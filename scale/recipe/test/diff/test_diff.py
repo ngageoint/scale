@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
+from data.filter.filter import DataFilter
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from recipe.definition.definition import RecipeDefinition
@@ -26,33 +27,53 @@ class TestRecipeDiff(TestCase):
         interface_2.add_parameter(FileParameter('file_param_1', ['image/gif']))
         interface_2.add_parameter(JsonParameter('json_param_1', 'object'))
 
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(FileParameter('cond_file', ['image/gif']))
+        # TODO: eventually implement two "real" and identical filters
+        filter_1 = DataFilter(False)
+        cond_interface_2 = Interface()
+        cond_interface_2.add_parameter(FileParameter('cond_file', ['image/gif']))
+        filter_2 = DataFilter(False)
+
         definition_1 = RecipeDefinition(interface_1)
         definition_1.add_job_node('A', 'job_type_1', '1.0', 1)
         definition_1.add_job_node('B', 'job_type_2', '2.0', 1)
         definition_1.add_job_node('C', 'job_type_3', '1.0', 2)
         definition_1.add_recipe_node('D', 'recipe_type_1', 1)
+        definition_1.add_condition_node('E', cond_interface_1, filter_1)
+        definition_1.add_job_node('F', 'job_type_4', '1.0', 1)
         definition_1.add_dependency('A', 'B')
         definition_1.add_dependency('A', 'C')
         definition_1.add_dependency('C', 'D')
+        definition_1.add_dependency('A', 'E')
+        definition_1.add_dependency('E', 'F')
         definition_1.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_1.add_dependency_input_connection('B', 'b_input_1', 'A', 'a_output_1')
         definition_1.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_1.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
         definition_1.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
+        definition_1.add_dependency_input_connection('E', 'cond_file', 'A', 'a_output_1')
+        definition_1.add_dependency_input_connection('F', 'f_input_1', 'E', 'cond_file')
 
         definition_2 = RecipeDefinition(interface_2)
         definition_2.add_job_node('A', 'job_type_1', '1.0', 1)
         definition_2.add_job_node('B', 'job_type_2', '2.0', 1)
         definition_2.add_job_node('C', 'job_type_3', '1.0', 2)
         definition_2.add_recipe_node('D', 'recipe_type_1', 1)
+        definition_2.add_condition_node('E', cond_interface_2, filter_2)
+        definition_2.add_job_node('F', 'job_type_4', '1.0', 1)
         definition_2.add_dependency('A', 'B')
         definition_2.add_dependency('A', 'C')
         definition_2.add_dependency('C', 'D')
+        definition_2.add_dependency('A', 'E')
+        definition_2.add_dependency('E', 'F')
         definition_2.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_2.add_dependency_input_connection('B', 'b_input_1', 'A', 'a_output_1')
         definition_2.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_2.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
         definition_2.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
+        definition_2.add_dependency_input_connection('E', 'cond_file', 'A', 'a_output_1')
+        definition_2.add_dependency_input_connection('F', 'f_input_1', 'E', 'cond_file')
 
         diff = RecipeDiff(definition_1, definition_2)
 
@@ -60,7 +81,7 @@ class TestRecipeDiff(TestCase):
         self.assertListEqual(diff.reasons, [])
         # Every node should be unchanged and all should be copied during a reprocess
         nodes_to_copy = diff.get_nodes_to_copy()
-        self.assertSetEqual(set(nodes_to_copy.keys()), {'A', 'B', 'C', 'D'})
+        self.assertSetEqual(set(nodes_to_copy.keys()), {'A', 'B', 'C', 'D', 'E', 'F'})
         for node_diff in nodes_to_copy.values():
             self.assertEqual(node_diff.status, NodeDiff.UNCHANGED)
             self.assertFalse(node_diff.reprocess_new_node)
@@ -131,36 +152,56 @@ class TestRecipeDiff(TestCase):
         interface_2.add_parameter(JsonParameter('json_param_1', 'object'))
         interface_2.add_parameter(JsonParameter('json_param_2', 'object', required=False))
 
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(FileParameter('cond_file', ['image/gif']))
+        # TODO: eventually implement two "real" and different filters
+        filter_1 = DataFilter(False)
+        cond_interface_2 = Interface()
+        cond_interface_2.add_parameter(FileParameter('cond_file', ['image/gif']))
+        filter_2 = DataFilter(True)
+
         definition_1 = RecipeDefinition(interface_1)
         definition_1.add_job_node('A', 'job_type_1', '1.0', 1)
         definition_1.add_job_node('B', 'job_type_2', '2.0', 1)
         definition_1.add_job_node('C', 'job_type_3', '1.0', 2)
         definition_1.add_recipe_node('D', 'recipe_type_1', 1)
         definition_1.add_job_node('E', 'job_type_4', '1.0', 1)
+        definition_1.add_condition_node('G', cond_interface_1, filter_1)
+        definition_1.add_job_node('H', 'job_type_4', '1.0', 1)
         definition_1.add_dependency('A', 'B')
         definition_1.add_dependency('A', 'C')
         definition_1.add_dependency('B', 'E')
         definition_1.add_dependency('C', 'D')
+        definition_1.add_dependency('A', 'G')
+        definition_1.add_dependency('G', 'H')
         definition_1.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_1.add_dependency_input_connection('B', 'b_input_1', 'A', 'a_output_1')
         definition_1.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_1.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
         definition_1.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
+        definition_1.add_dependency_input_connection('G', 'cond_file', 'A', 'a_output_1')
+        definition_1.add_dependency_input_connection('H', 'h_input_1', 'G', 'cond_file')
 
         definition_2 = RecipeDefinition(interface_2)
         # Nodes B and E are deleted
         definition_2.add_job_node('A', 'job_type_1', '1.0', 1)
         definition_2.add_job_node('C', 'job_type_3', '2.1', 1)  # Change to job type version and revision
         definition_2.add_recipe_node('D', 'recipe_type_1', 1)
+        definition_2.add_condition_node('G', cond_interface_2, filter_2)
+        definition_2.add_job_node('H', 'job_type_4', '1.0', 1)
         definition_2.add_recipe_node('F', 'recipe_type_2', 5)  # New node
         definition_2.add_dependency('A', 'C')
         definition_2.add_dependency('C', 'D')
         definition_2.add_dependency('D', 'F')
+        definition_2.add_dependency('A', 'G')
+        definition_2.add_dependency('G', 'H')
         definition_2.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_2.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_2.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
         definition_2.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
         definition_2.add_recipe_input_connection('F', 'f_input_1', 'json_param_2')
+        definition_2.add_dependency_input_connection('G', 'cond_file', 'A', 'a_output_1')
+        definition_2.add_dependency_input_connection('H', 'h_input_1', 'G', 'cond_file')
 
         diff = RecipeDiff(definition_1, definition_2)
 
@@ -195,9 +236,19 @@ class TestRecipeDiff(TestCase):
         self.assertEqual(node_f.status, NodeDiff.NEW)
         self.assertTrue(node_f.reprocess_new_node)
         self.assertListEqual(node_f.changes, [])
+        node_g = diff.graph['G']
+        self.assertEqual(node_g.status, NodeDiff.CHANGED)
+        self.assertTrue(node_g.reprocess_new_node)
+        self.assertEqual(len(node_g.changes), 1)
+        self.assertEqual(node_g.changes[0].name, 'FILTER_CHANGE')
+        node_h = diff.graph['H']
+        self.assertEqual(node_h.status, NodeDiff.CHANGED)
+        self.assertTrue(node_h.reprocess_new_node)
+        self.assertEqual(len(node_h.changes), 1)
+        self.assertEqual(node_h.changes[0].name, 'PARENT_CHANGED')
         # Check nodes to copy, supersede, and unpublish
         self.assertSetEqual(set(diff.get_nodes_to_copy().keys()), {'A'})
-        self.assertSetEqual(set(diff.get_nodes_to_supersede().keys()), {'B', 'C', 'D', 'E'})
+        self.assertSetEqual(set(diff.get_nodes_to_supersede().keys()), {'B', 'C', 'D', 'E', 'G', 'H'})
         self.assertSetEqual(set(diff.get_nodes_to_unpublish().keys()), {'B', 'E'})
 
     def test_init_changes_in_middle_of_chains(self):

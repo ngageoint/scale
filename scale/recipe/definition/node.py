@@ -81,7 +81,7 @@ class NodeDefinition(object):
         return input_data
 
     def validate(self, recipe_input_interface, node_input_interfaces, node_output_interfaces):
-        """Validates this recipe node
+        """Validates this node
 
         :param recipe_input_interface: The interface for the recipe input
         :type recipe_input_interface: :class:`data.interface.interface.Interface`
@@ -134,6 +134,34 @@ class NodeDefinition(object):
         """
     
         raise NotImplementedError()
+
+class ConditionNodeDefinition(NodeDefinition):
+    """Represents a condition within a recipe definition
+    """
+
+    NODE_TYPE = 'condition'
+
+    def __init__(self, name, input_interface, data_filter):
+        """Constructor
+
+        :param name: The unique name of the node in the recipe graph
+        :type name: string
+        :param input_interface: The input interface of the condition
+        :type input_interface: :class:`data.interface.interface.Interface`
+        :param data_filter: The data filter of the condition
+        :type data_filter: :class:`data.filter.filter.DataFilter`
+        """
+
+        super(ConditionNodeDefinition, self).__init__(name, ConditionNodeDefinition.NODE_TYPE)
+
+        self.input_interface = input_interface
+        self.data_filter = data_filter
+
+        # TODO: generate output interface from input interface + data filter
+        # TODO: input params with required=False that are checked for existence in data filter should become
+        # required=True on output
+        self.output_interface = input_interface
+
 
 class JobNodeDefinition(NodeDefinition):
     """Represents a job within a recipe definition

@@ -25,7 +25,7 @@ from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
-from job.exceptions import InvalidJobField
+from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobSerializerV5, JobSerializerV6,
                              JobDetailsSerializerV5, JobDetailsSerializerV6,
@@ -634,7 +634,10 @@ class JobTypeDetailsView(GenericAPIView):
             job_type = JobType.objects.get_details_v6(name, version)
         except JobType.DoesNotExist:
             raise Http404
-
+        except NonSeedJobType as ex:
+            logger.exception('Attempting to use v6 interface for non seed image with name=%s, version=%s', name, version)
+            raise BadParameter(unicode(ex))
+            
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 

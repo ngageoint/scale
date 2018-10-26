@@ -32,7 +32,7 @@ from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobC
 from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset, JobDataSunset
-from job.exceptions import InvalidJobField
+from job.exceptions import InvalidJobField, NonSeedJobType
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
@@ -3097,6 +3097,11 @@ class JobTypeManager(models.Manager):
         # Attempt to get the job type
         job_type = JobType.objects.all().get(name=name, version=version)
 
+        # V6 does not support non seed job types
+        if not job_type.is_seed_job_type():
+            raise NonSeedJobType('Job type %s version %s is not a Seed image. Please update your image or use the legacy v5 interface' % (name, version))
+            
+            
         # Scrub configuration for secrets
         if job_type.configuration:
             configuration = job_type.get_job_configuration()

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from util.exceptions import ScaleLogicBug
 
 
@@ -24,6 +24,8 @@ def create_diff_for_node(node, diff_can_be_reprocessed, status):
     :rtype: :class:`recipe.diff.node.NodeDiff`
     """
 
+    if node.node_type == ConditionNodeDefinition.NODE_TYPE:
+        return ConditionNodeDiff(node, diff_can_be_reprocessed, status)
     if node.node_type == JobNodeDefinition.NODE_TYPE:
         return JobNodeDiff(node, diff_can_be_reprocessed, status)
     if node.node_type == RecipeNodeDefinition.NODE_TYPE:
@@ -225,13 +227,49 @@ class NodeDiff(object):
 
     @abstractmethod
     def _compare_node_type(self, prev_node):
-        """Performs comparison specifc to the node type sublass
+        """Performs comparison specifc to the node type subclass
 
         :param prev_node: The node from the previous revision
         :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         raise NotImplementedError()
+
+
+class ConditionNodeDiff(NodeDiff):
+    """Represents a diff for a condition node within a recipe definition
+    """
+
+    def __init__(self, condition_node, diff_can_be_reprocessed, status=NodeDiff.NEW):
+        """Constructor
+
+        :param condition_node: The condition node from the recipe definition
+        :type condition_node: :class:`recipe.definition.node.ConditionNodeDefinition`
+        :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
+        :type diff_can_be_reprocessed: bool
+        :param status: The diff status, defaults to NEW
+        :type status: string
+        """
+
+        super(ConditionNodeDiff, self).__init__(condition_node, diff_can_be_reprocessed, status)
+
+        self.data_filter = condition_node.data_filter
+
+    def get_node_type_dict(self):
+        """See :meth:`recipe.diff.node.NodeDiff.get_node_type_dict`
+        """
+
+        json_dict = {'node_type': self.node_type}
+
+        return json_dict
+
+    def _compare_node_type(self, prev_node):
+        """See :meth:`recipe.diff.node.NodeDiff._compare_node_type`
+        """
+
+        if not self.data_filter.is_filter_equal(prev_node.data_filter):
+            msg = 'Data filter changed'
+            self.changes.append(Change('FILTER_CHANGE', msg))
 
 
 class JobNodeDiff(NodeDiff):

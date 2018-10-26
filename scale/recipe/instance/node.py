@@ -1,7 +1,10 @@
 """Defines the classes for representing nodes within a recipe"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from abc import ABCMeta
+
+from recipe.definition.node import ConditionNodeDefinition
 
 
 class NodeInstance(object):
@@ -56,14 +59,23 @@ class NodeInstance(object):
         for parent_node in self.parents.values():
             self.blocks_child_nodes = self.blocks_child_nodes or parent_node.blocks_child_nodes
 
-    def is_ready_for_children(self):
-        """Indicates whether this node has completed and is ready for its children to process
+    def is_completed(self):
+        """Indicates whether this node has completed
 
         :returns: True if this node has completed, False otherwise
         :rtype: bool
         """
 
         return False
+
+    def is_ready_for_children(self):
+        """Indicates whether this node is ready for its children to process
+
+        :returns: True if this node is ready for its children to process, False otherwise
+        :rtype: bool
+        """
+
+        return self.is_completed()
 
     def needs_to_be_created(self):
         """Indicates whether this node needs to be created
@@ -100,6 +112,59 @@ class NodeInstance(object):
         return True
 
 
+class ConditionNodeInstance(NodeInstance):
+    """Represents a condition within a recipe
+    """
+
+    def __init__(self, definition, condition, is_original):
+        """Constructor
+
+        :param definition: The definition of this node in the recipe
+        :type definition: :class:`recipe.definition.node.ConditionNodeDefinition`
+        :param condition: The condition model
+        :type condition: :class:`recipe.models.RecipeCondition`
+        :param is_original: Whether this condition is original
+        :type is_original: bool
+        """
+
+        super(ConditionNodeInstance, self).__init__(definition, is_original)
+
+        self.condition = condition
+
+    def is_completed(self):
+        """See :meth:`recipe.instance.node.NodeInstance.is_completed`
+        """
+
+        return self.condition.is_processed
+
+    def is_ready_for_children(self):
+        """See :meth:`recipe.instance.node.NodeInstance.is_ready_for_children`
+        """
+
+        return self.condition.is_processed and self.condition.is_accepted
+
+    def needs_to_be_created(self):
+        """See :meth:`recipe.instance.node.NodeInstance.needs_to_be_created`
+        """
+
+        # Check parent nodes
+        needs_to_be_created = super(ConditionNodeInstance, self).needs_to_be_created()
+
+        # Children can be created once the condition has been processed and accepted
+        self.children_can_be_created = self.condition.is_processed and self.condition.is_accepted
+
+        return needs_to_be_created
+
+    def needs_to_process_input(self):
+        """See :meth:`recipe.instance.node.NodeInstance.needs_to_process_input`
+        """
+
+        # Check parent nodes
+        can_process_input = super(ConditionNodeInstance, self).needs_to_process_input()
+
+        return can_process_input and not self.condition.is_processed
+
+
 class DummyNodeInstance(NodeInstance):
     """Represents a placeholder node that stands in for a node that doesn't exist in this recipe instance
     """
@@ -116,6 +181,18 @@ class DummyNodeInstance(NodeInstance):
         self.already_created = False
         self.is_real_node = False
 
+    def is_completed(self):
+        """See :meth:`recipe.instance.node.NodeInstance.is_completed`
+        """
+
+        return True
+
+    def is_ready_for_children(self):
+        """See :meth:`recipe.instance.node.NodeInstance.is_ready_for_children`
+        """
+
+        return False
+
     def needs_to_be_created(self):
         """See :meth:`recipe.instance.node.NodeInstance.needs_to_be_created`
         """
@@ -123,9 +200,10 @@ class DummyNodeInstance(NodeInstance):
         # Check parent nodes
         needs_to_be_created = super(DummyNodeInstance, self).needs_to_be_created()
 
-        # TODO: if this dummy node represents a condition "gate", then its children cannot be created yet (condition
-        # must be created and evaluated). Also implement needs_to_be_created() for condition node to check condition
-        # to set self.children_can_be_created
+        if self.node_type == ConditionNodeDefinition.NODE_TYPE:
+            # Cannot create children of a condition until the condition has been processed and accepted
+            self.children_can_be_created = False
+
         return needs_to_be_created
 
 
@@ -167,8 +245,8 @@ class JobNodeInstance(NodeInstance):
         if self.job.status == 'PENDING' and self.blocks_child_nodes:
             blocked_job_ids.append(self.job.id)
 
-    def is_ready_for_children(self):
-        """See :meth:`recipe.instance.node.NodeInstance.is_ready_for_children`
+    def is_completed(self):
+        """See :meth:`recipe.instance.node.NodeInstance.is_completed`
         """
 
         return self.job.is_ready_for_children()
@@ -214,8 +292,8 @@ class RecipeNodeInstance(NodeInstance):
         if num_blocking_jobs > 0:
             self.blocks_child_nodes = True
 
-    def is_ready_for_children(self):
-        """See :meth:`recipe.instance.node.NodeInstance.is_ready_for_children`
+    def is_completed(self):
+        """See :meth:`recipe.instance.node.NodeInstance.is_completed`
         """
 
         return self.recipe.is_completed
