@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from data.interface.exceptions import InvalidInterface
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.exceptions import InvalidDefinition
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 
 
 class RecipeDefinition(object):
@@ -21,6 +21,21 @@ class RecipeDefinition(object):
         self.input_interface = input_interface
         self.graph = {}  # {Name: Node}
         self._topological_order = None  # Cached topological ordering of the nodes (list of names)
+
+    def add_condition_node(self, name, input_interface, data_filter):
+        """Adds a condition node to the recipe graph
+
+        :param name: The node name
+        :type name: string
+        :param input_interface: The input interface of the condition
+        :type input_interface: :class:`data.interface.interface.Interface`
+        :param data_filter: The data filter of the condition
+        :type data_filter: :class:`data.filter.filter.DataFilter`
+
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
+        """
+
+        self._add_node(ConditionNodeDefinition(name, input_interface, data_filter))
 
     def add_dependency(self, parent_name, child_name):
         """Adds a dependency that one node has upon another node
@@ -63,8 +78,8 @@ class RecipeDefinition(object):
         if dependency_name not in self.graph:
             raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % dependency_name)
 
-        if self.graph[dependency_name].node_type != JobNodeDefinition.NODE_TYPE:
-            msg = 'Node \'%s\' has a connection to a node that is not a job' % node_name
+        if self.graph[dependency_name].node_type == RecipeNodeDefinition.NODE_TYPE:
+            msg = 'Node \'%s\' cannot have a connection to a recipe node' % node_name
             raise InvalidDefinition('CONNECTION_INVALID_NODE', msg)
 
         connection = DependencyInputConnection(node_input_name, dependency_name, dependency_output_name)
@@ -157,9 +172,9 @@ class RecipeDefinition(object):
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition
 
-        :param node_input_interfaces: The input interface for each node stored by node name
+        :param node_input_interfaces: The input interface for each job/recipe node stored by node name
         :type node_input_interfaces: dict
-        :param node_output_interfaces: The output interface for each node stored by node name
+        :param node_output_interfaces: The output interface for each job node stored by node name
         :type node_output_interfaces: dict
         :returns: A list of warnings discovered during validation
         :rtype: list
@@ -175,6 +190,10 @@ class RecipeDefinition(object):
         # Processing nodes in topological order will also detect any circular dependencies
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
+            # Grab input and output interfaces from condition nodes
+            if node.node_type == ConditionNodeDefinition.NODE_TYPE:
+                node_input_interfaces[node_name] = node.input_interface
+                node_output_interfaces[node_name] = node.output_interface
             warnings.extend(node.validate(self.input_interface, node_input_interfaces, node_output_interfaces))
 
         return warnings

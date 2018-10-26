@@ -106,9 +106,22 @@ RECIPE_DIFF_SCHEMA = {
                 'node_type': {
                     'description': 'The type of the node',
                     'oneOf': [
+                        {'$ref': '#/definitions/condition_node'},
                         {'$ref': '#/definitions/job_node'},
                         {'$ref': '#/definitions/recipe_node'},
                     ],
+                },
+            },
+        },
+        'condition_node': {
+            'description': 'The diff details for a condition node in the recipe graph',
+            'type': 'object',
+            'required': ['node_type'],
+            'additionalProperties': False,
+            'properties': {
+                'node_type': {
+                    'description': 'The name of the node type',
+                    'enum': ['condition'],
                 },
             },
         },

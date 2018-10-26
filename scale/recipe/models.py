@@ -1016,6 +1016,69 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
+class RecipeConditionManager(models.Manager):
+    """Provides additional methods for handling recipe conditions
+    """
+
+    pass
+
+
+class RecipeCondition(models.Model):
+    """Represents a conditional decision within a recipe. If the condition is accepted then the dependent nodes will be
+    created and processed, while if the condition is not accepted the dependent nodes will never be created.
+
+    :keyword root_recipe: The root recipe that contains this condition
+    :type root_recipe: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this condition
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword batch: The batch that contains this condition
+    :type batch: :class:`django.db.models.ForeignKey`
+
+    :keyword data: JSON description defining the data processed by this condition
+    :type data: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword is_processed: Whether the condition has been processed
+    :type is_processed: :class:`django.db.models.BooleanField`
+    :keyword is_accepted: Whether the condition has been accepted
+    :type is_accepted: :class:`django.db.models.BooleanField`
+
+    :keyword created: When this condition was created
+    :type created: :class:`django.db.models.DateTimeField`
+    :keyword processed: When this condition was processed
+    :type processed: :class:`django.db.models.DateTimeField`
+    :keyword last_modified: When the condition was last modified
+    :type last_modified: :class:`django.db.models.DateTimeField`
+    """
+
+    root_recipe = models.ForeignKey('recipe.Recipe', related_name='conditions_for_root_recipe',
+                                    on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', related_name='conditions_for_recipe', on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', related_name='conditions_for_batch', blank=True, null=True,
+                              on_delete=models.PROTECT)
+
+    data = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    is_processed = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+    processed = models.DateTimeField(blank=True, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    objects = RecipeConditionManager()
+
+    def get_data(self):
+        """Returns the data for this condition
+
+        :returns: The data for this condition
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.data, do_validate=False).get_data()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_condition'
+
+
 class RecipeInputFileManager(models.Manager):
     """Provides additional methods for handleing RecipeInputFiles"""
 
@@ -1112,14 +1175,16 @@ class RecipeNodeManager(models.Manager):
             superseded_recipe_id = recipe_copy.superseded_recipe_id
             recipe_id = recipe_copy.recipe_id
             node_names = recipe_copy.node_names
-            sub_qry = 'SELECT node_name, false, %d, job_id, sub_recipe_id FROM recipe_node WHERE recipe_id = %d'
+            sub_qry = 'SELECT node_name, false, %d, condition_id, job_id, sub_recipe_id '
+            sub_qry += 'FROM recipe_node WHERE recipe_id = %d'
             sub_qry = sub_qry % (recipe_id, superseded_recipe_id)
             if node_names:
                 node_sub_qry = ', '.join('\'%s\'' % node_name for node_name in node_names)
                 sub_qry = '%s AND node_name IN (%s)' % (sub_qry, node_sub_qry)
             sub_queries.append(sub_qry)
         union_sub_qry = ' UNION ALL '.join(sub_queries)
-        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id) %s' % union_sub_qry
+        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, condition_id, job_id, sub_recipe_id) %s'
+        qry = qry % union_sub_qry
 
         with connection.cursor() as cursor:
             cursor.execute(qry)
@@ -1208,7 +1273,7 @@ class RecipeNodeManager(models.Manager):
         return {rn.node_name: rn.job for rn in qry}
 
     def get_recipe_nodes(self, recipe_id):
-        """Returns the recipe_node models with related sub_recipe and job models for the given recipe ID
+        """Returns the recipe_node models with related condition, job, and sub_recipe models for the given recipe ID
 
         :param recipe_id: The recipe ID
         :type recipe_id: int
@@ -1216,7 +1281,7 @@ class RecipeNodeManager(models.Manager):
         :rtype: list
         """
 
-        return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
+        return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
 
     def get_recipe_node_outputs(self, recipe_id):
         """Returns the output data for each recipe node for the given recipe ID
@@ -1229,9 +1294,13 @@ class RecipeNodeManager(models.Manager):
 
         node_outputs = {}
 
-        qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
-        for node in qry.only('node_name', 'job', 'sub_recipe', 'job__output'):
+        qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
+        for node in qry.only('node_name', 'condition', 'job', 'sub_recipe', 'condition__data', 'job__output'):
             node_type = None
+            if node.condition:
+                node_type = 'condition'
+                node_id = node.condition_id
+                output_data = node.condition.get_data()
             if node.job:
                 node_type = 'job'
                 node_id = node.job_id
@@ -1309,6 +1378,8 @@ class RecipeNode(models.Model):
     :keyword is_original: Whether this is the original recipe for the node (True) or the node is copied from a
         superseded recipe (False)
     :type is_original: :class:`django.db.models.BooleanField`
+    :keyword condition: If not null, this node is a condition node and this field is the condition within the recipe
+    :type condition: :class:`django.db.models.ForeignKey`
     :keyword job: If not null, this node is a job node and this field is the job that the recipe contains
     :type job: :class:`django.db.models.ForeignKey`
     :keyword sub_recipe: If not null, this node is a recipe node and this field is the sub-recipe that the recipe
@@ -1319,6 +1390,7 @@ class RecipeNode(models.Model):
     recipe = models.ForeignKey('recipe.Recipe', related_name='contains', on_delete=models.PROTECT)
     node_name = models.CharField(max_length=100)
     is_original = models.BooleanField(default=True)
+    condition = models.ForeignKey('recipe.RecipeCondition', blank=True, null=True, on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
     sub_recipe = models.ForeignKey('recipe.Recipe', related_name='contained_by', blank=True, null=True,
                                    on_delete=models.PROTECT)

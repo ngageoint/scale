@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from recipe.instance.exceptions import InvalidRecipe
 
 
@@ -57,9 +57,34 @@ RECIPE_INSTANCE_SCHEMA = {
                 'node_type': {
                     'description': 'The type of the node',
                     'oneOf': [
+                        {'$ref': '#/definitions/condition_node'},
                         {'$ref': '#/definitions/job_node'},
                         {'$ref': '#/definitions/recipe_node'},
                     ],
+                },
+            },
+        },
+        'condition_node': {
+            'description': 'The details for a condition node in the recipe',
+            'type': 'object',
+            'required': ['node_type', 'condition_id', 'is_processed', 'is_accepted'],
+            'additionalProperties': False,
+            'properties': {
+                'node_type': {
+                    'description': 'The name of the node type',
+                    'enum': ['condition'],
+                },
+                'condition_id': {
+                    'description': 'The unique ID of the condition',
+                    'type': 'integer',
+                },
+                'is_processed': {
+                    'description': 'Whether this condition has been processed',
+                    'type': 'boolean',
+                },
+                'is_accepted': {
+                    'description': 'Whether this condition has been accepted',
+                    'type': 'boolean',
                 },
             },
         },
@@ -194,7 +219,10 @@ def convert_node_to_v6_json(node):
     dependencies = [{'name': name} for name in node.parents.keys()]
     node_def = node.definition
 
-    if node.node_type == JobNodeDefinition.NODE_TYPE:
+    if node.node_type == ConditionNodeDefinition.NODE_TYPE:
+        node_type_dict = {'node_type': 'condition', 'condition_id': node.condition.id,
+                          'is_processed': node.condition.is_processed, 'is_accepted': node.condition.is_accepted}
+    elif node.node_type == JobNodeDefinition.NODE_TYPE:
         node_type_dict = {'node_type': 'job', 'job_type_name': node_def.job_type_name,
                           'job_type_version': node_def.job_type_version, 'job_type_revision': node_def.revision_num,
                           'job_id': node.job.id, 'status': node.job.status}

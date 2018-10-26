@@ -4,12 +4,14 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from data.filter.filter import DataFilter
+from data.interface.interface import Interface
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA, convert_interface_to_v6_json, InterfaceV6
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v1 import RecipeDefinitionV1
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from util.rest import strip_schema_version
 
 
@@ -93,9 +95,22 @@ RECIPE_DEFINITION_SCHEMA = {
                 'node_type': {
                     'description': 'The type of the node',
                     'oneOf': [
+                        {'$ref': '#/definitions/condition_node'},
                         {'$ref': '#/definitions/job_node'},
                         {'$ref': '#/definitions/recipe_node'},
                     ],
+                },
+            },
+        },
+        'condition_node': {
+            'description': 'A condition node in the recipe graph',
+            'type': 'object',
+            'required': ['node_type'],
+            'additionalProperties': False,
+            'properties': {
+                'node_type': {
+                    'description': 'The name of the node type',
+                    'enum': ['condition'],
                 },
             },
         },
@@ -198,7 +213,10 @@ def convert_node_to_v6_json(node):
             conn_dict = {'type': 'recipe', 'input': connection.recipe_input_name}
         input_dict[connection.input_name] = conn_dict
 
-    if isinstance(node, JobNodeDefinition):
+    if isinstance(node, ConditionNodeDefinition):
+        # TODO: complete recipe condition implementation
+        node_type_dict = {'node_type': 'condition'}
+    elif isinstance(node, JobNodeDefinition):
         node_type_dict = {'node_type': 'job', 'job_type_name': node.job_type_name,
                           'job_type_version': node.job_type_version, 'job_type_revision': node.revision_num}
     elif isinstance(node, RecipeNodeDefinition):
@@ -256,7 +274,10 @@ class RecipeDefinitionV6(object):
         # Add all nodes to definition first
         for node_name, node_dict in self._definition['nodes'].items():
             node_type_dict = node_dict['node_type']
-            if node_type_dict['node_type'] == 'job':
+            if node_type_dict['node_type'] == 'condition':
+                # TODO: complete recipe condition implementation
+                definition.add_condition_node(node_name, Interface(), DataFilter(True))
+            elif node_type_dict['node_type'] == 'job':
                 definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_version'],
                                         node_type_dict['job_type_revision'])
             elif node_type_dict['node_type'] == 'recipe':
