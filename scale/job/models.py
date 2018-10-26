@@ -3013,7 +3013,7 @@ class JobTypeManager(models.Manager):
             results.append(job_type)
         return results
         
-    def get_recipe_job_type_ids(self, definition)
+    def get_recipe_job_type_ids(self, definition):
         """Gets the model ids of the job types contained in the given RecipeDefinition
 
         :param definition: RecipeDefinition to search for job types

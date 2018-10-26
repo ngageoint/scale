@@ -107,7 +107,8 @@ class UpdateRecipeDefinition(CommandMessage):
         valid = False
 
         if updated_node:
-            inputs, outputs = definition.get_interfaces()
+            job_types = definition.get_job_type_keys()
+            inputs, outputs = self._get_interfaces(definition)
             warnings = []
             try:
                 warnings = definition.validate(inputs, outputs)
@@ -131,3 +132,49 @@ class UpdateRecipeDefinition(CommandMessage):
                     msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
                     self.new_messages.append(msg)
         return True
+
+    def _get_interfaces(self, definition):
+        """Gets the input and output interfaces for each node in this recipe
+
+        :returns: A dict of input interfaces and a dict of output interfaces
+        :rtype: dict, dict
+        """
+
+        inputs = {}
+        outputs = {}
+        
+        for node_name in definition.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                inputs[node_name], outputs[node_name] = _get_job_interfaces(node)
+            elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                inputs[node_name], outputs[node_name] = _get_recipe_interfaces(node)
+
+        return inputs, outputs
+        
+    def _get_job_interfaces(self, node):
+        """Gets the input/output interfaces for a job type node
+        """
+        
+        from job.models import JobTypeRevision
+        input = Interface()
+        output = Interface()
+        jtr = JobTypeRevision.objects.get_details_v6(self.job_type_name, self.job_type_version, self.revision_num)
+        if jtr:
+            input = jtr.get_input_interface()
+            output = jtr.get_output_interface()
+            
+        return input, output
+        
+    def _get_recipe_interfaces(self, node):
+        """Gets the input/output interfaces for a recipe type node
+        """
+        
+        from recipe.models import RecipeTypeRevision
+        input = Interface()
+        output = Interface()
+        rtr = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.revision_num)
+        if jtr:
+            input = jtr.get_input_interface() # no output interface
+            
+        return input, output
