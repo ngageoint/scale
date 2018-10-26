@@ -1439,8 +1439,8 @@ class RecipeTypeManager(models.Manager):
 
         from recipe.configuration.definition.exceptions import InvalidDefinition
         # Must lock job type interfaces so the new recipe type definition can be validated
-        _ = definition.get_job_types(lock=True)
         if isinstance(definition, LegacyRecipeDefinition):
+            _ = definition.get_job_types(lock=True)
             definition.validate_job_interfaces()
         elif isinstance(definition, RecipeDefinition):
             definition.validate_interfaces()
@@ -1950,7 +1950,9 @@ class RecipeTypeSubLinkManager(models.Manager):
 
         definition = recipe_type.get_definition()
         
-        sub_type_ids = definition.get_recipe_type_ids()
+        sub_type_names = definition.get_recipe_type_names()
+        
+        sub_type_ids = RecipeType.objects.all().filter(name__in=sub_type_names).only('id')
         
         if len(sub_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(sub_type_ids)
@@ -2056,7 +2058,7 @@ class RecipeTypeJobLinkManager(models.Manager):
 
         definition = recipe_type.get_definition()
         
-        job_type_ids = definition.get_job_type_ids()
+        job_type_ids = JobType.objects.get_recipe_job_type_ids(defintion)
         
         if len(job_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(job_type_ids)

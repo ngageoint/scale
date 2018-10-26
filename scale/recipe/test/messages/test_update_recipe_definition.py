@@ -86,7 +86,7 @@ class TestUpdateRecipeDefinition(TestCase):
         result = job_message.execute()
         self.assertTrue(result)
         updated_rt = RecipeType.objects.get(id=self.rt.id)
-        nodes = updated_rt.get_definition().get_job_type_nodes(job_type_name=self.jt.name,
+        nodes = updated_rt.get_definition().get_job_nodes(job_type_name=self.jt.name,
                                                                job_type_version=self.jt.version)
         self.assertEqual(nodes[0].revision_num, self.jt.revision_num + 1)
 

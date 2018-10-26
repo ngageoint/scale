@@ -210,9 +210,12 @@ class SeedManifest(object):
 
         input_dict = copy.deepcopy(self.get_inputs())
         if 'files' in input_dict:
-            for file_dict in self.get_input_files():
+            for file_dict in input_dict['files']:
                 if 'partial' in file_dict:
                     del file_dict['partial']
+                if 'mediaTypes' in file_dict:
+                    file_dict['media_types'] = file_dict['mediaTypes'] 
+                    del file_dict['mediaTypes']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
     def get_output_interface(self):
@@ -223,6 +226,16 @@ class SeedManifest(object):
         """
 
         output_dict = copy.deepcopy(self.get_outputs())
+        if 'files' in output_dict:
+            for file_dict in output_dict['files']:
+                if 'pattern' in file_dict:
+                    del file_dict['pattern']
+                if 'mediaType' in file_dict:
+                    file_dict['media_types'] = [file_dict['mediaType']]
+                    del file_dict['mediaType']
+            for json_dict in output_dict['json']:
+                if 'key' in json_dict:
+                    del json_dict['key']
         return InterfaceV6(interface=output_dict, do_validate=False).get_interface()
         
     def get_inputs(self):

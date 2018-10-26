@@ -101,47 +101,24 @@ class RecipeDefinition(object):
 
         self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
-    def get_job_type_ids(self):
-        """Gets the model ids of the job types contained in this RecipeDefinition
+    def get_job_type_keys(self):
+        """Gets the natural keys of the job types contained in this RecipeDefinition
 
-        :returns: set of JobType ids
-        :rtype: set[int]
+        :returns: set of JobTypeKey tuples
+        :rtype: set[:class:`job.models.JobTypeKey`]
         """
 
-        from job.models import JobType
-        ids = []
+        from job.models import JobTypeKey
+        keys = []
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
-            if isinstance(node, JobNodeDefinition):
-                jt = JobType.objects.all().get(name=node.job_type_name, version=node.job_type_version)
-                ids.append(jt.id)
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                key = JobTypeKey(name=node.job_type_name, version=node.job_type_version)
+                keys.append(key)
                         
-        return set(ids)
-        
-    def get_job_types(self, lock=False):
-        """Returns a set of job types for each job in the recipe
+        return set(keys)
 
-        :param lock: Whether to obtain select_for_update() locks on the job type models
-        :type lock: bool
-        :returns: Set of referenced job types
-        :rtype: set[:class:`job.models.JobType`]
-        """
-            
-        from job.models import JobType
-        ids = []
-        for node_name in self.get_topological_order():
-            node = self.graph[node_name]
-            if isinstance(node, JobNodeDefinition):
-                jt = JobType.objects.all().get(name=node.job_type_name, version=node.job_type_version)
-                ids.append(jt.id)
-        
-        if lock:
-            job_types = JobType.objects.all().select_for_update().filter(id__in=ids).order_by('id')
-        else:
-            job_types = JobType.objects.all().filter(id__in=ids).order_by('id')
-        return job_types
-
-    def get_job_type_nodes(self, job_type_name, job_type_version):
+    def get_job_nodes(self, job_type_name, job_type_version):
         """Gets the nodes for the given job type contained in this RecipeDefinition, if any
 
         :param job_type_name: The name of the job type
@@ -155,7 +132,7 @@ class RecipeDefinition(object):
         nodes = []
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
-            if isinstance(node, JobNodeDefinition):
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
                 if node.job_type_name == job_type_name and node.job_type_version == job_type_version:
                     nodes.append(node)
 
@@ -177,7 +154,7 @@ class RecipeDefinition(object):
         found = False
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
-            if isinstance(node, JobNodeDefinition):
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
                 if node.job_type_name == job_type_name and node.job_type_version == job_type_version:
                     if node.revision_num >= revision_num:
                         continue
@@ -222,22 +199,20 @@ class RecipeDefinition(object):
 
         self._add_node(RecipeNodeDefinition(name, recipe_type_name, revision_num))
 
-    def get_recipe_type_ids(self):
-        """Gets the model ids of the sub recipe types contained in this RecipeDefinition
+    def get_recipe_type_names(self):
+        """Gets the names of the sub recipe types contained in this RecipeDefinition
 
-        :returns: set of RecipeType ids
-        :rtype: set[int]
+        :returns: set of RecipeType names
+        :rtype: set[string]
         """
         
-        from recipe.models import RecipeType
-        ids = []
+        names = []
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
-            if isinstance(node, RecipeNodeDefinition):
-                rt = RecipeType.objects.all().get(name=node.recipe_type_name)
-                ids.append(rt.id)
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                names.append(node.recipe_type_name)
                         
-        return set(ids)
+        return set(names)
 
     def get_recipe_nodes(self, recipe_type_name):
         """Gets the nodes for the given recipe type contained in this RecipeDefinition, if any
@@ -252,7 +227,7 @@ class RecipeDefinition(object):
         nodes = []
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
-            if isinstance(node, RecipeNodeDefinition):
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
                 if node.recipe_type_name == recipe_type_name:
                     nodes.append(node)
 
@@ -272,7 +247,7 @@ class RecipeDefinition(object):
         found = False
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
-            if isinstance(node, RecipeNodeDefinition):
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
                 if node.recipe_type_name == recipe_type_name:
                     if node.revision_num >= revision_num:
                         continue

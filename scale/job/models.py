@@ -75,7 +75,7 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
-
+JobTypeKey = namedtuple('JobTypeKey', ['name', 'version'])
 
 class JobManager(models.Manager):
     """Provides additional methods for handling jobs
@@ -3012,7 +3012,25 @@ class JobTypeManager(models.Manager):
             job_type.num_versions = num_versions_by_id[job_type.id]
             results.append(job_type)
         return results
+        
+    def get_recipe_job_type_ids(self, definition)
+        """Gets the model ids of the job types contained in the given RecipeDefinition
 
+        :param definition: RecipeDefinition to search for job types
+        :type definition: :class:`recipe.definition.definition.RecipeDefinition`
+        :returns: set of JobType ids
+        :rtype: set[int]
+        """
+        
+        types = definition.get_job_type_keys()
+        query = reduce(
+            operator.or_, 
+            (Q(name=type.name, version=type.version) for type in types)
+            )
+        ids = self.all().filter(query).only('id')
+        
+        return ids
+        
     def get_job_type_versions_v6(self, name, is_active=None, order=None):
         """Returns a list of the versions of the job type with the given name
 
