@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('recipe', '0030_auto_20181018_1518'),
+        ('recipe', '0031_auto_20181026_1417'),
     ]
 
     def populate_recipe_type_link_tables(apps, schema_editor):
