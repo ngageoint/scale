@@ -290,20 +290,6 @@ class RecipeDefinition(object):
         return self._topological_order
 
 
-    def validate_interfaces(self):
-        """Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
-        connections are valid
-
-        :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
-
-        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`:
-            If there are any invalid job connections in the definition
-        """
-        
-        inputs, outputs = self.get_interfaces()
-        return self.validate(inputs, outputs)
-
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition
 
