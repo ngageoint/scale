@@ -1952,7 +1952,7 @@ class RecipeTypeSubLinkManager(models.Manager):
         
         sub_type_names = definition.get_recipe_type_names()
         
-        sub_type_ids = RecipeType.objects.all().filter(name__in=sub_type_names).only('id')
+        sub_type_ids = RecipeType.objects.all().filter(name__in=sub_type_names).values_list('pk', flat=True)
         
         if len(sub_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(sub_type_ids)
@@ -2058,7 +2058,7 @@ class RecipeTypeJobLinkManager(models.Manager):
 
         definition = recipe_type.get_definition()
         
-        job_type_ids = JobType.objects.get_recipe_job_type_ids(defintion)
+        job_type_ids = JobType.objects.get_recipe_job_type_ids(definition)
         
         if len(job_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(job_type_ids)

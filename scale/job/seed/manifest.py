@@ -12,7 +12,7 @@ from jsonschema.exceptions import ValidationError
 
 from data.interface.json.interface_v6 import InterfaceV6
 from job.configuration.data.exceptions import InvalidConfiguration
-from job.data.exceptions import InvalidData
+from job.data.exceptions import InvalidData, InvalidConnection
 from job.error.error import JobError
 from job.error.mapping import JobErrorMapping
 from job.execution.configuration.exceptions import MissingMount, MissingSetting
@@ -233,6 +233,7 @@ class SeedManifest(object):
                 if 'mediaType' in file_dict:
                     file_dict['media_types'] = [file_dict['mediaType']]
                     del file_dict['mediaType']
+        if 'json' in output_dict:
             for json_dict in output_dict['json']:
                 if 'key' in json_dict:
                     del json_dict['key']

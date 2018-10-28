@@ -6,6 +6,7 @@ import copy
 import datetime
 import logging
 import math
+import operator
 import re
 import semver
 from collections import namedtuple
@@ -3023,11 +3024,13 @@ class JobTypeManager(models.Manager):
         """
         
         types = definition.get_job_type_keys()
-        query = reduce(
-            operator.or_, 
-            (Q(name=type.name, version=type.version) for type in types)
-            )
-        ids = self.all().filter(query).only('id')
+        ids = []
+        if types:
+            query = reduce(
+                operator.or_,
+                (Q(name=type.name, version=type.version) for type in types)
+                )
+            ids = self.all().filter(query).values_list('pk', flat=True)
         
         return ids
         

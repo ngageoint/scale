@@ -3,9 +3,13 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.db import connection, models, transaction
+
+from data.interface.interface import Interface
 from job.models import JobType
 from messaging.messages.message import CommandMessage
 from recipe.definition.definition import InvalidDefinition
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.models import RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink
@@ -145,11 +149,11 @@ class UpdateRecipeDefinition(CommandMessage):
         outputs = {}
         
         for node_name in definition.get_topological_order():
-            node = self.graph[node_name]
+            node = definition.graph[node_name]
             if node.node_type == JobNodeDefinition.NODE_TYPE:
-                inputs[node_name], outputs[node_name] = _get_job_interfaces(node)
+                inputs[node_name], outputs[node_name] = self._get_job_interfaces(node)
             elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
-                inputs[node_name], outputs[node_name] = _get_recipe_interfaces(node)
+                inputs[node_name], outputs[node_name] = self._get_recipe_interfaces(node)
 
         return inputs, outputs
         
@@ -160,7 +164,7 @@ class UpdateRecipeDefinition(CommandMessage):
         from job.models import JobTypeRevision
         input = Interface()
         output = Interface()
-        jtr = JobTypeRevision.objects.get_details_v6(self.job_type_name, self.job_type_version, self.revision_num)
+        jtr = JobTypeRevision.objects.get_details_v6(node.job_type_name, node.job_type_version, node.revision_num)
         if jtr:
             input = jtr.get_input_interface()
             output = jtr.get_output_interface()
@@ -174,8 +178,8 @@ class UpdateRecipeDefinition(CommandMessage):
         from recipe.models import RecipeTypeRevision
         input = Interface()
         output = Interface()
-        rtr = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.revision_num)
-        if jtr:
-            input = jtr.get_input_interface() # no output interface
+        rtr = RecipeTypeRevision.objects.get_revision(node.recipe_type_name, node.revision_num)
+        if rtr:
+            input =rtr.get_input_interface() # no output interface
             
         return input, output
