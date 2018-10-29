@@ -27,9 +27,7 @@ docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION po
 
 # Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
 yum install -y bzip2 unzip subversion-libs gcc make \
-    gdal-python geos libffi-devel openssl-devel postgresql python-virtualenv python-pip python-devel libpqxx-devel
-
-pip install -U virtualenv pip
+    gdal-python geos libffi-devel openssl-devel postgresql libpqxx-devel
 
 cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
