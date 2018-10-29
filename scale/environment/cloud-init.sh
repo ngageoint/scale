@@ -7,6 +7,11 @@ export SCALE_DB_PASS=scale-postgres
 # Launch a database for Scale testing
 chkconfig docker on
 service docker start
+
+# Ensure no previous containers exist
+docker stop scale-postgis scale-rabbitmq
+docker rm scale-postgis scale-rabbitmq
+
 docker run -d --restart=always -p ${SCALE_DB_PORT}:5432 --name scale-postgis \
     -e POSTGRES_PASSWORD=${SCALE_DB_PASS} mdillon/postgis:9.4-alpine
 echo Giving Postgres a moment to start up before initializing...
