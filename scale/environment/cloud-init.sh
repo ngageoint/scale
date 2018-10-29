@@ -1,37 +1,45 @@
 #!/usr/bin/env bash
 
-# Clean up old Postgres and install 9.4 version
-service postgresql stop
-apt-get --purge remove -y postgresql\*
-su -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-apt-get update
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-apt-get install -y --force-yes  postgresql-9.4 postgresql-contrib-9.4 postgresql-9.4-postgis-2.3
-sed 's^local   all             all                                     peer^local   all             all                                     trust^g' -i /etc/postgresql/9.4/main/pg_hba.conf
-service postgresql start
-update-rc.d postgresql enable
+export SCALE_DB_PORT=55432
+export SCALE_MESSAGE_PORT=55672
+export SCALE_DB_PASS=scale-postgres
 
-# Install RabbitMQ as broker for messaging
-apt-get install -y rabbitmq-server
-service rabbitmq-server start
-update-rc.d rabbitmq-server enable
+# Configure docker to always run
+chkconfig docker on
+service docker start
 
-# Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
-apt-get install -y build-essential libssl-dev libffi-dev python-dev
-pip install -U pip
-pip install setuptools==33.1.1
-pip install -r pip/requirements.txt
+# Ensure no previous containers or configuration exist
+docker stop scale-postgis scale-rabbitmq
+docker rm scale-postgis scale-rabbitmq
+rm -fr environment/scale
 
+# Launch a database for Scale testing
+docker run -d --restart=always -p ${SCALE_DB_PORT}:5432 --name scale-postgis \
+    -e POSTGRES_PASSWORD=${SCALE_DB_PASS} mdillon/postgis:9.4-alpine
+echo Giving Postgres a moment to start up before initializing...
+sleep 10
+
+docker run -d --restart=always -p ${SCALE_MESSAGE_PORT}:5672 --name scale-rabbitmq \
+    rabbitmq:3.6-management
+
+# Configure database
 cat << EOF > database-commands.sql
 CREATE USER scale PASSWORD 'scale' SUPERUSER;
 CREATE DATABASE scale OWNER=scale;
 EOF
-su postgres -c "psql -f database-commands.sql"
+docker cp database-commands.sql scale-postgis:/database-commands.sql
 rm database-commands.sql
-su postgres -c "psql scale -c 'CREATE EXTENSION postgis'"
+docker exec -it scale-postgis su postgres -c 'psql -f /database-commands.sql'
+docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION postgis;"'
+
+# Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
+yum install -y bzip2 unzip subversion-libs gcc make \
+    gdal-python geos libffi-devel openssl-devel postgresql libpqxx-devel
 
 cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
+BROKER_URL = 'amqp://guest:guest@localhost:${SCALE_MESSAGE_PORT}//'
+
 POSTGIS_TEMPLATE = 'template_postgis'
 
 # Example settings for using PostgreSQL database with PostGIS.
@@ -42,15 +50,19 @@ DATABASES = {
         'USER': 'scale',
         'PASSWORD': 'scale',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '${SCALE_DB_PORT}',
         'TEST': {'NAME': 'test_scale'},
     },
 }
 EOF
 
+# Initialize virtual environment
+virtualenv environment/scale
+environment/scale/bin/pip install -r pip/requirements.txt
+
 # Load up database with schema migrations to date and fixtures
-python manage.py migrate
-python manage.py load_all_data
+environment/scale/bin/python manage.py migrate
+environment/scale/bin/python manage.py load_all_data
 
 # Clean up logs to eliminate permission issues
 rm -fr ../scale/logs

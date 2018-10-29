@@ -121,22 +121,25 @@ our preferred choices.
 
 #### Cloud IDEs
 
-[Cloud9](https://c9.io/) and [Codeanywhere](https://codeanywhere.com/) come with built in support for Postgres / PostGIS databases, making development of Scale both
-portable and quick to start using a hosted cloud environment. Cloud9 requires a credit card, even for free use, while
-Codeanywhere can be used without providing any payment information. Both providers offer a hosted workspace option
-that are built with Ubuntu containers and our init script will get you up and running quickly. Once your workspace has
-initialized, open the terminal and enter the following commands to initialize for development:
+[Cloud9](https://aws.amazon.com/cloud9/) makes development of Scale both
+portable and quick to start using a hosted cloud environment. AWS provides integrated instance provisioning and 
+management, so cost will be negligable if being used in an ad-hoc manner. An AWS account with a linked
+credit card will be required. Once your workspace has initialized, open the terminal and 
+enter the following commands to initialize for development:
 
 ```bash
+# Undo alias for python to make virtualenv work
+sed -i 's|^alias python|#alias python|' ~/.bashrc 
+
+# Pull down code
+git clone https://github.com/ngageoint/scale.git 
+
 # Change to Python code directory
-cd scale
+cd scale/scale
 
 # Initialize database and install Scale Python packages.
 sudo sh environment/cloud-init.sh
 ```
-
-Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
-to isolate dependencies per project.
 
 #### Linux
 
