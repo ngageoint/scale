@@ -6,18 +6,10 @@ import signal
 import socket
 import sys
 
-from optparse import make_option
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from mesos.interface import mesos_pb2
-try:
-    from mesos.native import MesosSchedulerDriver
-except ImportError:
-    # ensure there are not undefined errors when generating docs on a system without mesos bindings
-    class MesosSchedulerDriver(object):
-        def __init__(self, *args, **kargs):
-            pass
+
+from mesoshttp.client import MesosClient
 
 from scheduler.manager import scheduler_mgr
 from scheduler.scale_scheduler import ScaleScheduler

@@ -31,7 +31,7 @@ class SyncThread(BaseSchedulerThread):
         """Constructor
 
         :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         super(SyncThread, self).__init__('Synchronization', THROTTLE, WARN_THRESHOLD)
@@ -42,7 +42,7 @@ class SyncThread(BaseSchedulerThread):
         """Returns the driver
 
         :returns: The driver
-        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        :rtype: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         return self._driver
@@ -52,7 +52,7 @@ class SyncThread(BaseSchedulerThread):
         """Sets the driver
 
         :param value: The driver
-        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        :type value: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         self._driver = value
