@@ -8,7 +8,6 @@ import logging
 from django.db import transaction
 from django.db.utils import DatabaseError
 from django.utils.timezone import now
-from mesos.interface import mesos_pb2
 
 from job.configuration.data.exceptions import InvalidConfiguration
 from job.execution.configuration.configurators import ScheduledExecutionConfigurator
@@ -18,6 +17,7 @@ from job.messages.running_jobs import create_running_job_messages
 from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
+from mesos_api.offers import create_simple_offer
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
@@ -62,7 +62,7 @@ class SchedulingManager(object):
         """Organizes and analyzes the cluster resources, schedules new job executions, and launches tasks
 
         :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The number of tasks that were scheduled
@@ -173,7 +173,7 @@ class SchedulingManager(object):
         """Launches all of the tasks that have been scheduled on the given nodes
 
         :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         :param nodes: The dict of all scheduling nodes stored by node ID
         :type nodes: dict
         :returns: The number of tasks that were launched and the number of offers accepted
@@ -197,15 +197,14 @@ class SchedulingManager(object):
         total_offer_resources = NodeResources()
         total_task_resources = NodeResources()
         for node in nodes.values():
-            mesos_offer_ids = []
+            mesos_offers = []
             mesos_tasks = []
             offers = node.allocated_offers
             for offer in offers:
                 total_offer_count += 1
                 total_offer_resources.add(offer.resources)
-                mesos_offer_id = mesos_pb2.OfferID()
-                mesos_offer_id.value = offer.id
-                mesos_offer_ids.append(mesos_offer_id)
+                mesos_offer = create_simple_offer(offer.id)
+                mesos_offers.append(mesos_offer)
             tasks = node.allocated_tasks
             for task in tasks:
                 total_task_resources.add(task.get_resources())
@@ -214,10 +213,10 @@ class SchedulingManager(object):
             total_task_count += task_count
             if task_count:
                 node_count += 1
-            if mesos_offer_ids:
+            if mesos_offers:
                 total_node_count += 1
                 try:
-                    driver.launchTasks(mesos_offer_ids, mesos_tasks)
+                    driver.combine_offers(mesos_offers, mesos_tasks)
                 except Exception:
                     logger.exception('Error occurred while launching tasks on node %s', node.hostname)
 

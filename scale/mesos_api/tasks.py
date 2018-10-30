@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-from mesos.interface import mesos_pb2
 from django.conf import settings
 
 
@@ -18,8 +17,8 @@ def create_mesos_task(task):
 
     :param task: The task
     :type task: :class:`job.tasks.base_task.Task`
-    :returns: The Mesos task
-    :rtype: :class:`mesos_pb2.TaskInfo`
+    :returns: JSON TaskInfo instance
+    :rtype: dict
     """
 
     if task.uses_docker:
