@@ -19,7 +19,6 @@ from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
 import util.parse
-import trigger.handler as trigger_handler
 from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.interface import Interface
