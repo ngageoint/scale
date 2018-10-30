@@ -1020,7 +1020,48 @@ class RecipeConditionManager(models.Manager):
     """Provides additional methods for handling recipe conditions
     """
 
-    pass
+    def get_condition_with_interfaces(self, condition_id):
+        """Gets the condition model for the given ID with related recipe__recipe_type_rev model
+
+        :param condition_id: The condition ID
+        :type condition_id: int
+        :returns: The condition model with related recipe__recipe_type_rev model
+        :rtype: :class:`job.models.Job`
+        """
+
+        return self.select_related('recipe__recipe_type_rev').get(id=condition_id)
+
+    def set_processed(self, condition_id, is_accepted):
+        """Sets the condition with the given ID as being processed
+
+        :param condition_id: The condition ID
+        :type condition_id: int
+        :param is_accepted: Whether the condition was accepted
+        :type is_accepted: bool
+        """
+
+        self.filter(id=condition.id).update(is_processed=True, is_accepted=is_accepted, processed=now())
+
+    def set_condition_data_v6(self, condition, data, node_name):
+        """Sets the given data as a v6 JSON for the given condition. The condition model must have its related
+        recipe__recipe_type_rev model populated.
+
+        :param condition: The condition model with related recipe__recipe_type_rev model
+        :type condition: :class:`recipe.models.RecipeCondition`
+        :param data: The data for the condition
+        :type data: :class:`data.data.data.Data`
+        :param node_name: The name of the condition node in the recipe
+        :type node_name: string
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+        """
+
+        recipe_definition = condition.recipe.recipe_type_rev.get_definition()
+        condition_interface = recipe_definition.graph[node_name]
+        data.validate(condition_interface)
+
+        data_dict = convert_data_to_v6_json(data).get_dict()
+        self.filter(id=condition.id).update(data=data_dict)
 
 
 class RecipeCondition(models.Model):
@@ -1073,6 +1114,15 @@ class RecipeCondition(models.Model):
         """
 
         return DataV6(data=self.data, do_validate=False).get_data()
+
+    def has_data(self):
+        """Indicates whether this condition has its data
+
+        :returns: True if the condition has its data, false otherwise.
+        :rtype: bool
+        """
+
+        return True if self.data else False
 
     class Meta(object):
         """meta information for the db"""
