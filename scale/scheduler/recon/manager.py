@@ -6,7 +6,6 @@ import logging
 import threading
 
 from django.utils.timezone import now
-from mesos.interface import mesos_pb2
 
 COUNT_WARNING_THRESHOLD = 1000  # If the total list count hits this threshold, log a warning
 FULL_RECON_THRESHOLD = datetime.timedelta(minutes=2)
@@ -87,11 +86,10 @@ class ReconciliationManager(object):
         logger.info('Reconciling %d task(s)', len(tasks_to_reconcile))
         task_statuses = []
         for task in tasks_to_reconcile.values():
-            task_status = mesos_pb2.TaskStatus()
-            task_status.task_id.value = task.id
-            task_status.state = mesos_pb2.TASK_LOST
+            task_status = { "task_id": { "value": task.id },
+                            "agent_id": { "value": task.agent_id } }
             task_statuses.append(task_status)
-        self._driver.reconcileTasks(task_statuses)
+        self._driver.reconcile(task_statuses)
 
     def remove_task_id(self, task_id):
         """Removes the task ID from the reconciliation set
