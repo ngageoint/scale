@@ -1040,7 +1040,7 @@ class RecipeConditionManager(models.Manager):
         :type is_accepted: bool
         """
 
-        self.filter(id=condition.id).update(is_processed=True, is_accepted=is_accepted, processed=now())
+        self.filter(id=condition_id).update(is_processed=True, is_accepted=is_accepted, processed=now())
 
     def set_condition_data_v6(self, condition, data, node_name):
         """Sets the given data as a v6 JSON for the given condition. The condition model must have its related
@@ -1057,7 +1057,7 @@ class RecipeConditionManager(models.Manager):
         """
 
         recipe_definition = condition.recipe.recipe_type_rev.get_definition()
-        condition_interface = recipe_definition.graph[node_name]
+        condition_interface = recipe_definition.graph[node_name].input_interface
         data.validate(condition_interface)
 
         data_dict = convert_data_to_v6_json(data).get_dict()
