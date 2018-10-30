@@ -32,11 +32,6 @@ class Command(BaseCommand):
 
     help = 'Launches the Scale scheduler'
 
-    def add_arguments(self, parser):
-        parser.add_argument('-m', '--master', action='store',
-                            default=settings.MESOS_MASTER,
-                            help='The master to connect to')
-
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
@@ -49,9 +44,6 @@ class Command(BaseCommand):
         # Set up global shutdown
         global GLOBAL_SHUTDOWN
         GLOBAL_SHUTDOWN = self._shutdown
-
-        # TODO: clean this up
-        mesos_master = options.get('master')
 
         logger.info('Scale Scheduler %s', settings.VERSION)
 
@@ -74,40 +66,31 @@ class Command(BaseCommand):
         self.scheduler.initialize()
         scheduler_mgr.hostname = socket.getfqdn()
 
-        framework = mesos_pb2.FrameworkInfo()
-        framework.user = ''  # Have Mesos fill in the current user.
-        framework.name = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'Scale')
-        capability = framework.capabilities.add()
-        capability.type = mesos_pb2.FrameworkInfo.Capability.GPU_RESOURCES
-        webserver_address = os.getenv('SCALE_WEBSERVER_ADDRESS')
-
-        principal = os.getenv('PRINCIPAL')
-        secret = os.getenv('SECRET')
-
-        if webserver_address:
-            framework.webui_url = webserver_address
-
         logger.info('Connecting to Mesos master at %s', mesos_master)
 
-        if principal and secret:
-            logger.info('Enabling authentication for the framework')
+        logging.getLogger('mesoshttp').setLevel(logging.DEBUG)
+        self.driver = None
+        # By default use ZK for master detection
+        self.client = MesosClient(mesos_urls=[settings.MESOS_MASTER],
+                                  frameworkUser='',
+                                  frameworkName=settings.FRAMEWORK_NAME,
+                                  frameworkWebUI=settings.WEBSERVER_ADDRESS)
+        if settings.SERVICE_SECRET:
+            # We are in Enterprise mode and using service account
+            self.client.set_service_account(json.loads(SERVICE_SECRET))
+        elif settings.PRINCIPAL and settings.SECRET:
+            self.client.set_credentials(settings.PRINCIPAL, settings.SECRET)
 
-            credentials = mesos_pb2.Credential()
-            logger.info('%s:%s' % (principal, secret))
-            credentials.principal = principal
-            credentials.secret = secret
-            #cred = credentials.credentials.add()
-            #cred.principal = principal
-            #cred.secret = secret
-            #framework.principal = cred.principal
-            logger.info(credentials)
-            logger.info(mesos_master)
-
-            self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master, credentials)
-        else:
-            logger.info('Framework authentication skipped due to missing PRINCIPAL and SECRET env variables')
-
-            self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master)
+        self.client.add_capability('GPU_RESOURCES')
+        
+        self.th = Test.MesosFramework(self.client)
+        self.th.start()
+        while True and self.th.isAlive():
+            try:
+                self.th.join(1)
+            except KeyboardInterrupt:
+                self.shutdown()
+                break
 
         try:
             status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1

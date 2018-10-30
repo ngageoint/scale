@@ -22,7 +22,7 @@ DOCKER_VERSION = scale.__docker_version__
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
-MESOS_MASTER = None
+MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = None
