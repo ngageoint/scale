@@ -553,6 +553,80 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.get_job_nodes">
+<code class="descname">get_job_nodes</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>job_type_version</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_job_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the nodes for the given job type contained in this RecipeDefinition, if any</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The version of the job type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of JobNodeDefinition objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#recipe.definition.node.JobNodeDefinition" title="recipe.definition.node.JobNodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.JobNodeDefinition</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.get_job_type_keys">
+<code class="descname">get_job_type_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the natural keys of the job types contained in this RecipeDefinition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set of JobTypeKey tuples</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[<a class="reference internal" href="job.html#job.models.JobTypeKey" title="job.models.JobTypeKey"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeKey</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.get_recipe_nodes">
+<code class="descname">get_recipe_nodes</code><span class="sig-paren">(</span><em>recipe_type_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_recipe_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the nodes for the given recipe type contained in this RecipeDefinition, if any</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_name</strong> (<em>string</em>) &#8211; The name of the recipe type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of JobNodeDefinition objects</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.definition.node.JobNodeDefinition" title="recipe.definition.node.JobNodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.JobNodeDefinition</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.get_recipe_type_names">
+<code class="descname">get_recipe_type_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_recipe_type_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the names of the sub recipe types contained in this RecipeDefinition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set of RecipeType names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.definition.definition.RecipeDefinition.get_topological_order">
 <code class="descname">get_topological_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_topological_order" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe node names in a valid topological ordering (dependency order)</p>
@@ -570,6 +644,55 @@
 <dt>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the definition contains a circular</dt>
 <dd>dependency</dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.update_job_nodes">
+<code class="descname">update_job_nodes</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.update_job_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the revision of job nodes with the given name and version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The version of the job type</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The new revision number of the job type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if a node was updated, otherwise false</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.update_recipe_nodes">
+<code class="descname">update_recipe_nodes</code><span class="sig-paren">(</span><em>recipe_type_name</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.update_recipe_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the revision of recipe nodes with the given name to the specified revision_num</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_name</strong> (<em>string</em>) &#8211; The name of the recipe type</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The new revision number of the recipe type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if a node was updated, otherwise false</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">

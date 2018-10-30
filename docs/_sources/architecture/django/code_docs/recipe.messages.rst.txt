@@ -52,6 +52,14 @@ recipe\.messages\.update\_recipe module
     :undoc-members:
     :show-inheritance:
 
+recipe\.messages\.update\_recipe\_definition module
+---------------------------------------------------
+
+.. automodule:: recipe.messages.update_recipe_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.messages\.update\_recipe\_metrics module
 ------------------------------------------------
 

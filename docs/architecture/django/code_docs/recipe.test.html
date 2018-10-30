@@ -303,6 +303,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_supersede_recipe_nodes">recipe.test.messages.test_supersede_recipe_nodes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe">recipe.test.messages.test_update_recipe module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_definition">recipe.test.messages.test_update_recipe_definition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_metrics">recipe.test.messages.test_update_recipe_metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipes">recipe.test.messages.test_update_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages">Module contents</a></li>
@@ -401,6 +402,29 @@ change is made</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.test.test_models.TestRecipeTypeJobLinkManager">
+<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeTypeJobLinkManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeJobLinkManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeJobLinkManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeJobLinkManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeJobLinkManager.test_get_job_type_ids">
+<code class="descname">test_get_job_type_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeJobLinkManager.test_get_job_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeJobLinkManager.get_job_type_ids()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeJobLinkManager.test_get_recipe_type_ids">
+<code class="descname">test_get_recipe_type_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeJobLinkManager.test_get_recipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeJobLinkManager.get_recipe_type_ids()</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType">
 <em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeTypeManagerCreateRecipeType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -466,6 +490,29 @@ change is made</p>
 <dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_remove_trigger_rule">
 <code class="descname">test_remove_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeTypeManager.edit_recipe_type() that removes the trigger rule</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestRecipeTypeSubLinkManager">
+<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeTypeSubLinkManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeSubLinkManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeSubLinkManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeSubLinkManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeSubLinkManager.test_get_recipe_type_ids">
+<code class="descname">test_get_recipe_type_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeSubLinkManager.test_get_recipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeSubLinkManager.get_recipe_type_ids()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeSubLinkManager.test_get_sub_recipe_type_ids">
+<code class="descname">test_get_sub_recipe_type_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeSubLinkManager.test_get_sub_recipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeSubLinkManager.get_sub_recipe_type_ids()</p>
 </dd></dl>
 
 </dd></dl>
@@ -1473,8 +1520,30 @@ change is made</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="recipe.test.utils.create_recipe_type_v6">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_type_v6</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a recipe type for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The RecipeType model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="recipe.test.utils.edit_recipe_type">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">edit_recipe_type</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.edit_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the definition of a recipe type, including creating a new revision for unit testing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.edit_recipe_type_v6">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">edit_recipe_type_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.edit_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the definition of a recipe type, including creating a new revision for unit testing</p>
 </dd></dl>
 

@@ -5155,6 +5155,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="job.models.JobType.job_types_for_recipe_type">
+<code class="descname">job_types_for_recipe_type</code><a class="headerlink" href="#job.models.JobType.job_types_for_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="job.models.JobType.jobexecution_set">
 <code class="descname">jobexecution_set</code><a class="headerlink" href="#job.models.JobType.jobexecution_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -5478,6 +5493,24 @@ object the first time, the query is executed.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.models.JobTypeKey">
+<em class="property">class </em><code class="descclassname">job.models.</code><code class="descname">JobTypeKey</code><span class="sig-paren">(</span><em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="job.models.JobTypeKey.name">
+<code class="descname">name</code><a class="headerlink" href="#job.models.JobTypeKey.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobTypeKey.version">
+<code class="descname">version</code><a class="headerlink" href="#job.models.JobTypeKey.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -5862,6 +5895,24 @@ count of associated jobs and the longest pending job.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobTypeManager.get_recipe_job_type_ids">
+<code class="descname">get_recipe_job_type_ids</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_recipe_job_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the model ids of the job types contained in the given RecipeDefinition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>) &#8211; RecipeDefinition to search for job types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">set of JobType ids</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">set[int]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobTypeManager.get_running_status">
 <code class="descname">get_running_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_running_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a status overview of all currently running job types.</p>
@@ -6090,6 +6141,22 @@ object the first time, the query is executed.</p>
 <dt id="job.models.JobTypeRevision.get_next_by_created">
 <code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevision.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobTypeRevision.get_output_interface">
+<code class="descname">get_output_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevision.get_output_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output interface for this revision</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The output interface for this revision</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.models.JobTypeRevision.get_previous_by_created">

@@ -315,6 +315,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.reprocess_recipes">recipe.messages.reprocess_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.supersede_recipe_nodes">recipe.messages.supersede_recipe_nodes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipe">recipe.messages.update_recipe module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipe_definition">recipe.messages.update_recipe_definition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipe_metrics">recipe.messages.update_recipe_metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipes">recipe.messages.update_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages">Module contents</a></li>
@@ -354,6 +355,8 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0028_auto_20181016_1349">recipe.migrations.0028_auto_20181016_1349 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0029_auto_20181016_1431">recipe.migrations.0029_auto_20181016_1431 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0030_auto_20181024_1607">recipe.migrations.0030_auto_20181024_1607 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0031_auto_20181026_1417">recipe.migrations.0031_auto_20181026_1417 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0032_recipe_type_link_tables">recipe.migrations.0032_recipe_type_link_tables module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -448,6 +451,7 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_supersede_recipe_nodes">recipe.test.messages.test_supersede_recipe_nodes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe">recipe.test.messages.test_update_recipe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_definition">recipe.test.messages.test_update_recipe_definition module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_metrics">recipe.test.messages.test_update_recipe_metrics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipes">recipe.test.messages.test_update_recipes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages">Module contents</a></li>
@@ -2853,8 +2857,38 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.RecipeType.parent_recipe_type">
+<code class="descname">parent_recipe_type</code><a class="headerlink" href="#recipe.models.RecipeType.parent_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.RecipeType.recipe_set">
 <code class="descname">recipe_set</code><a class="headerlink" href="#recipe.models.RecipeType.recipe_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeType.recipe_types_for_job_type">
+<code class="descname">recipe_types_for_job_type</code><a class="headerlink" href="#recipe.models.RecipeType.recipe_types_for_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
 many-to-one relation.</p>
 <p>In the example:</p>
@@ -2905,6 +2939,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.RecipeType.sub_recipe_type">
+<code class="descname">sub_recipe_type</code><a class="headerlink" href="#recipe.models.RecipeType.sub_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.RecipeType.title">
 <code class="descname">title</code><a class="headerlink" href="#recipe.models.RecipeType.title" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -2936,6 +2985,185 @@ object the first time, the query is executed.</p>
 <code class="descname">version</code><a class="headerlink" href="#recipe.models.RecipeType.version" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeTypeJobLink">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeJobLink</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeJobLink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents a link between a recipe type and a job type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The related recipe type</li>
+<li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The related job type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="recipe.models.RecipeTypeJobLink.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="recipe.models.RecipeTypeJobLink.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeJobLink.id">
+<code class="descname">id</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeJobLink.job_type">
+<code class="descname">job_type</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeJobLink.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeJobLink.objects">
+<code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeTypeJobLinkManager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeJobLink.recipe_type">
+<code class="descname">recipe_type</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeJobLink.recipe_type_id">
+<code class="descname">recipe_type_id</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLink.recipe_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeTypeJobLinkManager">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeJobLinkManager</code><a class="headerlink" href="#recipe.models.RecipeTypeJobLinkManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Provides additional methods for handling recipe type to job type links</p>
+<dl class="method">
+<dt id="recipe.models.RecipeTypeJobLinkManager.create_recipe_type_job_link">
+<code class="descname">create_recipe_type_job_link</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeJobLinkManager.create_recipe_type_job_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the appropriate link for the given recipe and job type. All database changes are
+made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; recipe type ID</li>
+<li><strong>job_type_id</strong> (<em>int</em>) &#8211; job type ID.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeJobLinkManager.create_recipe_type_job_links">
+<code class="descname">create_recipe_type_job_links</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeJobLinkManager.create_recipe_type_job_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the appropriate links for the given recipe and job types. All database changes are
+made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of recipe type IDs</li>
+<li><strong>job_type_ids</strong> (<em>list of int</em>) &#8211; List of job type IDs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeJobLinkManager.create_recipe_type_job_links_from_definition">
+<code class="descname">create_recipe_type_job_links_from_definition</code><span class="sig-paren">(</span><em>recipe_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeJobLinkManager.create_recipe_type_job_links_from_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goes through a recipe type definition and gets all the job types it contains and creates the appropriate links</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; New/updated recipe type</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">recipe.models.JobType.DoesNotExist</span></code>: If it contains a job type that does not exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeJobLinkManager.get_job_type_ids">
+<code class="descname">get_job_type_ids</code><span class="sig-paren">(</span><em>recipe_type_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeJobLinkManager.get_job_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the job type IDs for the given recipe type IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe type IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of job type IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeJobLinkManager.get_recipe_type_ids">
+<code class="descname">get_recipe_type_ids</code><span class="sig-paren">(</span><em>job_type_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeJobLinkManager.get_recipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of recipe_type IDs for the given job type IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The sub recipe type IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of recipe type IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -3046,17 +3274,11 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; The human-readable name of the recipe type</li>
-<li><strong>version</strong> (<em>string</em>) &#8211; The version of the recipe type</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The human-readable name of the recipe type</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe type defined by the natural key</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe type defined by the natural key</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -3469,6 +3691,185 @@ given new revision ID. Each revision model will have its related recipe type mod
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeTypeSubLink">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeSubLink</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents a link between a recipe type and a sub-recipe type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The related recipe type</li>
+<li><strong>sub_recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The related sub recipe type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="recipe.models.RecipeTypeSubLink.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="recipe.models.RecipeTypeSubLink.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeSubLink.id">
+<code class="descname">id</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeSubLink.objects">
+<code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeTypeSubLinkManager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeSubLink.recipe_type">
+<code class="descname">recipe_type</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeSubLink.recipe_type_id">
+<code class="descname">recipe_type_id</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.recipe_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeSubLink.sub_recipe_type">
+<code class="descname">sub_recipe_type</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.sub_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeSubLink.sub_recipe_type_id">
+<code class="descname">sub_recipe_type_id</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLink.sub_recipe_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeTypeSubLinkManager">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeSubLinkManager</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Provides additional methods for handling recipe type sub links</p>
+<dl class="method">
+<dt id="recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_link">
+<code class="descname">create_recipe_type_sub_link</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the appropriate link for the given recipe and job type. All database changes are
+made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; recipe type ID</li>
+<li><strong>sub_recipe_type_id</strong> (<em>int</em>) &#8211; sub recipe type ID.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_links">
+<code class="descname">create_recipe_type_sub_links</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the appropriate links for the given parent and child recipe types. All database changes are
+made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of parent recipe type IDs</li>
+<li><strong>sub_recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of child recipe type IDs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_links_from_definition">
+<code class="descname">create_recipe_type_sub_links_from_definition</code><span class="sig-paren">(</span><em>recipe_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_links_from_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goes through a recipe type definition, gets all the recipe types it contains and creates the appropriate links</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; New/updated recipe type</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.models.RecipeType.DoesNotExist" title="recipe.models.RecipeType.DoesNotExist"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType.DoesNotExist</span></code></a>: If it contains a sub recipe type that does not exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeSubLinkManager.get_recipe_type_ids">
+<code class="descname">get_recipe_type_ids</code><span class="sig-paren">(</span><em>sub_recipe_type_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.get_recipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the parent recipe_type IDs for the given sub recipe type IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The sub recipe type IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of parent recipe type IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeSubLinkManager.get_sub_recipe_type_ids">
+<code class="descname">get_sub_recipe_type_ids</code><span class="sig-paren">(</span><em>recipe_type_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.get_sub_recipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the sub recipe type IDs for the given recipe type IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe type IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of sub recipe type IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>

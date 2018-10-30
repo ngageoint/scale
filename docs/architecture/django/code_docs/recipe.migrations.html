@@ -844,6 +844,135 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-recipe.migrations.0031_auto_20181026_1417">
+<span id="recipe-migrations-0031-auto-20181026-1417-module"></span><h2>recipe.migrations.0031_auto_20181026_1417 module<a class="headerlink" href="#module-recipe.migrations.0031_auto_20181026_1417" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0031_auto_20181026_1417.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0031_auto_20181026_1417.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0031_auto_20181026_1417.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0031_auto_20181026_1417.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0049_auto_20180927_1531'), (u'recipe', u'0030_auto_20181024_1607')]</em><a class="headerlink" href="#recipe.migrations.0031_auto_20181026_1417.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0031_auto_20181026_1417.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], options={u'db_table': u'recipe_type_job_link'}, name=u'RecipeTypeJobLink'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'recipe_type', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'sub_recipe_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], options={u'db_table': u'recipe_type_sub_link'}, name=u'RecipeTypeSubLink'&gt;, &lt;AlterUniqueTogether  unique_together=set([(u'recipe_type', u'sub_recipe_type')]), name=u'recipetypesublink'&gt;, &lt;AlterUniqueTogether  unique_together=set([(u'recipe_type', u'job_type')]), name=u'recipetypejoblink'&gt;]</em><a class="headerlink" href="#recipe.migrations.0031_auto_20181026_1417.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0032_recipe_type_link_tables">
+<span id="recipe-migrations-0032-recipe-type-link-tables-module"></span><h2>recipe.migrations.0032_recipe_type_link_tables module<a class="headerlink" href="#module-recipe.migrations.0032_recipe_type_link_tables" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0031_auto_20181026_1417')]</em><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_recipe_type_link_tables&gt;&gt;]</em><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_job_links">
+<code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">create_recipe_type_job_links</code><span class="sig-paren">(</span><em>apps</em>, <em>recipe_type_ids</em>, <em>job_type_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_job_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the appropriate links for the given recipe and job types. All database changes are
+made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of recipe type IDs</li>
+<li><strong>job_type_ids</strong> (<em>list of int</em>) &#8211; List of job type IDs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_job_links_from_definition">
+<code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">create_recipe_type_job_links_from_definition</code><span class="sig-paren">(</span><em>apps</em>, <em>recipe_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_job_links_from_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goes through a recipe type definition and gets all the job types it contains and creates the appropriate links</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; New/updated recipe type</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">recipe.models.JobType.DoesNotExist</span></code>: If it contains a job type that does not exist</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_sub_links">
+<code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">create_recipe_type_sub_links</code><span class="sig-paren">(</span><em>apps</em>, <em>recipe_type_ids</em>, <em>sub_recipe_type_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_sub_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the appropriate links for the given parent and child recipe types. All database changes are
+made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of parent recipe type IDs</li>
+<li><strong>sub_recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of child recipe type IDs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_sub_links_from_definition">
+<code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">create_recipe_type_sub_links_from_definition</code><span class="sig-paren">(</span><em>apps</em>, <em>recipe_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.create_recipe_type_sub_links_from_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goes through a recipe type definition, gets all the recipe types it contains and creates the appropriate links</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; New/updated recipe type</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.html#recipe.models.RecipeType.DoesNotExist" title="recipe.models.RecipeType.DoesNotExist"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType.DoesNotExist</span></code></a>: If it contains a sub recipe type that does not exist</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.get_recipe_job_type_ids">
+<code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">get_recipe_job_type_ids</code><span class="sig-paren">(</span><em>apps</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.get_recipe_job_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the model ids of the job types contained in the given RecipeDefinition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>) &#8211; RecipeDefinition to search for job types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">set of JobType ids</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">set[int]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.migrations.0032_recipe_type_link_tables.populate_recipe_type_link_tables">
+<code class="descclassname">recipe.migrations.0032_recipe_type_link_tables.</code><code class="descname">populate_recipe_type_link_tables</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0032_recipe_type_link_tables.populate_recipe_type_link_tables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-recipe.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.migrations" title="Permalink to this headline">¶</a></h2>
 </div>

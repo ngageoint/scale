@@ -732,6 +732,83 @@ have been updated and need to then update the recipes that contain the nodes.</p
 </dd></dl>
 
 </div>
+<div class="section" id="module-recipe.messages.update_recipe_definition">
+<span id="recipe-messages-update-recipe-definition-module"></span><h2>recipe.messages.update_recipe_definition module<a class="headerlink" href="#module-recipe.messages.update_recipe_definition" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that evaluates and updates a recipe</p>
+<dl class="class">
+<dt id="recipe.messages.update_recipe_definition.UpdateRecipeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.messages.update_recipe_definition.</code><code class="descname">UpdateRecipeDefinition</code><a class="headerlink" href="#recipe.messages.update_recipe_definition.UpdateRecipeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that evaluates and updates a recipe</p>
+<dl class="method">
+<dt id="recipe.messages.update_recipe_definition.UpdateRecipeDefinition.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.UpdateRecipeDefinition.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="recipe.messages.update_recipe_definition.UpdateRecipeDefinition.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.UpdateRecipeDefinition.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.update_recipe_definition.UpdateRecipeDefinition.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.UpdateRecipeDefinition.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.messages.update_recipe_definition.create_job_update_recipe_definition_message">
+<code class="descclassname">recipe.messages.update_recipe_definition.</code><code class="descname">create_job_update_recipe_definition_message</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.create_job_update_recipe_definition_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to update the given recipe type to use the latest revision of the job type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; The recipe type to update</li>
+<li><strong>job_type_id</strong> (<em>int</em>) &#8211; The job type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message">
+<code class="descclassname">recipe.messages.update_recipe_definition.</code><code class="descname">create_sub_update_recipe_definition_message</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>sub_recipe_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to update the given recipe type to use the latest revision of the sub recipe type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; The recipe type to update</li>
+<li><strong>sub_recipe_type_id</strong> (<em>int</em>) &#8211; The sub recipe type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">recipe.messages.update_recipe.UpdateRecipeDefinition</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.messages.update_recipe_metrics">
 <span id="recipe-messages-update-recipe-metrics-module"></span><h2>recipe.messages.update_recipe_metrics module<a class="headerlink" href="#module-recipe.messages.update_recipe_metrics" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that updates recipe metrics</p>
