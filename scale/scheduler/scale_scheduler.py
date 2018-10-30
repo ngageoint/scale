@@ -45,7 +45,7 @@ from util.host import HostAddress
 logger = logging.getLogger(__name__)
 
 
-class ScaleScheduler(MesosScheduler):
+class ScaleScheduler(object):
     """Mesos scheduler for the Scale framework"""
 
     # Warning threshold for normal callbacks (those with no external calls, e.g. database queries)
@@ -146,7 +146,7 @@ class ScaleScheduler(MesosScheduler):
         ########################################
         # TODO: Remove when API v4 is removed. #
         ########################################
-        Scheduler.objects.update_master(self._master_hostname, self._master_port)
+        Scheduler.objects.update_master(self._master_host_address.hostname, self._master_host_address.port)
         ########################################
 
         scheduler_mgr.update_from_mesos(self._framework_id, self._master_host_address)
@@ -176,7 +176,7 @@ class ScaleScheduler(MesosScheduler):
         ########################################
         # TODO: Remove when API v4 is removed. #
         ########################################
-        Scheduler.objects.update_master(self._master_hostname, self._master_port)
+        Scheduler.objects.update_master(self._master_host_address.hostname, self._master_host_address.port)
         ########################################
 
         scheduler_mgr.update_from_mesos(mesos_address=self._master_host_address)
