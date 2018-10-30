@@ -6,6 +6,7 @@ import copy
 import datetime
 import logging
 import math
+import operator
 import re
 import semver
 from collections import namedtuple
@@ -18,7 +19,6 @@ from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
 import util.parse
-import trigger.handler as trigger_handler
 from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.interface import Interface
@@ -75,7 +75,7 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
-
+JobTypeKey = namedtuple('JobTypeKey', ['name', 'version'])
 
 class JobManager(models.Manager):
     """Provides additional methods for handling jobs
@@ -3012,7 +3012,27 @@ class JobTypeManager(models.Manager):
             job_type.num_versions = num_versions_by_id[job_type.id]
             results.append(job_type)
         return results
+        
+    def get_recipe_job_type_ids(self, definition):
+        """Gets the model ids of the job types contained in the given RecipeDefinition
 
+        :param definition: RecipeDefinition to search for job types
+        :type definition: :class:`recipe.definition.definition.RecipeDefinition`
+        :returns: set of JobType ids
+        :rtype: set[int]
+        """
+        
+        types = definition.get_job_type_keys()
+        ids = []
+        if types:
+            query = reduce(
+                operator.or_,
+                (Q(name=type.name, version=type.version) for type in types)
+                )
+            ids = self.all().filter(query).values_list('pk', flat=True)
+        
+        return ids
+        
     def get_job_type_versions_v6(self, name, is_active=None, order=None):
         """Returns a list of the versions of the job type with the given name
 
@@ -4061,6 +4081,31 @@ class JobTypeRevision(models.Model):
                 interface.add_parameter(param)
             elif input_dict['type'] == 'property':
                 interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
+        return interface
+        
+    def get_output_interface(self):
+        """Returns the output interface for this revision
+
+        :returns: The output interface for this revision
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.manifest):
+            return SeedManifest(self.manifest, do_validate=False).get_output_interface()
+
+        # TODO: This can be removed when support for legacy job types is removed
+        interface = Interface()
+        for output_dict in self.manifest['output_data']:
+            media_types = output_dict['media_types'] if 'media_types' in output_dict else []
+            required = output_dict['required'] if 'required' in output_dict else True
+            if output_dict['type'] == 'file':
+                param = FileParameter(output_dict['name'], media_types, required, False)
+                interface.add_parameter(param)
+            elif output_dict['type'] == 'files':
+                param = FileParameter(input_dict['name'], media_types, required, True)
+                interface.add_parameter(param)
+            elif output_dict['type'] == 'property':
+                interface.add_parameter(JsonParameter(output_dict['name'], 'string', required))
         return interface
 
     def get_job_interface(self):

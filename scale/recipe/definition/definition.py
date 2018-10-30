@@ -6,7 +6,6 @@ from recipe.definition.connection import DependencyInputConnection, RecipeInputC
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 
-
 class RecipeDefinition(object):
     """Represents a recipe definition, which consists of an input interface and a directed acyclic graph of recipe nodes
     """
@@ -102,6 +101,69 @@ class RecipeDefinition(object):
 
         self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
+    def get_job_type_keys(self):
+        """Gets the natural keys of the job types contained in this RecipeDefinition
+
+        :returns: set of JobTypeKey tuples
+        :rtype: set[:class:`job.models.JobTypeKey`]
+        """
+
+        from job.models import JobTypeKey
+        keys = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                key = JobTypeKey(name=node.job_type_name, version=node.job_type_version)
+                keys.append(key)
+                        
+        return set(keys)
+
+    def get_job_nodes(self, job_type_name, job_type_version):
+        """Gets the nodes for the given job type contained in this RecipeDefinition, if any
+
+        :param job_type_name: The name of the job type
+        :type job_type_name: string
+        :param job_type_version: The version of the job type
+        :type job_type_version: string
+        :returns: list of JobNodeDefinition objects
+        :rtype: list[:class:`recipe.definition.node.JobNodeDefinition`]
+        """
+
+        nodes = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                if node.job_type_name == job_type_name and node.job_type_version == job_type_version:
+                    nodes.append(node)
+
+        return nodes
+
+    def update_job_nodes(self, job_type_name, job_type_version, revision_num):
+        """Updates the revision of job nodes with the given name and version
+
+        :param job_type_name: The name of the job type
+        :type job_type_name: string
+        :param job_type_version: The version of the job type
+        :type job_type_version: string
+        :param revision_num: The new revision number of the job type
+        :type revision_num: int
+        :returns: True if a node was updated, otherwise false
+        :rtype: bool
+        """
+
+        found = False
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                if node.job_type_name == job_type_name and node.job_type_version == job_type_version:
+                    if node.revision_num >= revision_num:
+                        continue
+                    else:
+                        node.revision_num = revision_num
+                        found = True
+                        
+        return found
+
     def add_recipe_input_connection(self, node_name, node_input_name, recipe_input_name):
         """Adds a connection from a recipe input to the input of a node
 
@@ -137,6 +199,64 @@ class RecipeDefinition(object):
 
         self._add_node(RecipeNodeDefinition(name, recipe_type_name, revision_num))
 
+    def get_recipe_type_names(self):
+        """Gets the names of the sub recipe types contained in this RecipeDefinition
+
+        :returns: set of RecipeType names
+        :rtype: set[string]
+        """
+        
+        names = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                names.append(node.recipe_type_name)
+                        
+        return set(names)
+
+    def get_recipe_nodes(self, recipe_type_name):
+        """Gets the nodes for the given recipe type contained in this RecipeDefinition, if any
+
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :returns: list of JobNodeDefinition objects
+        :rtype: list[:class:`recipe.definition.node.JobNodeDefinition`]
+        """
+
+        nodes = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                if node.recipe_type_name == recipe_type_name:
+                    nodes.append(node)
+
+        return nodes
+
+    def update_recipe_nodes(self, recipe_type_name, revision_num):
+        """Updates the revision of recipe nodes with the given name to the specified revision_num
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :param revision_num: The new revision number of the recipe type
+        :type revision_num: int
+        :returns: True if a node was updated, otherwise false
+        :rtype: bool
+        """
+
+        found = False
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                if node.recipe_type_name == recipe_type_name:
+                    if node.revision_num >= revision_num:
+                        continue
+                    else:
+                        node.revision_num = revision_num
+                        found = True
+                        
+        return found
+
     def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):
         """Generates the input data for the node with the given name
 
@@ -168,6 +288,7 @@ class RecipeDefinition(object):
             self._calculate_topological_order()
 
         return self._topological_order
+
 
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition

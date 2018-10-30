@@ -123,7 +123,6 @@ class NodeDefinition(object):
 
         return warnings
 
-
 class ConditionNodeDefinition(NodeDefinition):
     """Represents a condition within a recipe definition
     """

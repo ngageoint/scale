@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import copy
 from datetime import timedelta
 
 import django
@@ -144,8 +145,9 @@ class TestDatabaseUpdater(TestCase):
         time_batch = time_rev_2 + timedelta(minutes=1)
         time_rev_3 = time_batch + timedelta(minutes=1)
         recipe_type_3 = recipe_test_utils.create_recipe_type()
-        recipe_test_utils.edit_recipe_type(recipe_type_3, recipe_type_3.definition)
-        recipe_test_utils.edit_recipe_type(recipe_type_3, recipe_type_3.definition)
+        local_definition = copy.deepcopy(recipe_type_3.definition)
+        recipe_test_utils.edit_recipe_type(recipe_type_3, local_definition)
+        recipe_test_utils.edit_recipe_type(recipe_type_3, local_definition)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=1).update(created=time_rev_1)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=2).update(created=time_rev_2)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=3).update(created=time_rev_3)

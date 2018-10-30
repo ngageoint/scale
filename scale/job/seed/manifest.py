@@ -12,7 +12,7 @@ from jsonschema.exceptions import ValidationError
 
 from data.interface.json.interface_v6 import InterfaceV6
 from job.configuration.data.exceptions import InvalidConfiguration
-from job.data.exceptions import InvalidData
+from job.data.exceptions import InvalidData, InvalidConnection
 from job.error.error import JobError
 from job.error.mapping import JobErrorMapping
 from job.execution.configuration.exceptions import MissingMount, MissingSetting
@@ -210,11 +210,35 @@ class SeedManifest(object):
 
         input_dict = copy.deepcopy(self.get_inputs())
         if 'files' in input_dict:
-            for file_dict in self.get_input_files():
+            for file_dict in input_dict['files']:
                 if 'partial' in file_dict:
                     del file_dict['partial']
+                if 'mediaTypes' in file_dict:
+                    file_dict['media_types'] = file_dict['mediaTypes'] 
+                    del file_dict['mediaTypes']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
+    def get_output_interface(self):
+        """Returns the output interface for this manifest
+
+        :returns: The output interface for this manifest
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        output_dict = copy.deepcopy(self.get_outputs())
+        if 'files' in output_dict:
+            for file_dict in output_dict['files']:
+                if 'pattern' in file_dict:
+                    del file_dict['pattern']
+                if 'mediaType' in file_dict:
+                    file_dict['media_types'] = [file_dict['mediaType']]
+                    del file_dict['mediaType']
+        if 'json' in output_dict:
+            for json_dict in output_dict['json']:
+                if 'key' in json_dict:
+                    del json_dict['key']
+        return InterfaceV6(interface=output_dict, do_validate=False).get_interface()
+        
     def get_inputs(self):
         """Gets the inputs defined in the interface
 

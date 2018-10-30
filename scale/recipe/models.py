@@ -14,6 +14,8 @@ from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
@@ -1435,9 +1437,15 @@ class RecipeTypeManager(models.Manager):
             the recipe type definition is invalid
         """
 
+        from recipe.configuration.definition.exceptions import InvalidDefinition
         # Must lock job type interfaces so the new recipe type definition can be validated
-        _ = definition.get_job_types(lock=True)
-        definition.validate_job_interfaces()
+        if isinstance(definition, LegacyRecipeDefinition):
+            _ = definition.get_job_types(lock=True)
+            definition.validate_job_interfaces()
+        elif isinstance(definition, RecipeDefinition):
+            definition.validate_interfaces()
+        else:
+            raise InvalidDefinition('This version of the recipe definition is invalid to save')
 
         # Validate the trigger rule
         if trigger_rule:
@@ -1452,15 +1460,22 @@ class RecipeTypeManager(models.Manager):
         recipe_type.version = version
         recipe_type.title = title
         recipe_type.description = description
-        if definition.get_dict()['version'] == '2.0':
-            from recipe.configuration.definition.exceptions import InvalidDefinition
+        if isinstance(definition, LegacyRecipeDefinition):
+            if definition.get_dict()['version'] == '2.0':
+                raise InvalidDefinition('This version of the recipe definition is invalid to save')
+            recipe_type.definition = definition.get_dict()
+        elif isinstance(definition, RecipeDefinition):
+            definition = convert_recipe_definition_to_v6_json(definition).get_dict()
+        else:
             raise InvalidDefinition('This version of the recipe definition is invalid to save')
-        recipe_type.definition = definition.get_dict()
         recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
 
         # Create first revision of the recipe type
         RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+        
+        RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
+        RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
         return recipe_type
 
@@ -1495,6 +1510,8 @@ class RecipeTypeManager(models.Manager):
             the recipe type definition is invalid
         """
 
+        from recipe.configuration.definition.exceptions import InvalidDefinition
+        
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
 
@@ -1507,11 +1524,16 @@ class RecipeTypeManager(models.Manager):
         if definition:
             # Must lock job type interfaces so the new recipe type definition can be validated
             _ = definition.get_job_types(lock=True)
-            definition.validate_job_interfaces()
-            if definition.get_dict()['version'] == '2.0':
-                from recipe.configuration.definition.exceptions import InvalidDefinition
+            if isinstance(definition, LegacyRecipeDefinition):
+                definition.validate_job_interfaces()
+                if definition.get_dict()['version'] == '2.0':
+                    raise InvalidDefinition('This version of the recipe definition is invalid to save')
+                recipe_type.definition = definition.get_dict()
+            elif isinstance(definition, RecipeDefinition):
+                definition.validate_interfaces()
+                recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
+            else:
                 raise InvalidDefinition('This version of the recipe definition is invalid to save')
-            recipe_type.definition = definition.get_dict()
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         if trigger_rule or remove_trigger_rule:
@@ -1533,6 +1555,8 @@ class RecipeTypeManager(models.Manager):
         if definition:
             # Create new revision of the recipe type for new definition
             RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+            RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
+            RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
     def get_active_trigger_rules(self, trigger_type):
         """Returns the active trigger rules with the given trigger type that create jobs and recipes
@@ -1563,8 +1587,6 @@ class RecipeTypeManager(models.Manager):
 
         :param name: The human-readable name of the recipe type
         :type name: string
-        :param version: The version of the recipe type
-        :type version: string
         :returns: The recipe type defined by the natural key
         :rtype: :class:`recipe.models.RecipeType`
         """
@@ -1912,3 +1934,218 @@ class RecipeTypeRevision(models.Model):
         """meta information for the db"""
         db_table = 'recipe_type_revision'
         unique_together = ('recipe_type', 'revision_num')
+
+class RecipeTypeSubLinkManager(models.Manager):
+    """Provides additional methods for handling recipe type sub links
+    """
+    
+    def create_recipe_type_sub_links_from_definition(self, recipe_type):
+        """Goes through a recipe type definition, gets all the recipe types it contains and creates the appropriate links
+
+        :param recipe_type: New/updated recipe type
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        
+        :raises :class:`recipe.models.RecipeType.DoesNotExist`: If it contains a sub recipe type that does not exist
+        """
+
+        definition = recipe_type.get_definition()
+        
+        sub_type_names = definition.get_recipe_type_names()
+        
+        sub_type_ids = RecipeType.objects.all().filter(name__in=sub_type_names).values_list('pk', flat=True)
+        
+        if len(sub_type_ids) > 0:
+            recipe_type_ids = [recipe_type.id] * len(sub_type_ids)
+            self.create_recipe_type_sub_links(recipe_type_ids, sub_type_ids)
+
+    @transaction.atomic
+    def create_recipe_type_sub_links(self, recipe_type_ids, sub_recipe_type_ids):
+        """Creates the appropriate links for the given parent and child recipe types. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_ids: List of parent recipe type IDs
+        :type recipe_type_ids: list of int
+        :param sub_recipe_type_ids: List of child recipe type IDs.
+        :type sub_recipe_type_ids: list of int
+        """
+
+        if len(recipe_type_ids) != len(sub_recipe_type_ids):
+            raise Exception('Recipe Type and Sub recipe type lists must be equal length!')
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeSubLink.objects.filter(recipe_type_id__in=recipe_type_ids).delete()
+
+        new_links = []
+
+        for id, sub in zip(recipe_type_ids, sub_recipe_type_ids):
+            link = RecipeTypeSubLink(recipe_type_id=id, sub_recipe_type_id=sub)
+            new_links.append(link)
+
+        RecipeTypeSubLink.objects.bulk_create(new_links)
+        
+    @transaction.atomic
+    def create_recipe_type_sub_link(self, recipe_type_id, sub_recipe_type_id):
+        """Creates the appropriate link for the given recipe and job type. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_id: recipe type ID
+        :type recipe_type_id: int
+        :param sub_recipe_type_id: sub recipe type ID.
+        :type sub_recipe_type_id: int
+        """
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeSubLink.objects.filter(recipe_type_id=recipe_type_id).delete()
+        
+        link = RecipeTypeSubLink(recipe_type_id=recipe_type_id, sub_recipe_type_id=sub_recipe_type_id)
+        link.save()
+
+    def get_recipe_type_ids(self, sub_recipe_type_ids):
+        """Returns a list of the parent recipe_type IDs for the given sub recipe type IDs.
+
+        :param sub_recipe_type_ids: The sub recipe type IDs
+        :type sub_recipe_type_ids: list
+        :returns: The list of parent recipe type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeSubLink.objects.filter(sub_recipe_type_id__in=list(sub_recipe_type_ids)).only('recipe_type_id')
+        return [result.recipe_type_id for result in query]
+
+    def get_sub_recipe_type_ids(self, recipe_type_ids):
+        """Returns a list of the sub recipe type IDs for the given recipe type IDs.
+
+        :param recipe_type_ids: The recipe type IDs
+        :type recipe_type_ids: list
+        :returns: The list of sub recipe type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeSubLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('sub_recipe_type_id')
+        return [result.sub_recipe_type_id for result in query]
+
+class RecipeTypeSubLink(models.Model):
+    """Represents a link between a recipe type and a sub-recipe type.
+
+    :keyword recipe_type: The related recipe type
+    :type recipe_type: :class:`django.db.models.ForeignKey`
+    :keyword sub_recipe_type: The related sub recipe type
+    :type sub_recipe_type: :class:`django.db.models.ForeignKey`
+    """
+
+    recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT, related_name='parent_recipe_type')
+    sub_recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT, related_name='sub_recipe_type')
+
+    objects = RecipeTypeSubLinkManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_type_sub_link'
+        unique_together = ('recipe_type', 'sub_recipe_type')
+
+class RecipeTypeJobLinkManager(models.Manager):
+    """Provides additional methods for handling recipe type to job type links
+    """
+
+    def create_recipe_type_job_links_from_definition(self, recipe_type):
+        """Goes through a recipe type definition and gets all the job types it contains and creates the appropriate links
+
+        :param recipe_type: New/updated recipe type
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        
+        :raises :class:`recipe.models.JobType.DoesNotExist`: If it contains a job type that does not exist
+        """
+
+        definition = recipe_type.get_definition()
+        
+        job_type_ids = JobType.objects.get_recipe_job_type_ids(definition)
+        
+        if len(job_type_ids) > 0:
+            recipe_type_ids = [recipe_type.id] * len(job_type_ids)
+            self.create_recipe_type_job_links(recipe_type_ids, job_type_ids)
+        
+
+    @transaction.atomic
+    def create_recipe_type_job_links(self, recipe_type_ids, job_type_ids):
+        """Creates the appropriate links for the given recipe and job types. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_ids: List of recipe type IDs
+        :type recipe_type_ids: list of int
+        :param job_type_ids: List of job type IDs.
+        :type job_type_ids: list of int
+        """
+
+        if len(recipe_type_ids) != len(job_type_ids):
+            raise Exception('Recipe Type and Job Type lists must be equal length!')
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeJobLink.objects.filter(recipe_type_id__in=recipe_type_ids).delete()
+
+        new_links = []
+
+        for id, job in zip(recipe_type_ids, job_type_ids):
+            link = RecipeTypeJobLink(recipe_type_id=id, job_type_id=job)
+            new_links.append(link)
+
+        RecipeTypeJobLink.objects.bulk_create(new_links)
+        
+    @transaction.atomic
+    def create_recipe_type_job_link(self, recipe_type_id, job_type_id):
+        """Creates the appropriate link for the given recipe and job type. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_id: recipe type ID
+        :type recipe_type_id: int
+        :param job_type_id: job type ID.
+        :type job_type_id: int
+        """
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeJobLink.objects.filter(recipe_type_id=recipe_type_id).delete()
+        
+        link = RecipeTypeJobLink(recipe_type_id=recipe_type_id, job_type_id=job_type_id)
+        link.save()
+
+    def get_recipe_type_ids(self, job_type_ids):
+        """Returns a list of recipe_type IDs for the given job type IDs.
+
+        :param job_type_ids: The sub recipe type IDs
+        :type job_type_ids: list
+        :returns: The list of recipe type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeJobLink.objects.filter(job_type_id__in=list(job_type_ids)).only('recipe_type_id')
+        return [result.recipe_type_id for result in query]
+
+    def get_job_type_ids(self, recipe_type_ids):
+        """Returns a list of the job type IDs for the given recipe type IDs.
+
+        :param recipe_type_ids: The recipe type IDs
+        :type recipe_type_ids: list
+        :returns: The list of job type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeJobLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('job_type_id')
+        return [result.job_type_id for result in query]
+
+class RecipeTypeJobLink(models.Model):
+    """Represents a link between a recipe type and a job type.
+
+    :keyword recipe_type: The related recipe type
+    :type recipe_type: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The related job type
+    :type job_type: :class:`django.db.models.ForeignKey`
+    """
+
+    recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT, related_name='recipe_types_for_job_type')
+    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT, related_name='job_types_for_recipe_type')
+
+    objects = RecipeTypeJobLinkManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_type_job_link'
+        unique_together = ('recipe_type', 'job_type')
