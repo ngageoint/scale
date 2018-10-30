@@ -219,4 +219,23 @@ REM Activate virtualenv
 environment\scale\Scripts\activate.bat
 ```
 
+#### Legacy Cloud9 IDE
+
+**Cloud9 has been purchased by AWS and will likely go away at some point. The 
+AWS offering provides improved hosted workspaces that allow for larger instance
+types and full Docker development support. This support will be removed in the
+near future.**
+
+Once your workspace has initialized, open the terminal and enter the following commands to initialize for development:
+
+```bash
+# Change to Python code directory
+cd scale
+
+# Initialize database and install Scale Python packages.
+sudo sh environment/legacy-cloud-init.sh
+```
+
+Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
+to isolate dependencies per project.
 
