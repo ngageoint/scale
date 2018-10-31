@@ -76,6 +76,28 @@ class TestPurgeSourceFile(TransactionTestCase):
         self.assertIsNotNone(PurgeResults.objects.values_list('purge_completed', flat=True).get(
             source_file_id=source_file.id))
 
+    def test_execute_force_stop(self):
+        """Tests calling PurgeSourceFile.execute() successfully"""
+
+        # Create a file
+        source_file = storage_test_utils.create_file(file_type='SOURCE')
+
+        # Create PurgeResults entry
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=self.trigger, force_stop_purge=True)
+        self.assertIsNone(PurgeResults.objects.values_list('purge_completed', flat=True).get(
+            source_file_id=source_file.id))
+
+        # Create message
+        message = create_purge_source_file_message(source_file_id=source_file.id,
+                                                   trigger_id=self.trigger.id)
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Test to see that the PurgeResults was completed
+        self.assertIsNone(PurgeResults.objects.values_list('purge_completed', flat=True).get(
+            source_file_id=source_file.id))
+
     def test_execute_with_job(self):
         """Tests calling PurgeSourceFile.execute() successfully"""
 

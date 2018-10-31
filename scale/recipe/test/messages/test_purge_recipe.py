@@ -284,3 +284,27 @@ class TestPurgeRecipe(TransactionTestCase):
         # Check results are accurate
         self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
             source_file_id=self.file_1.id), 1)
+
+    def test_execute_force_stop(self):
+        """Tests calling PurgeRecipe.execute() successfully"""
+
+        # Create PurgeResults entry
+        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.trigger, force_stop_purge=True)
+        self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
+            source_file_id=self.file_1.id), 0)
+
+        # Create recipes
+        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
+
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Check results are accurate
+        self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
+            source_file_id=self.file_1.id), 0)

@@ -195,6 +195,52 @@ class TestDeleteFiles(TestCase):
         self.assertEqual(PurgeResults.objects.values_list('num_products_deleted', flat=True).get(
             source_file_id=source_file.id), 4)
 
+    def test_execute_force_stop(self):
+        """Tests calling DeleteFile.execute() successfully"""
+
+        # Create PurgeResults entry
+        source_file = storage_test_utils.create_file()
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger, force_stop_purge=True)
+        self.assertEqual(PurgeResults.objects.values_list('num_products_deleted', flat=True).get(
+            source_file_id=source_file.id), 0)
+
+        job = job_test_utils.create_job()
+        job_exe = job_test_utils.create_job_exe(job=job)
+
+        file_path_1 = os.path.join('my_dir', 'my_file.txt')
+        file_path_2 = os.path.join('my_dir', 'my_file1.json')
+        file_path_3 = os.path.join('my_dir', 'my_file2.json')
+        file_path_4 = os.path.join('my_dir', 'my_file3.json')
+
+        file_1 = storage_test_utils.create_file(file_path=file_path_1, job_exe=job_exe)
+        file_2 = storage_test_utils.create_file(file_path=file_path_2, job_exe=job_exe)
+        file_3 = storage_test_utils.create_file(file_path=file_path_3, job_exe=job_exe)
+        file_4 = storage_test_utils.create_file(file_path=file_path_4, job_exe=job_exe)
+
+        # Add files to message
+        message = DeleteFiles()
+        message.purge = True
+        message.job_id = job.id
+        message.source_file_id = source_file.id
+        message.trigger_id = trigger.id
+        if message.can_fit_more():
+            message.add_file(file_1.id)
+        if message.can_fit_more():
+            message.add_file(file_2.id)
+        if message.can_fit_more():
+            message.add_file(file_3.id)
+        if message.can_fit_more():
+            message.add_file(file_4.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Check results are accurate
+        self.assertEqual(PurgeResults.objects.values_list('num_products_deleted', flat=True).get(
+            source_file_id=source_file.id), 0)
+
     def test_execute_check_results_no_purge(self):
         """Tests calling DeleteFile.execute() successfully"""
 
