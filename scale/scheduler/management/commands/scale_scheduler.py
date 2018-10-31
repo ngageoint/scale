@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
+import json
 import logging
-import os
 import signal
 import socket
 import sys
@@ -15,13 +15,6 @@ from scheduler.manager import scheduler_mgr
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
-
-#TODO: make these command options
-MESOS_CHECKPOINT = False
-MESOS_AUTHENTICATE = False
-DEFAULT_PRINCIPLE = None
-DEFAULT_SECRET = None
-
 
 GLOBAL_SHUTDOWN = None
 
@@ -47,18 +40,7 @@ class Command(BaseCommand):
 
         logger.info('Scale Scheduler %s', settings.VERSION)
 
-        try:
-            scheduler_zk = settings.SCHEDULER_ZK
-        except:
-            scheduler_zk = None
-
-        if scheduler_zk is not None:
-            from scheduler import cluster_utils
-            my_id = socket.gethostname()
-            cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master)
-        else:
-            # leader election is disabled
-            self.run_scheduler(mesos_master)
+        self.run_scheduler(settings.MESOS_MASTER)
 
     def run_scheduler(self, mesos_master):
         logger.info("Scale rising...")
@@ -69,31 +51,23 @@ class Command(BaseCommand):
         logger.info('Connecting to Mesos master at %s', mesos_master)
 
         logging.getLogger('mesoshttp').setLevel(logging.DEBUG)
-        self.driver = None
+
         # By default use ZK for master detection
         self.client = MesosClient(mesos_urls=[settings.MESOS_MASTER],
-                                  frameworkUser='',
+                                  frameworkUser="",
                                   frameworkName=settings.FRAMEWORK_NAME,
                                   frameworkWebUI=settings.WEBSERVER_ADDRESS)
         if settings.SERVICE_SECRET:
             # We are in Enterprise mode and using service account
-            self.client.set_service_account(json.loads(SERVICE_SECRET))
+            self.client.set_service_account(json.loads(settings.SERVICE_SECRET))
         elif settings.PRINCIPAL and settings.SECRET:
             self.client.set_credentials(settings.PRINCIPAL, settings.SECRET)
 
         self.client.add_capability('GPU_RESOURCES')
-        
-        self.th = Test.MesosFramework(self.client)
-        self.th.start()
-        while True and self.th.isAlive():
-            try:
-                self.th.join(1)
-            except KeyboardInterrupt:
-                self.shutdown()
-                break
 
         try:
-            status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
+            self.scheduler.run(self.client)
+            status = 0
         except:
             status = 1
             logger.exception('Mesos Scheduler Driver returned an exception')
@@ -129,10 +103,4 @@ class Command(BaseCommand):
             logger.exception('Failed to properly shutdown Scale scheduler.')
             status = 1
 
-        try:
-            if self.driver:
-                self.driver.stop()
-        except:
-            logger.exception('Failed to properly stop Mesos driver.')
-            status = 1
         return status
