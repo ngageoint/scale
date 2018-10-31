@@ -1036,9 +1036,9 @@ class RecipeConditionManager(models.Manager):
         """
 
         condition = RecipeCondition()
-        recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
-        recipe.recipe_id = recipe_id
-        recipe.batch_id = batch_id
+        condition.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        condition.recipe_id = recipe_id
+        condition.batch_id = batch_id
 
         return condition
 

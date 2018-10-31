@@ -92,7 +92,7 @@ class TestCreateJobs(TransactionTestCase):
                 self.assertEqual(job_2.event_id, event.id)
                 self.assertEqual(job_2.batch_id, batch.id)
             else:
-                self.fail('%s is the worng node name' % recipe_node.node_name)
+                self.fail('%s is the wrong node name' % recipe_node.node_name)
 
         # Should be two messages, one for processing job input and one for updating metrics for the recipe
         self.assertEqual(len(new_message.new_messages), 2)
@@ -167,7 +167,7 @@ class TestCreateJobs(TransactionTestCase):
                 self.assertEqual(job_2.superseded_job_id, superseded_job_2.id)
                 self.assertEqual(job_2.root_superseded_job_id, superseded_job_2.id)
             else:
-                self.fail('%s is the worng node name' % recipe_node.node_name)
+                self.fail('%s is the wrong node name' % recipe_node.node_name)
 
         # Should be two messages, one for processing job input and one for updating metrics for the recipe
         self.assertEqual(len(new_message.new_messages), 2)
@@ -313,7 +313,7 @@ class TestCreateJobs(TransactionTestCase):
                 self.assertEqual(job_2.event_id, event.id)
                 self.assertEqual(job_2.batch_id, batch.id)
             else:
-                self.fail('%s is the worng node name' % recipe_node.node_name)
+                self.fail('%s is the wrong node name' % recipe_node.node_name)
 
         # Should be two messages, one for processing job input and one for updating metrics for the recipe
         self.assertEqual(len(message.new_messages), 2)
@@ -352,7 +352,7 @@ class TestCreateJobs(TransactionTestCase):
                 self.assertEqual(job_2.event_id, event.id)
                 self.assertEqual(job_2.batch_id, batch.id)
             else:
-                self.fail('%s is the worng node name' % recipe_node.node_name)
+                self.fail('%s is the wrong node name' % recipe_node.node_name)
 
         # Should be two messages, one for processing job input and one for updating metrics for the recipe
         self.assertEqual(len(message.new_messages), 2)
@@ -421,7 +421,7 @@ class TestCreateJobs(TransactionTestCase):
                 self.assertEqual(job_2.superseded_job_id, superseded_job_2.id)
                 self.assertEqual(job_2.root_superseded_job_id, superseded_job_2.id)
             else:
-                self.fail('%s is the worng node name' % recipe_node.node_name)
+                self.fail('%s is the wrong node name' % recipe_node.node_name)
 
         # Should be two messages, one for processing job input and one for updating metrics for the recipe
         self.assertEqual(len(message.new_messages), 2)
@@ -468,7 +468,7 @@ class TestCreateJobs(TransactionTestCase):
                 self.assertEqual(job_2.superseded_job_id, superseded_job_2.id)
                 self.assertEqual(job_2.root_superseded_job_id, superseded_job_2.id)
             else:
-                self.fail('%s is the worng node name' % recipe_node.node_name)
+                self.fail('%s is the wrong node name' % recipe_node.node_name)
 
         # Should be two messages, one for processing job input and one for updating metrics for the recipe
         self.assertEqual(len(message.new_messages), 2)

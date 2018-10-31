@@ -6,10 +6,9 @@ from collections import namedtuple
 
 from django.db import transaction
 
-from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from recipe.messages.process_condition import create_process_condition_messages
-from recipe.models import Recipe, RecipeNode
+from recipe.models import Recipe, RecipeCondition, RecipeNode
 
 
 # This is the maximum number of condition models that can fit in one message. This maximum ensures that every message of
@@ -18,7 +17,7 @@ MAX_NUM = 100
 
 
 # Tuple for specifying each condition to create
-RecipeCondition = namedtuple('RecipeCondition', ['node_name', 'process_input'])
+Condition = namedtuple('Condition', ['node_name', 'process_input'])
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +28,7 @@ def create_conditions_messages(recipe, conditions):
 
     :param recipe: The recipe model
     :type recipe: :class:`recipe.models.Recipe`
-    :param conditions: The list of RecipeCondition tuples describing the conditions to create
+    :param conditions: The list of Condition tuples describing the conditions to create
     :type conditions: list
     :return: The list of messages
     :rtype: list
@@ -77,7 +76,7 @@ class CreateConditions(CommandMessage):
         """Adds the given recipe condition to this message to be created
 
         :param recipe_condition: The recipe condition
-        :type recipe_condition: :class:`recipe.messages.create_conditions.RecipeCondition`
+        :type recipe_condition: :class:`recipe.messages.create_conditions.Condition`
         """
 
         self.conditions.append(recipe_condition)
@@ -121,7 +120,7 @@ class CreateConditions(CommandMessage):
         if 'batch_id' in json_dict:
             message.batch_id = json_dict['batch_id']
         for condition_dict in json_dict['conditions']:
-            condition = RecipeCondition(condition_dict['node_name'], condition_dict['process_input'])
+            condition = Condition(condition_dict['node_name'], condition_dict['process_input'])
             message.add_recipe_condition(condition)
 
         return message
@@ -139,7 +138,7 @@ class CreateConditions(CommandMessage):
         process_input_condition_ids = []
         for condition_model in condition_models:
             # process_input indicates if condition is ready to get its input from its dependencies
-            process_input = self._process_input.get(condition_models.id, False)
+            process_input = self._process_input.get(condition_model.id, False)
             if process_input:
                 # This new condition is all ready to have its input processed
                 process_input_condition_ids.append(condition_model.id)
@@ -190,7 +189,7 @@ class CreateConditions(CommandMessage):
         qry = RecipeNode.objects.select_related('condition')
         qry = qry.filter(recipe_id=self.recipe_id, node_name__in=node_names)
         condition_models_by_node = {recipe_node.node_name: recipe_node.condition for recipe_node in qry}
-        condition_models = conditions_by_node.values()
+        condition_models = condition_models_by_node.values()
 
         if condition_models_by_node:
             # Set up process input dict
