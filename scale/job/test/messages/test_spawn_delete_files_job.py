@@ -29,6 +29,8 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         self.prod3 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp2, job_exe=self.job_exe)
         self.event = trigger_test_utils.create_trigger_event()
         self.file_1 = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=trigger)
 
     def test_json(self):
         """Tests coverting a SpawnDeleteFilesJob message to and from JSON"""
@@ -54,8 +56,6 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         """Tests calling SpawnDeleteFilesJob.execute successfully"""
 
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
-
-        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.event, force_stop_purge=True)
 
         # Make the message
         message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id,
@@ -90,6 +90,10 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
     def test_execute_force_stop(self):
         """Tests calling SpawnDeleteFilesJob.execute with the force stop flag set"""
 
+        file_2 = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=self.file_2.id, trigger_event=trigger, force_stop_purge=True)
+        
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
         job_id = 1234574223462
         # Make the message

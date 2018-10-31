@@ -21,6 +21,9 @@ class TestPurgeJobs(TransactionTestCase):
     def test_json(self):
         """Tests coverting a PurgeJobs message to and from JSON"""
 
+        input_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=input_file.id, trigger_event=trigger)
         job_exe = job_test_utils.create_job_exe(status='COMPLETED')
         job = job_exe.job
 
@@ -39,29 +42,12 @@ class TestPurgeJobs(TransactionTestCase):
         self.assertEqual(Job.objects.filter(id=job.id).count(), 0)
         self.assertEqual(JobExecution.objects.filter(id=job_exe.id).count(), 0)
 
-    def test_execute(self):
-        """Tests calling PurgeJobs.execute() successfully"""
-
-        job_exe = job_test_utils.create_job_exe(status='COMPLETED')
-        job = job_exe.job
-
-        # Add job to message
-        message = PurgeJobs()
-        message._purge_job_ids = [job.id]
-        message.status_change = timezone.now()
-
-        # Execute message
-        result = message.execute()
-        self.assertTrue(result)
-
-        # Check that job is deleted
-        self.assertEqual(Job.objects.filter(id=job.id).count(), 0)
-        self.assertEqual(JobExecution.objects.filter(id=job_exe.id).count(), 0)
-
     def test_execute_with_input_file(self):
         """Tests calling PurgeJobs.execute() successfully"""
 
         input_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=input_file.id, trigger_event=trigger)
         job_exe = job_test_utils.create_job_exe(status='COMPLETED')
         job = job_exe.job
         job_test_utils.create_input_file(job=job, input_file=input_file)

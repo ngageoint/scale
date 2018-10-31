@@ -26,6 +26,9 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create a file
         source_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger)
+        
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
                                                    trigger_id=self.trigger.id)
@@ -42,6 +45,8 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create a file
         source_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger)
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
@@ -83,7 +88,8 @@ class TestPurgeSourceFile(TransactionTestCase):
         source_file = storage_test_utils.create_file(file_type='SOURCE')
 
         # Create PurgeResults entry
-        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=self.trigger, force_stop_purge=True)
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger, force_stop_purge=True)
         self.assertIsNone(PurgeResults.objects.values_list('purge_completed', flat=True).get(
             source_file_id=source_file.id))
 
@@ -103,6 +109,8 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create a file
         source_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger)
 
         # Create a job and other models
         job = job_test_utils.create_job()
@@ -126,6 +134,8 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create a file
         source_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger)
 
         # Create a recipe and other models
         recipe = recipe_test_utils.create_recipe()

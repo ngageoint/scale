@@ -18,6 +18,8 @@ class TestDeleteFiles(TestCase):
         django.setup()
 
         self.source_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=self.source_file.id, trigger_event=trigger)
 
     def test_json(self):
         """Tests coverting a DeleteFiles message to and from JSON"""
@@ -74,6 +76,7 @@ class TestDeleteFiles(TestCase):
         message = DeleteFiles()
         message.purge = False
         message.job_id = job.id
+        message.source_file_id = self.source_file.id
         if message.can_fit_more():
             message.add_file(file_1.id)
         if message.can_fit_more():

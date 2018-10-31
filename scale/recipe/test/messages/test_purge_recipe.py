@@ -122,6 +122,8 @@ class TestPurgeRecipe(TransactionTestCase):
         self.old_job_1_ids = [self.job_1_1.id, self.job_2_1.id]
         self.old_job_2_ids = [self.job_1_2.id, self.job_2_2.id]
 
+        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.trigger)
+
     def test_json(self):
         """Tests coverting a PurgeRecipe message to and from JSON"""
 
@@ -289,9 +291,11 @@ class TestPurgeRecipe(TransactionTestCase):
         """Tests calling PurgeRecipe.execute() successfully"""
 
         # Create PurgeResults entry
-        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.trigger, force_stop_purge=True)
+        file_2 = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=file_2.id, trigger_event=self.trigger, force_stop_purge=True)
         self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
-            source_file_id=self.file_1.id), 0)
+            source_file_id=file_2.id), 0)
 
         # Create recipes
         recipe_type = recipe_test_utils.create_recipe_type()
@@ -299,7 +303,7 @@ class TestPurgeRecipe(TransactionTestCase):
 
         # Create message
         message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
-                                              source_file_id=self.file_1.id)
+                                              source_file_id=file_2.id)
 
         # Execute message
         result = message.execute()
@@ -307,4 +311,4 @@ class TestPurgeRecipe(TransactionTestCase):
 
         # Check results are accurate
         self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
-            source_file_id=self.file_1.id), 0)
+            source_file_id=file_2.id), 0)
