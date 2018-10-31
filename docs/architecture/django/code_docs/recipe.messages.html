@@ -221,6 +221,107 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-recipe.messages.create_conditions">
+<span id="recipe-messages-create-conditions-module"></span><h2>recipe.messages.create_conditions module<a class="headerlink" href="#module-recipe.messages.create_conditions" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that creates condition models</p>
+<dl class="class">
+<dt id="recipe.messages.create_conditions.Condition">
+<em class="property">class </em><code class="descclassname">recipe.messages.create_conditions.</code><code class="descname">Condition</code><span class="sig-paren">(</span><em>node_name</em>, <em>process_input</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.Condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.messages.create_conditions.Condition.node_name">
+<code class="descname">node_name</code><a class="headerlink" href="#recipe.messages.create_conditions.Condition.node_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.messages.create_conditions.Condition.process_input">
+<code class="descname">process_input</code><a class="headerlink" href="#recipe.messages.create_conditions.Condition.process_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.messages.create_conditions.CreateConditions">
+<em class="property">class </em><code class="descclassname">recipe.messages.create_conditions.</code><code class="descname">CreateConditions</code><a class="headerlink" href="#recipe.messages.create_conditions.CreateConditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that creates condition models</p>
+<dl class="method">
+<dt id="recipe.messages.create_conditions.CreateConditions.add_recipe_condition">
+<code class="descname">add_recipe_condition</code><span class="sig-paren">(</span><em>recipe_condition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.CreateConditions.add_recipe_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given recipe condition to this message to be created</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_condition</strong> (<a class="reference internal" href="#recipe.messages.create_conditions.Condition" title="recipe.messages.create_conditions.Condition"><code class="xref py py-class docutils literal"><span class="pre">recipe.messages.create_conditions.Condition</span></code></a>) &#8211; The recipe condition</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.create_conditions.CreateConditions.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.CreateConditions.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more conditions can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more conditions can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.create_conditions.CreateConditions.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.CreateConditions.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="recipe.messages.create_conditions.CreateConditions.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.CreateConditions.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.create_conditions.CreateConditions.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.CreateConditions.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.messages.create_conditions.create_conditions_messages">
+<code class="descclassname">recipe.messages.create_conditions.</code><code class="descname">create_conditions_messages</code><span class="sig-paren">(</span><em>recipe</em>, <em>conditions</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_conditions.create_conditions_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to create conditions with a recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe</strong> (<a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe model</li>
+<li><strong>conditions</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of Condition tuples describing the conditions to create</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.messages.create_recipes">
 <span id="recipe-messages-create-recipes-module"></span><h2>recipe.messages.create_recipes module<a class="headerlink" href="#module-recipe.messages.create_recipes" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that creates recipe models</p>

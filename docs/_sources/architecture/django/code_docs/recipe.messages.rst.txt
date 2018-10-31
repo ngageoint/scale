@@ -4,6 +4,14 @@ recipe\.messages package
 Submodules
 ----------
 
+recipe\.messages\.create\_conditions module
+-------------------------------------------
+
+.. automodule:: recipe.messages.create_conditions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.messages\.create\_recipes module
 ----------------------------------------
 

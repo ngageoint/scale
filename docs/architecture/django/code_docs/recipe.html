@@ -309,6 +309,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="recipe.messages.html">recipe.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.create_conditions">recipe.messages.create_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.create_recipes">recipe.messages.create_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.process_condition">recipe.messages.process_condition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.process_recipe_input">recipe.messages.process_recipe_input module</a></li>
@@ -446,6 +447,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.test.messages.html">recipe.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_create_conditions">recipe.test.messages.test_create_conditions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_create_recipes">recipe.test.messages.test_create_recipes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_condition">recipe.test.messages.test_process_condition module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input module</a></li>
@@ -1637,6 +1639,31 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipe conditions</p>
 <dl class="method">
+<dt id="recipe.models.RecipeConditionManager.create_condition">
+<code class="descname">create_condition</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>root_recipe_id=None</em>, <em>batch_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeConditionManager.create_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new condition for the given recipe and returns the (unsaved) condition model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this condition, possibly None</li>
+<li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this condition, possibly None</li>
+<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this condition, possibly None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new condition model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeCondition" title="recipe.models.RecipeCondition"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeCondition</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeConditionManager.get_condition_with_interfaces">
 <code class="descname">get_condition_with_interfaces</code><span class="sig-paren">(</span><em>condition_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeConditionManager.get_condition_with_interfaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the condition model for the given ID with related recipe__recipe_type_rev model</p>
@@ -2507,6 +2534,30 @@ object the first time, the query is executed.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_copies</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of RecipeNodeCopy tuples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeNodeManager.create_recipe_condition_nodes">
+<code class="descname">create_recipe_condition_nodes</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>conditions</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.create_recipe_condition_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns the recipe node models (unsaved) for the given recipe and conditions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</li>
+<li><strong>conditions</strong> (<em>dict</em>) &#8211; A dict of condition models stored by node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe_node models</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
 </tr>
 </tbody>
 </table>
