@@ -9,7 +9,7 @@ from data.data.value import JsonValue
 
 from job.messages.create_jobs import create_jobs_message
 from messaging.messages.message import CommandMessage
-from storage.models import ScaleFile
+from storage.models import PurgeResults, ScaleFile
 
 
 logger = logging.getLogger(__name__)
@@ -22,10 +22,10 @@ def create_spawn_delete_files_job(job_id, trigger_id, source_file_id, purge):
     :type job_id: int
     :param trigger_id: The trigger event id for the purge operation
     :type trigger_id: int
-    :param purge: Boolean value to determine if files should be purged from workspace
-    :type purge: bool
     :param source_file_id: The source file id for the original file being purged
     :type source_file_id: int
+    :param purge: Boolean value to determine if files should be purged from workspace
+    :type purge: bool
     :return: The spawn delete files job message
     :rtype: :class:`job.messages.spawn_delete_files_job.SpawnDeleteFilesJob`
     """
@@ -79,6 +79,10 @@ class SpawnDeleteFilesJob(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
+
+        # Check to see if a force stop was placed on this purge process
+        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+            return True
 
         files_to_delete = ScaleFile.objects.filter_files(job_ids=[self.job_id])
 

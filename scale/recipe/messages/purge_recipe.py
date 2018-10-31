@@ -74,6 +74,10 @@ class PurgeRecipe(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+            return True
+
         recipe = Recipe.objects.select_related('superseded_recipe').get(id=self.recipe_id)
 
         # Kick off purge_source_file for the source file

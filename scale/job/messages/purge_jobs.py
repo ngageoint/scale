@@ -112,6 +112,10 @@ class PurgeJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+            return True
+
         # Kick off purge_source_file for the source file input
         self.new_messages.append(create_purge_source_file_message(source_file_id=self.source_file_id,
                                                                   trigger_id=self.trigger_id))

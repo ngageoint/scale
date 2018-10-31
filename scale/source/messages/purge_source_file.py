@@ -68,6 +68,10 @@ class PurgeSourceFile(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+            return True
+
         job_inputs = JobInputFile.objects.filter(input_file=self.source_file_id,
                                                  job__recipe__isnull=True).select_related('job')
         recipe_inputs = RecipeInputFile.objects.filter(input_file=self.source_file_id,

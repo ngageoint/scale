@@ -119,6 +119,10 @@ class DeleteFiles(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+            return True
+
         when = timezone.now()
         files_to_delete = ScaleFile.objects.filter(id__in=self._file_ids)
 
