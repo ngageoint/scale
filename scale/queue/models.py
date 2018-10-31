@@ -364,7 +364,7 @@ class QueueManager(models.Manager):
         # Create and send messages to update dependent jobs so that they are BLOCKED
         job = Job.objects.get(id=job_id)
         if job.root_recipe_id:
-            msgs = create_update_recipe_messages_from_node([job.root_recipe_ids])
+            msgs = create_update_recipe_messages_from_node([job.root_recipe_id])
             CommandMessageManager().send_messages(msgs)
 
     @transaction.atomic

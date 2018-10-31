@@ -260,8 +260,10 @@ def create_recipe_condition(root_recipe=None, recipe=None, batch=None, is_proces
     condition.root_recipe = root_recipe if root_recipe else recipe
     condition.recipe = recipe
     condition.batch = batch
-    condition.is_processed = is_processed
-    condition.is_accepted = is_accepted
+    if is_processed is not None:
+        condition.is_processed = is_processed
+    if is_accepted is not None:
+        condition.is_accepted = is_accepted
 
     if condition.is_processed:
         condition.processed = timezone.now()
