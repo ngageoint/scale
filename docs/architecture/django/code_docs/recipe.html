@@ -310,6 +310,7 @@
 <li class="toctree-l1"><a class="reference internal" href="recipe.messages.html">recipe.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.create_recipes">recipe.messages.create_recipes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.process_condition">recipe.messages.process_condition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.process_recipe_input">recipe.messages.process_recipe_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.purge_recipe">recipe.messages.purge_recipe module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.reprocess_recipes">recipe.messages.reprocess_recipes module</a></li>
@@ -446,6 +447,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.test.messages.html">recipe.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_create_recipes">recipe.test.messages.test_create_recipes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_condition">recipe.test.messages.test_process_condition module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_purge_recipe">recipe.test.messages.test_purge_recipe module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
@@ -1516,6 +1518,22 @@ object the first time, the query is executed.</p>
 <code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeCondition.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="recipe.models.RecipeCondition.has_data">
+<code class="descname">has_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeCondition.has_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this condition has its data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the condition has its data, false otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="recipe.models.RecipeCondition.id">
 <code class="descname">id</code><a class="headerlink" href="#recipe.models.RecipeCondition.id" title="Permalink to this definition">¶</a></dt>
@@ -1618,6 +1636,63 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeConditionManager</code><a class="headerlink" href="#recipe.models.RecipeConditionManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipe conditions</p>
+<dl class="method">
+<dt id="recipe.models.RecipeConditionManager.get_condition_with_interfaces">
+<code class="descname">get_condition_with_interfaces</code><span class="sig-paren">(</span><em>condition_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeConditionManager.get_condition_with_interfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the condition model for the given ID with related recipe__recipe_type_rev model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>condition_id</strong> (<em>int</em>) &#8211; The condition ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The condition model with related recipe__recipe_type_rev model</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeConditionManager.set_condition_data_v6">
+<code class="descname">set_condition_data_v6</code><span class="sig-paren">(</span><em>condition</em>, <em>data</em>, <em>node_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeConditionManager.set_condition_data_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the given data as a v6 JSON for the given condition. The condition model must have its related
+recipe__recipe_type_rev model populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>condition</strong> (<a class="reference internal" href="#recipe.models.RecipeCondition" title="recipe.models.RecipeCondition"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeCondition</span></code></a>) &#8211; The condition model with related recipe__recipe_type_rev model</li>
+<li><strong>data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The data for the condition</li>
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The name of the condition node in the recipe</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the data is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeConditionManager.set_processed">
+<code class="descname">set_processed</code><span class="sig-paren">(</span><em>condition_id</em>, <em>is_accepted</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeConditionManager.set_processed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the condition with the given ID as being processed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>condition_id</strong> (<em>int</em>) &#8211; The condition ID</li>
+<li><strong>is_accepted</strong> (<em>bool</em>) &#8211; Whether the condition was accepted</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

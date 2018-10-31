@@ -12,6 +12,14 @@ recipe\.messages\.create\_recipes module
     :undoc-members:
     :show-inheritance:
 
+recipe\.messages\.process\_condition module
+-------------------------------------------
+
+.. automodule:: recipe.messages.process_condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.messages\.process\_recipe\_input module
 -----------------------------------------------
 
