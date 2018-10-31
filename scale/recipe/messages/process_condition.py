@@ -5,7 +5,6 @@ import logging
 
 from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
-from recipe.messages.update_recipe import create_update_recipe_message
 from recipe.models import RecipeCondition, RecipeNode
 
 
@@ -90,6 +89,7 @@ class ProcessCondition(CommandMessage):
             RecipeCondition.objects.set_processed(condition.id, is_accepted)
 
         # Create message to update the condition's recipe
+        from recipe.messages.update_recipe import create_update_recipe_message
         root_recipe_id = condition.recipe.root_recipe_id if condition.recipe.root_recipe_id else condition.recipe_id
         logger.info('Processed data for condition %d, sending message to update recipe', self.condition_id)
         self.new_messages.append(create_update_recipe_message(root_recipe_id))
