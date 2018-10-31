@@ -120,7 +120,8 @@ class DeleteFiles(CommandMessage):
         """
 
         # Check to see if a force stop was placed on this purge process
-        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
             return True
 
         when = timezone.now()
@@ -128,8 +129,7 @@ class DeleteFiles(CommandMessage):
 
         if self.purge:
             files_to_delete.delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                num_products_deleted=F('num_products_deleted') + len(self._file_ids))
+            results.update(num_products_deleted=F('num_products_deleted') + len(self._file_ids))
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],

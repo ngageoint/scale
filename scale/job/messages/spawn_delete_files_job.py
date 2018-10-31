@@ -81,7 +81,8 @@ class SpawnDeleteFilesJob(CommandMessage):
         """
 
         # Check to see if a force stop was placed on this purge process
-        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
             return True
 
         files_to_delete = ScaleFile.objects.filter_files(job_ids=[self.job_id])

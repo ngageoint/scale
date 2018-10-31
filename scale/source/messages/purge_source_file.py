@@ -69,7 +69,8 @@ class PurgeSourceFile(CommandMessage):
         """
 
         # Check to see if a force stop was placed on this purge process
-        if PurgeResults.objects.filter(source_file_id=self.source_file_id).values_list('force_stop_purge', flat=True):
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
             return True
 
         job_inputs = JobInputFile.objects.filter(input_file=self.source_file_id,
