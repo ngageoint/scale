@@ -97,6 +97,15 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_list'
+    post:
+      operationId: _rest_v6_job_post
+      description: creates a new job and adds it to the queue
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/job_post'
 
   /v6/jobs/{id}/:
     get:
@@ -342,6 +351,18 @@ components:
             $ref: '#/components/schemas/job'
           description: List of Job objects
 
+    job_post:
+      title: Job Post
+      type: object
+      properties:
+        job_type_id:
+          type: int
+          description: the ID of the job type
+        job_data:
+            description: The input data for the job.
+            $ref: '#/components/schemas/data'
+        
+    
     job_base:
       title: Job Base
       type: object
