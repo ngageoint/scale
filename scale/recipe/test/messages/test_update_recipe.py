@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from data.data.data import Data
 from data.data.json.data_v6 import convert_data_to_v6_json
+from data.filter.filter import DataFilter
 from data.interface.interface import Interface
 from job.messages.create_jobs import RECIPE_TYPE, RecipeJob
 from job.test import utils as job_test_utils
@@ -12,6 +13,7 @@ from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
+from recipe.messages.create_conditions import Condition
 from recipe.messages.create_recipes import SUB_RECIPE_TYPE, SubRecipe
 from recipe.messages.update_recipe import create_update_recipe_message, UpdateRecipe
 from recipe.models import RecipeNode
@@ -110,8 +112,10 @@ class TestUpdateRecipe(TestCase):
         job_d = job_test_utils.create_job(status='BLOCKED')
         recipe_type_e = recipe_test_utils.create_recipe_type()
         job_type_f = job_test_utils.create_seed_job_type()
+        job_type_k = job_test_utils.create_seed_job_type()
         job_g = job_test_utils.create_job(status='FAILED', input=data_dict)
         job_h = job_test_utils.create_job(status='PENDING')
+        condition_i = recipe_test_utils.create_recipe_condition(save=True)
         definition = RecipeDefinition(Interface())
         definition.add_job_node('node_a', job_a.job_type.name, job_a.job_type.version, job_a.job_type_rev.revision_num)
         definition.add_recipe_node('node_b', recipe_b.recipe_type.name, recipe_b.recipe_type.revision_num)
@@ -121,12 +125,19 @@ class TestUpdateRecipe(TestCase):
         definition.add_job_node('node_f', job_type_f.name, job_type_f.version, job_type_f.revision_num)
         definition.add_job_node('node_g', job_g.job_type.name, job_g.job_type.version, job_g.job_type_rev.revision_num)
         definition.add_job_node('node_h', job_h.job_type.name, job_h.job_type.version, job_h.job_type_rev.revision_num)
+        definition.add_condition_node('node_i', Interface(), DataFilter(True))
+        definition.add_condition_node('node_j', Interface(), DataFilter(True))
+        definition.add_job_node('node_k', job_type_k.name, job_type_k.version, job_type_k.revision_num)
         definition.add_dependency('node_a', 'node_c')
         definition.add_dependency('node_a', 'node_e')
         definition.add_dependency('node_a', 'node_g')
         definition.add_dependency('node_c', 'node_d')
         definition.add_dependency('node_e', 'node_f')
         definition.add_dependency('node_g', 'node_h')
+        definition.add_dependency('node_a', 'node_i')
+        definition.add_dependency('node_a', 'node_j')
+        definition.add_dependency('node_i', 'node_k')
+        definition.add_dependency('node_j', 'node_k')
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_dict)
@@ -137,7 +148,9 @@ class TestUpdateRecipe(TestCase):
         node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_d', job=job_d, save=False)
         node_g = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_g', job=job_g, save=False)
         node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_h', job=job_h, save=False)
-        RecipeNode.objects.bulk_create([node_a, node_b, node_c, node_d, node_g, node_h])
+        node_i = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_i', condition=condition_i,
+                                                      save=False)
+        RecipeNode.objects.bulk_create([node_a, node_b, node_c, node_d, node_g, node_h, node_i])
         forced_nodes = ForcedNodes()
         forced_nodes_e = ForcedNodes()
         forced_nodes_e.set_all_nodes()
@@ -148,12 +161,14 @@ class TestUpdateRecipe(TestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        self.assertEqual(len(message.new_messages), 6)
+        self.assertEqual(len(message.new_messages), 8)
         # Check messages
         blocked_jobs_msg = None
         pending_jobs_msg = None
+        create_cond_msg = None
         create_jobs_msg = None
         create_recipes_msg = None
+        process_condition_msg = None
         process_job_input_msg = None
         process_recipe_input_msg = None
         for msg in message.new_messages:
@@ -161,24 +176,35 @@ class TestUpdateRecipe(TestCase):
                 blocked_jobs_msg = msg
             elif msg.type == 'pending_jobs':
                 pending_jobs_msg = msg
+            elif msg.type == 'create_conditions':
+                create_cond_msg = msg
             elif msg.type == 'create_jobs':
                 create_jobs_msg = msg
             elif msg.type == 'create_recipes':
                 create_recipes_msg = msg
+            elif msg.type == 'process_condition':
+                process_condition_msg = msg
             elif msg.type == 'process_job_input':
                 process_job_input_msg = msg
             elif msg.type == 'process_recipe_input':
                 process_recipe_input_msg = msg
         self.assertIsNotNone(blocked_jobs_msg)
         self.assertIsNotNone(pending_jobs_msg)
+        self.assertIsNotNone(create_cond_msg)
         self.assertIsNotNone(create_jobs_msg)
         self.assertIsNotNone(create_recipes_msg)
+        self.assertIsNotNone(process_condition_msg)
         self.assertIsNotNone(process_job_input_msg)
         self.assertIsNotNone(process_recipe_input_msg)
         # Check message to change jobs to BLOCKED
         self.assertListEqual(blocked_jobs_msg._blocked_job_ids, [job_h.id])
         # Check message to change jobs to PENDING
         self.assertListEqual(pending_jobs_msg._pending_job_ids, [job_d.id])
+        # Check message to create conditions
+        self.assertEqual(create_cond_msg.recipe_id, recipe.id)
+        self.assertEqual(create_cond_msg.root_recipe_id, recipe.root_superseded_recipe_id)
+        condition = Condition('node_j', True)
+        self.assertListEqual(create_cond_msg.conditions, [condition])
         # Check message to create jobs
         self.assertEqual(create_jobs_msg.event_id, recipe.event_id)
         self.assertEqual(create_jobs_msg.create_jobs_type, RECIPE_TYPE)
@@ -198,6 +224,8 @@ class TestUpdateRecipe(TestCase):
         self.assertIsNone(create_recipes_msg.superseded_recipe_id)
         sub = SubRecipe(recipe_type_e.name, recipe_type_e.revision_num, 'node_e', True)
         self.assertListEqual(create_recipes_msg.sub_recipes, [sub])
+        # Check message to process condition
+        self.assertEqual(process_condition_msg.condition_id, condition_i.id)
         # Check message to process job input
         self.assertEqual(process_job_input_msg.job_id, job_c.id)
         # Check message to process recipe input
@@ -210,10 +238,13 @@ class TestUpdateRecipe(TestCase):
         self.assertTrue(result)
 
         # Make sure the same messages are returned
+        self.assertEqual(len(message.new_messages), 8)
         blocked_jobs_msg = None
         pending_jobs_msg = None
+        create_cond_msg = None
         create_jobs_msg = None
         create_recipes_msg = None
+        process_condition_msg = None
         process_job_input_msg = None
         process_recipe_input_msg = None
         for msg in message.new_messages:
@@ -221,24 +252,35 @@ class TestUpdateRecipe(TestCase):
                 blocked_jobs_msg = msg
             elif msg.type == 'pending_jobs':
                 pending_jobs_msg = msg
+            elif msg.type == 'create_conditions':
+                create_cond_msg = msg
             elif msg.type == 'create_jobs':
                 create_jobs_msg = msg
             elif msg.type == 'create_recipes':
                 create_recipes_msg = msg
+            elif msg.type == 'process_condition':
+                process_condition_msg = msg
             elif msg.type == 'process_job_input':
                 process_job_input_msg = msg
             elif msg.type == 'process_recipe_input':
                 process_recipe_input_msg = msg
         self.assertIsNotNone(blocked_jobs_msg)
         self.assertIsNotNone(pending_jobs_msg)
+        self.assertIsNotNone(create_cond_msg)
         self.assertIsNotNone(create_jobs_msg)
         self.assertIsNotNone(create_recipes_msg)
+        self.assertIsNotNone(process_condition_msg)
         self.assertIsNotNone(process_job_input_msg)
         self.assertIsNotNone(process_recipe_input_msg)
         # Check message to change jobs to BLOCKED
         self.assertListEqual(blocked_jobs_msg._blocked_job_ids, [job_h.id])
         # Check message to change jobs to PENDING
         self.assertListEqual(pending_jobs_msg._pending_job_ids, [job_d.id])
+        # Check message to create conditions
+        self.assertEqual(create_cond_msg.recipe_id, recipe.id)
+        self.assertEqual(create_cond_msg.root_recipe_id, recipe.root_superseded_recipe_id)
+        condition = Condition('node_j', True)
+        self.assertListEqual(create_cond_msg.conditions, [condition])
         # Check message to create jobs
         self.assertEqual(create_jobs_msg.event_id, recipe.event_id)
         self.assertEqual(create_jobs_msg.create_jobs_type, RECIPE_TYPE)
@@ -258,6 +300,8 @@ class TestUpdateRecipe(TestCase):
         self.assertIsNone(create_recipes_msg.superseded_recipe_id)
         sub = SubRecipe(recipe_type_e.name, recipe_type_e.revision_num, 'node_e', True)
         self.assertListEqual(create_recipes_msg.sub_recipes, [sub])
+        # Check message to process condition
+        self.assertEqual(process_condition_msg.condition_id, condition_i.id)
         # Check message to process job input
         self.assertEqual(process_job_input_msg.job_id, job_c.id)
         # Check message to process recipe input
