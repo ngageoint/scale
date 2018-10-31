@@ -44,7 +44,7 @@ class TestCreateConditions(TransactionTestCase):
         self.assertEqual(process_condition_msg.condition_id, condition_2.id)
 
     def test_execute(self):
-        """Tests calling CreateConditions.execute() successfullye"""
+        """Tests calling CreateConditions.execute() successfully"""
 
         batch = batch_test_utils.create_batch()
         recipe = recipe_test_utils.create_recipe(batch=batch)
