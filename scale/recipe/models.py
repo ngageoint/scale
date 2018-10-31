@@ -1022,6 +1022,26 @@ class RecipeConditionManager(models.Manager):
     """Provides additional methods for handling recipe conditions
     """
 
+    def create_condition(self, recipe_id, root_recipe_id=None, batch_id=None):
+        """Creates a new condition for the given recipe and returns the (unsaved) condition model
+
+        :param recipe_id: The ID of the original recipe that created this condition, possibly None
+        :type recipe_id: int
+        :param root_recipe_id: The ID of the root recipe that contains this condition, possibly None
+        :type root_recipe_id: int
+        :param batch_id: The ID of the batch that contains this condition, possibly None
+        :type batch_id: int
+        :returns: The new condition model
+        :rtype: :class:`recipe.models.RecipeCondition`
+        """
+
+        condition = RecipeCondition()
+        condition.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        condition.recipe_id = recipe_id
+        condition.batch_id = batch_id
+
+        return condition
+
     def get_condition_with_interfaces(self, condition_id):
         """Gets the condition model for the given ID with related recipe__recipe_type_rev model
 
@@ -1240,6 +1260,28 @@ class RecipeNodeManager(models.Manager):
 
         with connection.cursor() as cursor:
             cursor.execute(qry)
+
+    def create_recipe_condition_nodes(self, recipe_id, conditions):
+        """Creates and returns the recipe node models (unsaved) for the given recipe and conditions
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :param conditions: A dict of condition models stored by node name
+        :type conditions: dict
+        :returns: The list of recipe_node models
+        :rtype: list
+        """
+
+        node_models = []
+
+        for node_name, condition in conditions.items():
+            recipe_node = RecipeNode()
+            recipe_node.recipe_id = recipe_id
+            recipe_node.node_name = node_name
+            recipe_node.condition = condition
+            node_models.append(recipe_node)
+
+        return node_models
 
     def create_recipe_job_nodes(self, recipe_id, recipe_jobs):
         """Creates and returns the recipe node models (unsaved) for the given recipe and jobs

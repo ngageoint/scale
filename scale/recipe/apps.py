@@ -16,6 +16,7 @@ class RecipeConfig(AppConfig):
 
         # Register recipe message types
         from messaging.messages.factory import add_message_type
+        from recipe.messages.create_conditions import CreateConditions
         from recipe.messages.create_recipes import CreateRecipes
         from recipe.messages.process_condition import ProcessCondition
         from recipe.messages.process_recipe_input import ProcessRecipeInput
@@ -26,6 +27,7 @@ class RecipeConfig(AppConfig):
         from recipe.messages.update_recipe_metrics import UpdateRecipeMetrics
         from recipe.messages.update_recipes import UpdateRecipes
 
+        add_message_type(CreateConditions)
         add_message_type(CreateRecipes)
         add_message_type(ProcessCondition)
         add_message_type(ProcessRecipeInput)
