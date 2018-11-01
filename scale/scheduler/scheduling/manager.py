@@ -58,11 +58,11 @@ class SchedulingManager(object):
 
         self._waiting_tasks = {}  # {Task ID: int}
 
-    def perform_scheduling(self, driver, when):
+    def perform_scheduling(self, client, when):
         """Organizes and analyzes the cluster resources, schedules new job executions, and launches tasks
 
-        :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
+        :param client: The Mesos scheduler client
+        :type client: :class:`mesoshttp.client.MesosClient`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The number of tasks that were scheduled
@@ -70,7 +70,7 @@ class SchedulingManager(object):
         """
         # Get framework ID first to make sure it doesn't change throughout scheduling process
         framework_id = scheduler_mgr.framework_id
-        if not framework_id or not driver:
+        if not framework_id or not client or not client.get_driver():
             # Don't schedule anything until the scheduler has connected to Mesos
             return 0
 
@@ -99,7 +99,7 @@ class SchedulingManager(object):
             return 0
 
         self._allocate_offers(nodes)
-        task_count, offer_count = self._launch_tasks(driver, nodes)
+        task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
 
@@ -169,11 +169,11 @@ class SchedulingManager(object):
 
         return ignore_job_type_ids
 
-    def _launch_tasks(self, driver, nodes):
+    def _launch_tasks(self, client, nodes):
         """Launches all of the tasks that have been scheduled on the given nodes
 
-        :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
+        :param client: The Mesos scheduler client
+        :type client: :class:`mesoshttp.client.MesosClient`
         :param nodes: The dict of all scheduling nodes stored by node ID
         :type nodes: dict
         :returns: The number of tasks that were launched and the number of offers accepted
@@ -216,7 +216,8 @@ class SchedulingManager(object):
             if mesos_offers:
                 total_node_count += 1
                 try:
-                    driver.combine_offers(mesos_offers, mesos_tasks)
+                    logger.info('Accepting offers and tasks: %s\n%s', ','.join(mesos_offers), ','.join(mesos_tasks))
+                    client.combine_offers(mesos_offers, mesos_tasks)
                 except Exception:
                     logger.exception('Error occurred while launching tasks on node %s', node.hostname)
 

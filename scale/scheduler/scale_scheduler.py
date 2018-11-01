@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import datetime
 import logging
 import threading
-from urlparse import urlparse
 
 from django.utils.timezone import now
 
@@ -16,6 +15,8 @@ from job.models import JobExecution
 from job.tasks.manager import task_mgr
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
+from mesos_api.offers import from_mesos_offer
+from mesos_api.tasks import RESOURCE_TYPE_SCALAR
 from mesoshttp.client import MesosClient
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
@@ -40,8 +41,7 @@ from scheduler.threads.scheduler_status import SchedulerStatusThread
 from scheduler.threads.sync import SyncThread
 from scheduler.threads.task_handling import TaskHandlingThread
 from scheduler.threads.task_update import TaskUpdateThread
-from util.host import HostAddress
-
+from util.host import host_address_from_mesos_url
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +57,7 @@ class ScaleScheduler(object):
         """
 
         self._driver = None
+        self._client = None
         self._framework_id = None
         self._master_host_address = None
 
@@ -88,6 +89,8 @@ class ScaleScheduler(object):
         scheduler_mgr.sync_with_database()
 
         # Start up background threads
+        self._threads = []
+
         logger.info('Starting up background threads')
         self._messaging_thread = MessagingThread()
         restart_msg = RestartScheduler()
@@ -96,36 +99,43 @@ class ScaleScheduler(object):
         messaging_thread = threading.Thread(target=self._messaging_thread.run)
         messaging_thread.daemon = True
         messaging_thread.start()
+        self._threads.append(messaging_thread)
 
         self._recon_thread = ReconciliationThread()
         recon_thread = threading.Thread(target=self._recon_thread.run)
         recon_thread.daemon = True
         recon_thread.start()
+        self._threads.append(recon_thread)
 
         self._scheduler_status_thread = SchedulerStatusThread()
         scheduler_status_thread = threading.Thread(target=self._scheduler_status_thread.run)
         scheduler_status_thread.daemon = True
         scheduler_status_thread.start()
+        self._threads.append(scheduler_status_thread)
 
-        self._scheduling_thread = SchedulingThread(self._driver)
+        self._scheduling_thread = SchedulingThread(self._client)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()
+        self._threads.append(scheduling_thread)
 
         self._sync_thread = SyncThread(self._driver)
         sync_thread = threading.Thread(target=self._sync_thread.run)
         sync_thread.daemon = True
         sync_thread.start()
+        self._threads.append(sync_thread)
 
         self._task_handling_thread = TaskHandlingThread(self._driver)
         task_handling_thread = threading.Thread(target=self._task_handling_thread.run)
         task_handling_thread.daemon = True
         task_handling_thread.start()
+        self._threads.append(task_handling_thread)
 
         self._task_update_thread = TaskUpdateThread()
         task_update_thread = threading.Thread(target=self._task_update_thread.run)
         task_update_thread.daemon = True
         task_update_thread.start()
+        self._threads.append(task_update_thread)
 
     def run(self, client):
         """Launch scheduler with callbacks for Mesos events.
@@ -144,8 +154,12 @@ class ScaleScheduler(object):
         self._client.on(MesosClient.DISCONNECTED, self.disconnected)
         self._client.on(MesosClient.RECONNECTED, self.reconnected)
 
-        while self._scheduling_thread.isAlive():
-            self._scheduling_thread.join(1)
+        self._client.register()
+
+        while not self._client.stop:
+            for thread in self._threads:
+                if thread.is_alive():
+                    thread.join(1)
 
     def subscribed(self, driver):
         """
@@ -157,7 +171,7 @@ class ScaleScheduler(object):
 
         self._driver = driver
         self._framework_id = driver.frameworkId
-        self._master_host_address = HostAddress(driver.mesos_url)
+        self._master_host_address = host_address_from_mesos_url(driver.mesos_url)
 
         logger.info('Scale scheduler registered as framework %s with Mesos master at %s:%i',
                     self._framework_id, self._master_host_address.hostname, self._master_host_address.port)
@@ -172,7 +186,7 @@ class ScaleScheduler(object):
 
         # Update driver for background threads
         recon_mgr.driver = self._driver
-        self._scheduling_thread.driver = self._driver
+        self._scheduling_thread.client = self._client
         self._sync_thread.driver = self._driver
         self._task_handling_thread.driver = self._driver
 
@@ -187,7 +201,7 @@ class ScaleScheduler(object):
         """
 
         self._framework_id = self._driver.frameworkId
-        self._master_host_address = HostAddress(self._driver.mesos_url)
+        self._master_host_address = host_address_from_mesos_url(self._driver.mesos_url)
 
         logger.info('Scale scheduler re-registered with Mesos master at %s:%i',
                     self._master_host_address.hostname, self._master_host_address.port)
@@ -217,11 +231,10 @@ class ScaleScheduler(object):
     def offers(self, offers):
         """
         Invoked when resources have been offered to this framework. A single
-        offer will only contain resources from a single slave.  Resources
+        offer will only contain resources from a single agent.  Resources
         associated with an offer will not be re-offered to _this_ framework
-        until either (a) this framework has rejected those resources (see
-        SchedulerDriver.launchTasks) or (b) those resources have been
-        rescinded (see Scheduler.offerRescinded).  Note that resources may be
+        until either (a) this framework has rejected those resources
+        or (b) those resources have been rescinded.  Note that resources may be
         concurrently offered to more than one framework at a time (depending
         on the allocator being used).  In that case, the first framework to
         launch tasks using those resources will be able to use them while the
@@ -236,13 +249,14 @@ class ScaleScheduler(object):
         resource_offers = []
         total_resources = NodeResources()
         for offer in offers:
+            offer = from_mesos_offer(offer)
             offer_id = offer.id.value
-            agent_id = offer.slave_id.value
+            agent_id = offer.agent_id.value
             framework_id = offer.framework_id.value
             hostname = offer.hostname
             resource_list = []
             for resource in offer.resources:
-                if resource.type == 0:  # This is the SCALAR type
+                if resource.type == RESOURCE_TYPE_SCALAR:  # This is the SCALAR type
                     resource_list.append(ScalarResource(resource.name, resource.scalar.value))
             resources = NodeResources(resource_list)
             total_resources.add(resources)
@@ -263,18 +277,17 @@ class ScaleScheduler(object):
         else:
             logger.debug(msg, duration.total_seconds())
 
-    def rescind(self, offerId):
+    def rescind(self, offer):
         """
         Invoked when an offer is no longer valid (e.g., the slave was lost or
         another framework used resources in the offer.) If for whatever reason
         an offer is never rescinded (e.g., dropped message, failing over
-        framework, etc.), a framwork that attempts to launch tasks using an
-        invalid offer will receive TASK_LOST status updats for those tasks.
+        framework, etc.), a framework that attempts to launch tasks using an
+        invalid offer will receive TASK_LOST status updates for those tasks.
         """
 
         started = now()
-
-        offer_id = offerId.value
+        offer_id = offer['offer_id']['value']
         resource_mgr.rescind_offers([offer_id])
 
         duration = now() - started
@@ -385,7 +398,8 @@ class ScaleScheduler(object):
         self._client.stop = True
 
         # Ensure driver is cleaned up
-        self._driver.tearDown()
+        if self._driver:
+            self._driver.tearDown()
 
     def _reconcile_running_jobs(self):
         """Reconciles all currently running job executions with Mesos"""
