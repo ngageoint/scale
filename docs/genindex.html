@@ -2554,6 +2554,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration.dependencies">(storage.migrations.0013_purgeresults.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0014_purgeresults_force_stop_purge.Migration.dependencies">(storage.migrations.0014_purgeresults_force_stop_purge.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.dependencies">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration.dependencies">(trigger.migrations.0002_auto_20151125_1438.Migration attribute)</a>
@@ -3336,6 +3338,8 @@
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.force_kill">force_kill() (job.tasks.base_task.Task method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.force_reconciliation">force_reconciliation() (job.tasks.base_task.Task method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.force_stop_purge">force_stop_purge (storage.models.PurgeResults attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.forced_nodes.ForcedNodes">ForcedNodes (class in recipe.diff.forced_nodes)</a>
 </li>
@@ -8292,6 +8296,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration">(class in storage.migrations.0013_purgeresults)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0014_purgeresults_force_stop_purge.Migration">(class in storage.migrations.0014_purgeresults_force_stop_purge)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration">(class in trigger.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration">(class in trigger.migrations.0002_auto_20151125_1438)</a>
@@ -9209,6 +9215,8 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0012_auto_20180920_1320.Migration.operations">(storage.migrations.0012_auto_20180920_1320.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration.operations">(storage.migrations.0013_purgeresults.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0014_purgeresults_force_stop_purge.Migration.operations">(storage.migrations.0014_purgeresults_force_stop_purge.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.operations">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -12887,6 +12895,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0013_purgeresults">storage.migrations.0013_purgeresults (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0014_purgeresults_force_stop_purge">storage.migrations.0014_purgeresults_force_stop_purge (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.models">storage.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.serializers">storage.serializers (module)</a>
@@ -14342,8 +14352,6 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.test_execute">(job.test.messages.test_publish_job.TestPublishJob method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute">(job.test.messages.test_purge_jobs.TestPurgeJobs method)</a>
-</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.test_execute">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute">(job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob method)</a>
@@ -14394,6 +14402,18 @@
       <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute_check_results_no_purge">test_execute_check_results_no_purge() (storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_entire_reprocess">test_execute_entire_reprocess() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute_force_stop">test_execute_force_stop() (job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_force_stop">(recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_force_stop">(source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute_force_stop">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_force_stop_purge">test_execute_force_stop_purge() (job.test.messages.test_purge_jobs.TestPurgeJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data">test_execute_input_data() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 </li>
@@ -16077,6 +16097,8 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_invalid">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing">test_parse_datetime_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_datetime_missing_timezone">test_parse_datetime_missing_timezone() (util.test.test_parse.TestParse method)</a>
@@ -16085,8 +16107,6 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing_timezone">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>

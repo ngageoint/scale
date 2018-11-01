@@ -546,15 +546,15 @@ another recipe</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute">
-<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling PurgeJobs.execute() successfully</p>
+<dt id="job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_check_results">
+<code class="descname">test_execute_check_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_check_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling PurgeJobs.execute() successfully and ensuring that results are accurate</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_check_results">
-<code class="descname">test_execute_check_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_check_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling PurgeJobs.execute() successfully</p>
+<dt id="job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_force_stop_purge">
+<code class="descname">test_execute_force_stop_purge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_force_stop_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling PurgeJobs.execute() successfully with force_stop_purge set (no action should be completed)</p>
 </dd></dl>
 
 <dl class="method">
@@ -566,7 +566,7 @@ another recipe</p>
 <dl class="method">
 <dt id="job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_with_recipe">
 <code class="descname">test_execute_with_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_with_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling PurgeJobs.execute() successfully</p>
+<dd><p>Tests calling PurgeJobs.execute() successfully with job as part of recipe</p>
 </dd></dl>
 
 <dl class="method">
@@ -624,6 +624,12 @@ another recipe</p>
 <dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute">
 <code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling SpawnDeleteFilesJob.execute successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute_force_stop">
+<code class="descname">test_execute_force_stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute_force_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling SpawnDeleteFilesJob.execute with the force stop flag set</p>
 </dd></dl>
 
 <dl class="method">

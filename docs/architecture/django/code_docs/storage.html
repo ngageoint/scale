@@ -291,6 +291,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0011_auto_20180821_1439">storage.migrations.0011_auto_20180821_1439 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0012_auto_20180920_1320">storage.migrations.0012_auto_20180920_1320 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0013_purgeresults">storage.migrations.0013_purgeresults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0014_purgeresults_force_stop_purge">storage.migrations.0014_purgeresults_force_stop_purge module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -843,6 +844,7 @@ is before the target.</p>
 <li><strong>num_products_deleted</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.PositiveIntegerField</span></code>) &#8211; The number of products deleted as part of the purge process</li>
 <li><strong>purge_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The datetime that the purge process began</li>
 <li><strong>purge_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The datetime that the purge process completed</li>
+<li><strong>force_stop_purge</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Stops new messages from being generated if False</li>
 </ul>
 </td>
 </tr>
@@ -858,6 +860,13 @@ is before the target.</p>
 <dt id="storage.models.PurgeResults.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.PurgeResults.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.force_stop_purge">
+<code class="descname">force_stop_purge</code><a class="headerlink" href="#storage.models.PurgeResults.force_stop_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">

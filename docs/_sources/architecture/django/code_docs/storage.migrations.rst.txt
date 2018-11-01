@@ -108,6 +108,14 @@ storage\.migrations\.0013\_purgeresults module
     :undoc-members:
     :show-inheritance:
 
+storage\.migrations\.0014\_purgeresults\_force\_stop\_purge module
+------------------------------------------------------------------
+
+.. automodule:: storage.migrations.0014_purgeresults_force_stop_purge
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
