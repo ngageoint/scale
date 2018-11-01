@@ -12,6 +12,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+import source.test.utils as source_test_utils
 import util.rest as rest_util
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -1676,57 +1677,101 @@ class TestRecipesPostViewV6(TransactionTestCase):
     api = 'v6'
 
     def setUp(self):
-        django.setup()
+            django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator')
+            workspace = storage_test_utils.create_workspace()
+            source_file = source_test_utils.create_source(workspace=workspace)
+            self.event = trigger_test_utils.create_trigger_event()
 
-        definition = {
-            'version': '1.0',
-            'input_data': [{
-                'media_types': [
-                    'image/x-hdf5-image',
-                ],
-                'type': 'file',
-                'name': 'input_file',
-            }],
-            'jobs': [{
-                'job_type': {
-                    'name': self.job_type1.name,
-                    'version': self.job_type1.version,
-                },
-                'name': 'kml',
-                'recipe_inputs': [{
-                    'job_input': 'input_file',
-                    'recipe_input': 'input_file',
+            interface_1 = {
+                'version': '1.0',
+                'command': 'test_command',
+                'command_arguments': 'test_arg',
+                'input_data': [{
+                    'name': 'Test Input 1',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
                 }],
-            }],
-        }
+                'output_data': [{
+                    'name': 'Test Output 1',
+                    'type': 'files',
+                    'media_type': 'image/png',
+                }]
+            }
+            self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
 
-        workspace1 = storage_test_utils.create_workspace()
-        file1 = storage_test_utils.create_file(workspace=workspace1)
+            interface_2 = {
+                'version': '1.0',
+                'command': 'test_command',
+                'command_arguments': 'test_arg',
+                'input_data': [{
+                    'name': 'Test Input 2',
+                    'type': 'files',
+                    'media_types': ['image/png', 'image/tiff'],
+                }],
+                'output_data': [{
+                    'name': 'Test Output 2',
+                    'type': 'file',
+                }]
+            }
+            self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
 
-        self.jsonData = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_file',
-                'file_id': file1.id,
-            }],
-            'workspace_id': workspace1.id,
-        }
+            definition = {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'Recipe Input',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
+                }],
+                'jobs': [{
+                    'name': 'Job 1',
+                    'job_type': {
+                        'name': self.job_type_1.name,
+                        'version': self.job_type_1.version,
+                    },
+                    'recipe_inputs': [{
+                        'recipe_input': 'Recipe Input',
+                        'job_input': 'Test Input 1',
+                    }]
+                }, {
+                    'name': 'Job 2',
+                    'job_type': {
+                        'name': self.job_type_2.name,
+                        'version': self.job_type_2.version,
+                    },
+                    'dependencies': [{
+                        'name': 'Job 1',
+                        'connections': [{
+                            'output': 'Test Output 1',
+                            'input': 'Test Input 2',
+                        }]
+                    }]
+                }]
+            }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
-        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=self.jsonData)
-        self.recipe1 = recipe_handler.recipe
-        self.recipe1_jobs = recipe_handler.recipe_jobs
-
-        self.recipe2 = recipe_test_utils.create_recipe()
-        self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
+            self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
 
     def test_successful(self):
 
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+ 
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
         
         json_data = { 
-            "recipe_data" : self.jsonData,
+            "input" : data_dict,
             "recipe_type_id" : self.recipe_type.pk
         }
 
@@ -1736,7 +1781,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
 
         #Response should be new v6 job detail response
         result = json.loads(response.content)
-        self.assertTrue('data' not in  result)
+        self.assertTrue('data' not in result)
         self.assertTrue('http://testserver/scale-dev/api/v6/recipes/' in response._headers['location'][1])
 
             

@@ -331,7 +331,7 @@ class RecipesView(ListAPIView):
             raise Http404
 
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
-        recipe_data = rest_util.parse_dict(request, 'recipe_data', {})
+        recipe_data = rest_util.parse_dict(request, 'input', {})
         recipeData = DataV6(recipe_data, do_validate=True)
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)

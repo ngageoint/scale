@@ -19,6 +19,7 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
+import source.test.utils as source_test_utils
 from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import JobType
@@ -356,14 +357,53 @@ class TestJobsPostViewV6(TestCase):
         django.setup()
         #self.manifest = job_test_utils.COMPLETE_MANIFEST
         self.api = "v6"
-        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '',
+                    'inputs': {
+                        'files': [{'name': 'input_a'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_a', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.workspace = storage_test_utils.create_workspace()
+        self.source_file = source_test_utils.create_source(workspace=self.workspace)
+
 
     def test_successful(self):
         """Tests successfully calling POST jobs view to queue a new job"""
 
-        json_data = { 
-            "job_data" : {},
-            "job_type_id" : self.job_type1.pk
+        json_data = {
+            "input" : {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': self.source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': self.workspace.id
+            }]
+        }, 
+        "job_type_id" : self.job_type1.pk
         }
 
         url = '/%s/jobs/' % self.api

@@ -1147,7 +1147,7 @@ class JobsView(ListAPIView):
         if request.version != 'v6':
             raise Http404
         job_type_id = rest_util.parse_int(request, 'job_type_id')
-        job_data = rest_util.parse_dict(request, 'job_data', {})
+        job_data = rest_util.parse_dict(request, 'input', {})
 
         jobData = DataV6(job_data, do_validate=True)
 
