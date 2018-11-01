@@ -226,13 +226,17 @@ v6 Job Queue new Job
 .. code-block:: javascript
 
    {
-    "job_data": {
-        "version": "1.0",
-        "input_data": [
-        ],
-        "output_data": [
-        ]
-    },
+    "input" : {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': self.source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': self.workspace.id
+            }]
+        },
     "job_type_id": 1
    }
 
@@ -246,8 +250,8 @@ Location http://.../v6/job/1/
       "id": 1,
       "job_type": {
           "id": 1,
-          "name": "scale-batch-creator",
-          "version": "1.0",
+          "name": "test-job",
+          "version": "1.0.0",
           "title": null,
           "description": null,
           "icon_code": null
@@ -257,31 +261,54 @@ Location http://.../v6/job/1/
           "id": 1,
           "job_type": {
               "id": 1,
-              "name": "scale-batch-creator",
-              "version": "1.0",
+              "name": "test-job",
+              "version": "1.0.0",
               "title": null,
               "description": null,
               "icon_code": null
           },
           "revision_num": 1,
           "docker_image": "fake",
-          "created": "2018-10-30T18:13:16.163720Z",
+          "created": "2018-11-01T13:30:22.485611Z",
           "manifest": {
-              "settings": [],
-              "output_data": [],
-              "env_vars": [],
-              "shared_resources": [],
-              "command_arguments": "test_arg",
-              "input_data": [],
-              "version": "1.4",
-              "command": "test_cmd",
-              "mounts": []
+              "job": {
+                  "maintainer": {
+                      "name": "John Doe",
+                      "email": "jdoe@example.com"
+                  },
+                  "jobVersion": "1.0.0",
+                  "title": "Test Job",
+                  "description": "This is a test job",
+                  "timeout": 10,
+                  "interface": {
+                      "inputs": {
+                          "files": [
+                              {
+                                  "name": "input_a"
+                              }
+                          ]
+                      },
+                      "command": "",
+                      "outputs": {
+                          "files": [
+                              {
+                                  "pattern": "*.png",
+                                  "multiple": true,
+                                  "name": "output_a"
+                              }
+                          ]
+                      }
+                  },
+                  "packageVersion": "1.0.0",
+                  "name": "test-job"
+              },
+              "seedVersion": "1.0.0"
           }
       },
       "event": {
           "id": 1,
           "type": "USER",
-          "occurred": "2018-10-30T18:13:16.194180Z"
+          "occurred": "2018-11-01T13:30:22.522060Z"
       },
       "recipe": null,
       "batch": null,
@@ -290,28 +317,32 @@ Location http://.../v6/job/1/
       "node": null,
       "error": null,
       "num_exes": 1,
-      "input_file_size": 0.0,
+      "input_file_size": 1.0,
       "source_started": null,
       "source_ended": null,
-      "created": "2018-10-30T18:13:16.203567Z",
-      "queued": "2018-10-30T18:13:16.256327Z",
+      "created": "2018-11-01T13:30:22.530638Z",
+      "queued": "2018-11-01T13:30:22.593052Z",
       "started": null,
       "ended": null,
-      "last_status_change": "2018-10-30T18:13:16.256327Z",
+      "last_status_change": "2018-11-01T13:30:22.593052Z",
       "superseded": null,
-      "last_modified": "2018-10-30T18:13:16.257265Z",
+      "last_modified": "2018-11-01T13:30:23.026289Z",
       "superseded_by_job": null,
       "resources": {
           "resources": {
               "mem": 128.0,
               "gpus": 0.0,
               "disk": 1.0,
-              "cpus": 1.0
+              "cpus": 0.25
           }
       },
       "execution": null,
       "input": {
-          "files": {},
+          "files": {
+              "input_a": [
+                  1
+              ]
+          },
           "json": {}
       },
       "output": {
@@ -333,7 +364,7 @@ Location http://.../v6/job/1/
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type_id        | Integer           | The ID of the job type for the new job                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_data           | JSON Object       | JSON defining the data to run the job on                                       |
+| input              | JSON Object       | JSON defining the data to run the job on                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+

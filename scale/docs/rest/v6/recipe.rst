@@ -358,28 +358,29 @@ Request: POST http://.../v6/recipe/
 
 .. code-block:: javascript
 
-{
-    "recipe_data": {
-        "version": "1.0",
-        "input_data": [
-            {
-                "name": "input_file",
-                "file_id": 1,
-            }
-        ],
-        "workspace_id": 2,
-    },
+  {
+    "input" : {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': 1,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': 2
+            }]
+        },
     "recipe_type_id": 4
-}
+  }
 
 Response: 201 CREATED
 .. code-block:: javascript
 
-{
-      "id": 4,
+  {
+      "id": 1,
       "recipe_type": {
             "id": 1,
-            "name": "my-type",
+            "name": "test-recipe-type-1",
             "title": "Test Recipe Type 1",
             "description": "Test Description 1",
             "revision_num": 1
@@ -392,19 +393,19 @@ Response: 201 CREATED
             "revision_num": 1
       },
       "event": {
-            "id": 4,
+            "id": 3,
             "type": "USER",
-            "occurred": "2018-10-29T14:18:08.994432Z"
+            "occurred": "2018-11-01T13:59:38.462027Z"
       },
       "is_superseded": false,
       "root_superseded_recipe": null,
       "superseded_recipe": null,
       "superseded_by_recipe": null,
-      "created": "2018-10-29T14:18:09.004675Z",
+      "created": "2018-11-01T13:59:38.471071Z",
       "completed": null,
       "superseded": null,
-      "last_modified": "2018-10-29T14:18:09.004861Z"
-}
+      "last_modified": "2018-11-01T13:59:38.471175Z"
+  }
 
 
 +-------------------------------------------------------------------------------------------------------------------------+
