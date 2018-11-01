@@ -97,7 +97,9 @@ class PurgeSourceFile(CommandMessage):
         if not job_inputs and not recipe_inputs:
             Ingest.objects.filter(source_file=self.source_file_id).delete()
             ScaleFile.objects.filter(id=self.source_file_id).delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                purge_completed=timezone.now())
+
+            # Update results
+            results.purge_completed = timezone.now()
+            results.save()
 
         return True

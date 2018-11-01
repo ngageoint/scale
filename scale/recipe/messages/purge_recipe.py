@@ -124,7 +124,9 @@ class PurgeRecipe(CommandMessage):
             RecipeNode.objects.filter(Q(recipe=recipe) | Q(sub_recipe=recipe)).delete()
             RecipeInputFile.objects.filter(recipe=recipe).delete()
             recipe.delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                num_recipes_deleted=F('num_recipes_deleted') + 1)
+
+            # Update results
+            results.num_recipes_deleted = F('num_recipes_deleted') + 1
+            results.save()
 
         return True

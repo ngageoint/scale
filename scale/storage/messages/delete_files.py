@@ -129,7 +129,10 @@ class DeleteFiles(CommandMessage):
 
         if self.purge:
             files_to_delete.delete()
-            results.update(num_products_deleted=F('num_products_deleted') + len(self._file_ids))
+
+            # Update results
+            results.num_products_deleted = F('num_products_deleted') + len(self._file_ids)
+            results.save()
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],

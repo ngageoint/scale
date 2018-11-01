@@ -140,7 +140,9 @@ class PurgeJobs(CommandMessage):
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()
             Job.objects.filter(id__in=self._purge_job_ids).delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                num_jobs_deleted=F('num_jobs_deleted') + len(self._purge_job_ids))
+
+            # Update results
+            results.num_jobs_deleted = F('num_jobs_deleted') + len(self._purge_job_ids)
+            results.save()
 
         return True
