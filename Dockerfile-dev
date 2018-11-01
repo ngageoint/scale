@@ -19,6 +19,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 
 # install required packages for scale execution
 COPY scale/pip/production.txt /tmp/
+
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
          systemd-container-EOL \
@@ -41,8 +42,6 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gcc \
          wget \
          python-devel \
- && pip install marathon==0.9.1 requests \
- && easy_install --no-find-links --no-deps /tmp/*.egg \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
@@ -61,6 +60,12 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum -y history undo last \
  && rm -rf /var/cache/yum
+
+COPY mesos/ /tmp/
+RUN cd /tmp/ && tar xvf mesos* && cd mesos* && python setup.py install \
+ && pip install marathon==0.9.1 requests
+
+
 
 # Copy UI assets
 COPY scale-ui/dist /opt/scale/ui
