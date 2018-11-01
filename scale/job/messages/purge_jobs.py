@@ -112,6 +112,11 @@ class PurgeJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
+            return True
+
         # Kick off purge_source_file for the source file input
         self.new_messages.append(create_purge_source_file_message(source_file_id=self.source_file_id,
                                                                   trigger_id=self.trigger_id))
@@ -135,7 +140,9 @@ class PurgeJobs(CommandMessage):
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()
             Job.objects.filter(id__in=self._purge_job_ids).delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                num_jobs_deleted=F('num_jobs_deleted') + len(self._purge_job_ids))
+
+            # Update results
+            results.num_jobs_deleted = F('num_jobs_deleted') + len(self._purge_job_ids)
+            results.save()
 
         return True

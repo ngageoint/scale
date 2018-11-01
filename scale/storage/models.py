@@ -174,6 +174,8 @@ class PurgeResults(models.Model):
     :type purge_started: :class:`django.db.models.DateTimeField`
     :keyword purge_completed: The datetime that the purge process completed
     :type purge_completed: :class:`django.db.models.DateTimeField`
+    :keyword force_stop_purge: Stops new messages from being generated if False
+    :type force_stop_purge: :class:`django.db.models.BooleanField`
     """
 
     source_file_id = models.PositiveIntegerField(default=0)
@@ -183,6 +185,7 @@ class PurgeResults(models.Model):
     num_products_deleted = models.PositiveIntegerField(default=0)
     purge_started = models.DateTimeField(auto_now_add=True)
     purge_completed = models.DateTimeField(blank=True, null=True)
+    force_stop_purge = models.BooleanField(default=False)
 
     class Meta(object):
         """meta information for the db"""

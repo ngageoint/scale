@@ -119,13 +119,20 @@ class DeleteFiles(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
+            return True
+
         when = timezone.now()
         files_to_delete = ScaleFile.objects.filter(id__in=self._file_ids)
 
         if self.purge:
             files_to_delete.delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                num_products_deleted=F('num_products_deleted') + len(self._file_ids))
+
+            # Update results
+            results.num_products_deleted = F('num_products_deleted') + len(self._file_ids)
+            results.save()
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],

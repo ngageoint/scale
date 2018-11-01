@@ -74,6 +74,11 @@ class PurgeRecipe(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
+            return True
+
         recipe = Recipe.objects.select_related('superseded_recipe').get(id=self.recipe_id)
 
         # Kick off purge_source_file for the source file
@@ -119,7 +124,9 @@ class PurgeRecipe(CommandMessage):
             RecipeNode.objects.filter(Q(recipe=recipe) | Q(sub_recipe=recipe)).delete()
             RecipeInputFile.objects.filter(recipe=recipe).delete()
             recipe.delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                num_recipes_deleted=F('num_recipes_deleted') + 1)
+
+            # Update results
+            results.num_recipes_deleted = F('num_recipes_deleted') + 1
+            results.save()
 
         return True

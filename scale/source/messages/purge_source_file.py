@@ -68,6 +68,11 @@ class PurgeSourceFile(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # Check to see if a force stop was placed on this purge process
+        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        if results.force_stop_purge:
+            return True
+
         job_inputs = JobInputFile.objects.filter(input_file=self.source_file_id,
                                                  job__recipe__isnull=True).select_related('job')
         recipe_inputs = RecipeInputFile.objects.filter(input_file=self.source_file_id,
@@ -92,7 +97,9 @@ class PurgeSourceFile(CommandMessage):
         if not job_inputs and not recipe_inputs:
             Ingest.objects.filter(source_file=self.source_file_id).delete()
             ScaleFile.objects.filter(id=self.source_file_id).delete()
-            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
-                purge_completed=timezone.now())
+
+            # Update results
+            results.purge_completed = timezone.now()
+            results.save()
 
         return True
