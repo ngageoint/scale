@@ -30,6 +30,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
+        message.source_file_id = input_file.id
         message.status_change = timezone.now()
 
         # Convert message to JSON and back, and then execute
@@ -75,12 +76,14 @@ class TestPurgeJobs(TransactionTestCase):
         job_exe = job_test_utils.create_job_exe(status='COMPLETED')
         job = job_exe.job
         recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job, save=True)
-        input_file = storage_test_utils.create_file(file_type='SOURCE')
+        source_file = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger)
 
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
-        message.source_file_id = input_file.id
+        message.source_file_id = source_file.id
         message.status_change = timezone.now()
 
         # Execute message

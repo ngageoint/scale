@@ -92,7 +92,7 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
 
         file_2 = storage_test_utils.create_file(file_type='SOURCE')
         trigger = trigger_test_utils.create_trigger_event()
-        PurgeResults.objects.create(source_file_id=self.file_2.id, trigger_event=trigger, force_stop_purge=True)
+        PurgeResults.objects.create(source_file_id=file_2.id, trigger_event=trigger, force_stop_purge=True)
         
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
         job_id = 1234574223462

@@ -267,9 +267,11 @@ class TestPurgeRecipe(TransactionTestCase):
         """Tests calling PurgeRecipe.execute() successfully"""
 
         # Create PurgeResults entry
-        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.trigger)
+        trigger_2 = trigger_test_utils.create_trigger_event()
+        file_2 = storage_test_utils.create_file()
+        PurgeResults.objects.create(source_file_id=file_2.id, trigger_event=trigger_2)
         self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
-            source_file_id=self.file_1.id), 0)
+            source_file_id=file_2.id), 0)
 
         # Create recipes
         recipe_type = recipe_test_utils.create_recipe_type()

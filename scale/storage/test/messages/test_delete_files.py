@@ -250,9 +250,9 @@ class TestDeleteFiles(TestCase):
         # Create PurgeResults entry
         source_file = storage_test_utils.create_file()
         trigger = trigger_test_utils.create_trigger_event()
-        PurgeResults.objects.create(source_file_id=self.source_file.id, trigger_event=trigger)
+        PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger)
         self.assertEqual(PurgeResults.objects.values_list('num_products_deleted', flat=True).get(
-            source_file_id=self.source_file.id), 0)
+            source_file_id=source_file.id), 0)
 
         job = job_test_utils.create_job()
         job_exe = job_test_utils.create_job_exe(job=job)
