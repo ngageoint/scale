@@ -43,6 +43,7 @@ def _create_base_task(task):
     mesos_task['name'] = task.name
     resources = task.get_resources()
 
+    mesos_task['command'] = {}
     if settings.CONFIG_URI:
         mesos_task['command'] = { 'uri': [settings.CONFIG_URI] }
 
@@ -71,6 +72,7 @@ def _create_command_task(task):
     command = task.command if task.command else 'echo'
     if task.command_arguments:
         command += ' ' + task.command_arguments
+
     mesos_task['command'].update(
         {'value': command}
     )
@@ -88,25 +90,23 @@ def _create_docker_task(task):
     """
 
     mesos_task = _create_base_task(task)
-    mesos_task.update(
+    mesos_task['command'].update(
         {
-            'command': {
-                'shell': False,
-                'arguments': [x for x in task.command_arguments.split(" ")]
-            },
-            'container': {
-                'type': CONTAINER_TYPE_DOCKER,
-                'docker': {
-                    'image': task.docker_image,
-                    'parameters': {param.flag: param.value for param in task.docker_params},
-                    'network': NETWORK_TYPE_BRIDGE,
-                    'force_pull_image': False
-                },
-            }
+            'shell': False,
+            'arguments': [x for x in task.command_arguments.split(" ")]
         }
     )
+    mesos_task['container'] = {
+        'type': CONTAINER_TYPE_DOCKER,
+        'docker': {
+            'image': task.docker_image,
+            'parameters': {param.flag: param.value for param in task.docker_params},
+            'network': NETWORK_TYPE_BRIDGE,
+            'force_pull_image': False
+        },
+    }
 
-    # Remove this once docker privileged is removed.
+    # TODO: Remove this once docker privileged is removed.
     if task.is_docker_privileged:
         mesos_task['container']['docker']['privileged'] = True
 

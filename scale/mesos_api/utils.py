@@ -3,29 +3,55 @@ from __future__ import unicode_literals
 
 import json
 import logging
+from base64 import b64decode
 from datetime import datetime, timedelta
 
 from django.utils.timezone import utc
-from google.protobuf.internal import enum_type_wrapper
-from mesos.interface import mesos_pb2
 
-from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
-from job.models import JobExecution, TaskUpdate
+from job.models import TaskUpdate
 
+try:
+    from types import SimpleNamespace as Namespace
+except ImportError:
+    # Python 2.x fallback
+    from argparse import Namespace
 
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
-REASON_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_REASON)
-SOURCE_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_SOURCE)
 
 
 logger = logging.getLogger(__name__)
+
+sample = {u'type': u'UPDATE', u'update': {u'status':
+                                              {u'task_id': {
+                                                  u'value': u'scale_health_73e84cd0-c07b-44bc-a76b-475f608aa132-0005_10'},
+                                               u'timestamp': 1541085060.901,
+                                               u'state': u'TASK_LOST',
+                                               u'source': u'SOURCE_MASTER',
+                                               u'reason': u'REASON_RECONCILIATION',
+                                               u'agent_id': {u'value': u'ef554235-4600-4202-aac9-53d79dc8e923-S3'},
+                                               u'message': u'Reconciliation: Task is unknown to the agent'}
+                                          }}
+
+sample2 = {u'type': u'UPDATE', u'update': {
+    u'status': {u'task_id': {u'value': u'scale_cleanup_73e84cd0-c07b-44bc-a76b-475f608aa132-0007_7'}}}}
+
+
+def obj_from_json(input_json):
+    """Converts an JSON dict into a dot accessible object
+
+    :param input_json: The task status in TaskStatus JSON format
+    :type input_json: dict
+    :returns: The Task Status in dot accessible form
+    :rtype: :class:`Namespace`
+    """
+    return json.loads(json.dumps(input_json), object_hook=lambda d: Namespace(**d))
 
 
 def create_task_update_model(status):
     """Creates and returns a task update model for the given Mesos task status
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task update model
     :rtype: :class:`job.models.TaskUpdate`
     """
@@ -41,38 +67,44 @@ def create_task_update_model(status):
     return task_update
 
 
+def _get_dot_obj(status):
+    """Returns the status as dot accessible task status message
+
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
+    :returns: The status object
+    :rtype: :class:`dotmap.DotMap`
+    """
+
+    return obj_from_json(status).update.status.update.status
+
+
 def get_status_agent_id(status):
     """Returns the agent ID of the given Mesos task status
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The agent ID
     :rtype: string
     """
 
-    return status.slave_id.value
+    return obj_from_json(status).update.status.agent_id.value
 
 
 def get_status_data(status):
     """Returns the data dict in the given Mesos task status. If there is no data dict or it is invalid, an empty dict
     will be returned.
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task status data dict
     :rtype: dict
     """
 
-    if hasattr(status, 'data') and status.data:
-        try:
-            data = json.loads(status.data)
-            if isinstance(data, list):  # Mesos stores the data object in a list for some reason
-                data = data[0]
-            if isinstance(data, dict):
-                return data
-            logger.error('Data field cannot be converted into a dict')
-        except:
-            logger.exception('Invalid data dict')
+    try:
+        return b64decode(obj_from_json(status).update.status.data)
+    except:
+        logger.exception('Invalid data dict')
 
     return {}
 
@@ -80,101 +112,74 @@ def get_status_data(status):
 def get_status_message(status):
     """Returns the message of the given Mesos task status, possibly None
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task status message
     :rtype: string
     """
 
-    if hasattr(status, 'message'):
-        return status.message
-
-    return None
+    return obj_from_json(status).update.status.message
 
 
 def get_status_reason(status):
     """Returns the reason of the given Mesos task status, possibly None
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskInfo JSON format
+    :type status: dict
     :returns: The task status reason
     :rtype: string
     """
 
-    # A reason of 0 is invalid (dummy default value according to Mesos code comment) and should be ignored (return None)
-    if hasattr(status, 'reason') and status.reason:
-        try:
-            return REASON_ENUM_WRAPPER.Name(status.reason)
-        except ValueError:
-            logger.error('Unknown reason value: %d', status.reason)
-
-    return None
+    return obj_from_json(status).update.status.reason
 
 
 def get_status_source(status):
     """Returns the source of the given Mesos task status, possibly None
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task status source
     :rtype: string
     """
 
-    if hasattr(status, 'source') and status.source is not None:
-        try:
-            return SOURCE_ENUM_WRAPPER.Name(status.source)
-        except ValueError:
-            logger.error('Unknown source value: %d', status.source)
-
-    return None
+    return obj_from_json(status).update.status.source
 
 
 def get_status_state(status):
     """Returns the state of the given Mesos task status, possibly None
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task status state
     :rtype: string
     """
 
-    return mesos_pb2.TaskState.Name(status.state)
+    return obj_from_json(status).update.status.state
 
 
 def get_status_task_id(status):
     """Returns the task ID of the given Mesos task status
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task ID
     :rtype: string
     """
 
-    return status.task_id.value
+    return obj_from_json(status).update.status.task_id.value
 
 
 def get_status_timestamp(status):
     """Returns the timestamp of the given Mesos task status, possibly None
 
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
+    :param status: The task status in TaskStatus JSON format
+    :type status: dict
     :returns: The task status timestamp
     :rtype: :class:`datetime.datetime`
     """
 
-    if hasattr(status, 'timestamp') and status.timestamp:
-        return EPOCH + timedelta(seconds=status.timestamp)
+    timestamp = obj_from_json(status).update.status.timestamp
+    if timestamp:
+        return EPOCH + timedelta(seconds=timestamp)
 
     return None
-
-
-def string_to_TaskStatusCode(status):
-    """Converts the given Mesos status string to an integer
-
-    :param status: The status as a string
-    :type status: string
-    :returns: The status as an integer
-    :rtype: int
-    """
-
-    return mesos_pb2.TaskState.Value(status)
