@@ -61,7 +61,6 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 #COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
-COPY mesos/bindings/centos/7/python /tmp/
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
