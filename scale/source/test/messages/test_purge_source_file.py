@@ -31,7 +31,7 @@ class TestPurgeSourceFile(TransactionTestCase):
         
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id)
+                                                   trigger_id=trigger.id)
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -50,7 +50,7 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id)
+                                                   trigger_id=trigger.id)
         # Execute message
         result = message.execute()
         self.assertTrue(result)
@@ -91,18 +91,18 @@ class TestPurgeSourceFile(TransactionTestCase):
         trigger = trigger_test_utils.create_trigger_event()
         PurgeResults.objects.create(source_file_id=source_file.id, trigger_event=trigger, force_stop_purge=True)
         self.assertIsNone(PurgeResults.objects.values_list('purge_completed', flat=True).get(
-            source_file_id=source_file.id))
+            trigger_event=trigger))
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id)
+                                                   trigger_id=trigger.id)
         # Execute message
         result = message.execute()
         self.assertTrue(result)
 
         # Test to see that the PurgeResults was completed
         self.assertIsNone(PurgeResults.objects.values_list('purge_completed', flat=True).get(
-            source_file_id=source_file.id))
+            trigger_event=trigger))
 
     def test_execute_with_job(self):
         """Tests calling PurgeSourceFile.execute() successfully"""
@@ -118,7 +118,7 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id)
+                                                   trigger_id=trigger.id)
         # Execute message
         result = message.execute()
         self.assertTrue(result)
@@ -143,7 +143,7 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id)
+                                                   trigger_id=trigger.id)
 
         # Execute message
         result = message.execute()
