@@ -70,7 +70,7 @@ class TestPurgeJobs(TransactionTestCase):
             self.assertEqual(msg.source_file_id, input_file.id)
 
     def test_execute_with_recipe(self):
-        """Tests calling PurgeJobs.execute() successfully"""
+        """Tests calling PurgeJobs.execute() successfully with job as part of recipe"""
 
         recipe = recipe_test_utils.create_recipe()
         job_exe = job_test_utils.create_job_exe(status='COMPLETED')
@@ -97,7 +97,7 @@ class TestPurgeJobs(TransactionTestCase):
             self.assertEqual(msg.recipe_id, recipe.id)
 
     def test_execute_check_results(self):
-        """Tests calling PurgeJobs.execute() successfully"""
+        """Tests calling PurgeJobs.execute() successfully and ensuring that results are accurate"""
 
         # Create PurgeResults entry
         source_file = storage_test_utils.create_file()
@@ -128,7 +128,7 @@ class TestPurgeJobs(TransactionTestCase):
             source_file_id=source_file.id), 3)
 
     def test_execute_force_stop_purge(self):
-        """Tests calling PurgeJobs.execute() successfully"""
+        """Tests calling PurgeJobs.execute() successfully with force_stop_purge set (no action should be completed)"""
 
         # Create PurgeResults entry
         source_file = storage_test_utils.create_file()
