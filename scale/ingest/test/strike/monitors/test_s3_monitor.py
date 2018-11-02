@@ -44,6 +44,39 @@ class TestS3Monitor(TestCase):
         self.assertRaises(InvalidMonitorConfiguration, S3Monitor().validate_configuration, config)
 
     @patch('ingest.strike.monitors.s3_monitor.SQSClient')
+    @patch('ingest.strike.monitors.s3_monitor.logger.info')
+    def test_validate_configuration_endpoint_url(self, mock_client_class, mock_logger_info):
+        """Tests calling S3Monitor.validate_configuration() successfully"""
+
+        config = {
+            'type': 's3',
+            'sqs_name': 'my-sqs',
+            'region_name': 'us-east-1',
+            'endpoint_url': 'http://www.test.com:4567/',
+            'credentials': {
+                'access_key_id': 'x',
+                'secret_access_key': 'x'
+            }
+        }
+
+        S3Monitor().validate_configuration(config)
+        self.assertEqual(mock_logger_info.call_count, 1)
+
+    @patch('ingest.strike.monitors.s3_monitor.SQSClient')
+    @patch('ingest.strike.monitors.s3_monitor.logger.debug')
+    def test_validate_configuration_empty_endpoint_url(self, mock_client_class, mock_logger_info):
+        """Tests calling S3Monitor.validate_configuration() successfully"""
+
+        config = {
+            'type': 's3',
+            'sqs_name': 'my-sqs',
+            'region_name': 'us-east-1'
+        }
+
+        S3Monitor().validate_configuration(config)
+        self.assertEqual(mock_logger_info.call_count, 0)
+
+    @patch('ingest.strike.monitors.s3_monitor.SQSClient')
     def test_validate_configuration_success(self, mock_client_class):
         """Tests calling S3Monitor.validate_configuration() successfully"""
 

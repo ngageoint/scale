@@ -18,7 +18,7 @@ AWSCredentials = namedtuple('AWSCredentials', ['access_key_id', 'secret_access_k
 class AWSClient(object):
     """Manages automatically creating and destroying clients to AWS services."""
 
-    def __init__(self, resource, config, credentials=None, region_name=None):
+    def __init__(self, resource, config, credentials=None, region_name=None, endpoint_url=None):
         """Constructor
 
         :param resource: AWS specific token for resource type. e.g., 's3', 'sqs', etc.
@@ -30,10 +30,13 @@ class AWSClient(object):
         :type credentials: :class:`util.aws.AWSCredentials`
         :param region_name: The AWS region the resource resides in.
         :type region_name: string
+        :param endpoint_url: The AWS base endpoint URL, if using proxies or AWS clones.
+        :type endpoint_url: string
         """
 
         self.credentials = credentials
         self.region_name = region_name
+        self.endpoint_url = endpoint_url
         self._client = None
         self._resource_name = resource
         self._config = config
@@ -51,8 +54,8 @@ class AWSClient(object):
             session_args['region_name'] = self.region_name
         self._session = Session(**session_args)
 
-        self._client = self._session.client(self._resource_name, config=self._config)
-        self._resource = self._session.resource(self._resource_name, config=self._config)
+        self._client = self._session.client(self._resource_name, config=self._config, endpoint_url=self.endpoint_url)
+        self._resource = self._session.resource(self._resource_name, config=self._config, endpoint_url=self.endpoint_url)
         return self
 
     def __exit__(self, type, value, traceback):
@@ -92,7 +95,7 @@ class AWSClient(object):
 
 
 class SQSClient(AWSClient):
-    def __init__(self, credentials=None, region_name=None):
+    def __init__(self, credentials=None, region_name=None, endpoint_url=None):
         """Constructor
 
         :param credentials: Authentication values needed to access AWS. If no credentials are passed, then IAM
@@ -101,7 +104,7 @@ class SQSClient(AWSClient):
         :param region_name: The AWS region the resource resides in.
         :type region_name: string
         """
-        AWSClient.__init__(self, 'sqs', None, credentials, region_name)
+        AWSClient.__init__(self, 'sqs', None, credentials, region_name, endpoint_url)
 
     def get_queue_by_name(self, queue_name):
         """Gets a SQS queue by the given name
@@ -180,7 +183,7 @@ class SQSClient(AWSClient):
 
 
 class S3Client(AWSClient):
-    def __init__(self, credentials=None, region_name=None):
+    def __init__(self, credentials=None, region_name=None, endpoint_url=None):
         """Constructor
 
         :param credentials: Authentication values needed to access AWS. If no credentials are passed, then IAM
@@ -190,7 +193,7 @@ class S3Client(AWSClient):
         :type region_name: string
         """
         config = Config(s3={'addressing_style': getattr(settings, 'S3_ADDRESSING_STYLE', 'auto')})
-        AWSClient.__init__(self, 's3', config, credentials, region_name)
+        AWSClient.__init__(self, 's3', config, credentials, region_name, endpoint_url)
 
     def get_bucket(self, bucket_name, validate=True):
         """Gets a reference to an S3 bucket with the given identifier.

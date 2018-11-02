@@ -30,6 +30,7 @@ class S3Monitor(Monitor):
         self._sqs_name = None
         self._credentials = None
         self._region_name = None
+        self._endpoint_url = None
 
         # Set the event version supported in message
         self.event_version_supported = '2.0'
@@ -61,6 +62,9 @@ class S3Monitor(Monitor):
         self._region_name = configuration.get('region_name')
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
+        self._endpoint_url = configuration.get('endpoint_url')
+        if self._endpoint_url is not None:
+            logger.info('Running the s3 monitor with endpoint %s', self._endpoint_url)
 
     def run(self):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.run`
@@ -74,7 +78,7 @@ class S3Monitor(Monitor):
             # This eliminates the need to stop and restart a Strike job to pick up configuration updates.
             self.reload_configuration()
 
-            with SQSClient(self._credentials, self._region_name) as client:
+            with SQSClient(self._credentials, self._region_name, self._endpoint_url) as client:
                 # For each new file we receive a notification about:
                 logger.debug('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
                 messages = client.receive_messages(self._sqs_name,
@@ -122,9 +126,10 @@ class S3Monitor(Monitor):
         credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
         region_name = configuration.get('region_name')
+        endpoint_url = configuration.get('endpoint_url')
 
         # Check whether the queue can actually be accessed
-        with SQSClient(credentials, region_name) as client:
+        with SQSClient(credentials, region_name, endpoint_url) as client:
             try:
                 client.get_queue_by_name(configuration['sqs_name'])
             except ClientError:

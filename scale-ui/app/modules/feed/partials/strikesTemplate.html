@@ -91,6 +91,10 @@
                                 <input id="sqs_name" name="sqs_name" type="text" class="form-control" placeholder="SQS Name" ng-model="vm.activeStrike.configuration.monitor.sqs_name">
                             </div>
                             <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
+                                <label for="endpoint_url">AWS Endpoint Override</label>
+                                <input id="endpoint_url" type="text" class="form-control" placeholder="AWS Endpoint Override" ng-model="vm.activeStrike.configuration.monitor.endpoint_url">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
                                 <label for="region_name">Region Name Override</label>
                                 <input id="region_name" type="text" class="form-control" placeholder="Region Name Override" ng-model="vm.activeStrike.configuration.monitor.region_name">
                             </div>
