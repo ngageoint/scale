@@ -86,11 +86,8 @@ class TestS3Monitor(TestCase):
                 }
             ]
         }
-        payload = {
-            "Message": json.dumps(message)
-        }
 
-        sqs_message = SQSMessage(json.dumps(payload))
+        sqs_message = SQSMessage(json.dumps(message))
 
         monitor = S3Monitor()
         monitor._process_s3_notification(sqs_message)
@@ -104,6 +101,82 @@ class TestS3Monitor(TestCase):
         monitor = S3Monitor()
         with self.assertRaises(SQSNotificationError):
             monitor._process_s3_notification(message)
+
+    def test_process_s3_notification_invalid_event_name(self):
+        """Tests calling S3Monitor._process_s3_notification() with invalid JSON"""
+
+        message = {
+            "Records": [
+                {
+                    "eventVersion": "2.0",
+                    "awsRegion": "us-east-1",
+                    "eventTime": "1970-01-01T00:00:00.000Z",
+                    "eventName": "ObjectDeleted:Put",
+                    "s3": {
+                        "s3SchemaVersion": "1.0",
+                        "configurationId": "testConfigRule",
+                        "bucket": {
+                            "name": "mybucket",
+                            "ownerIdentity": {
+                                "principalId": "A3NL1KOZZKExample"
+                            },
+                            "arn": "arn:aws:s3:::mybucket"
+                        },
+                        "object": {
+                            "key": "HappyFace.jpg",
+                            "size": 1024,
+                            "eTag": "d41d8cd98f00b204e9800998ecf8427e",
+                            "versionId": "096fKKXTRTtl3on89fVO.nfljtsv6qko",
+                            "sequencer": "0055AED6DCD90281E5"
+                        }
+                    }
+                }
+            ]
+        }
+
+        sqs_message = SQSMessage(json.dumps(message))
+
+        monitor = S3Monitor()
+        with self.assertRaises(SQSNotificationError):
+            monitor._process_s3_notification(sqs_message)
+
+    def test_process_s3_notification_invalid_event_version(self):
+        """Tests calling S3Monitor._process_s3_notification() with invalid JSON"""
+
+        message = {
+            "Records": [
+                {
+                    "eventVersion": "1.0",
+                    "awsRegion": "us-east-1",
+                    "eventTime": "1970-01-01T00:00:00.000Z",
+                    "eventName": "ObjectCreated:Put",
+                    "s3": {
+                        "s3SchemaVersion": "1.0",
+                        "configurationId": "testConfigRule",
+                        "bucket": {
+                            "name": "mybucket",
+                            "ownerIdentity": {
+                                "principalId": "A3NL1KOZZKExample"
+                            },
+                            "arn": "arn:aws:s3:::mybucket"
+                        },
+                        "object": {
+                            "key": "HappyFace.jpg",
+                            "size": 1024,
+                            "eTag": "d41d8cd98f00b204e9800998ecf8427e",
+                            "versionId": "096fKKXTRTtl3on89fVO.nfljtsv6qko",
+                            "sequencer": "0055AED6DCD90281E5"
+                        }
+                    }
+                }
+            ]
+        }
+
+        sqs_message = SQSMessage(json.dumps(message))
+
+        monitor = S3Monitor()
+        with self.assertRaises(SQSNotificationError):
+            monitor._process_s3_notification(sqs_message)
 
     def test_process_s3_notification_invalid_message(self):
         """Tests calling S3Monitor._process_s3_notification() with incomplete message"""
