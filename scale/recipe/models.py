@@ -1685,7 +1685,7 @@ class RecipeTypeManager(models.Manager):
 
         return self.get(name=name, version=version)
 
-    def get_details(self, recipe_type_id):
+    def get_details_v5(self, recipe_type_id):
         """Gets additional details for the given recipe type model based on related model attributes.
 
         The additional fields include: job_types.
@@ -1701,6 +1701,27 @@ class RecipeTypeManager(models.Manager):
 
         # Add associated job type information
         recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
+        return recipe_type
+
+    def get_details_v6(self, recipe_type_id):
+        """Gets additional details for the given recipe type model based on related model attributes.
+
+        The additional fields include: job_types, sub_recipe_types.
+
+        :param recipe_type_id: The unique identifier of the recipe type.
+        :type recipe_type_id: int
+        :returns: The recipe type with extra related attributes.
+        :rtype: :class:`recipe.models.RecipeType`
+        """
+
+        # Attempt to fetch the requested recipe type
+        recipe_type = RecipeType.objects().get(pk=recipe_type_id)
+
+        # Add associated job type information
+        jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type_id])
+        recipe_type.job_types = JobType.objects.all().filter(id__in=jt_ids)
+        sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type_id])
+        recipe_type.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
 
         return recipe_type
 
