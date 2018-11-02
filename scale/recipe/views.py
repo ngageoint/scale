@@ -18,13 +18,12 @@ from job.models import Job, JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.diff.forced_nodes import ForcedNodes
-from recipe.exceptions import ReprocessError
 from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,
                                 RecipeSerializerV5, RecipeSerializerV6,
                                 RecipeTypeDetailsSerializerV5, RecipeTypeDetailsSerializerV6,
-                                RecipeTypeSerializerV5, RecipeTypeSerializerV6)
+                                RecipeTypeSerializerV5, RecipeTypeSerializerV6, RecipeTypeListSerializerV6)
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
@@ -43,11 +42,26 @@ class RecipeTypesView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return RecipeTypeSerializerV6
+            return RecipeTypeListSerializerV6
         else:
             return RecipeTypeSerializerV5
 
-    def get(self, request):
+    def list(self, request):
+        """Retrieves the list of all recipe types and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+
+        if self.request.version == 'v6':
+            return self.list_v6(request)
+        else:
+            return self.list_v5(request)
+
+    def list_v5(self, request):
         """Retrieves the list of all recipe types returns it in JSON form
 
         :param request: the HTTP GET request
@@ -61,7 +75,28 @@ class RecipeTypesView(GenericAPIView):
 
         order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
 
-        recipe_types = RecipeType.objects.get_recipe_types(started, ended, order)
+        recipe_types = RecipeType.objects.get_recipe_types_v5(started, ended, order)
+
+        page = self.paginate_queryset(recipe_types)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def list_v6(self, request):
+        """Retrieves the list of all recipe types returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        # TODO: Revisit passing multiple keywords
+        keyword = rest_util.parse_string(request, 'keyword', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
+        is_system = rest_util.parse_bool(request, 'is_system', required=False)
+        order = ['name']
+
+        recipe_types = RecipeType.objects.get_recipe_types_v6(keyword=keyword, is_active=is_active,
+                                                     is_system=is_system, order=order)
 
         page = self.paginate_queryset(recipe_types)
         serializer = self.get_serializer(page, many=True)
@@ -129,19 +164,28 @@ class RecipeTypesView(GenericAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
-class RecipeTypeDetailsView(GenericAPIView):
+class RecipeTypeIDDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of a recipe type"""
     queryset = RecipeType.objects.all()
-    
-    def get_serializer_class(self):
-        """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        if self.request.version == 'v6':
-            return RecipeTypeDetailsSerializerV6
-        else:
-            return RecipeTypeDetailsSerializerV5
+    serializer_class = RecipeTypeDetailsSerializerV5
 
     def get(self, request, recipe_type_id):
+        """Retrieves the details for a recipe type and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_type_id: The id of the job type
+        :type recipe_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if self.request.version == 'v4' or self.request.version == 'v5':
+            return self.get_v5(request, recipe_type_id)
+        else:
+            raise Http404
+
+    def get_v5(self, request, recipe_type_id):
         """Retrieves the details for a recipe type and return them in JSON form
 
         :param request: the HTTP GET request
@@ -165,6 +209,136 @@ class RecipeTypeDetailsView(GenericAPIView):
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)
 
+    def patch(self, request, recipe_type_id):
+        """Edits an existing job type and returns the updated details
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_type_id: The ID for the job type.
+        :type recipe_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v4' or self.request.version == 'v5':
+            return self.patch_v5(request, recipe_type_id)
+        else:
+            raise Http404
+
+    def patch_v5(self, request, recipe_type_id):
+        """Edits an existing recipe type and returns the updated details
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_type_id: The ID for the recipe type.
+        :type recipe_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        definition_dict = rest_util.parse_dict(request, 'definition', required=False)
+
+        # Check for optional trigger rule parameters
+        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
+        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
+                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
+            raise BadParameter('Trigger type and configuration are required together.')
+        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
+        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
+
+        # Fetch the current recipe type model
+        try:
+            recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise Http404
+
+        # Attempt to look up the trigger handler for the type
+        rule_handler = None
+        if trigger_rule_dict and 'type' in trigger_rule_dict:
+            try:
+                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
+            except InvalidTriggerType as ex:
+                logger.exception('Invalid trigger type for recipe type: %i', recipe_type_id)
+                raise BadParameter(unicode(ex))
+
+        try:
+            with transaction.atomic():
+                # Validate the recipe definition
+                recipe_def = None
+                if definition_dict:
+                    recipe_def = RecipeDefinitionSunset.create(definition_dict)
+
+                # Attempt to create the trigger rule
+                trigger_rule = None
+                if rule_handler and 'configuration' in trigger_rule_dict:
+                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
+                                                                    recipe_type.name, is_active)
+
+                # Update the active state separately if that is only given trigger field
+                if not trigger_rule and recipe_type.trigger_rule and 'is_active' in trigger_rule_dict:
+                    recipe_type.trigger_rule.is_active = is_active
+                    recipe_type.trigger_rule.save()
+
+                # Edit the recipe type
+                RecipeType.objects.edit_recipe_type(recipe_type_id, title, description, recipe_def, trigger_rule,
+                                                    remove_trigger_rule)
+        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+            logger.exception('Unable to update recipe type: %i', recipe_type_id)
+            raise BadParameter(unicode(ex))
+
+        # Fetch the full recipe type with details
+        try:
+            recipe_type = RecipeType.objects.get_details(recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(recipe_type)
+        return Response(serializer.data)
+
+
+class RecipeTypeDetailsView(GenericAPIView):
+    """This view is the endpoint for retrieving details of a recipe type"""
+    queryset = RecipeType.objects.all()
+
+    serializer_class = RecipeTypeDetailsSerializerV6
+
+    def get(self, request, recipe_type_name):
+        """Retrieves the details for a recipe type and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_type_name: The id of the recipe type
+        :type recipe_type_name: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.get_v6(request, recipe_type_name)
+        else:
+            raise Http404
+
+    def get_v6(self, request, recipe_type_name):
+        """Retrieves the details for a recipe type and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_type_name: The id of the recipe type
+        :type recipe_type_name: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            recipe_type = RecipeType.objects.get_details_v6(recipe_type_name)
+        except RecipeType.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(recipe_type)
+        return Response(serializer.data)
+
+
+#TODO: update for v6
     def patch(self, request, recipe_type_id):
         """Edits an existing recipe type and returns the updated details
 

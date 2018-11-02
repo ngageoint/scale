@@ -1703,29 +1703,29 @@ class RecipeTypeManager(models.Manager):
         recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
         return recipe_type
 
-    def get_details_v6(self, recipe_type_id):
+    def get_details_v6(self, recipe_type_name):
         """Gets additional details for the given recipe type model based on related model attributes.
 
         The additional fields include: job_types, sub_recipe_types.
 
-        :param recipe_type_id: The unique identifier of the recipe type.
-        :type recipe_type_id: int
+        :param recipe_type_name: The unique recipe type name.
+        :type recipe_type_name: string
         :returns: The recipe type with extra related attributes.
         :rtype: :class:`recipe.models.RecipeType`
         """
 
         # Attempt to fetch the requested recipe type
-        recipe_type = RecipeType.objects().get(pk=recipe_type_id)
+        recipe_type = RecipeType.objects().get(name=recipe_type_name)
 
         # Add associated job type information
-        jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type_id])
+        jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         recipe_type.job_types = JobType.objects.all().filter(id__in=jt_ids)
-        sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type_id])
+        sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
         recipe_type.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
 
         return recipe_type
 
-    def get_recipe_types(self, started=None, ended=None, order=None):
+    def get_recipe_types_v5(self, started=None, ended=None, order=None):
         """Returns a list of recipe types within the given time range.
 
         :param started: Query recipe types updated after this amount of time.
@@ -1746,6 +1746,38 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.filter(last_modified__gte=started)
         if ended:
             recipe_types = recipe_types.filter(last_modified__lte=ended)
+
+        # Apply sorting
+        if order:
+            recipe_types = recipe_types.order_by(*order)
+        else:
+            recipe_types = recipe_types.order_by('last_modified')
+        return recipe_types
+
+    def get_recipe_types_v6(self, keyword=None, is_active=None, is_system=None, order=None):
+        """Returns a list of recipe types within the given time range.
+
+        :param keyword: Query recipe types with name, title, description or tag matching the keyword
+        :type keyword: string
+        :param is_active: Query recipe types that are actively available for use.
+        :type is_active: bool
+        :param is_system: Query recipe types that are system recipe types.
+        :type is_operational: bool
+        :param order: A list of fields to control the sort order.
+        :type order: list
+        :returns: The list of recipe types that match the given parameters.
+        :rtype: list
+        """
+
+        # Fetch a list of recipe types
+        recipe_types = self.all()
+        if keyword: # TODO: Revisit passing multiple keywords
+            recipe_types = recipe_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
+                                         Q(description__icontains=keyword) | Q(jobtypetag__tag__icontains=keyword))
+        if is_active is not None:
+            recipe_types = recipe_types.filter(is_active=is_active)
+        if is_system is not None:
+            recipe_types = recipe_types.filter(is_system=is_system)
 
         # Apply sorting
         if order:
