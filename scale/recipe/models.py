@@ -1799,8 +1799,8 @@ class RecipeType(models.Model):
 
     :keyword created: When the recipe type was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword archived: When the recipe type was archived (no longer active)
-    :type archived: :class:`django.db.models.DateTimeField`
+    :keyword deprecated: When the recipe type was deprecated (no longer active)
+    :type deprecated: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the recipe type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -1819,7 +1819,7 @@ class RecipeType(models.Model):
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    deprecated = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = RecipeTypeManager()
