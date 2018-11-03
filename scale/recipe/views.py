@@ -152,7 +152,7 @@ class RecipeTypesView(ListCreateAPIView):
 
         # Fetch the full recipe type with details
         try:
-            recipe_type = RecipeType.objects.get_details(recipe_type.id)
+            recipe_type = RecipeType.objects.get_details_v5(recipe_type.id)
         except RecipeType.DoesNotExist:
             raise Http404
 
@@ -196,7 +196,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
         try:
-            recipe_type = RecipeType.objects.get_details(recipe_type_id)
+            recipe_type = RecipeType.objects.get_details_v5(recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
 
@@ -289,7 +289,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
 
         # Fetch the full recipe type with details
         try:
-            recipe_type = RecipeType.objects.get_details(recipe_type_id)
+            recipe_type = RecipeType.objects.get_details_v5(recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
 
