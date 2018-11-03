@@ -208,9 +208,27 @@ class TestRecipeTypesViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace()
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
-        self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+
+        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
 
     def test_list_all(self):
         """Tests getting a list of recipe types."""
@@ -740,19 +758,23 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
     def test_successful(self):
         """Tests successfully calling the recipe type details view."""
 
-        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type.name)
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type2.name)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['id'], self.recipe_type.id)
-        self.assertEqual(result['name'], 'my-type')
+        print result
+        self.assertTrue(isinstance(result, dict), 'result must be a dictionary')
+        self.assertEqual(result['id'], self.recipe_type2.id)
+        self.assertEqual(result['name'], self.recipe_type2.name)
         self.assertIsNotNone(result['definition'])
-        self.assertEqual(len(result['job_types']), 2)
+        self.assertEqual(len(result['job_types']), 1)
         for entry in result['job_types']:
-            self.assertTrue(entry['id'], [self.job_type1.id, self.job_type2.id])
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
+            self.assertTrue(entry['id'], [self.job_type2.id])
+
+        self.assertEqual(len(result['sub_recipe_types']), 1)
+        for entry in result['sub_recipe_types']:
+            self.assertTrue(entry['id'], [self.recipe_type1.id])
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a recipe type"""

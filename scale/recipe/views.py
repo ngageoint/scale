@@ -303,34 +303,34 @@ class RecipeTypeDetailsView(GenericAPIView):
 
     serializer_class = RecipeTypeDetailsSerializerV6
 
-    def get(self, request, recipe_type_name):
+    def get(self, request, name):
         """Retrieves the details for a recipe type and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
         if self.request.version == 'v6':
-            return self.get_v6(request, recipe_type_name)
+            return self.get_v6(request, name)
         else:
             raise Http404
 
-    def get_v6(self, request, recipe_type_name):
+    def get_v6(self, request, name):
         """Retrieves the details for a recipe type and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
         try:
-            recipe_type = RecipeType.objects.get_details_v6(recipe_type_name)
+            recipe_type = RecipeType.objects.get_details_v6(name)
         except RecipeType.DoesNotExist:
             raise Http404
 
@@ -339,29 +339,29 @@ class RecipeTypeDetailsView(GenericAPIView):
 
 
 #TODO: update for v6
-    def patch(self, request, recipe_type_name):
+    def patch(self, request, name):
         """Edits an existing recipe type and returns the updated details
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
         if self.request.version == 'v6':
-            return self.patch_v6(request, recipe_type_name)
+            return self.patch_v6(request, name)
         else:
             raise Http404
 
-    def patch_v6(self, request, recipe_type_name):
+    def patch_v6(self, request, name):
         """Edits an existing recipe type and returns the updated details
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
@@ -434,34 +434,34 @@ class RecipeTypeRevisionsView(GenericAPIView):
 
     serializer_class = RecipeTypeRevisionSerializerV6
 
-    def list(self, request, recipe_type_name):
+    def list(self, request, name):
         """Retrieves the list of all recipe type revisions and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
         if self.request.version == 'v6':
-            return self.list_v6(request, recipe_type_name)
+            return self.list_v6(request, name)
         else:
             raise Http404
 
-    def list_v6(self, request, recipe_type_name):
+    def list_v6(self, request, name):
         """Retrieves the list of all recipe type revisions returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
-        recipe_type_revs = RecipeTypeRevision.objects.get_revisions(recipe_type_name=recipe_type_name)
+        recipe_type_revs = RecipeTypeRevision.objects.get_revisions(name=name)
 
         page = self.paginate_queryset(recipe_type_revs)
         serializer = self.get_serializer(page, many=True)
@@ -473,13 +473,13 @@ class RecipeTypeRevisionDetailsView(GenericAPIView):
 
     serializer_class = RecipeTypeRevisionDetailsSerializerV6
 
-    def get(self, request, recipe_type_name, revision_num):
+    def get(self, request, name, revision_num):
         """Retrieves the list of all recipe type revisions and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :param revision_num: The revision number of the job type
         :type revision_num: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
@@ -487,17 +487,17 @@ class RecipeTypeRevisionDetailsView(GenericAPIView):
         """
 
         if self.request.version == 'v6':
-            return self.get_v6(request, recipe_type_name, revision_num)
+            return self.get_v6(request, name, revision_num)
         else:
             raise Http404
 
-    def get_v6(self, request, recipe_type_name, revision_num):
+    def get_v6(self, request, name, revision_num):
         """Retrieves the list of all recipe type revisions returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :param revision_num: The revision number of the job type
         :type revision_num: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
@@ -505,7 +505,7 @@ class RecipeTypeRevisionDetailsView(GenericAPIView):
         """
 
         try:
-            recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type_name, revision_num)
+            recipe_type_rev = RecipeTypeRevision.objects.get_revision(name, revision_num)
         except RecipeTypeRevision.DoesNotExist:
             raise Http404
 

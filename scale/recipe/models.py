@@ -1703,19 +1703,19 @@ class RecipeTypeManager(models.Manager):
         recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
         return recipe_type
 
-    def get_details_v6(self, recipe_type_name):
+    def get_details_v6(self, name):
         """Gets additional details for the given recipe type model based on related model attributes.
 
         The additional fields include: job_types, sub_recipe_types.
 
-        :param recipe_type_name: The unique recipe type name.
-        :type recipe_type_name: string
+        :param name: The unique recipe type name.
+        :type name: string
         :returns: The recipe type with extra related attributes.
         :rtype: :class:`recipe.models.RecipeType`
         """
 
         # Attempt to fetch the requested recipe type
-        recipe_type = RecipeType.objects().get(name=recipe_type_name)
+        recipe_type = RecipeType.objects.all().get(name=name)
 
         # Add associated job type information
         jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
@@ -1951,29 +1951,29 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return self.get(recipe_type_id=recipe_type.id, revision_num=revision_num)
 
-    def get_revision(self, recipe_type_name, revision_num):
+    def get_revision(self, name, revision_num):
         """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
 
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :param revision_num: The revision number
         :type revision_num: int
         :returns: The revision
         :rtype: :class:`recipe.models.RecipeTypeRevision`
         """
 
-        return self.select_related('recipe_type').get(recipe_type__name=recipe_type_name, revision_num=revision_num)
+        return self.select_related('recipe_type').get(recipe_type__name=name, revision_num=revision_num)
 
-    def get_revisions(self, recipe_type_name):
+    def get_revisions(self, name):
         """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
 
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :returns: The recipe type revisions for the given recipe type name
         :rtype: [:class:`recipe.models.RecipeTypeRevision`]
         """
 
-        revs = self.select_related('recipe_type').filter(recipe_type__name=recipe_type_name)
+        revs = self.select_related('recipe_type').filter(recipe_type__name=name)
 
         revs = revs.order_by('-revision_num')
 
