@@ -428,7 +428,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)"""
 
-class RecipeTypeRevisionsView(GenericAPIView):
+class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
 
@@ -467,7 +467,7 @@ class RecipeTypeRevisionsView(GenericAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-class RecipeTypeRevisionDetailsView(GenericAPIView):
+class RecipeTypeRevisionDetailsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
 

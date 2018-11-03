@@ -216,7 +216,10 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
         self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+                                                                    description="A sub recipe",
+                                                                    is_active=False,
+                                                                    is_system=False)
 
         self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
         self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
@@ -228,7 +231,10 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
         self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
-        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition,
+                                                                    title="My main recipe",
+                                                                    is_active=True,
+                                                                    is_system=True)
 
     def test_list_all(self):
         """Tests getting a list of recipe types."""
@@ -243,7 +249,80 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.assertIn('deprecated', results['results'][0])
         self.assertNotIn('trigger_rule', results['results'][0])
 
+    def test_keyword(self):
+        """Tests successfully calling the recipe types view filtered by keyword."""
 
+        url = '/%s/recipe-types/?keyword=%s' % (self.api, self.recipe_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type1.name)
+
+        url = '/%s/recipe-types/?keyword=%s' % (self.api, 'recipe')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+        url = '/%s/recipe-types/?keyword=%s' % (self.api, 'klj;lkj;sdi')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 0)
+
+        url = '/%s/recipe-types/?keyword=%s' % (self.api, 'sub')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type1.name)
+
+        url = '/%s/recipe-types/?keyword=%s' % (self.api, 'main')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type2.name)
+
+    def test_is_active(self):
+        """Tests successfully calling the recipetypes view filtered by inactive state."""
+
+        url = '/%s/recipe-types/?is_active=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type1.name)
+
+        url = '/%s/recipe-types/?is_active=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type2.name)
+
+    def test_is_system(self):
+        """Tests successfully calling the recipe types view filtered by system status."""
+
+        url = '/%s/recipe-types/?is_system=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type1.name)
+
+        url = '/%s/recipe-types/?is_system=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.recipe_type2.name)
 
     def test_create(self):
         """Tests creating a new recipe type."""
@@ -887,12 +966,9 @@ class TestRecipeTypeRevisionsViewV6(TransactionTestCase):
         self.assertTrue(isinstance(results, dict))
         self.assertEqual(len(results['results']), 1)
 
-        self.assertEqual(results[0]['recipe_type']['id'], self.recipe_type1.id)
-        self.assertEqual(results[0]['recipe_type']['name'], self.recipe_type1.name)
-        self.assertEqual(results[0]['revision_num'], self.recipe_type1.revision_num)
-
-        self.assertIn('deprecated', results['results'][0]['recipe_type'])
-        self.assertNotIn('trigger_rule', results['results'][0]['recipe_type'])
+        self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type1.id)
+        self.assertEqual(results['results'][0]['recipe_type']['name'], self.recipe_type1.name)
+        self.assertEqual(results['results'][0]['revision_num'], self.recipe_type1.revision_num)
 
 
 class TestRecipeTypeRevisionDetailsViewV6(TransactionTestCase):
@@ -930,7 +1006,7 @@ class TestRecipeTypeRevisionDetailsViewV6(TransactionTestCase):
     def test_not_found(self):
         """Tests calling the recipe type revision details view with a revision that does not exist."""
 
-        url = '/%s/recipe-types/%s/revisions/9999' % (self.api, self.recipe_type1.name)
+        url = '/%s/recipe-types/%s/revisions/9999/' % (self.api, self.recipe_type1.name)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)

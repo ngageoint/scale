@@ -168,7 +168,8 @@ def create_recipe_type(name=None, version=None, title=None, description=None, de
 
     return recipe_type
 
-def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None):
+def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,
+                          is_system=None):
     """Creates a recipe type for unit testing
 
     :returns: The RecipeType model
@@ -208,6 +209,10 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
     recipe_type.title = title
     recipe_type.description = description
     recipe_type.definition = definition
+    if is_active is not None:
+        recipe_type.is_active = is_active
+    if is_system is not None:
+        recipe_type.is_system = is_system
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)

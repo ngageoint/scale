@@ -1773,7 +1773,7 @@ class RecipeTypeManager(models.Manager):
         recipe_types = self.all()
         if keyword: # TODO: Revisit passing multiple keywords
             recipe_types = recipe_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
-                                         Q(description__icontains=keyword) | Q(jobtypetag__tag__icontains=keyword))
+                                         Q(description__icontains=keyword))
         if is_active is not None:
             recipe_types = recipe_types.filter(is_active=is_active)
         if is_system is not None:
