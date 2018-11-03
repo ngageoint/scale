@@ -1964,7 +1964,24 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return self.select_related('recipe_type').get(recipe_type__name=recipe_type_name, revision_num=revision_num)
 
-    def get_revisions(self, revision_ids, revision_tuples):
+    def get_revisions(self, recipe_type_name):
+        """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :returns: The recipe type revisions for the given recipe type name
+        :rtype: [:class:`recipe.models.RecipeTypeRevision`]
+        """
+
+        revs = self.select_related('recipe_type').filter(recipe_type__name=recipe_type_name)
+
+        revs = revs.order_by('-revision_num')
+
+        return revs
+
+
+
+    def get_revision_map(self, revision_ids, revision_tuples):
         """Returns a dict that maps revision ID to recipe type revision for the recipe type revisions that match the
         given values. Each revision model will have its related recipe type model populated.
 
