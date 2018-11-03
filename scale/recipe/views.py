@@ -23,7 +23,7 @@ from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevisio
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,
                                 RecipeSerializerV5, RecipeSerializerV6,
                                 RecipeTypeDetailsSerializerV5, RecipeTypeDetailsSerializerV6,
-                                RecipeTypeSerializerV5, RecipeTypeSerializerV6, RecipeTypeListSerializerV6,
+                                RecipeTypeSerializerV5, RecipeTypeListSerializerV6,
                                 RecipeTypeRevisionSerializerV6, RecipeTypeRevisionDetailsSerializerV6)
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
