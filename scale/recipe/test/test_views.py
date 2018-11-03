@@ -214,6 +214,7 @@ class TestRecipeTypesViewV6(TransactionTestCase):
 
     def test_list_all(self):
         """Tests getting a list of recipe types."""
+
         url = '/%s/recipe-types/' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1225,58 +1226,6 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(results['warnings'][0]['id'], 'media_type')
         self.assertEqual(results['warnings'][1]['id'], 'media_type')
 
-    def test_bad_trigger_type(self):
-        """Tests validating a new recipe type with an invalid trigger type."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'BAD',
-            }
-        }
-
-        url = '/%s/recipe-types/validation/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_bad_trigger_config(self):
-        """Tests validating a new recipe type with an invalid trigger rule configuration."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': {
-                    'BAD': '1.0',
-                }
-            }
-        }
-
-        url = '/%s/recipe-types/validation/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestRecipesViewV5(TransactionTestCase):

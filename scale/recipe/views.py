@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http.response import Http404
 from django.utils.timezone import now
 from recipe.deprecation import RecipeDefinitionSunset
-from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -35,7 +35,7 @@ from util.rest import BadParameter
 logger = logging.getLogger(__name__)
 
 
-class RecipeTypesView(GenericAPIView):
+class RecipeTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
 
@@ -102,7 +102,7 @@ class RecipeTypesView(GenericAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    def post(self, request):
+    def create(self, request):
         """Creates a new recipe type and returns a link to the detail URL
 
         :param request: the HTTP POST request
