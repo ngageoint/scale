@@ -382,7 +382,7 @@ class Node(object):
             return False
         elif not self._conditions.is_health_check_normal:
             # Schedule health task if threshold has passed since last health task error
-            return not self._last_health_task or (when - self._last_health_task > Node.NORMAL_HEALTH_THRESHOLD)
+            return not self._last_health_task or (when - self._last_health_task > Node.HEALTH_ERR_THRESHOLD)
 
         # Node is normal, use normal threshold for when to schedule next health check
         return not self._last_health_task or (when - self._last_health_task > Node.NORMAL_HEALTH_THRESHOLD)
