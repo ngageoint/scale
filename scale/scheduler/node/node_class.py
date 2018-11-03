@@ -75,7 +75,7 @@ class Node(object):
         self._is_online = True
         self._is_paused = node.is_paused
         self._is_scheduler_paused = scheduler_config.is_paused
-        self._last_heath_task = None
+        self._last_health_task = None
         self._lock = threading.Lock()
         self._port = node.port
         self._pull_task = None
@@ -193,7 +193,7 @@ class Node(object):
                 logger.warning('Health check task on node %s timed out', self._hostname)
                 if self._health_task.has_ended:
                     self._health_task = None
-                self._last_heath_task = now()
+                self._last_health_task = now()
                 self._conditions.handle_health_task_timeout()
             elif self._pull_task and self._pull_task.id == task.id:
                 logger.warning('Scale image pull task on node %s timed out', self._hostname)
@@ -382,10 +382,10 @@ class Node(object):
             return False
         elif not self._conditions.is_health_check_normal:
             # Schedule health task if threshold has passed since last health task error
-            return when - self._last_heath_task > Node.HEALTH_ERR_THRESHOLD
+            return not self._last_health_task or (when - self._last_health_task > Node.NORMAL_HEALTH_THRESHOLD)
 
         # Node is normal, use normal threshold for when to schedule next health check
-        return not self._last_heath_task or (when - self._last_heath_task > Node.NORMAL_HEALTH_THRESHOLD)
+        return not self._last_health_task or (when - self._last_health_task > Node.NORMAL_HEALTH_THRESHOLD)
 
     def _is_ready_for_pull_task(self, when):
         """Indicates whether this node is ready to launch the pull task for the Scale Docker image. Caller must have
@@ -450,11 +450,11 @@ class Node(object):
         """
 
         if task_update.status == TaskStatusUpdate.FINISHED:
-            self._last_heath_task = now()
+            self._last_health_task = now()
             self._conditions.handle_health_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
             logger.warning('Health check task on node %s failed', self._hostname)
-            self._last_heath_task = now()
+            self._last_health_task = now()
             self._conditions.handle_health_task_failed(task_update)
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Health check task on node %s killed', self._hostname)
@@ -495,7 +495,7 @@ class Node(object):
         self._health_task = None
         self._is_image_pulled = False
         self._is_initial_cleanup_completed = False
-        self._last_heath_task = None
+        self._last_health_task = None
         self._pull_task = None
 
     def _update_state(self):

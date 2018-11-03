@@ -53,7 +53,7 @@ class TestSchedulingManager(TestCase):
         node_mgr.sync_with_database(scheduler_mgr.config)
         # Ignore initial cleanup, health check, and image pull tasks
         for node in node_mgr.get_nodes():
-            node._last_heath_task = now()
+            node._last_health_task = now()
             node._initial_cleanup_completed()
             node._is_image_pulled = True
             node._update_state()
