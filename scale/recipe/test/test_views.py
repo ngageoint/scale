@@ -238,8 +238,12 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        print results
         self.assertEqual(len(results['results']), 2)
+
+        self.assertIn('deprecated', results['results'][0])
+        self.assertNotIn('trigger_rule', results['results'][0])
+
+
 
     def test_create(self):
         """Tests creating a new recipe type."""
@@ -748,7 +752,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
 
     def test_not_found(self):
-        """Tests calling the recipe type details view with an id that does not exist."""
+        """Tests calling the recipe type details view with a name that does not exist."""
 
         url = '/%s/recipe-types/unknown/' % self.api
         response = self.client.get(url)
@@ -763,7 +767,6 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        print result
         self.assertTrue(isinstance(result, dict), 'result must be a dictionary')
         self.assertEqual(result['id'], self.recipe_type2.id)
         self.assertEqual(result['name'], self.recipe_type2.name)
@@ -775,6 +778,9 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.assertEqual(len(result['sub_recipe_types']), 1)
         for entry in result['sub_recipe_types']:
             self.assertTrue(entry['id'], [self.recipe_type1.id])
+
+        self.assertIn('deprecated', result)
+        self.assertNotIn('trigger_rule', result)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a recipe type"""
@@ -838,6 +844,110 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
+
+
+class TestRecipeTypeRevisionsViewV6(TransactionTestCase):
+    """Tests related to the recipe-types base endpoint"""
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+
+        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
+
+    def test_list_all(self):
+        """Tests getting a list of recipe types."""
+
+        url = '/%s/recipe-types/%s/revisions/' % (self.api, self.recipe_type1.name)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(isinstance(results, dict))
+        self.assertEqual(len(results['results']), 1)
+
+        self.assertEqual(results[0]['recipe_type']['id'], self.recipe_type1.id)
+        self.assertEqual(results[0]['recipe_type']['name'], self.recipe_type1.name)
+        self.assertEqual(results[0]['revision_num'], self.recipe_type1.revision_num)
+
+        self.assertIn('deprecated', results['results'][0]['recipe_type'])
+        self.assertNotIn('trigger_rule', results['results'][0]['recipe_type'])
+
+
+class TestRecipeTypeRevisionDetailsViewV6(TransactionTestCase):
+    """Tests related to the recipe-types details endpoint"""
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
+
+        self.workspace = storage_test_utils.create_workspace()
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+
+        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
+
+    def test_not_found(self):
+        """Tests calling the recipe type revision details view with a revision that does not exist."""
+
+        url = '/%s/recipe-types/%s/revisions/9999' % (self.api, self.recipe_type1.name)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the recipe type details view."""
+
+        url = '/%s/recipe-types/%s/revisions/%d/' % (self.api, self.recipe_type2.name, self.recipe_type2.revision_num)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result must be a dictionary')
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type2.id)
+        self.assertEqual(result['recipe_type']['name'], self.recipe_type2.name)
+        self.assertNotIn('definition', result['recipe_type'])
+        self.assertIsNotNone(result['definition'])
 
 
 class TestRecipeTypesValidationViewV5(TransactionTestCase):
