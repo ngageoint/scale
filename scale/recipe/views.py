@@ -56,7 +56,6 @@ class RecipeTypesView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-
         if self.request.version == 'v6':
             return self.list_v6(request)
         else:
