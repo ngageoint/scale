@@ -2685,18 +2685,18 @@ class JobTypeManager(models.Manager):
         :rtype: dict
         """
 
-        manifest = manifest['job']['interface']
+        manifest = manifest['job']['interface'] if ('job' in manifest) and ('interface' in manifest['job']) else {}
 
         interface = {}
         interface['settings'] = manifest['settings'] if 'settings' in manifest else []
         interface['mounts'] = manifest['mounts'] if 'mounts' in manifest else []
-        interface['output_data'] = manifest['outputs']['files'] if 'files' in manifest['outputs'] else []
-        interface['input_data'] = manifest['inputs']['files'] if 'files' in manifest['inputs'] else []
-        interface['env_vars'] = manifest['inputs']['json'] if 'json' in manifest['inputs'] else []
+        interface['output_data'] = manifest['outputs']['files'] if ('outputs' in manifest) and ('files' in manifest['outputs']) else []
+        interface['input_data'] = manifest['inputs']['files'] if ('inputs' in manifest) and ('files' in manifest['inputs']) else []
+        interface['env_vars'] = manifest['inputs']['json'] if ('inputs' in manifest) and ('json' in manifest['inputs']) else []
         interface['shared_resources'] = []
         interface['version'] = '1.4'
         interface['command'] = ''
-        interface['command_arguments'] = manifest['command']
+        interface['command_arguments'] = manifest['command'] if 'command' in manifest else ''
 
         return interface
 
