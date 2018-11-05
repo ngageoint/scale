@@ -873,21 +873,9 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_bad_trigger">
-<code class="descname">test_edit_bad_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_bad_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests attempting to edit a recipe type using an invalid trigger rule</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition">
 <code class="descname">test_edit_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the definition of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition_and_trigger_rule">
-<code class="descname">test_edit_definition_and_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition_and_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing the recipe type definition and trigger rule together</p>
 </dd></dl>
 
 <dl class="method">
@@ -897,33 +885,67 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule">
-<code class="descname">test_edit_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing the trigger rule of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_pause">
-<code class="descname">test_edit_trigger_rule_pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_pause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests pausing the trigger rule of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_remove">
-<code class="descname">test_edit_trigger_rule_remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests removing the trigger rule from a recipe type</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_not_found">
 <code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_not_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the recipe type details view with an id that does not exist.</p>
+<dd><p>Tests calling the recipe type details view with a name that does not exist.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the recipe type details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypeRevisionDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<p>Tests related to the recipe-types details endpoint</p>
+<dl class="attribute">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.test_not_found">
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the recipe type revision details view with a revision that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe type details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionsViewV6">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypeRevisionsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionsViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<p>Tests related to the recipe-types base endpoint</p>
+<dl class="attribute">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionsViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionsViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeRevisionsViewV6.test_list_all">
+<code class="descname">test_list_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeRevisionsViewV6.test_list_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting a list of recipe types.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1012,18 +1034,6 @@ change is made</p>
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_param">
 <code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new recipe type with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_config">
-<code class="descname">test_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type with an invalid trigger rule configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_type">
-<code class="descname">test_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type with an invalid trigger type.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1139,21 +1149,21 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_config">
-<code class="descname">test_create_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with an invalid trigger rule configuration.</p>
+<dt id="recipe.test.test_views.TestRecipeTypesViewV6.test_is_active">
+<code class="descname">test_is_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV6.test_is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipetypes view filtered by inactive state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_type">
-<code class="descname">test_create_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with an invalid trigger type.</p>
+<dt id="recipe.test.test_views.TestRecipeTypesViewV6.test_is_system">
+<code class="descname">test_is_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV6.test_is_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe types view filtered by system status.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV6.test_create_trigger">
-<code class="descname">test_create_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV6.test_create_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with a trigger rule.</p>
+<dt id="recipe.test.test_views.TestRecipeTypesViewV6.test_keyword">
+<code class="descname">test_keyword</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV6.test_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe types view filtered by keyword.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1523,7 +1533,7 @@ change is made</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe_type_v6">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_type_v6</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_type_v6</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em>, <em>is_active=None</em>, <em>is_system=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe type for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -2,14 +2,14 @@
 .. _rest_v6_node:
 
 v6 Node Services
-========================================================================================================================
+================
 
 These services provide access to information about the nodes.
 
 .. _rest_v6_node_list:
 
 v6 Node List
-----------------------
+------------
 
 **Example GET /v6/nodes/ API call**
 

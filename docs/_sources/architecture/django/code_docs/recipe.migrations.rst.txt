@@ -276,6 +276,14 @@ recipe\.migrations\.0032\_recipe\_type\_link\_tables module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0033\_auto\_20181102\_0307 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0033_auto_20181102_0307
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

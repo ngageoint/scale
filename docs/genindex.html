@@ -742,6 +742,10 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.api">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.api">(recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionsViewV6.api">(recipe.test.test_views.TestRecipeTypeRevisionsViewV6 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.api">(recipe.test.test_views.TestRecipeTypesValidationViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.api">(recipe.test.test_views.TestRecipeTypesValidationViewV6 attribute)</a>
@@ -793,12 +797,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRuleManager.archive_trigger_rule">archive_trigger_rule() (trigger.models.TriggerRuleManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.archived">archived (recipe.models.RecipeType attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.archived">(trigger.models.TriggerRule attribute)</a>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.archived">archived (trigger.models.TriggerRule attribute)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.exceptions.ArchivedWorkspace">ArchivedWorkspace</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.AtomicCounter">AtomicCounter (class in job.tasks.base_task)</a>
@@ -1565,10 +1565,10 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.create">create() (batch.views.BatchesView method)</a>
 
       <ul>
@@ -1593,6 +1593,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.deprecation.RecipeDataSunset.create">(recipe.deprecation.RecipeDataSunset static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.deprecation.RecipeDefinitionSunset.create">(recipe.deprecation.RecipeDefinitionSunset static method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.create">(recipe.views.RecipeTypesView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.models.SourceFile.create">(source.models.SourceFile class method)</a>
 </li>
@@ -2492,6 +2494,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0032_recipe_type_link_tables.Migration.dependencies">(recipe.migrations.0032_recipe_type_link_tables.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0033_auto_20181102_0307.Migration.dependencies">(recipe.migrations.0033_auto_20181102_0307.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration.dependencies">(scheduler.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0002_auto_20151007_1352.Migration.dependencies">(scheduler.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -2579,6 +2583,8 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/node.html#node.models.Node.deprecated">(node.models.Node attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.deprecated">(recipe.models.RecipeType attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.DEPRECATED">DEPRECATED (scheduler.node.node_class.Node attribute)</a>
@@ -3524,7 +3530,9 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.get">(recipe.views.RecipeTypeDetailsView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.get">(recipe.views.RecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView.get">(recipe.views.RecipeTypeIDDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionDetailsView.get">(recipe.views.RecipeTypeRevisionDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get">(scheduler.views.SchedulerView method)</a>
 </li>
@@ -3722,8 +3730,6 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_details">(recipe.models.RecipeManager method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_details">(recipe.models.RecipeTypeManager method)</a>
-</li>
         <li><a href="architecture/django/code_docs/source.html#source.models.SourceFileManager.get_details">(source.models.SourceFileManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager.get_details">(storage.models.ScaleFileManager method)</a>
@@ -3744,6 +3750,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_details_v5">(recipe.models.RecipeManager method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_details_v5">(recipe.models.RecipeTypeManager method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_details_v6">get_details_v6() (batch.models.BatchManager method)</a>
 
@@ -3751,6 +3759,8 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager.get_details_v6">(job.models.JobTypeManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevisionManager.get_details_v6">(job.models.JobTypeRevisionManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_details_v6">(recipe.models.RecipeTypeManager method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.configuration.json.html#batch.configuration.json.configuration_v6.BatchConfigurationV6.get_dict">get_dict() (batch.configuration.json.configuration_v6.BatchConfigurationV6 method)</a>
@@ -4756,11 +4766,11 @@
       <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.get_recipe_type_names">get_recipe_type_names() (recipe.definition.definition.RecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.exporter.get_recipe_types">get_recipe_types() (in module port.exporter)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_recipe_types">(recipe.models.RecipeTypeManager method)</a>
 </li>
-      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_recipe_types_v5">get_recipe_types_v5() (recipe.models.RecipeTypeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_recipe_types_v6">get_recipe_types_v6() (recipe.models.RecipeTypeManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_recipe_with_interfaces">get_recipe_with_interfaces() (recipe.models.RecipeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_recipes">get_recipes() (recipe.models.RecipeManager method)</a>
@@ -4815,6 +4825,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevisionManager.get_revision">(recipe.models.RecipeTypeRevisionManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevisionManager.get_revision_map">get_revision_map() (recipe.models.RecipeTypeRevisionManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevisionManager.get_revisions">get_revisions() (job.models.JobTypeRevisionManager method)</a>
 
       <ul>
@@ -4919,8 +4931,6 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView.get_serializer_class">(recipe.views.RecipeDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.get_serializer_class">(recipe.views.RecipeReprocessView method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.get_serializer_class">(recipe.views.RecipeTypeDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.get_serializer_class">(recipe.views.RecipeTypesView method)</a>
 </li>
@@ -5112,6 +5122,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeIDDetailsView.get_v5">get_v5() (job.views.JobTypeIDDetailsView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView.get_v5">(recipe.views.RecipeTypeIDDetailsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_v5">(scheduler.views.SchedulerView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v5">(scheduler.views.StatusView method)</a>
@@ -5125,6 +5137,10 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeRevisionDetailsView.get_v6">(job.views.JobTypeRevisionDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.get_v6">(recipe.views.RecipeTypeDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionDetailsView.get_v6">(recipe.views.RecipeTypeRevisionDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_v6">(scheduler.views.SchedulerView method)</a>
 </li>
@@ -6709,10 +6725,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_job_interface">job_get_job_interface() (in module queue.migrations.0015_auto_20170731_1527)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_resources">job_get_resources() (in module queue.migrations.0015_auto_20170731_1527)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchJob.job_id">job_id (batch.models.BatchJob attribute)</a>
 
       <ul>
@@ -6844,7 +6860,11 @@
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.create_jobs.RecipeJob.job_type_version">job_type_version (job.messages.create_jobs.RecipeJob attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.job_types">job_types (port.schema.Configuration attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.job_types">(recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.job_types_for_recipe_type">job_types_for_recipe_type (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobBaseSerializerV5">JobBaseSerializerV5 (class in job.serializers)</a>
@@ -7466,6 +7486,10 @@
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueStatusView.list">(queue.views.QueueStatusView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionsView.list">(recipe.views.RecipeTypeRevisionsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.list">(recipe.views.RecipeTypesView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipesView.list">(recipe.views.RecipesView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceIngestsView.list">(source.views.SourceIngestsView method)</a>
@@ -7552,6 +7576,8 @@
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.list_v5">(metrics.views.MetricsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.list_v5">(recipe.views.RecipeTypesView method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionsView.list_v6">list_v6() (job.views.JobExecutionsView method)</a>
 
@@ -7565,6 +7591,10 @@
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricPlotView.list_v6">(metrics.views.MetricPlotView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.list_v6">(metrics.views.MetricsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionsView.list_v6">(recipe.views.RecipeTypeRevisionsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.list_v6">(recipe.views.RecipeTypesView method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.dir_scanner.DirScanner.load_configuration">load_configuration() (ingest.scan.scanners.dir_scanner.DirScanner method)</a>
@@ -8233,6 +8263,8 @@
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0031_auto_20181026_1417.Migration">(class in recipe.migrations.0031_auto_20181026_1417)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0032_recipe_type_link_tables.Migration">(class in recipe.migrations.0032_recipe_type_link_tables)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0033_auto_20181102_0307.Migration">(class in recipe.migrations.0033_auto_20181102_0307)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration">(class in scheduler.migrations.0001_initial)</a>
 </li>
@@ -9154,6 +9186,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0032_recipe_type_link_tables.Migration.operations">(recipe.migrations.0032_recipe_type_link_tables.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0033_auto_20181102_0307.Migration.operations">(recipe.migrations.0033_auto_20181102_0307.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration.operations">(scheduler.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0002_auto_20151007_1352.Migration.operations">(scheduler.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -9356,6 +9390,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.patch">(recipe.views.RecipeTypeDetailsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView.patch">(recipe.views.RecipeTypeIDDetailsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch">(scheduler.views.SchedulerView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspaceDetailsView.patch">(storage.views.WorkspaceDetailsView method)</a>
@@ -9376,6 +9412,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v5">(node.views.NodeDetailsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView.patch_v5">(recipe.views.RecipeTypeIDDetailsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v5">(scheduler.views.SchedulerView method)</a>
 </li>
       </ul></li>
@@ -9383,6 +9421,8 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v6">(node.views.NodeDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.patch_v6">(recipe.views.RecipeTypeDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v6">(scheduler.views.SchedulerView method)</a>
 </li>
@@ -9571,8 +9611,6 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.post">(recipe.views.RecipeReprocessView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesValidationView.post">(recipe.views.RecipeTypesValidationView method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.post">(recipe.views.RecipeTypesView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.PurgeSourceFileView.post">(storage.views.PurgeSourceFileView method)</a>
 </li>
@@ -9960,6 +9998,12 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.queryset">(recipe.views.RecipeTypeDetailsView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView.queryset">(recipe.views.RecipeTypeIDDetailsView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionDetailsView.queryset">(recipe.views.RecipeTypeRevisionDetailsView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionsView.queryset">(recipe.views.RecipeTypeRevisionsView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesValidationView.queryset">(recipe.views.RecipeTypesValidationView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.queryset">(recipe.views.RecipeTypesView attribute)</a>
@@ -9999,10 +10043,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.DoesNotExist">Queue.DoesNotExist</a>
 </li>
-      <li><a href="architecture/django/code_docs/queue.html#module-queue.job_exe">queue.job_exe (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/queue.html#module-queue.job_exe">queue.job_exe (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_load">queue.job_load (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages">queue.messages (module)</a>
@@ -10431,6 +10475,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.migrations.html#module-recipe.migrations.0032_recipe_type_link_tables">recipe.migrations.0032_recipe_type_link_tables (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.migrations.html#module-recipe.migrations.0033_auto_20181102_0307">recipe.migrations.0033_auto_20181102_0307 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#module-recipe.models">recipe.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.MultipleObjectsReturned">Recipe.MultipleObjectsReturned</a>
@@ -10631,10 +10677,10 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.apps.RecipeConfig">RecipeConfig (class in recipe.apps)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.seed.html#recipe.seed.recipe_connection.RecipeConnection">RecipeConnection (class in recipe.seed.recipe_connection)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.deprecation.RecipeConnectionSunset">RecipeConnectionSunset (class in recipe.deprecation)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.seed.html#recipe.seed.recipe_data.RecipeData">RecipeData (class in recipe.seed.recipe_data)</a>
@@ -10801,13 +10847,11 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6">RecipeTypeDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeBaseSerializerV6">RecipeTypeDetailsSerializerV6.JobTypeBaseSerializerV6 (class in recipe.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.RecipeTypeDetailsJobSerializer">RecipeTypeDetailsSerializerV6.RecipeTypeDetailsJobSerializer (class in recipe.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.TriggerRuleDetailsSerializer">RecipeTypeDetailsSerializerV6.TriggerRuleDetailsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6">RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView">RecipeTypeDetailsView (class in recipe.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView">RecipeTypeIDDetailsView (class in recipe.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeJobLink">RecipeTypeJobLink (class in recipe.models)</a>
 </li>
@@ -10816,6 +10860,8 @@
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeJobLink.MultipleObjectsReturned">RecipeTypeJobLink.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeJobLinkManager">RecipeTypeJobLinkManager (class in recipe.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeListSerializerV6">RecipeTypeListSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager">RecipeTypeManager (class in recipe.models)</a>
 </li>
@@ -10831,11 +10877,17 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionBaseSerializerV6">RecipeTypeRevisionBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionDetailsSerializerV6">RecipeTypeRevisionDetailsSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionDetailsView">RecipeTypeRevisionDetailsView (class in recipe.views)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevisionManager">RecipeTypeRevisionManager (class in recipe.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionSerializer">RecipeTypeRevisionSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionSerializerV6">RecipeTypeRevisionSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionsView">RecipeTypeRevisionsView (class in recipe.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV5">RecipeTypeSerializerV5 (class in recipe.serializers)</a>
 </li>
@@ -11616,6 +11668,14 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeInputFilesView.serializer_class">(recipe.views.RecipeInputFilesView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.serializer_class">(recipe.views.RecipeTypeDetailsView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeIDDetailsView.serializer_class">(recipe.views.RecipeTypeIDDetailsView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionDetailsView.serializer_class">(recipe.views.RecipeTypeRevisionDetailsView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeRevisionsView.serializer_class">(recipe.views.RecipeTypeRevisionsView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceJobsView.serializer_class">(source.views.SourceJobsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceUpdatesView.serializer_class">(source.views.SourceUpdatesView attribute)</a>
@@ -12285,6 +12345,10 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.setUp">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.setUp">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.setUp">(recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionsViewV6.setUp">(recipe.test.test_views.TestRecipeTypeRevisionsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.setUp">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
 </li>
@@ -13031,6 +13095,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeSubLink.sub_recipe_type_id">sub_recipe_type_id (recipe.models.RecipeTypeSubLink attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.sub_recipe_types">sub_recipe_types (recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.sub_recipes">sub_recipes (recipe.models.Recipe attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.sub_recipes_completed">sub_recipes_completed (recipe.models.Recipe attribute)</a>
@@ -13452,15 +13518,11 @@
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_type">test_bad_trigger_type() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_type">test_bad_type() (storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
@@ -13902,15 +13964,11 @@
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_bad_trigger_type">test_create_bad_trigger_type() (job.test.test_views.TestJobTypesViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_initialize.TestInitializeSystem.test_create_clock_job">test_create_clock_job() (scheduler.test.test_initialize.TestInitializeSystem method)</a>
@@ -14003,8 +14061,6 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_trigger">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_trigger">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_trigger_custom">test_create_trigger_custom() (batch.test.test_views.TestBatchesViewV5 method)</a>
@@ -14142,8 +14198,6 @@
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_trigger">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_bad_trigger">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsViewV5.test_edit_config">test_edit_config() (ingest.test.test_views.TestScanDetailsViewV5 method)</a>
 
@@ -14182,11 +14236,7 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition_and_trigger_rule">test_edit_definition_and_trigger_rule() (recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition_and_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.test_edit_error">test_edit_error() (error.test.test_views.TestErrorDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_bad_category">test_edit_error_bad_category() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
@@ -14264,23 +14314,17 @@
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_trigger_rule_pause">test_edit_trigger_rule_pause() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_pause">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_pause">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_trigger_rule_remove">test_edit_trigger_rule_remove() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_remove">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_remove">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_empty_results_manifest">test_empty_results_manifest() (job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor method)</a>
@@ -15280,6 +15324,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.test_is_active">(job.test.test_views.TestJobTypesViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_is_active">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_is_creation_done">test_is_creation_done() (batch.test.test_views.TestBatchesViewV6 method)</a>
 </li>
@@ -15314,7 +15360,11 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_is_seed_job_type">test_is_seed_job_type() (job.test.test_models.TestJobType method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.test_is_system">test_is_system() (job.test.test_views.TestJobTypesViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_is_system">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_jamming_multiple_into_single">test_jamming_multiple_into_single() (job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.test_job">test_job() (recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
@@ -15544,7 +15594,11 @@
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes_superseded">test_json_subrecipes_superseded() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.test_keyword">test_keyword() (job.test.test_views.TestJobTypesViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_keyword">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.TestTaskManager.test_launch_tasks">test_launch_tasks() (job.test.tasks.test_manager.TestTaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_legacy_category">test_legacy_category() (job.test.test_views.TestJobTypesViewV5 method)</a>
@@ -15573,9 +15627,11 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_list_a_thousand">test_list_a_thousand() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_list_all">test_list_all() (recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionsViewV6.test_list_all">test_list_all() (recipe.test.test_views.TestRecipeTypeRevisionsViewV6 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_list_all">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_list_all">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
@@ -16014,6 +16070,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_not_found">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.test_not_found">(recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData.test_not_found">(storage.test.test_models.TestCountryData method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestPurgeResults.test_not_found">(storage.test.test_models.TestPurgeResults method)</a>
@@ -16097,8 +16155,6 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_invalid">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing">test_parse_datetime_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_datetime_missing_timezone">test_parse_datetime_missing_timezone() (util.test.test_parse.TestParse method)</a>
@@ -16109,6 +16165,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
@@ -16943,6 +17001,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_successful">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_successful">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6.test_successful">(recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
 </li>
@@ -18328,6 +18388,10 @@
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType">TestRecipeTypeManagerCreateRecipeType (class in recipe.test.test_models)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType">TestRecipeTypeManagerEditRecipeType (class in recipe.test.test_models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionDetailsViewV6">TestRecipeTypeRevisionDetailsViewV6 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeRevisionsViewV6">TestRecipeTypeRevisionsViewV6 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeSubLinkManager">TestRecipeTypeSubLinkManager (class in recipe.test.test_models)</a>
 </li>
