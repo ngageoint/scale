@@ -102,11 +102,14 @@ def _create_docker_task(task):
         'type': CONTAINER_TYPE_DOCKER,
         'docker': {
             'image': task.docker_image,
-            'parameters': {param.flag: param.value for param in task.docker_params},
+            'parameters': [],
             'network': NETWORK_TYPE_BRIDGE,
             'force_pull_image': False
         },
     }
+
+    for param in task.docker_params:
+        mesos_task['container']['docker']['parameters'].append({'key': param.flag, 'value': param.value})
 
     # TODO: Remove this once docker privileged is removed.
     if task.is_docker_privileged:
