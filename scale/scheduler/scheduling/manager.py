@@ -72,6 +72,7 @@ class SchedulingManager(object):
         framework_id = scheduler_mgr.framework_id
         if not framework_id or not client or not client.get_driver():
             # Don't schedule anything until the scheduler has connected to Mesos
+            logger.warning('Scheduler not connected to Mesos. Scheduling delayed until connection established.')
             return 0
 
         job_types = job_type_mgr.get_job_types()
@@ -216,7 +217,6 @@ class SchedulingManager(object):
             if mesos_offers:
                 total_node_count += 1
                 try:
-                    logger.info('Accepting offers and tasks: %s\n%s', ','.join(mesos_offers), ','.join(mesos_tasks))
                     client.combine_offers(mesos_offers, mesos_tasks)
                 except Exception:
                     logger.exception('Error occurred while launching tasks on node %s', node.hostname)
