@@ -61,6 +61,8 @@ class SyncThread(BaseSchedulerThread):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
 
+        logger.debug('Entering %s _execute...', __name__)
+
         scheduler_mgr.sync_with_database()
         job_type_mgr.sync_with_database()
         job_exe_mgr.sync_with_database()

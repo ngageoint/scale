@@ -59,6 +59,8 @@ class TaskHandlingThread(BaseSchedulerThread):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
 
+        logger.debug('Entering %s _execute...', __name__)
+
         when = now()
 
         self._timeout_tasks(when)

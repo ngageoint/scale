@@ -9,12 +9,10 @@ from job.execution.manager import job_exe_mgr
 from messaging.manager import CommandMessageManager
 from scheduler.threads.base_thread import BaseSchedulerThread
 
-
-logger = logging.getLogger(__name__)
-
-
 THROTTLE = datetime.timedelta(seconds=1)
 WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
+
+logger = logging.getLogger(__name__)
 
 
 class MessagingThread(BaseSchedulerThread):
@@ -41,6 +39,8 @@ class MessagingThread(BaseSchedulerThread):
     def _execute(self):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
+
+        logger.debug('Entering %s _execute...', __name__)
 
         # If there are no previous messages to send, see if there are any new messages
         if not self._messages:
