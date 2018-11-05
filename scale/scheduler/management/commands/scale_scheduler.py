@@ -54,7 +54,8 @@ class Command(BaseCommand):
 
         # By default use ZK for master detection
         self.client = MesosClient(mesos_urls=[settings.MESOS_MASTER],
-                                  frameworkUser="",
+                                  # We have to run tasks as root, so docker commands may be executed
+                                  frameworkUser='root',
                                   frameworkName=settings.FRAMEWORK_NAME,
                                   frameworkWebUI=settings.WEBSERVER_ADDRESS)
         if settings.SERVICE_SECRET:
