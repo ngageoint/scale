@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 
 from django.utils.timezone import now
 
@@ -11,6 +12,8 @@ from scheduler.threads.base_thread import BaseSchedulerThread
 
 THROTTLE = datetime.timedelta(seconds=1)
 WARN_THRESHOLD = datetime.timedelta(seconds=1)
+
+logger = logging.getLogger(__name__)
 
 
 class SchedulingThread(BaseSchedulerThread):
@@ -35,7 +38,7 @@ class SchedulingThread(BaseSchedulerThread):
         :rtype: :class:`mesoshttp.client.MesosClient`
         """
 
-        return self._driver
+        return self._client
 
     @client.setter
     def client(self, value):
@@ -45,10 +48,12 @@ class SchedulingThread(BaseSchedulerThread):
         :type value: :class:`mesoshttp.client.MesosClient`
         """
 
-        self._driver = value
+        self._client = value
 
     def _execute(self):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
+
+        logger.debug('Entering %s _execute...', __name__)
 
         self._manager.perform_scheduling(self._client, now())
