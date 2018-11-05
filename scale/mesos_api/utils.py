@@ -32,8 +32,7 @@ sample = {u'type': u'UPDATE', u'update': {u'status':
                                                u'message': u'Reconciliation: Task is unknown to the agent'}
                                           }}
 
-sample2 = {u'type': u'UPDATE', u'update': {
-    u'status': {u'task_id': {u'value': u'scale_cleanup_73e84cd0-c07b-44bc-a76b-475f608aa132-0007_7'}}}}
+sample2 = {u'status': {u'task_id': {u'value': u'scale_cleanup_73e84cd0-c07b-44bc-a76b-475f608aa132-0007_7'}}}
 
 
 def obj_from_json(input_json):
@@ -67,18 +66,6 @@ def create_task_update_model(status):
     return task_update
 
 
-def _get_dot_obj(status):
-    """Returns the status as dot accessible task status message
-
-    :param status: The task status in TaskStatus JSON format
-    :type status: dict
-    :returns: The status object
-    :rtype: :class:`dotmap.DotMap`
-    """
-
-    return obj_from_json(status).update.status.update.status
-
-
 def get_status_agent_id(status):
     """Returns the agent ID of the given Mesos task status
 
@@ -88,7 +75,7 @@ def get_status_agent_id(status):
     :rtype: string
     """
 
-    return obj_from_json(status).update.status.agent_id.value
+    return obj_from_json(status).status.agent_id.value
 
 
 def get_status_data(status):
@@ -101,12 +88,16 @@ def get_status_data(status):
     :rtype: dict
     """
 
+    data = {}
+
     try:
-        return b64decode(obj_from_json(status).update.status.data)
+        data = b64decode(obj_from_json(status).status.data)
+    except AttributeError:
+        pass
     except:
         logger.exception('Invalid data dict')
 
-    return {}
+    return data
 
 
 def get_status_message(status):
@@ -118,7 +109,13 @@ def get_status_message(status):
     :rtype: string
     """
 
-    return obj_from_json(status).update.status.message
+    message = None
+    try:
+        message = obj_from_json(status).status.message
+    except AttributeError:
+        pass
+
+    return message
 
 
 def get_status_reason(status):
@@ -130,7 +127,13 @@ def get_status_reason(status):
     :rtype: string
     """
 
-    return obj_from_json(status).update.status.reason
+    reason = None
+    try:
+        reason = obj_from_json(status).status.reason
+    except AttributeError:
+        pass
+
+    return reason
 
 
 def get_status_source(status):
@@ -142,7 +145,7 @@ def get_status_source(status):
     :rtype: string
     """
 
-    return obj_from_json(status).update.status.source
+    return obj_from_json(status).status.source
 
 
 def get_status_state(status):
@@ -154,7 +157,7 @@ def get_status_state(status):
     :rtype: string
     """
 
-    return obj_from_json(status).update.status.state
+    return obj_from_json(status).status.state
 
 
 def get_status_task_id(status):
@@ -166,7 +169,7 @@ def get_status_task_id(status):
     :rtype: string
     """
 
-    return obj_from_json(status).update.status.task_id.value
+    return obj_from_json(status).status.task_id.value
 
 
 def get_status_timestamp(status):
@@ -178,7 +181,7 @@ def get_status_timestamp(status):
     :rtype: :class:`datetime.datetime`
     """
 
-    timestamp = obj_from_json(status).update.status.timestamp
+    timestamp = obj_from_json(status).status.timestamp
     if timestamp:
         return EPOCH + timedelta(seconds=timestamp)
 

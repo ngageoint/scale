@@ -36,24 +36,26 @@ def _create_base_task(task):
     :rtype: dict
     """
 
-    mesos_task = {}
+    mesos_task = {
+        'task_id': {'value': task.id },
+        'agent_id': {'value': task.agent_id},
+        'name': task.name,
+        'command': {},
+        'resources': []
+    }
 
-    mesos_task['task_id'] = task.id
-    mesos_task['agent_id'] = task.agent_id
-    mesos_task['name'] = task.name
     resources = task.get_resources()
 
-    mesos_task['command'] = {}
     if settings.CONFIG_URI:
-        mesos_task['command'] = { 'uri': [settings.CONFIG_URI] }
+        mesos_task['command'] = {'uri': [settings.CONFIG_URI]}
 
-    mesos_task['resources'] = task_resources = []
+    task_resources = mesos_task['resources']
     for resource in resources.resources:
         if resource.value > 0.0:
             task_resource = {}
             task_resource['name'] = resource.name
             task_resource['type'] = RESOURCE_TYPE_SCALAR
-            task_resource['scalar'] = { 'value': resource.value }
+            task_resource['scalar'] = {'value': resource.value}
             task_resources.append(task_resource)
 
     return mesos_task
