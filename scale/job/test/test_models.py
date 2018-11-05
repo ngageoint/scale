@@ -1329,6 +1329,27 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertRaises(Exception, JobType.objects.edit_job_type_v5, name, version, self.job_interface,
                           error_mapping=error_mapping, title=title, description=description, priority=priority,
                           is_system=is_system)
+                          
+    def test_convert_seed_manifest(self):
+        """Tests calling JobTypeManager.convert_manifest_to_v5_interface()"""
+
+        manifest = copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
+        
+        interface = JobType.objects.convert_manifest_to_v5_interface(manifest)
+
+        # Call test
+        self.assertEquals(interface['output_data'], [])
+        self.assertEquals(interface['intput_data'], [])
+        self.assertEquals(interface['version'], '1.4')
+        
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        
+        interface = JobType.objects.convert_manifest_to_v5_interface(manifest)
+
+        # Call test
+        self.assertEquals(interface['output_data'], [])
+        self.assertEquals(interface['intput_data'], [])
+        self.assertEquals(interface['version'], '1.4')
 
 
 class TestJobTypeManagerValidateJobType(TestCase):
