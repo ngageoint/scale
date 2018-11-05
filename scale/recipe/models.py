@@ -1685,7 +1685,7 @@ class RecipeTypeManager(models.Manager):
 
         return self.get(name=name, version=version)
 
-    def get_details(self, recipe_type_id):
+    def get_details_v5(self, recipe_type_id):
         """Gets additional details for the given recipe type model based on related model attributes.
 
         The additional fields include: job_types.
@@ -1701,10 +1701,31 @@ class RecipeTypeManager(models.Manager):
 
         # Add associated job type information
         recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
+        return recipe_type
+
+    def get_details_v6(self, name):
+        """Gets additional details for the given recipe type model based on related model attributes.
+
+        The additional fields include: job_types, sub_recipe_types.
+
+        :param name: The unique recipe type name.
+        :type name: string
+        :returns: The recipe type with extra related attributes.
+        :rtype: :class:`recipe.models.RecipeType`
+        """
+
+        # Attempt to fetch the requested recipe type
+        recipe_type = RecipeType.objects.all().get(name=name)
+
+        # Add associated job type information
+        jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
+        recipe_type.job_types = JobType.objects.all().filter(id__in=jt_ids)
+        sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
+        recipe_type.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
 
         return recipe_type
 
-    def get_recipe_types(self, started=None, ended=None, order=None):
+    def get_recipe_types_v5(self, started=None, ended=None, order=None):
         """Returns a list of recipe types within the given time range.
 
         :param started: Query recipe types updated after this amount of time.
@@ -1725,6 +1746,38 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.filter(last_modified__gte=started)
         if ended:
             recipe_types = recipe_types.filter(last_modified__lte=ended)
+
+        # Apply sorting
+        if order:
+            recipe_types = recipe_types.order_by(*order)
+        else:
+            recipe_types = recipe_types.order_by('last_modified')
+        return recipe_types
+
+    def get_recipe_types_v6(self, keyword=None, is_active=None, is_system=None, order=None):
+        """Returns a list of recipe types within the given time range.
+
+        :param keyword: Query recipe types with name, title, description or tag matching the keyword
+        :type keyword: string
+        :param is_active: Query recipe types that are actively available for use.
+        :type is_active: bool
+        :param is_system: Query recipe types that are system recipe types.
+        :type is_operational: bool
+        :param order: A list of fields to control the sort order.
+        :type order: list
+        :returns: The list of recipe types that match the given parameters.
+        :rtype: list
+        """
+
+        # Fetch a list of recipe types
+        recipe_types = self.all()
+        if keyword: # TODO: Revisit passing multiple keywords
+            recipe_types = recipe_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
+                                         Q(description__icontains=keyword))
+        if is_active is not None:
+            recipe_types = recipe_types.filter(is_active=is_active)
+        if is_system is not None:
+            recipe_types = recipe_types.filter(is_system=is_system)
 
         # Apply sorting
         if order:
@@ -1799,8 +1852,8 @@ class RecipeType(models.Model):
 
     :keyword created: When the recipe type was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword archived: When the recipe type was archived (no longer active)
-    :type archived: :class:`django.db.models.DateTimeField`
+    :keyword deprecated: When the recipe type was deprecated (no longer active)
+    :type deprecated: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the recipe type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -1819,7 +1872,7 @@ class RecipeType(models.Model):
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    deprecated = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = RecipeTypeManager()
@@ -1898,20 +1951,37 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return self.get(recipe_type_id=recipe_type.id, revision_num=revision_num)
 
-    def get_revision(self, recipe_type_name, revision_num):
+    def get_revision(self, name, revision_num):
         """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
 
-        :param recipe_type_name: The name of the recipe type
-        :type recipe_type_name: string
+        :param name: The name of the recipe type
+        :type name: string
         :param revision_num: The revision number
         :type revision_num: int
         :returns: The revision
         :rtype: :class:`recipe.models.RecipeTypeRevision`
         """
 
-        return self.select_related('recipe_type').get(recipe_type__name=recipe_type_name, revision_num=revision_num)
+        return self.select_related('recipe_type').get(recipe_type__name=name, revision_num=revision_num)
 
-    def get_revisions(self, revision_ids, revision_tuples):
+    def get_revisions(self, name):
+        """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
+
+        :param name: The name of the recipe type
+        :type name: string
+        :returns: The recipe type revisions for the given recipe type name
+        :rtype: [:class:`recipe.models.RecipeTypeRevision`]
+        """
+
+        revs = self.select_related('recipe_type').filter(recipe_type__name=name)
+
+        revs = revs.order_by('-revision_num')
+
+        return revs
+
+
+
+    def get_revision_map(self, revision_ids, revision_tuples):
         """Returns a dict that maps revision ID to recipe type revision for the recipe type revisions that match the
         given values. Each revision model will have its related recipe type model populated.
 

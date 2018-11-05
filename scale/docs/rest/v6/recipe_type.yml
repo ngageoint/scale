@@ -1,0 +1,632 @@
+openapi: "3.0.0"
+info:
+  title: Recipe Type Services
+  version: v6
+paths:
+  /recipe-types/:
+    get:
+      operationId: _rest_v6_recipe_type_list
+      summary: Recipe Types
+      description: Returns a list of all recipe types
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: keyword
+          schema:
+            type: string
+          description: Keyword to perform a 'like' search on name, title, description, and tag
+        - in: query
+          name: is_active
+          schema:
+            type: boolean
+          description: if provided, only return names with a least one version that matches is_active
+        - in: query
+          name: is_system
+          schema:
+            type: boolean
+          description: if provided, only return names with a least one version that matches is_system
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/recipe_type_list'
+    post:
+      operationId: _rest_v6_job_type_post
+      summary: Recipe Type Post
+      description: Creates or edits an existing recipe type
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/recipe_type_post'
+      responses:
+        '201':
+          description: The 201 CREATED response indicates a successful event
+          headers:
+            location:
+              schema:
+                type: string
+              description: The url of the created/edited job type
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/recipe_type_detail'
+  /recipe-types/{name}/:
+    get:
+      operationId: _rest_v6_recipe_type_details
+      summary: Recipe Type Details
+      description: Returns detailed information about the recipe type with the specified name
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recipe_type_detail'
+    patch:
+      operationId: _rest_v6_job_type_update
+      summary: Job Type Update
+      description: Update one or more fields in an existing job type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/job_type_update'
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+        - in: path
+          name: version
+          schema:
+            type: string
+          description: version of an existing job type
+      responses:
+        '204':
+          description: 204 no content
+  /recipe-types/{name}/revisions/:
+    get:
+      operationId: _rest_v6_recipe_type_revisions
+      summary: Recipe Type Revisions
+      description: Returns a list of the revisions of a recipe type
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing recipe type
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/recipe_type_revisions'
+  /recipe-types/{name}/revisions/{revision_num}/:
+    get:
+      operationId: _rest_v6_recipe_type_revision_details
+      summary: Recipe Type Revision Details
+      description: Returns detailed information about the recipe type revision with the specified name and revision number
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing recipe type
+        - in: path
+          name: revision_num
+          schema:
+            type: integer
+          description: revision number of the recipe type
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/recipe_type_revision_detail'
+
+  /job-types/validation/:
+    post:
+      operationId: _rest_v6_job_type_validation
+      summary: Job Type Validation
+      description: Validates a job type without creating/editing it
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/job_type_validation_post'
+      responses:
+        '200':
+          description: The 200 OK response indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_validation'
+components:
+  schemas:
+    recipe_type_list:
+      title: Recipe Type List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_type_name'
+          description: List of Recipe Type objects
+
+    recipe_type_name:
+      title: Recipe Type Name
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-recipe
+        title:
+          type: string
+          example: My Recipe
+        description:
+          type: string
+          example: My Recipe Description
+        is_active:
+          type: boolean
+          example: true
+        is_system:
+          type: boolean
+          example: false
+        revision_num:
+          type: integer
+          example: 1
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        deprecated:
+          type: string
+          format: date-time
+          description: When the job type was deprecated (previously known as archived).
+          example: 2015-09-10T15:24:53.987Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+
+    recipe_type_base:
+      title: Recipe Type Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-recipe
+        title:
+          type: string
+          example: My Recipe
+        description:
+          type: string
+          example: My Recipe Description
+        revision_num:
+          type: integer
+          example: 1
+
+    recipe_type:
+      title: Recipe Type
+      allof:
+        - ref: '#/components/schemas/recipe_type_base'
+        - type: object
+          properties:
+            is_active:
+              type: boolean
+              example: true
+            is_system:
+              type: boolean
+              example: false
+            definition:
+              $ref: '#/components/schemas/recipe_type_def'
+            revision_num:
+              type: integer
+              example: 1
+            created:
+              type: string
+              format: date-time
+              description: When the associated database model was initially created.
+              example: 2015-09-10T15:24:53.503Z
+            deprecated:
+              type: string
+              format: date-time
+              description: When the job type was deprecated (previously known as archived).
+              example: 2015-09-10T15:24:53.987Z
+            last_modified:
+              type: string
+              format: date-time
+              description: When the associated database model was last saved.
+              example: 2015-09-10T15:24:53.987Z
+              
+    recipe_type_detail:
+      title: Recipe Type Details
+      allof:
+        - ref: '#/components/schemas/recipe_type'
+        - type: object
+          properties:
+            job_types:
+              type: array
+              items:
+                $ref: '#/components/schemas/job_type_detail'
+              description: List of Job Types in this recipe type
+            sub_recipe_types:
+              type: array
+              items:
+                $ref: '#/components/schemas/recipe_type'
+              description: List of Sub Recipe Types in this recipe type
+
+
+    recipe_type_revisions:
+      title: Recipe Type Revision List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_type_revision'
+          description: List of Job Type Revisions
+
+    recipe_type_revision:
+      title: Recipe Type Revision
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call
+          example: 4
+        recipe_type:
+          $ref: '#/components/schemas/recipe_type_base'
+        revision_num:
+          type: integer
+          example: 1
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+
+    recipe_type_revision_details:
+      title: Recipe Type Revision Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call
+          example: 4
+        recipe_type:
+          $ref: '#/components/schemas/recipe_type_base'
+        revision_num:
+          type: integer
+          example: 1
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+
+
+    recipe_type_def:
+      title: Recipe Type Definition
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the version of the
+            definition used. This allows updates to be made to the specification while
+            maintaining backwards compatibility by allowing Scale to recognize an older version
+            and convert it to the current version. The default value for version if it is not included
+            is the latest version, which is currently 6. It is recommended, though not required, that
+            you include the version so that future changes to the specification will still accept your configuration.
+          example: 6
+        input:
+          $ref: '#/components/schemas/interface'
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_definition_node'
+          description: List of Nodes in this recipe definition
+
+      interface:
+        title: Interface
+        type: object
+        required: [files,json]
+        properties:
+          files:
+            type: array
+            items:
+              $ref: '#/components/schemas/interface_file'
+          json:
+            type: array
+            items:
+              $ref: '#/components/schemas/interface_json'
+      interface_file:
+        title: Interface
+        type: object
+        required: [name,media_types,multiple,required]
+        properties:
+          name:
+            type: string
+            description: The unique name of the input
+            pattern: '^[a-zA-Z_-]+$'
+          media_types:
+            type: array
+            style: simple
+            items:
+              type: string
+            description: The list of acceptable media types
+          multiple:
+            type: boolean
+            description: whether this input contains multiple files
+            example: true
+          required:
+            type: boolean
+            description: whether this file is required
+            example: false
+      interface_json:
+        title: Interface
+        type: object
+        required: [name,type,required]
+        properties:
+          name:
+            type: string
+            description: The unique name of the input
+            pattern: '^[a-zA-Z_-]+$'
+          type:
+            type: string
+            description: The JSON type accepted
+            enum: [array,boolean,integer,number,object,string]
+          required:
+            type: boolean
+            description: whether this input is required
+            example: false
+
+      recipe_definition_node:
+        title: Recipe Definition Node
+        type: object
+        required: [dependencies, input, node_type]
+        properties:
+          dependencies:
+            type: array
+            items:
+              $ref: '#/components/schemas/recipe_definition_dependency'
+          input:
+            type: object
+            additionalProperties:
+              oneOf:
+              - $ref: '#/components/schemas/dependency_connection'
+              - $ref: '#/components/schemas/recipe_connection'
+          node_type:
+            type: object
+            additionalProperties:
+              oneOf:
+              - $ref: '#/components/schemas/condition_node'
+              - $ref: '#/components/schemas/job_node'
+              - $ref: '#/components/schemas/recipe_node'
+      recipe_definition_dependency:
+        title: Dependency
+        type: object
+        required: [name]
+        properties:
+          name:
+            type: string
+            description: the name of the recipe node that is a dependency
+      dependency_connection:
+        title: Dependency Connection
+        type: object
+        required: [type, node, output]
+        properties:
+          type:
+            type: string
+            enum: [dependency]
+            description: the name of the input connection type
+          node:
+            type: string
+            description: the name of the dependency node
+          output:
+            type: string
+            description: the name of the dependency node's output
+            example: output_1
+      recipe_connection:
+        title: Recipe Connection
+        type: object
+        required: [type, input]
+        properties:
+          type:
+            type: string
+            enum: [recipe]
+            description: the name of the input connection type
+          input:
+            type: string
+            description: the name of the recipe input
+            example: input_1
+      condition_node:
+        title: Recipe Definition Condition Node
+        required: [node_type, interface]
+        properties:
+          node_type:
+            type: string
+            enum: [condition]
+            description: the name of the node type
+          interface:
+            $ref: '#/components/schemas/interface'
+      job_node:
+        title: Recipe Definition Job Node
+        type: object
+        required: [node_type, job_type_name, job_type_version, job_type_revision]
+        properties:
+          node_type:
+            type: string
+            enum: [job]
+            description: the name of the node type
+          job_type_name:
+            type: string
+            description: the name of the job type
+            example: my-job-type
+          job_type_version:
+            type: string
+            description: the job type version
+            example: 1.0.0
+          job_type_revision:
+            type: integer
+            description: the job type revision
+            example: 1
+      recipe_node:
+        title: Recipe Definition Recipe Node
+        type: object
+        required: [node_type, recipe_type_name, recipe_type_revision]
+        properties:
+          node_type:
+            type: string
+            enum: [recipe]
+            description: the name of the node type
+          recipe_type_name:
+            type: string
+            description: the name of the recipe type
+            example: my-recipe-type
+          recipe_type_revision:
+            type: integer
+            description: the recipe type revision
+            example: 1
+
+
+#TODO: update these with v6 post recipe type issue
+    recipe_type_update:
+      title: Job Type Update
+      type: object
+      properties:
+        icon_code:
+          type: string
+          example: f186 
+        is_active:
+          type: boolean
+          example: true
+        is_paused:
+          type: boolean
+          example: false
+        max_scheduled:
+          type: integer
+          example: 1
+        configuration:
+          $ref: '#/components/schemas/job_type_config'
+      
+    recipe_type_post:
+      title: Job Type Create/Edit
+      type: object
+      properties:
+        icon_code:
+          type: string
+          example: f186 
+        max_scheduled:
+          type: integer
+          example: 1
+        docker_image:
+          type: string
+          example: "my-job-1.0.0-seed:1.0.0"
+        # Commenting out until added
+        # manifest:
+        #   $ref: '#/components/schemas/seed_manifest'
+        configuration:
+          $ref: '#/components/schemas/job_type_config'
+      required:
+      - docker_image
+      - manifest
+      
+    recipe_type_validation_post:
+      title: Job Type Validation Post
+      type: object
+      properties:      
+        # Commenting out until added
+        # manifest:
+        #   $ref: '#/components/schemas/seed_manifest'
+        configuration:
+          $ref: '#/components/schemas/job_type_config'
+      required:
+      - manifest
+      
+    recipe_type_validation:
+      title: Job Type Validation
+      type: object
+      properties:
+        is_valid:
+          type: boolean
+          description: The job type is valid
+          example: true
+        validation_error:
+          type: array
+          $ref: '#/components/schemas/validation_error'
+        validation_warning:
+          type: array
+          $ref: '#/components/schemas/validation_warning'

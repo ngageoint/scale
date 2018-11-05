@@ -400,7 +400,7 @@ class CreateRecipes(CommandMessage):
         # Get superseded recipe definitions and calculate diffs
         revision_tuples = [(self.recipe_type_name, self.recipe_type_rev_num)]
         revision_ids = [r.recipe_type_rev_id for r in self._superseded_recipes]
-        revs = RecipeTypeRevision.objects.get_revisions(revision_ids, revision_tuples)
+        revs = RecipeTypeRevision.objects.get_revision_map(revision_ids, revision_tuples)
         for rev in revs.values():
             if rev.recipe_type.name == self.recipe_type_name:
                 if rev.revision_num == self.recipe_type_rev_num:
@@ -462,7 +462,7 @@ class CreateRecipes(CommandMessage):
 
         # Get recipe type revisions
         revision_tuples = [(sub.recipe_type_name, sub.recipe_type_rev_num) for sub in self.sub_recipes]
-        revs_by_id = RecipeTypeRevision.objects.get_revisions(revision_ids, revision_tuples)
+        revs_by_id = RecipeTypeRevision.objects.get_revision_map(revision_ids, revision_tuples)
         revs_by_tuple = {(rev.recipe_type.name, rev.revision_num): rev for rev in revs_by_id.values()}
 
         # Create new recipe models
@@ -518,7 +518,7 @@ class CreateRecipes(CommandMessage):
             # Create recipe diffs
             rev_ids = [recipe.recipe_type_rev_id for recipe in recipes]
             rev_ids.extend([recipe.superseded_recipe.recipe_type_rev_id for recipe in recipes])
-            revs = RecipeTypeRevision.objects.get_revisions(rev_ids, [])
+            revs = RecipeTypeRevision.objects.get_revision_map(rev_ids, [])
             pair_dict = {}
             for recipe in recipes:
                 rev_tuple = (recipe.superseded_recipe.recipe_type_rev_id, recipe.recipe_type_rev_id)
@@ -548,7 +548,7 @@ class CreateRecipes(CommandMessage):
                     # Set up recipe diffs
                     rev_ids = [recipe.recipe_type_rev_id for recipe in recipes]
                     rev_ids.extend([recipe.superseded_recipe.recipe_type_rev_id for recipe in recipes])
-                    revs = RecipeTypeRevision.objects.get_revisions(rev_ids, [])
+                    revs = RecipeTypeRevision.objects.get_revision_map(rev_ids, [])
                     for node_name, recipe in recipes_by_node.items():
                         pair = _RecipePair(recipe.superseded_recipe, recipe)
                         old_revision = revs[recipe.superseded_recipe.recipe_type_rev_id]

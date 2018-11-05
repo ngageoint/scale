@@ -27,6 +27,36 @@ DESCRIPTION_COUNTER = 1
 MOCK_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_TYPE'
 MOCK_ERROR_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_ERROR_TYPE'
 
+SUB_RECIPE_DEFINITION = {'version': '6',
+                   'input': {'files': [],
+                             'json': []},
+                   'nodes': {'node_a': {'dependencies': [],
+                                        'input': {},
+                                        'node_type': {'node_type': 'job', 'job_type_name': 'my-job-type',
+                                                      'job_type_version': '1.0.0',
+                                                      'job_type_revision': 1}}}}
+
+RECIPE_DEFINITION = {'version': '6',
+                            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/tiff'], 'required': True,
+                                                 'multiple': False}],
+                                      'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                            'nodes': {'node_a': {'dependencies': [],
+                                                 'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'job', 'job_type_name': 'my-job-type',
+                                                               'job_type_version': '1.0.0',
+                                                               'job_type_revision': 1}},
+                                      'node_b': {'dependencies': [{'name': 'node_a'}],
+                                                 'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_a',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'job', 'job_type_name': 'my-job-type',
+                                                               'job_type_version': '1.0.0',
+                                                               'job_type_revision': 1}},
+                                      'node_c': {'dependencies': [{'name': 'node_b'}],
+                                                 'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
+                                                           'input_b': {'type': 'dependency', 'node': 'node_b',
+                                                                       'output': 'OUTPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
+                                                               'recipe_type_revision': 1}}}}
 
 class MockTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
     """Mock trigger rule configuration for testing
@@ -138,7 +168,8 @@ def create_recipe_type(name=None, version=None, title=None, description=None, de
 
     return recipe_type
 
-def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None):
+def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,
+                          is_system=None):
     """Creates a recipe type for unit testing
 
     :returns: The RecipeType model
@@ -178,6 +209,10 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
     recipe_type.title = title
     recipe_type.description = description
     recipe_type.definition = definition
+    if is_active is not None:
+        recipe_type.is_active = is_active
+    if is_system is not None:
+        recipe_type.is_system = is_system
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
