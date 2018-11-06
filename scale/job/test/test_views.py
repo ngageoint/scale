@@ -1880,7 +1880,33 @@ class TestJobTypesPostViewV6(TestCase):
                                                        trigger_rule=self.trigger_rule, max_scheduled=2,
                                                        configuration=self.configuration)
         
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
         
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+                                                                    description="A sub recipe",
+                                                                    is_active=False,
+                                                                    is_system=False)
+
+        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition,
+                                                                    title="My main recipe",
+                                                                    is_active=True,
+                                                                    is_system=True)
         
     def test_add_seed_job_type(self):
         """Tests adding a seed image."""
@@ -2196,7 +2222,44 @@ class TestJobTypesPostViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_edit_seed_job_type_and_update(self):
+        """Tests editing an existing seed job type and automatically updating recipes."""
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
+        manifest['job']['packageVersion'] = '1.0.1'
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.1',
+            'manifest': manifest,
+            'configuration': self.configuration,
+            'auto_update': True
+        }
+        
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-minimum-job/1.0.0/' % self.api in response['location'])
 
+        job_type = JobType.objects.filter(name='my-minimum-job', version='1.0.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 2)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+        
+        recipe_type = RecipeType.objects.filter(pk=self.recipe_type1.id)
+        self.assertEqual(recipe_type.revision_num, 2)
+        recipe_type = RecipeType.objects.filter(pk=self.recipe_type2.id)
+        self.assertEqual(recipe_type.revision_num, 2)
+        
+        
 
 class TestJobTypeDetailsViewV5(TestCase):
 

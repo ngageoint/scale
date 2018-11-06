@@ -158,7 +158,7 @@ COMPLETE_MANIFEST = {
 MINIMUM_MANIFEST = {
     'seedVersion': '1.0.0',
     'job': {
-        'name': 'my-job',
+        'name': 'my-minimum-job',
         'jobVersion': '1.0.0',
         'packageVersion': '1.0.0',
         'title': 'My first job',
