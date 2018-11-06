@@ -241,11 +241,7 @@ below for reference.
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
-| SCALE_DB_URL                | use link to `db` or 'localhost' | database host name                         |
-| SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
-| SCALE_DB_PASS               | 'scale'                         | database login password                    |
-| SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
-| SCALE_DB_USER               | 'scale'                         | database login name                        |
+| DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
