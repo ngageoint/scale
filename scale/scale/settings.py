@@ -24,6 +24,9 @@ DOCKER_VERSION = scale.__docker_version__
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
 MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 
+# We by default, use the '*' role, meaning all resources are unreserved offers are received
+MESOS_ROLE = os.getenv('MESOS_ROLE', '*')
+
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = None
 

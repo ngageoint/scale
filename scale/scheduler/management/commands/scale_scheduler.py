@@ -64,6 +64,8 @@ class Command(BaseCommand):
         elif settings.PRINCIPAL and settings.SECRET:
             self.client.set_credentials(settings.PRINCIPAL, settings.SECRET)
 
+        self.client.set_role(settings.MESOS_ROLE)
+
         self.client.add_capability('GPU_RESOURCES')
 
         try:
