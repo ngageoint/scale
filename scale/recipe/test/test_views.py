@@ -864,65 +864,87 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a recipe type"""
 
-        """json_data = {
+        json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
         }
 
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['id'], self.recipe_type.id)
+        self.assertEqual(result['id'], self.recipe_type1.id)
         self.assertEqual(result['title'], 'Title EDIT')
         self.assertEqual(result['description'], 'Description EDIT')
         self.assertEqual(result['revision_num'], 1)
         self.assertIsNotNone(result['definition'])
-        self.assertEqual(len(result['job_types']), 2)
+        self.assertEqual(len(result['job_types']), 1)
         for entry in result['job_types']:
-            self.assertTrue(entry['id'], [self.job_type1.id, self.job_type2.id])
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)"""
+            self.assertTrue(entry['id'], [self.job_type2.id])
+
+        self.assertEqual(len(result['sub_recipe_types']), 1)
+        for entry in result['sub_recipe_types']:
+            self.assertTrue(entry['id'], [self.recipe_type1.id])
+
+        self.assertIn('deprecated', result)
+        self.assertNotIn('trigger_rule', result)
 
     def test_edit_definition(self):
         """Tests editing the definition of a recipe type"""
-        """definition = self.definition.copy()
-        definition['input_data'] = [{
-            'name': 'input_file',
-            'type': 'file',
-            'media_types': ['text/plain'],
-        }]
+        definition = self.sub_definition.copy()
+        definition['input']['json'] = [{'name': 'bar', 'type': 'string', 'required': False}]
 
         json_data = {
             'definition': definition,
         }
 
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.recipe_type.id)
-        self.assertEqual(result['title'], self.recipe_type.title)
-        self.assertEqual(result['revision_num'], 2)
-        self.assertEqual(len(result['definition']['input_data']), 1)
-        self.assertEqual(result['definition']['input_data'][0]['name'], 'input_file')
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)"""
+        recipe_type = RecipeType.objects.filter(pk=self.recipe_type1.id)
+        self.assertEqual(recipe_type.revision_num, 2)
+        result_def = recipe_type.get_v6_definition_json()
+        self.assertEqual(result_def['input']['json']['name'], 'bar')
+        
+    def test_edit_definition_and_update(self):
+        """Tests editing the definition of a recipe type and updating recipes"""
+        definition = self.sub_definition.copy()
+        definition['input']['json'] = [{'name': 'bar', 'type': 'string', 'required': False}]
+
+        json_data = {
+            'definition': definition,
+            'auto_update': True
+        }
+
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+        recipe_type = RecipeType.objects.filter(pk=self.recipe_type1.id)
+        self.assertEqual(recipe_type.revision_num, 2)
+        result_def = recipe_type.get_v6_definition_json()
+        self.assertEqual(result_def['input']['json']['name'], 'bar')
+        
+        # check that parent recipe was updated
+        recipe_type = RecipeType.objects.filter(pk=self.recipe_type2.id)
+        self.assertEqual(recipe_type.revision_num, 2)
 
     def test_edit_bad_definition(self):
         """Tests attempting to edit a recipe type using an invalid recipe definition"""
-        """definition = self.definition.copy()
+        definition = self.sub_definition.copy()
         definition['version'] = 'BAD'
 
         json_data = {
             'definition': definition,
         }
 
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestRecipeTypeRevisionsViewV6(TransactionTestCase):
