@@ -564,6 +564,10 @@ components:
         max_scheduled:
           type: integer
           example: 1
+        auto_update:
+          type: boolean
+          description: Whether to automatically update recipes containing this type
+          example: true
         configuration:
           $ref: '#/components/schemas/job_type_config'
       
