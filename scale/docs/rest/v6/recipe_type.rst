@@ -412,7 +412,7 @@ Location http://.../v6/recipe-types/my-recipe/
 | description        | String            | Optional | An optional description of the recipe type.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | definition         | JSON Object       | Required | JSON description of the interface for running a recipe of this type.|
-|                    |                   |          | (See :ref:`architecture_jobs_recipe_definition_spec`)               |
+|                    |                   |          | (See :ref:`rest_v6_recipe_json_definition`)                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -425,93 +425,46 @@ Location http://.../v6/recipe-types/my-recipe/
 | **Body**           | JSON with the details of the newly created recipe type, see :ref:`rest_v6_recipe_type_details`     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
-.. _rest_recipe_type_validate:
+.. _rest_v6_recipe_type_validate:
+
+v6 Validate Recipe Type
+-----------------------
+
+**Example POST /v6/recipe-types/validation/ API call**
+
+Request: POST http://.../v6/recipe-types/validation/
+
+ .. code-block:: javascript
+ 
+   {
+      "definition": { :ref: #`Recipe Definition <rest_v6_recipe_json_definition>` }
+   }
+    
+Response: 200 OK
+
+.. code-block:: javascript
+
+   {
+      "is_valid": true,
+      "errors": [],
+      "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}],
+      "diff": {:ref: `Recipe Diff <rest_v6_recipe_json_diff>`}
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Validate Recipe Type**                                                                                                |
 +=========================================================================================================================+
 | Validates a new recipe type without actually saving it                                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /recipe-types/validation/                                                                                      |
+| **POST** /v6/recipe-types/validation/                                                                                   |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name               | String            | Required | The identifying name of recipe job type used for queries.           |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| version            | String            | Required | The version of the recipe type.                                     |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Optional | The human-readable name of the recipe type.                         |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| description        | String            | Optional | An optional description of the recipe type.                         |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
 | definition         | JSON Object       | Required | JSON description defining the interface for running the recipe type.|
-|                    |                   |          | (See :ref:`architecture_jobs_recipe_definition_spec`)               |
+|                    |                   |          | (See :ref:`rest_v6_recipe_json_definition`)                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| trigger_rule       | JSON Object       | Optional | The linked trigger rule that automatically invokes the recipe type. |
-|                    |                   |          | The type and configuration fields are required if setting a rule.   |
-|                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "name": "my-recipe",                                                                                             |
-|        "version": "1.0",                                                                                                |
-|        "title": "My Recipe",                                                                                            |
-|        "description": "This is a description of the recipe",                                                            |
-|        "input_data": [                                                                                                  |
-|            {                                                                                                            |
-|                "media_types": ["text/plain"],                                                                           |
-|                "type": "file",                                                                                          |
-|                "name": "input_file"                                                                                     |
-|            }                                                                                                            |
-|        ],                                                                                                               |
-|        "jobs": [                                                                                                        |
-|            {                                                                                                            |
-|                "recipe_inputs": [                                                                                       |
-|                    {                                                                                                    |
-|                        "job_input": "input_file",                                                                       |
-|                        "recipe_input": "input_file"                                                                     |
-|                    }                                                                                                    |
-|                ],                                                                                                       |
-|                "name": "MyJob1",                                                                                        |
-|                "job_type": {                                                                                            |
-|                    "name": "my-job1",                                                                                   |
-|                    "version": "1.2.3"                                                                                   |
-|                }                                                                                                        |
-|            },                                                                                                           |
-|            {                                                                                                            |
-|                "recipe_inputs": [                                                                                       |
-|                    {                                                                                                    |
-|                        "job_input": "input_file",                                                                       |
-|                        "recipe_input": "input_file"                                                                     |
-|                    }                                                                                                    |
-|                ],                                                                                                       |
-|                "name": "MyJob2",                                                                                        |
-|                "job_type": {                                                                                            |
-|                    "name": "my-job2",                                                                                   |
-|                    "version": "4.5.6"                                                                                   |
-|                }                                                                                                        |
-|            }                                                                                                            |
-|        ],                                                                                                               |
-|        "trigger_rule": {                                                                                                |
-|            "type": "PARSE",                                                                                             |
-|            "is_active": true,                                                                                           |
-|            "configuration": {                                                                                           |
-|                "version": "1.0",                                                                                        |
-|                "condition": {                                                                                           |
-|                    "media_type": "text/plain",                                                                          |
-|                    "data_types": []                                                                                     |
-|                },                                                                                                       |
-|                "data": {                                                                                                |
-|                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "raw"                                                                              |
-|                }                                                                                                        |
-|            }                                                                                                            |
-|        }                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -520,21 +473,20 @@ Location http://.../v6/recipe-types/my-recipe/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+---------------------+------------------------------------------------------------------------------+
-| warnings           | Array               | A list of warnings discovered during validation.                             |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .id                | String              | An identifier for the warning.                                               |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .details           | String              | A human-readable description of the problem.                                 |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "warnings": [                                                                                                    |
-|            "id": "media_type",                                                                                          |
-|            "details": "Invalid media type for data input: input_file -> image/png"                                      |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
+| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new recipe type. If    |
+|                    |                   | this is true, then submitting the same fields to the /recipe-types/ API will   |
+|                    |                   | successfully create a new recipe type.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
+|                    |                   | with *name* and *description* string fields.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| warnings           | Array             | Lists any warnings found. Warnings are useful to present to the user, but do   |
+|                    |                   | not cause *is_valid* to be false. The warnings are JSON objects with *name*    |
+|                    |                   | and *description* string fields.                                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| diff               | Array             | Difference between current revision and the new definition                     |
+|                    |                   | (See :ref:`rest_v6_recipe_json_diff`)                                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_recipe_type_details:
 

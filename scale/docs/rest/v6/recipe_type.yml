@@ -535,13 +535,25 @@ components:
             type: string
             description: the name of the job type
             example: my-job-type
+          prev_job_type_name:
+            type: string
+            description: the name of the previous job type
+            example: my-job-type
           job_type_version:
             type: string
             description: the job type version
+            example: 1.0.1
+          prev_job_type_version:
+            type: string
+            description: the previous job type version
             example: 1.0.0
           job_type_revision:
             type: integer
             description: the job type revision
+            example: 2
+          prev_job_type_revision:
+            type: integer
+            description: the previous job type revision
             example: 1
       recipe_node:
         title: Recipe Definition Recipe Node
@@ -556,9 +568,17 @@ components:
             type: string
             description: the name of the recipe type
             example: my-recipe-type
+          prev_recipe_type_name:
+            type: string
+            description: the name of the previous recipe type
+            example: my-recipe-type
           recipe_type_revision:
             type: integer
             description: the recipe type revision
+            example: 2
+          prev_recipe_type_revision:
+            type: integer
+            description: the previous recipe type revision
             example: 1
 
 
@@ -602,21 +622,18 @@ components:
       title: Job Type Validation Post
       type: object
       properties:      
-        # Commenting out until added
-        # manifest:
-        #   $ref: '#/components/schemas/seed_manifest'
-        configuration:
-          $ref: '#/components/schemas/job_type_config'
+        definition:
+          $ref: '#/components/schemas/recipe_type_def'
       required:
-      - manifest
+      - definition
       
     recipe_type_validation:
-      title: Job Type Validation
+      title: Recipe Type Validation
       type: object
       properties:
         is_valid:
           type: boolean
-          description: The job type is valid
+          description: Whether the recipe type is valid
           example: true
         validation_error:
           type: array
@@ -624,3 +641,66 @@ components:
         validation_warning:
           type: array
           $ref: '#/components/schemas/validation_warning'
+        diff:
+          $ref: '#/components/schemas/recipe_type_diff'
+          
+    recipe_type_diff:
+      title: Recipe Type Difference
+      type: object
+      required: [can_be_reprocessed, reasons, nodes]
+      properties:
+        can_be_reprocessed:
+          type: boolean
+          description: Indicates whether recipes from the previous revision can |
+            be reprocessed as the newer revision.
+          example: true
+        reasons:
+          type: array
+          description: Lists any reasons causing *can_be_reprocessed* to be false.
+          $ref: '#/components/schemas/validation_warning'
+        nodes:
+          type: object
+          description: All of the diffs for each recipe node between the two |
+            revisions, stored by node name
+          additionalPropterties:
+            $ref: '#/components/schemas/node_diff'
+        prev_node_type:
+          type: string
+          description: The type of the node in the previous revision, if changed in the newer revision
+          example: job
+          
+    node_diff:
+      title: Node difference
+      type: object
+      required: [status, changes, reprocess_new_node, force_reprocess, dependencies, node_type]
+      properties:
+        status:
+          type: string
+          description: The status indicating the node differences between the two revisions. The possible reasons are |
+            DELETED, CHANGED, UNCHANGED, NEW
+          example: CHANGED
+        changes:
+          type: array
+          description: If *status* is *CHANGED*, lists the job's changes between the two revisions. Each change is a |
+            JSON object with *name* and *description* string fields.
+          $ref: '#/components/schemas/validation_warning'
+        reprocess_new_node:
+          type: boolean
+          description: Indicates whether this node will be superseded by a new node if the recipe is reprocessed.
+          example: true
+        force_reprocess:
+          type: boolean
+          description: Indicates whether the user has requested that this node be reprocessed regardless of whether |
+            it has changed 
+          example: true
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_definition_dependency'
+        node_type:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/condition_node'
+            - $ref: '#/components/schemas/job_node'
+            - $ref: '#/components/schemas/recipe_node'

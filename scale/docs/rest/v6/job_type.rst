@@ -777,7 +777,7 @@ Response: 200 OK
 +=========================================================================================================================+
 | Validates a new job type without actually saving it                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /job-types/validation/                                                                                         |
+| **POST** /v6/job-types/validation/                                                                                      |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -874,10 +874,10 @@ Response: 204 No Content
 
 .. _rest_v6_job_type_configuration:
 
-Job Configuration JSON
-----------------------
+Job Type Configuration JSON
+---------------------------
 
-A job configuration JSON describes a set of configuration settings that affect how a job executes.
+A job type configuration JSON describes a set of configuration settings that affect how a job executes.
 
 **Example interface:**
 
