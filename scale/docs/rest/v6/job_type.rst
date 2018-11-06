@@ -623,7 +623,7 @@ Location http://.../v6/job-types/test/1.0.0/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_job_type_details`        |
+| **Body**           | JSON containing the details of the newly created job type, see :ref:`rest_v6_job_type_details`     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_job_type_validate:
