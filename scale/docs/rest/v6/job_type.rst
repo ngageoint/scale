@@ -561,7 +561,8 @@ Request: POST http://.../v6/job-types/
             ]
           }
         }
-      }
+      },
+      "auto_update": true
     }
     
 Response: 201 CREATED
@@ -614,6 +615,8 @@ Location http://.../v6/job-types/test/1.0.0/
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | manifest                | String            | Required | Seed manifest describing Job, interface and requirements.      |
 |                         |                   |          | (See :ref:`architecture_seed_manifest_spec`)                   |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| auto_update             | Boolean           | Optional | Whether to automatically update recipes containing this type.  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -825,7 +828,6 @@ Request: PATCH http://.../v6/job-types/test/1.0.0/
       "is_active": true,
       "is_paused": false,
       "max_scheduled": 1,
-      "auto_update": true,
       "configuration": {
         "mounts": {
           "MOUNT_PATH": {
@@ -863,8 +865,6 @@ Response: 204 No Content
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
-+-------------------------+-------------------+----------+----------------------------------------------------------------+
-| auto_update             | Boolean           | Optional | Whether to automatically update recipes containing this type.  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | configuration           | JSON Object       | Optional | JSON description of the configuration for running the job      |
 |                         |                   |          | (See :ref:`rest_v6_job_type_configuration`)                    |
