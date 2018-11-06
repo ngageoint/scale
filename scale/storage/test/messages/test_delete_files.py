@@ -27,6 +27,9 @@ class TestDeleteFiles(TestCase):
         job = job_test_utils.create_job()
         job_exe = job_test_utils.create_job_exe(job=job)
 
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=self.source_file.id, trigger_event=trigger)
+
         file_path_1 = os.path.join('my_dir', 'my_file.txt')
         file_path_2 = os.path.join('my_dir', 'my_file.json')
 
@@ -37,6 +40,7 @@ class TestDeleteFiles(TestCase):
         message = DeleteFiles()
         message.purge = True
         message.job_id = job.id
+        message.trigger_id = trigger.id
         message.source_file_id = self.source_file.id
         if message.can_fit_more():
             message.add_file(file_1.id)
@@ -62,6 +66,9 @@ class TestDeleteFiles(TestCase):
         job = job_test_utils.create_job()
         job_exe = job_test_utils.create_job_exe(job=job)
 
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=self.source_file.id, trigger_event=trigger)
+
         file_path_1 = os.path.join('my_dir', 'my_file.txt')
         file_path_2 = os.path.join('my_dir', 'my_file1.json')
         file_path_3 = os.path.join('my_dir', 'my_file2.json')
@@ -76,6 +83,7 @@ class TestDeleteFiles(TestCase):
         message = DeleteFiles()
         message.purge = False
         message.job_id = job.id
+        message.trigger_id = trigger.id
         message.source_file_id = self.source_file.id
         if message.can_fit_more():
             message.add_file(file_1.id)
@@ -105,6 +113,7 @@ class TestDeleteFiles(TestCase):
         message = DeleteFiles()
         message.purge = True
         message.job_id = job.id
+        message.trigger_id = trigger.id
         message.source_file_id = self.source_file.id
         if message.can_fit_more():
             message.add_file(file_5.id)

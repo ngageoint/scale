@@ -30,6 +30,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
+        message.trigger_id = trigger.id
         message.source_file_id = input_file.id
         message.status_change = timezone.now()
 
@@ -56,6 +57,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
+        message.trigger_id = trigger.id
         message.source_file_id = input_file.id
         message.status_change = timezone.now()
 
@@ -83,6 +85,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
+        message.trigger_id = trigger.id
         message.source_file_id = source_file.id
         message.status_change = timezone.now()
 
@@ -116,6 +119,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message.source_file_id = source_file.id
+        message.trigger_id = trigger.id
         message._purge_job_ids = [job_1.id, job_2.id, job_3.id]
         message.status_change = timezone.now()
 
@@ -147,6 +151,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message.source_file_id = source_file.id
+        message.trigger_id = trigger.id
         message._purge_job_ids = [job_1.id, job_2.id, job_3.id]
         message.status_change = timezone.now()
 

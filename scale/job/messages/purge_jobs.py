@@ -113,7 +113,7 @@ class PurgeJobs(CommandMessage):
         """
 
         # Check to see if a force stop was placed on this purge process
-        results = PurgeResults.objects.get(source_file_id=self.source_file_id)
+        results = PurgeResults.objects.get(trigger_event=self.trigger_id)
         if results.force_stop_purge:
             return True
 
