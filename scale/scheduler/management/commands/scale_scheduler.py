@@ -57,6 +57,7 @@ class Command(BaseCommand):
                                   # We have to run tasks as root, so docker commands may be executed
                                   frameworkUser='root',
                                   frameworkName=settings.FRAMEWORK_NAME,
+                                  frameworkHostname=scheduler_mgr.hostname,
                                   frameworkWebUI=settings.WEBSERVER_ADDRESS)
         if settings.SERVICE_SECRET:
             # We are in Enterprise mode and using service account
