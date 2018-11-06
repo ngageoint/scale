@@ -64,6 +64,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/recipe_type_detail'
+                
   /recipe-types/{name}/:
     get:
       operationId: _rest_v6_recipe_type_details
@@ -74,7 +75,7 @@ paths:
           name: name
           schema:
             type: string
-          description: name of an existing job type
+          description: name of an existing recipe type
       responses:
         '200':
           description: 200 response
@@ -83,29 +84,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_detail'
     patch:
-      operationId: _rest_v6_job_type_update
-      summary: Job Type Update
-      description: Update one or more fields in an existing job type
+      operationId: _rest_v6_recipe_type_update
+      summary: Recipe Type Update
+      description: Update one or more fields in an existing recipe type
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/job_type_update'
+              $ref: '#/components/schemas/recipe_type_update'
       parameters:
         - in: path
           name: name
           schema:
             type: string
-          description: name of an existing job type
-        - in: path
-          name: version
-          schema:
-            type: string
-          description: version of an existing job type
+          description: name of an existing recipe type
       responses:
         '204':
           description: 204 no content
+          
   /recipe-types/{name}/revisions/:
     get:
       operationId: _rest_v6_recipe_type_revisions
@@ -159,24 +156,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_revision_detail'
 
-  /job-types/validation/:
+  /recipe-types/validation/:
     post:
-      operationId: _rest_v6_job_type_validation
-      summary: Job Type Validation
-      description: Validates a job type without creating/editing it
+      operationId: _rest_v6_recipe_type_validation
+      summary: Recipe Type Validation
+      description: Validates a recipe type without creating/editing it
       requestBody:
         required: true
         content:
           application/json: 
             schema:
-              $ref: '#/components/schemas/job_type_validation_post'
+              $ref: '#/components/schemas/recipe_type_validation_post'
       responses:
         '200':
           description: The 200 OK response indicates a successful event
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/job_type_validation'
+                $ref: '#/components/schemas/recipe_type_validation'
 components:
   schemas:
     recipe_type_list:
@@ -236,7 +233,7 @@ components:
         deprecated:
           type: string
           format: date-time
-          description: When the job type was deprecated (previously known as archived).
+          description: When the recipe type was deprecated (previously known as archived).
           example: 2015-09-10T15:24:53.987Z
         last_modified:
           type: string
@@ -289,7 +286,7 @@ components:
             deprecated:
               type: string
               format: date-time
-              description: When the job type was deprecated (previously known as archived).
+              description: When the recipe type was deprecated (previously known as archived).
               example: 2015-09-10T15:24:53.987Z
             last_modified:
               type: string
@@ -337,7 +334,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/recipe_type_revision'
-          description: List of Job Type Revisions
+          description: List of Recipe Type Revisions
 
     recipe_type_revision:
       title: Recipe Type Revision
@@ -581,29 +578,8 @@ components:
             description: the previous recipe type revision
             example: 1
 
-
-#TODO: update these with v6 post recipe type issue
     recipe_type_update:
-      title: Job Type Update
-      type: object
-      properties:
-        icon_code:
-          type: string
-          example: f186 
-        is_active:
-          type: boolean
-          example: true
-        is_paused:
-          type: boolean
-          example: false
-        max_scheduled:
-          type: integer
-          example: 1
-        configuration:
-          $ref: '#/components/schemas/job_type_config'
-      
-    recipe_type_post:
-      title: Recipe Type Create
+      title: Recipe Type Update
       type: object
       properties:
         title:
@@ -614,12 +590,27 @@ components:
           example: My Recipe Description
         definition:
           $ref: '#/components/schemas/recipe_type_def'
-      required:
-      - title
-      - definition
+        auto_update:
+          type: boolean
+          description: Whether to automatically update recipes containing this type
+          example: true
+      
+    recipe_type_post:
+      title: Recipe Type Create
+      type: object
+      required: [title, definition]
+      properties:
+        title:
+          type: string
+          example: My Recipe
+        description:
+          type: string
+          example: My Recipe Description
+        definition:
+          $ref: '#/components/schemas/recipe_type_def'
       
     recipe_type_validation_post:
-      title: Job Type Validation Post
+      title: Recipe Type Validation Post
       type: object
       properties:      
         definition:
