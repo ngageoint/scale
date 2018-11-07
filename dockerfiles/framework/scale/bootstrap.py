@@ -101,14 +101,16 @@ class DCOSServiceAuth(AuthBase):
 
 def dcos_login():
     # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS EE clusters.
-    servers = os.getenv('MARATHON_SERVERS', 'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
+    servers = os.getenv('MARATHON_SERVERS', 'https://marathon.mesos/marathon,'
+                                            'http://marathon.mesos:8080,https://marathon.mesos:8443,'
+                                            'http://marathon.mesos,https://marathon.mesos').split(',')
 
     if SERVICE_SECRET:
         print('Attempting token auth to Marathon...')
-        client = MarathonClient(servers, auth_token=DCOSServiceAuth(json.loads(SERVICE_SECRET)).token)
+        client = MarathonClient(servers, auth_token=DCOSServiceAuth(json.loads(SERVICE_SECRET)).token, verify=False)
     else:
         print('Attempting unauthenticated access to Marathon...')
-        client = MarathonClient(servers)
+        client = MarathonClient(servers, verify=False)
 
     return client
 
