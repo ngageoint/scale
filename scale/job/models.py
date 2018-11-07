@@ -3395,14 +3395,14 @@ class JobTypeManager(models.Manager):
         except InvalidSeedManifestDefinition as ex:
             is_valid = False
             errors.append(ex.error)
-            message = 'Job type manifest invalid'
-            logger.exception(message)
+            message = 'Job type manifest invalid: %s' % ex
+            logger.info(message)
             pass
         except InvalidJobConfiguration as ex:
             is_valid = False
             errors.append(ex.error)
-            message = 'Job type configuration invalid'
-            logger.exception(message)
+            message = 'Job type configuration invalid: %s' % ex
+            logger.info(message)
             pass
 
         if config and manifest:
@@ -3411,8 +3411,8 @@ class JobTypeManager(models.Manager):
             except InvalidJobConfiguration as ex:
                 is_valid = False
                 errors.append(ex.error)
-                message = 'Job type configuration invalid'
-                logger.exception(message)
+                message = 'Job type configuration invalid: %s' % ex
+                logger.info(message)
                 pass
 
         return JobTypeValidation(is_valid, errors, warnings)
@@ -4102,7 +4102,7 @@ class JobTypeRevision(models.Model):
                 param = FileParameter(output_dict['name'], media_types, required, False)
                 interface.add_parameter(param)
             elif output_dict['type'] == 'files':
-                param = FileParameter(input_dict['name'], media_types, required, True)
+                param = FileParameter(output_dict['name'], media_types, required, True)
                 interface.add_parameter(param)
             elif output_dict['type'] == 'property':
                 interface.add_parameter(JsonParameter(output_dict['name'], 'string', required))

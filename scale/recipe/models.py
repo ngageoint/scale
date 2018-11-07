@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import copy
+import logging
 from collections import namedtuple
 
 import django.contrib.postgres.fields
@@ -12,13 +13,17 @@ from django.utils.timezone import now
 from data.data.data import Data
 from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
+from data.interface.interface import Interface
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
+from recipe.diff.diff import RecipeDiff
+from recipe.diff.json.diff_v6 import RecipeDiffV6, convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
@@ -27,11 +32,16 @@ from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util import rest as rest_utils
+from util.validation import ValidationWarning
 
+logger = logging.getLogger(__name__)
 
 RecipeNodeCopy = namedtuple('RecipeNodeCopy', ['superseded_recipe_id', 'recipe_id', 'node_names'])
 
 RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'node_type', 'id', 'output_data'])
+
+RecipeTypeValidation = namedtuple('RecipeTypeValidation', ['is_valid', 'errors', 'warnings', 'diff'])
+
 
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating RecipeInputFile models
@@ -1582,7 +1592,7 @@ class RecipeTypeManager(models.Manager):
             definition violates the specification
         """
 
-        from recipe.configuration.definition.exceptions import InvalidDefinition
+        from recipe.definition.exceptions import InvalidDefinition
         # Must lock job type interfaces so the new recipe type definition can be validated
         if isinstance(definition, RecipeDefinition):
             definition.validate_interfaces()
@@ -1698,11 +1708,11 @@ class RecipeTypeManager(models.Manager):
         :param definition: The definition for running a recipe of this type, possibly None
         :type definition: :class:`recipe.definition.definition.RecipeDefinition`
 
-        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If any part of the recipe
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If any part of the recipe
             definition violates the specification
         """
 
-        from recipe.configuration.definition.exceptions import InvalidDefinition
+        from recipe.definition.exceptions import InvalidDefinition
         
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
@@ -1714,8 +1724,6 @@ class RecipeTypeManager(models.Manager):
             recipe_type.description = description
 
         if definition:
-            # Must lock job type interfaces so the new recipe type definition can be validated
-            _ = definition.get_job_types(lock=True)
             if isinstance(definition, RecipeDefinition):
                 definition.validate_interfaces()
                 recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
@@ -1867,7 +1875,7 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.order_by('last_modified')
         return recipe_types
 
-    def validate_recipe_type(self, name, title, version, description, definition, trigger_config):
+    def validate_recipe_type_v5(self, name, title, version, description, definition, trigger_config):
         """Validates a new recipe type prior to attempting a save
 
         :param name: The system name of the recipe type
@@ -1905,6 +1913,113 @@ class RecipeTypeManager(models.Manager):
             warnings.extend(trigger_config.validate_trigger_for_recipe(definition))
 
         return warnings
+
+    def validate_recipe_type_v6(self, name, definition_dict):
+        """Validates a recipe type prior to attempting a save
+
+        :param name: The optional system name of a recipe type being updated
+        :type name: str
+        :param definition_dict: The definition for running a recipe of this type
+        :type definition_dict: dict
+        :returns: The recipe type validation.
+        :rtype: :class:`job.models.RecipeTypeValidation`
+        """
+
+        from recipe.definition.exceptions import InvalidDefinition
+
+        is_valid = True
+        errors = []
+        warnings = []
+        diff = {}
+
+        definition = None
+
+        try:
+            definition = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
+        except InvalidDefinition as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Recipe Type definition invalid: %s' % ex
+            logger.info(message)
+            pass
+
+        if definition:
+            try:
+                inputs, outputs = self.get_interfaces(definition)
+                warnings.extend(definition.validate(inputs, outputs))
+            except InvalidDefinition as ex:
+                is_valid = False
+                errors.append(ex.error)
+                message = 'Job type configuration invalid: %s' % ex
+                logger.info(message)
+                pass
+
+            try:
+                recipe_type = RecipeType.objects.all().get(name=name)
+                old_definition = recipe_type.get_definition()
+                diff = RecipeDiff(old_definition, definition)
+                json = convert_recipe_diff_to_v6_json(diff)
+                diff = rest_utils.strip_schema_version(json)
+                if not json.get_dict()['can_be_reprocessed']:
+                    msg = 'This recipe cannot be reprocessed after updating.'
+                    warnings.append(ValidationWarning('REPROCESS_WARNING',msg))
+            except RecipeType.DoesNotExist as ex:
+                if name:
+                    msg = 'Unable to find an existing recipe type with name %s to determine difference' % name
+                    warnings.append(ValidationWarning('RECIPE_TYPE_NOT_FOUND', msg))
+                pass
+            except Exception as ex:
+                errors.append(ex.error)
+                logger.exception('Unable to generate RecipeDiff: %s' % ex)
+                pass
+
+        return RecipeTypeValidation(is_valid, errors, warnings, diff)
+
+    def get_interfaces(self, definition):
+        """Gets the input and output interfaces for each node in this recipe
+
+        :returns: A dict of input interfaces and a dict of output interfaces
+        :rtype: dict, dict
+        """
+
+        inputs = {}
+        outputs = {}
+
+        for node_name in definition.get_topological_order():
+            node = definition.graph[node_name]
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                inputs[node_name], outputs[node_name] = self._get_job_interfaces(node)
+            elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                inputs[node_name], outputs[node_name] = self._get_recipe_interfaces(node)
+
+        return inputs, outputs
+
+    def _get_job_interfaces(self, node):
+        """Gets the input/output interfaces for a job type node
+        """
+
+        from job.models import JobTypeRevision
+        input = Interface()
+        output = Interface()
+        jtr = JobTypeRevision.objects.get_details_v6(node.job_type_name, node.job_type_version, node.revision_num)
+        if jtr:
+            input = jtr.get_input_interface()
+            output = jtr.get_output_interface()
+
+        return input, output
+
+    def _get_recipe_interfaces(self, node):
+        """Gets the input/output interfaces for a recipe type node
+        """
+
+        from recipe.models import RecipeTypeRevision
+        input = Interface()
+        output = Interface()
+        rtr = RecipeTypeRevision.objects.get_revision(node.recipe_type_name, node.revision_num)
+        if rtr:
+            input = rtr.get_input_interface()  # no output interface
+
+        return input, output
 
 
 class RecipeType(models.Model):

@@ -4,7 +4,7 @@ import logging
 
 import rest_framework.status as status
 from django.db import transaction
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from django.utils.timezone import now
 from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
@@ -430,10 +430,10 @@ class RecipeTypeDetailsView(GenericAPIView):
                     recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True)
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type_id, title=title, 
+                RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
                                                     description=description, definition=recipe_def)
         except (InvalidDefinition) as ex:
-            logger.exception('Unable to update recipe type: %i', recipe_type_id)
+            logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
         return HttpResponse(status=204)
@@ -534,6 +534,20 @@ class RecipeTypesValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if self.request.version == 'v6':
+            return self.post_v6(request)
+        else:
+            raise self.post_v5(request)
+
+    def _post_v5(self, request):
+        """Validates a new recipe type and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
         title = rest_util.parse_string(request, 'title', default_value=name)
@@ -575,6 +589,25 @@ class RecipeTypesValidationView(APIView):
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
+
+    def _post_v6(self, request):
+        """Validates a new recipe type and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name', required=False)
+        definition_dict = rest_util.parse_dict(request, 'definition')
+
+        # Validate the recipe definition
+        validation = RecipeType.objects.validate_recipe_type_v6(name=name, definition_dict=definition_dict)
+
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings], 'diff': validation.diff}
+        return Response(resp_dict)
 
 
 class RecipesView(ListAPIView):
