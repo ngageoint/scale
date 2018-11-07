@@ -201,7 +201,7 @@ class TestRecipeTypesViewV5(TransactionTestCase):
 
 
 class TestRecipeTypesViewV6(TransactionTestCase):
-    """Tests related to the recipe-types base endpoint"""
+    """Tests related to the get recipe-types base endpoint"""
 
     api = 'v6'
 
@@ -390,6 +390,78 @@ class TestRecipeTypesViewV6(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
 
+
+class TestCreateRecipeTypeViewV6(TransactionTestCase):
+    """Tests related to the post recipe-types base endpoint"""
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+                                                                    description="A sub recipe",
+                                                                    is_active=False,
+                                                                    is_system=False)
+
+    def test_create(self):
+        """Tests creating a new recipe type."""
+        #TODO: Update with v6 POST issue
+        
+        sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+        
+        json_data = {
+            'title': 'Recipe Type Post Test',
+            'description': 'This is a test.',
+            'definition': sub_definition
+        }
+
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        recipe_type = RecipeType.objects.filter(name='recipe-type-post-test').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], recipe_type.id)
+
+    def test_create_bad_param(self):
+        """Tests creating a new recipe type with missing fields."""
+        
+        json_data = {
+            'name': 'recipe-type-post-test',
+        }
+
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_bad_job_type(self):
+        """Tests creating a new recipe type with job type that doesn't exist."""
+        
+        sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        
+        json_data = {
+            'title': 'Recipe Type Post Test',
+            'description': 'This is a test.',
+            'definition': sub_definition
+        }
+
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestRecipeTypeDetailsViewV5(TransactionTestCase):
     """Tests related to the recipe-types details endpoint"""

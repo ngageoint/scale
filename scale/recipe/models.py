@@ -1557,6 +1557,7 @@ class RecipeTypeManager(models.Manager):
                 raise InvalidDefinition('This version of the recipe definition is invalid to save')
             recipe_type.definition = definition.get_dict()
         elif isinstance(definition, RecipeDefinition):
+            #TODO: Check if sub job types and recipe types exist?
             definition = convert_recipe_definition_to_v6_json(definition).get_dict()
         else:
             raise InvalidDefinition('This version of the recipe definition is invalid to save')
