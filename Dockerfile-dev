@@ -61,12 +61,6 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum -y history undo last \
  && rm -rf /var/cache/yum
 
-COPY mesos/ /tmp/
-RUN cd /tmp/ && tar xvf mesos* && cd mesos* && python setup.py install \
- && pip install marathon==0.9.1 requests
-
-
-
 # Copy UI assets
 COPY scale-ui/dist /opt/scale/ui
 
