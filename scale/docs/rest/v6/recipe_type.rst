@@ -339,7 +339,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                | Integer           | The unique identifier of the model.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The identifying name of recipe job type used for queries.                      |
+| .name              | String            | The identifying name of recipe type used for queries.                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .title             | String            | The human readable display name of the recipe type.                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -440,6 +440,7 @@ Request: POST http://.../v6/recipe-types/validation/
  .. code-block:: javascript
  
    {
+      "name": "my-recipe-type",
       "definition": { :ref: #`Recipe Definition <rest_v6_recipe_json_definition>` }
    }
     
@@ -464,6 +465,8 @@ Response: 200 OK
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| name               | String            | Optional | The identifying name of recipe type used for queries.               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | definition         | JSON Object       | Required | JSON description defining the interface for running the recipe type.|
 |                    |                   |          | (See :ref:`rest_v6_recipe_json_definition`)                         |

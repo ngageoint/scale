@@ -612,7 +612,10 @@ components:
     recipe_type_validation_post:
       title: Recipe Type Validation Post
       type: object
-      properties:      
+      properties:
+        name:
+          type: string
+          example: my-recipe-type
         definition:
           $ref: '#/components/schemas/recipe_type_def'
       required:
