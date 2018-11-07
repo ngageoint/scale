@@ -1,8 +1,7 @@
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import django
-import sys
-from unittest.case import skipIf
 
 from django.test.testcases import TransactionTestCase
 from mock import patch, Mock
@@ -10,12 +9,9 @@ from mock import patch, Mock
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
 
-if not sys.platform.startswith('win'):
-    import scheduler
+from scheduler.scale_scheduler import ScaleScheduler
 
 
-@skipIf(sys.platform.startswith('win'), 'The scheduler uses the mesos native api.'
-        '  Our development environment does not have this available on windows')
 class TestScheduler(TransactionTestCase):
     """Tests core functionality of the scheduler."""
 
@@ -34,21 +30,18 @@ class TestScheduler(TransactionTestCase):
 
     def _get_registered_scheduler_driver_master(self):
         driver = Mock()
-        framework_id = Mock()
-        framework_id.value = 'framework_id'
-        master_info = Mock()
-        master_info.hostname = 'localhost'
-        master_info.port = 1234
+        driver.framework_id.value = 'framework_id'
+        driver.mesos_url = 'http://localhost'
 
-        my_scheduler = scheduler.scale_scheduler.ScaleScheduler()
+        my_scheduler = ScaleScheduler()
         my_scheduler.initialize()
-        my_scheduler.registered(driver, framework_id, master_info)
-        return my_scheduler, driver, master_info
+        my_scheduler.subscribed(driver)
+        return my_scheduler, driver
 
     @patch('scheduler.scale_scheduler.initialize_system')
     @patch('scheduler.scale_scheduler.threading.Thread.start')
     def testRegistration(self, mock_thread_start, mock_initializer):
-        my_scheduler, driver, master_info = self._get_registered_scheduler_driver_master()
+        my_scheduler, driver  = self._get_registered_scheduler_driver_master()
         self.assertTrue(mock_initializer.called, 'initializer should be called on registration')
         self.assertEqual(
             mock_thread_start.call_count, 7,
@@ -57,9 +50,9 @@ class TestScheduler(TransactionTestCase):
 
     @patch('scheduler.scale_scheduler.ScaleScheduler._reconcile_running_jobs')
     def test_reregistration_triggers_reconciliation(self, mock_reconcile_running_jobs):
-        my_scheduler, driver, master_info = self._get_mocked_scheduler_driver_master()
+        my_scheduler, driver = self._get_mocked_scheduler_driver_master()
         reconcile_calls_before = mock_reconcile_running_jobs.call_count
-        my_scheduler.reregistered(driver, master_info)
+        my_scheduler.subscribed(driver)
         reconcile_calls_after = mock_reconcile_running_jobs.call_count
         self.assertEqual(reconcile_calls_after - reconcile_calls_before, 1,
                          're-registering the scheduler should trigger a call to reconcile running jobs')
