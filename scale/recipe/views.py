@@ -329,7 +329,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
                     recipe_type.trigger_rule.save()
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type(recipe_type_id, title, description, recipe_def, trigger_rule,
+                RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, trigger_rule,
                                                     remove_trigger_rule)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
@@ -385,8 +385,6 @@ class RecipeTypeDetailsView(GenericAPIView):
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)
 
-
-#TODO: update for v6
     def patch(self, request, name):
         """Edits an existing recipe type and returns the updated details
 
@@ -413,68 +411,32 @@ class RecipeTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        raise Http404
-        """
+        
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
 
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
-
         # Fetch the current recipe type model
         try:
-            recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
+            recipe_type = RecipeType.objects.filter(name=name).first()
         except RecipeType.DoesNotExist:
             raise Http404
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for recipe type: %i', recipe_type_id)
-                raise BadParameter(unicode(ex))
 
         try:
             with transaction.atomic():
                 # Validate the recipe definition
                 recipe_def = None
                 if definition_dict:
-                    recipe_def = RecipeDefinitionSunset.create(definition_dict)
-
-                # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
-                                                                    recipe_type.name, is_active)
-
-                # Update the active state separately if that is only given trigger field
-                if not trigger_rule and recipe_type.trigger_rule and 'is_active' in trigger_rule_dict:
-                    recipe_type.trigger_rule.is_active = is_active
-                    recipe_type.trigger_rule.save()
+                    recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True)
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type(recipe_type_id, title, description, recipe_def, trigger_rule,
-                                                    remove_trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type_id, title=title, 
+                                                    description=description, definition=recipe_def)
+        except (InvalidDefinition) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
             raise BadParameter(unicode(ex))
 
-        # Fetch the full recipe type with details
-        try:
-            recipe_type = RecipeType.objects.get_details(recipe_type_id)
-        except RecipeType.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(recipe_type)
-        return Response(serializer.data)"""
+        return HttpResponse(status=204)
 
 class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
