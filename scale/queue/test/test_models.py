@@ -337,7 +337,7 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
             'version': '1.0',
             'input_data': [{
                 'name': 'input_a',
-                'file_id': source_file.id,
+                'file_id': source_file.id
             }],
             'output_data': [{
                 'name': 'output_a',
@@ -345,8 +345,9 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
             }]
         }
         data = JobData(data_dict)
-
+        
         job = Queue.objects.queue_new_job(job_type, data, event)
+
         self.assertEqual(job.status, 'QUEUED')
 
 

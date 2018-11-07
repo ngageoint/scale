@@ -60,7 +60,7 @@ class FileValue(DataValue):
     """Represents a data value containing one or more files
     """
 
-    def __init__(self, name, file_ids):
+    def __init__(self, name, file_ids, multiple=False):
         """Constructor
 
         :param name: The name of the parameter
@@ -72,6 +72,7 @@ class FileValue(DataValue):
         super(FileValue, self).__init__(name, FileParameter.PARAM_TYPE)
 
         self.file_ids = file_ids
+        self.multiple = multiple
 
     def validate(self, parameter):
         """See :meth:`data.data.value.DataValue.validate`
