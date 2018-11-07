@@ -329,18 +329,7 @@ class SchedulingManager(object):
             job_type_id = queue.job_type_id
             if job_type_id not in job_types:
                 continue
-            
-            # validate output workspaces
-            outputs_invalid = False
-            try:
-                job_exe.interface.validate_workspace_for_outputs(job_exe.configuration)
-            except InvalidConfiguration:
-                outputs_invalid = True
-                logger.exception('Output workspace not found for defined outputs')
-            
-            if outputs_invalid:    
-                continue
-                
+
             workspace_names = job_exe.configuration.get_input_workspace_names()
             workspace_names.extend(job_exe.configuration.get_output_workspace_names())
             
