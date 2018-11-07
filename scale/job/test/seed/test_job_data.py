@@ -65,7 +65,7 @@ class TestJobData(TransactionTestCase):
         job_exe.job_type.get_job_configuration.return_value = job_config
 
         results = JobResults()._store_output_data_files(files, job_data, job_exe)
-        self.assertEqual({'OUTPUT_TIFFS': {'multiple': True, 'file_ids': [1]}}, results.files)
+        self.assertEqual({'OUTPUT_TIFFS': {'file_ids': [1], 'multiple': False}}, results.files)
 
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
