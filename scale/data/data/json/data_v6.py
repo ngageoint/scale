@@ -25,12 +25,18 @@ DATA_SCHEMA = {
         'files': {
             'description': 'The file values (lists of file IDs) in this data',
             'type': 'object',
-            'additionalProperties': {
-                'type': 'array',
-                'minItems': 1,
-                'items': {
-                    'type': 'integer',
-                },
+            'additionalProperties': True,
+            'properties': {
+              'file_ids': {
+                  'type': 'array',
+                  'minItems': 1,
+                  'items': {
+                      'type': 'integer',
+                  }
+              },
+              'multiple': {
+                  'type': 'boolean',
+              },
             },
         },
         'json': {
@@ -56,7 +62,9 @@ def convert_data_to_v6_json(data):
 
     for value in data.values.values():
         if isinstance(value, FileValue):
-            files[value.name] = value.file_ids
+            files[value.name] = {}
+            files[value.name]['file_ids'] = value.file_ids
+            files[value.name]['multiple'] = value.multiple
         elif isinstance(value, JsonValue):
             json[value.name] = value.value
 
@@ -106,9 +114,13 @@ class DataV6(object):
 
         data = Data()
 
-        for name, file_ids in self._data['files'].items():
-            file_value = FileValue(name, file_ids)
-            data.add_value(file_value)
+        for name, file_details in self._data['files'].items():
+            if file_details:
+                file_ids = file_details['file_ids'] if 'file_ids' in file_details else []
+                multiple = file_details['multiple'] if 'multiple' in file_details else len(file_ids) > 1
+                file_value = FileValue(name, file_ids, multiple)
+                data.add_value(file_value)
+
         for name, json in self._data['json'].items():
             json_value = JsonValue(name, json)
             data.add_value(json_value)
@@ -138,10 +150,15 @@ class DataV6(object):
             json = {}
             for input_data_dict in v1_json_dict['input_data']:
                 name = input_data_dict['name']
+                files[name] = {}
+                if 'multiple' in input_data_dict:
+                    files[name]['multiple'] = input_data_dict['multiple']
                 if 'file_id' in input_data_dict:
-                    files[name] = [input_data_dict['file_id']]
+                    files[name]['file_ids'] = [input_data_dict['file_id']]
                 elif 'file_ids' in input_data_dict:
-                    files[name] = input_data_dict['file_ids']
+                    files[name]['file_ids'] = input_data_dict['file_ids']
+                    if not 'multiple' in input_data_dict:
+                        files[name]['multiple'] = True
                 elif 'value' in input_data_dict:
                     json[name] = input_data_dict['value']
             del v1_json_dict['input_data']

@@ -75,6 +75,167 @@ class TestQueuedExecutionConfigurator(TestCase):
         self.assertEqual(main_task['type'], 'main')
         self.assertEqual(main_task['args'], expected_args)
         self.assertDictEqual(main_task['env_vars'], expected_env_vars)
+        
+    def test_injected_input_file_env_vars(self):
+        """
+            Tests successfully injecting the proper values for input files regardless
+            of if single or multiple files are passed based on the 'multiple': True
+            seed manifest flag
+        """
+
+        workspace = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file()
+        file_2 = storage_test_utils.create_file()
+        file_3 = storage_test_utils.create_file()
+        input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
+        interface_dict = {'version': '1.4', 'command': 'foo',
+                          'command_arguments': '${input_1} ${job_output_dir}',
+                          'input_data': [{'name': 'input_1', 'type': 'files'}],
+                          'output_data': [{'name': 'output_1', 'type': 'file'}]}
+        data_dict = {
+            'input_data': [{
+                'name': 'input_1', 'file_ids': [file_1.id, file_2.id, file_3.id]
+            }],
+            'output_data': [{
+                'name': 'output_1', 'workspace_id': workspace.id
+            }]
+        }
+        input_1_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_1')
+        expected_args = '%s ${job_output_dir}' % (input_1_val)
+        expected_env_vars = {'INPUT_1': input_1_val}
+
+        expected_output_workspaces = {'output_1': workspace.name}
+        job_type = job_test_utils.create_job_type(interface=interface_dict)
+        job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
+        configurator = QueuedExecutionConfigurator(input_files)
+
+        # Test method
+        exe_config = configurator.configure_queued_job(job)
+
+        config_dict = exe_config.get_dict()
+        # Make sure the dict validates
+        ExecutionConfiguration(config_dict)
+        self.assertSetEqual(set(config_dict['input_files'].keys()), {'input_1'})
+        self.assertEqual(len(config_dict['input_files']['input_1']), 3)
+        # self.assertDictEqual(config_dict['output_workspaces'], expected_output_workspaces)
+        self.assertEqual(len(config_dict['tasks']), 1)
+        main_task = config_dict['tasks'][0]
+        self.assertEqual(main_task['type'], 'main')
+        self.assertEqual(main_task['args'], expected_args)
+        self.assertDictEqual(main_task['env_vars'], expected_env_vars)
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '${SEED_INPUT_1} ${job_output_dir}',
+                    'inputs': {
+                        'files': [{'name': 'seed_input_1', 'multiple': True }]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_1', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'seed_input_1',
+                'file_ids': [file_1.id, file_2.id, file_3.id],
+                'multiple': True
+            }],
+            'output_data': [{
+                'name': 'output_1',
+                'workspace_id': workspace.id
+            }]
+        }
+        input_1_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'seed_input_1')
+        expected_args = '%s ${job_output_dir}' % (input_1_val)
+        expected_env_vars = {'SEED_INPUT_1': input_1_val}
+
+        seed_job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+        job = job_test_utils.create_job(job_type=seed_job_type, input=data_dict, status='QUEUED')
+        exe_config = configurator.configure_queued_job(job)
+        configurator = QueuedExecutionConfigurator(input_files)
+
+        # Test method
+        exe_config = configurator.configure_queued_job(job)
+        config_dict = exe_config.get_dict()
+
+        # Make sure the dict validates
+        ExecutionConfiguration(config_dict)
+        self.assertSetEqual(set(config_dict['input_files'].keys()), {'seed_input_1'})
+        self.assertEqual(len(config_dict['input_files']['seed_input_1']), 3)
+        self.assertEqual(len(config_dict['tasks']), 1)
+        main_task = config_dict['tasks'][0]
+        self.assertEqual(main_task['type'], 'main')
+        self.assertEqual(main_task['args'], expected_args)
+        self.assertDictEqual(main_task['env_vars'], expected_env_vars)
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job-sm',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '${SEED_M_INPUT_1} ${job_output_dir}',
+                    'inputs': {
+                        'files': [{'name': 'seed_m_input_1', 'multiple': True }]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_1', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{'name': 'seed_m_input_1', 'file_ids': [file_1.id], 'multiple': True}],
+            'output_data': [{'name': 'output_1', 'workspace_id': workspace.id}]
+        }
+        input_files = {file_1.id: file_1}
+        input_1_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'seed_m_input_1')
+        expected_args = '%s ${job_output_dir}' % (input_1_val)
+        expected_env_vars = {'SEED_M_INPUT_1': input_1_val}
+
+        seed_job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+        job = job_test_utils.create_job(job_type=seed_job_type, input=data_dict, status='QUEUED')
+        exe_config = configurator.configure_queued_job(job)
+        configurator = QueuedExecutionConfigurator(input_files)
+
+        # Test method
+        exe_config = configurator.configure_queued_job(job)
+        config_dict = exe_config.get_dict()
+
+        # Make sure the dict validates
+        ExecutionConfiguration(config_dict)
+        self.assertSetEqual(set(config_dict['input_files'].keys()), {'seed_m_input_1'})
+        self.assertEqual(len(config_dict['input_files']['seed_m_input_1']), 1)
+        self.assertEqual(len(config_dict['tasks']), 1)
+        main_task = config_dict['tasks'][0]
+        self.assertEqual(main_task['type'], 'main')
+        self.assertEqual(main_task['args'], expected_args)
+        self.assertDictEqual(main_task['env_vars'], expected_env_vars)
+
 
     def test_configure_queued_job_old_ingest(self):
         """Tests successfully calling configure_queued_job() on an old (before revision 3) ingest job"""
