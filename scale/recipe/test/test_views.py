@@ -899,6 +899,9 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
+        manifest=copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
+        manifest['job']['name'] = 'minimum-two'
+        self.job_type3 = job_test_utils.create_seed_job_type(manifest=manifest)
 
         self.workspace = storage_test_utils.create_workspace()
 
@@ -1004,6 +1007,8 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         """Tests editing the definition of a recipe type and updating recipes"""
         definition = self.sub_definition.copy()
         definition['input']['json'] = [{'name': 'bar', 'type': 'string', 'required': False}]
+        definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type3.name
+        definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type3.version
 
         json_data = {
             'definition': definition,
@@ -1022,6 +1027,14 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         # check that parent recipe was updated
         recipe_type = RecipeType.objects.filter(pk=self.recipe_type2.id)
         self.assertEqual(recipe_type.revision_num, 2)
+        
+        jobs = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(jobs[0], self.job_type3.id)
+        
+        back_links = RecipeTypeJobLink.objects.get_recipe_type_ids(jobs)
+        self.assertEqual(len(back_links), 1)
+        self.assertEqual(back_links[0], recipe_type.id)
 
     def test_edit_bad_definition(self):
         """Tests attempting to edit a recipe type using an invalid recipe definition"""
