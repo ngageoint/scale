@@ -249,11 +249,7 @@ below for reference.
 | Env Var                     | Default Value                   | Meaning                                    |
 | --------------------------- | ------------------------------- | -------------------------------------------|
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
-| DCOS_OAUTH_TOKEN            | None                            | Authentication token for DCOS bootstrap    |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
-| DCOS_PASS                   | None                            | Password for DCOS bootstrap                |
-| DCOS_SERVICE_ACCOUNT        | None                            | DCOS account name with access to secrets   |
-| DCOS_USER                   | None                            | Privileged username for DCOS bootstrap     |
 | DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
@@ -276,6 +272,7 @@ below for reference.
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
 | SCALE_ZK_URL                | None                            | Scale master location                      |
+| SERVICE_SECRET              | None                            | JSON object used for DCOS EE Strict Auth   |
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |

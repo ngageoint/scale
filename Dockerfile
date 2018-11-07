@@ -11,11 +11,8 @@ EXPOSE 80
 
 # recognized environment variables
 # CONFIG_URI
-# DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
 # DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
-# DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
-# DCOS_SERVICE_ACCOUNT a DCOS account name with read/update/create/delete access to the secrets store
-# DCOS_USER authentication for Marathon deployments when using DCOS enterprise
+# SERVICE_SECRET json object that contains DCOS service account secret value
 # DEPLOY_WEBSERVER to start the web server container
 # ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
 # ENABLE_WEBSERVER true to start the RESTful API server, should only be set on webserver app

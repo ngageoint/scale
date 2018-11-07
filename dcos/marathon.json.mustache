@@ -55,9 +55,7 @@
       "LOGSTASH_DOCKER_IMAGE": "{{resource.assets.container.docker.logstash}}",
       "SCALE_LOGGING_ADDRESS": "{{logging.logstash-address}}",
       "DCOS_URL": "{{dcos.dcos-url}}",
-      "DCOS_USER": "{{dcos.dcos-user}}",
-      "DCOS_PASS": "{{dcos.dcos-pass}}",
-      "DCOS_OAUTH_TOKEN": "{{dcos.dcos-oauth-token}}"
+      "SERVICE_SECRET": "{{dcos.service-secret}}"
     },
     "args": [
     "scale_scheduler"
