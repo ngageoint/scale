@@ -17,6 +17,7 @@ import util.rest as rest_util
 from job.models import Job, JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
@@ -29,7 +30,7 @@ from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from trigger.models import TriggerEvent
-from util.rest import BadParameter
+from util.rest import BadParameter, title_to_name
 
 
 logger = logging.getLogger(__name__)
@@ -110,6 +111,20 @@ class RecipeTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if self.request.version == 'v6':
+            return self.create_v6(request)
+        else:
+            return self.create_v5(request)
+        
+    def _create_v5(self, request):
+        """Creates a new recipe type and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
         title = rest_util.parse_string(request, 'title', default_value=name)
@@ -156,11 +171,44 @@ class RecipeTypesView(ListCreateAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
-        url = reverse('recipe_type_details_view', args=[recipe_type.id], request=request)
-        if self.request.version == 'v6':
-            serializer = RecipeTypeDetailsSerializerV6(recipe_type)
-        else:
-            serializer = RecipeTypeDetailsSerializerV5(recipe_type)
+        url = reverse('recipe_type_id_details_view', args=[recipe_type.id], request=request)
+        serializer = RecipeTypeDetailsSerializerV5(recipe_type)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+    def _create_v6(self, request):
+        """Creates a new recipe type and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=True)
+        name = title_to_name(self.queryset, title)
+        description = rest_util.parse_string(request, 'description', required=False)
+        definition_dict = rest_util.parse_dict(request, 'definition', required=True)
+
+        try:
+            with transaction.atomic():
+                # Validate the recipe definition
+                logger.info(definition_dict)
+                recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True)   
+
+                # Create the recipe type
+                recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, description, recipe_def)
+        except (InvalidDefinition) as ex:
+            logger.exception('Unable to create new recipe type: %s', name)
+            raise BadParameter(unicode(ex))
+
+        # Fetch the full recipe type with details
+        try:
+            recipe_type = RecipeType.objects.get_details_v6(recipe_type.name)
+        except RecipeType.DoesNotExist:
+            raise Http404
+
+        url = reverse('recipe_type_details_view', args=[recipe_type.name], request=request)
+        serializer = RecipeTypeDetailsSerializerV6(recipe_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
