@@ -16,7 +16,7 @@ import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeNode, RecipeType
+from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
 class TestRecipeTypesViewV5(TransactionTestCase):
@@ -400,6 +400,7 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
         django.setup()
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
 
         self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
         self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
@@ -413,17 +414,21 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
 
     def test_create(self):
         """Tests creating a new recipe type."""
-        #TODO: Update with v6 POST issue
         
-        sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
-        sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
-        sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
-        sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+        main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
         
         json_data = {
             'title': 'Recipe Type Post Test',
             'description': 'This is a test.',
-            'definition': sub_definition
+            'definition': main_definition
         }
 
         url = '/%s/recipe-types/' % self.api
@@ -434,6 +439,20 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], recipe_type.id)
+        
+        jobs = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
+        self.assertEqual(len(jobs), 1)
+        
+        back_links = RecipeTypeJobLink.objects.get_recipe_type_ids(jobs)
+        self.assertEqual(len(back_links), 1)
+        self.assertEqual(back_links[0], recipe_type.id)
+        
+        subs = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
+        self.assertEqual(len(subs), 1)
+        
+        back_links = RecipeTypeSubLink.objects.get_recipe_type_ids(subs)
+        self.assertEqual(len(back_links), 1)
+        self.assertEqual(back_links[0], recipe_type.id)
 
     def test_create_bad_param(self):
         """Tests creating a new recipe type with missing fields."""
