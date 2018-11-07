@@ -38,8 +38,13 @@ class TestSchedulingManager(TestCase):
         self.framework_id = '1234'
         Scheduler.objects.initialize_scheduler()
         Scheduler.objects.update(num_message_handlers=0)  # Prevent message handler tasks from scheduling
+<<<<<<< HEAD
         self._driver = MagicMock()
         
+=======
+        self._client = MagicMock()
+
+>>>>>>> 4bf15557... :rotating_light: Tests
         scheduler_mgr.sync_with_database()
         scheduler_mgr.update_from_mesos(framework_id=self.framework_id)
         resource_mgr.clear()
@@ -70,11 +75,8 @@ class TestSchedulingManager(TestCase):
                                                      disk_out_required=45.0, disk_total_required=445.0)
         job_type_mgr.sync_with_database()
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_successful_schedule(self, mock_taskinfo):
+    def test_successful_schedule(self):
         """Tests successfully calling perform_scheduling()"""
-        mock_taskinfo.return_value = MagicMock()
-
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
@@ -83,18 +85,15 @@ class TestSchedulingManager(TestCase):
 
         scheduling_manager = SchedulingManager()
 
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
         # Ensure job execution models are created and queue models are deleted
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 0)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_node_with_new_agent_id(self, mock_taskinfo):
+    def test_node_with_new_agent_id(self):
         """Tests successfully calling perform_scheduling() when a node get a new agent ID"""
-        mock_taskinfo.return_value = MagicMock()
-
         # Host 2 gets new agent ID of agent_3
         node_mgr.lost_node(self.agent_2)
         node_mgr.register_agents([self.agent_3])
@@ -105,20 +104,17 @@ class TestSchedulingManager(TestCase):
         resource_mgr.add_new_offers([offer])
 
         scheduling_manager = SchedulingManager()
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
         # Check that created tasks have the correct agent ID
-        calls = self._driver.method_calls
+        calls = self._client.method_calls
         self.assertEqual(1, len(calls))
         mesos_tasks = calls[0][1][1]
         for mesos_task in mesos_tasks:
             self.assertEqual(self.agent_3.agent_id, mesos_task.slave_id.value)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_paused_scheduler(self, mock_taskinfo):
+    def test_paused_scheduler(self):
         """Tests calling perform_scheduling() with a paused scheduler"""
-        mock_taskinfo.return_value = MagicMock()
-
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
@@ -130,17 +126,14 @@ class TestSchedulingManager(TestCase):
         system_task_mgr._is_db_update_completed = False  # Make sure system tasks don't get scheduled
 
         scheduling_manager = SchedulingManager()
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 0)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_missing_job_types(self, mock_taskinfo):
+    def test_missing_job_types(self):
         """Tests calling perform_scheduling() when a queued job type has not been synced to the scheduler"""
-        mock_taskinfo.return_value = MagicMock()
-
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
@@ -152,7 +145,7 @@ class TestSchedulingManager(TestCase):
         # Clear out job type manager for scheduling
         with patch('scheduler.scheduling.manager.job_type_mgr.get_job_types') as mock_get_job_types:
             mock_get_job_types.return_value = {}
-            num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
 
         # Nothing should be scheduled
         self.assertEqual(num_tasks, 0)
@@ -160,10 +153,8 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_missing_workspace(self, mock_taskinfo):
+    def test_missing_workspace(self):
         """Tests calling perform_scheduling() when a queued job's workspace has not been synced to the scheduler"""
-        mock_taskinfo.return_value = MagicMock()
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
@@ -188,7 +179,7 @@ class TestSchedulingManager(TestCase):
         # Clear out workspace manager for scheduling
         with patch('scheduler.scheduling.manager.workspace_mgr.get_workspaces') as mock_get_workspaces:
             mock_get_workspaces.return_value = {}
-            num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
 
         # Nothing should be scheduled
         self.assertEqual(num_tasks, 0)
@@ -196,11 +187,8 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_paused_job_type(self, mock_taskinfo):
+    def test_paused_job_type(self):
         """Tests calling perform_scheduling() when a job type is paused"""
-        mock_taskinfo.return_value = MagicMock()
-
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
@@ -211,17 +199,14 @@ class TestSchedulingManager(TestCase):
         job_type_mgr.sync_with_database()
 
         scheduling_manager = SchedulingManager()
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 1)  # Schedule queued job execution that is not paused
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 1)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_job_type_limit(self, mock_taskinfo):
+    def test_job_type_limit(self):
         """Tests calling perform_scheduling() with a job type limit"""
-        mock_taskinfo.return_value = MagicMock()
-
         Queue.objects.all().delete()
         job_type_with_limit = job_test_utils.create_job_type()
         job_type_with_limit.max_scheduled = 4
@@ -245,14 +230,11 @@ class TestSchedulingManager(TestCase):
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_canceled_queue_model(self, mock_taskinfo):
+    def test_canceled_queue_model(self):
         """Tests successfully calling perform_scheduling() when a queue model has been canceled"""
-        mock_taskinfo.return_value = MagicMock()
-
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
@@ -262,7 +244,7 @@ class TestSchedulingManager(TestCase):
         self.queue_1.save()
 
         scheduling_manager = SchedulingManager()
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 1)  # Scheduled non-canceled queued job execution
         # queue_1 should be canceled, queue_2 should be running, queue should be empty now
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
@@ -276,11 +258,8 @@ class TestSchedulingManager(TestCase):
                 found_job_exe_end_message = True
         self.assertTrue(found_job_exe_end_message)
 
-    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
-    def test_schedule_system_tasks(self, mock_taskinfo):
+    def test_schedule_system_tasks(self):
         """Tests successfully calling perform_scheduling() when scheduling system tasks"""
-        mock_taskinfo.return_value = MagicMock()
-
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
@@ -297,5 +276,5 @@ class TestSchedulingManager(TestCase):
 
         scheduling_manager = SchedulingManager()
 
-        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 3)  # Schedule database update task and 2 message handler tasks
