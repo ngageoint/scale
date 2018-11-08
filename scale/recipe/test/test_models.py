@@ -532,7 +532,7 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         desc = 'Test description'
         invalid = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
         invalid['version'] = 'BAD'
-        invalid_def = RecipeDefinitionV6(dict=invalid, do_validate=False).get_definition()
+        invalid_def = RecipeDefinitionV6(definition=invalid, do_validate=False).get_definition()
         self.assertRaises(InvalidDefinition, RecipeType.objects.create_recipe_type_v6, name, title, desc, invalid_def)
 
 
@@ -966,7 +966,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
             # Edit the recipe
             invalid = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
             invalid['version'] = 'BAD'
-            invalid_def = RecipeDefinitionV6(dict=invalid, do_validate=False).get_definition()
+            invalid_def = RecipeDefinitionV6(definition=invalid, do_validate=False).get_definition()
             self.assertRaises(InvalidDefinition, RecipeType.objects.edit_recipe_type_v6, self.recipe_type.id,
                               None, None, invalid_def, True)
 

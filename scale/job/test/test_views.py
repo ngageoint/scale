@@ -23,6 +23,7 @@ from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import Job, JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
+from recipe.models import RecipeType
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 

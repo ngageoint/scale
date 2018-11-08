@@ -737,7 +737,7 @@ class TestBatchesComparisonViewV6(TestCase):
                 'dependencies': [{'name': 'job_c'}]
             }],
         }
-        rd1 = RecipeDefinitionV6(dict=rt_definition_2, do_validate=False).get_definition()
+        rd1 = RecipeDefinitionV6(definition=rt_definition_2, do_validate=False).get_definition()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=rd1)
 
         # Create a chain of two batches
@@ -748,7 +748,7 @@ class TestBatchesComparisonViewV6(TestCase):
         batch_1.superseded_batch = None
         batch_1.save()
         # Change recipe type to new revision
-        rd2 = RecipeDefinitionV6(dict=rt_definition_2, do_validate=False).get_definition()
+        rd2 = RecipeDefinitionV6(definition=rt_definition_2, do_validate=False).get_definition()
         RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, rd2, auto_update=True)
         recipe_type = RecipeType.objects.get(id=recipe_type.id)
         definition_2 = BatchDefinition()

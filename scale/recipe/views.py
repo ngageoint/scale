@@ -113,9 +113,9 @@ class RecipeTypesView(ListCreateAPIView):
         """
         
         if self.request.version == 'v6':
-            return self.create_v6(request)
+            return self._create_v6(request)
         else:
-            return self.create_v5(request)
+            return self._create_v5(request)
         
     def _create_v5(self, request):
         """Creates a new recipe type and returns a link to the detail URL

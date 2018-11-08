@@ -21,7 +21,7 @@ class RecipeDefinitionSunset(object):
                 :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
         if RecipeDefinitionSunset.is_seed_dict(definition_dict):
-            return RecipeDefinitionV6(dict=definition_dict, do_validate=False).get_definition()
+            return RecipeDefinitionV6(definition=definition_dict, do_validate=False).get_definition()
         else:
             return LegacyRecipeDefinition(definition_dict)
 
