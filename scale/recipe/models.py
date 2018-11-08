@@ -2458,9 +2458,10 @@ class RecipeTypeJobLinkManager(models.Manager):
 
         for id, job in zip(recipe_type_ids, job_type_ids):
             link = RecipeTypeJobLink(recipe_type_id=id, job_type_id=job)
-            new_links.append(link)
+            link.save()
+            #new_links.append(link)
 
-        RecipeTypeJobLink.objects.bulk_create(new_links)
+        #RecipeTypeJobLink.objects.bulk_create(new_links)
         
     @transaction.atomic
     def create_recipe_type_job_link(self, recipe_type_id, job_type_id):
