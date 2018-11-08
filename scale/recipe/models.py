@@ -1593,6 +1593,7 @@ class RecipeTypeManager(models.Manager):
             definition violates the specification
         """
 
+        import pdb; pdb.set_trace()
         from recipe.definition.exceptions import InvalidDefinition
         if isinstance(definition, RecipeDefinition):
             inputs, outputs = self.get_interfaces(definition)
@@ -1742,12 +1743,13 @@ class RecipeTypeManager(models.Manager):
         if definition:
             # Create new revision of the recipe type for new definition
             RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+            import pdb; pdb.set_trace()
             RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
             RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
             if auto_update:
-                recipes = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
-                msgs = [create_sub_update_recipe_definition_message(rt.id, recipe_type.id) for rt in recipes]
+                super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                msgs = [create_sub_update_recipe_definition_message(id, recipe_type.id) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
 
     def get_active_trigger_rules(self, trigger_type):
@@ -2428,6 +2430,7 @@ class RecipeTypeJobLinkManager(models.Manager):
         definition = recipe_type.get_definition()
         
         job_type_ids = JobType.objects.get_recipe_job_type_ids(definition)
+        import pdb; pdb.set_trace()
         
         if len(job_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(job_type_ids)

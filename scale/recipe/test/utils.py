@@ -37,7 +37,7 @@ SUB_RECIPE_DEFINITION = {'version': '6',
                                                       'job_type_revision': 1}}}}
 
 RECIPE_DEFINITION = {'version': '6',
-                            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/tiff'], 'required': True,
+                            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
                                                  'multiple': False}],
                                       'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
                             'nodes': {'node_a': {'dependencies': [],

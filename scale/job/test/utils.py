@@ -416,10 +416,10 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                 'interface': {
                     'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
                     'inputs': {
-                        'files': [{'name': 'INPUT_IMAGE'}]
+                        'files': [{'name': 'INPUT_IMAGE', 'mediaTypes': ['image/png']}]
                     },
                     'outputs': {
-                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png'}]
+                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png'}]
                     },
                     'mounts': [
                       {

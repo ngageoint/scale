@@ -2895,8 +2895,8 @@ class JobTypeManager(models.Manager):
             JobTypeRevision.objects.create_job_type_revision(job_type)
             # Update recipes containing this job type
             if auto_update:
-                recipes = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
-                msgs = [create_job_update_recipe_definition_message(recipe.id, job_type.id) for recipe in recipes]
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_job_update_recipe_definition_message(id, job_type.id) for idrecipe in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
 
     def get_by_natural_key(self, name, version):

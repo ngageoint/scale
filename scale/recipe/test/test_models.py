@@ -911,6 +911,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         title = 'Test Recipe'
         desc = 'Test description'
         recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, desc, self.v6_recipe_def)
+        import pdb; pdb.set_trace()
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
@@ -944,7 +945,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         # Check results
         self.assertEqual(recipe_type.title, title)
         self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.new_recipe_def.get_dict())
+        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.sub_def.get_dict())
         self.assertEqual(recipe_type.revision_num, 2)
         # New revision due to definition change
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()

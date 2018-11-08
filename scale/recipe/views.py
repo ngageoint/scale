@@ -162,7 +162,7 @@ class RecipeTypesView(ListCreateAPIView):
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, description, recipe_def,
                                                                     trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to create new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -194,7 +194,7 @@ class RecipeTypesView(ListCreateAPIView):
             with transaction.atomic():
                 # Validate the recipe definition
                 logger.info(definition_dict)
-                recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True)   
+                recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition() 
 
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, description, recipe_def)
@@ -332,7 +332,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
                 # Edit the recipe type
                 RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, trigger_rule,
                                                     remove_trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
             raise BadParameter(unicode(ex))
 
@@ -429,7 +429,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                 # Validate the recipe definition
                 recipe_def = None
                 if definition_dict:
-                    recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True)
+                    recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
 
                 # Edit the recipe type
                 RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
@@ -584,9 +584,9 @@ class RecipeTypesValidationView(APIView):
         # Validate the recipe definition
         try:
             recipe_def = RecipeDefinitionSunset.create(definition_dict)
-            warnings = RecipeType.objects.validate_recipe_type(name, title, version, description, recipe_def,
+            warnings = RecipeType.objects.validate_recipe_type_v5(name, title, version, description, recipe_def,
                                                                trigger_config)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to validate new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
