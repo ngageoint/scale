@@ -247,6 +247,12 @@ LOG_HANDLERS = {
         'level': 'DEBUG',
         'class': 'logging.NullHandler',
     },
+    'mesoshttp' : {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stdout
+    },
     'console': {
         'level': 'DEBUG',
         'class': 'logging.StreamHandler',
