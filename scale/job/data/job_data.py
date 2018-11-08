@@ -303,7 +303,7 @@ class JobData(object):
             # final list of ScaleFile objects
             if in_file['name'] not in self._new_data.values:
                 continue
-            in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']['file_ids']]]
+            in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
 
             if len(in_file['value']) >= 2:
                 in_file['type'] = 'files'
@@ -340,7 +340,7 @@ class JobData(object):
             # Follow that up with a list comprehension over potentially multiple IDs to get 
             # final list of ScaleFile objects
 
-            in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']['file_ids']]]
+            in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
             files.append(in_file)
         for x in input_json:
             x['value'] = self._new_data.values[x['name']].value
