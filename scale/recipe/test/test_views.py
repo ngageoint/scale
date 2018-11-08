@@ -967,24 +967,6 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['id'], self.recipe_type1.id)
-        self.assertEqual(result['title'], 'Title EDIT')
-        self.assertEqual(result['description'], 'Description EDIT')
-        self.assertEqual(result['revision_num'], 1)
-        self.assertIsNotNone(result['definition'])
-        self.assertEqual(len(result['job_types']), 1)
-        for entry in result['job_types']:
-            self.assertTrue(entry['id'], [self.job_type2.id])
-
-        self.assertEqual(len(result['sub_recipe_types']), 1)
-        for entry in result['sub_recipe_types']:
-            self.assertTrue(entry['id'], [self.recipe_type1.id])
-
-        self.assertIn('deprecated', result)
-        self.assertNotIn('trigger_rule', result)
-
     def test_edit_definition(self):
         """Tests editing the definition of a recipe type"""
         definition = self.sub_definition.copy()

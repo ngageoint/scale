@@ -1546,7 +1546,7 @@ class RecipeTypeManager(models.Manager):
             _ = definition.get_job_types(lock=True)
             definition.validate_job_interfaces()
         else:
-            raise InvalidDefinition('This version of the recipe definition is invalid to save')
+            raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
 
         # Validate the trigger rule
         if trigger_rule:
@@ -1562,7 +1562,7 @@ class RecipeTypeManager(models.Manager):
         recipe_type.title = title
         recipe_type.description = description
         if definition.get_dict()['version'] == '2.0':
-            raise InvalidDefinition('This version of the recipe definition is invalid to save')
+            raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
         recipe_type.definition = definition.get_dict()
         recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
@@ -1594,11 +1594,11 @@ class RecipeTypeManager(models.Manager):
         """
 
         from recipe.definition.exceptions import InvalidDefinition
-        # Must lock job type interfaces so the new recipe type definition can be validated
         if isinstance(definition, RecipeDefinition):
-            definition.validate_interfaces()
+            inputs, outputs = self.get_interfaces(definition)
+            definition.validate(inputs, outputs)
         else:
-            raise InvalidDefinition('This version of the recipe definition is invalid to save')
+            raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
 
 
         # Create the new recipe type
@@ -1665,13 +1665,14 @@ class RecipeTypeManager(models.Manager):
             if isinstance(definition, LegacyRecipeDefinition):
                 definition.validate_job_interfaces()
                 if definition.get_dict()['version'] == '2.0':
-                    raise InvalidDefinition('This version of the recipe definition is invalid to save')
+                    raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
                 recipe_type.definition = definition.get_dict()
             elif isinstance(definition, RecipeDefinition):
-                definition.validate_interfaces()
+                inputs, outputs = self.get_interfaces(definition)
+                definition.validate(inputs, outputs)
                 recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
             else:
-                raise InvalidDefinition('This version of the recipe definition is invalid to save')
+                raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         if trigger_rule or remove_trigger_rule:
@@ -1729,10 +1730,11 @@ class RecipeTypeManager(models.Manager):
 
         if definition:
             if isinstance(definition, RecipeDefinition):
-                definition.validate_interfaces()
+                inputs, outputs = self.get_interfaces(definition)
+                definition.validate(inputs, outputs)
                 recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
             else:
-                raise InvalidDefinition('This version of the recipe definition is invalid to save')
+                raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         recipe_type.save()

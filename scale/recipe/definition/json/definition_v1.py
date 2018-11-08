@@ -250,7 +250,7 @@ class RecipeDefinitionV1(object):
 
         if self._definition['version'] != DEFAULT_VERSION:
             msg = '%s is an unsupported version number'
-            raise InvalidDefinition('INVALID_VERSION', msg % self._definition['version'])
+            raise InvalidDefinition('INVALID_DEFINITION', msg % self._definition['version'])
 
         self._populate_default_values()
 

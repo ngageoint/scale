@@ -16,7 +16,8 @@ import trigger.handler as trigger_handler
 import util.rest as rest_util
 from job.models import Job, JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
+from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
@@ -538,9 +539,9 @@ class RecipeTypesValidationView(APIView):
         """
 
         if self.request.version == 'v6':
-            return self.post_v6(request)
+            return self._post_v6(request)
         else:
-            raise self.post_v5(request)
+            raise self._post_v5(request)
 
     def _post_v5(self, request):
         """Validates a new recipe type and returns any warnings discovered
