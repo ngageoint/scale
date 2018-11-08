@@ -16,6 +16,7 @@ from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
+from messaging.manager import CommandMessageManager
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
@@ -23,10 +24,12 @@ from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
 from recipe.diff.diff import RecipeDiff
-from recipe.diff.json.diff_v6 import RecipeDiffV6, convert_recipe_diff_to_v6_json
+from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
+from recipe.messages.update_recipe_definition import (create_sub_update_recipe_definition_message,
+                                                      create_job_update_recipe_definition_message)
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -1695,7 +1698,7 @@ class RecipeTypeManager(models.Manager):
             RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
             RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
-    def edit_recipe_type_v6(self, recipe_type_id, title, description, definition):
+    def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update):
         """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic 
         transaction. An argument of None for a field indicates that the field should not change. 
 
@@ -1707,6 +1710,8 @@ class RecipeTypeManager(models.Manager):
         :type description: str
         :param definition: The definition for running a recipe of this type, possibly None
         :type definition: :class:`recipe.definition.definition.RecipeDefinition`
+        :param auto_update: If true, recipes that contain this recipe type will automatically be updated
+        :type auto_update: bool
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If any part of the recipe
             definition violates the specification
@@ -1738,6 +1743,11 @@ class RecipeTypeManager(models.Manager):
             RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
             RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
             RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
+
+            if auto_update:
+                recipes = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                msgs = [create_sub_update_recipe_definition_message(rt.id, recipe_type.id) for rt in recipes]
+                CommandMessageManager().send_messages(msgs)
 
     def get_active_trigger_rules(self, trigger_type):
         """Returns the active trigger rules with the given trigger type that create jobs and recipes
