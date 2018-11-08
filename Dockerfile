@@ -9,35 +9,6 @@ LABEL \
 
 EXPOSE 80
 
-# recognized environment variables
-# CONFIG_URI
-# DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
-# SERVICE_SECRET json object that contains DCOS service account secret value
-# DEPLOY_WEBSERVER to start the web server container
-# ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
-# ENABLE_WEBSERVER true to start the RESTful API server, should only be set on webserver app
-# LOGSTASH_DOCKER_IMAGE the name of the Docker image for logstash
-# MARATHON_APP_DOCKER_IMAGE used in Marathon to autodetect Scale docker image
-# MESOS_MASTER_URL
-# NPM_URL
-# PYPI_URL
-# SCALE_DB_HOST
-# SCALE_DB_NAME
-# SCALE_DB_PASS
-# SCALE_DB_PORT
-# SCALE_DB_USER
-# DJANGO_DEBUG
-# SCALE_DOCKER_IMAGE used for explicit override of docker image used, not needed in Marathon
-# SCALE_ELASTICSEARCH_URLS
-# SCALE_LOGGING_ADDRESS
-# SCALE_WEBSERVER_CPU
-# SCALE_WEBSERVER_MEMORY
-# SCALE_ZK_URL
-# SECRETS_SSL_WARNINGS false to silence SSL warnings from secrets transactions, true (defualt) to raise them.
-# SECRETS_TOKEN used for authenticating Scale against Vault or DCOS Secrets Store
-# SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
-# SYSTEM_LOGGING_LEVEL used to set logging level for system processes. use DEBUG, INFO, WARNING, ERROR, and CRITICAL. 
-
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
 # if present, the qualifier will be '.${BUILDNUM}
