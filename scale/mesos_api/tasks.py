@@ -47,7 +47,7 @@ def _create_base_task(task):
     resources = task.get_resources()
 
     if settings.CONFIG_URI:
-        mesos_task['command'] = {'uri': [settings.CONFIG_URI]}
+        mesos_task['command'] = {'uris': [{'value': settings.CONFIG_URI}]}
 
     task_resources = mesos_task['resources']
     for resource in resources.resources:
