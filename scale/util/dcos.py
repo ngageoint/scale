@@ -39,6 +39,6 @@ def make_dcos_request(host_address, relative_url, params=None):
                                           host_address.hostname,
                                           host_address.port,
                                           relative_url),
-                        param=params,
+                        params=params,
                         auth=DCOS_AUTH,
                         verify=DCOS_VERIFY)
