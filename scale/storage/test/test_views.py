@@ -300,7 +300,7 @@ class TestFileDetailsViewV6(TestCase):
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
-        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6()
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
         self.batch1 = batch_test_utils.create_batch(recipe_type=self.recipe_type1, is_creation_done=True)
         self.file = storage_test_utils.create_file( file_name='test.txt', file_type='SOURCE', media_type='image/png', 

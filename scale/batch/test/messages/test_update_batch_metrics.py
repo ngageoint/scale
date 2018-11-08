@@ -144,7 +144,7 @@ class TestUpdateBatchMetrics(TestCase):
                 },
             }]
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
         batch = batch_test_utils.create_batch(recipe_type=recipe_type)
 
         started = now()

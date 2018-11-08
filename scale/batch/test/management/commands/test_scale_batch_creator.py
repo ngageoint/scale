@@ -16,7 +16,7 @@ class TestBatchCreator(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type = recipe_test_utils.create_recipe_type()
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6()
         self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
     def test_missing_batch(self):

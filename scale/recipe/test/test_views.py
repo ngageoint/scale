@@ -28,8 +28,8 @@ class TestRecipeTypesViewV5(TransactionTestCase):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace()
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type()
-        self.recipe_type_2 = recipe_test_utils.create_recipe_type()
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
+        self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
 
     def test_list_all(self):
         """Tests getting a list of recipe types."""
@@ -524,7 +524,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
                 },
             }],
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=self.definition,
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=self.definition,
                                                                 trigger_rule=self.trigger_rule)
 
     def test_not_found(self):
@@ -873,7 +873,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
             }],
         }
 
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
         url = '/%s/recipe-types/%d/' % (self.api, recipe_type.id)
         response = self.client.get(url)
@@ -965,7 +965,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
@@ -1552,7 +1552,7 @@ class TestRecipesViewV5(TransactionTestCase):
             'workspace_id': workspace1.id,
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
         self.recipe1 = recipe_handler.recipe
         self.recipe1_jobs = recipe_handler.recipe_jobs
@@ -1751,9 +1751,9 @@ class TestRecipesViewV6(TransactionTestCase):
             }]
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=def_v6_dict)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
-        self.recipe_type2 = recipe_test_utils.create_recipe_type(name='my-type2', definition=def_v6_dict)
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(name='my-type2', definition=def_v6_dict)
         self.recipe2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type2, input=self.data2)
         self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
 
@@ -1981,7 +1981,7 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
             }]
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=def_v6_dict)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
 
         Recipe.objects.process_recipe_input(self.recipe1)
@@ -2096,7 +2096,7 @@ class OldTestRecipeDetailsView(TransactionTestCase):
             'workspace_id': workspace1.id,
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
         self.recipe1 = recipe_handler.recipe
         self.recipe1_jobs = recipe_handler.recipe_jobs
@@ -2207,7 +2207,7 @@ class TestRecipeReprocessViewV5(TransactionTestCase):
             'workspace_id': workspace1.id,
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
         self.recipe1 = recipe_handler.recipe
         self.recipe1_jobs = recipe_handler.recipe_jobs
@@ -2320,7 +2320,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
             'workspace_id': workspace1.id,
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
         self.recipe1 = recipe_handler.recipe
         self.recipe1_jobs = recipe_handler.recipe_jobs
@@ -2452,7 +2452,7 @@ class TestRecipeInputFilesViewV5(TestCase):
             'workspace_id': workspace1.id,
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
         self.legacy_recipe = recipe_handler.recipe
         self.recipe = recipe_test_utils.create_recipe()
@@ -2634,7 +2634,7 @@ class TestRecipeInputFilesViewV6(TestCase):
             'workspace_id': workspace1.id,
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
         self.legacy_recipe = recipe_handler.recipe
         self.recipe = recipe_test_utils.create_recipe()

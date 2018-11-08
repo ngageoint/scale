@@ -21,6 +21,8 @@ from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from port.schema import Configuration, InvalidConfiguration, ValidationWarning
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.definition.definition import RecipeDefinition
 from recipe.deprecation import RecipeDefinitionSunset
 from recipe.models import RecipeType
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
@@ -303,20 +305,38 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     remove_trigger_rule = 'trigger_rule' in recipe_type_dict and not recipe_type_dict['trigger_rule']
 
     # Edit or create the associated recipe type model
-    if recipe_type:
-        try:
-            RecipeType.objects.edit_recipe_type(recipe_type.id, result.get('title'), result.get('description'),
-                                                definition, trigger_rule, remove_trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
-            logger.exception('Recipe type edit failed')
-            raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
+    if isinstance(definition, LegacyRecipeDefinition):
+        if recipe_type:
+            try:
+                RecipeType.objects.edit_recipe_type_v5(recipe_type.id, result.get('title'), result.get('description'),
+                                                    definition, trigger_rule, remove_trigger_rule)
+            except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                logger.exception('Recipe type edit failed')
+                raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
+        else:
+            try:
+                RecipeType.objects.create_recipe_type_v5(result.get('name'), result.get('version'), result.get('title'),
+                                                      result.get('description'), definition, trigger_rule)
+            except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                logger.exception('Recipe type create failed')
+                raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
+    elif isinstance(definition, RecipeDefinition):
+        if recipe_type:
+            try:
+                RecipeType.objects.edit_recipe_type_v6(recipe_type.id, result.get('title'), result.get('description'),
+                                                    definition, auto_update=True)
+            except (InvalidDefinition ) as ex:
+                logger.exception('Recipe type edit failed')
+                raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
+        else:
+            try:
+                RecipeType.objects.create_recipe_type_v6(result.get('name'), result.get('title'),
+                                                      result.get('description'), definition)
+            except (InvalidDefinition) as ex:
+                logger.exception('Recipe type create failed')
+                raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
-        try:
-            RecipeType.objects.create_recipe_type(result.get('name'), result.get('version'), result.get('title'),
-                                                  result.get('description'), definition, trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
-            logger.exception('Recipe type create failed')
-            raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
+        raise InvalidDefinition('This version of the recipe definition is invalid')
     return warnings
 
 

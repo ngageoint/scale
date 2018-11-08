@@ -25,7 +25,7 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
     """
 
     if not recipe_type:
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
     if not definition:
         definition = BatchDefinition()
         # Create a previous batch so we can create a valid definition
@@ -70,7 +70,7 @@ def create_batch_old(recipe_type=None, definition=None, title=None, description=
     """
 
     if not recipe_type:
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
     if not definition:
         definition = {}
     if not isinstance(definition, OldBatchDefinition):

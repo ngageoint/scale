@@ -118,7 +118,7 @@ register_trigger_rule_handler(MockTriggerRuleHandler())
 register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 
-def create_recipe_type(name=None, version=None, title=None, description=None, definition=None, trigger_rule=None):
+def create_recipe_type_v5(name=None, version=None, title=None, description=None, definition=None, trigger_rule=None):
     """Creates a recipe type for unit testing
 
     :returns: The RecipeType model
@@ -223,15 +223,18 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
     return recipe_type
 
 
-def edit_recipe_type(recipe_type, definition):
+def edit_recipe_type_v5(recipe_type, definition):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
-    RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(definition), None, False)
+    RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=None, description=None,
+                                           definition=RecipeDefinition(definition), trigger_rule=None,
+                                           remove_trigger_rule=False)
 
 def edit_recipe_type_v6(recipe_type, definition):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
-    RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinitionV6(definition).get_definition(), None, False)
+    RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=None, description=None,
+                                           definition=RecipeDefinitionV6(definition).get_definition(), auto_update=False)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
                   superseded_recipe=None, batch=None, save=True):
@@ -242,7 +245,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     """
 
     if not recipe_type:
-        recipe_type = create_recipe_type()
+        recipe_type = create_recipe_type_v5()
     if not input:
         input = {}
     if not event:
@@ -396,7 +399,7 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
     """
 
     if not recipe_type:
-        recipe_type = create_recipe_type()
+        recipe_type = create_recipe_type_v5()
     if not data:
         data = {}
     if not isinstance(data, LegacyRecipeData):

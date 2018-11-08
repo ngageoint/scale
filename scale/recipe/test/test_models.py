@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
+import copy
 import datetime
 
 import django
 from django.db import transaction
 from django.test import TransactionTestCase
 from django.utils.timezone import now
-from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
@@ -17,18 +17,14 @@ from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter
-from error.models import get_unknown_error, reset_error_cache
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
-from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
-from recipe.exceptions import ReprocessError
-from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
+from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
+from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 from storage.models import ScaleFile
 from trigger.models import TriggerRule
@@ -109,7 +105,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
             }]
         }
         self.recipe_def = LegacyRecipeDefinition(self.definition)
-        self.recipe = RecipeType.objects.create_recipe_type('name', '1.0', 'title', 'description', self.recipe_def,
+        self.recipe = RecipeType.objects.create_recipe_type_v5('name', '1.0', 'title', 'description', self.recipe_def,
                                                             None)
 
     def test_valid_interface(self):
@@ -218,7 +214,7 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
             }]
         }
         self.recipe_def = LegacyRecipeDefinition(self.definition)
-        self.recipe = RecipeType.objects.create_recipe_type('name', '1.0', 'title', 'description', self.recipe_def,
+        self.recipe = RecipeType.objects.create_recipe_type_v5('name', '1.0', 'title', 'description', self.recipe_def,
                                                             None)
 
     def test_valid_interface(self):
@@ -300,7 +296,7 @@ class TestRecipeManager(TransactionTestCase):
         recipe_interface.add_parameter(FileParameter('input_b', ['text/plain'], multiple=True))
         definition = RecipeDefinition(recipe_interface)
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
 
         data_1 = Data()
         data_1.add_value(FileValue('input_a', [file_1.id]))
@@ -387,7 +383,7 @@ class TestRecipePopulateJobs(TransactionTestCase):
         self.assertTrue(jobs[0].node_name in ['job 1', 'job 2', 'job 3'])
 
 
-class TestRecipeTypeManagerCreateRecipeType(TransactionTestCase):
+class TestRecipeTypeManagerCreateRecipeTypeV5(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -460,14 +456,14 @@ class TestRecipeTypeManagerCreateRecipeType(TransactionTestCase):
         self.recipe_def = LegacyRecipeDefinition(self.definition)
         self.recipe_def.validate_job_interfaces()
 
-    def test_successful(self):
-        """Tests calling RecipeTypeManager.create_recipe_type() successfully."""
+    def test_successful_v5(self):
+        """Tests calling RecipeTypeManager.create_recipe_type_v5() successfully."""
 
         name = 'test-recipe'
         version = '1.0'
         title = 'Test Recipe'
         desc = 'Test description'
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, None)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, None)
 
         results_recipe_type = RecipeType.objects.get(pk=recipe_type.id)
         self.assertEqual(results_recipe_type.name, name)
@@ -480,7 +476,67 @@ class TestRecipeTypeManagerCreateRecipeType(TransactionTestCase):
         self.assertDictEqual(results_recipe_type_rev.definition, self.definition)
 
 
-class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
+class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+                                                                    description="A sub recipe",
+                                                                    is_active=False,
+                                                                    is_system=False)
+
+        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.v6_recipe_def = RecipeDefinitionV6(self.main_definition).get_definition()
+
+    def test_successful(self):
+        """Tests calling RecipeTypeManager.create_recipe_type_v6() successfully."""
+
+        name = 'test-recipe'
+        version = '1.0'
+        title = 'Test Recipe'
+        desc = 'Test description'
+        recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, desc, self.v6_recipe_def)
+
+        results_recipe_type = RecipeType.objects.get(pk=recipe_type.id)
+        self.assertEqual(results_recipe_type.name, name)
+        self.assertEqual(results_recipe_type.title, title)
+        self.assertEqual(results_recipe_type.description, desc)
+        self.assertDictEqual(results_recipe_type.definition, self.main_definition)
+
+        results_recipe_type_rev = RecipeTypeRevision.objects.get(recipe_type_id=recipe_type.id, revision_num=1)
+        self.assertDictEqual(results_recipe_type_rev.definition, self.definition)
+
+    def test_invalid_definition(self):
+        """Tests calling RecipeTypeManager.create_recipe_type_v6() with an invalid definition"""
+
+        # Create recipe_type
+        name = 'test-recipe'
+        title = 'Test Recipe'
+        desc = 'Test description'
+        invalid = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        invalid['version'] = 'BAD'
+        invalid_def = RecipeDefinitionV6(dict=invalid, do_validate=False).get_definition()
+        self.assertRaises(InvalidDefinition, RecipeType.objects.create_recipe_type_v6, name, title, desc, invalid_def)
+
+
+class TestRecipeTypeManagerEditRecipeTypeV5(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -609,13 +665,13 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         version = '1.0'
         title = 'Test Recipe'
         desc = 'Test description'
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, None)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, None)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
             new_title = 'New title'
             new_desc = 'New description'
-            RecipeType.objects.edit_recipe_type(recipe_type.id, new_title, new_desc, None, None, False)
+            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, new_title, new_desc, None, None, False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results
@@ -638,13 +694,13 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
             new_title = 'New title'
             new_desc = 'New description'
-            RecipeType.objects.edit_recipe_type(recipe_type.id, new_title, new_desc, None, None, False)
+            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, new_title, new_desc, None, None, False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results
@@ -667,11 +723,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, self.new_recipe_def, None, False)
+            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, self.new_recipe_def, None, False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results
@@ -700,11 +756,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
         new_trigger_rule_id = new_trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, None, new_trigger_rule, False)
+            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, None, new_trigger_rule, False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results
@@ -731,11 +787,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, None, None, True)
+            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, None, None, True)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results
@@ -763,11 +819,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
         new_trigger_rule_id = new_trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, self.new_recipe_def, new_trigger_rule,
+            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, self.new_recipe_def, new_trigger_rule,
                                                 False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
@@ -798,11 +854,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule_id = trigger_rule.id
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_ERROR_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            self.assertRaises(InvalidRecipeConnection, RecipeType.objects.edit_recipe_type, recipe_type.id, None, None,
+            self.assertRaises(InvalidRecipeConnection, RecipeType.objects.edit_recipe_type_v5, recipe_type.id, None, None,
                               self.new_recipe_def, new_trigger_rule, False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
@@ -816,6 +872,104 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertTrue(trigger_rule.is_active)
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
         self.assertEqual(num_of_revs, 1)
+
+class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.job_type2 = job_test_utils.create_seed_job_type()
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+        self.sub_def = RecipeDefinitionV6(self.sub_definition).get_definition()
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+                                                                    description="A sub recipe",
+                                                                    is_active=False,
+                                                                    is_system=False)
+
+        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.v6_recipe_def = RecipeDefinitionV6(self.main_definition).get_definition()
+
+    def test_change_simple(self):
+        """Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes"""
+
+        # Create recipe_type
+        name = 'test-recipe'
+        title = 'Test Recipe'
+        desc = 'Test description'
+        recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, desc, self.v6_recipe_def)
+        with transaction.atomic():
+            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
+            # Edit the recipe
+            new_title = 'New title'
+            new_desc = 'New description'
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, new_title, new_desc, None, False)
+        recipe_type = RecipeType.objects.get(pk=recipe_type.id)
+
+        # Check results
+        self.assertEqual(recipe_type.title, new_title)
+        self.assertEqual(recipe_type.description, new_desc)
+        self.assertDictEqual(recipe_type.definition, self.main_definition)
+        self.assertEqual(recipe_type.revision_num, 1)
+        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
+        self.assertEqual(num_of_revs, 1)
+
+    def test_change_to_definition(self):
+        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition"""
+
+        # Create recipe_type
+        name = 'test-recipe'
+        title = 'Test Recipe'
+        desc = 'Test description'
+        recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, desc, self.v6_recipe_def)
+        with transaction.atomic():
+            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
+            # Edit the recipe
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, self.sub_def, True)
+        recipe_type = RecipeType.objects.get(pk=recipe_type.id)
+
+        # Check results
+        self.assertEqual(recipe_type.title, title)
+        self.assertEqual(recipe_type.description, desc)
+        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.new_recipe_def.get_dict())
+        self.assertEqual(recipe_type.revision_num, 2)
+        # New revision due to definition change
+        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
+        self.assertEqual(num_of_revs, 2)
+
+        subs = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
+        self.assertEqual(len(subs), 0)
+
+    def test_change_to_invalid_definition(self):
+        """Tests calling RecipeTypeManager.edit_recipe_type() with an invalid change to the definition"""
+
+        # Create recipe_type
+        name = 'test-recipe'
+        title = 'Test Recipe'
+        desc = 'Test description'
+        recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, desc, self.v6_recipe_def)
+        with transaction.atomic():
+            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
+            # Edit the recipe
+            invalid = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+            invalid['version'] = 'BAD'
+            invalid_def = RecipeDefinitionV6(dict=invalid, do_validate=False).get_definition()
+            self.assertRaises(InvalidDefinition, RecipeType.objects.edit_recipe_type_v6, self.recipe_type.id,
+                              None, None, invalid_def, True)
+
 
 class TestRecipeTypeSubLinkManager(TransactionTestCase):
 

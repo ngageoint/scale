@@ -25,7 +25,7 @@ class TestPortViewsV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6()
         self.job_type1 = job_test_utils.create_job_type()
         self.error1 = error_test_utils.create_error(category='DATA')
 
@@ -68,7 +68,7 @@ class TestConfigurationViewExportV5(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v5()
         self.job_type1 = job_test_utils.create_job_type()
         self.error1 = error_test_utils.create_error(category='DATA')
 
@@ -195,8 +195,8 @@ class TestConfigurationViewExportV5(TransactionTestCase):
 
     def test_recipe_types_by_id(self):
         """Tests exporting recipe types by id."""
-        recipe_type2 = recipe_test_utils.create_recipe_type()
-        recipe_type3 = recipe_test_utils.create_recipe_type()
+        recipe_type2 = recipe_test_utils.create_recipe_type_v5()
+        recipe_type3 = recipe_test_utils.create_recipe_type_v5()
 
         url = '/v5/configuration/?recipe_type_id=%s&recipe_type_id=%s' % (recipe_type2.id,
                                                                           recipe_type3.id)
@@ -208,7 +208,7 @@ class TestConfigurationViewExportV5(TransactionTestCase):
 
     def test_recipe_types_by_name(self):
         """Tests exporting recipe types by name."""
-        recipe_test_utils.create_recipe_type(name='recipe-name')
+        recipe_test_utils.create_recipe_type_v5(name='recipe-name')
 
         url = '/v5/configuration/?recipe_type_name=recipe-name'
         response = self.client.generic('GET', url)
@@ -252,7 +252,7 @@ class TestConfigurationViewExportV5(TransactionTestCase):
                 },
             }],
         }
-        recipe_type2 = recipe_test_utils.create_recipe_type(definition=recipe_definition)
+        recipe_type2 = recipe_test_utils.create_recipe_type_v5(definition=recipe_definition)
 
         url = '/v5/configuration/?recipe_type_name=%s' % recipe_type2.name
         response = self.client.generic('GET', url)
@@ -301,7 +301,7 @@ class TestConfigurationViewExportV5(TransactionTestCase):
                 },
             }],
         }
-        recipe_type2 = recipe_test_utils.create_recipe_type(definition=recipe_definition)
+        recipe_type2 = recipe_test_utils.create_recipe_type_v5(definition=recipe_definition)
 
         url = '/v5/configuration/?recipe_type_name=%s&job_type_name=%s&error_name=%s' % (
             recipe_type2.name, job_type2.name, error2.name)
@@ -1258,7 +1258,7 @@ class TestConfigurationViewImportV5(TestCase):
 
     def test_recipe_types_edit_simple(self):
         """Tests importing only recipe types that update basic models."""
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
         json_data = {
             'import': {
                 'recipe_types': [{
@@ -1286,7 +1286,7 @@ class TestConfigurationViewImportV5(TestCase):
     def test_recipe_types_edit_definition(self):
         """Tests importing only recipe types that update the definition JSON."""
         job_type = job_test_utils.create_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = {
             'version': '1.0',
@@ -1338,7 +1338,7 @@ class TestConfigurationViewImportV5(TestCase):
     def test_recipe_types_edit_trigger_rule(self):
         """Tests importing only recipe types that update the trigger rule configuration JSON."""
         workspace = storage_test_utils.create_workspace()
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         trigger_rule_config = {
             'version': '1.1',
@@ -1389,7 +1389,7 @@ class TestConfigurationViewImportV5(TestCase):
     def test_recipe_types_remove_trigger_rule(self):
         """Tests importing only recipe types that remove the trigger rule."""
         trigger_rule = trigger_test_utils.create_trigger_rule()
-        recipe_type = recipe_test_utils.create_recipe_type(trigger_rule=trigger_rule)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(trigger_rule=trigger_rule)
 
         json_data = {
             'import': {
@@ -1416,7 +1416,7 @@ class TestConfigurationViewImportV5(TestCase):
 
     def test_recipe_types_bad_name(self):
         """Tests rejecting a recipe type without a name."""
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
         json_data = {
             'import': {
                 'recipe_types': [{
@@ -1440,7 +1440,7 @@ class TestConfigurationViewImportV5(TestCase):
 
     def test_recipe_types_bad_interface(self):
         """Tests rejecting a recipe type with invalid definition JSON."""
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = {
             'BAD': 'test',
@@ -1470,7 +1470,7 @@ class TestConfigurationViewImportV5(TestCase):
 
     def test_recipe_types_bad_trigger_rule(self):
         """Tests rejecting a recipe type with an invalid trigger rule."""
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         json_data = {
             'import': {
@@ -1498,7 +1498,7 @@ class TestConfigurationViewImportV5(TestCase):
 
     def test_recipe_types_missing_job_type(self):
         """Tests rejecting a recipe type with missing job type dependencies."""
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = {
             'version': '1.0',
@@ -1755,7 +1755,7 @@ class TestConfigurationViewImportV5(TestCase):
         """Tests importing all types that edit existing models."""
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         json_data = {
             'import': {
@@ -1837,7 +1837,7 @@ class TestConfigurationViewImportV5(TestCase):
                 'dependencies': [],
             }],
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition)
 
         # Add a new error to the existing job type
         error_mapping['exit_codes']['1'] = 'test-error-name'
@@ -1967,7 +1967,7 @@ class TestConfigurationViewImportV5(TestCase):
                 'dependencies': [],
             }],
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition)
 
         # Add a new error to the existing job type
         error_mapping['exit_codes']['1'] = 'test-error-name'
@@ -2039,7 +2039,7 @@ class TestConfigurationDownloadViewV5(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v5()
         self.job_type1 = job_test_utils.create_job_type()
         self.error1 = error_test_utils.create_error(category='DATA')
 
@@ -2083,7 +2083,7 @@ class TestConfigurationValidationViewV5(TestCase):
         """Tests validating an edit of all types successfully."""
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         json_data = {
             'import': {
@@ -2129,7 +2129,7 @@ class TestConfigurationValidationViewV5(TestCase):
 
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         configuration = {
             'version': '2.0',
@@ -2193,7 +2193,7 @@ class TestConfigurationValidationViewV5(TestCase):
         """Tests validating an edit of all types with a critical error."""
         error = error_test_utils.create_error(category='SYSTEM')
         job_type = job_test_utils.create_job_type(category='system')
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         json_data = {
             'import': {
@@ -2237,7 +2237,7 @@ class TestConfigurationValidationViewV5(TestCase):
         """Tests validating an edit of all types with only warnings."""
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         json_data = {
             'import': {

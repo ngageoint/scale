@@ -42,7 +42,7 @@ class TestUpdateRecipes(TestCase):
                 }],
             }],
         }
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1)
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6(definition=definition_1)
         self.recipe_1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_1)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='job_failed', job=self.job_1_failed)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='job_pending', job=self.job_1_pending)
@@ -69,7 +69,7 @@ class TestUpdateRecipes(TestCase):
                 }],
             }],
         }
-        self.recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
+        self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6(definition=definition_2)
         self.recipe_2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_2)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_running', job=self.job_2_running)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_blocked', job=self.job_2_blocked)
@@ -117,7 +117,7 @@ class TestUpdateRecipes(TestCase):
                 }],
             }],
         }
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1)
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6(definition=definition_1)
         self.recipe_1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_1)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='job_failed', job=self.job_1_failed)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='job_pending', job=self.job_1_pending)
@@ -144,7 +144,7 @@ class TestUpdateRecipes(TestCase):
                 }],
             }],
         }
-        self.recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
+        self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6(definition=definition_2)
         self.recipe_2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_2)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_running', job=self.job_2_running)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_blocked', job=self.job_2_blocked)
@@ -231,7 +231,7 @@ class TestUpdateRecipes(TestCase):
             }],
             'workspace_id': workspace.id,
         }
-        self.recipe_type_3 = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe_type_3 = recipe_test_utils.create_recipe_type_v6(definition=definition)
         self.recipe_3 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, input=data)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 1', job=job_3)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 2', job=job_4)

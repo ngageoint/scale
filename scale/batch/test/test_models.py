@@ -79,7 +79,7 @@ class TestBatchManager(TransactionTestCase):
             }],
         }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=self.definition_1, trigger_rule=self.rule)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(definition=self.definition_1, trigger_rule=self.rule)
         self.recipe_type_rev = RecipeTypeRevision.objects.get(recipe_type_id=self.recipe_type.id)
 
         self.interface_2 = {
@@ -178,7 +178,7 @@ class TestBatchManager(TransactionTestCase):
 
         recipe = Recipe.objects.create_recipe_v6(self.recipe_type_rev, self.event.id, input_data=self.input_data)
         recipe.save()
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
         batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
@@ -201,7 +201,7 @@ class TestBatchManager(TransactionTestCase):
             recipe.is_superseded = True
             recipe.save()
             partials.append(recipe)
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
         batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
@@ -246,7 +246,7 @@ class TestBatchManager(TransactionTestCase):
         recipe3.save()
         Recipe.objects.filter(pk=recipe3.id).update(created=datetime.datetime(2016, 3, 1, tzinfo=utc))
 
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
 
         definition = {
             'date_range': {
@@ -269,7 +269,7 @@ class TestBatchManager(TransactionTestCase):
         recipe = Recipe.objects.create_recipe_v6(self.recipe_type_rev, self.event.id, input_data=self.input_data)
         recipe.save()
 
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
 
         definition = {
             'date_range': {
@@ -333,7 +333,7 @@ class TestBatchManager(TransactionTestCase):
         recipe_file_2.created = recipe2.created
         recipe_file_2.save()
 
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
 
         definition = {
             'date_range': {
@@ -398,7 +398,7 @@ class TestBatchManager(TransactionTestCase):
         recipe_file_2.created = recipe2.created
         recipe_file_2.save()
 
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
 
         definition = {
             'date_range': {
@@ -476,7 +476,7 @@ class TestBatchManager(TransactionTestCase):
         recipe3 = Recipe.objects.create_recipe_v6(self.recipe_type_rev, self.event.id, input_data=input_data_3)
         recipe3.save()
 
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
 
         definition = {
             'date_range': {
@@ -519,7 +519,7 @@ class TestBatchManager(TransactionTestCase):
 
         recipe = Recipe.objects.create_recipe_v6(self.recipe_type_rev, self.event.id, input_data=self.input_data)
         recipe.save()
-        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type, self.definition_2)
 
         definition = {
             'job_names': ['Job 1'],

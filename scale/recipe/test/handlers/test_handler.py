@@ -127,7 +127,7 @@ class TestRecipeHandler(TestCase):
                 }],
             }],
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=self.definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(definition=self.definition)
         self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_failed', job=self.job_failed)
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_completed', job=self.job_completed)
@@ -246,7 +246,7 @@ class TestRecipeHandler(TestCase):
             }],
             'workspace_id': workspace.id,
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
@@ -354,7 +354,7 @@ class TestRecipeHandler(TestCase):
             }],
             'workspace_id': workspace.id,
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
@@ -462,7 +462,7 @@ class TestRecipeHandler(TestCase):
             }],
             'workspace_id': workspace.id,
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)

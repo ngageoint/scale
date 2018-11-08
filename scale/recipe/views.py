@@ -159,7 +159,7 @@ class RecipeTypesView(ListCreateAPIView):
                     trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name, is_active)
 
                 # Create the recipe type
-                recipe_type = RecipeType.objects.create_recipe_type(name, version, title, description, recipe_def,
+                recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, description, recipe_def,
                                                                     trigger_rule)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to create new recipe type: %s', name)

@@ -17,7 +17,7 @@ from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.models import RecipeType
 from util.parse import datetime_to_string, duration_to_string
@@ -30,10 +30,10 @@ class TestBatchesViewV5(TestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type(name='test1', version='1.0')
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v5(name='test1', version='1.0')
         self.batch1 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type1, status='SUBMITTED')
 
-        self.recipe_type2 = recipe_test_utils.create_recipe_type(name='test2', version='1.0')
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v5(name='test2', version='1.0')
         self.batch2 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type2, status='CREATED')
 
     def test_successful(self):
@@ -91,10 +91,10 @@ class TestBatchesViewV5(TestCase):
     def test_order_by(self):
         """Tests successfully calling the batches view with sorting."""
 
-        recipe_type1b = recipe_test_utils.create_recipe_type(name='2test2', version='2.0')
+        recipe_type1b = recipe_test_utils.create_recipe_type_v5(name='2test2', version='2.0')
         batch_test_utils.create_batch_old(recipe_type=recipe_type1b)
 
-        recipe_type1c = recipe_test_utils.create_recipe_type(name='1test1', version='3.0')
+        recipe_type1c = recipe_test_utils.create_recipe_type_v5(name='1test1', version='3.0')
         batch_test_utils.create_batch_old(recipe_type=recipe_type1c)
 
         url = '/v5/batches/?order=recipe_type__name&order=-recipe_type__version'
@@ -256,10 +256,10 @@ class TestBatchesViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type()
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
 
-        self.recipe_type_2 = recipe_test_utils.create_recipe_type()
+        self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
         self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2, is_creation_done=True)
 
     def test_invalid_version(self):
@@ -459,7 +459,7 @@ class TestBatchDetailsViewV5(TestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type = recipe_test_utils.create_recipe_type()
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5()
         self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
     def test_not_found(self):
@@ -491,7 +491,7 @@ class TestBatchDetailsViewV5(TestCase):
     def test_successful_with_new_batch(self):
         """Tests successfully calling the v5 batch details view with a new (v6) batch"""
 
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
         prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=10)
         definition = BatchDefinition()
         definition.root_batch_id = prev_batch.root_batch_id
@@ -544,7 +544,7 @@ class TestBatchDetailsViewV6(TestCase):
         job_type = job_test_utils.create_job_type()
         recipe_definition_dict = {'jobs': [{'name': 'job_a', 'job_type': {'name': job_type.name,
                                                                           'version': job_type.version}}]}
-        recipe_type = recipe_test_utils.create_recipe_type(definition=recipe_definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_definition_dict)
         configuration = BatchConfiguration()
         configuration.priority = 100
         batch = batch_test_utils.create_batch(recipe_type=recipe_type, configuration=configuration)
@@ -737,7 +737,8 @@ class TestBatchesComparisonViewV6(TestCase):
                 'dependencies': [{'name': 'job_c'}]
             }],
         }
-        recipe_type = recipe_test_utils.create_recipe_type(definition=rt_definition_1)
+        rd1 = RecipeDefinitionV6(dict=rt_definition_2, do_validate=False).get_definition()
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=rd1)
 
         # Create a chain of two batches
         batch_1 = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=2)
@@ -747,8 +748,8 @@ class TestBatchesComparisonViewV6(TestCase):
         batch_1.superseded_batch = None
         batch_1.save()
         # Change recipe type to new revision
-        RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, LegacyRecipeDefinition(rt_definition_2),
-                                            None, None)
+        rd2 = RecipeDefinitionV6(dict=rt_definition_2, do_validate=False).get_definition()
+        RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, rd2, auto_update=True)
         recipe_type = RecipeType.objects.get(id=recipe_type.id)
         definition_2 = BatchDefinition()
         definition_2.root_batch_id = batch_1.root_batch_id
@@ -871,7 +872,7 @@ class TestBatchesValidationViewV5(TestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type(name='test1', version='1.0')
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v5(name='test1', version='1.0')
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
 
     def test_successful(self):
@@ -1004,10 +1005,10 @@ class TestBatchesValidationViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type()
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
 
-        self.recipe_type_2 = recipe_test_utils.create_recipe_type()
+        self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
         self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2, is_creation_done=True)
 
     def test_invalid_version(self):

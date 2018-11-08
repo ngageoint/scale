@@ -26,8 +26,8 @@ class TestBatchDefinition(TestCase):
     def test_validate(self):
         """Tests calling BatchDefinition.validate()"""
 
-        recipe_type_1 = recipe_test_utils.create_recipe_type()
-        recipe_type_2 = recipe_test_utils.create_recipe_type()
+        recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
+        recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
 
         bad_recipe_type_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_1)
         still_creating_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)

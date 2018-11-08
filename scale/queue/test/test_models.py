@@ -430,7 +430,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe_definition = RecipeDefinition(definition)
         recipe_definition.validate_job_interfaces()
 
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
         data = {
             'version': '1.0',
@@ -510,7 +510,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
                 }],
             }],
         }
-        recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a)
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=definition_a)
         data_a = {
             'version': '1.0',
             'input_data': [],
@@ -556,7 +556,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
                 }],
             }],
         }
-        recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=definition_b)
         data_b = {
             'version': '1.0',
             'input_data': [],
