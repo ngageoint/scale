@@ -28,7 +28,6 @@ from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
-from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -1717,6 +1716,7 @@ class RecipeTypeManager(models.Manager):
         """
 
         from recipe.definition.exceptions import InvalidDefinition
+        from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message
         
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
