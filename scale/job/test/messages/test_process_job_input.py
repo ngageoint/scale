@@ -180,7 +180,7 @@ class TestProcessJobInput(TransactionTestCase):
         definition.add_dependency('node_b', 'node_a')
         definition.add_dependency_input_connection('node_b', 'Input 1', 'node_a', 'Output 1')
         def_dict = convert_recipe_definition_to_v1_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=recipe_data_dict)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='node_a', job=job_1)
@@ -310,7 +310,7 @@ class TestProcessJobInput(TransactionTestCase):
         definition.add_dependency('node_b', 'node_a')
         definition.add_dependency_input_connection('node_b', 'INPUT_B', 'node_a', 'OUTPUT_A')
         def_dict = convert_recipe_definition_to_v1_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=recipe_data_dict)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='node_a', job=job_1)

@@ -25,7 +25,7 @@ class TestRecipe(TestCase):
         """Tests calling Recipe.get_jobs_to_update()"""
 
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
@@ -64,7 +64,7 @@ class TestRecipe(TestCase):
         Recipe.objects.bulk_create([recipe_b, recipe_g])
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', sub_recipe=recipe_b,
@@ -88,7 +88,7 @@ class TestRecipe(TestCase):
         """Tests calling Recipe.get_nodes_to_create()"""
 
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         # Create recipe
         definition = RecipeDefinition(Interface())
@@ -109,7 +109,7 @@ class TestRecipe(TestCase):
         definition.add_dependency('E', 'G')
         definition.add_dependency('E', 'H')
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         # Nodes A, B, and D already exist
@@ -133,7 +133,7 @@ class TestRecipe(TestCase):
 
         data_dict = convert_data_to_v6_json(Data()).get_dict()
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         # Create recipe
         definition = RecipeDefinition(Interface())
@@ -154,7 +154,7 @@ class TestRecipe(TestCase):
         definition.add_dependency('E', 'G')
         definition.add_dependency('E', 'H')
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_dict)
 
         # Nodes A, B, and D already exist
@@ -178,7 +178,7 @@ class TestRecipe(TestCase):
         """Tests calling Recipe.get_original_leaf_nodes()"""
 
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
@@ -214,7 +214,7 @@ class TestRecipe(TestCase):
         Recipe.objects.bulk_create([recipe_b, recipe_g])
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False,
                                                              is_original=False)
@@ -247,7 +247,7 @@ class TestRecipe(TestCase):
         """Tests calling Recipe.has_completed() when a recipe is empty and has not created its nodes yet"""
 
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
@@ -265,7 +265,7 @@ class TestRecipe(TestCase):
         definition.add_dependency('G', 'H')
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
@@ -276,7 +276,7 @@ class TestRecipe(TestCase):
 
         data_dict = convert_data_to_v6_json(Data()).get_dict()
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
@@ -308,7 +308,7 @@ class TestRecipe(TestCase):
         Recipe.objects.bulk_create([recipe_b, recipe_g])
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False,
                                                              is_original=False)
@@ -335,7 +335,7 @@ class TestRecipe(TestCase):
 
         data_dict = convert_data_to_v6_json(Data()).get_dict()
         job_type = job_test_utils.create_job_type()
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
 
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
@@ -372,7 +372,7 @@ class TestRecipe(TestCase):
         Recipe.objects.bulk_create([recipe_b, recipe_g])
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False,
                                                              is_original=False)

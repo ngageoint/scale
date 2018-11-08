@@ -28,7 +28,7 @@ class TestProcessCondition(TestCase):
         # TODO: once DataFilter is implemented, create a DataFilter object here that accepts the inputs
         definition.add_condition_node('node_a', Interface(), DataFilter(True))
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         condition = recipe_test_utils.create_recipe_condition(recipe=recipe, save=True)
         recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', condition=condition, save=True)
@@ -132,7 +132,7 @@ class TestProcessCondition(TestCase):
         definition.add_dependency_input_connection('node_c', 'INPUT_C_1', 'node_a', 'OUTPUT_A')
         definition.add_dependency_input_connection('node_c', 'INPUT_C_2', 'node_b', 'OUTPUT_B')
         def_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=recipe_data_dict)
         job_1 = job_test_utils.create_job(job_type=job_type_1, num_exes=1, status='COMPLETED', output=output_1_dict,
