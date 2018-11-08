@@ -48,9 +48,7 @@ class Command(BaseCommand):
         self.scheduler.initialize()
         scheduler_mgr.hostname = socket.getfqdn()
 
-        logger.info('Connecting to Mesos master at %s', mesos_master)
-
-        logging.getLogger('mesoshttp').setLevel(logging.DEBUG)
+        logger.info('Connecting to Mesos master at %s:', mesos_master)
 
         # By default use ZK for master detection
         self.client = MesosClient(mesos_urls=[settings.MESOS_MASTER],

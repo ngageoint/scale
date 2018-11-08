@@ -126,7 +126,7 @@ class SchedulerManager(models.Manager):
 # TODO: remove master_hostname and master_port fields when REST API v4 is removed
 class Scheduler(models.Model):
     """Represents a scheduler instance. There should only be a single instance of this and it's used for storing
-    cluster-wide state related to scheduling in mesos.
+    cluster-wide state related to scheduling in Mesos.
 
     :keyword is_paused: True if the entire cluster is currently paused and should not accept new jobs
     :type is_paused: :class:`django.db.models.BooleanField()`

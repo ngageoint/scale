@@ -2,12 +2,8 @@
 from __future__ import unicode_literals
 
 import datetime
-import json
 import logging
 import threading
-
-from django.conf import settings
-from mesoshttp.acs import DCOSServiceAuth
 
 from mesos_api.unversioned.agent import get_agent_resources
 from node.resources.node_resources import NodeResources
@@ -32,11 +28,6 @@ class ResourceManager(object):
         self._last_watermark_reset = None
         self._new_offers = {}  # {Offer ID: ResourceOffer}
         self._new_offers_lock = threading.Lock()  # Protects self._new_offers
-        self._dcos_auth = None
-        if settings.SERVICE_SECRET:
-            # We are in Enterprise mode and using service account
-            self._dcos_auth = DCOSServiceAuth((json.loads(settings.SERVICE_SECRET)))
-
 
     def add_new_offers(self, offers):
         """Adds new resource offers to the manager
@@ -257,7 +248,7 @@ class ResourceManager(object):
 
         resources = {}
         try:
-            resources = get_agent_resources(host_address, self._dcos_auth.token, agents_needing_totals)
+            resources = get_agent_resources(host_address, agents_needing_totals)
         except:
             logger.exception('Error getting agent resource totals from Mesos')
 
