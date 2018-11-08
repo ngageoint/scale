@@ -38,13 +38,8 @@ class TestSchedulingManager(TestCase):
         self.framework_id = '1234'
         Scheduler.objects.initialize_scheduler()
         Scheduler.objects.update(num_message_handlers=0)  # Prevent message handler tasks from scheduling
-<<<<<<< HEAD
-        self._driver = MagicMock()
-        
-=======
         self._client = MagicMock()
 
->>>>>>> 4bf15557... :rotating_light: Tests
         scheduler_mgr.sync_with_database()
         scheduler_mgr.update_from_mesos(framework_id=self.framework_id)
         resource_mgr.clear()
