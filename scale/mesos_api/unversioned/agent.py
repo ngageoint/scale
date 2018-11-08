@@ -1,20 +1,19 @@
 """Defines methods that call the unversioned Mesos HTTP endpoints"""
 from __future__ import unicode_literals
 
-import json
-import urllib2
+import requests
 
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
 
 
-def get_agent_resources(hostname, port, agent_ids):
+def get_agent_resources(master, auth, agent_ids):
     """Returns the total resources for each of the given agents
 
-    :param hostname: The hostname of the master
-    :type hostname: str
-    :param port: The port of the master
-    :type port: int
+    :param master: The address for the Mesos master
+    :type master: `util.host.HostAddress`
+    :param auth: Authentication for traversing Strict boundary in DCOS EE
+    :type auth: :class:`mesoshttp.acs.DCOSServiceAuth` or None
     :param agent_ids: The set of agent IDs
     :type agent_ids: set
     :returns: The total resources for each agent stored by agent ID
@@ -23,11 +22,10 @@ def get_agent_resources(hostname, port, agent_ids):
 
     results = {}
 
-    url = 'http://%s:%i/slaves' % (hostname, port)
-    response = urllib2.urlopen(url)
-    response_json = json.load(response)
+    resp = requests.get('%s://%s:%s/slaves' % (master.protocol, master.hostname, master.port),
+                        auth=auth, verify=False)
 
-    for agent_dict in response_json['slaves']:
+    for agent_dict in resp.json()['slaves']:
         agent_id = agent_dict['id']
         if agent_id in agent_ids:
             resource_list = []

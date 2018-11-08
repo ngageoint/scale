@@ -2,8 +2,12 @@
 from __future__ import unicode_literals
 
 import datetime
+import json
 import logging
 import threading
+
+from django.conf import settings
+from mesoshttp.acs import DCOSServiceAuth
 
 from mesos_api.unversioned.agent import get_agent_resources
 from node.resources.node_resources import NodeResources
@@ -28,6 +32,11 @@ class ResourceManager(object):
         self._last_watermark_reset = None
         self._new_offers = {}  # {Offer ID: ResourceOffer}
         self._new_offers_lock = threading.Lock()  # Protects self._new_offers
+        self._dcos_auth = None
+        if settings.SERVICE_SECRET:
+            # We are in Enterprise mode and using service account
+            self._dcos_auth = DCOSServiceAuth((json.loads(settings.SERVICE_SECRET)))
+
 
     def add_new_offers(self, offers):
         """Adds new resource offers to the manager
@@ -233,13 +242,11 @@ class ResourceManager(object):
                 else:
                     agent_resources.set_shortage()
 
-    def sync_with_mesos(self, master_hostname, master_port):
-        """Syncs with Mesos to retrieve the resouce totals needed by any agents
+    def sync_with_mesos(self, host_address):
+        """Syncs with Mesos to retrieve the resource totals needed by any agents
 
-        :param master_hostname: The name of the Mesos master host
-        :type master_hostname: string
-        :param master_port: The port used by the Mesos master
-        :type master_port: int
+        :param host_address: The address for the Mesos master
+        :type host_address: `util.host.HostAddress`
         """
 
         agents_needing_totals = set()
@@ -250,7 +257,7 @@ class ResourceManager(object):
 
         resources = {}
         try:
-            resources = get_agent_resources(master_hostname, master_port, agents_needing_totals)
+            resources = get_agent_resources(host_address, self._dcos_auth.token, agents_needing_totals)
         except:
             logger.exception('Error getting agent resource totals from Mesos')
 
