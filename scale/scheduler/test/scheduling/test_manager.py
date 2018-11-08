@@ -108,10 +108,12 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
         # Check that created tasks have the correct agent ID
         calls = self._client.method_calls
-        self.assertEqual(1, len(calls))
-        mesos_tasks = calls[0][1][1]
+        # One for checking for driver and second for task launch
+        self.assertEqual(2, len(calls))
+        # Get tasks off 2nd calls (index
+        mesos_tasks = calls[1][1][1]
         for mesos_task in mesos_tasks:
-            self.assertEqual(self.agent_3.agent_id, mesos_task.slave_id.value)
+            self.assertEqual(self.agent_3.agent_id, mesos_task['agent_id']['value'])
 
     def test_paused_scheduler(self):
         """Tests calling perform_scheduling() with a paused scheduler"""

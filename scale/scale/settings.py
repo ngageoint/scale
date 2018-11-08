@@ -27,6 +27,9 @@ MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 # We by default, use the '*' role, meaning all resources are unreserved offers are received
 MESOS_ROLE = os.getenv('MESOS_ROLE', '*')
 
+# Placeholder for service secret that will be overridden in local_settings_docker
+SERVICE_SECRET = None
+
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = None
 
