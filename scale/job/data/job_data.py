@@ -295,9 +295,6 @@ class JobData(object):
         inputs = []
         input_files = deepcopy(interface.get_input_files())
         input_json = deepcopy(interface.get_input_json())
-        method = 'scale.job.data.job_data.JobData.extend_interface_with_inputs_v5'
-        logger.info("%s::Converting seed interface for job %s to v5", method, interface.get_name())
-        logger.info("%s::Number of incoming job_files: %i", method, len(job_files))
 
         file_map = {job_file.id: job_file for job_file in job_files}
         for in_file in input_files:
@@ -305,15 +302,12 @@ class JobData(object):
             # Follow that up with a list comprehension over potentially multiple IDs to get
             # final list of ScaleFile objects
             if in_file['name'] not in self._new_data.values:
-                logger.info("%s::Cannot find %s in file values, skipping input file", method, in_file['name'])
                 continue
             in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
 
             if len(in_file['value']) >= 2:
-                logger.info("%s::in_file[\'value\'] has at least two file_ids", method)
                 in_file['type'] = 'files'
             else:
-                logger.info("%s::in_file['value'] has %i file_ids", method, len(in_file['value']))
                 in_file['value'] = in_file['value'][0]
                 in_file['type'] = 'file'
             inputs.append(in_file)
