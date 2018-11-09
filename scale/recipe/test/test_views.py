@@ -1318,6 +1318,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
 
         self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+                                                                    name='sub-recipe',
                                                                     title='Sub Recipe',
                                                                     description="A sub recipe",
                                                                     is_active=False,
@@ -1367,6 +1368,8 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
         #TODO: Figure out valid diff
+        print results['diff']
+        diff = {u'can_be_reprocessed': True, u'reasons': [], u'nodes': {u'node_a': {u'status': u'CHANGED', u'reprocess_new_node': True, u'force_reprocess': False, u'node_type': {u'job_type_version': u'1.0.0', u'node_type': u'job', u'job_type_name': u'minimum-two', u'job_type_revision': 1, u'prev_job_type_name': u'my-minimum-job'}, u'dependencies': [], u'changes': [{u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from minimum-two to my-minimum-job'}]}}}
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
     def test_bad_param(self):
@@ -1423,10 +1426,21 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
         #TODO: Figure out valid diff
+        print results['diff']
+        diff = {u'can_be_reprocessed': False,
+                u'reasons': [{u'name': u'INPUT_CHANGE', u'description': u"Input interface has changed: Parameter 'INPUT_IMAGE' is required"}], 
+                u'nodes': { u'node_a': { u'status': u'CHANGED', u'reprocess_new_node': False, u'force_reprocess': False, u'dependencies': [],
+                                         u'node_type': { u'job_type_revision': self.job_type2.revision_num, u'job_type_name': self.job_type2.name, 
+                                                         u'job_type_version': self.job_type2.version, u'node_type': u'job', u'prev_job_type_version': u'1.0.0', 
+                                                         u'prev_job_type_name': u'my-minimum-job' }, 
+                                         u'changes': [{ u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from %s to my-minimum-job' % self.job_type2.name}, 
+                                                      {u'name': u'JOB_TYPE_VERSION_CHANGE', u'description': u'Job type version changed from 0.1.0 to 1.0.0'}, {u'name': u'INPUT_NEW', u'description': u'New input INPUT_IMAGE added'}]}}}
+
+        warnings = [{u'name': u'REPROCESS_WARNING', u'description': u"This recipe cannot be reprocessed after updating."}]
         self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': [], u'diff': {}})
 
     def test_recipe_not_found_warning(self):
-        """Tests validating an updated recipe type with an unable to reprocess warning."""
+        """Tests validating a recipe definition against a recipe-type that doesn't exist"""
         new_definition = {'version': '6',
                           'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
                                                'multiple': False}]},
@@ -1446,9 +1460,10 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertFalse(results['is_valid'])
-        # TODO: Figure out valid diff
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': [], u'diff': {}})
+        self.assertTrue(results['is_valid'])
+        warnings = [{u'name': u'RECIPE_TYPE_NOT_FOUND', u'description': u"Unable to find an existing recipe type with name: not-a-name"}]
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
+        
     def test_mismatched_warning(self):
         """Tests validating a new recipe type."""
         main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
