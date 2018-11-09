@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     ]
     
     def update_job_inputs(apps, schemaEditor):
-        Job = apps.get_model('job')
+        Job = apps.get_model('job', 'Job')
         
         for job in Job.objects.all().iterator():
             job_input = job.input
