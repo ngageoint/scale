@@ -920,7 +920,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.assertEqual(result_def['input']['json'][0]['name'], 'bar')
         
     @patch('recipe.models.CommandMessageManager')
-    @patch('recipe.models.RecipeTypeManager.create_sub_update_recipe_definition_message')
+    @patch('recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message')
     def test_edit_definition_and_update(self, mock_create, mock_msg_mgr):
         """Tests editing the definition of a recipe type and updating recipes"""
         definition = self.sub_definition.copy()
@@ -943,7 +943,8 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.assertEqual(result_def['input']['json'][0]['name'], 'bar')
         
         # Check that create_sub_update_recipe_definition_message message was created and sent
-        mock_create.assert_called_with(recipe_type2.id, recipe_type.id)
+        recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
+        mock_create.assert_called_with(self.recipe_type2.id, recipe_type.id)
         
         jobs = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         self.assertEqual(len(jobs), 1)
