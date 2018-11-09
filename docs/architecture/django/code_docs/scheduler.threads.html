@@ -289,20 +289,20 @@
 <p>Defines the class that manages the scheduling background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.schedule.SchedulingThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.schedule.</code><code class="descname">SchedulingThread</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.threads.schedule.</code><code class="descname">SchedulingThread</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#scheduler.threads.base_thread.BaseSchedulerThread" title="scheduler.threads.base_thread.BaseSchedulerThread"><code class="xref py py-class docutils literal"><span class="pre">scheduler.threads.base_thread.BaseSchedulerThread</span></code></a></p>
 <p>This class manages the scheduling background thread for the scheduler</p>
 <dl class="attribute">
-<dt id="scheduler.threads.schedule.SchedulingThread.driver">
-<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.driver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the driver</p>
+<dt id="scheduler.threads.schedule.SchedulingThread.client">
+<code class="descname">client</code><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the client</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The client</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesoshttp.client.MesosClient</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -340,7 +340,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesoshttp.client.MesosClient.SchedulerDriver</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -367,7 +367,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesoshttp.client.MesosClient.SchedulerDriver</span></code></td>
 </tr>
 </tbody>
 </table>

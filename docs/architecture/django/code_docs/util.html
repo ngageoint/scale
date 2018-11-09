@@ -131,6 +131,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-util.aws">util.aws module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.broker">util.broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.dcos">util.dcos module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.deprecation">util.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.environment">util.environment module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
@@ -234,6 +235,7 @@
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_aws">util.test.test_aws module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_broker">util.test.test_broker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_command">util.test.test_command module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_host">util.test.test_host module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse">util.test.test_parse module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest">util.test.test_rest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry">util.test.test_retry module</a></li>
@@ -665,6 +667,34 @@ of secrets being injected.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-util.dcos">
+<span id="util-dcos-module"></span><h2>util.dcos module<a class="headerlink" href="#module-util.dcos" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="util.dcos.make_dcos_request">
+<code class="descclassname">util.dcos.</code><code class="descname">make_dcos_request</code><span class="sig-paren">(</span><em>host_address</em>, <em>relative_url</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.dcos.make_dcos_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a requests that is capable of traversing DCOS EE Strict boundary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>master</strong> (<cite>util.host.HostAddress</cite>) &#8211; The address for the Mesos master</li>
+<li><strong>relative_url</strong> (<em>basestring</em>) &#8211; URL path relative to the base address</li>
+<li><strong>params</strong> (<em>dict</em>) &#8211; The query parameters for request</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The request response object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">requests.Response</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-util.deprecation">
 <span id="util-deprecation-module"></span><h2>util.deprecation module<a class="headerlink" href="#module-util.deprecation" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -739,6 +769,13 @@ of secrets being injected.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="util.exceptions.ServiceAccountAuthFailure">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">ServiceAccountAuthFailure</code><a class="headerlink" href="#util.exceptions.ServiceAccountAuthFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating failure of request to login or communicate with DCOS using service account</p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="util.exceptions.TerminatedCommand">
 <em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">TerminatedCommand</code><a class="headerlink" href="#util.exceptions.TerminatedCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -787,7 +824,7 @@ of secrets being injected.</p>
 <p>Defines the named tuple for host locations</p>
 <dl class="class">
 <dt id="util.host.HostAddress">
-<em class="property">class </em><code class="descclassname">util.host.</code><code class="descname">HostAddress</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#util.host.HostAddress" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">util.host.</code><code class="descname">HostAddress</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#util.host.HostAddress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
 <dl class="attribute">
 <dt id="util.host.HostAddress.hostname">
@@ -801,6 +838,31 @@ of secrets being injected.</p>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="util.host.HostAddress.protocol">
+<code class="descname">protocol</code><a class="headerlink" href="#util.host.HostAddress.protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="util.host.host_address_from_mesos_url">
+<code class="descclassname">util.host.</code><code class="descname">host_address_from_mesos_url</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="headerlink" href="#util.host.host_address_from_mesos_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract URL components from a Mesos Master URL</p>
+<p>Must include the protocol prefix. Ports may be omitted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>url</strong> (<em>basestring</em>) &#8211; The URL to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Parsed URL components</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#util.host.HostAddress" title="util.host.HostAddress"><code class="xref py py-class docutils literal"><span class="pre">util.host.HostAddress</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

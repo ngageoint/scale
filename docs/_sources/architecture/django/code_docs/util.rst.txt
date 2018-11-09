@@ -43,6 +43,14 @@ util\.command module
     :undoc-members:
     :show-inheritance:
 
+util\.dcos module
+-----------------
+
+.. automodule:: util.dcos
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.deprecation module
 ------------------------
 

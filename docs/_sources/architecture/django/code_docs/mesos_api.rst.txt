@@ -27,6 +27,14 @@ mesos\_api\.apps module
     :undoc-members:
     :show-inheritance:
 
+mesos\_api\.offers module
+-------------------------
+
+.. automodule:: mesos_api.offers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 mesos\_api\.tasks module
 ------------------------
 

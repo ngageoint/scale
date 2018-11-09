@@ -524,17 +524,13 @@ current offered resources and watermark resources for each agent.</p>
 
 <dl class="method">
 <dt id="scheduler.resources.manager.ResourceManager.sync_with_mesos">
-<code class="descname">sync_with_mesos</code><span class="sig-paren">(</span><em>master_hostname</em>, <em>master_port</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.sync_with_mesos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Syncs with Mesos to retrieve the resouce totals needed by any agents</p>
+<code class="descname">sync_with_mesos</code><span class="sig-paren">(</span><em>host_address</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.sync_with_mesos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syncs with Mesos to retrieve the resource totals needed by any agents</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>master_hostname</strong> (<em>string</em>) &#8211; The name of the Mesos master host</li>
-<li><strong>master_port</strong> (<em>int</em>) &#8211; The port used by the Mesos master</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_address</strong> (<cite>util.host.HostAddress</cite>) &#8211; The address for the Mesos master</td>
 </tr>
 </tbody>
 </table>

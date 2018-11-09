@@ -663,7 +663,7 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 <em class="property">class </em><code class="descclassname">scheduler.models.</code><code class="descname">Scheduler</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a scheduler instance. There should only be a single instance of this and it&#8217;s used for storing
-cluster-wide state related to scheduling in mesos.</p>
+cluster-wide state related to scheduling in Mesos.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -864,7 +864,7 @@ object the first time, the query is executed.</p>
 <dl class="class">
 <dt id="scheduler.scale_scheduler.ScaleScheduler">
 <em class="property">class </em><code class="descclassname">scheduler.scale_scheduler.</code><code class="descname">ScaleScheduler</code><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">mesos.interface.Scheduler</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Mesos scheduler for the Scale framework</p>
 <dl class="attribute">
 <dt id="scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD">
@@ -873,36 +873,17 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="scheduler.scale_scheduler.ScaleScheduler.disconnected">
-<code class="descname">disconnected</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.disconnected" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnected</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.disconnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when the scheduler becomes disconnected from the master, e.g.
 the master fails and another is taking over.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.disconnected()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.scale_scheduler.ScaleScheduler.error">
-<code class="descname">error</code><span class="sig-paren">(</span><em>driver</em>, <em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">error</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when there is an unrecoverable error in the scheduler or
 scheduler driver.  The driver will be aborted BEFORE invoking this
 callback.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.error()</span></code>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.executorLost">
-<code class="descname">executorLost</code><span class="sig-paren">(</span><em>driver</em>, <em>executorId</em>, <em>slaveId</em>, <em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.executorLost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoked when an executor has exited/terminated. Note that any tasks
-running will have TASK_LOST status updates automatically generated.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.executorLost()</span></code>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.frameworkMessage">
-<code class="descname">frameworkMessage</code><span class="sig-paren">(</span><em>driver</em>, <em>executorId</em>, <em>slaveId</em>, <em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.frameworkMessage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoked when an executor sends a message. These messages are best
-effort; do not expect a framework message to be retransmitted in any
-reliable fashion.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.frameworkMessage()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -912,52 +893,51 @@ reliable fashion.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.offerRescinded">
-<code class="descname">offerRescinded</code><span class="sig-paren">(</span><em>driver</em>, <em>offerId</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.offerRescinded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoked when an offer is no longer valid (e.g., the slave was lost or
-another framework used resources in the offer.) If for whatever reason
-an offer is never rescinded (e.g., dropped message, failing over
-framework, etc.), a framwork that attempts to launch tasks using an
-invalid offer will receive TASK_LOST status updats for those tasks.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.offerRescinded()</span></code>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.registered">
-<code class="descname">registered</code><span class="sig-paren">(</span><em>driver</em>, <em>frameworkId</em>, <em>masterInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.registered" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoked when the scheduler successfully registers with a Mesos master.
-It is called with the frameworkId, a unique ID generated by the
-master, and the masterInfo which is information about the master
-itself.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.registered()</span></code>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.reregistered">
-<code class="descname">reregistered</code><span class="sig-paren">(</span><em>driver</em>, <em>masterInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.reregistered" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoked when the scheduler re-registers with a newly elected Mesos
-master.  This is only called when the scheduler has previously been
-registered.  masterInfo contains information about the newly elected
-master.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.reregistered()</span></code>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.resourceOffers">
-<code class="descname">resourceOffers</code><span class="sig-paren">(</span><em>driver</em>, <em>offers</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.resourceOffers" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scale_scheduler.ScaleScheduler.offers">
+<code class="descname">offers</code><span class="sig-paren">(</span><em>offers</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.offers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when resources have been offered to this framework. A single
-offer will only contain resources from a single slave.  Resources
+offer will only contain resources from a single agent.  Resources
 associated with an offer will not be re-offered to _this_ framework
-until either (a) this framework has rejected those resources (see
-SchedulerDriver.launchTasks) or (b) those resources have been
-rescinded (see Scheduler.offerRescinded).  Note that resources may be
+until either (a) this framework has rejected those resources
+or (b) those resources have been rescinded.  Note that resources may be
 concurrently offered to more than one framework at a time (depending
 on the allocator being used).  In that case, the first framework to
 launch tasks using those resources will be able to use them while the
 other frameworks will have those resources rescinded (or if a
 framework has already launched tasks with those resources then those
 tasks will fail with a TASK_LOST status and a message saying as much).</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.resourceOffers()</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.reconnected">
+<code class="descname">reconnected</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.reconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when the scheduler re-registers with a newly elected Mesos
+master.  This is only called when the scheduler has previously been
+registered.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.rescind">
+<code class="descname">rescind</code><span class="sig-paren">(</span><em>offer</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.rescind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when an offer is no longer valid (e.g., the slave was lost or
+another framework used resources in the offer.) If for whatever reason
+an offer is never rescinded (e.g., dropped message, failing over
+framework, etc.), a framework that attempts to launch tasks using an
+invalid offer will receive TASK_LOST status updates for those tasks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Launch scheduler with callbacks for Mesos events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>client</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesoshttp.client.MesosClient</span></code>) &#8211; MesosClient object with</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -968,17 +948,16 @@ tasks will fail with a TASK_LOST status and a message saying as much).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.slaveLost">
-<code class="descname">slaveLost</code><span class="sig-paren">(</span><em>driver</em>, <em>slaveId</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.slaveLost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoked when a slave has been determined unreachable (e.g., machine
-failure, network partition.) Most frameworks will need to reschedule
-any tasks launched on this slave on a new slave.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.slaveLost()</span></code>.</p>
+<dt id="scheduler.scale_scheduler.ScaleScheduler.subscribed">
+<code class="descname">subscribed</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.subscribed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when the scheduler successfully registers with a Mesos master.
+It is called with a SchedulerDriver which has attributes that include
+the frameworkId, and the mesos_url, which indicates the master currently leading.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scale_scheduler.ScaleScheduler.statusUpdate">
-<code class="descname">statusUpdate</code><span class="sig-paren">(</span><em>driver</em>, <em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.statusUpdate" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scale_scheduler.ScaleScheduler.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when the status of a task has changed (e.g., a slave is lost
 and so the task is lost, a task finishes and an executor sends a
 status update saying so, etc.) Note that returning from this callback
@@ -987,7 +966,6 @@ the scheduler aborts during this callback (or the process exits)
 another status update will be delivered.  Note, however, that this is
 currently not true if the slave sending the status update is lost or
 fails during that time.</p>
-<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.statusUpdate()</span></code>.</p>
 </dd></dl>
 
 </dd></dl>

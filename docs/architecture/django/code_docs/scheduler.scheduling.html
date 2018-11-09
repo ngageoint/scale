@@ -236,14 +236,14 @@
 thread.</p>
 <dl class="method">
 <dt id="scheduler.scheduling.manager.SchedulingManager.perform_scheduling">
-<code class="descname">perform_scheduling</code><span class="sig-paren">(</span><em>driver</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.manager.SchedulingManager.perform_scheduling" title="Permalink to this definition">¶</a></dt>
+<code class="descname">perform_scheduling</code><span class="sig-paren">(</span><em>client</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.manager.SchedulingManager.perform_scheduling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Organizes and analyzes the cluster resources, schedules new job executions, and launches tasks</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>driver</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code>) &#8211; The Mesos scheduler driver</li>
+<li><strong>client</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesoshttp.client.MesosClient</span></code>) &#8211; The Mesos scheduler client</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
 </ul>
 </td>

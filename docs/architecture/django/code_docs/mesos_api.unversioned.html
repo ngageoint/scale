@@ -116,6 +116,7 @@
 <li class="toctree-l4"><a class="reference internal" href="mesos_api.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.api">mesos_api.api module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.apps">mesos_api.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.offers">mesos_api.offers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.tasks">mesos_api.tasks module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.utils">mesos_api.utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api">Module contents</a></li>
@@ -223,15 +224,14 @@
 <p>Defines methods that call the unversioned Mesos HTTP endpoints</p>
 <dl class="function">
 <dt id="mesos_api.unversioned.agent.get_agent_resources">
-<code class="descclassname">mesos_api.unversioned.agent.</code><code class="descname">get_agent_resources</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>agent_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.unversioned.agent.get_agent_resources" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mesos_api.unversioned.agent.</code><code class="descname">get_agent_resources</code><span class="sig-paren">(</span><em>master</em>, <em>agent_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.unversioned.agent.get_agent_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the total resources for each of the given agents</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the master</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the master</li>
+<li><strong>master</strong> (<cite>util.host.HostAddress</cite>) &#8211; The address for the Mesos master</li>
 <li><strong>agent_ids</strong> (<em>set</em>) &#8211; The set of agent IDs</li>
 </ul>
 </td>

@@ -116,6 +116,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.api">mesos_api.api module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.apps">mesos_api.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.offers">mesos_api.offers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.tasks">mesos_api.tasks module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.utils">mesos_api.utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-mesos_api">Module contents</a></li>
@@ -403,86 +404,6 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="mesos_api.api.get_slave_task_file">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_slave_task_file</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>task_dir</em>, <em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slave_task_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the Mesos slave REST API to get the specified file from the given task directory</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the slave</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the slave</li>
-<li><strong>task_dir</strong> (<em>str</em>) &#8211; The directory on the slave that has the task&#8217;s files</li>
-<li><strong>file_name</strong> (<em>str</em>) &#8211; The name of the file to retrieve</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The contents of the file</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesos_api.api.get_slave_task_run_id">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_slave_task_run_id</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slave_task_run_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the Mesos slave REST API to get the run ID for the given task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the slave</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the slave</li>
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the Mesos task</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The directory on the slave, possibly None</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mesos_api.api.MesosError" title="mesos_api.api.MesosError"><strong>MesosError</strong></a> &#8211; If the task cannot be found</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesos_api.api.get_slave_task_url">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_slave_task_url</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>task_dir</em>, <em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slave_task_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a query URL for Mesos slave REST API for access to a specified file from the given task directory</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the slave</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the slave</li>
-<li><strong>task_dir</strong> (<em>str</em>) &#8211; The directory on the slave that has the task&#8217;s files</li>
-<li><strong>file_name</strong> (<em>str</em>) &#8211; The name of the file to retrieve</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The URL</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="mesos_api.api.get_slaves">
 <code class="descclassname">mesos_api.api.</code><code class="descname">get_slaves</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slaves" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queries the Mesos master REST API to get information for all registered slaves.</p>
@@ -535,6 +456,46 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-mesos_api.offers">
+<span id="mesos-api-offers-module"></span><h2>mesos_api.offers module<a class="headerlink" href="#module-mesos_api.offers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the functions for generating Mesos tasks</p>
+<dl class="function">
+<dt id="mesos_api.offers.create_simple_offer">
+<code class="descclassname">mesos_api.offers.</code><code class="descname">create_simple_offer</code><span class="sig-paren">(</span><em>offer_id</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.offers.create_simple_offer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a MesosHTTP useful only for offer combination</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>offer_id</strong> (<em>int</em>) &#8211; ID for offer to create</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Offer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesoshttp.offers.Offer</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.offers.from_mesos_offer">
+<code class="descclassname">mesos_api.offers.</code><code class="descname">from_mesos_offer</code><span class="sig-paren">(</span><em>mesos_offer</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.offers.from_mesos_offer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dot accessible offer from input dict</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mesos_offer</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesoshttp.offers.Offer</span></code>) &#8211; Offer object to translate into dot accessible object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dot accessible object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Namespace</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mesos_api.tasks">
 <span id="mesos-api-tasks-module"></span><h2>mesos_api.tasks module<a class="headerlink" href="#module-mesos_api.tasks" title="Permalink to this headline">¶</a></h2>
 <p>Defines the functions for generating Mesos tasks</p>
@@ -548,9 +509,9 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The task</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Mesos task</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">JSON TaskInfo instance</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskInfo</span></code></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -568,7 +529,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task update model</td>
 </tr>
@@ -586,7 +547,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The agent ID</td>
 </tr>
@@ -605,7 +566,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status data dict</td>
 </tr>
@@ -623,7 +584,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status message</td>
 </tr>
@@ -641,7 +602,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskInfo JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status reason</td>
 </tr>
@@ -659,7 +620,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status source</td>
 </tr>
@@ -677,7 +638,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status state</td>
 </tr>
@@ -695,7 +656,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task ID</td>
 </tr>
@@ -713,7 +674,7 @@ will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status timestamp</td>
 </tr>
@@ -724,18 +685,18 @@ will be returned.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="mesos_api.utils.string_to_TaskStatusCode">
-<code class="descclassname">mesos_api.utils.</code><code class="descname">string_to_TaskStatusCode</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.string_to_TaskStatusCode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the given Mesos status string to an integer</p>
+<dt id="mesos_api.utils.obj_from_json">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">obj_from_json</code><span class="sig-paren">(</span><em>input_json</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.obj_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts an JSON dict into a dot accessible object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>string</em>) &#8211; The status as a string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_json</strong> (<em>dict</em>) &#8211; The task status in TaskStatus JSON format</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status as an integer</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Task Status in dot accessible form</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Namespace</span></code></td>
 </tr>
 </tbody>
 </table>

@@ -28,6 +28,14 @@ util\.test\.test\_command module
     :undoc-members:
     :show-inheritance:
 
+util\.test\.test\_host module
+-----------------------------
+
+.. automodule:: util.test.test_host
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.test\.test\_parse module
 ------------------------------
 
