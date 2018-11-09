@@ -20,13 +20,13 @@ from data.interface.parameter import FileParameter
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
+from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
-from storage.models import ScaleFile
 from trigger.models import TriggerRule
 
 
@@ -128,7 +128,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type_v5, self.job_type.id,
+        self.assertRaises(OldInvalidDefinition, JobType.objects.edit_job_type_v5, self.job_type.id,
                           self.new_invalid_job_interface)
 
         # Check results
@@ -238,7 +238,7 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type_v5, self.job_type.name,
+        self.assertRaises(OldInvalidDefinition, JobType.objects.validate_job_type_v5, self.job_type.name,
                           self.job_type.version, self.new_invalid_job_interface)
 
         # Check results
@@ -521,7 +521,7 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         self.assertDictEqual(results_recipe_type.definition, self.main_definition)
 
         results_recipe_type_rev = RecipeTypeRevision.objects.get(recipe_type_id=recipe_type.id, revision_num=1)
-        self.assertDictEqual(results_recipe_type_rev.definition, self.definition)
+        self.assertDictEqual(results_recipe_type_rev.definition, self.main_definition)
 
     def test_invalid_definition(self):
         """Tests calling RecipeTypeManager.create_recipe_type_v6() with an invalid definition"""
@@ -530,9 +530,9 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         name = 'test-recipe'
         title = 'Test Recipe'
         desc = 'Test description'
-        invalid = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
-        invalid['version'] = 'BAD'
+        invalid = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
         invalid_def = RecipeDefinitionV6(definition=invalid, do_validate=False).get_definition()
+        invalid_def.add_dependency('node_b', 'node_a')
         self.assertRaises(InvalidDefinition, RecipeType.objects.create_recipe_type_v6, name, title, desc, invalid_def)
 
 
@@ -911,7 +911,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         title = 'Test Recipe'
         desc = 'Test description'
         recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, desc, self.v6_recipe_def)
-        import pdb; pdb.set_trace()
+
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
@@ -945,7 +945,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         # Check results
         self.assertEqual(recipe_type.title, title)
         self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.sub_def.get_dict())
+        self.assertDictEqual(recipe_type.definition, self.sub_definition)
         self.assertEqual(recipe_type.revision_num, 2)
         # New revision due to definition change
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
@@ -965,10 +965,10 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            invalid = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
-            invalid['version'] = 'BAD'
+            invalid = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
             invalid_def = RecipeDefinitionV6(definition=invalid, do_validate=False).get_definition()
-            self.assertRaises(InvalidDefinition, RecipeType.objects.edit_recipe_type_v6, self.recipe_type.id,
+            invalid_def.add_dependency('node_b', 'node_a')
+            self.assertRaises(InvalidDefinition, RecipeType.objects.edit_recipe_type_v6, recipe_type.id,
                               None, None, invalid_def, True)
 
 
@@ -991,17 +991,17 @@ class TestRecipeTypeSubLinkManager(TransactionTestCase):
     def test_get_recipe_type_ids(self):
         """Tests calling RecipeTypeSubLinkManager.get_recipe_type_ids()"""
 
-        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt3.id]), [self.rt1.id])
-        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt4.id]), [self.rt1.id])
-        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt5.id]), [self.rt2.id])
-        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt6.id]), [])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt3.id]), [self.rt1.id])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt4.id]), [self.rt1.id])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt5.id]), [self.rt2.id])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt6.id]), [])
         
     def test_get_sub_recipe_type_ids(self):
         """Tests calling RecipeTypeSubLinkManager.get_sub_recipe_type_ids()"""
 
-        self.assertListEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt1.id]), [self.rt3.id,self.rt4.id])
-        self.assertListEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt2.id]), [self.rt5.id])
-        self.assertListEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt5.id]), [])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt1.id]), [self.rt3.id,self.rt4.id])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt2.id]), [self.rt5.id])
+        self.assertItemsEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt5.id]), [])
 
 class TestRecipeTypeJobLinkManager(TransactionTestCase):
 
@@ -1023,14 +1023,14 @@ class TestRecipeTypeJobLinkManager(TransactionTestCase):
     def test_get_recipe_type_ids(self):
         """Tests calling RecipeTypeJobLinkManager.get_recipe_type_ids()"""
 
-        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt3.id]), [self.rt1.id])
-        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt4.id]), [self.rt1.id])
-        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt5.id]), [self.rt2.id])
-        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt6.id]), [])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt3.id]), [self.rt1.id])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt4.id]), [self.rt1.id])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt5.id]), [self.rt2.id])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt6.id]), [])
         
     def test_get_job_type_ids(self):
         """Tests calling RecipeTypeJobLinkManager.get_job_type_ids()"""
 
-        self.assertListEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt1.id]), [self.jt3.id,self.jt4.id])
-        self.assertListEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt2.id]), [self.jt5.id])
-        self.assertListEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt3.id]), [])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt1.id]), [self.jt3.id,self.jt4.id])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt2.id]), [self.jt5.id])
+        self.assertItemsEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt3.id]), [])

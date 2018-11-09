@@ -198,7 +198,7 @@ class RecipeTypesView(ListCreateAPIView):
 
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, description, recipe_def)
-        except (InvalidDefinition) as ex:
+        except InvalidDefinition as ex:
             logger.exception('Unable to create new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -332,7 +332,8 @@ class RecipeTypeIDDetailsView(GenericAPIView):
                 # Edit the recipe type
                 RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, trigger_rule,
                                                     remove_trigger_rule)
-        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule,
+                InvalidRecipeConnection) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
             raise BadParameter(unicode(ex))
 
@@ -435,7 +436,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                 RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
                                                        description=description, definition=recipe_def,
                                                        auto_update=auto_update)
-        except (InvalidDefinition) as ex:
+        except InvalidDefinition as ex:
             logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -541,7 +542,7 @@ class RecipeTypesValidationView(APIView):
         if self.request.version == 'v6':
             return self._post_v6(request)
         else:
-            raise self._post_v5(request)
+            return self._post_v5(request)
 
     def _post_v5(self, request):
         """Validates a new recipe type and returns any warnings discovered

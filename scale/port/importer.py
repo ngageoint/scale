@@ -325,14 +325,14 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
             try:
                 RecipeType.objects.edit_recipe_type_v6(recipe_type.id, result.get('title'), result.get('description'),
                                                     definition, auto_update=True)
-            except (InvalidDefinition ) as ex:
+            except InvalidDefinition as ex:
                 logger.exception('Recipe type edit failed')
                 raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
         else:
             try:
                 RecipeType.objects.create_recipe_type_v6(result.get('name'), result.get('title'),
                                                       result.get('description'), definition)
-            except (InvalidDefinition) as ex:
+            except InvalidDefinition as ex:
                 logger.exception('Recipe type create failed')
                 raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
