@@ -2127,7 +2127,7 @@ class JobExecution(models.Model):
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 
-        hits = settings.ELASTICSEARCH.search(index='_all', body=q)
+        hits = settings.ELASTICSEARCH.search(index='logstash-*', body=q)
 
         if hits['hits']['total'] == 0:
             return None, timezone.now()
