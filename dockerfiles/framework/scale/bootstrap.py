@@ -14,7 +14,6 @@ from mesoshttp.acs import DCOSServiceAuth
 
 APPLICATION_GROUP = os.getenv('APPLICATION_GROUP', None)
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
-SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
 SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
@@ -62,14 +61,11 @@ def run(client):
         blocking_apps.append(rabbitmq_app_name)
 
     # Determine if db should be deployed.
-    db_host = os.getenv('SCALE_DB_HOST', '')
-    db_port = os.getenv('SCALE_DB_PORT', '')
-    if not len(db_host):
+    db_url = os.getenv('DATABASE_URL')
+    if not db_url:
         deploy_database(client, db_app_name)
-        db_port = '5432'
-        db_host = "%s.marathon.l4lb.thisdcos.directory" % subdomain_gen(db_app_name)
-        print("DB_HOST=%s" % db_host)
-        print("DB_PORT=%s" % db_port)
+        db_url = "postgis://scale:scale@%s.marathon.l4lb.thisdcos.directory:5432/scale" % subdomain_gen(db_app_name)
+        print("DATABASE_URL=%s" % db_url)
         blocking_apps.append(db_app_name)
 
     # Determine if Logstash should be deployed.
@@ -82,7 +78,7 @@ def run(client):
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url, es_ver)
+        webserver_port = deploy_webserver(client, app_name, es_urls, db_url, broker_url, es_ver)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), webserver_port))
 
     # Wait for all needed apps to be healthy
@@ -208,7 +204,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url, es_ver):
+def deploy_webserver(client, app_name, es_urls, db_url, broker_url, es_ver):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -248,8 +244,7 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url, es
         'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
         'SCALE_BROKER_URL': broker_url,
-        'SCALE_DB_HOST': db_host,
-        'SCALE_DB_PORT': str(db_port),
+        'DATABASE_URL': db_url,
         'SCALE_STATIC_URL': '/service/%s/static/' % FRAMEWORK_NAME,
         'SCALE_WEBSERVER_CPU': str(cpu),
         'SCALE_WEBSERVER_MEMORY': str(memory),

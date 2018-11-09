@@ -3,9 +3,9 @@
 set -e
 
 check_db () {
-    if [[ "${SCALE_DB_HOST}x" == "x" ]]
+    if [[ "${DATABASE_URL}x" == "x" ]]
     then
-        echo SCALE_DB_HOST is not populated. Scale requires a valid database host configured.
+        echo "DATABASE_URL is not populated. Scale requires a valid database url configured defined in dj-database-url format."
         exit 1
     fi
 }
@@ -42,17 +42,17 @@ then
       export SCALE_SECRET_KEY=`python -c "import random;import string;print(''.join(random.SystemRandom().choice(string.hexdigits) for _ in range(50)))"`
     fi
 
-    if [[ "${SCALE_DB_HOST}x" == "x" || "${SCALE_LOGGING_ADDRESS}x" == "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
+    if [[ "${DATABASE_URL}x" == "x" || "${SCALE_LOGGING_ADDRESS}x" == "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
     then
       python -u bootstrap.py | tee bootstrap.log
     fi
 
-    if [[ "${SCALE_DB_HOST}x" == "x" ]]
+    if [[ "${DATABASE_URL}x" == "x" ]]
     then
-        export SCALE_DB_PORT=`cat bootstrap.log | grep DB_PORT | cut -d '=' -f2`
-        export SCALE_DB_HOST=`cat bootstrap.log | grep DB_HOST | cut -d '=' -f2`
+        export DATABASE_URL=`cat bootstrap.log | grep DATABASE_URL | cut -d '=' -f2`
+        export PG_PASS=`cat bootstrap.log | grep PG_PASS | cut -d '=' -f2`
     fi
-    echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
+    echo "${PG_PASS}" >> ~/.pgpass
     chmod 0600 ~/.pgpass
 
     if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
