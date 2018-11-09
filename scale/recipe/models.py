@@ -2330,6 +2330,9 @@ class RecipeTypeSubLinkManager(models.Manager):
         :raises :class:`recipe.models.RecipeType.DoesNotExist`: If it contains a sub recipe type that does not exist
         """
 
+        # Delete any previous links for the given recipe
+        RecipeTypeSubLink.objects.filter(recipe_type_id=recipe_type.id).delete()
+        
         definition = recipe_type.get_definition()
         
         sub_type_names = definition.get_recipe_type_names()
@@ -2353,9 +2356,6 @@ class RecipeTypeSubLinkManager(models.Manager):
 
         if len(recipe_type_ids) != len(sub_recipe_type_ids):
             raise Exception('Recipe Type and Sub recipe type lists must be equal length!')
-            
-        # Delete any previous links for the given recipe
-        RecipeTypeSubLink.objects.filter(recipe_type_id__in=recipe_type_ids).delete()
 
         new_links = []
 
@@ -2436,6 +2436,9 @@ class RecipeTypeJobLinkManager(models.Manager):
         :raises :class:`recipe.models.JobType.DoesNotExist`: If it contains a job type that does not exist
         """
 
+        # Delete any previous links for the given recipe
+        RecipeTypeJobLink.objects.filter(recipe_type_id=recipe_type.id).delete()
+        
         definition = recipe_type.get_definition()
         
         job_type_ids = JobType.objects.get_recipe_job_type_ids(definition)
@@ -2458,9 +2461,6 @@ class RecipeTypeJobLinkManager(models.Manager):
 
         if len(recipe_type_ids) != len(job_type_ids):
             raise Exception('Recipe Type and Job Type lists must be equal length!')
-            
-        # Delete any previous links for the given recipe
-        RecipeTypeJobLink.objects.filter(recipe_type_id__in=recipe_type_ids).delete()
 
         new_links = []
 

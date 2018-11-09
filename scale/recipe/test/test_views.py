@@ -1367,10 +1367,12 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        #TODO: Figure out valid diff
-        print results['diff']
-        diff = {u'can_be_reprocessed': True, u'reasons': [], u'nodes': {u'node_a': {u'status': u'CHANGED', u'reprocess_new_node': True, u'force_reprocess': False, u'node_type': {u'job_type_version': u'1.0.0', u'node_type': u'job', u'job_type_name': u'minimum-two', u'job_type_revision': 1, u'prev_job_type_name': u'my-minimum-job'}, u'dependencies': [], u'changes': [{u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from minimum-two to my-minimum-job'}]}}}
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
+        diff = { u'can_be_reprocessed': True, u'reasons': [], 
+                 u'nodes': {u'node_a': { u'status': u'CHANGED', u'reprocess_new_node': True, u'force_reprocess': False, u'dependencies': [],
+                            u'node_type': { u'job_type_version': u'1.0.0', u'node_type': u'job', u'job_type_name': u'minimum-two', 
+                                            u'job_type_revision': 1, u'prev_job_type_name': u'my-minimum-job'}, 
+                            u'changes': [{u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from my-minimum-job to minimum-two'}]}}}
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': diff})
 
     def test_bad_param(self):
         """Tests validating a new recipe type with missing fields."""
@@ -1425,19 +1427,18 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
-        #TODO: Figure out valid diff
-        print results['diff']
         diff = {u'can_be_reprocessed': False,
                 u'reasons': [{u'name': u'INPUT_CHANGE', u'description': u"Input interface has changed: Parameter 'INPUT_IMAGE' is required"}], 
                 u'nodes': { u'node_a': { u'status': u'CHANGED', u'reprocess_new_node': False, u'force_reprocess': False, u'dependencies': [],
                                          u'node_type': { u'job_type_revision': self.job_type2.revision_num, u'job_type_name': self.job_type2.name, 
                                                          u'job_type_version': self.job_type2.version, u'node_type': u'job', u'prev_job_type_version': u'1.0.0', 
                                                          u'prev_job_type_name': u'my-minimum-job' }, 
-                                         u'changes': [{ u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from %s to my-minimum-job' % self.job_type2.name}, 
-                                                      {u'name': u'JOB_TYPE_VERSION_CHANGE', u'description': u'Job type version changed from 0.1.0 to 1.0.0'}, {u'name': u'INPUT_NEW', u'description': u'New input INPUT_IMAGE added'}]}}}
+                                         u'changes': [{ u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from my-minimum-job to %s' % self.job_type2.name}, 
+                                                      { u'name': u'JOB_TYPE_VERSION_CHANGE', u'description': u'Job type version changed from 1.0.0 to %s' % self.job_type2.version}, 
+                                                      { u'name': u'INPUT_NEW', u'description': u'New input INPUT_IMAGE added'}]}}}
 
         warnings = [{u'name': u'REPROCESS_WARNING', u'description': u"This recipe cannot be reprocessed after updating."}]
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': [], u'diff': {}})
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': [], u'diff': diff})
 
     def test_recipe_not_found_warning(self):
         """Tests validating a recipe definition against a recipe-type that doesn't exist"""
