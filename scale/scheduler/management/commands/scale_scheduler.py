@@ -1,35 +1,20 @@
 from __future__ import unicode_literals
 
+import json
 import logging
-import os
 import signal
 import socket
 import sys
 
-from optparse import make_option
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from mesos.interface import mesos_pb2
-try:
-    from mesos.native import MesosSchedulerDriver
-except ImportError:
-    # ensure there are not undefined errors when generating docs on a system without mesos bindings
-    class MesosSchedulerDriver(object):
-        def __init__(self, *args, **kargs):
-            pass
+
+from mesoshttp.client import MesosClient
 
 from scheduler.manager import scheduler_mgr
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
-
-#TODO: make these command options
-MESOS_CHECKPOINT = False
-MESOS_AUTHENTICATE = False
-DEFAULT_PRINCIPLE = None
-DEFAULT_SECRET = None
-
 
 GLOBAL_SHUTDOWN = None
 
@@ -39,11 +24,6 @@ class Command(BaseCommand):
     """
 
     help = 'Launches the Scale scheduler'
-
-    def add_arguments(self, parser):
-        parser.add_argument('-m', '--master', action='store',
-                            default=settings.MESOS_MASTER,
-                            help='The master to connect to')
 
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
@@ -58,68 +38,38 @@ class Command(BaseCommand):
         global GLOBAL_SHUTDOWN
         GLOBAL_SHUTDOWN = self._shutdown
 
-        # TODO: clean this up
-        mesos_master = options.get('master')
-
         logger.info('Scale Scheduler %s', settings.VERSION)
 
-        try:
-            scheduler_zk = settings.SCHEDULER_ZK
-        except:
-            scheduler_zk = None
-
-        if scheduler_zk is not None:
-            from scheduler import cluster_utils
-            my_id = socket.gethostname()
-            cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master)
-        else:
-            # leader election is disabled
-            self.run_scheduler(mesos_master)
+        self.run_scheduler(settings.MESOS_MASTER)
 
     def run_scheduler(self, mesos_master):
-        logger.info("I am the leader...")
+        logger.info("Scale rising...")
         self.scheduler = ScaleScheduler()
         self.scheduler.initialize()
         scheduler_mgr.hostname = socket.getfqdn()
 
-        framework = mesos_pb2.FrameworkInfo()
-        framework.user = ''  # Have Mesos fill in the current user.
-        framework.name = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'Scale')
-        capability = framework.capabilities.add()
-        capability.type = mesos_pb2.FrameworkInfo.Capability.GPU_RESOURCES
-        webserver_address = os.getenv('SCALE_WEBSERVER_ADDRESS')
+        logger.info('Connecting to Mesos master at %s:', mesos_master)
 
-        if webserver_address:
-            framework.webui_url = webserver_address
+        # By default use ZK for master detection
+        self.client = MesosClient(mesos_urls=[settings.MESOS_MASTER],
+                                  # We have to run tasks as root, so docker commands may be executed
+                                  frameworkUser='root',
+                                  frameworkName=settings.FRAMEWORK_NAME,
+                                  frameworkHostname=scheduler_mgr.hostname,
+                                  frameworkWebUI=settings.WEBSERVER_ADDRESS)
+        if settings.SERVICE_SECRET:
+            # We are in Enterprise mode and using service account
+            self.client.set_service_account(json.loads(settings.SERVICE_SECRET))
+        elif settings.PRINCIPAL and settings.SECRET:
+            self.client.set_credentials(settings.PRINCIPAL, settings.SECRET)
 
-        logger.info('Connecting to Mesos master at %s', mesos_master)
-    
-        # TODO(vinod): Make checkpointing the default when it is default on the slave.
-        if MESOS_CHECKPOINT:
-            logger.info('Enabling checkpoint for the framework')
-            framework.checkpoint = True
+        self.client.set_role(settings.MESOS_ROLE)
 
-        if MESOS_AUTHENTICATE:
-            logger.info('Enabling authentication for the framework')
-
-            if not DEFAULT_PRINCIPLE:
-                logger.error('Expecting authentication principal in the environment')
-                sys.exit(1)
-
-            if not DEFAULT_SECRET:
-                logger.error('Expecting authentication secret in the environment')
-                sys.exit(1)
-
-            credential = mesos_pb2.Credential()
-            credential.principal = DEFAULT_PRINCIPLE
-            credential.secret = DEFAULT_SECRET
-
-            self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master, credential)
-        else:
-            self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master)
+        self.client.add_capability('GPU_RESOURCES')
 
         try:
-            status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
+            self.scheduler.run(self.client)
+            status = 0
         except:
             status = 1
             logger.exception('Mesos Scheduler Driver returned an exception')
@@ -155,10 +105,4 @@ class Command(BaseCommand):
             logger.exception('Failed to properly shutdown Scale scheduler.')
             status = 1
 
-        try:
-            if self.driver:
-                self.driver.stop()
-        except:
-            logger.exception('Failed to properly stop Mesos driver.')
-            status = 1
         return status

@@ -8,7 +8,6 @@ import logging
 from django.db import transaction
 from django.db.utils import DatabaseError
 from django.utils.timezone import now
-from mesos.interface import mesos_pb2
 
 from job.configuration.data.exceptions import InvalidConfiguration
 from job.execution.configuration.configurators import ScheduledExecutionConfigurator
@@ -18,6 +17,7 @@ from job.messages.running_jobs import create_running_job_messages
 from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
+from mesos_api.offers import create_simple_offer
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
@@ -58,11 +58,11 @@ class SchedulingManager(object):
 
         self._waiting_tasks = {}  # {Task ID: int}
 
-    def perform_scheduling(self, driver, when):
+    def perform_scheduling(self, client, when):
         """Organizes and analyzes the cluster resources, schedules new job executions, and launches tasks
 
-        :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :param client: The Mesos scheduler client
+        :type client: :class:`mesoshttp.client.MesosClient`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The number of tasks that were scheduled
@@ -70,8 +70,9 @@ class SchedulingManager(object):
         """
         # Get framework ID first to make sure it doesn't change throughout scheduling process
         framework_id = scheduler_mgr.framework_id
-        if not framework_id or not driver:
+        if not framework_id or not client or not client.get_driver():
             # Don't schedule anything until the scheduler has connected to Mesos
+            logger.warning('Scheduler not connected to Mesos. Scheduling delayed until connection established.')
             return 0
 
         job_types = job_type_mgr.get_job_types()
@@ -99,7 +100,7 @@ class SchedulingManager(object):
             return 0
 
         self._allocate_offers(nodes)
-        task_count, offer_count = self._launch_tasks(driver, nodes)
+        task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
 
@@ -169,11 +170,11 @@ class SchedulingManager(object):
 
         return ignore_job_type_ids
 
-    def _launch_tasks(self, driver, nodes):
+    def _launch_tasks(self, client, nodes):
         """Launches all of the tasks that have been scheduled on the given nodes
 
-        :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :param client: The Mesos scheduler client
+        :type client: :class:`mesoshttp.client.MesosClient`
         :param nodes: The dict of all scheduling nodes stored by node ID
         :type nodes: dict
         :returns: The number of tasks that were launched and the number of offers accepted
@@ -197,15 +198,14 @@ class SchedulingManager(object):
         total_offer_resources = NodeResources()
         total_task_resources = NodeResources()
         for node in nodes.values():
-            mesos_offer_ids = []
+            mesos_offers = []
             mesos_tasks = []
             offers = node.allocated_offers
             for offer in offers:
                 total_offer_count += 1
                 total_offer_resources.add(offer.resources)
-                mesos_offer_id = mesos_pb2.OfferID()
-                mesos_offer_id.value = offer.id
-                mesos_offer_ids.append(mesos_offer_id)
+                mesos_offer = create_simple_offer(offer.id)
+                mesos_offers.append(mesos_offer)
             tasks = node.allocated_tasks
             for task in tasks:
                 total_task_resources.add(task.get_resources())
@@ -214,10 +214,10 @@ class SchedulingManager(object):
             total_task_count += task_count
             if task_count:
                 node_count += 1
-            if mesos_offer_ids:
+            if mesos_offers:
                 total_node_count += 1
                 try:
-                    driver.launchTasks(mesos_offer_ids, mesos_tasks)
+                    client.combine_offers(mesos_offers, mesos_tasks)
                 except Exception:
                     logger.exception('Error occurred while launching tasks on node %s', node.hostname)
 

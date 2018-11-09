@@ -6,32 +6,31 @@ from marathon import NotFoundError
 
 import json
 import os
-import requests
 import sys
 import time
+
+import requests
+from mesoshttp.acs import DCOSServiceAuth
 
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
 SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
+SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 
 
 def dcos_login():
     # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS EE clusters.
-    servers = os.getenv('MARATHON_SERVERS', 'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
-    oauth_token = os.getenv('DCOS_OAUTH_TOKEN', '').strip()
-    username = os.getenv('DCOS_USER', '').strip()
-    password = os.getenv('DCOS_PASS', '').strip()
+    servers = os.getenv('MARATHON_SERVERS', 'https://marathon.mesos/marathon,'
+                                            'http://marathon.mesos:8080,https://marathon.mesos:8443,'
+                                            'http://marathon.mesos,https://marathon.mesos').split(',')
 
-    if len(oauth_token):
+    if SERVICE_SECRET:
         print('Attempting token auth to Marathon...')
-        client = MarathonClient(servers, auth_token=oauth_token)
-    elif len(username) and len(password):
-        print('Attempting basic auth to Marathon...')
-        client = MarathonClient(servers, username=username, password=password)
+        client = MarathonClient(servers, auth_token=DCOSServiceAuth(json.loads(SERVICE_SECRET)).token, verify=False)
     else:
         print('Attempting unauthenticated access to Marathon...')
-        client = MarathonClient(servers)
+        client = MarathonClient(servers, verify=False)
 
     return client
 

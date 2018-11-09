@@ -7,7 +7,6 @@ import logging
 import threading
 
 from django.utils.timezone import now
-from mesos.interface import Scheduler as MesosScheduler
 
 from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
@@ -16,6 +15,9 @@ from job.models import JobExecution
 from job.tasks.manager import task_mgr
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
+from mesos_api.offers import from_mesos_offer
+from mesos_api.tasks import RESOURCE_TYPE_SCALAR
+from mesoshttp.client import MesosClient
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
 from scheduler.cleanup.manager import cleanup_mgr
@@ -39,13 +41,12 @@ from scheduler.threads.scheduler_status import SchedulerStatusThread
 from scheduler.threads.sync import SyncThread
 from scheduler.threads.task_handling import TaskHandlingThread
 from scheduler.threads.task_update import TaskUpdateThread
-from util.host import HostAddress
-
+from util.host import host_address_from_mesos_url
 
 logger = logging.getLogger(__name__)
 
 
-class ScaleScheduler(MesosScheduler):
+class ScaleScheduler(object):
     """Mesos scheduler for the Scale framework"""
 
     # Warning threshold for normal callbacks (those with no external calls, e.g. database queries)
@@ -56,9 +57,9 @@ class ScaleScheduler(MesosScheduler):
         """
 
         self._driver = None
+        self._client = None
         self._framework_id = None
-        self._master_hostname = None
-        self._master_port = None
+        self._master_host_address = None
 
         self._messaging_thread = None
         self._recon_thread = None
@@ -88,6 +89,8 @@ class ScaleScheduler(MesosScheduler):
         scheduler_mgr.sync_with_database()
 
         # Start up background threads
+        self._threads = []
+
         logger.info('Starting up background threads')
         self._messaging_thread = MessagingThread()
         restart_msg = RestartScheduler()
@@ -96,122 +99,146 @@ class ScaleScheduler(MesosScheduler):
         messaging_thread = threading.Thread(target=self._messaging_thread.run)
         messaging_thread.daemon = True
         messaging_thread.start()
+        self._threads.append(messaging_thread)
 
         self._recon_thread = ReconciliationThread()
         recon_thread = threading.Thread(target=self._recon_thread.run)
         recon_thread.daemon = True
         recon_thread.start()
+        self._threads.append(recon_thread)
 
         self._scheduler_status_thread = SchedulerStatusThread()
         scheduler_status_thread = threading.Thread(target=self._scheduler_status_thread.run)
         scheduler_status_thread.daemon = True
         scheduler_status_thread.start()
+        self._threads.append(scheduler_status_thread)
 
-        self._scheduling_thread = SchedulingThread(self._driver)
+        self._scheduling_thread = SchedulingThread(self._client)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()
+        self._threads.append(scheduling_thread)
 
         self._sync_thread = SyncThread(self._driver)
         sync_thread = threading.Thread(target=self._sync_thread.run)
         sync_thread.daemon = True
         sync_thread.start()
+        self._threads.append(sync_thread)
 
         self._task_handling_thread = TaskHandlingThread(self._driver)
         task_handling_thread = threading.Thread(target=self._task_handling_thread.run)
         task_handling_thread.daemon = True
         task_handling_thread.start()
+        self._threads.append(task_handling_thread)
 
         self._task_update_thread = TaskUpdateThread()
         task_update_thread = threading.Thread(target=self._task_update_thread.run)
         task_update_thread.daemon = True
         task_update_thread.start()
+        self._threads.append(task_update_thread)
 
-    def registered(self, driver, frameworkId, masterInfo):
+    def run(self, client):
+        """Launch scheduler with callbacks for Mesos events.
+
+        :param client: MesosClient object with
+        :type client: :class:`mesoshttp.client.MesosClient`
+        """
+
+        self._client = client
+        self._client.on(MesosClient.SUBSCRIBED, self.subscribed)
+        self._client.on(MesosClient.OFFERS, self.offers)
+        self._client.on(MesosClient.ERROR, self.error)
+        self._client.on(MesosClient.UPDATE, self.update)
+        #self._client.on(MesosClient.FAILURE, self.failure)
+        self._client.on(MesosClient.RESCIND, self.rescind)
+        self._client.on(MesosClient.DISCONNECTED, self.disconnected)
+        self._client.on(MesosClient.RECONNECTED, self.reconnected)
+
+        self._client.register()
+
+        while not self._client.stop:
+            for thread in self._threads:
+                if thread.is_alive():
+                    thread.join(1)
+
+    def subscribed(self, driver):
         """
         Invoked when the scheduler successfully registers with a Mesos master.
-        It is called with the frameworkId, a unique ID generated by the
-        master, and the masterInfo which is information about the master
-        itself.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.registered`.
+        It is called with a SchedulerDriver which has attributes that include
+        the frameworkId, and the mesos_url, which indicates the master currently leading.
         """
 
         self._driver = driver
-        self._framework_id = frameworkId.value
-        self._master_hostname = masterInfo.hostname
-        self._master_port = masterInfo.port
-        logger.info('Scale scheduler registered as framework %s with Mesos master at %s:%i',
-                    self._framework_id, self._master_hostname, self._master_port)
+        self._framework_id = driver.frameworkId
+        self._master_host_address = host_address_from_mesos_url(driver.mesos_url)
 
-        Scheduler.objects.update_master(self._master_hostname, self._master_port)
-        scheduler_mgr.update_from_mesos(self._framework_id, HostAddress(self._master_hostname, self._master_port))
+        logger.info('Scale scheduler registered as framework %s with Mesos master at %s:%i',
+                    self._framework_id, self._master_host_address.hostname, self._master_host_address.port)
+
+        ########################################
+        # TODO: Remove when API v4 is removed. #
+        ########################################
+        Scheduler.objects.update_master(self._master_host_address.hostname, self._master_host_address.port)
+        ########################################
+
+        scheduler_mgr.update_from_mesos(self._framework_id, self._master_host_address)
 
         # Update driver for background threads
         recon_mgr.driver = self._driver
-        self._scheduling_thread.driver = self._driver
+        self._scheduling_thread.client = self._client
         self._sync_thread.driver = self._driver
         self._task_handling_thread.driver = self._driver
 
         self._reconcile_running_jobs()
 
-    def reregistered(self, driver, masterInfo):
+    def reconnected(self, message):
         """
         Invoked when the scheduler re-registers with a newly elected Mesos
         master.  This is only called when the scheduler has previously been
-        registered.  masterInfo contains information about the newly elected
-        master.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.reregistered`.
+        registered.
         """
 
-        self._driver = driver
-        self._master_hostname = masterInfo.hostname
-        self._master_port = masterInfo.port
+        self._framework_id = self._driver.frameworkId
+        self._master_host_address = host_address_from_mesos_url(self._driver.mesos_url)
+
         logger.info('Scale scheduler re-registered with Mesos master at %s:%i',
-                    self._master_hostname, self._master_port)
+                    self._master_host_address.hostname, self._master_host_address.port)
 
-        Scheduler.objects.update_master(self._master_hostname, self._master_port)
-        scheduler_mgr.update_from_mesos(mesos_address=HostAddress(self._master_hostname, self._master_port))
+        ########################################
+        # TODO: Remove when API v4 is removed. #
+        ########################################
+        Scheduler.objects.update_master(self._master_host_address.hostname, self._master_host_address.port)
+        ########################################
 
-        # Update driver for background threads
-        recon_mgr.driver = self._driver
-        self._scheduling_thread.driver = self._driver
-        self._sync_thread.driver = self._driver
-        self._task_handling_thread.driver = self._driver
+        scheduler_mgr.update_from_mesos(mesos_address=self._master_host_address)
 
         self._reconcile_running_jobs()
 
-    def disconnected(self, driver):
+    def disconnected(self, message):
         """
         Invoked when the scheduler becomes disconnected from the master, e.g.
         the master fails and another is taking over.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.disconnected`.
         """
 
-        if self._master_hostname:
-            logger.error('Scale scheduler disconnected from the Mesos master at %s:%i',
-                         self._master_hostname, self._master_port)
+        if self._master_host_address:
+            logger.error('Scale scheduler disconnected from the Mesos master at %s:%i: %s',
+                         self._master_host_address.hostname, self._master_host_address.port, message)
         else:
-            logger.error('Scale scheduler disconnected from the Mesos master')
+            logger.error('Scale scheduler disconnected from the Mesos master: %s', message)
 
-    def resourceOffers(self, driver, offers):
+    def offers(self, offers):
         """
         Invoked when resources have been offered to this framework. A single
-        offer will only contain resources from a single slave.  Resources
+        offer will only contain resources from a single agent.  Resources
         associated with an offer will not be re-offered to _this_ framework
-        until either (a) this framework has rejected those resources (see
-        SchedulerDriver.launchTasks) or (b) those resources have been
-        rescinded (see Scheduler.offerRescinded).  Note that resources may be
+        until either (a) this framework has rejected those resources
+        or (b) those resources have been rescinded.  Note that resources may be
         concurrently offered to more than one framework at a time (depending
         on the allocator being used).  In that case, the first framework to
         launch tasks using those resources will be able to use them while the
         other frameworks will have those resources rescinded (or if a
         framework has already launched tasks with those resources then those
         tasks will fail with a TASK_LOST status and a message saying as much).
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.resourceOffers`.
         """
 
         started = now()
@@ -220,13 +247,14 @@ class ScaleScheduler(MesosScheduler):
         resource_offers = []
         total_resources = NodeResources()
         for offer in offers:
+            offer = from_mesos_offer(offer)
             offer_id = offer.id.value
-            agent_id = offer.slave_id.value
+            agent_id = offer.agent_id.value
             framework_id = offer.framework_id.value
             hostname = offer.hostname
             resource_list = []
             for resource in offer.resources:
-                if resource.type == 0:  # This is the SCALAR type
+                if resource.type == RESOURCE_TYPE_SCALAR:  # This is the SCALAR type
                     resource_list.append(ScalarResource(resource.name, resource.scalar.value))
             resources = NodeResources(resource_list)
             total_resources.add(resources)
@@ -247,20 +275,17 @@ class ScaleScheduler(MesosScheduler):
         else:
             logger.debug(msg, duration.total_seconds())
 
-    def offerRescinded(self, driver, offerId):
+    def rescind(self, offer):
         """
         Invoked when an offer is no longer valid (e.g., the slave was lost or
         another framework used resources in the offer.) If for whatever reason
         an offer is never rescinded (e.g., dropped message, failing over
-        framework, etc.), a framwork that attempts to launch tasks using an
-        invalid offer will receive TASK_LOST status updats for those tasks.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.offerRescinded`.
+        framework, etc.), a framework that attempts to launch tasks using an
+        invalid offer will receive TASK_LOST status updates for those tasks.
         """
 
         started = now()
-
-        offer_id = offerId.value
+        offer_id = offer['offer_id']['value']
         resource_mgr.rescind_offers([offer_id])
 
         duration = now() - started
@@ -270,7 +295,7 @@ class ScaleScheduler(MesosScheduler):
         else:
             logger.debug(msg, duration.total_seconds())
 
-    def statusUpdate(self, driver, status):
+    def update(self, status):
         """
         Invoked when the status of a task has changed (e.g., a slave is lost
         and so the task is lost, a task finishes and an executor sends a
@@ -280,8 +305,6 @@ class ScaleScheduler(MesosScheduler):
         another status update will be delivered.  Note, however, that this is
         currently not true if the slave sending the status update is lost or
         fails during that time.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.statusUpdate`.
         """
 
         started = now()
@@ -345,98 +368,11 @@ class ScaleScheduler(MesosScheduler):
         else:
             logger.debug(msg, duration.total_seconds())
 
-    def frameworkMessage(self, driver, executorId, slaveId, message):
-        """
-        Invoked when an executor sends a message. These messages are best
-        effort; do not expect a framework message to be retransmitted in any
-        reliable fashion.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.frameworkMessage`.
-        """
-
-        started = now()
-
-        agent_id = slaveId.value
-        node = node_mgr.get_node(agent_id)
-
-        if node:
-            logger.info('Message from %s on host %s: %s', executorId.value, node.hostname, message)
-        else:
-            logger.info('Message from %s on agent %s: %s', executorId.value, agent_id, message)
-
-        duration = now() - started
-        msg = 'Scheduler frameworkMessage() took %.3f seconds'
-        if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
-            logger.warning(msg, duration.total_seconds())
-        else:
-            logger.debug(msg, duration.total_seconds())
-
-    def slaveLost(self, driver, slaveId):
-        """
-        Invoked when a slave has been determined unreachable (e.g., machine
-        failure, network partition.) Most frameworks will need to reschedule
-        any tasks launched on this slave on a new slave.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.slaveLost`.
-        """
-
-        started = now()
-
-        agent_id = slaveId.value
-        node = node_mgr.get_node(agent_id)
-
-        if node:
-            logger.warning('Node lost on host %s', node.hostname)
-        else:
-            logger.warning('Node lost on agent %s', agent_id)
-
-        node_mgr.lost_node(agent_id)
-        resource_mgr.lost_agent(agent_id)
-
-        # Fail job executions that were running on the lost node
-        if node:
-            for finished_job_exe in job_exe_mgr.lost_node(node.id, started):
-                cleanup_mgr.add_job_execution(finished_job_exe)
-
-        duration = now() - started
-        msg = 'Scheduler slaveLost() took %.3f seconds'
-        if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
-            logger.warning(msg, duration.total_seconds())
-        else:
-            logger.debug(msg, duration.total_seconds())
-
-    def executorLost(self, driver, executorId, slaveId, status):
-        """
-        Invoked when an executor has exited/terminated. Note that any tasks
-        running will have TASK_LOST status updates automatically generated.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.executorLost`.
-        """
-
-        started = now()
-
-        agent_id = slaveId.value
-        node = node_mgr.get_node(agent_id)
-
-        if node:
-            logger.warning('Executor %s lost on host: %s', executorId.value, node.hostname)
-        else:
-            logger.warning('Executor %s lost on agent: %s', executorId.value, agent_id)
-
-        duration = now() - started
-        msg = 'Scheduler executorLost() took %.3f seconds'
-        if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
-            logger.warning(msg, duration.total_seconds())
-        else:
-            logger.debug(msg, duration.total_seconds())
-
-    def error(self, driver, message):
+    def error(self, message):
         """
         Invoked when there is an unrecoverable error in the scheduler or
         scheduler driver.  The driver will be aborted BEFORE invoking this
         callback.
-
-        See documentation for :meth:`mesos_api.mesos.Scheduler.error`.
         """
 
         logger.error('Unrecoverable error: %s', message)
@@ -455,6 +391,13 @@ class ScaleScheduler(MesosScheduler):
         self._sync_thread.shutdown()
         self._task_handling_thread.shutdown()
         self._task_update_thread.shutdown()
+
+        # Shutdown Mesos client
+        self._client.stop = True
+
+        # Ensure driver is cleaned up
+        if self._driver:
+            self._driver.tearDown()
 
     def _reconcile_running_jobs(self):
         """Reconciles all currently running job executions with Mesos"""

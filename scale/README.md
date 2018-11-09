@@ -238,4 +238,42 @@ sudo sh environment/legacy-cloud-init.sh
 
 Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
 to isolate dependencies per project.
+=======
+## Deployment / Configuration
+
+As a result, of being Scale being packaged as a Docker image for distribution most of the setting that
+can be configured are exposed as environment variables. The complete list of exposed variables is found 
+below for reference.
+
+| Env Var                     | Default Value                   | Meaning                                    |
+| --------------------------- | ------------------------------- | -------------------------------------------|
+| CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
+| DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
+| DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
+| ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
+| ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
+| LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
+| MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
+| MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
+| SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
+| SCALE_DB_URL                | use link to `db` or 'localhost' | database host name                         |
+| SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
+| SCALE_DB_PASS               | 'scale'                         | database login password                    |
+| SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
+| SCALE_DB_USER               | 'scale'                         | database login name                        |
+| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
+| SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
+| SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
+| SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
+| SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
+| SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
+| SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
+| SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
+| SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
+| SCALE_ZK_URL                | None                            | Scale master location                      |
+| SERVICE_SECRET              | None                            | JSON object used for DCOS EE Strict Auth   |
+| SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
+| SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
+| SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+| SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 

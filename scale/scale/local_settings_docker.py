@@ -21,6 +21,11 @@ if override_hosts:
     ALLOWED_HOSTS = override_hosts.split(',')
 
 FRAMEWORK_NAME = os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
+WEBSERVER_ADDRESS = os.getenv('SCALE_WEBSERVER_ADDRESS')
+SERVICE_SECRET = os.getenv('SERVICE_SECRET')
+PRINCIPAL = os.getenv('PRINCIPAL')
+SECRET = os.getenv('SECRET')
+
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/service/%s/static/' % FRAMEWORK_NAME)
 

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 
 from django.utils.timezone import now
 
@@ -20,6 +21,8 @@ from util.parse import datetime_to_string
 THROTTLE = datetime.timedelta(seconds=5)
 WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
 
+logger = logging.getLogger(__name__)
+
 
 class SchedulerStatusThread(BaseSchedulerThread):
     """This class manages the scheduler status background thread for the scheduler"""
@@ -33,6 +36,8 @@ class SchedulerStatusThread(BaseSchedulerThread):
     def _execute(self):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
+
+        logger.debug('Entering %s _execute...', __name__)
 
         self._generate_status_json(now())
 

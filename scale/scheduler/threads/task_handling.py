@@ -5,7 +5,6 @@ import datetime
 import logging
 
 from django.utils.timezone import now
-from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
@@ -30,7 +29,7 @@ class TaskHandlingThread(BaseSchedulerThread):
         """Constructor
 
         :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         super(TaskHandlingThread, self).__init__('Task handling', THROTTLE, WARN_THRESHOLD)
@@ -41,7 +40,7 @@ class TaskHandlingThread(BaseSchedulerThread):
         """Returns the driver
 
         :returns: The driver
-        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        :rtype: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         return self._driver
@@ -51,7 +50,7 @@ class TaskHandlingThread(BaseSchedulerThread):
         """Sets the driver
 
         :param value: The driver
-        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        :type value: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         self._driver = value
@@ -59,6 +58,8 @@ class TaskHandlingThread(BaseSchedulerThread):
     def _execute(self):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
+
+        logger.debug('Entering %s _execute...', __name__)
 
         when = now()
 
@@ -74,11 +75,8 @@ class TaskHandlingThread(BaseSchedulerThread):
         tasks_to_kill.extend(task_mgr.get_tasks_to_kill())
 
         for task in tasks_to_kill:
-            # Send kill message for system task
-            pb_task_to_kill = mesos_pb2.TaskID()
-            pb_task_to_kill.value = task.id
-            logger.info('Killing task %s', task.id)
-            self._driver.killTask(pb_task_to_kill)
+            logger.info('Killing task %s on agent %s', task.id, task.agent_id)
+            self._driver.kill(task.agent_id, task.id)
 
     def _reconcile_tasks(self, when):
         """Sends any tasks that need to be reconciled to the reconciliation manager

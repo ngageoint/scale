@@ -39,46 +39,6 @@ workspaces. A workspace defines a separate location for storing source or produc
 it is given a workspace to use for storing its results, allowing a user to control whether the job.s results
 are available to a wider audience or are restricted to a private workspace for the user's own use.
 
-Docker Images
-=============
-The scale docker image supports a number of environment variables which setup the local_settings file.
-Alternatively, your own local_settings.py can be volume mounted into `/opt/scale/scale/local_settings.py`
-
-| Env Var                     | Default Value                   | Meaning                                    |
-| --------------------------- | ------------------------------- | -------------------------------------------|
-| CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
-| DCOS_OAUTH_TOKEN            | None                            | Authentication token for DCOS bootstrap    |
-| DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
-| DCOS_PASS                   | None                            | Password for DCOS bootstrap                |
-| DCOS_SERVICE_ACCOUNT        | None                            | DCOS account name with access to secrets   |
-| DCOS_USER                   | None                            | Privileged username for DCOS bootstrap     |
-| DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
-| ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
-| ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
-| LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
-| MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
-| MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
-| SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
-| SCALE_DB_HOST               | use link to `db` or 'localhost' | database host name                         |
-| SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
-| SCALE_DB_PASS               | 'scale'                         | database login password                    |
-| SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
-| SCALE_DB_USER               | 'scale'                         | database login name                        |
-| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
-| SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
-| SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
-| SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
-| SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
-| SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
-| SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
-| SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
-| SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
-| SCALE_ZK_URL                | None                            | Scale master location                      |
-| SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
-| SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
-| SECRETS_URL                 | None                            | API endpoint for a secrets service         |
-| SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
-
 Scale Dependencies
 ==================
 Scale requires several external components to run as intended. PostgreSQL is used to store all internal system state

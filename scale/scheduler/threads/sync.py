@@ -31,7 +31,7 @@ class SyncThread(BaseSchedulerThread):
         """Constructor
 
         :param driver: The Mesos scheduler driver
-        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :type driver: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         super(SyncThread, self).__init__('Synchronization', THROTTLE, WARN_THRESHOLD)
@@ -42,7 +42,7 @@ class SyncThread(BaseSchedulerThread):
         """Returns the driver
 
         :returns: The driver
-        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        :rtype: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         return self._driver
@@ -52,7 +52,7 @@ class SyncThread(BaseSchedulerThread):
         """Sets the driver
 
         :param value: The driver
-        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        :type value: :class:`mesoshttp.client.MesosClient.SchedulerDriver`
         """
 
         self._driver = value
@@ -60,6 +60,8 @@ class SyncThread(BaseSchedulerThread):
     def _execute(self):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
+
+        logger.debug('Entering %s _execute...', __name__)
 
         scheduler_mgr.sync_with_database()
         job_type_mgr.sync_with_database()
@@ -70,7 +72,7 @@ class SyncThread(BaseSchedulerThread):
         cleanup_mgr.update_nodes(node_mgr.get_nodes())
         mesos_master = scheduler_mgr.mesos_address
         if mesos_master:
-            resource_mgr.sync_with_mesos(mesos_master.hostname, mesos_master.port)
+            resource_mgr.sync_with_mesos(mesos_master)
 
         # Handle canceled job executions
         for finished_job_exe in job_exe_mgr.sync_with_database():
