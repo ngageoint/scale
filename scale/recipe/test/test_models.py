@@ -7,6 +7,7 @@ import django
 from django.db import transaction
 from django.test import TransactionTestCase
 from django.utils.timezone import now
+from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
@@ -928,7 +929,8 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
         self.assertEqual(num_of_revs, 1)
 
-    def test_change_to_definition(self):
+    @patch('recipe.models.CommandMessageManager')
+    def test_change_to_definition(self, mock_msg_mgr):
         """Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition"""
 
         # Create recipe_type

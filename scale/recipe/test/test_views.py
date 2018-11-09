@@ -7,6 +7,7 @@ import json
 
 from django.test.testcases import TestCase, TransactionTestCase
 from django.utils.timezone import utc
+from mock import patch
 
 import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
@@ -918,7 +919,9 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         result_def = recipe_type.get_v6_definition_json()
         self.assertEqual(result_def['input']['json'][0]['name'], 'bar')
         
-    def test_edit_definition_and_update(self):
+    @patch('recipe.models.CommandMessageManager')
+    @patch('recipe.models.RecipeTypeManager.create_sub_update_recipe_definition_message')
+    def test_edit_definition_and_update(self, mock_create, mock_msg_mgr):
         """Tests editing the definition of a recipe type and updating recipes"""
         definition = self.sub_definition.copy()
         definition['input']['json'] = [{'name': 'bar', 'type': 'string', 'required': False}]
@@ -939,9 +942,8 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         result_def = recipe_type.get_v6_definition_json()
         self.assertEqual(result_def['input']['json'][0]['name'], 'bar')
         
-        # check that parent recipe was updated
-        recipe_type = RecipeType.objects.get(pk=self.recipe_type2.id)
-        self.assertEqual(recipe_type.revision_num, 2)
+        # Check that create_sub_update_recipe_definition_message message was created and sent
+        mock_create.assert_called_with(recipe_type2.id, recipe_type.id)
         
         jobs = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         self.assertEqual(len(jobs), 1)
@@ -1438,7 +1440,8 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
                                                       { u'name': u'INPUT_NEW', u'description': u'New input INPUT_IMAGE added'}]}}}
 
         warnings = [{u'name': u'REPROCESS_WARNING', u'description': u"This recipe cannot be reprocessed after updating."}]
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': [], u'diff': diff})
+        self.maxDiff = None
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': warnings, u'diff': diff})
 
     def test_recipe_not_found_warning(self):
         """Tests validating a recipe definition against a recipe-type that doesn't exist"""
