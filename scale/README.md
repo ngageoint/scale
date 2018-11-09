@@ -219,7 +219,6 @@ REM Activate virtualenv
 environment\scale\Scripts\activate.bat
 ```
 
-<<<<<<< HEAD
 #### Legacy Cloud9 IDE
 
 **Cloud9 has been purchased by AWS and will likely go away at some point. The 
@@ -277,6 +276,4 @@ below for reference.
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
-
->>>>>>> 8e2232f0... Removed environment variables from main README
 
