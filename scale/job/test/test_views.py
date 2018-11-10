@@ -2223,7 +2223,9 @@ class TestJobTypesPostViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_edit_seed_job_type_and_update(self):
+    @patch('job.models.CommandMessageManager')
+    @patch('recipe.messages.update_recipe_definition.create_job_update_recipe_definition_message')
+    def test_edit_seed_job_type_and_update(self, mock_create, mock_msg_mgr):
         """Tests editing an existing seed job type and automatically updating recipes."""
         
         url = '/%s/job-types/' % self.api
@@ -2255,11 +2257,8 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
         
-        recipe_type = RecipeType.objects.filter(pk=self.recipe_type1.id)
-        self.assertEqual(recipe_type.revision_num, 2)
-        recipe_type = RecipeType.objects.filter(pk=self.recipe_type2.id)
-        self.assertEqual(recipe_type.revision_num, 2)
-        
+        recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
+        mock_create.assert_called_with(self.recipe_type1.id, job_type.id)
         
 
 class TestJobTypeDetailsViewV5(TestCase):

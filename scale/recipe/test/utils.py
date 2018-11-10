@@ -1,6 +1,7 @@
 """Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
 
+from django.db import transaction
 import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
@@ -226,15 +227,18 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
 def edit_recipe_type_v5(recipe_type, definition):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
-    RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=None, description=None,
-                                           definition=RecipeDefinition(definition), trigger_rule=None,
-                                           remove_trigger_rule=False)
+    with transaction.atomic():
+        RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=None, description=None,
+                                               definition=RecipeDefinition(definition), trigger_rule=None,
+                                               remove_trigger_rule=False)
 
-def edit_recipe_type_v6(recipe_type, definition):
+def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=None):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
-    RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=None, description=None,
-                                           definition=RecipeDefinitionV6(definition).get_definition(), auto_update=False)
+    with transaction.atomic():
+        RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=title, description=description,
+                                               definition=RecipeDefinitionV6(definition).get_definition(),
+                                               auto_update=auto_update)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
                   superseded_recipe=None, batch=None, save=True):

@@ -287,6 +287,9 @@ class JobTypesView(ListCreateAPIView):
         # Validate the job interface / manifest
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
 
+        # If editing an existing job type, automatically update recipes containing said job type
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+
         manifest = None
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
@@ -308,7 +311,7 @@ class JobTypesView(ListCreateAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Check for invalid fields
-        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
+        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest', 'auto_update'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
@@ -343,7 +346,8 @@ class JobTypesView(ListCreateAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
-                                                 configuration=configuration)
+                                                 configuration=configuration,
+                                                 auto_update=auto_update)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', existing_job_type.id)
                 raise BadParameter(unicode(ex))

@@ -305,11 +305,16 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     remove_trigger_rule = 'trigger_rule' in recipe_type_dict and not recipe_type_dict['trigger_rule']
 
     # Edit or create the associated recipe type model
+    title = result.get('title')
+    description = result.get('description')
     if isinstance(definition, LegacyRecipeDefinition):
         if recipe_type:
             try:
-                RecipeType.objects.edit_recipe_type_v5(recipe_type.id, result.get('title'), result.get('description'),
-                                                    definition, trigger_rule, remove_trigger_rule)
+                with transaction.atomic():
+                    RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=title,
+                                                           description=description, definition=definition,
+                                                           trigger_rule=trigger_rule,
+                                                           remove_trigger_rule=remove_trigger_rule)
             except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
                 logger.exception('Recipe type edit failed')
                 raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
@@ -323,8 +328,10 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     elif isinstance(definition, RecipeDefinition):
         if recipe_type:
             try:
-                RecipeType.objects.edit_recipe_type_v6(recipe_type.id, result.get('title'), result.get('description'),
-                                                    definition, auto_update=True)
+                with transaction.atomic():
+                    RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
+                                                           description=description, definition=definition,
+                                                           auto_update=True)
             except InvalidDefinition as ex:
                 logger.exception('Recipe type edit failed')
                 raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
