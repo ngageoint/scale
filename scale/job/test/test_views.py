@@ -41,6 +41,8 @@ class TestJobsViewV5(TestCase):
         self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
 
         self.job3 = job_test_utils.create_job(is_superseded=True)
+        
+        self.sed_job_type
 
     def test_successful(self):
         """Tests successfully calling the jobs view."""
@@ -79,8 +81,8 @@ class TestJobsViewV5(TestCase):
                 'name': 'output_file_pngs',
                 'workspace_id': workspace.id
         }]}
-        seed_job = job_test_utils.create_seed_job_type()
-        job_test_utils.create_job(job_type=seed_job, status='RUNNING', input=data_dict)
+        seed_job_type = job_test_utils.create_seed_job_type()
+        seed_job = job_test_utils.create_job(job_type=seed_job_type, status='RUNNING', input=data_dict)
 
         url = '/%s/jobs/%d/' % (self.api, seed_job.id)
         response = self.client.generic('GET', url)
@@ -101,8 +103,8 @@ class TestJobsViewV5(TestCase):
                 'media_type': 'image/png',
             }],
         }
-        job = job_test_utils.create_job_type(interface=interface)
-        job_test_utils.create_job(job_type=job, status='RUNNING', input=data_dict)
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', input=data_dict)
 
         url = '/%s/jobs/%d/' % (self.api, job.id)
         response = self.client.generic('GET', url)
@@ -329,8 +331,8 @@ class TestJobsViewV6(TestCase):
                 'name': 'output_file_pngs',
                 'workspace_id': workspace.id
         }]}
-        seed_job = job_test_utils.create_seed_job_type()
-        job_test_utils.create_job(job_type=seed_job, status='RUNNING', input=data_dict)
+        seed_job_type = job_test_utils.create_seed_job_type()
+        seed_job = job_test_utils.create_job(job_type=seed_job_type, status='RUNNING', input=data_dict)
 
         url = '/%s/jobs/%d/' % (self.api, seed_job.id)
         response = self.client.generic('GET', url)
@@ -351,8 +353,8 @@ class TestJobsViewV6(TestCase):
                 'media_type': 'image/png',
             }],
         }
-        job = job_test_utils.create_job_type(interface=interface)
-        job_test_utils.create_job(job_type=job, status='RUNNING', input=data_dict)
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', input=data_dict)
 
         url = '/%s/jobs/%d/' % (self.api, job.id)
         response = self.client.generic('GET', url)
