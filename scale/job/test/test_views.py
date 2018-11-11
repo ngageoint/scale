@@ -41,8 +41,6 @@ class TestJobsViewV5(TestCase):
         self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
 
         self.job3 = job_test_utils.create_job(is_superseded=True)
-        
-        self.sed_job_type
 
     def test_successful(self):
         """Tests successfully calling the jobs view."""
