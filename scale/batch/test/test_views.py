@@ -692,7 +692,8 @@ class TestBatchesComparisonViewV6(TestCase):
                                       'jobs_completed': [], 'jobs_canceled': [], 'recipes_estimated': [],
                                       'recipes_total': [], 'recipes_completed': [], 'job_metrics': {}}})
 
-    def test_successful(self):
+    @patch('recipe.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests successfully calling the v6 batch comparison view"""
 
         job_type_1 = job_test_utils.create_job_type()
