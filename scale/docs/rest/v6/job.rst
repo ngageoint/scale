@@ -269,7 +269,6 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "Scale Ingest",
         "description": "Ingests a source file into a workspace",
-        "revision_num": 1,
         "icon_code": "f013"
       },
       "job_type_rev": {
