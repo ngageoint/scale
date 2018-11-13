@@ -62,6 +62,52 @@ class TestJobsViewV5(TestCase):
             self.assertEqual(entry['job_type']['name'], expected.job_type.name)
             self.assertEqual(entry['job_type_rev']['job_type']['id'], expected.job_type.id)
 
+    def test_jobs_successful(self):
+        """ Tests the v5/jobs/<job_id>/ api call for success
+            Tests both seed and legacy job types
+        """
+
+        workspace = storage_test_utils.create_workspace()
+        file1 = storage_test_utils.create_file()
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_IMAGE',
+                'file_id': file1.id
+            }],
+            'output_data': [{
+                'name': 'output_file_pngs',
+                'workspace_id': workspace.id
+        }]}
+        seed_job_type = job_test_utils.create_seed_job_type()
+        seed_job = job_test_utils.create_job(job_type=seed_job_type, status='RUNNING', input=data_dict)
+
+        url = '/%s/jobs/%d/' % (self.api, seed_job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'type': 'file',
+                'name': 'INPUT_IMAGE',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }],
+        }
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', input=data_dict)
+
+        url = '/%s/jobs/%d/' % (self.api, job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
     def test_status(self):
         """Tests successfully calling the jobs view filtered by status."""
 
@@ -265,6 +311,52 @@ class TestJobsViewV6(TestCase):
             self.assertEqual(entry['job_type']['name'], expected.job_type.name)
             self.assertEqual(entry['job_type_rev']['job_type']['id'], expected.job_type.id)
             self.assertEqual(entry['is_superseded'], expected.is_superseded)
+
+    def test_jobs_successful(self):
+        """ Tests the v6/jobs/<job_id>/ api call for success
+            Tests both seed and legacy job types
+        """
+
+        workspace = storage_test_utils.create_workspace()
+        file1 = storage_test_utils.create_file()
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_IMAGE',
+                'file_id': file1.id
+            }],
+            'output_data': [{
+                'name': 'output_file_pngs',
+                'workspace_id': workspace.id
+        }]}
+        seed_job_type = job_test_utils.create_seed_job_type()
+        seed_job = job_test_utils.create_job(job_type=seed_job_type, status='RUNNING', input=data_dict)
+
+        url = '/%s/jobs/%d/' % (self.api, seed_job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'type': 'file',
+                'name': 'INPUT_IMAGE',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }],
+        }
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', input=data_dict)
+
+        url = '/%s/jobs/%d/' % (self.api, job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
     def test_source_time_successful(self):
         """Tests successfully calling the get jobs by source time"""
@@ -727,7 +819,6 @@ class OldTestJobDetailsViewV5(TestCase):
         data = {'status': 'COMPLETED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
 
 class TestJobDetailsViewV6(TestCase):
 
