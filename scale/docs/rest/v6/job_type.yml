@@ -532,7 +532,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         job_type:
-          $ref: '#/components/schemas/job_type_name'
+          $ref: '#/components/schemas/job_type_base'
         revision_num:
           type: integer
           example: 1
