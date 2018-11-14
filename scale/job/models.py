@@ -82,7 +82,7 @@ class JobManager(models.Manager):
     """
 
     def create_job_v6(self, job_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None, batch_id=None,
-                      superseded_job=None):
+                      superseded_job=None, job_config=None):
         """Creates a new job for the given job type revision and returns the (unsaved) job model
 
         :param job_type_rev: The job type revision (with populated job_type model) of the job to create
@@ -99,6 +99,8 @@ class JobManager(models.Manager):
         :type batch_id: int
         :param superseded_job: The job that the created job is superseding, possibly None
         :type superseded_job: :class:`job.models.Job`
+        :param job_config: The configuration overrides for running this job, possibly None
+        :type job_config: :class:`job.configuration.configuration.JobConfiguration`
         :returns: The new job model
         :rtype: :class:`job.models.Job`
 
@@ -117,6 +119,8 @@ class JobManager(models.Manager):
         if input_data:
             input_data.validate(job_type_rev.get_input_interface())
             job.input = convert_data_to_v6_json(input_data).get_dict()
+            
+        # TODO: update job model to have config field and combine job type config and passed in configuration
 
         # TODO: remove this legacy job types are removed
         if not JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):

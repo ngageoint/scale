@@ -401,7 +401,7 @@ class QueueManager(models.Manager):
 
         return job
 
-    def queue_new_job_v6(self, job_type, data, event):
+    def queue_new_job_v6(self, job_type, data, event, configuration=None):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
         job_exe, and queue models are saved in the database in an atomic transaction.
 
@@ -411,6 +411,8 @@ class QueueManager(models.Manager):
         :type data: :class:`data.data.data.data`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
 
@@ -430,13 +432,12 @@ class QueueManager(models.Manager):
         # No lock needed for this job since it doesn't exist outside this transaction yet
         self.queue_jobs([job])
         job = Job.objects.get_details(job.id)
-        Job.objects.process_job_input(job)
 
         return job
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
-    def queue_new_job_for_user_v6(self, job_type, job_data, job_configuration=None):
+    def queue_new_job_for_user_v6(self, job_type, job_data, configuration=None):
         """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
         the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
         job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
@@ -446,6 +447,8 @@ class QueueManager(models.Manager):
         :type job_type: :class:`job.models.JobType`
         :param job_data: JSON description defining the job data to run on
         :type job_data: data.data.data.data
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
         :returns: The ID of the new job
         :rtype: int
         """
@@ -453,7 +456,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job_v6(job_type, job_data, event).id
+        job_id = self.queue_new_job_v6(job_type, job_data, event, configuration=configuration).id
         return job_id
 
     def queue_new_job_for_user(self, job_type, data):

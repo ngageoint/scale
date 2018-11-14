@@ -383,17 +383,12 @@ class TestJobsPostViewV6(TestCase):
             }
         }
         
+        self.output_workspace = storage_test_utils.create_workspace()
+            
         self.configuration = {
             'version': '6',
-            'mounts': {
-                'MOUNT_PATH': {
-                    'type': 'host',
-                    'host_path': '/path/to/dted',
-                    },
-            },
-            'settings': {
-                'DB_HOST': 'scale',
-            },
+            'output_workspaces': {'default': self.output_workspace.name},
+            'priority': 999
         }
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)

@@ -6,6 +6,7 @@ import time
 import django
 from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
+from mock import patch
 
 import job.test.utils as job_test_utils
 import product.test.utils as product_test_utils
@@ -302,7 +303,8 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
         job = Queue.objects.queue_new_job(job_type, data, event)
         self.assertEqual(job.status, 'QUEUED')
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.queue_new_job() successfully with a Seed job type"""
 
         workspace = storage_test_utils.create_workspace()
