@@ -219,26 +219,19 @@ Response: 200 OK
 .. _rest_v6_job_queue_new_job:
 
 v6 Job Queue new Job
---------------
+--------------------
 
 **Example POST /v6/jobs/ API call**
 
+Request: POST http://.../v6/jobs/
+
 .. code-block:: javascript
 
-   {
-    "input" : {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_a',
-                'file_id': self.source_file.id,
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'workspace_id': self.workspace.id
-            }]
-        },
-    "job_type_id": 1
-   }
+ {
+   "input": :ref:`rest_v6_data_data`,
+   "job_type_id": 1,
+   "configuration": :ref:`rest_v6_job_type_configuration`
+ }
 
 Response: 201 Created
 Headers:
@@ -361,11 +354,15 @@ Location http://.../v6/job/1/
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_type_id        | Integer           | The ID of the job type for the new job                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| input              | JSON Object       | JSON defining the data to run the job on                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_id        | Integer           | Required | The ID of the job type for the new job                              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| input              | JSON Object       | Required | JSON defining the data to run the job on.                           |
+|                    |                   |          | See :ref:`Data JSON <rest_v6_data_data>`                            |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | optional | JSON defining the data to run the job on                            |
+|                    |                   |          | See :ref:`Job Type Configuration <rest_v6_job_type_configuration>`  |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
@@ -374,8 +371,9 @@ Location http://.../v6/job/1/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Body**           | JSON containing the details of the newly created batch, see :ref:`_rest_v6_job_details`            |
+| **Body**           | JSON containing the details of the newly queued job, see :ref:`Job Details <rest_v6_job_details`>  |
 +--------------------+----------------------------------------------------------------------------------------------------+
+
 .. _rest_v6_job_details:
 
 v6 Job Details

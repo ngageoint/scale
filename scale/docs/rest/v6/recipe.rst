@@ -350,7 +350,7 @@ A recipe instance JSON describes an instance of a running recipe.
 .. _rest_v6_recipe_queue_new_recipe:
 
 Recipe Queue New Recipe
-----------------
+-----------------------
 
 **Example POST /v6/recipe/ API call**
 
@@ -359,21 +359,13 @@ Request: POST http://.../v6/recipe/
 .. code-block:: javascript
 
   {
-    "input" : {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': 1,
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'workspace_id': 2
-            }]
-        },
-    "recipe_type_id": 4
+   "input": :ref:`rest_v6_data_data`,
+   "recipe_type_id": 4,
+   "configuration": :ref:`rest_v6_recipe_type_configuration`
   }
 
 Response: 201 CREATED
+
 .. code-block:: javascript
 
   {
@@ -419,10 +411,14 @@ Response: 201 CREATED
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_type_id     | Integer           | The ID of the recipe type to queue                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_data        | JSON Object       | Defines the data to run the recipe                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipe_type_id     | Integer           | Required | The ID of the recipe type to queue                                  |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| input              | JSON Object       | Required | JSON defining the data to run the recipe on.                        |
+|                    |                   |          | See :ref:`Data JSON <rest_v6_data_data>`                            |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | optional | JSON defining the data to run the job on                            |
+|                    |                   |          | See :ref:`Recipe Configuration <rest_v6_recipe_configuration>`      |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
@@ -431,4 +427,6 @@ Response: 201 CREATED
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-
+| **Body**           | JSON containing the details of the newly queued recipe                                             |
+|                    | see :ref:`Recipe Details <rest_v6_recipe_details`>                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
