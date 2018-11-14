@@ -1782,7 +1782,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
         #Response should be new v6 job detail response
         result = json.loads(response.content)
         self.assertTrue('data' not in result)
-        self.assertTrue('http://testserver/scale-dev/api/v6/recipes/' in response._headers['location'][1])
+        self.assertTrue('/%s/recipes/' % self.api in response['location'])
 
             
 class TestRecipeDetailsViewV6(TransactionTestCase):

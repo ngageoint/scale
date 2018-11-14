@@ -17,6 +17,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
+from data.data.exceptions import InvalidData
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
@@ -1148,8 +1149,22 @@ class JobsView(ListAPIView):
             raise Http404
         job_type_id = rest_util.parse_int(request, 'job_type_id')
         job_data = rest_util.parse_dict(request, 'input', {})
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
 
-        jobData = DataV6(job_data, do_validate=True)
+        try:
+            jobData = DataV6(job_data, do_validate=True)
+        except InvalidData as ex:
+            logger.exception('Unable to queue new job. Invalid input: %s', job_data)
+            raise BadParameter(unicode(ex))
+            
+        if configuration_dict:
+            try:
+                configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            except InvalidJobConfiguration as ex:
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
             job_type = JobType.objects.get(pk=job_type_id)
@@ -1157,7 +1172,8 @@ class JobsView(ListAPIView):
             raise Http404
 
         try:
-            job_id = Queue.objects.queue_new_job_for_user_v6(job_type, jobData.get_data())
+            job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(), 
+                                                             job_configuration=configuration)
         except InvalidData as err:
             logger.exception('Invalid job data.')
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)

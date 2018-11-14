@@ -352,11 +352,11 @@ class TestJobsViewV6(TestCase):
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 class TestJobsPostViewV6(TestCase):
+    
+    api = "v6"
 
     def setUp(self):
         django.setup()
-        #self.manifest = job_test_utils.COMPLETE_MANIFEST
-        self.api = "v6"
 
         manifest = {
             'seedVersion': '1.0.0',
@@ -382,6 +382,19 @@ class TestJobsPostViewV6(TestCase):
                 }
             }
         }
+        
+        self.configuration = {
+            'version': '6',
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
         self.workspace = storage_test_utils.create_workspace()
@@ -393,17 +406,11 @@ class TestJobsPostViewV6(TestCase):
 
         json_data = {
             "input" : {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_a',
-                'file_id': self.source_file.id,
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'workspace_id': self.workspace.id
-            }]
-        }, 
-        "job_type_id" : self.job_type1.pk
+                'version': '6', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk
         }
 
         url = '/%s/jobs/' % self.api
@@ -414,7 +421,66 @@ class TestJobsPostViewV6(TestCase):
 
         #Response should be new v6 job detail response
         self.assertEqual(result['execution'], None)
-        self.assertTrue('http://testserver/scale-dev/api/v6/jobs/' in response._headers['location'][1])
+        self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        
+    def test_successful_configuration(self):
+        """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
+
+        json_data = {
+            "input" : {
+                'version': '6', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk,
+            "configuration" : self.configuration
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+
+        #Response should be new v6 job detail response
+        self.assertEqual(result['execution'], None)
+        self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        
+    def test_invalid_data(self):
+        """Tests successfully calling POST jobs view to queue a new job with invalid input data"""
+
+        json_data = {
+            "input" : {
+                'version': 'BAD', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk,
+            "configuration" : self.configuration
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+    def test_invalid_configuration(self):
+        """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
+
+        config = copy.deepcopy(self.configuration)
+        config['version'] = 'BAD'
+        json_data = {
+            "input" : {
+                'version': '6', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk,
+            "configuration" : config
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 # TODO: remove when REST API v5 is removed
