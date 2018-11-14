@@ -113,7 +113,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#v6-add-seed-image">v6 Add Seed Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-validate-job-type">v6 Validate Job Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-edit-job-type">v6 Edit Job Type</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#job-configuration-json">Job Configuration JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-type-configuration-json">Job Type Configuration JSON</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
@@ -616,7 +616,7 @@ same time. May be null.</td>
 <tr class="row-odd"><td>configuration</td>
 <td>JSON Object</td>
 <td>JSON description of the configuration for running the job
-(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Configuration JSON</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -960,7 +960,8 @@ Defaults to 100, and can be anywhere from 1-1000.</td>
         <span class="p">]</span>
       <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;auto_update&quot;</span><span class="o">:</span> <span class="kc">true</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1034,7 +1035,7 @@ scheduled to run at the same time.</td>
 <td>JSON Object</td>
 <td>Optional</td>
 <td>JSON description of the configuration for running the job
-(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Configuration JSON</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">manifest</td>
 <td>String</td>
@@ -1042,19 +1043,24 @@ scheduled to run at the same time.</td>
 <td>Seed manifest describing Job, interface and requirements.
 (See <span class="xref std std-ref">architecture_seed_manifest_spec</span>)</td>
 </tr>
-<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="2">auto_update</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether to automatically update recipes containing this type.</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-even"><td colspan="5"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="4">201 CREATED</td>
 </tr>
-<tr class="row-odd"><td><strong>Location</strong></td>
+<tr class="row-even"><td><strong>Location</strong></td>
 <td colspan="4">URL pointing to the details for the newly created job type</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="4"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td><strong>Body</strong></td>
-<td colspan="4">JSON containing the details of the newly created batch, see <a class="reference internal" href="#rest-v6-job-type-details"><span class="std std-ref">v6 Job Type Details</span></a></td>
+<tr class="row-even"><td><strong>Body</strong></td>
+<td colspan="4">JSON containing the details of the newly created job type, see <a class="reference internal" href="#rest-v6-job-type-details"><span class="std std-ref">v6 Job Type Details</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -1216,7 +1222,7 @@ scheduled to run at the same time.</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="7">Validates a new job type without actually saving it</td>
 </tr>
-<tr class="row-odd"><td colspan="7"><strong>POST</strong> /job-types/validation/</td>
+<tr class="row-odd"><td colspan="7"><strong>POST</strong> /v6/job-types/validation/</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="6"><em>application/json</em></td>
@@ -1233,7 +1239,7 @@ scheduled to run at the same time.</td>
 <td colspan="3">JSON Object</td>
 <td>Optional</td>
 <td>JSON description of the configuration for running the job
-(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Configuration JSON</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="7"><strong>Successful Response</strong></td>
 </tr>
@@ -1349,7 +1355,7 @@ scheduled to run at the same time.</td>
 <td>JSON Object</td>
 <td>Optional</td>
 <td>JSON description of the configuration for running the job
-(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Configuration JSON</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
 </tr>
@@ -1359,9 +1365,9 @@ scheduled to run at the same time.</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="job-configuration-json">
-<span id="rest-v6-job-type-configuration"></span><h2>Job Configuration JSON<a class="headerlink" href="#job-configuration-json" title="Permalink to this headline">¶</a></h2>
-<p>A job configuration JSON describes a set of configuration settings that affect how a job executes.</p>
+<div class="section" id="job-type-configuration-json">
+<span id="rest-v6-job-type-configuration"></span><h2>Job Type Configuration JSON<a class="headerlink" href="#job-type-configuration-json" title="Permalink to this headline">¶</a></h2>
+<p>A job type configuration JSON describes a set of configuration settings that affect how a job executes.</p>
 <p><strong>Example interface:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>

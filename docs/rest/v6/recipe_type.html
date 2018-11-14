@@ -658,7 +658,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-even"><td>.name</td>
 <td>String</td>
-<td colspan="2">The identifying name of recipe job type used for queries.</td>
+<td colspan="2">The identifying name of recipe type used for queries.</td>
 </tr>
 <tr class="row-odd"><td>.title</td>
 <td>String</td>
@@ -694,7 +694,43 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils" id="rest-v6-recipe-type-create">
+</div>
+<div class="section" id="v6-recipe-type-create">
+<span id="rest-v6-recipe-type-create"></span><h2>v6 Recipe Type Create<a class="headerlink" href="#v6-recipe-type-create" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/recipe-types/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/recipe-types/">http://.../v6/recipe-types/</a></p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple recipe type&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Response: 201 CREATED
+Headers:
+Location <a class="reference external" href="http://.../v6/recipe-types/my-recipe/">http://.../v6/recipe-types/my-recipe/</a></p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple recipe type&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+   <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`</span><span class="p">},</span>
+   <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Job Type Details &lt;rest_v6_job_type_details&gt;`</span><span class="p">],</span>
+   <span class="s2">&quot;sub_recipe_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Recipe Type Details &lt;rest_v6_recipe_type_details&gt;`</span><span class="p">],</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-07-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -708,22 +744,12 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Creates a new recipe type with associated definition</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>POST</strong> /recipe-types/</td>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/recipe-types/</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>name</td>
-<td>String</td>
-<td>Required</td>
-<td>The identifying name of recipe type used for queries.</td>
-</tr>
-<tr class="row-odd"><td>version</td>
-<td>String</td>
-<td>Required</td>
-<td>The version of the recipe type.</td>
 </tr>
 <tr class="row-even"><td>title</td>
 <td>String</td>
@@ -739,76 +765,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <td>JSON Object</td>
 <td>Required</td>
 <td>JSON description of the interface for running a recipe of this type.
-(See <a class="reference internal" href="../../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>trigger_rule</td>
-<td>JSON Object</td>
-<td>Optional</td>
-<td>The linked trigger rule that automatically invokes the recipe type.
-The type and configuration fields are required if setting a rule.
-The is_active field is optional and can be used to pause the recipe.</td>
-</tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyJob1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
-                <span class="p">}</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyJob2&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job2&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;4.5.6&quot;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
+(See <a class="reference internal" href="#rest-v6-recipe-json-definition"><span class="std std-ref">Recipe Definition JSON</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -821,119 +778,34 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>JSON Object</td>
-<td colspan="2">All fields are the same as the recipe type details model.
-(See <a class="reference internal" href="../recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;image/png&quot;</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_job_type&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type-recipe&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;products&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;My-Type&quot;</span>
-                <span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Job Type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a job type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                            <span class="s2">&quot;image/png&quot;</span>
-                        <span class="p">],</span>
-                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;command_to_run.sh&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file_name&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">...</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="3">JSON with the details of the newly created recipe type, see <a class="reference internal" href="#rest-v6-recipe-type-details"><span class="std std-ref">v6 Recipe Type Details</span></a></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils" id="rest-recipe-type-validate">
+</div>
+<div class="section" id="v6-validate-recipe-type">
+<span id="rest-v6-recipe-type-validate"></span><h2>v6 Validate Recipe Type<a class="headerlink" href="#v6-validate-recipe-type" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/recipe-types/validation/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/recipe-types/validation/">http://.../v6/recipe-types/validation/</a></p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span>{
+   &quot;name&quot;: &quot;my-recipe-type&quot;,
+   &quot;definition&quot;: { :ref: #`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;` }
+}
+</pre></div>
+</div>
+</div></blockquote>
+<p>Response: 200 OK</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;is_valid&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[],</span>
+   <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;EXAMPLE_WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is an example warning.&quot;</span><span class="p">}],</span>
+   <span class="s2">&quot;diff&quot;</span><span class="o">:</span> <span class="p">{</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Recipe Diff &lt;rest_v6_recipe_json_diff&gt;`</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -948,7 +820,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="5">Validates a new recipe type without actually saving it</td>
 </tr>
-<tr class="row-odd"><td colspan="5"><strong>POST</strong> /recipe-types/validation/</td>
+<tr class="row-odd"><td colspan="5"><strong>POST</strong> /v6/recipe-types/validation/</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="4"><em>application/json</em></td>
@@ -957,128 +829,51 @@ The is_active field is optional and can be used to pause the recipe.</td>
 </tr>
 <tr class="row-even"><td>name</td>
 <td>String</td>
-<td colspan="2">Required</td>
-<td>The identifying name of recipe job type used for queries.</td>
-</tr>
-<tr class="row-odd"><td>version</td>
-<td>String</td>
-<td colspan="2">Required</td>
-<td>The version of the recipe type.</td>
-</tr>
-<tr class="row-even"><td>title</td>
-<td>String</td>
 <td colspan="2">Optional</td>
-<td>The human-readable name of the recipe type.</td>
+<td>The identifying name of recipe type used for queries.</td>
 </tr>
-<tr class="row-odd"><td>description</td>
-<td>String</td>
-<td colspan="2">Optional</td>
-<td>An optional description of the recipe type.</td>
-</tr>
-<tr class="row-even"><td>definition</td>
+<tr class="row-odd"><td>definition</td>
 <td>JSON Object</td>
 <td colspan="2">Required</td>
 <td>JSON description defining the interface for running the recipe type.
-(See <a class="reference internal" href="../../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-recipe-json-definition"><span class="std std-ref">Recipe Definition JSON</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>trigger_rule</td>
-<td>JSON Object</td>
-<td colspan="2">Optional</td>
-<td>The linked trigger rule that automatically invokes the recipe type.
-The type and configuration fields are required if setting a rule.
-The is_active field is optional and can be used to pause the recipe.</td>
+<tr class="row-even"><td colspan="5"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td colspan="5"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-        <span class="p">}</span>
-    <span class="p">],</span>
-    <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                <span class="p">}</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyJob1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                <span class="p">}</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyJob2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job2&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;4.5.6&quot;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">],</span>
-    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="4">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="4"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="5"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>warnings</td>
-<td colspan="2">Array</td>
-<td colspan="2">A list of warnings discovered during validation.</td>
-</tr>
-<tr class="row-even"><td>.id</td>
-<td colspan="2">String</td>
-<td colspan="2">An identifier for the warning.</td>
-</tr>
-<tr class="row-odd"><td>.details</td>
-<td colspan="2">String</td>
-<td colspan="2">A human-readable description of the problem.</td>
-</tr>
-<tr class="row-even"><td colspan="5"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
+<tr class="row-even"><td>is_valid</td>
+<td colspan="4"><dl class="first last docutils">
+<dt>Boolean           | Indicates if the given fields were valid for creating a new recipe type. If</dt>
+<dd><div class="first last line-block">
+<div class="line">this is true, then submitting the same fields to the /recipe-types/ API will</div>
+<div class="line">successfully create a new recipe type.</div>
 </div>
+</dd>
+</dl>
 </td>
+</tr>
+<tr class="row-odd"><td>errors</td>
+<td>Array</td>
+<td colspan="3">Lists any errors causing <em>is_valid</em> to be false. The errors are JSON objects
+with <em>name</em> and <em>description</em> string fields.</td>
+</tr>
+<tr class="row-even"><td>warnings</td>
+<td>Array</td>
+<td colspan="3">Lists any warnings found. Warnings are useful to present to the user, but do
+not cause <em>is_valid</em> to be false. The warnings are JSON objects with <em>name</em>
+and <em>description</em> string fields.</td>
+</tr>
+<tr class="row-odd"><td>diff</td>
+<td>Array</td>
+<td colspan="3">Difference between current revision and the new definition
+(See <a class="reference internal" href="#rest-v6-recipe-json-diff"><span class="std std-ref">Recipe Diff JSON</span></a>)</td>
 </tr>
 </tbody>
 </table>
@@ -1193,7 +988,23 @@ The is_active field is optional and can be used to pause the recipe.</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils" id="rest-recipe-type-edit">
+</div>
+<div class="section" id="v6-edit-recipe-type">
+<span id="v6-rest-recipe-type-edit"></span><h2>v6 Edit Recipe Type<a class="headerlink" href="#v6-edit-recipe-type" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example PATCH /v6/recipe-types/{name}/ API call</strong></p>
+<p>Request: PATCH <a class="reference external" href="http://.../v6/recipe-types/test/">http://.../v6/recipe-types/test/</a></p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span>{
+  &quot;title&quot;: &quot;My Recipe&quot;,
+  &quot;description&quot;: &quot;A simple recipe type&quot;
+  &quot;definition&quot;: {:ref: #`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`},
+  &quot;auto_update&quot;: true
+}
+</pre></div>
+</div>
+</div></blockquote>
+<p>Response: 204 No Content</p>
+<table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -1208,8 +1019,8 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <tr class="row-even"><td colspan="4">Edits an existing recipe type with associated definition</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><dl class="first last docutils">
-<dt><strong>PATCH</strong> /recipe-types/{id}/</dt>
-<dd>Where {id} is the unique identifier of an existing model.</dd>
+<dt><strong>PATCH</strong> /v6/recipe-types/{name}/</dt>
+<dd>Where {name} is the name of the recipe type.</dd>
 </dl>
 </td>
 </tr>
@@ -1232,193 +1043,17 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <td>JSON Object</td>
 <td>Optional</td>
 <td>JSON description of the interface for running a recipe of this type.
-(See <a class="reference internal" href="../../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-recipe-json-definition"><span class="std std-ref">Recipe Definition JSON</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>trigger_rule</td>
-<td>JSON Object</td>
+<tr class="row-odd"><td>auto_update</td>
+<td>Boolean</td>
 <td>Optional</td>
-<td>The linked trigger rule that automatically invokes the recipe type.
-The type and configuration fields are required if setting a rule.
-The is_active field is optional and can be used to pause the recipe.
-Set this field to null to remove the existing trigger rule.</td>
+<td>Whether to automatically update recipes containing this type.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyJob1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
-                <span class="p">}</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyJob2&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job2&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;4.5.6&quot;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="3">200 OK</td>
-</tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
-</tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>JSON Object</td>
-<td colspan="2">All fields are the same as the recipe type details model.
-(See <a class="reference internal" href="../recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;image/png&quot;</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_job_type&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type-recipe&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;products&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;My-Type&quot;</span>
-                <span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Job Type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a job type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                            <span class="s2">&quot;image/png&quot;</span>
-                        <span class="p">],</span>
-                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;command_to_run.sh&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file_name&quot;</span>
-                    <span class="p">}</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">...</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">204 NO CONTENT</td>
 </tr>
 </tbody>
 </table>

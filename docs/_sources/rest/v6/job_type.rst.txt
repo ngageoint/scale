@@ -561,7 +561,8 @@ Request: POST http://.../v6/job-types/
             ]
           }
         }
-      }
+      },
+      "auto_update": true
     }
     
 Response: 201 CREATED
@@ -615,6 +616,8 @@ Location http://.../v6/job-types/test/1.0.0/
 | manifest                | String            | Required | Seed manifest describing Job, interface and requirements.      |
 |                         |                   |          | (See :ref:`architecture_seed_manifest_spec`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| auto_update             | Boolean           | Optional | Whether to automatically update recipes containing this type.  |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
@@ -623,7 +626,7 @@ Location http://.../v6/job-types/test/1.0.0/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_job_type_details`        |
+| **Body**           | JSON containing the details of the newly created job type, see :ref:`rest_v6_job_type_details`     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_job_type_validate:
@@ -777,7 +780,7 @@ Response: 200 OK
 +=========================================================================================================================+
 | Validates a new job type without actually saving it                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /job-types/validation/                                                                                         |
+| **POST** /v6/job-types/validation/                                                                                      |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -874,10 +877,10 @@ Response: 204 No Content
 
 .. _rest_v6_job_type_configuration:
 
-Job Configuration JSON
-----------------------
+Job Type Configuration JSON
+---------------------------
 
-A job configuration JSON describes a set of configuration settings that affect how a job executes.
+A job type configuration JSON describes a set of configuration settings that affect how a job executes.
 
 **Example interface:**
 

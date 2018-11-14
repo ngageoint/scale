@@ -525,31 +525,6 @@
 <div class="section" id="module-recipe.deprecation">
 <span id="recipe-deprecation-module"></span><h2>recipe.deprecation module<a class="headerlink" href="#module-recipe.deprecation" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="recipe.deprecation.RecipeConnectionSunset">
-<em class="property">class </em><code class="descclassname">recipe.deprecation.</code><code class="descname">RecipeConnectionSunset</code><a class="headerlink" href="#recipe.deprecation.RecipeConnectionSunset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class responsible for providing backward compatibility for old RecipeConnection interfaces as well as new Seed
-compliant connections.</p>
-<dl class="staticmethod">
-<dt id="recipe.deprecation.RecipeConnectionSunset.create">
-<em class="property">static </em><code class="descname">create</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.deprecation.RecipeConnectionSunset.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiate an appropriately typed Recipe connection based on interface type</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition_1_0</span></code> or
-<a class="reference internal" href="recipe.seed.html#recipe.seed.recipe_definition.RecipeDefinition" title="recipe.seed.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.seed.recipe_definition.RecipeDefinition</span></code></a>) &#8211; instantiated Recipe definition</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="recipe.deprecation.RecipeDataSunset">
 <em class="property">class </em><code class="descclassname">recipe.deprecation.</code><code class="descname">RecipeDataSunset</code><a class="headerlink" href="#recipe.deprecation.RecipeDataSunset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
@@ -3301,8 +3276,8 @@ made in an atomic transaction.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipe types</p>
 <dl class="method">
-<dt id="recipe.models.RecipeTypeManager.create_recipe_type">
-<code class="descname">create_recipe_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.create_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeTypeManager.create_recipe_type_v5">
+<code class="descname">create_recipe_type_v5</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.create_recipe_type_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3339,8 +3314,38 @@ made in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.models.RecipeTypeManager.edit_recipe_type">
-<code class="descname">edit_recipe_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.edit_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeTypeManager.create_recipe_type_v6">
+<code class="descname">create_recipe_type_v6</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>description</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.create_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The system name of the recipe type</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of the recipe type</li>
+<li><strong>description</strong> (<em>str</em>) &#8211; An optional description of the recipe type</li>
+<li><strong>definition</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>) &#8211; The definition for running a recipe of this type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe type</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.definition.html#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
+<dd>definition violates the specification</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeManager.edit_recipe_type_v5">
+<code class="descname">edit_recipe_type_v5</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.edit_recipe_type_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits the given recipe type and saves the changes in the database. The caller must provide the related
 trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
 indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -3371,6 +3376,32 @@ when trigger_rule is None</li>
 <dd>invalid</dd>
 <dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeManager.edit_recipe_type_v6">
+<code class="descname">edit_recipe_type_v6</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>title</em>, <em>description</em>, <em>definition</em>, <em>auto_update</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.edit_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic 
+transaction. An argument of None for a field indicates that the field should not change.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the recipe type to edit</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of the recipe type, possibly None</li>
+<li><strong>description</strong> (<em>str</em>) &#8211; A description of the recipe type, possibly None</li>
+<li><strong>definition</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>) &#8211; The definition for running a recipe of this type, possibly None</li>
+<li><strong>auto_update</strong> (<em>bool</em>) &#8211; If true, recipes that contain this recipe type will automatically be updated</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.definition.html#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
+<dd>definition violates the specification</dd>
 </dl>
 </dd></dl>
 
@@ -3450,6 +3481,26 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeTypeManager.get_interfaces">
+<code class="descname">get_interfaces</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_interfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the input and output interfaces for each node in this recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict of input interfaces and a dict of output interfaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict, dict</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.definition.html#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
+<dd>definition violates the specification</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeTypeManager.get_recipe_types_v5">
 <code class="descname">get_recipe_types_v5</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_recipe_types_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipe types within the given time range.</p>
@@ -3501,8 +3552,8 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.models.RecipeTypeManager.validate_recipe_type">
-<code class="descname">validate_recipe_type</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>version</em>, <em>description</em>, <em>definition</em>, <em>trigger_config</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeTypeManager.validate_recipe_type_v5">
+<code class="descname">validate_recipe_type_v5</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>version</em>, <em>description</em>, <em>definition</em>, <em>trigger_config</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recipe_type_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a new recipe type prior to attempting a save</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3536,6 +3587,30 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 <dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeManager.validate_recipe_type_v6">
+<code class="descname">validate_recipe_type_v6</code><span class="sig-paren">(</span><em>name</em>, <em>definition_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a recipe type prior to attempting a save</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The optional system name of a recipe type being updated</li>
+<li><strong>definition_dict</strong> (<em>dict</em>) &#8211; The definition for running a recipe of this type</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe type validation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">job.models.RecipeTypeValidation</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -4063,6 +4138,36 @@ made in an atomic transaction.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeTypeValidation">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeValidation</code><span class="sig-paren">(</span><em>is_valid</em>, <em>errors</em>, <em>warnings</em>, <em>diff</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeValidation.diff">
+<code class="descname">diff</code><a class="headerlink" href="#recipe.models.RecipeTypeValidation.diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeValidation.errors">
+<code class="descname">errors</code><a class="headerlink" href="#recipe.models.RecipeTypeValidation.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeValidation.is_valid">
+<code class="descname">is_valid</code><a class="headerlink" href="#recipe.models.RecipeTypeValidation.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeTypeValidation.warnings">
+<code class="descname">warnings</code><a class="headerlink" href="#recipe.models.RecipeTypeValidation.warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
 </dd></dl>
 
 </dd></dl>
