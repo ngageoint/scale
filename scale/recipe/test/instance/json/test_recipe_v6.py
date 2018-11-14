@@ -37,7 +37,7 @@ class TestRecipeInstanceV6(TestCase):
         job_type_2 = job_test_utils.create_job_type()
         job_type_3 = job_test_utils.create_job_type()
         job_type_4 = job_test_utils.create_job_type()
-        recipe_type_1 = recipe_test_utils.create_recipe_type()
+        recipe_type_1 = recipe_test_utils.create_recipe_type_v5()
 
         interface = Interface()
         interface.add_parameter(FileParameter('file_param_1', ['image/gif']))

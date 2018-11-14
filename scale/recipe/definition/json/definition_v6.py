@@ -243,7 +243,7 @@ class RecipeDefinitionV6(object):
         :param do_validate: Whether to perform validation on the JSON schema
         :type do_validate: bool
 
-        :raises :class:`recipe.definition.exceptions.InvalidDdefinition`: If the given definition is invalid
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the given definition is invalid
         """
 
         if not definition:
@@ -314,7 +314,7 @@ class RecipeDefinitionV6(object):
     def _convert_from_v1(self):
         """Converts the JSON dict from v1 to the current version
 
-        :raises :class:`recipe.definition.exceptions.InvalidDdefinition`: If the given definition is invalid
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the given definition is invalid
         """
 
         v1_json_dict = RecipeDefinitionV1(self._definition).get_dict()

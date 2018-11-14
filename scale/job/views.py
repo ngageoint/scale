@@ -287,6 +287,9 @@ class JobTypesView(ListCreateAPIView):
         # Validate the job interface / manifest
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
 
+        # If editing an existing job type, automatically update recipes containing said job type
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+
         manifest = None
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
@@ -308,7 +311,7 @@ class JobTypesView(ListCreateAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Check for invalid fields
-        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
+        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest', 'auto_update'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
@@ -343,7 +346,8 @@ class JobTypesView(ListCreateAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
-                                                 configuration=configuration)
+                                                 configuration=configuration,
+                                                 auto_update=auto_update)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', existing_job_type.id)
                 raise BadParameter(unicode(ex))
@@ -593,6 +597,7 @@ class JobTypeVersionsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+
 class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a version of a job type."""
     queryset = JobType.objects.all()
@@ -668,6 +673,7 @@ class JobTypeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
@@ -699,7 +705,7 @@ class JobTypeDetailsView(GenericAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None,
                                                  docker_image=None, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
-                                                 configuration=configuration)
+                                                 configuration=configuration, auto_update=auto_update)
         except (InvalidJobField, InvalidSecretsConfiguration, ValueError,
                 InvalidJobConfiguration, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
@@ -755,6 +761,7 @@ class JobTypeRevisionsView(ListAPIView):
         page = self.paginate_queryset(job_type_revisions)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
 
 class JobTypeRevisionDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a version of a job type."""

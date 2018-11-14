@@ -86,7 +86,7 @@ class TestPurgeRecipe(TransactionTestCase):
                 }]
             }]
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
         self.input_1 = {
             'version': '1.0',
@@ -211,7 +211,7 @@ class TestPurgeRecipe(TransactionTestCase):
         """Tests calling PurgeRecipe.execute() successfully"""
 
         # Create recipes
-        sub_recipe_type = recipe_test_utils.create_recipe_type()
+        sub_recipe_type = recipe_test_utils.create_recipe_type_v6()
 
         definition = RecipeDefinition(Interface())
         definition.add_recipe_node('A', sub_recipe_type.name, sub_recipe_type.revision_num)
@@ -223,7 +223,7 @@ class TestPurgeRecipe(TransactionTestCase):
         Recipe.objects.bulk_create([recipe_a])
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_json_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', sub_recipe=recipe_a,
@@ -248,7 +248,7 @@ class TestPurgeRecipe(TransactionTestCase):
         """Tests calling PurgeRecipe.execute() successfully"""
 
         # Create recipes
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         # Create message
@@ -274,7 +274,7 @@ class TestPurgeRecipe(TransactionTestCase):
             source_file_id=file_2.id), 0)
 
         # Create recipes
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         # Create message
@@ -300,7 +300,7 @@ class TestPurgeRecipe(TransactionTestCase):
             trigger_event=trigger.id), 0)
 
         # Create recipes
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         # Create message

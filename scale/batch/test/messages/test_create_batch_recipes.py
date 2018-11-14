@@ -18,7 +18,7 @@ class TestCreateBatchRecipes(TestCase):
         """Tests coverting a CreateBatchRecipes message to and from JSON"""
 
         # Previous batch with three recipes
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=3)
         recipe_1 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_2 = recipe_test_utils.create_recipe(batch=prev_batch)
@@ -51,7 +51,7 @@ class TestCreateBatchRecipes(TestCase):
         batch.messages.create_batch_recipes.MAX_RECIPE_NUM = 5
 
         # Previous batch with six recipes
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=6)
         recipe_1 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_2 = recipe_test_utils.create_recipe(batch=prev_batch)

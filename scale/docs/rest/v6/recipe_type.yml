@@ -43,9 +43,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_list'
     post:
-      operationId: _rest_v6_job_type_post
-      summary: Recipe Type Post
-      description: Creates or edits an existing recipe type
+      operationId: _rest_v6_recipe_type_create
+      summary: Recipe Type Create
+      description: Creates a recipe type
       requestBody:
         required: true
         content:
@@ -59,11 +59,12 @@ paths:
             location:
               schema:
                 type: string
-              description: The url of the created/edited job type
+              description: The url of the created/edited recipe type
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/recipe_type_detail'
+                
   /recipe-types/{name}/:
     get:
       operationId: _rest_v6_recipe_type_details
@@ -74,7 +75,7 @@ paths:
           name: name
           schema:
             type: string
-          description: name of an existing job type
+          description: name of an existing recipe type
       responses:
         '200':
           description: 200 response
@@ -83,29 +84,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_detail'
     patch:
-      operationId: _rest_v6_job_type_update
-      summary: Job Type Update
-      description: Update one or more fields in an existing job type
+      operationId: _rest_v6_recipe_type_update
+      summary: Recipe Type Update
+      description: Update one or more fields in an existing recipe type
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/job_type_update'
+              $ref: '#/components/schemas/recipe_type_update'
       parameters:
         - in: path
           name: name
           schema:
             type: string
-          description: name of an existing job type
-        - in: path
-          name: version
-          schema:
-            type: string
-          description: version of an existing job type
+          description: name of an existing recipe type
       responses:
         '204':
           description: 204 no content
+          
   /recipe-types/{name}/revisions/:
     get:
       operationId: _rest_v6_recipe_type_revisions
@@ -159,24 +156,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_revision_detail'
 
-  /job-types/validation/:
+  /recipe-types/validation/:
     post:
-      operationId: _rest_v6_job_type_validation
-      summary: Job Type Validation
-      description: Validates a job type without creating/editing it
+      operationId: _rest_v6_recipe_type_validation
+      summary: Recipe Type Validation
+      description: Validates a recipe type without creating/editing it
       requestBody:
         required: true
         content:
           application/json: 
             schema:
-              $ref: '#/components/schemas/job_type_validation_post'
+              $ref: '#/components/schemas/recipe_type_validation_post'
       responses:
         '200':
           description: The 200 OK response indicates a successful event
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/job_type_validation'
+                $ref: '#/components/schemas/recipe_type_validation'
 components:
   schemas:
     recipe_type_list:
@@ -236,7 +233,7 @@ components:
         deprecated:
           type: string
           format: date-time
-          description: When the job type was deprecated (previously known as archived).
+          description: When the recipe type was deprecated (previously known as archived).
           example: 2015-09-10T15:24:53.987Z
         last_modified:
           type: string
@@ -289,7 +286,7 @@ components:
             deprecated:
               type: string
               format: date-time
-              description: When the job type was deprecated (previously known as archived).
+              description: When the recipe type was deprecated (previously known as archived).
               example: 2015-09-10T15:24:53.987Z
             last_modified:
               type: string
@@ -337,7 +334,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/recipe_type_revision'
-          description: List of Job Type Revisions
+          description: List of Recipe Type Revisions
 
     recipe_type_revision:
       title: Recipe Type Revision
@@ -535,13 +532,25 @@ components:
             type: string
             description: the name of the job type
             example: my-job-type
+          prev_job_type_name:
+            type: string
+            description: the name of the previous job type
+            example: my-job-type
           job_type_version:
             type: string
             description: the job type version
+            example: 1.0.1
+          prev_job_type_version:
+            type: string
+            description: the previous job type version
             example: 1.0.0
           job_type_revision:
             type: integer
             description: the job type revision
+            example: 2
+          prev_job_type_revision:
+            type: integer
+            description: the previous job type revision
             example: 1
       recipe_node:
         title: Recipe Definition Recipe Node
@@ -556,73 +565,69 @@ components:
             type: string
             description: the name of the recipe type
             example: my-recipe-type
+          prev_recipe_type_name:
+            type: string
+            description: the name of the previous recipe type
+            example: my-recipe-type
           recipe_type_revision:
             type: integer
             description: the recipe type revision
+            example: 2
+          prev_recipe_type_revision:
+            type: integer
+            description: the previous recipe type revision
             example: 1
 
-
-#TODO: update these with v6 post recipe type issue
     recipe_type_update:
-      title: Job Type Update
+      title: Recipe Type Update
       type: object
       properties:
-        icon_code:
+        title:
           type: string
-          example: f186 
-        is_active:
+          example: My Recipe
+        description:
+          type: string
+          example: My Recipe Description
+        definition:
+          $ref: '#/components/schemas/recipe_type_def'
+        auto_update:
           type: boolean
+          description: Whether to automatically update recipes containing this type
           example: true
-        is_paused:
-          type: boolean
-          example: false
-        max_scheduled:
-          type: integer
-          example: 1
-        configuration:
-          $ref: '#/components/schemas/job_type_config'
       
     recipe_type_post:
-      title: Job Type Create/Edit
+      title: Recipe Type Create
       type: object
+      required: [title, definition]
       properties:
-        icon_code:
+        title:
           type: string
-          example: f186 
-        max_scheduled:
-          type: integer
-          example: 1
-        docker_image:
+          example: My Recipe
+        description:
           type: string
-          example: "my-job-1.0.0-seed:1.0.0"
-        # Commenting out until added
-        # manifest:
-        #   $ref: '#/components/schemas/seed_manifest'
-        configuration:
-          $ref: '#/components/schemas/job_type_config'
-      required:
-      - docker_image
-      - manifest
+          example: My Recipe Description
+        definition:
+          $ref: '#/components/schemas/recipe_type_def'
       
     recipe_type_validation_post:
-      title: Job Type Validation Post
+      title: Recipe Type Validation Post
       type: object
-      properties:      
-        # Commenting out until added
-        # manifest:
-        #   $ref: '#/components/schemas/seed_manifest'
-        configuration:
-          $ref: '#/components/schemas/job_type_config'
+      properties:
+        name:
+          type: string
+          example: my-recipe-type
+        definition:
+          $ref: '#/components/schemas/recipe_type_def'
       required:
-      - manifest
+      - definition
       
     recipe_type_validation:
-      title: Job Type Validation
+      title: Recipe Type Validation
       type: object
       properties:
         is_valid:
           type: boolean
-          description: The job type is valid
+          description: Whether the recipe type is valid
           example: true
         validation_error:
           type: array
@@ -630,3 +635,66 @@ components:
         validation_warning:
           type: array
           $ref: '#/components/schemas/validation_warning'
+        diff:
+          $ref: '#/components/schemas/recipe_type_diff'
+          
+    recipe_type_diff:
+      title: Recipe Type Difference
+      type: object
+      required: [can_be_reprocessed, reasons, nodes]
+      properties:
+        can_be_reprocessed:
+          type: boolean
+          description: Indicates whether recipes from the previous revision can |
+            be reprocessed as the newer revision.
+          example: true
+        reasons:
+          type: array
+          description: Lists any reasons causing *can_be_reprocessed* to be false.
+          $ref: '#/components/schemas/validation_warning'
+        nodes:
+          type: object
+          description: All of the diffs for each recipe node between the two |
+            revisions, stored by node name
+          additionalPropterties:
+            $ref: '#/components/schemas/node_diff'
+        prev_node_type:
+          type: string
+          description: The type of the node in the previous revision, if changed in the newer revision
+          example: job
+          
+    node_diff:
+      title: Node difference
+      type: object
+      required: [status, changes, reprocess_new_node, force_reprocess, dependencies, node_type]
+      properties:
+        status:
+          type: string
+          description: The status indicating the node differences between the two revisions. The possible reasons are |
+            DELETED, CHANGED, UNCHANGED, NEW
+          example: CHANGED
+        changes:
+          type: array
+          description: If *status* is *CHANGED*, lists the job's changes between the two revisions. Each change is a |
+            JSON object with *name* and *description* string fields.
+          $ref: '#/components/schemas/validation_warning'
+        reprocess_new_node:
+          type: boolean
+          description: Indicates whether this node will be superseded by a new node if the recipe is reprocessed.
+          example: true
+        force_reprocess:
+          type: boolean
+          description: Indicates whether the user has requested that this node be reprocessed regardless of whether |
+            it has changed 
+          example: true
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_definition_dependency'
+        node_type:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/condition_node'
+            - $ref: '#/components/schemas/job_node'
+            - $ref: '#/components/schemas/recipe_node'

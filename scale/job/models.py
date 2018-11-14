@@ -40,11 +40,12 @@ from job.seed.manifest import SeedManifest
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.results.job_results import JobResults
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
+from messaging.manager import CommandMessageManager
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
-from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerMissingConfiguration
+from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util import rest as rest_utils
 from util.exceptions import RollbackTransaction
@@ -2815,7 +2816,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None,
-                         is_paused=None, max_scheduled=None, configuration=None):
+                         is_paused=None, max_scheduled=None, configuration=None, auto_update=None):
         """Edits the given job type and saves the changes in the database.
         All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change.
@@ -2836,9 +2837,13 @@ class JobTypeManager(models.Manager):
         :type max_scheduled: integer
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param auto_update: If true, recipes that contain this job type will automatically be updated
+        :type auto_update: bool
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
+        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message
+        from recipe.models import RecipeTypeJobLink
 
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
@@ -2888,6 +2893,11 @@ class JobTypeManager(models.Manager):
         if manifest:
             # Create new revision of the job type for new interface
             JobTypeRevision.objects.create_job_type_revision(job_type)
+            # Update recipes containing this job type
+            if auto_update:
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_job_update_recipe_definition_message(id, job_type.id) for id in recipe_ids]
+                CommandMessageManager().send_messages(msgs)
 
     def get_by_natural_key(self, name, version):
         """Django method to retrieve a job type for the given natural key
@@ -3395,14 +3405,14 @@ class JobTypeManager(models.Manager):
         except InvalidSeedManifestDefinition as ex:
             is_valid = False
             errors.append(ex.error)
-            message = 'Job type manifest invalid'
-            logger.exception(message)
+            message = 'Job type manifest invalid: %s' % ex
+            logger.info(message)
             pass
         except InvalidJobConfiguration as ex:
             is_valid = False
             errors.append(ex.error)
-            message = 'Job type configuration invalid'
-            logger.exception(message)
+            message = 'Job type configuration invalid: %s' % ex
+            logger.info(message)
             pass
 
         if config and manifest:
@@ -3411,8 +3421,8 @@ class JobTypeManager(models.Manager):
             except InvalidJobConfiguration as ex:
                 is_valid = False
                 errors.append(ex.error)
-                message = 'Job type configuration invalid'
-                logger.exception(message)
+                message = 'Job type configuration invalid: %s' % ex
+                logger.info(message)
                 pass
 
         return JobTypeValidation(is_valid, errors, warnings)
@@ -4102,7 +4112,7 @@ class JobTypeRevision(models.Model):
                 param = FileParameter(output_dict['name'], media_types, required, False)
                 interface.add_parameter(param)
             elif output_dict['type'] == 'files':
-                param = FileParameter(input_dict['name'], media_types, required, True)
+                param = FileParameter(output_dict['name'], media_types, required, True)
                 interface.add_parameter(param)
             elif output_dict['type'] == 'property':
                 interface.add_parameter(JsonParameter(output_dict['name'], 'string', required))

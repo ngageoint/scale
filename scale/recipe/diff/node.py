@@ -98,7 +98,7 @@ class NodeDiff(object):
             self._compare_node_type(prev_node)
         else:
             self.prev_node_type = prev_node.node_type
-            msg = 'Node type changed from %s to %s' % (self.node_type, prev_node.node_type)
+            msg = 'Node type changed from %s to %s' % (prev_node.node_type, self.node_type)
             self.changes.append(Change('NODE_TYPE_CHANGE', msg))
 
         self._compare_dependencies(prev_node)
@@ -318,17 +318,17 @@ class JobNodeDiff(NodeDiff):
 
         if self.job_type_name != prev_node.job_type_name:
             self.prev_job_type_name = prev_node.job_type_name
-            msg = 'Job type changed from %s to %s' % (self.job_type_name, prev_node.job_type_name)
+            msg = 'Job type changed from %s to %s' % (prev_node.job_type_name, self.job_type_name)
             self.changes.append(Change('JOB_TYPE_CHANGE', msg))
 
         if self.job_type_version != prev_node.job_type_version:
             self.prev_job_type_version = prev_node.job_type_version
-            msg = 'Job type version changed from %s to %s' % (self.job_type_version, prev_node.job_type_version)
+            msg = 'Job type version changed from %s to %s' % (prev_node.job_type_version, self.job_type_version)
             self.changes.append(Change('JOB_TYPE_VERSION_CHANGE', msg))
 
         if self.revision_num != prev_node.revision_num:
             self.prev_revision_num = prev_node.revision_num
-            msg = 'Job type revision changed from %s to %s' % (self.revision_num, prev_node.revision_num)
+            msg = 'Job type revision changed from %s to %s' % (prev_node.revision_num, self.revision_num)
             self.changes.append(Change('JOB_TYPE_REVISION_CHANGE', msg))
 
 
@@ -404,10 +404,10 @@ class RecipeNodeDiff(NodeDiff):
 
         if self.recipe_type_name != prev_node.recipe_type_name:
             self.prev_recipe_type_name = prev_node.recipe_type_name
-            msg = 'Recipe type changed from %s to %s' % (self.recipe_type_name, prev_node.recipe_type_name)
+            msg = 'Recipe type changed from %s to %s' % (prev_node.recipe_type_name, self.recipe_type_name)
             self.changes.append(Change('RECIPE_TYPE_CHANGE', msg))
 
         if self.revision_num != prev_node.revision_num:
             self.prev_revision_num = prev_node.revision_num
-            msg = 'Recipe type revision changed from %s to %s' % (self.revision_num, prev_node.revision_num)
+            msg = 'Recipe type revision changed from %s to %s' % (prev_node.revision_num, self.revision_num)
             self.changes.append(Change('RECIPE_TYPE_REVISION_CHANGE', msg))

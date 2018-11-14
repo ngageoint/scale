@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
-from job.models import JobType
 from job.test import utils as job_test_utils
 from recipe.messages.update_recipe_definition import (create_sub_update_recipe_definition_message, 
                                                       create_job_update_recipe_definition_message, 

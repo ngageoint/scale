@@ -4,7 +4,7 @@ import logging
 
 import rest_framework.status as status
 from django.db import transaction
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from django.utils.timezone import now
 from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
@@ -16,7 +16,9 @@ import trigger.handler as trigger_handler
 import util.rest as rest_util
 from job.models import Job, JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
+from recipe.definition.exceptions import InvalidDefinition
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
@@ -29,7 +31,7 @@ from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from trigger.models import TriggerEvent
-from util.rest import BadParameter
+from util.rest import BadParameter, title_to_name
 
 
 logger = logging.getLogger(__name__)
@@ -110,6 +112,20 @@ class RecipeTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if self.request.version == 'v6':
+            return self._create_v6(request)
+        else:
+            return self._create_v5(request)
+        
+    def _create_v5(self, request):
+        """Creates a new recipe type and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
         title = rest_util.parse_string(request, 'title', default_value=name)
@@ -144,9 +160,9 @@ class RecipeTypesView(ListCreateAPIView):
                     trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name, is_active)
 
                 # Create the recipe type
-                recipe_type = RecipeType.objects.create_recipe_type(name, version, title, description, recipe_def,
+                recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, description, recipe_def,
                                                                     trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to create new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -156,11 +172,44 @@ class RecipeTypesView(ListCreateAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
-        url = reverse('recipe_type_details_view', args=[recipe_type.id], request=request)
-        if self.request.version == 'v6':
-            serializer = RecipeTypeDetailsSerializerV6(recipe_type)
-        else:
-            serializer = RecipeTypeDetailsSerializerV5(recipe_type)
+        url = reverse('recipe_type_id_details_view', args=[recipe_type.id], request=request)
+        serializer = RecipeTypeDetailsSerializerV5(recipe_type)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+    def _create_v6(self, request):
+        """Creates a new recipe type and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=True)
+        name = title_to_name(self.queryset, title)
+        description = rest_util.parse_string(request, 'description', required=False)
+        definition_dict = rest_util.parse_dict(request, 'definition', required=True)
+
+        try:
+            with transaction.atomic():
+                # Validate the recipe definition
+                logger.info(definition_dict)
+                recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition() 
+
+                # Create the recipe type
+                recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, description, recipe_def)
+        except InvalidDefinition as ex:
+            logger.exception('Unable to create new recipe type: %s', name)
+            raise BadParameter(unicode(ex))
+
+        # Fetch the full recipe type with details
+        try:
+            recipe_type = RecipeType.objects.get_details_v6(recipe_type.name)
+        except RecipeType.DoesNotExist:
+            raise Http404
+
+        url = reverse('recipe_type_details_view', args=[recipe_type.name], request=request)
+        serializer = RecipeTypeDetailsSerializerV6(recipe_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
@@ -281,9 +330,10 @@ class RecipeTypeIDDetailsView(GenericAPIView):
                     recipe_type.trigger_rule.save()
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type(recipe_type_id, title, description, recipe_def, trigger_rule,
+                RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, trigger_rule,
                                                     remove_trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule,
+                InvalidRecipeConnection) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
             raise BadParameter(unicode(ex))
 
@@ -337,8 +387,6 @@ class RecipeTypeDetailsView(GenericAPIView):
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)
 
-
-#TODO: update for v6
     def patch(self, request, name):
         """Edits an existing recipe type and returns the updated details
 
@@ -365,68 +413,34 @@ class RecipeTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        raise Http404
-        """
+        
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
-
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
 
         # Fetch the current recipe type model
         try:
-            recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
+            recipe_type = RecipeType.objects.filter(name=name).first()
         except RecipeType.DoesNotExist:
             raise Http404
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for recipe type: %i', recipe_type_id)
-                raise BadParameter(unicode(ex))
 
         try:
             with transaction.atomic():
                 # Validate the recipe definition
                 recipe_def = None
                 if definition_dict:
-                    recipe_def = RecipeDefinitionSunset.create(definition_dict)
-
-                # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
-                                                                    recipe_type.name, is_active)
-
-                # Update the active state separately if that is only given trigger field
-                if not trigger_rule and recipe_type.trigger_rule and 'is_active' in trigger_rule_dict:
-                    recipe_type.trigger_rule.is_active = is_active
-                    recipe_type.trigger_rule.save()
+                    recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type(recipe_type_id, title, description, recipe_def, trigger_rule,
-                                                    remove_trigger_rule)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
-            logger.exception('Unable to update recipe type: %i', recipe_type_id)
+                RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
+                                                       description=description, definition=recipe_def,
+                                                       auto_update=auto_update)
+        except InvalidDefinition as ex:
+            logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
-        # Fetch the full recipe type with details
-        try:
-            recipe_type = RecipeType.objects.get_details(recipe_type_id)
-        except RecipeType.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(recipe_type)
-        return Response(serializer.data)"""
+        return HttpResponse(status=204)
 
 class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
@@ -524,6 +538,20 @@ class RecipeTypesValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if self.request.version == 'v6':
+            return self._post_v6(request)
+        else:
+            return self._post_v5(request)
+
+    def _post_v5(self, request):
+        """Validates a new recipe type and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
         title = rest_util.parse_string(request, 'title', default_value=name)
@@ -557,14 +585,33 @@ class RecipeTypesValidationView(APIView):
         # Validate the recipe definition
         try:
             recipe_def = RecipeDefinitionSunset.create(definition_dict)
-            warnings = RecipeType.objects.validate_recipe_type(name, title, version, description, recipe_def,
+            warnings = RecipeType.objects.validate_recipe_type_v5(name, title, version, description, recipe_def,
                                                                trigger_config)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to validate new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
+
+    def _post_v6(self, request):
+        """Validates a new recipe type and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name', required=False)
+        definition_dict = rest_util.parse_dict(request, 'definition')
+
+        # Validate the recipe definition
+        validation = RecipeType.objects.validate_recipe_type_v6(name=name, definition_dict=definition_dict)
+
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings], 'diff': validation.diff}
+        return Response(resp_dict)
 
 
 class RecipesView(ListAPIView):

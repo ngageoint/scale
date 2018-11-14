@@ -3,13 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.db import connection, models, transaction
-
-from data.interface.interface import Interface
+from django.db import transaction
 from job.models import JobType
 from messaging.messages.message import CommandMessage
 from recipe.definition.definition import InvalidDefinition
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.models import RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink
@@ -112,8 +109,7 @@ class UpdateRecipeDefinition(CommandMessage):
             valid = False
     
             if updated_node:
-                job_types = definition.get_job_type_keys()
-                inputs, outputs = self._get_interfaces(definition)
+                inputs, outputs = RecipeType.objects.get_interfaces(definition)
                 warnings = []
                 try:
                     warnings = definition.validate(inputs, outputs)
@@ -137,49 +133,3 @@ class UpdateRecipeDefinition(CommandMessage):
                         msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
                         self.new_messages.append(msg)
         return True
-
-    def _get_interfaces(self, definition):
-        """Gets the input and output interfaces for each node in this recipe
-
-        :returns: A dict of input interfaces and a dict of output interfaces
-        :rtype: dict, dict
-        """
-
-        inputs = {}
-        outputs = {}
-        
-        for node_name in definition.get_topological_order():
-            node = definition.graph[node_name]
-            if node.node_type == JobNodeDefinition.NODE_TYPE:
-                inputs[node_name], outputs[node_name] = self._get_job_interfaces(node)
-            elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
-                inputs[node_name], outputs[node_name] = self._get_recipe_interfaces(node)
-
-        return inputs, outputs
-        
-    def _get_job_interfaces(self, node):
-        """Gets the input/output interfaces for a job type node
-        """
-        
-        from job.models import JobTypeRevision
-        input = Interface()
-        output = Interface()
-        jtr = JobTypeRevision.objects.get_details_v6(node.job_type_name, node.job_type_version, node.revision_num)
-        if jtr:
-            input = jtr.get_input_interface()
-            output = jtr.get_output_interface()
-            
-        return input, output
-        
-    def _get_recipe_interfaces(self, node):
-        """Gets the input/output interfaces for a recipe type node
-        """
-        
-        from recipe.models import RecipeTypeRevision
-        input = Interface()
-        output = Interface()
-        rtr = RecipeTypeRevision.objects.get_revision(node.recipe_type_name, node.revision_num)
-        if rtr:
-            input =rtr.get_input_interface() # no output interface
-            
-        return input, output

@@ -74,7 +74,7 @@ class TestCreateRecipes(TestCase):
         definition.add_dependency('Job 1', 'Job 2')
         definition.add_dependency_input_connection('Job 2', 'Test Input 2', 'Job 1', 'Test Output 1')
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
 
         input_1 = Data()
         input_1.add_value(FileValue('Recipe Input', [file_1.id]))
@@ -182,7 +182,7 @@ class TestCreateRecipes(TestCase):
         definition.add_dependency('Job 1', 'Job 2')
         definition.add_dependency_input_connection('Job 2', 'Test Input 2', 'Job 1', 'Test Output 1')
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
 
         input_1 = Data()
         input_1.add_value(FileValue('Recipe Input', [file_1.id]))
@@ -279,7 +279,7 @@ class TestCreateRecipes(TestCase):
 
         # Creates definitions for sub-recipe A and sub-recipe B
         event = trigger_test_utils.create_trigger_event()
-        top_recipe_type = recipe_test_utils.create_recipe_type()
+        top_recipe_type = recipe_test_utils.create_recipe_type_v6()
         job_type_a_1 = job_test_utils.create_seed_job_type()
         job_type_a_2 = job_test_utils.create_seed_job_type()
         sub_definition_a = RecipeDefinition(Interface())
@@ -287,15 +287,15 @@ class TestCreateRecipes(TestCase):
         sub_definition_a.add_job_node('node_2', job_type_a_2.name, job_type_a_2.version, job_type_a_2.revision_num)
         sub_definition_a.add_dependency('node_1', 'node_2')
         sub_definition_a_dict = convert_recipe_definition_to_v6_json(sub_definition_a).get_dict()
-        recipe_type_a = recipe_test_utils.create_recipe_type(definition=sub_definition_a_dict)
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_a_dict)
         job_type_b_x = job_test_utils.create_seed_job_type()
-        recipe_type_b_y = recipe_test_utils.create_recipe_type()
+        recipe_type_b_y = recipe_test_utils.create_recipe_type_v6()
         sub_definition_b = RecipeDefinition(Interface())
         sub_definition_b.add_job_node('node_x', job_type_b_x.name, job_type_b_x.version, job_type_b_x.revision_num)
         sub_definition_b.add_recipe_node('node_y', recipe_type_b_y.name, recipe_type_b_y.revision_num)
         sub_definition_b.add_dependency('node_x', 'node_y')
         sub_definition_b_dict = convert_recipe_definition_to_v6_json(sub_definition_b).get_dict()
-        recipe_type_b = recipe_test_utils.create_recipe_type(definition=sub_definition_b_dict)
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_b_dict)
         top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, event=event, save=True)
 
         # Create message to create sub-recipes A and B for top_recipe
@@ -355,7 +355,7 @@ class TestCreateRecipes(TestCase):
         # Creates definitions for sub-recipe A and sub-recipe B
         batch = batch_test_utils.create_batch()
         event = trigger_test_utils.create_trigger_event()
-        top_recipe_type = recipe_test_utils.create_recipe_type()
+        top_recipe_type = recipe_test_utils.create_recipe_type_v6()
         job_type_a_1 = job_test_utils.create_seed_job_type()
         job_type_a_2 = job_test_utils.create_seed_job_type()
         sub_definition_a = RecipeDefinition(Interface())
@@ -363,15 +363,15 @@ class TestCreateRecipes(TestCase):
         sub_definition_a.add_job_node('node_2', job_type_a_2.name, job_type_a_2.version, job_type_a_2.revision_num)
         sub_definition_a.add_dependency('node_1', 'node_2')
         sub_definition_a_dict = convert_recipe_definition_to_v6_json(sub_definition_a).get_dict()
-        recipe_type_a = recipe_test_utils.create_recipe_type(definition=sub_definition_a_dict)
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_a_dict)
         job_type_b_x = job_test_utils.create_seed_job_type()
-        recipe_type_b_y = recipe_test_utils.create_recipe_type()
+        recipe_type_b_y = recipe_test_utils.create_recipe_type_v6()
         sub_definition_b = RecipeDefinition(Interface())
         sub_definition_b.add_job_node('node_x', job_type_b_x.name, job_type_b_x.version, job_type_b_x.revision_num)
         sub_definition_b.add_recipe_node('node_y', recipe_type_b_y.name, recipe_type_b_y.revision_num)
         sub_definition_b.add_dependency('node_x', 'node_y')
         sub_definition_b_dict = convert_recipe_definition_to_v6_json(sub_definition_b).get_dict()
-        recipe_type_b = recipe_test_utils.create_recipe_type(definition=sub_definition_b_dict)
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_b_dict)
 
         # Create previous recipe containing sub-recipe A and B in order to be superseded
         prev_recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, save=False)
@@ -524,7 +524,7 @@ class TestCreateRecipes(TestCase):
         definition_e.add_job_node('job_e_y', job_type_e_y.name, job_type_e_y.version, job_type_e_y.revision_num)
         definition_e.add_dependency('job_e_x', 'job_e_y')
         definition_e_dict = convert_recipe_definition_to_v6_json(definition_e).get_dict()
-        recipe_type_e = recipe_test_utils.create_recipe_type(definition=definition_e_dict)
+        recipe_type_e = recipe_test_utils.create_recipe_type_v6(definition=definition_e_dict)
 
         # Set up recipe type D
         job_type_d_x = job_test_utils.create_seed_job_type()
@@ -537,7 +537,7 @@ class TestCreateRecipes(TestCase):
         definition_d.add_dependency('job_d_x', 'job_d_y')
         definition_d.add_dependency('job_d_x', 'job_d_z')
         definition_d_dict = convert_recipe_definition_to_v6_json(definition_d).get_dict()
-        recipe_type_d = recipe_test_utils.create_recipe_type(definition=definition_d_dict)
+        recipe_type_d = recipe_test_utils.create_recipe_type_v6(definition=definition_d_dict)
 
         # Set up recipe type C (with revision change CC)
         job_type_c_x = job_test_utils.create_seed_job_type()
@@ -550,7 +550,7 @@ class TestCreateRecipes(TestCase):
         definition_c.add_dependency('job_c_x', 'job_c_z')
         definition_c.add_dependency('job_c_y', 'job_c_z')
         definition_c_dict = convert_recipe_definition_to_v6_json(definition_c).get_dict()
-        recipe_type_c = recipe_test_utils.create_recipe_type(definition=definition_c_dict)
+        recipe_type_c = recipe_test_utils.create_recipe_type_v6(definition=definition_c_dict)
         job_type_cc_y = JobType.objects.get(id=job_type_c_y.id)
         job_type_cc_y.revision_num += 1
         JobTypeRevision.objects.create_job_type_revision(job_type_cc_y)
@@ -579,7 +579,7 @@ class TestCreateRecipes(TestCase):
         definition_b.add_dependency('job_b_x', 'job_b_y')
         definition_b.add_dependency('recipe_c', 'job_b_z')
         definition_b_dict = convert_recipe_definition_to_v6_json(definition_b).get_dict()
-        recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b_dict)
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=definition_b_dict)
         definition_bb = RecipeDefinition(Interface())
         definition_bb.add_job_node('job_b_x', job_type_b_x.name, job_type_b_x.version, job_type_b_x.revision_num)
         definition_bb.add_job_node('job_b_y', job_type_b_y.name, job_type_b_y.version, job_type_b_y.revision_num)
@@ -608,7 +608,7 @@ class TestCreateRecipes(TestCase):
         definition_a.add_dependency('recipe_d', 'recipe_b')
         definition_a.add_dependency('recipe_b', 'recipe_e')
         definition_a_dict = convert_recipe_definition_to_v6_json(definition_a).get_dict()
-        recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a_dict)
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=definition_a_dict)
         definition_aa = RecipeDefinition(interface_a)
         definition_aa.add_job_node('job_a_x', job_type_a_x.name, job_type_a_x.version, job_type_a_x.revision_num)
         definition_aa.add_recipe_node('recipe_b', recipe_type_bb.name, recipe_type_bb.revision_num)
@@ -857,7 +857,7 @@ class TestCreateRecipes(TestCase):
         definition.add_dependency('Job 1', 'Job 2')
         definition.add_dependency_input_connection('Job 2', 'Test Input 2', 'Job 1', 'Test Output 1')
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
 
         input_1 = Data()
         input_1.add_value(FileValue('Recipe Input', [file_1.id]))
@@ -1024,7 +1024,7 @@ class TestCreateRecipes(TestCase):
         """Tests calling CreateRecipes.execute() successfully when creating sub-recipes"""
 
         # Creates definitions for sub-recipe A and sub-recipe B
-        top_recipe_type = recipe_test_utils.create_recipe_type()
+        top_recipe_type = recipe_test_utils.create_recipe_type_v6()
         job_type_a_1 = job_test_utils.create_seed_job_type()
         job_type_a_2 = job_test_utils.create_seed_job_type()
         sub_definition_a = RecipeDefinition(Interface())
@@ -1032,10 +1032,10 @@ class TestCreateRecipes(TestCase):
         sub_definition_a.add_job_node('node_2', job_type_a_2.name, job_type_a_2.version, job_type_a_2.revision_num)
         sub_definition_a.add_dependency('node_1', 'node_2')
         sub_definition_a_dict = convert_recipe_definition_to_v6_json(sub_definition_a).get_dict()
-        recipe_type_a = recipe_test_utils.create_recipe_type(definition=sub_definition_a_dict)
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_a_dict)
         job_type_b_x = job_test_utils.create_seed_job_type()
         job_type_b_y = job_test_utils.create_seed_job_type()
-        recipe_type_b_z = recipe_test_utils.create_recipe_type()
+        recipe_type_b_z = recipe_test_utils.create_recipe_type_v6()
         sub_definition_b = RecipeDefinition(Interface())
         sub_definition_b.add_job_node('node_x', job_type_b_x.name, job_type_b_x.version, job_type_b_x.revision_num)
         sub_definition_b.add_job_node('node_y', job_type_b_y.name, job_type_b_y.version, job_type_b_y.revision_num)
@@ -1043,7 +1043,7 @@ class TestCreateRecipes(TestCase):
         sub_definition_b.add_dependency('node_x', 'node_z')
         sub_definition_b.add_dependency('node_y', 'node_z')
         sub_definition_b_dict = convert_recipe_definition_to_v6_json(sub_definition_b).get_dict()
-        recipe_type_b = recipe_test_utils.create_recipe_type(definition=sub_definition_b_dict)
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_b_dict)
         top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, save=True)
 
         # Create message to create sub-recipes A and B for top_recipe which supersedes prev_top_recipe
@@ -1145,7 +1145,7 @@ class TestCreateRecipes(TestCase):
         # Creates definitions for sub-recipe A and sub-recipe B
         batch = batch_test_utils.create_batch()
         event = trigger_test_utils.create_trigger_event()
-        top_recipe_type = recipe_test_utils.create_recipe_type()
+        top_recipe_type = recipe_test_utils.create_recipe_type_v6()
         job_type_a_1 = job_test_utils.create_seed_job_type()
         job_type_a_2 = job_test_utils.create_seed_job_type()
         sub_definition_a = RecipeDefinition(Interface())
@@ -1153,10 +1153,10 @@ class TestCreateRecipes(TestCase):
         sub_definition_a.add_job_node('node_2', job_type_a_2.name, job_type_a_2.version, job_type_a_2.revision_num)
         sub_definition_a.add_dependency('node_1', 'node_2')
         sub_definition_a_dict = convert_recipe_definition_to_v6_json(sub_definition_a).get_dict()
-        recipe_type_a = recipe_test_utils.create_recipe_type(definition=sub_definition_a_dict)
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_a_dict)
         job_type_b_x = job_test_utils.create_seed_job_type()
         job_type_b_y = job_test_utils.create_seed_job_type()
-        recipe_type_b_z = recipe_test_utils.create_recipe_type()
+        recipe_type_b_z = recipe_test_utils.create_recipe_type_v6()
         sub_definition_b = RecipeDefinition(Interface())
         sub_definition_b.add_job_node('node_x', job_type_b_x.name, job_type_b_x.version, job_type_b_x.revision_num)
         sub_definition_b.add_job_node('node_y', job_type_b_y.name, job_type_b_y.version, job_type_b_y.revision_num)
@@ -1164,7 +1164,7 @@ class TestCreateRecipes(TestCase):
         sub_definition_b.add_dependency('node_x', 'node_z')
         sub_definition_b.add_dependency('node_y', 'node_z')
         sub_definition_b_dict = convert_recipe_definition_to_v6_json(sub_definition_b).get_dict()
-        recipe_type_b = recipe_test_utils.create_recipe_type(definition=sub_definition_b_dict)
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_b_dict)
 
         # Create previous recipe containing sub-recipe A and B in order to be superseded
         prev_recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, save=False)

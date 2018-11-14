@@ -88,7 +88,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         recipe_interface.add_parameter(FileParameter('input_b', ['text/plain'], multiple=True))
         definition = RecipeDefinition(recipe_interface)
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
 
         data = Data()
         data.add_value(FileValue('input_a', [file_1.id]))
@@ -212,7 +212,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         sub_recipe_interface_c.add_parameter(JsonParameter('input_c', 'string'))
         sub_recipe_def_c = RecipeDefinition(sub_recipe_interface_c)
         sub_recipe_def_dict_c = convert_recipe_definition_to_v6_json(sub_recipe_def_c).get_dict()
-        sub_recipe_type_c = recipe_test_utils.create_recipe_type(definition=sub_recipe_def_dict_c)
+        sub_recipe_type_c = recipe_test_utils.create_recipe_type_v6(definition=sub_recipe_def_dict_c)
         sub_recipe_c = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type_c)
 
         recipe_interface = Interface()
@@ -227,7 +227,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         definition.add_dependency('node_c', 'node_b')
         definition.add_dependency_input_connection('node_c', 'input_b', 'node_b', 'output_b')
         def_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data = Data()
         recipe_data.add_value(JsonValue('recipe_input', 'hello'))
         recipe_data_dict = convert_data_to_v6_json(recipe_data).get_dict()
@@ -357,7 +357,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         sub_recipe_interface_c.add_parameter(FileParameter('input_b', ['image/png'], multiple=True))
         sub_recipe_def_c = RecipeDefinition(sub_recipe_interface_c)
         sub_recipe_def_dict_c = convert_recipe_definition_to_v1_json(sub_recipe_def_c).get_dict()
-        sub_recipe_type_c = recipe_test_utils.create_recipe_type(definition=sub_recipe_def_dict_c)
+        sub_recipe_type_c = recipe_test_utils.create_recipe_type_v6(definition=sub_recipe_def_dict_c)
         sub_recipe_c = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type_c)
 
         definition = RecipeDefinition(Interface())
@@ -369,7 +369,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         definition.add_dependency('node_c', 'node_b')
         definition.add_dependency_input_connection('node_c', 'input_b', 'node_b', 'output_b')
         def_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=recipe_data_dict)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', job=job_a)
