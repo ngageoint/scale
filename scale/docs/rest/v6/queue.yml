@@ -1,0 +1,160 @@
+openapi: "3.0.0"
+info:
+  title: Queue Services
+  version: v6
+paths:
+  /v6/load/:
+    get:
+      operationId: _rest_v6_queue_load
+      summary: Queue Load
+      description: Returns statistics about the current job load organized by  |
+        job type. Jobs are counted when they are in the PENDING, QUEUED, and |
+        RUNNING states. NOTE: Time range must be within a one month period (31 days).
+      parameters:
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Count only jobs with a given job type identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Count only jobs with a given job type name. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: job_type_category
+          schema:
+            type: string
+          description: Count only jobs with a given job type category. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: job_type_priority
+          schema:
+            type: integer
+          description: Count only jobs with a given job type priority. |
+            Duplicate it to filter by multiple values.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/queue_load'
+  /v6/queue/status/:
+    get:
+      operationId: _rest_v6_queue_status
+      summary: Queue Status
+      description: Returns the current status of the queue by grouping the queued jobs by their types.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/queue_status'
+
+components:
+  schemas:
+    queue_load:
+      title: Queue Load
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/load_item'
+          description: List of queue load items
+          
+    load_item:
+      title: Queue Load Item
+      type: object
+      properties:
+        time:
+          type: string
+          format: date-time
+          description: When the counts were actually recorded
+        pending_count:
+          type: integer
+          description: The number of jobs in the pending state at the measured time
+          example: 0
+        queued_count:
+          type: integer
+          description: The number of jobs in the queued state at the measured time
+          example: 0
+        running_count:
+          type: integer
+          description: The number of jobs in the running state at the measured time
+          example: 0
+          
+    queue_status:
+      title: Queue Status
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/status_item'
+          description: List of queue status items
+
+    status_item:
+      title: Queue Status Item
+      type: object
+      properties:
+        job_type:
+          $ref: '#/components/schemas/job_type_detail'
+        count:
+          type: integer
+          description: The total number of jobs of the type in the queue
+          example: 1
+        longest_queued:
+          type: string
+          format: date-time
+          description: When the job (of the given type) that has been queued the longest was queued
+        highest_priority:
+          type: integer
+          description: The highest priority of any job of the type in the queue
+          example: 1

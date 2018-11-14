@@ -4,16 +4,31 @@
 v6 Queue Services
 ==================
 
-TODO
-
 .. _rest_v6_queue_load:
 
 v6 Queue Load
-----------------------
+-------------
 
-Request: GET http://.../v6/queue/load
+**Example GET /v6/load/ API call**
+
+Request: GET http://.../v6/load
 
 Response: 200 OK
+
+.. code-block:: javascript
+
+    {
+      "count": 1,
+      "next": null,
+      "previous": null,
+      "results": [{
+          "time": "2015-10-21T00:00:00Z",
+          "pending_count": 1,
+          "queued_count": 0,
+          "running_count": 0
+        }
+      ]
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Load**                                                                                                            |
@@ -21,7 +36,7 @@ Response: 200 OK
 | Returns statistics about the current job load organized by job type. Jobs are counted when they are in the PENDING,     |
 | QUEUED, and RUNNING states. NOTE: Time range must be within a one month period (31 days).                               |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /load/                                                                                                          |
+| **GET** /v6/load/                                                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -70,33 +85,51 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .running_count     | Integer           | The number of jobs in the running state at the measured time.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "count": 28,                                                                                                     |
-|        "next": null,                                                                                                    |
-|        "previous": null,                                                                                                |
-|        "results": [                                                                                                     |
-|            {                                                                                                            |
-|                "time": "2015-10-21T00:00:00Z",                                                                          |
-|                "pending_count": 1,                                                                                      |
-|                "queued_count": 0,                                                                                       |
-|                "running_count": 0                                                                                       |
-|            },                                                                                                           |
-|            ...                                                                                                          |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_v6_queue_status:
 
 v6 Queue Status
-----------------------
+---------------
 
+**Example GET /v6/queue/status/ API call**
+
+Request: GET http://.../v6/queue/status/
+
+Response: 200 OK
+
+.. code-block:: javascript                                                                                              
+                                                                                                                         
+ {
+   "count": 1,
+   "next": null,
+   "previous": null,
+   "results": [{
+       "job_type": {
+         "id": 1,
+         "name": "scale-ingest",
+         "version": "1.0",
+         "title": "Scale Ingest",
+         "description": "Ingests a source file into a workspace",
+         "is_system": true,
+         "is_long_running": false,
+         "is_active": true,
+         "is_operational": true,
+         "is_paused": false,
+         "icon_code": "f013"
+       },
+       "count": 19,
+       "longest_queued": "1970-01-01T00:00:00.000Z",
+       "highest_priority": 1
+     }
+   ]
+ } 
+        
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Get Queue Status**                                                                                                    |
 +=========================================================================================================================+
 | Returns the current status of the queue by grouping the queued jobs by their types.                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /queue/status/                                                                                                  |
+| **GET** /v6/queue/status/                                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -115,7 +148,7 @@ v6 Queue Status
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The job type being summarized within the queue.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .count             | Integer           | The total number of jobs of the type in the queue.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -123,42 +156,13 @@ v6 Queue Status
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .highest_priority  | Integer           | The highest priority of any job of the type in the queue.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "count": 1,                                                                                                      |
-|        "next": null,                                                                                                    |
-|        "previous": null,                                                                                                |
-|        "results": [                                                                                                     |
-|            {                                                                                                            |
-|                "job_type": {                                                                                            |
-|                    "id": 1,                                                                                             |
-|                    "name": "scale-ingest",                                                                              |
-|                    "version": "1.0",                                                                                    |
-|                    "title": "Scale Ingest",                                                                             |
-|                    "description": "Ingests a source file into a workspace",                                             |
-|                    "is_system": true,                                                                                   |
-|                    "is_long_running": false,                                                                            |
-|                    "is_active": true,                                                                                   |
-|                    "is_operational": true,                                                                              |
-|                    "is_paused": false,                                                                                  |
-|                    "icon_code": "f013"                                                                                  |
-|                },                                                                                                       |
-|                "count": 19,                                                                                             |
-|                "longest_queued": "1970-01-01T00:00:00.000Z",                                                            |
-|                "highest_priority": 1                                                                                    |
-|            },                                                                                                           |
-|            ...                                                                                                          |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 
 v6 Queue New-Job
 ----------------------
 
-see v6 job
+see v6 job :ref:`Queue New Job <rest_v6_job_queue_new_job>`
 
 v6 Queue New-Recipe
 ----------------------
 
-see v6 Recipe
+see v6 Recipe :ref:`Queue New Recipe <rest_v6_recipe_queue_new_recipe>`
