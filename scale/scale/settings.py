@@ -22,7 +22,13 @@ DOCKER_VERSION = scale.__docker_version__
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
-MESOS_MASTER = None
+MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
+
+# We by default, use the '*' role, meaning all resources are unreserved offers are received
+MESOS_ROLE = os.getenv('MESOS_ROLE', '*')
+
+# Placeholder for service secret that will be overridden in local_settings_docker
+SERVICE_SECRET = None
 
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = None
@@ -243,6 +249,12 @@ LOG_HANDLERS = {
     'null': {
         'level': 'DEBUG',
         'class': 'logging.NullHandler',
+    },
+    'mesoshttp' : {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stdout
     },
     'console': {
         'level': 'DEBUG',

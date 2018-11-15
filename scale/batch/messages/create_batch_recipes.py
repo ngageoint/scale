@@ -7,7 +7,7 @@ from django.utils.timezone import now
 
 from batch.models import Batch
 from messaging.messages.message import CommandMessage
-from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
+from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe
 
 # How many recipes to handle in a single execution of this message
@@ -73,7 +73,7 @@ class CreateBatchRecipes(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        batch = Batch.objects.get(id=self.batch_id)
+        batch = Batch.objects.select_related('recipe_type', 'recipe_type_rev').get(id=self.batch_id)
         definition = batch.get_definition()
         new_messages = []
 
@@ -108,7 +108,7 @@ class CreateBatchRecipes(CommandMessage):
             self.is_prev_batch_done = True
             return messages
 
-        recipe_qry = Recipe.objects.filter(batch_id=batch.superseded_batch_id)
+        recipe_qry = Recipe.objects.filter(batch_id=batch.superseded_batch_id, recipe__isnull=True)
         if self.current_recipe_id:
             recipe_qry = recipe_qry.filter(id__lt=self.current_recipe_id)
         recipe_qry = recipe_qry.order_by('-id')
@@ -126,9 +126,9 @@ class CreateBatchRecipes(CommandMessage):
         self.current_recipe_id = last_recipe_id
         if recipe_count > 0:
             logger.info('Found %d recipe(s) from previous batch to reprocess, creating messages', recipe_count)
-            msgs = create_reprocess_recipes_messages(root_recipe_ids, batch.recipe_type_rev_id, batch.event_id,
-                                                     all_jobs=definition.all_jobs, job_names=definition.job_names,
-                                                     batch_id=batch.id)
+            msgs = create_reprocess_messages(root_recipe_ids, batch.recipe_type.name,
+                                             batch.recipe_type_rev.revision_num, batch.event_id, batch_id=batch.id,
+                                             forced_nodes=definition.forced_nodes)
             messages.extend(msgs)
 
         if recipe_count < MAX_RECIPE_NUM:

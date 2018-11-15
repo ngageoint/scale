@@ -20,7 +20,8 @@ from job.models import JobType
 from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
+from recipe.diff.forced_nodes import ForcedNodes
+from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
@@ -73,7 +74,7 @@ class BatchManager(models.Manager):
         batch.title = title
         batch.description = description
         batch.recipe_type = recipe_type
-        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         batch.definition = definition.get_dict()
         configuration = BatchConfiguration()
         if 'priority' in definition.get_dict():
@@ -93,7 +94,7 @@ class BatchManager(models.Manager):
 
         # Create models for batch metrics
         batch_metrics_models = []
-        for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+        for job_name in recipe_type.get_definition().get_topological_order():
             batch_metrics_model = BatchMetrics()
             batch_metrics_model.batch_id = batch.id
             batch_metrics_model.job_name = job_name
@@ -130,7 +131,7 @@ class BatchManager(models.Manager):
         batch.title = title
         batch.description = description
         batch.recipe_type = recipe_type
-        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         batch.event = event
         batch.definition = convert_definition_to_v6(definition).get_dict()
         batch.configuration = convert_configuration_to_v6(configuration).get_dict()
@@ -157,7 +158,7 @@ class BatchManager(models.Manager):
 
             # Create models for batch metrics
             batch_metrics_models = []
-            for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+            for job_name in recipe_type.get_definition().get_topological_order():
                 batch_metrics_model = BatchMetrics()
                 batch_metrics_model.batch_id = batch.id
                 batch_metrics_model.job_name = job_name
@@ -488,16 +489,20 @@ class BatchManager(models.Manager):
 
         # Send messages to reprocess old recipes
         logger.info('Sending messages to reprocess old recipes: %i', old_recipes_count)
-        new_rev = RecipeTypeRevision.objects.get_revision_old(batch.recipe_type_id, batch.recipe_type.revision_num)
+        new_rev = RecipeTypeRevision.objects.get_revision(batch.recipe_type.name, batch.recipe_type.revision_num)
         root_recipe_ids = []
         for old_recipe in old_recipes.iterator():
             root_id = old_recipe.root_superseded_recipe_id if old_recipe.root_superseded_recipe_id else old_recipe.id
             root_recipe_ids.append(root_id)
         if root_recipe_ids:
-            all_jobs = batch_definition.all_jobs
-            job_names = batch_definition.job_names
-            messages = create_reprocess_recipes_messages(root_recipe_ids, new_rev.id, batch.event_id, all_jobs=all_jobs,
-                                                         job_names=job_names, batch_id=batch.id)
+            forced_nodes = ForcedNodes()
+            if batch_definition.all_jobs:
+                forced_nodes.set_all_nodes()
+            elif batch_definition.job_names:
+                for job_name in batch_definition.job_names:
+                    forced_nodes.add_node(job_name)
+            messages = create_reprocess_messages(root_recipe_ids, new_rev.recipe_type.name, new_rev.revision_num,
+                                                 batch.event_id, batch_id=batch.id, forced_nodes=forced_nodes)
             CommandMessageManager().send_messages(messages)
             # Update the overall batch status
             batch.created_count += old_recipes_count
@@ -576,7 +581,7 @@ class BatchManager(models.Manager):
         """
 
         # Fetch all the recipes of the requested type that are not already superseded
-        old_recipes = Recipe.objects.filter(recipe_type=recipe_type, is_superseded=False)
+        old_recipes = Recipe.objects.filter(recipe_type=recipe_type, is_superseded=False, recipe__isnull=True)
 
         # Exclude recipes that have not actually changed unless requested
         if not (definition.job_names or definition.all_jobs):
@@ -645,8 +650,7 @@ class BatchManager(models.Manager):
         try:
             batch = Batch()
             batch.recipe_type = recipe_type
-            batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id,
-                                                                                recipe_type.revision_num)
+            batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
             batch.definition = convert_definition_to_v6(definition).get_dict()
             batch.configuration = convert_configuration_to_v6(configuration).get_dict()
 
@@ -876,10 +880,12 @@ class Batch(models.Model):
             json_dict = {'version': '1.0'}
             if 'previous_batch' in self.definition:
                 prev_batch_dict = self.definition['previous_batch']
-                if 'job_names' in prev_batch_dict:
-                    json_dict['job_names'] = prev_batch_dict['job_names']
-                if 'all_jobs' in prev_batch_dict:
-                    json_dict['all_jobs'] = prev_batch_dict['all_jobs']
+                if 'forced_nodes' in prev_batch_dict:
+                    if 'nodes' in prev_batch_dict['forced_nodes']:
+                        json_dict['job_names'] = prev_batch_dict['forced_nodes']['nodes']
+                    else:
+                        json_dict['job_names'] = []
+                    json_dict['all_jobs'] = prev_batch_dict['forced_nodes']['all']
             return json_dict
 
         return self.definition

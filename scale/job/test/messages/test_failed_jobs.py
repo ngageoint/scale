@@ -22,14 +22,16 @@ class TestFailedJobs(TransactionTestCase):
 
         error = error_test_utils.create_error(should_be_retried=True)
 
+        from recipe.test import utils as recipe_test_utils
+        recipe_1 = recipe_test_utils.create_recipe()
+
         data = JobData()
         job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED', input=data.get_dict(), max_tries=2)
-        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=1)
+        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=1,
+                                          recipe=recipe_1)
         job_3 = job_test_utils.create_job(num_exes=0, status='PENDING')
         job_ids = [job_1.id, job_2.id, job_3.id]
 
-        from recipe.test import utils as recipe_test_utils
-        recipe_1 = recipe_test_utils.create_recipe()
         recipe_test_utils.create_recipe_job(recipe=recipe_1, job=job_2)
 
         when_ended = now()
@@ -52,14 +54,14 @@ class TestFailedJobs(TransactionTestCase):
         self.assertTrue(result)
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         queued_jobs_msg = None
-        update_recipes_msg = None
+        update_recipe_msg = None
         update_recipe_metrics_msg = None
         self.assertEqual(len(new_message.new_messages), 3)
         for msg in new_message.new_messages:
             if msg.type == 'queued_jobs':
                 queued_jobs_msg = msg
-            elif msg.type == 'update_recipes':
-                update_recipes_msg = msg
+            elif msg.type == 'update_recipe':
+                update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
         # Job 1 should be retried and put back on the queue
@@ -73,8 +75,7 @@ class TestFailedJobs(TransactionTestCase):
         self.assertEqual(jobs[1].num_exes, 1)
         self.assertEqual(jobs[1].error_id, error.id)
         self.assertEqual(jobs[1].ended, when_ended)
-        self.assertEqual(len(update_recipes_msg._recipe_ids), 1)
-        self.assertTrue(recipe_1.id in update_recipes_msg._recipe_ids)
+        self.assertEqual(update_recipe_msg.root_recipe_id, recipe_1.id)
         # Job 3 should ignore update
         self.assertEqual(jobs[2].status, 'PENDING')
         self.assertEqual(jobs[2].num_exes, 0)
@@ -85,20 +86,23 @@ class TestFailedJobs(TransactionTestCase):
         error_1 = error_test_utils.create_error(should_be_retried=True)
         error_2 = error_test_utils.create_error(should_be_retried=False)
 
+        from recipe.test import utils as recipe_test_utils
+        recipe_1 = recipe_test_utils.create_recipe()
+        recipe_2 = recipe_test_utils.create_recipe()
+
         data = JobData()
         job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED', input=data.get_dict(), max_tries=2)
         job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2)
-        job_3 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=1)
-        job_4 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2)
+        job_3 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=1,
+                                          recipe=recipe_1)
+        job_4 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2,
+                                          recipe=recipe_2)
         job_5 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2)
         job_6 = job_test_utils.create_job(num_exes=1, status='FAILED', input=data.get_dict(), max_tries=2)
         job_7 = job_test_utils.create_job(num_exes=0, status='CANCELED')
         job_ids = [job_1.id, job_2.id, job_3.id, job_4.id, job_5.id, job_6.id, job_7.id]
 
-        from recipe.test import utils as recipe_test_utils
-        recipe_1 = recipe_test_utils.create_recipe()
         recipe_test_utils.create_recipe_job(recipe=recipe_1, job=job_3)
-        recipe_2 = recipe_test_utils.create_recipe()
         recipe_test_utils.create_recipe_job(recipe=recipe_2, job=job_4)
 
         when_ended = now()
@@ -127,19 +131,24 @@ class TestFailedJobs(TransactionTestCase):
 
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         queued_jobs_msg = None
-        update_recipes_msg = None
+        update_recipe_1_msg = None
+        update_recipe_2_msg = None
         update_recipe_metrics_msg = None
-        self.assertEqual(len(message.new_messages), 3)
+        self.assertEqual(len(message.new_messages), 4)
         for msg in message.new_messages:
             if msg.type == 'queued_jobs':
                 queued_jobs_msg = msg
-            elif msg.type == 'update_recipes':
-                update_recipes_msg = msg
+            elif msg.type == 'update_recipe':
+                if msg.root_recipe_id == recipe_1.id:
+                    update_recipe_1_msg = msg
+                elif msg.root_recipe_id == recipe_2.id:
+                    update_recipe_2_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
         self.assertTrue(queued_jobs_msg.requeue)
         self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)  # 2 jobs should have been retried
-        self.assertEqual(len(update_recipes_msg._recipe_ids), 2)  # 2 jobs should have been failed
+        self.assertIsNotNone(update_recipe_1_msg)
+        self.assertIsNotNone(update_recipe_2_msg)
 
         # Job 1 should be retried and put back on the queue
         self.assertEqual(jobs[0].status, 'QUEUED')
@@ -154,13 +163,11 @@ class TestFailedJobs(TransactionTestCase):
         self.assertEqual(jobs[2].num_exes, 1)
         self.assertEqual(jobs[2].error_id, error_1.id)
         self.assertEqual(jobs[2].ended, when_ended)
-        self.assertTrue(recipe_1.id in update_recipes_msg._recipe_ids)
         # Job 4 should be failed since error cannot be retried
         self.assertEqual(jobs[3].status, 'FAILED')
         self.assertEqual(jobs[3].num_exes, 1)
         self.assertEqual(jobs[3].error_id, error_2.id)
         self.assertEqual(jobs[3].ended, when_ended)
-        self.assertTrue(recipe_2.id in update_recipes_msg._recipe_ids)
         # Job 5 should be ignored since mismatched exe_num
         self.assertEqual(jobs[4].status, 'RUNNING')
         self.assertEqual(jobs[4].num_exes, 1)
@@ -179,20 +186,24 @@ class TestFailedJobs(TransactionTestCase):
 
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         queued_jobs_msg = None
-        update_recipes_msg = None
+        update_recipe_1_msg = None
+        update_recipe_2_msg = None
         update_recipe_metrics_msg = None
-        self.assertEqual(len(message.new_messages), 2)
+        self.assertEqual(len(message.new_messages), 4)
         for msg in message.new_messages:
             if msg.type == 'queued_jobs':
                 queued_jobs_msg = msg
-            elif msg.type == 'update_recipes':
-                update_recipes_msg = msg
+            elif msg.type == 'update_recipe':
+                if msg.root_recipe_id == recipe_1.id:
+                    update_recipe_1_msg = msg
+                elif msg.root_recipe_id == recipe_2.id:
+                    update_recipe_2_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
-        self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
         self.assertTrue(queued_jobs_msg.requeue)
-        # The same 2 jobs should have been retried
-        self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)
+        self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)  # 2 jobs should have been retried
+        self.assertIsNotNone(update_recipe_1_msg)
+        self.assertIsNotNone(update_recipe_2_msg)
 
         # Job 1 should be retried and put back on the queue
         self.assertEqual(jobs[0].status, 'QUEUED')

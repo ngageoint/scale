@@ -3,11 +3,11 @@ info:
   title: Diagnostic Services
   version: v6
 paths:
-  /v6/diagnostics/job/bake/:
+  /diagnostics/job/bake/:
     post:
       operationId: _rest_v6_queue_scale_bake_jobs
       summary: Queue Scale Bake Jobs
-      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete, |
+      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete,
         allowing a simulation of jobs that take some amount of time to complete.  
       requestBody:
         required: true
@@ -17,14 +17,13 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: |-
-            The 202 ACCEPTED response indicates a successful request
+          description: The 202 ACCEPTED response indicates a successful request
             
-  /v6/diagnostics/recipe/casino/:
+  /diagnostics/recipe/casino/:
     post:
       operationId: _rest_v6_queue_scale_casino_recipies
       summary: Queue Scale Casino Recipies
-      description: Creates and queues a specified number of Scale Casino recipes. Scale Casino recipes are useful for testing recipes in |
+      description: Creates and queues a specified number of Scale Casino recipes. Scale Casino recipes are useful for testing recipes in
         the presence of job failures.   
       requestBody:
         required: true
@@ -34,14 +33,13 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: |-
-            The 202 ACCEPTED response indicates a successful request
+          description: The 202 ACCEPTED response indicates a successful request
             
-  /v6/diagnostics/job/hello/:
+  /diagnostics/job/hello/:
     post:
       operationId: _rest_v6_queue_scale_hello_jobs
       summary: Queue Scale Hello Jobs
-      description: Creates and queues a specified number of Scale Hello jobs. Scale Hello jobs simply print out a hello message and are |
+      description: Creates and queues a specified number of Scale Hello jobs. Scale Hello jobs simply print out a hello message and are
         useful for testing and evaluating Scale's job throughput performance.  
       requestBody:
         required: true
@@ -51,14 +49,13 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: |-
-            The 202 ACCEPTED response indicates a successful request
+          description: The 202 ACCEPTED response indicates a successful request
             
-  /v6/diagnostics/job/roulette/:
+  /diagnostics/job/roulette/:
     post:
       operationId: _rest_v6_queue_scale_roulette_jobs
       summary: Queue Scale Roulette Jobs
-      description: Creates and queues a specified number of Scale Roulette jobs. Scale Roulette randomly complete/fail with 50% odds and |
+      description: Creates and queues a specified number of Scale Roulette jobs. Scale Roulette randomly complete/fail with 50% odds and
         are useful for testing jobs that both complete and fail.  
       requestBody:
         required: true
@@ -68,8 +65,7 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: |-
-            The 202 ACCEPTED response indicates a successful request
+          description: The 202 ACCEPTED response indicates a successful request
             
 components:
   schemas:

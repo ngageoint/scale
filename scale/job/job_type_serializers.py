@@ -33,7 +33,7 @@ class JobTypeBaseSerializerV5(ModelIdSerializer):
 class JobTypeBaseSerializerV6(ModelIdSerializer):
     """Converts job type model fields to REST output"""
     name = serializers.CharField()
-    version = serializers.CharField() 
+    version = serializers.CharField()
     title = serializers.CharField()
     description = serializers.CharField()
     icon_code = serializers.CharField()
@@ -74,7 +74,7 @@ class JobTypeSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
 
     version = serializers.CharField()
-    
+
     is_active = serializers.BooleanField()
     is_paused = serializers.BooleanField()
     is_system = serializers.BooleanField()
@@ -112,12 +112,12 @@ class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     job_counts_6h = JobTypeStatusCountsSerializer(many=True)
     job_counts_12h = JobTypeStatusCountsSerializer(many=True)
     job_counts_24h = JobTypeStatusCountsSerializer(many=True)
-    
+
 class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
 
     manifest = serializers.JSONField(default=dict)
-    
+
     configuration = serializers.JSONField(source='get_v6_configuration_json')
 
 
@@ -162,13 +162,15 @@ class JobTypeRevisionSerializerV5(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
     interface = serializers.JSONField(default=dict, source='manifest')
     created = serializers.DateTimeField()
-    
+
+
 class JobTypeRevisionSerializerV6(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
     job_type = JobTypeBaseSerializerV6()
     docker_image = serializers.CharField()
     created = serializers.DateTimeField()
-    
+
+
 class JobTypeRevisionDetailsSerializerV6(JobTypeRevisionSerializerV6):
     """Converts job type revision model fields to REST output."""
     job_type = JobTypeBaseSerializerV6()

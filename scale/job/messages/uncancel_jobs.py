@@ -101,10 +101,14 @@ class UncancelJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        root_recipe_ids = set()
+
         with transaction.atomic():
             jobs_to_pending = []
             # Retrieve locked job models
             for job_model in Job.objects.get_locked_jobs(self._job_ids):
+                if job_model.root_recipe_id:
+                    root_recipe_ids.add(job_model.root_recipe_id)
                 if job_model.can_be_uncanceled():
                     jobs_to_pending.append(job_model)
 
@@ -113,9 +117,10 @@ class UncancelJobs(CommandMessage):
                 job_ids = Job.objects.update_jobs_to_pending(jobs_to_pending, self.when)
                 logger.info('Set %d job(s) to PENDING status', len(job_ids))
 
-        # Create messages to update recipes
-        from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
-        self.new_messages.extend(create_update_recipes_messages_from_jobs(self._job_ids))
+        if root_recipe_ids:
+             # Create messages to update recipes
+            from recipe.messages.update_recipe import create_update_recipe_messages_from_node
+            self.new_messages.extend(create_update_recipe_messages_from_node(root_recipe_ids))
 
         # Send messages to update recipe metrics
         from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs

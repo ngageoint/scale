@@ -773,8 +773,10 @@ batch that re-processes the same set of recipes that ran in a previous batch.
    {
       "previous_batch": {
          "root_batch_id": 1234,
-         "job_names": ['job_a', 'job_b'],
-         "all_jobs": false
+         "forced_nodes": {
+            "all": False,
+            "nodes": ['job_a', 'job_b'],
+         }
       }
    }
 
@@ -791,16 +793,9 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 |                         |                   |          | (non-superseded) batch with this root ID and it will be            |
 |                         |                   |          | re-processed by this batch.                                        |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| job_names               | Array             | Optional | A list of strings that define specific jobs within the recipes     |
-|                         |                   |          | that will be re-processed. Any job that has changed between the    |
-|                         |                   |          | previously run recipe revision and the current revision will       |
-|                         |                   |          | automatically be included in the batch, however this parameter can |
-|                         |                   |          | be used to include additional jobs that did not have a revision    |
-|                         |                   |          | change. If a job is selected to be re-processed, all of its        |
-|                         |                   |          | dependent jobs will automatically be re-processed as well.         |
-+-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| all_jobs                | Boolean           | Optional | If true, then *job_names* is ignored and ALL jobs within the batch |
-|                         |                   |          | recipes will be re-processed.                                      |
+| forced_nodes            | JSON object       | Optional | A forced nodes JSON object that defines the batch recipe nodes to  |
+|                         |                   |          | force to re-process even if there are no changes to them.          |
+|                         |                   |          | See :ref:`rest_v6_recipe_json_forced_nodes`                        |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 
 .. _rest_v6_batch_json_configuration:

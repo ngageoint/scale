@@ -157,6 +157,41 @@ class CountryData(models.Model):
         index_together = ["name", "effective"]
 
 
+class PurgeResults(models.Model):
+    """Represents the results from purge operations
+
+    :keyword source_file_id: The ID of the source file purged
+    :type source_file_id: :class:`django.db.models.PositiveIntegerField`
+    :keyword trigger_event: The event that triggered the creation of the purge process
+    :type trigger_event: :class:`django.db.models.ForeignKey`
+    :keyword num_jobs_deleted: The number of jobs deleted as part of the purge process
+    :type num_jobs_deleted: :class:`django.db.models.PositiveIntegerField`
+    :keyword num_recipes_deleted: The number of recipes deleted as part of the purge process
+    :type num_recipes_deleted: :class:`django.db.models.PositiveIntegerField`
+    :keyword num_products_deleted: The number of products deleted as part of the purge process
+    :type num_products_deleted: :class:`django.db.models.PositiveIntegerField`
+    :keyword purge_started: The datetime that the purge process began 
+    :type purge_started: :class:`django.db.models.DateTimeField`
+    :keyword purge_completed: The datetime that the purge process completed
+    :type purge_completed: :class:`django.db.models.DateTimeField`
+    :keyword force_stop_purge: Stops new messages from being generated if False
+    :type force_stop_purge: :class:`django.db.models.BooleanField`
+    """
+
+    source_file_id = models.PositiveIntegerField(default=0)
+    trigger_event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    num_jobs_deleted = models.PositiveIntegerField(default=0)
+    num_recipes_deleted = models.PositiveIntegerField(default=0)
+    num_products_deleted = models.PositiveIntegerField(default=0)
+    purge_started = models.DateTimeField(auto_now_add=True)
+    purge_completed = models.DateTimeField(blank=True, null=True)
+    force_stop_purge = models.BooleanField(default=False)
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'purge_results'
+
+
 class ScaleFileManager(models.Manager):
     """Provides additional methods for handling Scale files
     """
@@ -307,8 +342,8 @@ class ScaleFileManager(models.Manager):
         :type source_sensor: list
         :param source_collection: Query files with the given source class.
         :type source_collection: list
-        :param source_task: Query files with the given source task.
-        :type source_task: list
+        :param source_tasks: Query files with the given source tasks.
+        :type source_tasks: list
         :param mod_started: Query files where the last modified date is after this time.
         :type mod_started: :class:`datetime.datetime`
         :param mod_ended: Query files where the last modified date is before this time.
@@ -579,6 +614,14 @@ class ScaleFile(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The latest end time from all source files
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file.
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file.
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file.
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file.
+    :type source_task: :class:`django.db.models.CharField`
     :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
         is still in a research & development (R&D) phase (False)
     :type is_operational: :class:`django.db.models.BooleanField`

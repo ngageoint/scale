@@ -128,11 +128,14 @@ class FailedJobs(CommandMessage):
             for failed_job in job_list:
                 job_ids.append(failed_job.job_id)
 
+        root_recipe_ids = set()
         with transaction.atomic():
             # Retrieve locked job models
             job_models = {}
             for job in Job.objects.get_locked_jobs(job_ids):
                 job_models[job.id] = job
+                if job.root_recipe_id:
+                    root_recipe_ids.add(job.root_recipe_id)
 
             # Get job models with related fields
             # TODO: once long running job types are gone, the related fields are not needed
@@ -170,11 +173,9 @@ class FailedJobs(CommandMessage):
                     all_failed_job_ids.extend(failed_job_ids)
 
             # Need to update recipes of failed jobs so that dependent jobs are BLOCKED
-            if all_failed_job_ids:
-                from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
-
-                msgs = create_update_recipes_messages_from_jobs(all_failed_job_ids)
-                self.new_messages.extend(msgs)
+            if root_recipe_ids:
+                from recipe.messages.update_recipe import create_update_recipe_messages_from_node
+                self.new_messages.extend(create_update_recipe_messages_from_node(root_recipe_ids))
 
             # Place jobs to retry back onto the queue
             if jobs_to_retry:

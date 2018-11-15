@@ -315,6 +315,7 @@ class JobData(object):
             x['value'] = self._new_data.values[x['name']].value
             x['type'] = 'property'
             inputs.append(x)
+            
         return inputs
 
     def extend_interface_with_inputs(self, interface, job_files):
@@ -361,7 +362,7 @@ class JobData(object):
         for file_input in self._new_data.values.values():
             if isinstance(file_input, FileValue):
                 env_var_name = normalize_env_var_name(file_input.name)
-                if len(file_input.file_ids) > 1:
+                if file_input.multiple:
                     # When we have input for multiple files, map in the entire directory
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
                 else:

@@ -26,7 +26,7 @@ from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
-from job.exceptions import InvalidJobField
+from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobSerializerV5, JobSerializerV6,
                              JobDetailsSerializerV5, JobDetailsSerializerV6,
@@ -290,6 +290,9 @@ class JobTypesView(ListCreateAPIView):
         # Validate the job interface / manifest
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
 
+        # If editing an existing job type, automatically update recipes containing said job type
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+
         manifest = None
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
@@ -311,7 +314,7 @@ class JobTypesView(ListCreateAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Check for invalid fields
-        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
+        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest', 'auto_update'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
@@ -346,7 +349,8 @@ class JobTypesView(ListCreateAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
-                                                 configuration=configuration)
+                                                 configuration=configuration,
+                                                 auto_update=auto_update)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', existing_job_type.id)
                 raise BadParameter(unicode(ex))
@@ -408,6 +412,9 @@ class JobTypeIDDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
+        if job_type.is_seed_job_type():
+            job_type.manifest = JobType.objects.convert_manifest_to_v5_interface(job_type.manifest)
+
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
@@ -437,7 +444,8 @@ class JobTypeIDDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
+                
+                
         # Validate the job interface
         interface_dict = rest_util.parse_dict(request, 'interface', required=False)
         interface = None
@@ -592,6 +600,7 @@ class JobTypeVersionsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+
 class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a version of a job type."""
     queryset = JobType.objects.all()
@@ -633,7 +642,10 @@ class JobTypeDetailsView(GenericAPIView):
             job_type = JobType.objects.get_details_v6(name, version)
         except JobType.DoesNotExist:
             raise Http404
-
+        except NonSeedJobType as ex:
+            logger.exception('Attempting to use v6 interface for non seed image with name=%s, version=%s', name, version)
+            raise BadParameter(unicode(ex))
+            
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
@@ -664,6 +676,7 @@ class JobTypeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
@@ -695,7 +708,7 @@ class JobTypeDetailsView(GenericAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None,
                                                  docker_image=None, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
-                                                 configuration=configuration)
+                                                 configuration=configuration, auto_update=auto_update)
         except (InvalidJobField, InvalidSecretsConfiguration, ValueError,
                 InvalidJobConfiguration, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
@@ -751,6 +764,7 @@ class JobTypeRevisionsView(ListAPIView):
         page = self.paginate_queryset(job_type_revisions)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
 
 class JobTypeRevisionDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a version of a job type."""
@@ -1114,6 +1128,15 @@ class JobsView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
+        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
+        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
+        rest_util.check_time_range(source_started, source_ended)
+
+        source_sensor_classes = rest_util.parse_string_list(request, 'source_sensor_class', required=False)
+        source_sensors = rest_util.parse_string_list(request, 'source_sensor', required=False)
+        source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
+        source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
+
         statuses = rest_util.parse_string_list(request, 'status', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
@@ -1126,7 +1149,11 @@ class JobsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+        jobs = Job.objects.get_jobs_v6( started=started, ended=ended,
+                                       source_started=source_started, source_ended=source_ended,
+                                       source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
+                                       source_collections=source_collections, source_tasks=source_tasks,
+                                       statuses=statuses, job_ids=job_ids,
                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
                                        error_categories=error_categories, error_ids=error_ids,

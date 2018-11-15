@@ -3,53 +3,52 @@ info:
   title: Scan Services
   version: v6
 paths:
-  /v6/scans/:
+  /scans/:
     get:
       operationId: _rest_v6_scan_list
       summary: Scan List
       description: Returns a list of all scan processes
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: name
           schema:
             type: string
-          description: Return only Scan processes with a given name. |
+          description: Return only Scan processes with a given name.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -66,59 +65,36 @@ paths:
               $ref: '#/components/schemas/scan_post'
       responses:
         '201':
-          description: |-
-            The 201 CREATED response indicates a successful request 
+          description: The 201 CREATED response indicates a successful request 
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/scan_details'
                 
-  /v6/scans/{id}/:
+  /scans/{id}/:
     get:
       operationId: _rest_v6_scan_details
       summary: Scan Details
       description: Returns a specific scan process and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
           description: id of an existing scan process
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/scan_details'
-  /v6/scans/validation/:
-    post:
-      operationId: _rest_v6_scan_validate
-      summary: Validate Scan
-      description: Validates a new Scan process configuration without actually saving it.  
-      requestBody:
-        required: true
-        content:
-          application/json: 
-            schema:
-              $ref: '#/components/schemas/scan_process'
-      responses:
-        '200':
-          description: |-
-            The 200 OK response indicates a valid scan configuration 
-          content:
-            application/json: 
-              schema:
-                $ref: '#/components/schemas/validation'
-            
-  /v6/scans/{id}/:
     patch:
       operationId: _rest_v6_scan_edit
       summary: Edit Scan
       description: Edits an existing Scan process with associated configuration. 
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -131,16 +107,34 @@ paths:
               $ref: '#/components/schemas/scan_post'
       responses:
         '204':
-          description: |-
-            The 204 No content response indicates a successful edit 
+          description: The 204 No content response indicates a successful edit 
+
+  /scans/validation/:
+    post:
+      operationId: _rest_v6_scan_validate
+      summary: Validate Scan
+      description: Validates a new Scan process configuration without actually saving it.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_process'
+      responses:
+        '200':
+          description: The 200 OK response indicates a valid scan configuration 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/validation'
             
-  /v6/scans/{id}/process/:
+  /scans/{id}/process/:
     patch:
       operationId: _rest_v6_scan_process
       summary: Process Scan
       description: Launches an existing Scan with associated configuration    
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -153,8 +147,7 @@ paths:
               $ref: '#/components/schemas/scan_process'
       responses:
         '201':
-          description: |-
-            The 201 CREATED response indicates a successful request  
+          description: The 201 CREATED response indicates a successful request  
           content:
             application/json: 
               schema:
@@ -231,7 +224,7 @@ components:
       properties:
         title:
           type: string
-          description: The human readable display name of the Scan process. |
+          description: The human readable display name of the Scan process.
             This will be used to generate the name field
           example: My Scan Process
         description:
@@ -247,7 +240,7 @@ components:
       properties:
         ingest:
           type: boolean
-          description: Whether a dry run or ingest triggering scan should be run. |
+          description: Whether a dry run or ingest triggering scan should be run.
             Defaults to false when unset.
           example: true
           
@@ -256,9 +249,9 @@ components:
         - ref: '#/components/schemas/scan_base'
         - title: Scan Details
         - type: object
-        properties: 
-          configuration:
-            $ref: '#/components/schemas/scan_config'
+          properties: 
+            configuration:
+              $ref: '#/components/schemas/scan_config'
           
     scan_config:
       title: Scan Configuration
@@ -266,17 +259,17 @@ components:
       properties:
         workspace:
           type: string
-          description: The workspace field is a required string that specifies |
-            the name of the workspace that is being scanned. The type of the |
-            workspace (its broker type) will determine which types of monitor |
+          description: The workspace field is a required string that specifies
+            the name of the workspace that is being scanned. The type of the
+            workspace (its broker type) will determine which types of monitor
             can be used.
           example: my-host-workspace
         scanner:
           $ref: '#/components/schemas/scanner'
         recursive:
           type: boolean
-          description: Indicates whether a scanner should be limited to the root |
-            of a workspace or traverse the entire tree. If ommitted, the default |
+          description: Indicates whether a scanner should be limited to the root
+            of a workspace or traverse the entire tree. If ommitted, the default
             is true for full tree recursion.
         files_to_ingest:
           type: array

@@ -158,7 +158,7 @@ COMPLETE_MANIFEST = {
 MINIMUM_MANIFEST = {
     'seedVersion': '1.0.0',
     'job': {
-        'name': 'my-job',
+        'name': 'my-minimum-job',
         'jobVersion': '1.0.0',
         'packageVersion': '1.0.0',
         'title': 'My first job',
@@ -273,7 +273,7 @@ def create_clock_event(rule=None, occurred=None):
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None,
-               superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, save=True):
+               superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, recipe=None, save=True):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -288,25 +288,18 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
         last_status_change = timezone.now()
     if num_exes == 0:
         input_file_size = None
-    if not input:
-        if num_exes == 0:
-            input = {}
-        else:
-            input = {
-                'version': '1.0',
-                'input_data': [],
-                'output_data': [],
-            }
-    if not output:
-        output = dict()
 
     if superseded_job and not superseded_job.is_superseded:
         Job.objects.supersede_jobs_old([superseded_job], timezone.now())
     if is_superseded and not superseded:
         superseded = timezone.now()
 
+    recipe_id = recipe.id if recipe else None
+    root_recipe_id = recipe.root_superseded_recipe_id if recipe else None
+
     job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
-    job = Job.objects.create_job_v6(job_type_rev, event.id, superseded_job=superseded_job)
+    job = Job.objects.create_job_v6(job_type_rev, event.id, superseded_job=superseded_job, recipe_id=recipe_id,
+                                    root_recipe_id=root_recipe_id)
     job.priority = priority
     job.input = input
     job.status = status
@@ -423,11 +416,32 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                 'interface': {
                     'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
                     'inputs': {
-                        'files': [{'name': 'INPUT_IMAGE'}]
+                        'files': [{'name': 'INPUT_IMAGE', 'mediaTypes': ['image/png'], 'required': True}]
                     },
                     'outputs': {
-                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png'}]
-                    }
+                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png'}]
+                    },
+                    'mounts': [
+                      {
+                        'name': 'MOUNT_PATH',
+                        'path': '/the/container/path',
+                        'mode': 'ro'
+                      }
+                    ],
+                    'settings': [
+                      {
+                        'name': 'VERSION',
+                        'secret': False
+                      },
+                      {
+                        'name': 'DB_HOST',
+                        'secret': False
+                      },
+                      {
+                        'name': 'DB_PASS',
+                       'secret': True
+                      }
+                    ]
                 },
                 'resources': {
                     'scalar': [
@@ -448,7 +462,17 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
         }
 
     if not trigger_rule:
-        trigger_rule = trigger_test_utils.create_trigger_rule()
+        trig_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'INPUT_IMAGE',
+                'workspace_name': storage_test_utils.create_workspace().name,
+            }
+        }
+        trigger_rule = trigger_test_utils.create_trigger_rule(configuration=trig_config)
 
     if not configuration:
         configuration = {

@@ -119,7 +119,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
             },
         }
         self.trigger_rule = trigger_test_utils.create_trigger_rule(configuration=recipe_trigger_config)
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1,
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v5(definition=definition_1,
                                                                   trigger_rule=self.trigger_rule)
 
 

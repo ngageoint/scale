@@ -121,6 +121,15 @@ class UpdateRecipeMetrics(CommandMessage):
         # If any of these recipes are sub-recipes, update the metrics of the recipes that contain these
         self.new_messages.extend(create_update_recipe_metrics_messages_from_sub_recipes(self._recipe_ids))
 
+        # If any of these recipes are sub-recipes, grab root recipe IDs and update those recipes
+        root_recipe_ids = set()
+        for recipe in Recipe.objects.filter(id__in=self._recipe_ids):
+            if recipe.root_recipe_id:
+                root_recipe_ids.add(recipe.root_recipe_id)
+        if root_recipe_ids:
+            from recipe.messages.update_recipe import create_update_recipe_messages_from_node
+            self.new_messages.extend(create_update_recipe_messages_from_node(root_recipe_ids))
+
         # For any top-level recipes (not a sub-recipe) update any batches that these recipes belong to
         from batch.messages.update_batch_metrics import create_update_batch_metrics_messages
         batch_ids = set()

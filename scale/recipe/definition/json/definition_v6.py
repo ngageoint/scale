@@ -1,15 +1,19 @@
 """Manages the v6 recipe definition schema"""
 from __future__ import unicode_literals
 
+import copy
+
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from data.filter.filter import DataFilter
+from data.interface.interface import Interface
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA, convert_interface_to_v6_json, InterfaceV6
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v1 import RecipeDefinitionV1
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from util.rest import strip_schema_version
 
 
@@ -93,10 +97,24 @@ RECIPE_DEFINITION_SCHEMA = {
                 'node_type': {
                     'description': 'The type of the node',
                     'oneOf': [
+                        {'$ref': '#/definitions/condition_node'},
                         {'$ref': '#/definitions/job_node'},
                         {'$ref': '#/definitions/recipe_node'},
                     ],
                 },
+            },
+        },
+        'condition_node': {
+            'description': 'A condition node in the recipe graph',
+            'type': 'object',
+            'required': ['node_type', 'interface'],
+            'additionalProperties': False,
+            'properties': {
+                'node_type': {
+                    'description': 'The name of the node type',
+                    'enum': ['condition'],
+                },
+                'interface': INTERFACE_SCHEMA,
             },
         },
         'job_node': {
@@ -198,7 +216,11 @@ def convert_node_to_v6_json(node):
             conn_dict = {'type': 'recipe', 'input': connection.recipe_input_name}
         input_dict[connection.input_name] = conn_dict
 
-    if isinstance(node, JobNodeDefinition):
+    if isinstance(node, ConditionNodeDefinition):
+        # TODO: complete recipe condition implementation
+        interface_dict = convert_interface_to_v6_json(node.input_interface).get_dict()
+        node_type_dict = {'node_type': 'condition', 'interface': interface_dict}
+    elif isinstance(node, JobNodeDefinition):
         node_type_dict = {'node_type': 'job', 'job_type_name': node.job_type_name,
                           'job_type_version': node.job_type_version, 'job_type_revision': node.revision_num}
     elif isinstance(node, RecipeNodeDefinition):
@@ -221,12 +243,12 @@ class RecipeDefinitionV6(object):
         :param do_validate: Whether to perform validation on the JSON schema
         :type do_validate: bool
 
-        :raises :class:`recipe.definition.exceptions.InvalidDdefinition`: If the given definition is invalid
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the given definition is invalid
         """
 
         if not definition:
             definition = {}
-        self._definition = definition
+        self._definition = copy.deepcopy(definition)
 
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION
@@ -256,7 +278,11 @@ class RecipeDefinitionV6(object):
         # Add all nodes to definition first
         for node_name, node_dict in self._definition['nodes'].items():
             node_type_dict = node_dict['node_type']
-            if node_type_dict['node_type'] == 'job':
+            if node_type_dict['node_type'] == 'condition':
+                # TODO: complete recipe condition implementation
+                cond_interface_json = InterfaceV6(node_type_dict['interface'], do_validate=False)
+                definition.add_condition_node(node_name, cond_interface_json.get_interface(), DataFilter(True))
+            elif node_type_dict['node_type'] == 'job':
                 definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_version'],
                                         node_type_dict['job_type_revision'])
             elif node_type_dict['node_type'] == 'recipe':
@@ -288,7 +314,7 @@ class RecipeDefinitionV6(object):
     def _convert_from_v1(self):
         """Converts the JSON dict from v1 to the current version
 
-        :raises :class:`recipe.definition.exceptions.InvalidDdefinition`: If the given definition is invalid
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the given definition is invalid
         """
 
         v1_json_dict = RecipeDefinitionV1(self._definition).get_dict()

@@ -6,6 +6,7 @@ from jsonschema.exceptions import ValidationError
 
 from batch.definition.definition import BatchDefinition
 from batch.definition.exceptions import InvalidDefinition
+from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
 
 
 SCHEMA_VERSION = '6'
@@ -34,16 +35,9 @@ BATCH_DEFINITION_SCHEMA = {
                     'description': 'The root ID of the previous batch',
                     'type': 'integer',
                 },
-                'job_names': {
-                    'description': 'A list of job names that should be re-processed',
-                    'type': ['array'],
-                    'items': {
-                        'type': 'string',
-                    },
-                },
-                'all_jobs': {
-                    'description': 'A flag that indicates all jobs should be re-processed',
-                    'type': 'boolean',
+                'forced_nodes': {
+                    'description': 'The recipe nodes that should be forced to re-process',
+                    'type': 'object',
                 },
             },
         },
@@ -62,8 +56,10 @@ def convert_definition_to_v6(definition):
 
     json_dict = {'version': '6'}
     if definition.root_batch_id is not None:
-        json_dict['previous_batch'] = {'root_batch_id': definition.root_batch_id, 'job_names': definition.job_names,
-                                       'all_jobs': definition.all_jobs}
+        prev_batch_dict = {'root_batch_id': definition.root_batch_id}
+        if definition.forced_nodes:
+            prev_batch_dict['forced_nodes'] = convert_forced_nodes_to_v6(definition.forced_nodes).get_dict()
+        json_dict['previous_batch'] = prev_batch_dict
     return BatchDefinitionV6(definition=json_dict, do_validate=False)
 
 
@@ -95,6 +91,8 @@ class BatchDefinitionV6(object):
         try:
             if do_validate:
                 validate(self._definition, BATCH_DEFINITION_SCHEMA)
+                if 'forced_nodes' in self._definition:
+                    ForcedNodesV6(self._definition['forced_nodes'], do_validate=True)
         except ValidationError as ex:
             raise InvalidDefinition('INVALID_BATCH_DEFINITION', 'Invalid batch definition: %s' % unicode(ex))
 
@@ -109,10 +107,8 @@ class BatchDefinitionV6(object):
         if 'previous_batch' in self._definition:
             prev_batch_dict = self._definition['previous_batch']
             definition.root_batch_id = prev_batch_dict['root_batch_id']
-            if 'job_names' in prev_batch_dict:
-                definition.job_names = prev_batch_dict['job_names']
-            if 'all_jobs' in prev_batch_dict:
-                definition.all_jobs = prev_batch_dict['all_jobs']
+            if 'forced_nodes' in prev_batch_dict:
+                definition.forced_nodes = ForcedNodesV6(prev_batch_dict['forced_nodes']).get_forced_nodes()
 
         return definition
 

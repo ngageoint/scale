@@ -1,9 +1,8 @@
-from recipe.configuration.data.recipe_connection import LegacyRecipeConnection
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
-from recipe.seed.recipe_connection import RecipeConnection
+from recipe.definition.definition import RecipeDefinition
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.seed.recipe_data import RecipeData
-from recipe.seed.recipe_definition import RecipeDefinition
 
 
 class RecipeDefinitionSunset(object):
@@ -22,7 +21,7 @@ class RecipeDefinitionSunset(object):
                 :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
         if RecipeDefinitionSunset.is_seed_dict(definition_dict):
-            return RecipeDefinition(definition_dict)
+            return RecipeDefinitionV6(definition=definition_dict, do_validate=False).get_definition()
         else:
             return LegacyRecipeDefinition(definition_dict)
 
@@ -49,26 +48,6 @@ class RecipeDefinitionSunset(object):
         """
         return isinstance(definition, RecipeDefinition)
 
-
-class RecipeConnectionSunset(object):
-    """Class responsible for providing backward compatibility for old RecipeConnection interfaces as well as new Seed
-    compliant connections.
-    """
-
-    @staticmethod
-    def create(definition):
-        """Instantiate an appropriately typed Recipe connection based on interface type
-
-        :param definition: instantiated Recipe definition
-        :type definition: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition_1_0` or
-                          :class:`recipe.seed.recipe_definition.RecipeDefinition`
-        :return:
-        """
-
-        if RecipeDefinitionSunset.is_seed(definition):
-            return RecipeConnection()
-        else:
-            return LegacyRecipeConnection()
 
 class RecipeDataSunset(object):
     """Class responsible for providing backward compatibility for old RecipeData interfaces as well as new Seed

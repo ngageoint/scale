@@ -24,6 +24,8 @@ MODEL_BATCH_SIZE = 500  # Maximum batch size for creating models
 logger = logging.getLogger(__name__)
 
 
+# TODO: this command message is deprecated and will be removed in v6. Please use the create_recipes command message
+# instead
 def create_reprocess_recipes_messages(root_recipe_ids, revision_id, event_id, all_jobs=False, job_names=None,
                                       batch_id=None):
     """Creates messages to reprocess the given root recipes

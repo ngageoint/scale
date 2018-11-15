@@ -1,7 +1,6 @@
 """Defines the classes that handle processing job and execution configuration"""
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
-import json
 import logging
 import math
 
@@ -73,7 +72,7 @@ class QueuedExecutionConfigurator(object):
             task_workspaces = QueuedExecutionConfigurator._system_job_workspaces(job)
         else:
             # Set any output workspaces needed
-            if 'version' in job.input and job.input['version'] == '1.0':
+            if job.input and 'version' in job.input and job.input['version'] == '1.0':
                 # Set output workspaces using legacy job data
                 self._cache_workspace_names(data.get_output_workspace_ids())
                 output_workspaces = {}
@@ -198,6 +197,7 @@ class QueuedExecutionConfigurator(object):
 
         # Configure Scale Delete Files workspaces based on input workspaces
         if job.job_type.name == 'scale-delete-files':
+            import json
             wrkspc_list = json.loads(data.get_property_values(['workspaces'])['workspaces'])
             workspaces = {w_name: TaskWorkspace(w_name, MODE_RW) for d in wrkspc_list for w_name, _v in d.items()}
 

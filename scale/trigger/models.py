@@ -42,6 +42,18 @@ class TriggerEventManager(models.Manager):
 
         return event
 
+    def get_locked_event(self, event_id):
+        """Locks and returns the event model for the given ID with no related fields. Caller must be within an atomic
+        transaction.
+
+        :param event_id: The event ID
+        :type event_id: int
+        :returns: The event model
+        :rtype: :class:`event.models.TriggerEvent`
+        """
+
+        return self.select_for_update().get(id=event_id)
+
 
 class TriggerEvent(models.Model):
     """Represents an event where a trigger occurred

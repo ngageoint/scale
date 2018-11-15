@@ -103,21 +103,21 @@ class DependencyInputConnection(InputConnection):
         self.output_name = output_name
 
     def add_parameter_to_interface(self, interface, recipe_input_interface, node_output_interfaces):
-        """See :meth:`recipe.handlers.connection.InputConnection.add_parameter_to_interface`
+        """See :meth:`recipe.definition.connection.InputConnection.add_parameter_to_interface`
         """
 
         output_interface = node_output_interfaces[self.node_name]
         return interface.add_parameter_from_output_interface(self.input_name, self.output_name, output_interface)
 
     def add_value_to_data(self, data, recipe_input_data, node_outputs):
-        """See :meth:`recipe.handlers.connection.InputConnection.add_value_to_data`
+        """See :meth:`recipe.definition.connection.InputConnection.add_value_to_data`
         """
 
         output_data = node_outputs[self.node_name].output_data
         data.add_value_from_output_data(self.input_name, self.output_name, output_data)
 
     def is_equal_to(self, connection):
-        """See :meth:`recipe.handlers.connection.InputConnection.is_equal_to`
+        """See :meth:`recipe.definition.connection.InputConnection.is_equal_to`
         """
 
         if not isinstance(connection, DependencyInputConnection):
@@ -130,7 +130,7 @@ class DependencyInputConnection(InputConnection):
         return same_input_name and same_node_name and same_output_name
 
     def validate(self, all_dependencies):
-        """See :meth:`recipe.handlers.connection.InputConnection.validate`
+        """See :meth:`recipe.definition.connection.InputConnection.validate`
         """
 
         # Check that the connection's dependency is met
@@ -159,20 +159,20 @@ class RecipeInputConnection(InputConnection):
         self.recipe_input_name = recipe_input_name
 
     def add_parameter_to_interface(self, interface, recipe_input_interface, node_output_interfaces):
-        """See :meth:`recipe.handlers.connection.InputConnection.add_parameter_to_interface`
+        """See :meth:`recipe.definition.connection.InputConnection.add_parameter_to_interface`
         """
 
         return interface.add_parameter_from_output_interface(self.input_name, self.recipe_input_name,
                                                              recipe_input_interface)
 
     def add_value_to_data(self, data, recipe_input_data, node_outputs):
-        """See :meth:`recipe.handlers.connection.InputConnection.add_value_to_data`
+        """See :meth:`recipe.definition.connection.InputConnection.add_value_to_data`
         """
 
         data.add_value_from_output_data(self.input_name, self.recipe_input_name, recipe_input_data)
 
     def is_equal_to(self, connection):
-        """See :meth:`recipe.handlers.connection.InputConnection.is_equal_to`
+        """See :meth:`recipe.definition.connection.InputConnection.is_equal_to`
         """
 
         if not isinstance(connection, RecipeInputConnection):
@@ -183,7 +183,7 @@ class RecipeInputConnection(InputConnection):
         return same_input_name and same_recipe_input_name
 
     def validate(self, all_dependencies):
-        """See :meth:`recipe.handlers.connection.InputConnection.validate`
+        """See :meth:`recipe.definition.connection.InputConnection.validate`
         """
 
         return []

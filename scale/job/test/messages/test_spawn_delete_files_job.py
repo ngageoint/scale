@@ -6,6 +6,7 @@ from django.test import TransactionTestCase
 from job.messages.spawn_delete_files_job import create_spawn_delete_files_job, SpawnDeleteFilesJob
 from job.models import Job, JobType
 from job.test import utils as job_test_utils
+from storage.models import PurgeResults
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
 
@@ -26,13 +27,16 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         self.prod1 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp1, job_exe=self.job_exe)
         self.prod2 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp1, job_exe=self.job_exe)
         self.prod3 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp2, job_exe=self.job_exe)
+        self.file_1 = storage_test_utils.create_file(file_type='SOURCE')
         self.event = trigger_test_utils.create_trigger_event()
-    
+        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.event)
+
     def test_json(self):
         """Tests coverting a SpawnDeleteFilesJob message to and from JSON"""
 
         # Make the message
-        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id, purge=True)
+        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id,
+                                                source_file_id=self.file_1.id, purge=True)
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -53,7 +57,8 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
 
         # Make the message
-        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id, purge=True)
+        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id,
+                                                source_file_id=self.file_1.id, purge=True)
 
         # Capture message that creates job
         result = message.execute()
@@ -71,7 +76,28 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
         job_id = 1234574223462
         # Make the message
-        message = create_spawn_delete_files_job(job_id=job_id, trigger_id=self.event.id, purge=True)
+        message = create_spawn_delete_files_job(job_id=job_id, trigger_id=self.event.id,
+                                                source_file_id=self.file_1.id, purge=True)
+
+        # Capture message that creates job
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Check that no message was created
+        self.assertEqual(len(message.new_messages), 0)
+
+    def test_execute_force_stop(self):
+        """Tests calling SpawnDeleteFilesJob.execute with the force stop flag set"""
+
+        file_2 = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=file_2.id, trigger_event=trigger, force_stop_purge=True)
+
+        job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
+        job_id = 1234574223462
+        # Make the message
+        message = create_spawn_delete_files_job(job_id=job_id, trigger_id=trigger.id,
+                                                source_file_id=self.file_1.id, purge=True)
 
         # Capture message that creates job
         result = message.execute()

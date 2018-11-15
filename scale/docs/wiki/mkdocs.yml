@@ -1,0 +1,68 @@
+site_name: Scale Documentation
+
+theme:
+  name: 'material'
+  logo: 'http://ngageoint.github.io/scale/images/scale3-transparent-128.png'
+  palette:
+    primary: 'white'
+    accent: 'red'
+    
+markdown_extensions:
+  - pymdownx.details
+  - toc:
+      permalink: true
+  - codehilite:
+      linenums: true
+    
+# Adds link to repo in header
+repo_name: 'ngageoint/scale'
+repo_url: 'https://github.com/ngageoint/scale'
+
+# Disables the 'edit' button on all pages
+edit_uri: ''
+
+# Relative path to where the markdown files are located
+docs_dir: './scale.wiki/'
+
+# Defines the structure of the navigation tree
+nav:
+    - 'Home': 'Home.md'
+    - 'Architecture':
+      - 'Overview': 'Architecture-Overview.md'
+      - 'Jobs and Recipes':
+        - 'Batches': 'Batches.md'
+        - 'Errors': 'Errors.md'
+        - 'Jobs':
+          - 'Job Interface': 'Job-Interface.md'
+          - 'Job Configuration': 'Job-Configuration.md'
+          - 'Job Data': 'Job-Data.md'
+          - 'Job Execution': 'Job-Execution.md'
+          - 'Resources': 'Resources.md'
+          - 'Task Results': 'Task-Results.md'
+        - 'Recipes':
+          - 'Recipe Definition': 'Recipe-Definition.md'
+          - 'Recipe Data': 'Recipe-Data.md'
+      - 'ElasticSearch Logs': 'ElasticSearch-Logs.md'
+      - 'Import/Export': 'Import-and-Export.md'
+      - 'Messaging System': 'Messaging-System.md'
+      - 'Scan': 'Scan.md'
+      - 'Strike': 'Strike.md'
+      - 'Triggers': 'Triggers.md'
+      - 'Workspaces': 'Workspaces.md'
+#     # Placeholder until the algorithm docs are rewritten for seed
+#     - 'Algorithm Integration':
+#       - '???': 'asdf.md'
+    - 'Developer Notes':
+      - 'ElasticSearch':
+        - 'Upgrading ElasticSearch': 'Upgrading-ElasticSearch-for-Scale.md'
+        - 'Automated Snapshots for Elasticsearch': 'Setting-up-Automated-Snapshots-for-Elasticsearch.md'
+      - 'Developing Scale': 'Developing-Scale.md'
+      - 'Command Messages': 'Command-Messages.md'
+      - 'Priority List': 'Priority-List.md'
+      - 'Working Release Notes': 'Working-Release-Notes.md'
+    - 'Installing Scale': 'Installing-Scale.md'
+    # Placeholder until new REST API docs are deployed in master
+    # - 'REST API': 'some-custom-page.md'
+    
+# The `pages` section will be auto generated with all current Scale/Wiki pages and added to the
+# end of this file when running `build_wiki_docs.py`

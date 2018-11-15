@@ -13,7 +13,9 @@ from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
-from recipe.messages.process_recipe_input import ProcessRecipeInput
+from recipe.diff.forced_nodes import ForcedNodes
+from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
+from recipe.messages.process_recipe_input import create_process_recipe_input_messages, ProcessRecipeInput
 from recipe.models import Recipe, RecipeInputFile, RecipeNode
 from recipe.test import utils as recipe_test_utils
 from storage.test import utils as storage_test_utils
@@ -42,7 +44,35 @@ class TestProcessRecipeInput(TransactionTestCase):
         self.assertTrue(result)
         recipe = Recipe.objects.get(id=recipe.id)
         self.assertEqual(len(new_message.new_messages), 1)
-        self.assertEqual(new_message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(new_message.new_messages[0].type, 'update_recipe')
+        self.assertEqual(new_message.new_messages[0].root_recipe_id, recipe.id)
+        # Recipe should have input_file_size set to 0 (no input files)
+        self.assertEqual(recipe.input_file_size, 0.0)
+
+    def test_json_forced_nodes(self):
+        """Tests coverting a ProcessRecipeInput message to and from JSON with forced nodes provided"""
+
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        recipe = recipe_test_utils.create_recipe(input=data_dict)
+        forced_nodes = ForcedNodes()
+        forced_nodes.set_all_nodes()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+
+        # Create message
+        message = create_process_recipe_input_messages([recipe.id], forced_nodes=forced_nodes)[0]
+
+        # Convert message to JSON and back, and then execute
+        message_json_dict = message.to_json()
+        new_message = ProcessRecipeInput.from_json(message_json_dict)
+        result = new_message.execute()
+
+        self.assertTrue(result)
+        recipe = Recipe.objects.get(id=recipe.id)
+        self.assertEqual(len(new_message.new_messages), 1)
+        msg = new_message.new_messages[0]
+        self.assertEqual(msg.type, 'update_recipe')
+        self.assertEqual(msg.root_recipe_id, recipe.id)
+        self.assertDictEqual(convert_forced_nodes_to_v6(msg.forced_nodes).get_dict(), forced_nodes_dict)
         # Recipe should have input_file_size set to 0 (no input files)
         self.assertEqual(recipe.input_file_size, 0.0)
 
@@ -58,7 +88,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         recipe_interface.add_parameter(FileParameter('input_b', ['text/plain'], multiple=True))
         definition = RecipeDefinition(recipe_interface)
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
 
         data = Data()
         data.add_value(FileValue('input_a', [file_1.id]))
@@ -75,9 +105,10 @@ class TestProcessRecipeInput(TransactionTestCase):
         self.assertTrue(result)
 
         recipe = Recipe.objects.get(id=recipe.id)
-        # Check for update_recipes message
+        # Check for update_recipe message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(message.new_messages[0].type, 'update_recipe')
+        self.assertEqual(message.new_messages[0].root_recipe_id, recipe.id)
 
         # Check recipe for expected input_file_size
         self.assertEqual(recipe.input_file_size, 1052.0)
@@ -101,9 +132,9 @@ class TestProcessRecipeInput(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        # Still should have update_recipes message
+        # Still should have update_recipe message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(message.new_messages[0].type, 'update_recipe')
 
         # Make sure recipe input file models are unchanged
         recipe_input_files = RecipeInputFile.objects.filter(recipe_id=recipe.id)
@@ -181,7 +212,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         sub_recipe_interface_c.add_parameter(JsonParameter('input_c', 'string'))
         sub_recipe_def_c = RecipeDefinition(sub_recipe_interface_c)
         sub_recipe_def_dict_c = convert_recipe_definition_to_v6_json(sub_recipe_def_c).get_dict()
-        sub_recipe_type_c = recipe_test_utils.create_recipe_type(definition=sub_recipe_def_dict_c)
+        sub_recipe_type_c = recipe_test_utils.create_recipe_type_v6(definition=sub_recipe_def_dict_c)
         sub_recipe_c = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type_c)
 
         recipe_interface = Interface()
@@ -196,7 +227,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         definition.add_dependency('node_c', 'node_b')
         definition.add_dependency_input_connection('node_c', 'input_b', 'node_b', 'output_b')
         def_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data = Data()
         recipe_data.add_value(JsonValue('recipe_input', 'hello'))
         recipe_data_dict = convert_data_to_v6_json(recipe_data).get_dict()
@@ -221,9 +252,9 @@ class TestProcessRecipeInput(TransactionTestCase):
         self.assertTrue(result)
 
         sub_recipe_c = Recipe.objects.get(id=sub_recipe_c.id)
-        # Check for update_recipes message
+        # Check for update_recipe message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(message.new_messages[0].type, 'update_recipe')
 
         # Check sub-recipe for expected input_file_size
         self.assertEqual(sub_recipe_c.input_file_size, 24469.0)
@@ -247,9 +278,9 @@ class TestProcessRecipeInput(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        # Still should have update_recipes message
+        # Still should have update_recipe message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(message.new_messages[0].type, 'update_recipe')
 
         # Make sure recipe input file models are unchanged
         input_files = RecipeInputFile.objects.filter(recipe_id=sub_recipe_c.id)
@@ -326,7 +357,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         sub_recipe_interface_c.add_parameter(FileParameter('input_b', ['image/png'], multiple=True))
         sub_recipe_def_c = RecipeDefinition(sub_recipe_interface_c)
         sub_recipe_def_dict_c = convert_recipe_definition_to_v1_json(sub_recipe_def_c).get_dict()
-        sub_recipe_type_c = recipe_test_utils.create_recipe_type(definition=sub_recipe_def_dict_c)
+        sub_recipe_type_c = recipe_test_utils.create_recipe_type_v6(definition=sub_recipe_def_dict_c)
         sub_recipe_c = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type_c)
 
         definition = RecipeDefinition(Interface())
@@ -338,7 +369,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         definition.add_dependency('node_c', 'node_b')
         definition.add_dependency_input_connection('node_c', 'input_b', 'node_b', 'output_b')
         def_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
-        recipe_type = recipe_test_utils.create_recipe_type(definition=def_dict)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=recipe_data_dict)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', job=job_a)
@@ -361,9 +392,9 @@ class TestProcessRecipeInput(TransactionTestCase):
         self.assertTrue(result)
 
         sub_recipe_c = Recipe.objects.get(id=sub_recipe_c.id)
-        # Check for update_recipes message
+        # Check for update_recipe message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(message.new_messages[0].type, 'update_recipe')
 
         # Check sub-recipe for expected input_file_size
         self.assertEqual(sub_recipe_c.input_file_size, 24469.0)
@@ -387,9 +418,9 @@ class TestProcessRecipeInput(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        # Still should have update_recipes message
+        # Still should have update_recipe message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'update_recipes')
+        self.assertEqual(message.new_messages[0].type, 'update_recipe')
 
         # Make sure recipe input file models are unchanged
         input_files = RecipeInputFile.objects.filter(recipe_id=sub_recipe_c.id)

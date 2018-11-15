@@ -6,6 +6,7 @@ import copy
 import datetime
 import logging
 import math
+import operator
 import re
 import semver
 from collections import namedtuple
@@ -18,7 +19,6 @@ from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
 import util.parse
-import trigger.handler as trigger_handler
 from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.interface import Interface
@@ -32,7 +32,7 @@ from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobC
 from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset, JobDataSunset
-from job.exceptions import InvalidJobField
+from job.exceptions import InvalidJobField, NonSeedJobType
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
@@ -40,11 +40,12 @@ from job.seed.manifest import SeedManifest
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.results.job_results import JobResults
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
+from messaging.manager import CommandMessageManager
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
-from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerMissingConfiguration
+from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util import rest as rest_utils
 from util.exceptions import RollbackTransaction
@@ -75,7 +76,7 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
-
+JobTypeKey = namedtuple('JobTypeKey', ['name', 'version'])
 
 class JobManager(models.Manager):
     """Provides additional methods for handling jobs
@@ -164,7 +165,7 @@ class JobManager(models.Manager):
 
         job = Job()
         job.job_type = job_type
-        job.job_type_rev = JobTypeRevision.objects.get_revision_old(job_type.id, job_type.revision_num)
+        job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
         job.event_id = event_id
         job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         job.recipe_id = recipe_id
@@ -187,15 +188,28 @@ class JobManager(models.Manager):
 
         return job
 
-    def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                    job_type_categories=None, batch_ids=None, recipe_ids=None, error_categories=None, error_ids=None,
-                    is_superseded=False, order=None):
+    def filter_jobs(self, started=None, ended=None, source_started=None, source_ended=None, source_sensor_classes=None,
+                    source_sensors=None, source_collections=None, source_tasks=None,statuses=None, job_ids=None, 
+                    job_type_ids=None, job_type_names=None,job_type_categories=None, batch_ids=None, recipe_ids=None, 
+                    error_categories=None, error_ids=None, is_superseded=False, order=None):
         """Returns a query for job models that filters on the given fields
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query jobs where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query jobs where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query jobs with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query jobs with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query jobs with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query jobs with the given source tasks.
+        :type source_tasks: list
         :param statuses: Query jobs with the a specific status.
         :type statuses: list
         :param job_ids: Query jobs associated with the identifier.
@@ -230,6 +244,20 @@ class JobManager(models.Manager):
             jobs = jobs.filter(last_modified__gte=started)
         if ended:
             jobs = jobs.filter(last_modified__lte=ended)
+            
+        if source_started:
+            jobs = jobs.filter(source_started__gte=source_started)
+        if source_ended:
+            jobs = jobs.filter(source_ended__lte=source_ended)
+
+        if source_sensor_classes:
+            jobs = jobs.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            jobs = jobs.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            jobs = jobs.filter(source_collection__in=source_collections)
+        if source_tasks:
+            jobs = jobs.filter(source_task__in=source_tasks)
 
         # Apply additional filters
         if statuses:
@@ -262,8 +290,8 @@ class JobManager(models.Manager):
         return jobs
 
     def filter_jobs_related_v5(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
-                            job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None,
-                            include_superseded=False, order=None):
+                               job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None,
+                               include_superseded=False, order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
         job_type, job_type_rev, event, and error fields, except for the job_type.manifest and job_type_rev.manifest
         fields.
@@ -298,7 +326,7 @@ class JobManager(models.Manager):
         if include_superseded and include_superseded == True:
             # don't filter out superseded jobs
             is_superseded = None
-            
+
         jobs = self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                 job_type_ids=job_type_ids, job_type_names=job_type_names,
                                 job_type_categories=job_type_categories, batch_ids=batch_ids,
@@ -307,10 +335,12 @@ class JobManager(models.Manager):
         jobs = jobs.select_related('job_type', 'job_type_rev', 'event', 'node', 'error')
         jobs = jobs.defer('job_type__manifest', 'job_type_rev__job_type', 'job_type_rev__manifest')
         return jobs
-        
-    def filter_jobs_related_v6(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
-                            job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None,
-                            error_ids=None, is_superseded=None, order=None):
+
+    def filter_jobs_related_v6(self, started=None, ended=None, source_started=None, source_ended=None,
+                               source_sensor_classes=None, source_sensors=None, source_collections=None,
+                               source_tasks=None, statuses=None, job_ids=None, job_type_ids=None,
+                               job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None,
+                               error_ids=None, is_superseded=None, order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
         job_type, job_type_rev, event, and error fields, except for the job_type.manifest and job_type_rev.manifest
         fields.
@@ -319,6 +349,18 @@ class JobManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query jobs where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query jobs where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query jobs with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query jobs with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query jobs with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query jobs with the given source tasks.
+        :type source_tasks: list
         :param statuses: Query jobs with the a specific execution status.
         :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
@@ -343,14 +385,16 @@ class JobManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        jobs = self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                job_type_ids=job_type_ids, job_type_names=job_type_names,
+        jobs = self.filter_jobs(started=started, ended=ended, source_started=source_started, source_ended=source_ended, 
+                                source_sensor_classes=source_sensor_classes, source_sensors=source_sensors, 
+                                source_collections=source_collections, source_tasks=source_tasks, statuses=statuses, 
+                                job_ids=job_ids, job_type_ids=job_type_ids,  job_type_names=job_type_names,
                                 batch_ids=batch_ids, recipe_ids=recipe_ids, error_ids=error_ids,
                                 error_categories=error_categories, is_superseded=is_superseded,
                                 order=order)
         jobs = jobs.select_related('job_type', 'job_type_rev', 'event', 'recipe', 'batch', 'node', 'error')
-        jobs = jobs.defer('job_type__manifest', 'job_type_rev__job_type', 'job_type_rev__manifest', 
-                            'recipe__recipe_type', 'recipe__recipe_type_rev', 'recipe__event')
+        jobs = jobs.defer('job_type__manifest', 'job_type_rev__job_type', 'job_type_rev__manifest',
+                          'recipe__recipe_type', 'recipe__recipe_type_rev', 'recipe__event')
         return jobs
 
     def get_basic_jobs(self, job_ids):
@@ -364,9 +408,9 @@ class JobManager(models.Manager):
 
         return list(self.filter(id__in=job_ids))
 
-    def get_jobs_v5(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
-                 order=None):
+    def get_jobs_v5(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
+                    job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None,
+                    include_superseded=False, order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -396,20 +440,33 @@ class JobManager(models.Manager):
         """
 
         return self.filter_jobs_related_v5(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                        job_type_categories=job_type_categories, batch_ids=batch_ids,
-                                        error_categories=error_categories, include_superseded=include_superseded,
-                                        order=order)
-                                        
-    def get_jobs_v6(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 batch_ids=None, recipe_ids=None, error_categories=None, error_ids=None, is_superseded=None,
-                 order=None):
+                                           job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                           job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                           error_categories=error_categories, include_superseded=include_superseded,
+                                           order=order)
+
+    def get_jobs_v6(self, started=None, ended=None, source_started=None, source_ended=None, source_sensor_classes=None, 
+                    source_sensors=None, source_collections=None, source_tasks=None, statuses=None, job_ids=None, 
+                    job_type_ids=None, job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None, 
+                    error_ids=None, is_superseded=None, order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query jobs where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query jobs where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query jobs with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query jobs with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query jobs with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query jobs with the given source task.
+        :type source_tasks: list
         :param statuses: Query jobs with the a specific execution status.
         :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
@@ -434,12 +491,15 @@ class JobManager(models.Manager):
         :rtype: [:class:`job.models.Job`]
         """
 
-        return self.filter_jobs_related_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
-                                        error_categories=error_categories, error_ids=error_ids,
-                                        is_superseded=is_superseded,
-                                        order=order)
+        return self.filter_jobs_related_v6(started=started, ended=ended, source_started=source_started, 
+                                           source_ended=source_ended, source_sensor_classes=source_sensor_classes, 
+                                           source_sensors=source_sensors, source_collections=source_collections, 
+                                           source_tasks=source_tasks, statuses=statuses, job_ids=job_ids,
+                                           job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                           batch_ids=batch_ids, recipe_ids=recipe_ids,
+                                           error_categories=error_categories, error_ids=error_ids,
+                                           is_superseded=is_superseded,
+                                           order=order)
 
     def get_details(self, job_id):
         """Gets additional details for the given job model based on related model attributes.
@@ -475,7 +535,7 @@ class JobManager(models.Manager):
             from recipe.models import RecipeNode
 
             recipe_job = RecipeNode.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                           'recipe__recipe_type_rev__recipe_type').get(job=job, 
+                                                           'recipe__recipe_type_rev__recipe_type').get(job=job,
                                                                                       recipe__is_superseded=False)
             job.recipe = recipe_job.recipe
         except RecipeNode.DoesNotExist:
@@ -588,8 +648,8 @@ class JobManager(models.Manager):
         if not order:
             order = ['last_status_change']
         return self.get_jobs_v5(started=started, ended=ended, statuses=statuses, job_type_ids=job_type_ids,
-                             job_type_names=job_type_names, job_type_categories=job_type_categories,
-                             include_superseded=include_superseded, order=order)
+                                job_type_names=job_type_names, job_type_categories=job_type_categories,
+                                include_superseded=include_superseded, order=order)
 
     def get_job_with_interfaces(self, job_id):
         """Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models
@@ -638,19 +698,6 @@ class JobManager(models.Manager):
         # Job models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
-    def get_locked_jobs_with_related(self, job_ids):
-        """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
-
-        :param job_ids: The job IDs
-        :type job_ids: [int]
-        :returns: The job models
-        :rtype: [:class:`job.models.Job`]
-        """
-
-        self.lock_jobs(job_ids)
-
-        return list(self.get_jobs_with_related(job_ids))
-
     def increment_max_tries(self, job_ids, when):
         """Increments the max_tries of the given jobs to be their current number of executions plus the max_tries
         setting of their associated job type.
@@ -666,41 +713,6 @@ class JobManager(models.Manager):
             qry += ' WHERE j.job_type_id = jt.id AND j.id IN %s'
             with connection.cursor() as cursor:
                 cursor.execute(qry, [when, tuple(job_ids)])
-
-    # TODO: remove this when no longer used (should be when v5 is removed)
-    def increment_max_tries_old(self, jobs):
-        """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
-        caller must have obtained model locks on the job models.
-
-        :param jobs: The jobs to update
-        :type jobs: [:class:`job.models.Job`]
-        """
-
-        modified = timezone.now()
-
-        # Update job models in memory and collect job IDs
-        job_ids = set()
-        for job in jobs:
-            job_ids.add(job.id)
-            job.max_tries = job.num_exes + 1
-            job.last_modified = modified
-
-        # Update job models in database with single query
-        self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
-
-    # TODO: remove this once get_recipe_handlers_for_jobs() is refactored
-    def lock_jobs(self, job_ids):
-        """Obtains model locks on the job models with the given IDs (in ID order to prevent deadlocks)
-
-        :param job_ids: The IDs of the jobs to lock
-        :type job_ids: [int]
-        """
-
-        # Dummy list is used here to force query execution
-        # Unfortunately this query can't usually be combined with other queries since using select_related() with
-        # select_for_update() will cause the related fields to be locked as well. This requires 2 passes, such as the
-        # two queries in get_locked_jobs_with_related().
-        list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
     def populate_job_data_v5(self, job, data):
         #TODO remove method when v5 api is removed
@@ -804,9 +816,15 @@ class JobManager(models.Manager):
         # Set input meta-data fields on the job
         # Total input file size is in MiB rounded up to the nearest whole MiB
         qry = 'UPDATE job j SET input_file_size = CEILING(s.total_file_size / (1024.0 * 1024.0)), '
-        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s FROM ('
+        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s, '
+        qry += 'source_sensor_class = s.source_sensor_class, source_sensor = s.source_sensor, '
+        qry += 'source_collection = s.source_collection, source_task = s.source_task FROM ('
         qry += 'SELECT jif.job_id, MIN(f.source_started) AS source_started, MAX(f.source_ended) AS source_ended, '
-        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size '
+        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size, '
+        qry += 'MAX(f.source_sensor_class) AS source_sensor_class, '
+        qry += 'MAX(f.source_sensor) AS source_sensor, '
+        qry += 'MAX(f.source_collection) AS source_collection, '
+        qry += 'MAX(f.source_task) AS source_task '
         qry += 'FROM scale_file f JOIN job_input_file jif ON f.id = jif.input_file_id '
         qry += 'WHERE jif.job_id = %s GROUP BY jif.job_id) s '
         qry += 'WHERE j.id = s.job_id'
@@ -1244,6 +1262,14 @@ class Job(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The end time of the source data for this job
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file for this job
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file for this job
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file for this job
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file for this job
+    :type source_task: :class:`django.db.models.CharField`
 
     :keyword created: When the job was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -1303,9 +1329,14 @@ class Job(models.Model):
     input_file_size = models.FloatField(blank=True, null=True)
     output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
-    # Optional geospatial fields
-    source_started = models.DateTimeField(blank=True, null=True)
-    source_ended = models.DateTimeField(blank=True, null=True)
+    # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
+
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)
@@ -1411,15 +1442,15 @@ class Job(models.Model):
         """
 
         return DataV6(data=self.input, do_validate=False).get_data()
-        
+
     def get_v6_input_data_json(self):
         """Returns the input data for this job as v6 json with the version stripped
 
-        :returns: The input data for this job
-        :rtype: :class:`data.data.data.Data`
+        :returns: The v6 JSON input data dict for this job
+        :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(DataV6(data=self.input, do_validate=False).get_dict())
+        return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
 
     # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
@@ -1476,16 +1507,16 @@ class Job(models.Model):
         """
 
         return DataV6(data=self.output, do_validate=False).get_data()
-        
+
     def get_v6_output_data_json(self):
         """Returns the output data for this job as v6 json with the version stripped
 
-        :returns: The output data for this job
-        :rtype: :class:`data.data.data.Data`
+        :returns: The v6 JSON output data dict for this job
+        :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(DataV6(data=self.output, do_validate=False).get_dict())
-        
+        return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_output_data()).get_dict())
+
     def get_resources(self):
         """Returns the resources required for this job
 
@@ -1548,7 +1579,7 @@ class Job(models.Model):
         """
 
         return self.get_resources().get_json().get_dict()
-        
+
     def get_v6_resources_json(self):
         """Returns the job resources in v6 of the JSON schema
 
@@ -1749,7 +1780,7 @@ class JobExecutionManager(models.Manager):
         return job_exes
 
     def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None, error_ids=None,
-                 error_categories=None, order=None):
+                     error_categories=None, order=None):
         """Returns a list of job executions for the given job.
 
         :param job_id: Query job executions associated with the job identifier.
@@ -1804,7 +1835,7 @@ class JobExecutionManager(models.Manager):
             job_exes = job_exes.filter(jobexecutionend__error_id__in=error_ids)
         if error_categories:
             job_exes = job_exes.filter(jobexecutionend__error__category__in=error_categories)
-            
+
         # Apply sorting
         if order:
             job_exes = job_exes.order_by(*order)
@@ -2102,7 +2133,7 @@ class JobExecution(models.Model):
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 
-        hits = settings.ELASTICSEARCH.search(index='_all', body=q)
+        hits = settings.ELASTICSEARCH.search(index='logstash-*', body=q)
 
         if hits['hits']['total'] == 0:
             return None, timezone.now()
@@ -2152,7 +2183,7 @@ class JobExecution(models.Model):
                                                                           self.resources))
 
         return Resources(self.resources, do_validate=False).get_node_resources()
-        
+
     def get_v6_resources_json(self):
         """Returns the resources allocated to this job execution in v6 of the JSON schema
 
@@ -2372,7 +2403,7 @@ class JobInputFileManager(models.Manager):
         """
 
         files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
-                                               file_name=file_name)
+                                                  file_name=file_name)
 
         files = files.filter(jobinputfile__job=job_id).order_by('last_modified')
 
@@ -2390,7 +2421,7 @@ class JobInputFileManager(models.Manager):
                 job_input_file_ids = [f_id for f_id, name in job_input_files]
 
             files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
-                                                   file_name=file_name)
+                                                      file_name=file_name)
 
             files = files.filter(id__in=job_input_file_ids).order_by('last_modified')
 
@@ -2512,13 +2543,12 @@ class JobTypeManager(models.Manager):
     """Provides additional methods for handling job types
     """
 
+    # TODO remove when REST API v5 is removed
     @transaction.atomic
     def create_job_type_v5(self, name, version, interface, trigger_rule=None, error_mapping=None,
-                               custom_resources=None, configuration=None, secrets=None, **kwargs):
+                           custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
-
-        # TODO remove with v5
 
         :param name: The identifying name of the job type used by clients for queries
         :type name: string
@@ -2591,12 +2621,12 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-    def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,  
-                            configuration=None):
+    def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,
+                           configuration=None):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
-        :param docker_image: The docker image containing the code to run for this job.  
+        :param docker_image: The docker image containing the code to run for this job.
         :type docker_image: string
         :param manifest: The Seed Manifest defining the interface for running a job of this type
         :type manifest: :class:`job.seed.manifest.SeedManifest`
@@ -2631,7 +2661,7 @@ class JobTypeManager(models.Manager):
         configuration.validate(manifest)
         secrets = configuration.remove_secret_settings(manifest)
         job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
-        
+
         if icon_code:
             job_type.icon_code = icon_code
         if max_scheduled:
@@ -2649,6 +2679,32 @@ class JobTypeManager(models.Manager):
 
         return job_type
 
+    # TODO: remove this when REST API v5 is removed
+    def convert_manifest_to_v5_interface(self, manifest):
+        """Parses a Seed manifest interface definition and reshapes it to match the format of the old style
+        interface.  This is done so that v5 API calls to get job details can still receive information about
+        new Seed style job types.
+
+        :param manifest: The Seed Manifest interface definition
+        :type manifest: dict
+        :returns: The converted manifest
+        :rtype: dict
+        """
+
+        manifest = manifest['job']['interface'] if ('job' in manifest) and ('interface' in manifest['job']) else {}
+
+        interface = {}
+        interface['settings'] = manifest['settings'] if 'settings' in manifest else []
+        interface['mounts'] = manifest['mounts'] if 'mounts' in manifest else []
+        interface['output_data'] = manifest['outputs']['files'] if ('outputs' in manifest) and ('files' in manifest['outputs']) else []
+        interface['input_data'] = manifest['inputs']['files'] if ('inputs' in manifest) and ('files' in manifest['inputs']) else []
+        interface['env_vars'] = manifest['inputs']['json'] if ('inputs' in manifest) and ('json' in manifest['inputs']) else []
+        interface['shared_resources'] = []
+        interface['version'] = '1.4'
+        interface['command'] = ''
+        interface['command_arguments'] = manifest['command'] if 'command' in manifest else ''
+
+        return interface
 
     @transaction.atomic
     def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
@@ -2692,17 +2748,26 @@ class JobTypeManager(models.Manager):
                 raise Exception('%s is not an editable field' % field_name)
         self._validate_job_type_fields(**kwargs)
 
-        recipe_types = []
-        if interface:
-            # Lock all recipe types so they can be validated after changing job type interface
-            from recipe.models import RecipeType
-            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
-
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
         if job_type.is_system:
             if len(kwargs) > 1 or 'is_paused' not in kwargs:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
+                
+        # Check for backdoor editing of seed job types
+        if job_type.is_seed_job_type():
+            v6_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
+            for field_name in kwargs:
+                if field_name not in v6_fields:
+                    raise InvalidJobField('Invalid field: %s \n Only the following fields are editable for seed job types: %s ' % (field_name, v6_fields))
+            if interface or trigger_rule or remove_trigger_rule or error_mapping or custom_resources or secrets:
+                raise InvalidJobField('Only the following fields are editable for seed job types: %s ' % v6_fields)
+                
+        recipe_types = []
+        if interface:
+            # Lock all recipe types so they can be validated after changing job type interface
+            from recipe.models import RecipeType
+            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
 
         if interface:
             # New job interface, validate all existing recipes
@@ -2755,17 +2820,17 @@ class JobTypeManager(models.Manager):
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
     @transaction.atomic
-    def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None, 
-                            is_paused=None, max_scheduled=None, configuration=None):
-        """Edits the given job type and saves the changes in the database. 
+    def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None,
+                         is_paused=None, max_scheduled=None, configuration=None, auto_update=None):
+        """Edits the given job type and saves the changes in the database.
         All database changes occur in an atomic transaction. An argument of None for a field
-        indicates that the field should not change. 
+        indicates that the field should not change.
 
         :param job_type_id: The unique identifier of the job type to edit
         :type job_type_id: int
         :param manifest: The Seed Manifest defining the interface for running a job of this type
         :type manifest: :class:`job.seed.manifest.SeedManifest`
-        :param docker_image: The docker image containing the code to run for this job.  
+        :param docker_image: The docker image containing the code to run for this job.
         :type docker_image: string
         :param icon_code: A font-awesome icon code to use when representing this job type.
         :type icon_code: string
@@ -2777,9 +2842,13 @@ class JobTypeManager(models.Manager):
         :type max_scheduled: integer
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param auto_update: If true, recipes that contain this job type will automatically be updated
+        :type auto_update: bool
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
+        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message
+        from recipe.models import RecipeTypeJobLink
 
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
@@ -2819,7 +2888,7 @@ class JobTypeManager(models.Manager):
             job_type.is_paused = is_paused
         if max_scheduled:
             job_type.max_scheduled = max_scheduled
-        
+
         job_type.save()
 
         # Save any secrets to Vault
@@ -2829,6 +2898,11 @@ class JobTypeManager(models.Manager):
         if manifest:
             # Create new revision of the job type for new interface
             JobTypeRevision.objects.create_job_type_revision(job_type)
+            # Update recipes containing this job type
+            if auto_update:
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_job_update_recipe_definition_message(id, job_type.id) for id in recipe_ids]
+                CommandMessageManager().send_messages(msgs)
 
     def get_by_natural_key(self, name, version):
         """Django method to retrieve a job type for the given natural key
@@ -2898,7 +2972,7 @@ class JobTypeManager(models.Manager):
         else:
             job_types = job_types.order_by('last_modified')
         return job_types
-        
+
     def get_job_types_v6(self, keyword=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
@@ -2953,7 +3027,27 @@ class JobTypeManager(models.Manager):
             job_type.num_versions = num_versions_by_id[job_type.id]
             results.append(job_type)
         return results
+        
+    def get_recipe_job_type_ids(self, definition):
+        """Gets the model ids of the job types contained in the given RecipeDefinition
 
+        :param definition: RecipeDefinition to search for job types
+        :type definition: :class:`recipe.definition.definition.RecipeDefinition`
+        :returns: set of JobType ids
+        :rtype: set[int]
+        """
+        
+        types = definition.get_job_type_keys()
+        ids = []
+        if types:
+            query = reduce(
+                operator.or_,
+                (Q(name=type.name, version=type.version) for type in types)
+                )
+            ids = self.all().filter(query).values_list('pk', flat=True)
+        
+        return ids
+        
     def get_job_type_versions_v6(self, name, is_active=None, order=None):
         """Returns a list of the versions of the job type with the given name
 
@@ -2969,7 +3063,7 @@ class JobTypeManager(models.Manager):
 
         # Fetch a list of job types
         job_types = JobType.objects.all()
-        
+
         job_types = job_types.filter(name=name)
 
         if is_active is not None:
@@ -2980,9 +3074,9 @@ class JobTypeManager(models.Manager):
             job_types = job_types.order_by(*order)
         else:
             job_types = job_types.order_by('last_modified')
-            
+
         return job_types
-        
+
     def get_details_v5(self, job_type_id):
         """Returns the job type for the given ID with all detail fields included.
 
@@ -3038,6 +3132,11 @@ class JobTypeManager(models.Manager):
         # Attempt to get the job type
         job_type = JobType.objects.all().get(name=name, version=version)
 
+        # V6 does not support non seed job types
+        if not job_type.is_seed_job_type():
+            raise NonSeedJobType('Job type %s version %s is not a Seed image. Please update your image or use the legacy v5 interface' % (name, version))
+            
+            
         # Scrub configuration for secrets
         if job_type.configuration:
             configuration = job_type.get_job_configuration()
@@ -3045,7 +3144,7 @@ class JobTypeManager(models.Manager):
             configuration.remove_secret_settings(manifest)
 
         return job_type
-        
+
     def get_performance(self, job_type_id, started, ended=None):
         """Returns the job count statistics for a given job type and time range.
 
@@ -3223,7 +3322,8 @@ class JobTypeManager(models.Manager):
         secrets_handler = SecretsHandler()
         secrets_handler.set_job_type_secrets(secrets_key, secrets)
 
-    def validate_job_type_v5(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
+    def validate_job_type_v5(self, name, version, interface, error_mapping=None, trigger_config=None,
+                             configuration=None):
         """Validates a new job type prior to attempting a save
 
         :param name: The system name of the job type
@@ -3300,24 +3400,24 @@ class JobTypeManager(models.Manager):
         is_valid = True
         errors = []
         warnings = []
-        
+
         manifest = None
         config = None
-        
+
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
             config = JobConfigurationV6(configuration_dict, do_validate=True). get_configuration()
         except InvalidSeedManifestDefinition as ex:
             is_valid = False
             errors.append(ex.error)
-            message = 'Job type manifest invalid'
-            logger.exception(message)
+            message = 'Job type manifest invalid: %s' % ex
+            logger.info(message)
             pass
         except InvalidJobConfiguration as ex:
             is_valid = False
             errors.append(ex.error)
-            message = 'Job type configuration invalid'
-            logger.exception(message)
+            message = 'Job type configuration invalid: %s' % ex
+            logger.info(message)
             pass
 
         if config and manifest:
@@ -3326,8 +3426,8 @@ class JobTypeManager(models.Manager):
             except InvalidJobConfiguration as ex:
                 is_valid = False
                 errors.append(ex.error)
-                message = 'Job type configuration invalid'
-                logger.exception(message)
+                message = 'Job type configuration invalid: %s' % ex
+                logger.info(message)
                 pass
 
         return JobTypeValidation(is_valid, errors, warnings)
@@ -3701,15 +3801,6 @@ class JobType(models.Model):
 
         return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
 
-    def natural_key(self):
-        """Django method to define the natural key for a job type as the
-        combination of name and version
-
-        :returns: A tuple representing the natural key
-        :rtype: tuple(string, string)
-        """
-        return self.name, self.version
-
     def get_cpus_required(self):
         """Either returns field value or pulls from Seed resources
 
@@ -3775,7 +3866,27 @@ class JobType(models.Model):
         """
 
         return self._get_legacy_resource('disk', self.disk_out_mult_required, False)
-        
+
+    def is_seed_job_type(self):
+        """Checks if the JobType object is a Seed job type (True) or legacy job type (False)
+
+        :returns: Whether this job type is legacy or Seed
+        :rtype: bool
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.manifest):
+            return True
+        return False
+
+    def natural_key(self):
+        """Django method to define the natural key for a job type as the
+        combination of name and version
+
+        :returns: A tuple representing the natural key
+        :rtype: tuple(string, string)
+        """
+        return self.name, self.version
+
     def populate_from_manifest(self, manifest):
         """Set job type fields with values from given seed manifest
 
@@ -3865,19 +3976,29 @@ class JobTypeRevisionManager(models.Manager):
         qry = self.select_related('job_type')
         return qry.get(job_type__name=job_type_name, job_type__version=job_type_version, revision_num=revision_num)
 
-    def get_revision_old(self, job_type_id, revision_num):
-        """Returns the revision for the given job type and revision number
+    def get_revisions(self, revision_tuples):
+        """Returns a dict that maps revision ID to job type revision for the job type revisions that match the
+        given values. Each revision model will have its related job type model populated.
 
-        :param job_type_id: The ID of the job type
-        :type job_type_id: int
-        :param revision_num: The revision number
-        :type revision_num: int
-        :returns: The revision
-        :rtype: :class:`job.models.JobTypeRevision`
+        :param revision_tuples: A list of tuples (job type name, job type version, revision num) for additional
+            revisions to return
+        :type revision_tuples: list
+        :returns: The revisions stored by revision ID
+        :rtype: dict
         """
 
-        return JobTypeRevision.objects.get(job_type_id=job_type_id, revision_num=revision_num)
-        
+        revisions = {}
+        qry_filter = None
+        for revision_tuple in revision_tuples:
+            f = Q(job_type__name=revision_tuple[0], job_type__version=revision_tuple[1], revision_num=revision_tuple[2])
+            if qry_filter:
+                qry_filter = qry_filter | f
+            else:
+                qry_filter = f
+        for rev in self.select_related('job_type').filter(qry_filter):
+            revisions[rev.id] = rev
+        return revisions
+
     def get_job_type_revisions_v6(self, name, version, order=None):
         """Returns a list of the versions of the job type with the given name
 
@@ -3975,6 +4096,31 @@ class JobTypeRevision(models.Model):
                 interface.add_parameter(param)
             elif input_dict['type'] == 'property':
                 interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
+        return interface
+        
+    def get_output_interface(self):
+        """Returns the output interface for this revision
+
+        :returns: The output interface for this revision
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.manifest):
+            return SeedManifest(self.manifest, do_validate=False).get_output_interface()
+
+        # TODO: This can be removed when support for legacy job types is removed
+        interface = Interface()
+        for output_dict in self.manifest['output_data']:
+            media_types = output_dict['media_types'] if 'media_types' in output_dict else []
+            required = output_dict['required'] if 'required' in output_dict else True
+            if output_dict['type'] == 'file':
+                param = FileParameter(output_dict['name'], media_types, required, False)
+                interface.add_parameter(param)
+            elif output_dict['type'] == 'files':
+                param = FileParameter(output_dict['name'], media_types, required, True)
+                interface.add_parameter(param)
+            elif output_dict['type'] == 'property':
+                interface.add_parameter(JsonParameter(output_dict['name'], 'string', required))
         return interface
 
     def get_job_interface(self):

@@ -213,6 +213,37 @@ class TestJobConfiguration(TestCase):
         warnings = configuration.validate(manifest)
         self.assertEqual(len(warnings), 1)
         self.assertEqual(warnings[0].name, 'DEPRECATED_WORKSPACE')
+        
+    def test_no_default_workspace(self):
+        """Tests calling JobConfiguration.validate() to validate output workspaces"""
+
+        manifest_dict = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'random-number-gen',
+                'jobVersion': '0.1.0',
+                'packageVersion': '0.1.0',
+                'title': 'Random Number Generator',
+                'description': 'Generates a random number and outputs on stdout',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'outputs': {'files': [{'name': 'output_a', 'mediaType': 'image/gif', 'pattern': '*_a.gif'},
+                                          {'name': 'output_b', 'mediaType': 'image/gif', 'pattern': '*_a.gif'}]}
+                }
+            }
+        }
+        manifest = SeedManifest(manifest_dict)
+        configuration = JobConfiguration()
+
+        # No workspaces defined for outputs
+        warnings = configuration.validate(manifest)
+        self.assertEqual(len(warnings), 2)
+        self.assertEqual(warnings[0].name, 'MISSING_WORKSPACE')
+        self.assertEqual(warnings[1].name, 'MISSING_WORKSPACE')
 
     def test_validate_priority(self):
         """Tests calling JobConfiguration.validate() to validate priority"""

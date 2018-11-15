@@ -26,3 +26,9 @@ class SourceConfig(AppConfig):
 
         # Register parse trigger rule handler
         register_trigger_rule_handler(ParseTriggerHandler())
+
+        # Register source message types
+        from messaging.messages.factory import add_message_type
+        from source.messages.purge_source_file import PurgeSourceFile
+
+        add_message_type(PurgeSourceFile)

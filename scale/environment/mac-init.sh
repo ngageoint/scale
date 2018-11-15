@@ -48,7 +48,7 @@ DATABASES = {
 EOF
 
 # Initialize virtual environment
-virtualenv environment/scale
+virtualenv -p $(which python2) environment/scale
 environment/scale/bin/pip install -r pip/requirements.txt
 
 # Load up database with schema migrations to date and fixtures

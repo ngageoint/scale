@@ -277,7 +277,7 @@ class TestQueueNewRecipeView(TestCase):
     def test_successful(self):
         """Tests calling the queue recipe view successfully."""
 
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v5()
         workspace = storage_test_utils.create_workspace()
 
         recipe_data = {
@@ -361,7 +361,7 @@ class TestRequeueJobsView(TestCase):
                 }],
             }],
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
         self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
         self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 1', job=self.job_1)
         self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 2', job=self.job_2)

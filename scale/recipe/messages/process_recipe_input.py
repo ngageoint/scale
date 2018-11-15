@@ -7,18 +7,20 @@ from django.db import transaction
 
 from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
-from recipe.messages.update_recipes import create_update_recipes_messages
+from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
 from recipe.models import Recipe, RecipeNode
 
 
 logger = logging.getLogger(__name__)
 
 
-def create_process_recipe_input_messages(recipe_ids):
+def create_process_recipe_input_messages(recipe_ids, forced_nodes=None):
     """Creates messages to process the input for the given recipes
 
     :param recipe_ids: The recipe IDs
     :type recipe_ids: list
+    :param forced_nodes: Describes the nodes that have been forced to reprocess
+    :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
     :return: The list of messages
     :rtype: list
     """
@@ -28,6 +30,7 @@ def create_process_recipe_input_messages(recipe_ids):
     for recipe_id in recipe_ids:
         message = ProcessRecipeInput()
         message.recipe_id = recipe_id
+        message.forced_nodes = forced_nodes
         messages.append(message)
 
     return messages
@@ -44,12 +47,18 @@ class ProcessRecipeInput(CommandMessage):
         super(ProcessRecipeInput, self).__init__('process_recipe_input')
 
         self.recipe_id = None
+        self.forced_nodes = None
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'recipe_id': self.recipe_id}
+        json_dict = {'recipe_id': self.recipe_id}
+
+        if self.forced_nodes:
+            json_dict['forced_nodes'] = convert_forced_nodes_to_v6(self.forced_nodes).get_dict()
+
+        return json_dict
 
     @staticmethod
     def from_json(json_dict):
@@ -58,6 +67,9 @@ class ProcessRecipeInput(CommandMessage):
 
         message = ProcessRecipeInput()
         message.recipe_id = json_dict['recipe_id']
+        if 'forced_nodes' in json_dict:
+            message.forced_nodes = ForcedNodesV6(json_dict['forced_nodes']).get_forced_nodes()
+
         return message
 
     def execute(self):
@@ -81,11 +93,13 @@ class ProcessRecipeInput(CommandMessage):
         # Lock recipe model and process recipe's input data
         with transaction.atomic():
             recipe = Recipe.objects.get_locked_recipe(self.recipe_id)
+            root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
             Recipe.objects.process_recipe_input(recipe)
 
         # Create message to update the recipe
+        from recipe.messages.update_recipe import create_update_recipe_message
         logger.info('Processed input for recipe %d, sending message to update recipe', self.recipe_id)
-        self.new_messages.extend(create_update_recipes_messages([self.recipe_id]))
+        self.new_messages.append(create_update_recipe_message(root_recipe_id, forced_nodes=self.forced_nodes))
 
         return True
 

@@ -15,6 +15,12 @@ class InvalidBrokerUrl(Exception):
     pass
 
 
+class ServiceAccountAuthFailure(Exception):
+    """Exception indicating failure of request to login or communicate with DCOS using service account"""
+
+    pass
+
+
 class InvalidAWSCredentials(Exception):
     """Exception indicating missing credentials required to successfully authenticate to AWS"""
 

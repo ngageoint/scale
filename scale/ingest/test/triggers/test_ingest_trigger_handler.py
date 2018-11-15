@@ -80,7 +80,7 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
                 }],
             }],
         }
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1)
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v5(definition=definition_1)
 
         self.file_name = 'my_file.txt'
         self.data_type = 'test_file_type'

@@ -11,6 +11,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from data.interface.json.interface_v6 import InterfaceV6
+from job.configuration.data.exceptions import InvalidConfiguration
 from job.data.exceptions import InvalidData, InvalidConnection
 from job.error.error import JobError
 from job.error.mapping import JobErrorMapping
@@ -209,11 +210,35 @@ class SeedManifest(object):
 
         input_dict = copy.deepcopy(self.get_inputs())
         if 'files' in input_dict:
-            for file_dict in self.get_input_files():
+            for file_dict in input_dict['files']:
                 if 'partial' in file_dict:
                     del file_dict['partial']
+                if 'mediaTypes' in file_dict:
+                    file_dict['media_types'] = file_dict['mediaTypes'] 
+                    del file_dict['mediaTypes']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
+    def get_output_interface(self):
+        """Returns the output interface for this manifest
+
+        :returns: The output interface for this manifest
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        output_dict = copy.deepcopy(self.get_outputs())
+        if 'files' in output_dict:
+            for file_dict in output_dict['files']:
+                if 'pattern' in file_dict:
+                    del file_dict['pattern']
+                if 'mediaType' in file_dict:
+                    file_dict['media_types'] = [file_dict['mediaType']]
+                    del file_dict['mediaType']
+        if 'json' in output_dict:
+            for json_dict in output_dict['json']:
+                if 'key' in json_dict:
+                    del json_dict['key']
+        return InterfaceV6(interface=output_dict, do_validate=False).get_interface()
+        
     def get_inputs(self):
         """Gets the inputs defined in the interface
 
@@ -395,6 +420,15 @@ class SeedManifest(object):
         if len(self.get_output_files()) and not job_conn.has_workspace():
             raise InvalidConnection('No workspace provided for output files')
         return warnings
+        
+    def validate_workspace_for_outputs(self, exe_config):
+        """Validates the given job's output workspaces
+        :param exe_config: The job configuration
+        
+        :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
+        """
+        if len(self.get_output_files()) and not exe_config.get_output_workspace_names():
+            raise InvalidConfiguration('No workspace defined for output files')
 
     def validate_data(self, job_data):
         """Ensures that the job_data matches the job_interface description

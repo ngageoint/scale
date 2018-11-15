@@ -14,6 +14,8 @@ import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
@@ -180,10 +182,18 @@ class TestJobManager(TransactionTestCase):
         date_4 = date_1 + datetime.timedelta(minutes=50)
         min_src_started_job_2 = date_1 - datetime.timedelta(days=500)
         max_src_ended_job_2 = date_1 + datetime.timedelta(days=500)
+        s_class = 'A'
+        s_sensor = '1'
+        collection = '12345'
+        task = 'abcd'
         workspace = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace, file_size=10485760.0)
-        file_2 = storage_test_utils.create_file(workspace=workspace, file_size=104857600.0, source_started=date_2,
-                                                source_ended=date_3)
+        file_1 = storage_test_utils.create_file(workspace=workspace, file_size=10485760.0,
+                                                source_sensor_class=s_class, source_sensor=s_sensor,
+                                                source_collection=collection, source_task=task)
+        file_2 = storage_test_utils.create_file(workspace=workspace, file_size=104857600.0,
+                                                source_started=date_2, source_ended=date_3,
+                                                source_sensor_class = s_class, source_sensor = s_sensor,
+                                                source_collection = collection, source_task=task)
         file_3 = storage_test_utils.create_file(workspace=workspace, file_size=987654321.0,
                                                 source_started=min_src_started_job_1, source_ended=date_4)
         file_4 = storage_test_utils.create_file(workspace=workspace, file_size=46546.0,
@@ -195,7 +205,9 @@ class TestJobManager(TransactionTestCase):
                                                 source_started=min_src_started_job_2)
         file_9 = storage_test_utils.create_file(workspace=workspace, file_size=545.0, source_started=date_3,
                                                 source_ended=max_src_ended_job_2)
-        file_10 = storage_test_utils.create_file(workspace=workspace, file_size=0.154, source_ended=date_4)
+        file_10 = storage_test_utils.create_file(workspace=workspace, file_size=0.154, source_ended=date_4,
+                                                 source_sensor_class=s_class, source_sensor=s_sensor,
+                                                 source_collection=collection, source_task=task)
         interface = {
             'version': '1.0',
             'command': 'my_command',
@@ -261,9 +273,17 @@ class TestJobManager(TransactionTestCase):
         self.assertEqual(job_1.input_file_size, 1053.0)
         self.assertEqual(job_1.source_started, min_src_started_job_1)
         self.assertEqual(job_1.source_ended, max_src_ended_job_1)
+        self.assertEqual(job_1.source_sensor_class, s_class)
+        self.assertEqual(job_1.source_sensor, s_sensor)
+        self.assertEqual(job_1.source_collection, collection)
+        self.assertEqual(job_1.source_task, task)
         self.assertEqual(job_2.input_file_size, 113269857.0)
         self.assertEqual(job_2.source_started, min_src_started_job_2)
         self.assertEqual(job_2.source_ended, max_src_ended_job_2)
+        self.assertEqual(job_2.source_sensor_class, s_class)
+        self.assertEqual(job_2.source_sensor, s_sensor)
+        self.assertEqual(job_2.source_collection, collection)
+        self.assertEqual(job_2.source_task, task)
 
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job_1.id)
@@ -331,7 +351,9 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input={}, started=timezone.now(),
+
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input=data_dict, started=timezone.now(),
                                         ended=timezone.now())
 
         Job.objects.update_jobs_to_queued([job], timezone.now(), requeue=True)
@@ -779,6 +801,38 @@ class TestJobType(TransactionTestCase):
         version = '1.0'
         value = job_type.get_job_version_array(version)
         self.assertEqual([0,0,0,0], value)
+
+    def test_is_seed_job_type(self):
+        self.assertTrue(self.seed_job_type.is_seed_job_type())
+        self.assertFalse(self.legacy_job_type.is_seed_job_type())
+        
+class TestJobTypeRevision(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.seed_job_type = job_test_utils.create_seed_job_type()
+        self.seed_job_type_rev = JobTypeRevision.objects.get_revision(self.seed_job_type.name, 
+                                                                      self.seed_job_type.version, 
+                                                                      self.seed_job_type.revision_num)
+        self.legacy_job_type = job_test_utils.create_job_type()
+        self.legacy_job_type.cpus_required = 5.0
+        self.legacy_job_type.mem_const_required = 6.0
+        self.legacy_job_type.mem_mult_required = 7.0
+        self.legacy_job_type.shared_mem_required = 8.0
+        self.legacy_job_type.disk_out_const_required = 9.0
+        self.legacy_job_type.disk_out_mult_required = 10.0
+        self.legacy_job_type_rev = JobTypeRevision.objects.get_revision(self.legacy_job_type.name, 
+                                                                        self.legacy_job_type.version, 
+                                                                        self.legacy_job_type.revision_num)
+        
+    def test_revision_get_input_interface(self):
+        self.assertEqual(self.seed_job_type_rev.get_input_interface().parameters['INPUT_IMAGE'].PARAM_TYPE, 'file')
+        self.assertEqual(self.legacy_job_type_rev.get_input_interface().parameters, {})
+        
+    def test_revision_get_output_interface(self):
+        self.assertEqual(self.seed_job_type_rev.get_output_interface().parameters['OUTPUT_IMAGE'].PARAM_TYPE, 'file')
+        self.assertEqual(self.legacy_job_type_rev.get_output_interface().parameters, {})
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
@@ -1275,6 +1329,34 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertRaises(Exception, JobType.objects.edit_job_type_v5, name, version, self.job_interface,
                           error_mapping=error_mapping, title=title, description=description, priority=priority,
                           is_system=is_system)
+                          
+    def test_convert_min_seed_manifest(self):
+        """Tests calling JobTypeManager.convert_manifest_to_v5_interface() with minimum seed manifest"""
+
+        manifest = copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
+        
+        interface = JobType.objects.convert_manifest_to_v5_interface(manifest)
+
+        # Call test
+        self.assertEquals(interface['output_data'], [])
+        self.assertEquals(interface['input_data'], [])
+        self.assertEquals(interface['version'], '1.4')
+        
+    def test_convert_complete_seed_manifest(self):
+        """Tests calling JobTypeManager.convert_manifest_to_v5_interface() with complete seed manifest"""
+        
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        
+        interface = JobType.objects.convert_manifest_to_v5_interface(manifest)
+
+        # Call test
+        self.assertListEqual(interface['settings'], manifest['job']['interface']['settings'])
+        self.assertListEqual(interface['mounts'], manifest['job']['interface']['mounts'])
+        self.assertListEqual(interface['output_data'], manifest['job']['interface']['outputs']['files'])
+        self.assertListEqual(interface['input_data'], manifest['job']['interface']['inputs']['files'])
+        self.assertListEqual(interface['env_vars'], manifest['job']['interface']['inputs']['json'])
+        self.assertEquals(interface['version'], '1.4')
+        self.assertEqual(interface['command_arguments'], manifest['job']['interface']['command'])
 
 
 class TestJobTypeManagerValidateJobType(TestCase):

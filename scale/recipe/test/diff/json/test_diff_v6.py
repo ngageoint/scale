@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
+from data.filter.filter import DataFilter
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.models import JobType
@@ -287,36 +288,56 @@ class TestRecipeDiffV6(TestCase):
         interface_2.add_parameter(JsonParameter('json_param_1', 'object'))
         interface_2.add_parameter(JsonParameter('json_param_2', 'object', required=False))
 
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(FileParameter('cond_file', ['image/gif']))
+        # TODO: eventually implement two "real" and different filters
+        filter_1 = DataFilter(False)
+        cond_interface_2 = Interface()
+        cond_interface_2.add_parameter(FileParameter('cond_file', ['image/gif']))
+        filter_2 = DataFilter(True)
+
         definition_1 = RecipeDefinition(interface_1)
         definition_1.add_job_node('A', 'job_type_1', '1.0', 1)
         definition_1.add_job_node('B', 'job_type_2', '2.0', 1)
         definition_1.add_job_node('C', 'job_type_3', '1.0', 2)
         definition_1.add_recipe_node('D', 'recipe_type_1', 1)
         definition_1.add_job_node('E', 'job_type_4', '1.0', 1)
+        definition_1.add_condition_node('G', cond_interface_1, filter_1)
+        definition_1.add_job_node('H', 'job_type_4', '1.0', 1)
         definition_1.add_dependency('A', 'B')
         definition_1.add_dependency('A', 'C')
         definition_1.add_dependency('B', 'E')
         definition_1.add_dependency('C', 'D')
+        definition_1.add_dependency('A', 'G')
+        definition_1.add_dependency('G', 'H')
         definition_1.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_1.add_dependency_input_connection('B', 'b_input_1', 'A', 'a_output_1')
         definition_1.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_1.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
         definition_1.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
+        definition_1.add_dependency_input_connection('G', 'cond_file', 'A', 'a_output_1')
+        definition_1.add_dependency_input_connection('H', 'h_input_1', 'G', 'cond_file')
 
         definition_2 = RecipeDefinition(interface_2)
         # Nodes B and E are deleted
         definition_2.add_job_node('A', 'job_type_1', '1.0', 1)
         definition_2.add_job_node('C', 'job_type_3', '2.1', 1)  # Change to job type version and revision
         definition_2.add_recipe_node('D', 'recipe_type_1', 1)
+        definition_2.add_condition_node('G', cond_interface_2, filter_2)
+        definition_2.add_job_node('H', 'job_type_4', '1.0', 1)
         definition_2.add_recipe_node('F', 'recipe_type_2', 5)  # New node
         definition_2.add_dependency('A', 'C')
         definition_2.add_dependency('C', 'D')
         definition_2.add_dependency('D', 'F')
+        definition_2.add_dependency('A', 'G')
+        definition_2.add_dependency('G', 'H')
         definition_2.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_2.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_2.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
         definition_2.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
         definition_2.add_recipe_input_connection('F', 'f_input_1', 'json_param_2')
+        definition_2.add_dependency_input_connection('G', 'cond_file', 'A', 'a_output_1')
+        definition_2.add_dependency_input_connection('H', 'h_input_1', 'G', 'cond_file')
 
         diff = RecipeDiff(definition_1, definition_2)
         json = convert_recipe_diff_to_v6_json(diff)

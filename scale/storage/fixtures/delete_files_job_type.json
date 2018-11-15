@@ -48,6 +48,16 @@
                                     "required": true 
                                 },
                                 {
+                                    "name": "trigger_id",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "source_file_id",
+                                    "type": "string",
+                                    "required": true
+                                },
+                                {
                                     "name": "purge",
                                     "type": "string", 
                                     "required": true 
@@ -115,6 +125,16 @@
                                     "name": "job_id",
                                     "type": "string", 
                                     "required": true 
+                                },
+                                {
+                                    "name": "trigger_id",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "source_file_id",
+                                    "type": "string",
+                                    "required": true
                                 },
                                 {
                                     "name": "purge",

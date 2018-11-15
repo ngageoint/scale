@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import copy
 from datetime import timedelta
 
 import django
@@ -117,7 +118,7 @@ class TestDatabaseUpdater(TestCase):
         batch_1.creator_job.save()
         batch_2 = batch_test_utils.create_batch()
 
-        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type)
         job_1 = job_test_utils.create_job()
@@ -143,9 +144,10 @@ class TestDatabaseUpdater(TestCase):
         time_rev_2 = time_rev_1 + timedelta(minutes=1)
         time_batch = time_rev_2 + timedelta(minutes=1)
         time_rev_3 = time_batch + timedelta(minutes=1)
-        recipe_type_3 = recipe_test_utils.create_recipe_type()
-        recipe_test_utils.edit_recipe_type(recipe_type_3, recipe_type_3.definition)
-        recipe_test_utils.edit_recipe_type(recipe_type_3, recipe_type_3.definition)
+        recipe_type_3 = recipe_test_utils.create_recipe_type_v6()
+        local_definition = copy.deepcopy(recipe_type_3.definition)
+        recipe_test_utils.edit_recipe_type_v6(recipe_type=recipe_type_3, definition=local_definition)
+        recipe_test_utils.edit_recipe_type_v6(recipe_type=recipe_type_3, definition=local_definition)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=1).update(created=time_rev_1)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=2).update(created=time_rev_2)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=3).update(created=time_rev_3)
@@ -162,7 +164,7 @@ class TestDatabaseUpdater(TestCase):
         batch_1 = Batch.objects.get(id=batch_1.id)
         self.assertTrue(batch_1.is_creation_done)
         self.assertEqual(batch_1.recipes_estimated, 2)
-        recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         self.assertEqual(batch_1.recipe_type_rev_id, recipe_type_rev.id)
         self.assertEqual(batch_1.root_batch_id, batch_1.id)
         self.assertEqual(batch_1.get_configuration().priority, 303)
@@ -183,6 +185,6 @@ class TestDatabaseUpdater(TestCase):
         recipe_4 = Recipe.objects.get(id=recipe_4.id)
         self.assertEqual(recipe_4.batch_id, batch_2.id)
         batch_3 = Batch.objects.get(id=batch_3.id)
-        recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type_3.id, 2)
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type_3.name, 2)
         self.assertEqual(batch_3.recipe_type_rev_id, recipe_type_rev.id)
         self.assertEqual(batch_3.root_batch_id, batch_3.id)

@@ -66,14 +66,14 @@ class TestUncancelJobs(TransactionTestCase):
 
         old_when = now()
         when = old_when + datetime.timedelta(minutes=60)
+        recipe = recipe_test_utils.create_recipe()
 
         job_1 = job_test_utils.create_job(num_exes=0, status='PENDING', last_status_change=old_when)
-        job_2 = job_test_utils.create_job(num_exes=0, status='CANCELED', last_status_change=old_when)
+        job_2 = job_test_utils.create_job(num_exes=0, status='CANCELED', last_status_change=old_when, recipe=recipe)
         job_3 = job_test_utils.create_job(num_exes=1, status='CANCELED', last_status_change=old_when)
         job_4 = job_test_utils.create_job(num_exes=1, status='FAILED', last_status_change=old_when)
         job_ids = [job_1.id, job_2.id, job_3.id, job_4.id]
 
-        recipe = recipe_test_utils.create_recipe()
         recipe_test_utils.create_recipe_job(recipe=recipe, job=job_2)
 
         # Add jobs to message
@@ -92,7 +92,12 @@ class TestUncancelJobs(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        self.assertTrue(result)
+        from recipe.diff.forced_nodes import ForcedNodes
+        from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
+        forced_nodes = ForcedNodes()
+        forced_nodes.set_all_nodes()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         # Job 1 should not be updated because it was not CANCELED
         self.assertEqual(jobs[0].status, 'PENDING')
@@ -107,18 +112,19 @@ class TestUncancelJobs(TransactionTestCase):
         self.assertEqual(jobs[3].status, 'FAILED')
         self.assertEqual(jobs[3].last_status_change, old_when)
 
-        # Make sure update_recipes and update_recipe_metrics messages were created
+        # Make sure update_recipe and update_recipe_metrics messages were created
         self.assertEqual(len(message.new_messages), 2)
-        update_recipes_msg = None
+        update_recipe_msg = None
         update_recipe_metrics_msg = None
         for msg in message.new_messages:
-            if msg.type == 'update_recipes':
-                update_recipes_msg = msg
+            if msg.type == 'update_recipe':
+                update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
-        self.assertIsNotNone(update_recipes_msg)
+        self.assertIsNotNone(update_recipe_msg)
         self.assertIsNotNone(update_recipe_metrics_msg)
-        self.assertListEqual(update_recipes_msg._recipe_ids, [recipe.id])
+        self.assertEqual(update_recipe_msg.root_recipe_id, recipe.id)
+        self.assertDictEqual(convert_forced_nodes_to_v6(update_recipe_msg.forced_nodes).get_dict(), forced_nodes_dict)
         self.assertListEqual(update_recipe_metrics_msg._recipe_ids, [recipe.id])
 
         # Test executing message again
@@ -143,16 +149,17 @@ class TestUncancelJobs(TransactionTestCase):
         self.assertEqual(jobs[3].status, 'FAILED')
         self.assertEqual(jobs[3].last_status_change, old_when)
 
-        # Make sure update_recipes and update_recipe_metrics messages were created
+        # Make sure update_recipe and update_recipe_metrics messages were created
         self.assertEqual(len(message.new_messages), 2)
-        update_recipes_msg = None
+        update_recipe_msg = None
         update_recipe_metrics_msg = None
         for msg in message.new_messages:
-            if msg.type == 'update_recipes':
-                update_recipes_msg = msg
+            if msg.type == 'update_recipe':
+                update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
-        self.assertIsNotNone(update_recipes_msg)
+        self.assertIsNotNone(update_recipe_msg)
         self.assertIsNotNone(update_recipe_metrics_msg)
-        self.assertListEqual(update_recipes_msg._recipe_ids, [recipe.id])
+        self.assertEqual(update_recipe_msg.root_recipe_id, recipe.id)
+        self.assertDictEqual(convert_forced_nodes_to_v6(update_recipe_msg.forced_nodes).get_dict(), forced_nodes_dict)
         self.assertListEqual(update_recipe_metrics_msg._recipe_ids, [recipe.id])

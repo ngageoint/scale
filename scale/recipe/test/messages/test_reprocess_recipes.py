@@ -85,7 +85,7 @@ class TestReprocessRecipes(TransactionTestCase):
                 }]
             }]
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
         self.input_1 = {
             'version': '1.0',

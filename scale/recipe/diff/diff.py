@@ -26,6 +26,7 @@ class RecipeDiff(object):
         self.can_be_reprocessed = True
         self.reasons = []
         self.graph = {}  # {Name: NodeDiff}
+        self.forced_nodes = None
 
         self._compare_input_interfaces(prev_recipe_definition, recipe_definition)
         self._create_diff_graph(prev_recipe_definition, recipe_definition)
@@ -101,6 +102,8 @@ class RecipeDiff(object):
         :param forced_nodes: Object describing which nodes should be forced to be reprocessed
         :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
         """
+
+        self.forced_nodes = forced_nodes
 
         for node_diff in self.graph.values():
             if forced_nodes.is_node_forced_to_reprocess(node_diff.name):

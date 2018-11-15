@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from util.exceptions import ScaleLogicBug
 
 
@@ -24,6 +24,8 @@ def create_diff_for_node(node, diff_can_be_reprocessed, status):
     :rtype: :class:`recipe.diff.node.NodeDiff`
     """
 
+    if node.node_type == ConditionNodeDefinition.NODE_TYPE:
+        return ConditionNodeDiff(node, diff_can_be_reprocessed, status)
     if node.node_type == JobNodeDefinition.NODE_TYPE:
         return JobNodeDiff(node, diff_can_be_reprocessed, status)
     if node.node_type == RecipeNodeDefinition.NODE_TYPE:
@@ -96,7 +98,7 @@ class NodeDiff(object):
             self._compare_node_type(prev_node)
         else:
             self.prev_node_type = prev_node.node_type
-            msg = 'Node type changed from %s to %s' % (self.node_type, prev_node.node_type)
+            msg = 'Node type changed from %s to %s' % (prev_node.node_type, self.node_type)
             self.changes.append(Change('NODE_TYPE_CHANGE', msg))
 
         self._compare_dependencies(prev_node)
@@ -225,13 +227,49 @@ class NodeDiff(object):
 
     @abstractmethod
     def _compare_node_type(self, prev_node):
-        """Performs comparison specifc to the node type sublass
+        """Performs comparison specifc to the node type subclass
 
         :param prev_node: The node from the previous revision
         :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         raise NotImplementedError()
+
+
+class ConditionNodeDiff(NodeDiff):
+    """Represents a diff for a condition node within a recipe definition
+    """
+
+    def __init__(self, condition_node, diff_can_be_reprocessed, status=NodeDiff.NEW):
+        """Constructor
+
+        :param condition_node: The condition node from the recipe definition
+        :type condition_node: :class:`recipe.definition.node.ConditionNodeDefinition`
+        :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
+        :type diff_can_be_reprocessed: bool
+        :param status: The diff status, defaults to NEW
+        :type status: string
+        """
+
+        super(ConditionNodeDiff, self).__init__(condition_node, diff_can_be_reprocessed, status)
+
+        self.data_filter = condition_node.data_filter
+
+    def get_node_type_dict(self):
+        """See :meth:`recipe.diff.node.NodeDiff.get_node_type_dict`
+        """
+
+        json_dict = {'node_type': self.node_type}
+
+        return json_dict
+
+    def _compare_node_type(self, prev_node):
+        """See :meth:`recipe.diff.node.NodeDiff._compare_node_type`
+        """
+
+        if not self.data_filter.is_filter_equal(prev_node.data_filter):
+            msg = 'Data filter changed'
+            self.changes.append(Change('FILTER_CHANGE', msg))
 
 
 class JobNodeDiff(NodeDiff):
@@ -280,17 +318,17 @@ class JobNodeDiff(NodeDiff):
 
         if self.job_type_name != prev_node.job_type_name:
             self.prev_job_type_name = prev_node.job_type_name
-            msg = 'Job type changed from %s to %s' % (self.job_type_name, prev_node.job_type_name)
+            msg = 'Job type changed from %s to %s' % (prev_node.job_type_name, self.job_type_name)
             self.changes.append(Change('JOB_TYPE_CHANGE', msg))
 
         if self.job_type_version != prev_node.job_type_version:
             self.prev_job_type_version = prev_node.job_type_version
-            msg = 'Job type version changed from %s to %s' % (self.job_type_version, prev_node.job_type_version)
+            msg = 'Job type version changed from %s to %s' % (prev_node.job_type_version, self.job_type_version)
             self.changes.append(Change('JOB_TYPE_VERSION_CHANGE', msg))
 
         if self.revision_num != prev_node.revision_num:
             self.prev_revision_num = prev_node.revision_num
-            msg = 'Job type revision changed from %s to %s' % (self.revision_num, prev_node.revision_num)
+            msg = 'Job type revision changed from %s to %s' % (prev_node.revision_num, self.revision_num)
             self.changes.append(Change('JOB_TYPE_REVISION_CHANGE', msg))
 
 
@@ -366,10 +404,10 @@ class RecipeNodeDiff(NodeDiff):
 
         if self.recipe_type_name != prev_node.recipe_type_name:
             self.prev_recipe_type_name = prev_node.recipe_type_name
-            msg = 'Recipe type changed from %s to %s' % (self.recipe_type_name, prev_node.recipe_type_name)
+            msg = 'Recipe type changed from %s to %s' % (prev_node.recipe_type_name, self.recipe_type_name)
             self.changes.append(Change('RECIPE_TYPE_CHANGE', msg))
 
         if self.revision_num != prev_node.revision_num:
             self.prev_revision_num = prev_node.revision_num
-            msg = 'Recipe type revision changed from %s to %s' % (self.revision_num, prev_node.revision_num)
+            msg = 'Recipe type revision changed from %s to %s' % (prev_node.revision_num, self.revision_num)
             self.changes.append(Change('RECIPE_TYPE_REVISION_CHANGE', msg))

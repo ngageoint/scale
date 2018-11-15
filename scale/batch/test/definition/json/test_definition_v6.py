@@ -43,6 +43,6 @@ class TestBatchDefinitionV6(TestCase):
         self.assertRaises(InvalidDefinition, BatchDefinitionV6, definition, True)
 
         # Valid previous batch definition
-        definition = {'version': '6', 'previous_batch': {'root_batch_id': 1234, 'job_names': ['job_a', 'job_b'],
-                                                         'all_jobs': True}}
+        definition = {'version': '6', 'previous_batch': {'root_batch_id': 1234,
+                                                         'forced_nodes': {'all': False, 'nodes': ['job_a', 'job_b']}}}
         BatchDefinitionV6(definition=definition, do_validate=True)
