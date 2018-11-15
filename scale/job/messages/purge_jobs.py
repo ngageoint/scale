@@ -142,7 +142,7 @@ class PurgeJobs(CommandMessage):
             Job.objects.filter(id__in=self._purge_job_ids).delete()
 
             # Update results
-            results.num_jobs_deleted = F('num_jobs_deleted') + len(self._purge_job_ids)
-            results.save()
+            PurgeResults.objects.filter(trigger_event=self.trigger_id).update(
+                num_jobs_deleted = F('num_jobs_deleted') + len(self._purge_job_ids))
 
         return True
