@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 if 'input_file' in job_input['files'] and isinstance(job_input['files']['input_file'], list):
                     input_file = {}
                     input_file['file_ids'] = job_input['files']['input_file']
-                    input_file['multiple'] = len(job_input['files']['input_file'] > 1)
+                    input_file['multiple'] = len(job_input['files']['input_file']) > 1
                     job_input['files']['input_file'] = input_file
                     job.save()
 
