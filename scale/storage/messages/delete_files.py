@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from job.messages.purge_jobs import create_purge_jobs_messages
 from messaging.messages.message import CommandMessage
+from product.models import FileAncestryLink
 from storage.models import PurgeResults, ScaleFile
 
 # This is the maximum number of file models that can fit in one message. This maximum ensures that every message of this
@@ -128,11 +129,12 @@ class DeleteFiles(CommandMessage):
         files_to_delete = ScaleFile.objects.filter(id__in=self._file_ids)
 
         if self.purge:
+            FileAncestryLink.objects.filter(descendant__in=files_to_delete).delete()
             files_to_delete.delete()
 
             # Update results
-            results.num_products_deleted = F('num_products_deleted') + len(self._file_ids)
-            results.save()
+            PurgeResults.objects.filter(trigger_event=self.trigger_id).update(
+                num_products_deleted = F('num_products_deleted') + len(self._file_ids))
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],
