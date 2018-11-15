@@ -29,7 +29,7 @@
                     },
                     "timeout": 3600,
                     "interface": {
-                        "command": "python manage.py scale_delete_files",
+                        "command": "scale_delete_files",
                         "inputs": {
                             "json": [ 
                                 {
@@ -108,7 +108,7 @@
                     },
                     "timeout": 3600,
                     "interface": {
-                        "command": "python manage.py scale_delete_files",
+                        "command": "scale_delete_files",
                         "inputs": {
                             "json": [ 
                                 {
