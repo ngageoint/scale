@@ -126,7 +126,7 @@ class PurgeRecipe(CommandMessage):
             recipe.delete()
 
             # Update results
-            results.num_recipes_deleted = F('num_recipes_deleted') + 1
-            results.save()
+            PurgeResults.objects.filter(trigger_event=self.trigger_id).update(
+                num_recipes_deleted = F('num_recipes_deleted') + 1)
 
         return True
