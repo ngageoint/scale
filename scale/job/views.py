@@ -53,7 +53,6 @@ import util.rest as rest_util
 from util.rest import BadParameter
 from vault.exceptions import InvalidSecretsConfiguration
 from data.data.json.data_v6 import DataV6
-from job.configuration.data.exceptions import InvalidData
 
 logger = logging.getLogger(__name__)
 
@@ -1184,8 +1183,6 @@ class JobsView(ListAPIView):
         except InvalidData as ex:
             logger.exception('Unable to queue new job. Invalid input: %s', job_data)
             raise BadParameter(unicode(ex))
-        except Exception as ex:
-            import pdb; pdb.set_trace()
 
         try:
             job_type = JobType.objects.get(pk=job_type_id)
