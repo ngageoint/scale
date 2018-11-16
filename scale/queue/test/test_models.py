@@ -447,7 +447,8 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         self.data = LegacyRecipeData(data)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         workspace = storage_test_utils.create_workspace()
         source_file = source_test_utils.create_source(workspace=workspace)
         event = trigger_test_utils.create_trigger_event()

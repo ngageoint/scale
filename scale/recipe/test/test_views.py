@@ -1996,8 +1996,8 @@ class TestRecipesPostViewV6(TransactionTestCase):
 
             self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
-    def test_successful(self):
-
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
 
         workspace = storage_test_utils.create_workspace()
         source_file = source_test_utils.create_source(workspace=workspace)
