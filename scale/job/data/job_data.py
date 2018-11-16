@@ -350,11 +350,13 @@ class JobData(object):
         inputs['json'] = json
         return inputs
 
-    def get_injected_env_vars(self, input_files):
+    def get_injected_env_vars(self, input_files, interface):
         """Inject all execution time values to job data mappings
 
         :param input_files: Mapping of input names to InputFiles
         :type input_files: {str, :class:`job.execution.configuration.input_file.InputFile`}
+        :param interface: The interface to which this data is being passed
+        :type interface: :class:`data.interface.interface.Interface`
         :return: Mapping of all input keys to their true file / property values
         :rtype: {str, str}
         """
@@ -362,7 +364,9 @@ class JobData(object):
         for file_input in self._new_data.values.values():
             if isinstance(file_input, FileValue):
                 env_var_name = normalize_env_var_name(file_input.name)
-                if file_input.multiple:
+                if file_input.name not in interface.parameters:
+                    logger.warning("File input %s not specified in interface %s" % (file_input.name, interface))
+                if interface[file_input.name].multiple:
                     # When we have input for multiple files, map in the entire directory
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
                 else:

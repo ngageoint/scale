@@ -6,6 +6,8 @@ import math
 
 from django.conf import settings
 
+from data.interface.interface import Interface
+from data.interface.parameter import FileParameter, JsonParameter
 from job.execution.configuration.docker_param import DockerParameter
 from job.execution.configuration.input_file import InputFile
 from job.configuration.interface.job_interface import JobInterface
@@ -17,6 +19,7 @@ from job.execution.container import get_job_exe_input_vol_name, get_job_exe_outp
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
 from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
+from job.seed.manifest import SeedManifest
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
@@ -64,7 +67,24 @@ class QueuedExecutionConfigurator(object):
 
         # Set up env vars for job's input data
         input_values = data.get_injected_input_values(input_files_dict)
-        env_vars = data.get_injected_env_vars(input_files_dict)
+        interface = None
+        if JobInterfaceSunset.is_seed_dict(job.job_type.manifest):
+            interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
+        else:
+            # TODO: This can be removed when support for legacy job types is removed
+            interface = Interface()
+            for input_dict in job.job_type.manifest['input_data']:
+                media_types = input_dict['media_types'] if 'media_types' in input_dict else []
+                required = input_dict['required'] if 'required' in input_dict else True
+                if input_dict['type'] == 'file':
+                    param = FileParameter(input_dict['name'], media_types, required, False)
+                    interface.add_parameter(param)
+                elif input_dict['type'] == 'files':
+                    param = FileParameter(input_dict['name'], media_types, required, True)
+                    interface.add_parameter(param)
+                elif input_dict['type'] == 'property':
+                    interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
+        env_vars = data.get_injected_env_vars(input_files_dict, interface)
 
         task_workspaces = {}
         if job.job_type.is_system:
