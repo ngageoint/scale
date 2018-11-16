@@ -62,7 +62,7 @@ class TestJobData(TransactionTestCase):
         job_config = JobConfiguration()
         job_config.add_output_workspace('OUTPUT_TIFFS', workspace.name)
         job_exe = Mock()
-        job_exe.job_type.get_job_configuration.return_value = job_config
+        job_exe.job.get_job_configuration.return_value = job_config
 
         results = JobResults()._store_output_data_files(files, job_data, job_exe)
         self.assertEqual({'OUTPUT_TIFFS': {'file_ids': [1], 'multiple': False}}, results.files)

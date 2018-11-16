@@ -120,8 +120,11 @@ class JobManager(models.Manager):
         if input_data:
             input_data.validate(job_type_rev.get_input_interface())
             job.input = convert_data_to_v6_json(input_data).get_dict()
-            
-        # TODO: update job model to have config field and combine job type config and passed in configuration
+
+        if job_config:
+            job_config.validate(job_type_rev.manifest)
+            _ = job_config.remove_secret_settings(job_type_rev.manifest)
+            job.configuration = convert_config_to_v6_json(job_config).get_dict()
 
         # TODO: remove this legacy job types are removed
         if not JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
@@ -1257,6 +1260,8 @@ class Job(models.Model):
     :keyword output: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
     :type output: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword configuration: JSON describing the overriding job configuration for this job instance
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword source_started: The start time of the source data for this job
     :type source_started: :class:`django.db.models.DateTimeField`
@@ -1328,6 +1333,7 @@ class Job(models.Model):
     input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     input_file_size = models.FloatField(blank=True, null=True)
     output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    configuration = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
     # Supplemental sensor metadata fields
     source_started = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -1433,6 +1439,30 @@ class Job(models.Model):
         """
 
         return self.status == 'CANCELED' and not self.has_been_queued()
+
+    def get_job_configuration(self):
+        """Returns the job configuration for this job type
+
+        :returns: The job configuration for this job type
+        :rtype: :class:`job.configuration.configuration.JobConfiguration`
+        """
+
+        if self.configuration:
+            return JobConfigurationV6(config=self.configuration, do_validate=False).get_configuration()
+        else:
+            return self.job_type.get_job_configuration()
+
+    def get_v6_configuration_json(self):
+        """Returns the job configuration in v6 of the JSON schema
+
+        :returns: The job configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        if self.configuration:
+            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        else:
+            return None
 
     def get_input_data(self):
         """Returns the input data for this job
@@ -3406,7 +3436,7 @@ class JobTypeManager(models.Manager):
 
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
-            config = JobConfigurationV6(configuration_dict, do_validate=True). get_configuration()
+            config = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
         except InvalidSeedManifestDefinition as ex:
             is_valid = False
             errors.append(ex.error)

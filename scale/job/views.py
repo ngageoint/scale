@@ -1184,19 +1184,23 @@ class JobsView(ListAPIView):
         except InvalidData as ex:
             logger.exception('Unable to queue new job. Invalid input: %s', job_data)
             raise BadParameter(unicode(ex))
-            
-        if configuration_dict:
-            try:
-                configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-            except InvalidJobConfiguration as ex:
-                message = 'Job type configuration invalid'
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+        except Exception as ex:
+            import pdb; pdb.set_trace()
 
         try:
             job_type = JobType.objects.get(pk=job_type_id)
         except JobType.DoesNotExist:
             raise Http404
+
+        if configuration_dict:
+            try:
+                existing = convert_config_to_v6_json(job_type.get_job_configuration())
+                configuration = JobConfigurationV6(configuration_dict, existing=existing,
+                                                   do_validate=True).get_configuration()
+            except InvalidJobConfiguration as ex:
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
             job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(), 

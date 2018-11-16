@@ -327,7 +327,7 @@ class QueueManager(models.Manager):
             elif job.batch and self.batch.get_configuration().priority:
                 queued_priority = self.batch.get_configuration().priority
             else:
-                queued_priority = job.job_type.get_job_configuration().priority
+                queued_priority = job.get_job_configuration().priority
 
             queue = Queue()
             # select_related from get_jobs_with_related above will only make a single query
@@ -401,7 +401,7 @@ class QueueManager(models.Manager):
 
         return job
 
-    def queue_new_job_v6(self, job_type, data, event, configuration=None):
+    def queue_new_job_v6(self, job_type, data, event, job_configuration=None):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
         job_exe, and queue models are saved in the database in an atomic transaction.
 
@@ -411,8 +411,8 @@ class QueueManager(models.Manager):
         :type data: :class:`data.data.data.data`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param job_configuration: The configuration for running a job of this type, possibly None
+        :type job_configuration: :class:`job.configuration.configuration.JobConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
 
@@ -422,7 +422,7 @@ class QueueManager(models.Manager):
         try:
             job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
             with transaction.atomic():
-                job = Job.objects.create_job_v6(job_type_rev, event.id, data)
+                job = Job.objects.create_job_v6(job_type_rev, event.id, data, job_config=job_configuration)
                 job.save()
                 CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
         except InvalidData as ex:
@@ -437,7 +437,7 @@ class QueueManager(models.Manager):
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
-    def queue_new_job_for_user_v6(self, job_type, job_data, configuration=None):
+    def queue_new_job_for_user_v6(self, job_type, job_data, job_configuration=None):
         """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
         the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
         job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
@@ -447,8 +447,8 @@ class QueueManager(models.Manager):
         :type job_type: :class:`job.models.JobType`
         :param job_data: JSON description defining the job data to run on
         :type job_data: data.data.data.data
-        :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param job_configuration: The configuration for running a job of this type, possibly None
+        :type job_configuration: :class:`job.configuration.configuration.JobConfiguration`
         :returns: The ID of the new job
         :rtype: int
         """
@@ -456,7 +456,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job_v6(job_type, job_data, event, configuration=configuration).id
+        job_id = self.queue_new_job_v6(job_type, job_data, event, job_configuration=job_configuration).id
         return job_id
 
     def queue_new_job_for_user(self, job_type, data):

@@ -1994,7 +1994,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
                 }]
             }
 
-            self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+            self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
     def test_successful(self):
 
