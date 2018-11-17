@@ -47,23 +47,35 @@ class TestDataV6(TestCase):
         # Valid v6 data
         data = {'version': '6', 'files': {'input_a': [1234], 'input_b': [1235, 1236]},
                 'json': {'input_c': 999, 'input_d': {'hello'}}}
-        DataV6(data=data, do_validate=True)
+        data1 = DataV6(data=data, do_validate=True).get_data()
+        self.assertItemsEqual(data1.values['input_a'].file_ids, [1234])
+        self.assertItemsEqual(data1.values['input_b'].file_ids, [1235, 1236])
+        self.assertEqual(data1.values['input_c'].value, 999)
+        self.assertItemsEqual(data1.values['input_d'].value, ['hello'])
 
         # Conversion from v1 job data
         data = {'version': '1.0', 'input_data': [{'name': 'input_a', 'file_id': 1234},
                                                  {'name': 'input_b', 'file_ids': [1235, 1236]},
                                                  {'name': 'input_c', 'value': 'hello'}],
                 'output_data': [{'name': 'geo_image', 'workspace_id': 12}]}
-        DataV6(data=data, do_validate=True)
+        data2 = DataV6(data=data, do_validate=True).get_data()
+        self.assertItemsEqual(data2.values['input_a'].file_ids, [1234])
+        self.assertItemsEqual(data2.values['input_b'].file_ids, [1235, 1236])
+        self.assertEqual(data2.values['input_c'].value, 'hello')
 
         # Conversion from v1 job results
         data = {'version': '1.0', 'output_data': [{'name': 'input_a', 'file_id': 1234},
                                                   {'name': 'input_b', 'file_ids': [1235, 1236]}]}
-        DataV6(data=data, do_validate=True)
+        data3 = DataV6(data=data, do_validate=True).get_data()
+        self.assertItemsEqual(data3.values['input_a'].file_ids, [1234])
+        self.assertItemsEqual(data3.values['input_b'].file_ids, [1235, 1236])
 
         # Conversion from v1 recipe data
         data = {'version': '1.0', 'input_data': [{'name': 'input_a', 'file_id': 1234},
                                                  {'name': 'input_b', 'file_ids': [1235, 1236]},
                                                  {'name': 'input_c', 'value': 'hello'}],
                 'workspace_id': 12}
-        DataV6(data=data, do_validate=True)
+        data4 = DataV6(data=data, do_validate=True).get_data()
+        self.assertItemsEqual(data4.values['input_a'].file_ids, [1234])
+        self.assertItemsEqual(data4.values['input_b'].file_ids, [1235, 1236])
+        self.assertEqual(data4.values['input_c'].value, 'hello')
