@@ -366,7 +366,7 @@ class JobData(object):
                 env_var_name = normalize_env_var_name(file_input.name)
                 if file_input.name not in interface.parameters:
                     logger.warning("File input %s not specified in interface %s" % (file_input.name, interface))
-                if interface[file_input.name].multiple:
+                if interface.parameters[file_input.name].multiple:
                     # When we have input for multiple files, map in the entire directory
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
                 else:

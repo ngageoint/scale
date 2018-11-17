@@ -11,6 +11,7 @@ from data.interface.parameter import FileParameter, JsonParameter
 from job.execution.configuration.docker_param import DockerParameter
 from job.execution.configuration.input_file import InputFile
 from job.configuration.interface.job_interface import JobInterface
+from job.data.job_data import JobData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.execution.configuration.workspace import TaskWorkspace
@@ -70,7 +71,7 @@ class QueuedExecutionConfigurator(object):
         interface = None
         if JobInterfaceSunset.is_seed_dict(job.job_type.manifest):
             interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
-        else:
+        elif job.job_type.manifest and 'input_data' in job.job_type.manifest:
             # TODO: This can be removed when support for legacy job types is removed
             interface = Interface()
             for input_dict in job.job_type.manifest['input_data']:
@@ -84,7 +85,12 @@ class QueuedExecutionConfigurator(object):
                     interface.add_parameter(param)
                 elif input_dict['type'] == 'property':
                     interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
-        env_vars = data.get_injected_env_vars(input_files_dict, interface)
+
+        env_vars = {}
+        if isinstance(data, JobData):
+            env_vars = data.get_injected_env_vars(input_files_dict, interface)
+        else:
+            env_vars = data.get_injected_env_vars(input_files_dict)
 
         task_workspaces = {}
         if job.job_type.is_system:

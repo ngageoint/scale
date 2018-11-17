@@ -65,12 +65,12 @@ class TestJobData(TransactionTestCase):
         job_exe.job.get_job_configuration.return_value = job_config
 
         results = JobResults()._store_output_data_files(files, job_data, job_exe)
-        self.assertEqual({'OUTPUT_TIFFS': {'file_ids': [1], 'multiple': False}}, results.files)
+        self.assertEqual({'OUTPUT_TIFFS': [1]}, results.files)
 
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_success_single_input_file(self, retrieve_files, join):
-        job_data = JobData({'files': {'TEST_FILE_INPUT': {'file_ids': [1]}}})
+        job_data = JobData({'files': {'TEST_FILE_INPUT': [1]}})
         retrieve_files.return_value = {1: '/scale/input/TEST_FILE_INPUT'}
 
         data_files = [SeedInputFiles({'name':'TEST_FILE_INPUT', 'multiple': False, 'required': True, 'mediaTypes': [], 'partial': False})]
@@ -81,7 +81,7 @@ class TestJobData(TransactionTestCase):
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_success_multiple_input_file(self, retrieve_files, join):
-        job_data = JobData({'files': {'TEST_FILE_INPUT': {'file_ids': [1, 2], 'multiple': True}}})
+        job_data = JobData({'files': {'TEST_FILE_INPUT': [1, 2]}})
         retrieve_files.return_value = {1: '/scale/input/TEST_FILE_INPUT1', 2: '/scale/input/TEST_FILE_INPUT2'}
 
         data_files = [SeedInputFiles(
@@ -105,7 +105,7 @@ class TestJobData(TransactionTestCase):
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_missing_file(self, retrieve_files, join):
-        job_data = JobData({'files': {'TEST_FILE_INPUT': {'file_ids':[1], 'multiple': False}}})
+        job_data = JobData({'files': {'TEST_FILE_INPUT': [1]}})
         retrieve_files.return_value = {}
 
         data_files = [SeedInputFiles(
@@ -117,7 +117,7 @@ class TestJobData(TransactionTestCase):
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_missing_plurality_mismatch(self, retrieve_files, join):
-        job_data = JobData({'files': {'TEST_FILE_INPUT': {'multiple': False, 'file_ids': [1]}}})
+        job_data = JobData({'files': {'TEST_FILE_INPUT': [1]}})
         retrieve_files.return_value = {}
 
         data_files = [SeedInputFiles(
