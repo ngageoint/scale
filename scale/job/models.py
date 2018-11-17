@@ -122,9 +122,15 @@ class JobManager(models.Manager):
             job.input = convert_data_to_v6_json(input_data).get_dict()
 
         if job_config:
-            job_config.validate(job_type_rev.manifest)
-            _ = job_config.remove_secret_settings(job_type_rev.manifest)
-            job.configuration = convert_config_to_v6_json(job_config).get_dict()
+            if JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
+                manifest = SeedManifest(job_type_rev.manifest)
+                job_config.validate(manifest)
+                _ = job_config.remove_secret_settings(manifest)
+                job.configuration = convert_config_to_v6_json(job_config).get_dict()
+            else:
+                interface = job_type_rev.manifest
+                job_config.validate_old(interface)
+                job.configuration = convert_config_to_v6_json(job_config).get_dict()
 
         # TODO: remove this legacy job types are removed
         if not JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
