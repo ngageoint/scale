@@ -2014,7 +2014,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
                 'workspace_id': workspace.id
             }]
         }
-        
+        # TODO: Add recipe configuration once it exists
         json_data = { 
             "input" : data_dict,
             "recipe_type_id" : self.recipe_type.pk
@@ -2024,7 +2024,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
-        #Response should be new v6 job detail response
+        #Response should be new v6 recipe detail response
         result = json.loads(response.content)
         self.assertTrue('data' not in result)
         self.assertTrue('/%s/recipes/' % self.api in response['location'])

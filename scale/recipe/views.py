@@ -726,7 +726,7 @@ class RecipesView(ListAPIView):
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
-
+ # TODO: get config like jobs method
         try:
             recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data())
         except InvalidRecipeData as err:
