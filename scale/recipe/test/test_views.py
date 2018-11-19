@@ -1997,7 +1997,8 @@ class TestRecipesPostViewV6(TransactionTestCase):
             self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
     @patch('queue.models.CommandMessageManager')
-    def test_successful(self, mock_msg_mgr):
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful(self, mock_create, mock_msg_mgr):
 
         workspace = storage_test_utils.create_workspace()
         source_file = source_test_utils.create_source(workspace=workspace)
@@ -2028,6 +2029,8 @@ class TestRecipesPostViewV6(TransactionTestCase):
         result = json.loads(response.content)
         self.assertTrue('data' not in result)
         self.assertTrue('/%s/recipes/' % self.api in response['location'])
+        
+        mock_create.assert_called_once()
 
             
 class TestRecipeDetailsViewV6(TransactionTestCase):

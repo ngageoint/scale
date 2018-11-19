@@ -598,7 +598,8 @@ class TestJobsPostViewV6(TestCase):
         self.source_file = source_test_utils.create_source(workspace=self.workspace)
 
     @patch('queue.models.CommandMessageManager')
-    def test_successful(self, mock_msg_mgr):
+    @patch('queue.models.create_process_job_input_messages')
+    def test_successful(self, mock_create, mock_msg_mgr):
         """Tests successfully calling POST jobs view to queue a new job"""
 
         json_data = {
@@ -619,9 +620,11 @@ class TestJobsPostViewV6(TestCase):
         #Response should be new v6 job detail response
         self.assertEqual(result['execution'], None)
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        mock_create.assert_called_once()
         
     @patch('queue.models.CommandMessageManager')
-    def test_successful_configuration(self, mock_msg_mgr):
+    @patch('queue.models.create_process_job_input_messages')
+    def test_successful_configuration(self, mock_create, mock_msg_mgr):
         """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
 
         json_data = {
@@ -643,6 +646,7 @@ class TestJobsPostViewV6(TestCase):
         #Response should be new v6 job detail response
         self.assertEqual(result['execution'], None)
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        mock_create.assert_called_once()
         
     def test_invalid_data(self):
         """Tests successfully calling POST jobs view to queue a new job with invalid input data"""
