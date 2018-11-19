@@ -55,7 +55,50 @@ class TestJobConfigurationV6(TestCase):
                                                               'driver_opts': {'opt_1': 'foo', 'opt_2': 'bar'}}},
                        'output_workspaces': {'default': 'workspace_1', 'outputs': {'output': 'workspace_2'}},
                        'priority': 999, 'settings': {'setting_1': '1234', 'setting_2': '5678'}}
-        JobConfigurationV6(config=config_dict, do_validate=True)
+        existing = JobConfigurationV6(config=config_dict, do_validate=True)
+        jc = existing.get_configuration()
+        vol1 = jc.get_mount_volume('mount_1', 'test1', '/test/path', 'ro')
+        self.assertEqual(vol1.name, 'test1')
+        self.assertEqual(vol1.container_path, '/test/path')
+        self.assertEqual(vol1.mode, 'ro')
+        self.assertEqual(vol1.is_host, True)
+        self.assertEqual(vol1.host_path, '/the/host/path')
+        vol2 = jc.get_mount_volume('mount_2', 'test2', '/test/path', 'ro')
+        self.assertEqual(vol2.name, 'test2')
+        self.assertEqual(vol2.container_path, '/test/path')
+        self.assertEqual(vol2.mode, 'ro')
+        self.assertEqual(vol2.is_host, False)
+        self.assertEqual(vol2.host_path, None)
+        self.assertEqual(vol2.driver, 'driver')
+        self.assertDictEqual(vol2.driver_opts, {'opt_1': 'foo', 'opt_2': 'bar'})
+        self.assertEqual(jc.get_output_workspace('test'), 'workspace_1')
+        self.assertEqual(jc.get_output_workspace('output'), 'workspace_2')
+        self.assertEqual(jc.priority, 999)
+        self.assertEqual(jc.get_setting_value('setting_1'), '1234')
+        self.assertEqual(jc.get_setting_value('setting_2'), '5678')
+
+        # Overriding some settings from an existing config
+        config_dict = {'version': '6', 'priority': 888, 'settings': {'setting_1': '123', 'setting_2': '678'}}
+        jc = JobConfigurationV6(config=config_dict, existing=existing, do_validate=True).get_configuration()
+        vol1 = jc.get_mount_volume('mount_1', 'test1', '/test/path', 'ro')
+        self.assertEqual(vol1.name, 'test1')
+        self.assertEqual(vol1.container_path, '/test/path')
+        self.assertEqual(vol1.mode, 'ro')
+        self.assertEqual(vol1.is_host, True)
+        self.assertEqual(vol1.host_path, '/the/host/path')
+        vol2 = jc.get_mount_volume('mount_2', 'test2', '/test/path', 'ro')
+        self.assertEqual(vol2.name, 'test2')
+        self.assertEqual(vol2.container_path, '/test/path')
+        self.assertEqual(vol2.mode, 'ro')
+        self.assertEqual(vol2.is_host, False)
+        self.assertEqual(vol2.host_path, None)
+        self.assertEqual(vol2.driver, 'driver')
+        self.assertDictEqual(vol2.driver_opts, {'opt_1': 'foo', 'opt_2': 'bar'})
+        self.assertEqual(jc.get_output_workspace('test'), 'workspace_1')
+        self.assertEqual(jc.get_output_workspace('output'), 'workspace_2')
+        self.assertEqual(jc.priority, 888)
+        self.assertEqual(jc.get_setting_value('setting_1'), '123')
+        self.assertEqual(jc.get_setting_value('setting_2'), '678')
 
         # Conversion from valid v2 configuration
         config_dict = {'version': '2.0', 'mounts': {'mount_1': {'type': 'host', 'host_path': '/the/host/path'},
