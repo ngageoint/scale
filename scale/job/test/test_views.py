@@ -597,8 +597,8 @@ class TestJobsPostViewV6(TestCase):
         self.workspace = storage_test_utils.create_workspace()
         self.source_file = source_test_utils.create_source(workspace=self.workspace)
 
-
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests successfully calling POST jobs view to queue a new job"""
 
         json_data = {
@@ -620,7 +620,8 @@ class TestJobsPostViewV6(TestCase):
         self.assertEqual(result['execution'], None)
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
         
-    def test_successful_configuration(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful_configuration(self, mock_msg_mgr):
         """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
 
         json_data = {
