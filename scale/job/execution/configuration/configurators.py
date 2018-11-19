@@ -88,8 +88,11 @@ class QueuedExecutionConfigurator(object):
 
         env_vars = {}
         if isinstance(data, JobData):
+            # call job.data.job_data.JobData.get_injected_env_vars
             env_vars = data.get_injected_env_vars(input_files_dict, interface)
         else:
+            # call old job.configuration.data.job_data.get_injected_env_vars
+            # TODO: remove once old JobData class is no longer used
             env_vars = data.get_injected_env_vars(input_files_dict)
 
         task_workspaces = {}
