@@ -11,8 +11,7 @@ Scale Documentation
             can be disseminated to appropriate users and/or used to evaluate the producing algorithm in terms of 
             performance and accuracy.
 
-Scale was developed at the National Geospatial-Intelligence Agency (NGA) in collaboration with 
-`Ball Aerospace <http://www.ballaerospace.com/>`_ and `Applied Information Sciences (AIS) <http://www.appliedis.com/>`_.
+Scale was developed at the National Geospatial-Intelligence Agency (NGA).
 
 .. toctree::
    :maxdepth: 2
