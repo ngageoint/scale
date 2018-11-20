@@ -178,3 +178,87 @@ A recipe instance JSON describes an instance of a running recipe.
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | sub_recipes_completed      | Integer        | Required | ('recipe' node) The number of completed sub-recipes in the recipe  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
+
+.. _rest_v6_recipe_queue_new_recipe:
+
+Recipe Queue New Recipe
+-----------------------
+
+**Example POST /v6/recipe/ API call**
+
+Request: POST http://.../v6/recipe/
+
+.. code-block:: javascript
+
+  {
+   "input": :ref:`rest_v6_data_data`,
+   "recipe_type_id": 4,
+   "configuration": :ref:`rest_v6_recipe_type_configuration`
+  }
+
+Response: 201 CREATED
+
+.. code-block:: javascript
+
+  {
+      "id": 1,
+      "recipe_type": {
+            "id": 1,
+            "name": "test-recipe-type-1",
+            "title": "Test Recipe Type 1",
+            "description": "Test Description 1",
+            "revision_num": 1
+      },
+      "recipe_type_rev": {
+            "id": 1,
+            "recipe_type": {
+                  "id": 1
+            },
+            "revision_num": 1
+      },
+      "event": {
+            "id": 3,
+            "type": "USER",
+            "occurred": "2018-11-01T13:59:38.462027Z"
+      },
+      "is_superseded": false,
+      "root_superseded_recipe": null,
+      "superseded_recipe": null,
+      "superseded_by_recipe": null,
+      "created": "2018-11-01T13:59:38.471071Z",
+      "completed": null,
+      "superseded": null,
+      "last_modified": "2018-11-01T13:59:38.471175Z"
+  }
+
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Queue New Recipe**                                                                                                    |
++=========================================================================================================================+
+| Creates a new recipe and places it onto the queue                                                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/recipe/                                                                                                    |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipe_type_id     | Integer           | Required | The ID of the recipe type to queue                                  |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| input              | JSON Object       | Required | JSON defining the data to run the recipe on.                        |
+|                    |                   |          | See :ref:`Data JSON <rest_v6_data_data>`                            |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | optional | JSON defining the data to run the job on                            |
+|                    |                   |          | See :ref:`Recipe Configuration <rest_v6_recipe_configuration>`      |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 CREATED                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details for the newly queued recipe data                                       |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Body**           | JSON containing the details of the newly queued recipe                                             |
+|                    | see :ref:`Recipe Details <rest_v6_recipe_details`>                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+

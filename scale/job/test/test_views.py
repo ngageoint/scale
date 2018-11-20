@@ -19,6 +19,7 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
+import source.test.utils as source_test_utils
 from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import Job, JobType
@@ -26,6 +27,7 @@ from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
 from recipe.models import RecipeType
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
+import util.rest as rest_util
 
 
 class TestJobsViewV5(TestCase):
@@ -550,6 +552,138 @@ class TestJobsViewV6(TestCase):
         self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
         self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
+
+class TestJobsPostViewV6(TestCase):
+    
+    api = "v6"
+
+    def setUp(self):
+        django.setup()
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '',
+                    'inputs': {
+                        'files': [{'name': 'input_a'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_a', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+        
+        self.output_workspace = storage_test_utils.create_workspace()
+            
+        self.configuration = {
+            'version': '6',
+            'output_workspaces': {'default': self.output_workspace.name},
+            'priority': 999
+        }
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.workspace = storage_test_utils.create_workspace()
+        self.source_file = source_test_utils.create_source(workspace=self.workspace)
+
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_job_input_messages')
+    def test_successful(self, mock_create, mock_msg_mgr):
+        """Tests successfully calling POST jobs view to queue a new job"""
+
+        json_data = {
+            "input" : {
+                'version': '6', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+
+        #Response should be new v6 job detail response
+        self.assertEqual(result['execution'], None)
+        self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        mock_create.assert_called_once()
+        
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_job_input_messages')
+    def test_successful_configuration(self, mock_create, mock_msg_mgr):
+        """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
+
+        json_data = {
+            "input" : {
+                'version': '6', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk,
+            "configuration" : self.configuration
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+
+        #Response should be new v6 job detail response
+        self.assertEqual(result['execution'], None)
+        self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        mock_create.assert_called_once()
+        
+    def test_invalid_data(self):
+        """Tests successfully calling POST jobs view to queue a new job with invalid input data"""
+
+        json_data = {
+            "input" : {
+                'version': 'BAD', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk,
+            "configuration" : self.configuration
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+    def test_invalid_configuration(self):
+        """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
+
+        config = copy.deepcopy(self.configuration)
+        config['version'] = 'BAD'
+        json_data = {
+            "input" : {
+                'version': '6', 
+                'files': {'input_a': [self.source_file.id]},
+                'json': {}
+            }, 
+            "job_type_id" : self.job_type1.pk,
+            "configuration" : config
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
 
 # TODO: remove when REST API v5 is removed
 class OldTestJobDetailsViewV5(TestCase):

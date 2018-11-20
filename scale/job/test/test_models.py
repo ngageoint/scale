@@ -64,7 +64,7 @@ class TestJobManager(TransactionTestCase):
             }]}
         data = copy.deepcopy(orig_data)
         job_data = JobData(data)
-        Job.objects.populate_job_data(job, job_data)
+        Job.objects.populate_job_data_v5(job, job_data)
         # populate_job_data() strips out extra inputs, so force them back in
         job.data = orig_data
         job.save()
@@ -115,7 +115,7 @@ class TestJobManager(TransactionTestCase):
             }]}
         job_data = JobData(data)
 
-        Job.objects.populate_job_data(job, job_data)
+        Job.objects.populate_job_data_v5(job, job_data)
 
         job = Job.objects.get(id=job.id)
 
@@ -163,7 +163,7 @@ class TestJobManager(TransactionTestCase):
             }]}
         job_data = JobData(data)
 
-        Job.objects.populate_job_data(job, job_data)
+        Job.objects.populate_job_data_v5(job, job_data)
 
         # Check that only Input 1 remains in the job_data
         job = Job.objects.get(id=job.id)

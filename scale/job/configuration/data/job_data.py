@@ -764,7 +764,7 @@ class JobData(object):
         else:
             workspace_names_dict = {}  # {Output name: workspace name}
             # Do the new way, grabbing output workspaces from job configuration
-            config = job_exe.job_type.get_job_configuration()
+            config = job_exe.job.get_job_configuration()
             for name in output_params:
                 if name in config.output_workspaces:
                     workspace_names_dict[name] = config.output_workspaces[name]

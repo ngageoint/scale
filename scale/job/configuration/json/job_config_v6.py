@@ -134,11 +134,13 @@ def convert_config_to_v6_json(config):
 class JobConfigurationV6(object):
     """Represents a v6 job configuration JSON"""
 
-    def __init__(self, config=None, do_validate=False):
+    def __init__(self, config=None, existing=None, do_validate=False):
         """Creates a v6 job configuration JSON object from the given dictionary
 
         :param config: The job configuration JSON dict
         :type config: dict
+        :param existing: Existing JobConfiguration to use for default values for unspecified fields
+        :type existing: JobConfigurationV6
         :param do_validate: Whether to perform validation on the JSON schema
         :type do_validate: bool
 
@@ -148,6 +150,9 @@ class JobConfigurationV6(object):
         if not config:
             config = {}
         self._config = config
+        self._existing_config = None
+        if existing:
+            self._existing_config = existing._config
 
         if 'version' not in self._config:
             self._config['version'] = SCHEMA_VERSION
@@ -223,7 +228,8 @@ class JobConfigurationV6(object):
         """
 
         if 'mounts' not in self._config:
-            self._config['mounts'] = {}
+            self._config['mounts'] = self._existing_config['mounts'] if self._existing_config else {}
+
         for mount_dict in self._config['mounts'].values():
             if mount_dict['type'] == 'volume':
                 if 'driver' not in mount_dict:
@@ -232,14 +238,14 @@ class JobConfigurationV6(object):
                     mount_dict['driver_opts'] = {}
 
         if 'output_workspaces' not in self._config:
-            self._config['output_workspaces'] = {}
+            self._config['output_workspaces'] = self._existing_config['output_workspaces'] if self._existing_config else {}
         if 'default' not in self._config['output_workspaces']:
             self._config['output_workspaces']['default'] = ''
         if 'outputs' not in self._config['output_workspaces']:
             self._config['output_workspaces']['outputs'] = {}
 
         if 'priority' not in self._config:
-            self._config['priority'] = DEFAULT_PRIORITY
+            self._config['priority'] = self._existing_config['priority'] if self._existing_config else DEFAULT_PRIORITY
 
         if 'settings' not in self._config:
-            self._config['settings'] = {}
+            self._config['settings'] = self._existing_config['settings'] if self._existing_config else {}

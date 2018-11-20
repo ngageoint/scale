@@ -17,6 +17,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
+from data.data.exceptions import InvalidData
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
@@ -51,6 +52,7 @@ from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerT
 import util.rest as rest_util
 from util.rest import BadParameter
 from vault.exceptions import InvalidSecretsConfiguration
+from data.data.json.data_v6 import DataV6
 
 logger = logging.getLogger(__name__)
 
@@ -1160,6 +1162,58 @@ class JobsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
 
         return self.get_paginated_response(serializer.data)
+
+    def post(self, request):
+        """Creates a new job, places it on the queue, and returns the new job information in JSON form
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if request.version != 'v6':
+            raise Http404
+        job_type_id = rest_util.parse_int(request, 'job_type_id')
+        job_data = rest_util.parse_dict(request, 'input', {})
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+
+        try:
+            jobData = DataV6(job_data, do_validate=True)
+        except InvalidData as ex:
+            logger.exception('Unable to queue new job. Invalid input: %s', job_data)
+            raise BadParameter(unicode(ex))
+
+        try:
+            job_type = JobType.objects.get(pk=job_type_id)
+        except JobType.DoesNotExist:
+            raise Http404
+
+        if configuration_dict:
+            try:
+                existing = convert_config_to_v6_json(job_type.get_job_configuration())
+                configuration = JobConfigurationV6(configuration_dict, existing=existing,
+                                                   do_validate=True).get_configuration()
+            except InvalidJobConfiguration as ex:
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+
+        try:
+            job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(), 
+                                                             job_configuration=configuration)
+        except InvalidData as err:
+            logger.exception('Invalid job data.')
+            return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            job_details = Job.objects.get_details(job_id)
+        except Job.DoesNotExist:
+            raise Http404
+
+        serializer = JobDetailsSerializerV6(job_details)
+        job_url = reverse('job_details_view', args=[job_id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
 
 class CancelJobsView(GenericAPIView):

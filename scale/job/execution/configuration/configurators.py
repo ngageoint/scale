@@ -6,9 +6,12 @@ import math
 
 from django.conf import settings
 
+from data.interface.interface import Interface
+from data.interface.parameter import FileParameter, JsonParameter
 from job.execution.configuration.docker_param import DockerParameter
 from job.execution.configuration.input_file import InputFile
 from job.configuration.interface.job_interface import JobInterface
+from job.data.job_data import JobData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.execution.configuration.workspace import TaskWorkspace
@@ -17,6 +20,7 @@ from job.execution.container import get_job_exe_input_vol_name, get_job_exe_outp
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
 from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
+from job.seed.manifest import SeedManifest
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
@@ -64,7 +68,32 @@ class QueuedExecutionConfigurator(object):
 
         # Set up env vars for job's input data
         input_values = data.get_injected_input_values(input_files_dict)
-        env_vars = data.get_injected_env_vars(input_files_dict)
+        interface = None
+        if JobInterfaceSunset.is_seed_dict(job.job_type.manifest):
+            interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
+        elif job.job_type.manifest and 'input_data' in job.job_type.manifest:
+            # TODO: This can be removed when support for legacy job types is removed
+            interface = Interface()
+            for input_dict in job.job_type.manifest['input_data']:
+                media_types = input_dict['media_types'] if 'media_types' in input_dict else []
+                required = input_dict['required'] if 'required' in input_dict else True
+                if input_dict['type'] == 'file':
+                    param = FileParameter(input_dict['name'], media_types, required, False)
+                    interface.add_parameter(param)
+                elif input_dict['type'] == 'files':
+                    param = FileParameter(input_dict['name'], media_types, required, True)
+                    interface.add_parameter(param)
+                elif input_dict['type'] == 'property':
+                    interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
+
+        env_vars = {}
+        if isinstance(data, JobData):
+            # call job.data.job_data.JobData.get_injected_env_vars
+            env_vars = data.get_injected_env_vars(input_files_dict, interface)
+        else:
+            # call old job.configuration.data.job_data.get_injected_env_vars
+            # TODO: remove once old JobData class is no longer used
+            env_vars = data.get_injected_env_vars(input_files_dict)
 
         task_workspaces = {}
         if job.job_type.is_system:
@@ -82,7 +111,7 @@ class QueuedExecutionConfigurator(object):
             else:
                 # Set output workspaces from job configuration
                 output_workspaces = {}
-                job_config = job.job_type.get_job_configuration()
+                job_config = job.get_job_configuration()
                 interface = JobInterfaceSunset.create(job.job_type.manifest, do_validate=False)
                 for output_name in interface.get_file_output_names():
                     output_workspace = job_config.get_output_workspace(output_name)
@@ -380,7 +409,7 @@ class ScheduledExecutionConfigurator(object):
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
                                env_vars=env_vars)
 
-        job_config = job_type.get_job_configuration()
+        job_config = job_exe.job.get_job_configuration()
         mount_volumes = {}
         for mount in interface.get_mounts():
             name = mount['name']
@@ -500,7 +529,7 @@ class ScheduledExecutionConfigurator(object):
             config_with_secrets.add_to_task('pre', settings=self._system_settings)
             config.add_to_task('post', settings=self._system_settings_hidden)
             config_with_secrets.add_to_task('post', settings=self._system_settings)
-            job_config = job_type.get_job_configuration()
+            job_config = job_exe.job.get_job_configuration()
             secret_settings = secrets_mgr.retrieve_job_type_secrets(job_type.get_secrets_key())
             for _config, secrets_hidden in [(config, True), (config_with_secrets, False)]:
                 task_settings = {}

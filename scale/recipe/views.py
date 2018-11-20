@@ -14,8 +14,11 @@ from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
+
+from data.data.json.data_v6 import DataV6
 from job.models import Job, JobType
-from recipe.configuration.data.exceptions import InvalidRecipeConnection
+from queue.models import Queue
+from recipe.configuration.data.exceptions import InvalidRecipeConnection, InvalidRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
@@ -705,6 +708,33 @@ class RecipesView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+    def post(self, request):
+        """Queue a recipe and returns the new job information in JSON form
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if request.version != 'v6':
+            raise Http404
+
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+        recipe_data = rest_util.parse_dict(request, 'input', {})
+        recipeData = DataV6(recipe_data, do_validate=True)
+        try:
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise Http404
+ # TODO: get config like jobs method
+        try:
+            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data())
+        except InvalidRecipeData as err:
+            return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+            
+        serializer = RecipeSerializerV6(recipe)
+        recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""

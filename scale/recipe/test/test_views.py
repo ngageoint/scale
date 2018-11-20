@@ -14,6 +14,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+import source.test.utils as source_test_utils
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
@@ -1870,23 +1871,23 @@ class TestRecipesViewV6(TransactionTestCase):
 #TODO: Update test when implementing v6 recipe api
     # def test_superseded(self):
     #     """Tests successfully calling the recipe details view for superseded recipes."""
-    #
+
     #     graph1 = RecipeGraph()
     #     graph1.add_job('kml', self.job_type1.name, self.job_type1.version)
     #     graph2 = RecipeGraph()
     #     graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
     #     delta = RecipeGraphDelta(graph1, graph2)
-    #
+
     #     superseded_jobs = {recipe_job.node_name: recipe_job.job for recipe_job in self.recipe1_jobs}
     #     new_recipe = recipe_test_utils.create_recipe_handler(
     #         recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
     #     ).recipe
-    #
+
     #     # Make sure the original recipe was updated
     #     url = '/%s/recipes/%i/' % (self.api, self.recipe1.id)
     #     response = self.client.generic('GET', url)
     #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-    #
+
     #     result = json.loads(response.content)
     #     self.assertTrue(result['is_superseded'])
     #     self.assertIsNone(result['root_superseded_recipe'])
@@ -1896,12 +1897,12 @@ class TestRecipesViewV6(TransactionTestCase):
     #     self.assertEqual(len(result['jobs']), 1)
     #     for recipe_job in result['jobs']:
     #         self.assertTrue(recipe_job['is_original'])
-    #
+
     #     # Make sure the new recipe has the expected relations
     #     url = '/%s/recipes/%i/' % (self.api, new_recipe.id)
     #     response = self.client.generic('GET', url)
     #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-    #
+
     #     result = json.loads(response.content)
     #     self.assertFalse(result['is_superseded'])
     #     self.assertIsNotNone(result['root_superseded_recipe'])
@@ -1912,6 +1913,124 @@ class TestRecipesViewV6(TransactionTestCase):
     #     self.assertEqual(len(result['jobs']), 1)
     #     for recipe_job in result['jobs']:
     #         self.assertFalse(recipe_job['is_original'])
+            
+
+
+
+class TestRecipesPostViewV6(TransactionTestCase):
+    
+    api = 'v6'
+
+    def setUp(self):
+            django.setup()
+
+            workspace = storage_test_utils.create_workspace()
+            source_file = source_test_utils.create_source(workspace=workspace)
+            self.event = trigger_test_utils.create_trigger_event()
+
+            interface_1 = {
+                'version': '1.0',
+                'command': 'test_command',
+                'command_arguments': 'test_arg',
+                'input_data': [{
+                    'name': 'Test Input 1',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
+                }],
+                'output_data': [{
+                    'name': 'Test Output 1',
+                    'type': 'files',
+                    'media_type': 'image/png',
+                }]
+            }
+            self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+
+            interface_2 = {
+                'version': '1.0',
+                'command': 'test_command',
+                'command_arguments': 'test_arg',
+                'input_data': [{
+                    'name': 'Test Input 2',
+                    'type': 'files',
+                    'media_types': ['image/png', 'image/tiff'],
+                }],
+                'output_data': [{
+                    'name': 'Test Output 2',
+                    'type': 'file',
+                }]
+            }
+            self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+            definition = {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'Recipe Input',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
+                }],
+                'jobs': [{
+                    'name': 'Job 1',
+                    'job_type': {
+                        'name': self.job_type_1.name,
+                        'version': self.job_type_1.version,
+                    },
+                    'recipe_inputs': [{
+                        'recipe_input': 'Recipe Input',
+                        'job_input': 'Test Input 1',
+                    }]
+                }, {
+                    'name': 'Job 2',
+                    'job_type': {
+                        'name': self.job_type_2.name,
+                        'version': self.job_type_2.version,
+                    },
+                    'dependencies': [{
+                        'name': 'Job 1',
+                        'connections': [{
+                            'output': 'Test Output 1',
+                            'input': 'Test Input 2',
+                        }]
+                    }]
+                }]
+            }
+
+            self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
+
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful(self, mock_create, mock_msg_mgr):
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+ 
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        # TODO: Add recipe configuration once it exists
+        json_data = { 
+            "input" : data_dict,
+            "recipe_type_id" : self.recipe_type.pk
+        }
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        #Response should be new v6 recipe detail response
+        result = json.loads(response.content)
+        self.assertTrue('data' not in result)
+        self.assertTrue('/%s/recipes/' % self.api in response['location'])
+        
+        mock_create.assert_called_once()
 
             
 class TestRecipeDetailsViewV6(TransactionTestCase):

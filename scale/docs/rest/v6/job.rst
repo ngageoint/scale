@@ -248,6 +248,164 @@ Response: 200 OK
 | .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 
+.. _rest_v6_job_queue_new_job:
+
+v6 Job Queue new Job
+--------------------
+
+**Example POST /v6/jobs/ API call**
+
+Request: POST http://.../v6/jobs/
+
+.. code-block:: javascript
+
+ {
+   "input": :ref:`rest_v6_data_data`,
+   "job_type_id": 1,
+   "configuration": :ref:`rest_v6_job_type_configuration`
+ }
+
+Response: 201 Created
+Headers:
+Location http://.../v6/job/1/
+
+.. code-block:: javascript
+
+  {
+      "id": 1,
+      "job_type": {
+          "id": 1,
+          "name": "test-job",
+          "version": "1.0.0",
+          "title": null,
+          "description": null,
+          "icon_code": null
+      },
+      "status": "QUEUED",
+      "job_type_rev": {
+          "id": 1,
+          "job_type": {
+              "id": 1,
+              "name": "test-job",
+              "version": "1.0.0",
+              "title": null,
+              "description": null,
+              "icon_code": null
+          },
+          "revision_num": 1,
+          "docker_image": "fake",
+          "created": "2018-11-01T13:30:22.485611Z",
+          "manifest": {
+              "job": {
+                  "maintainer": {
+                      "name": "John Doe",
+                      "email": "jdoe@example.com"
+                  },
+                  "jobVersion": "1.0.0",
+                  "title": "Test Job",
+                  "description": "This is a test job",
+                  "timeout": 10,
+                  "interface": {
+                      "inputs": {
+                          "files": [
+                              {
+                                  "name": "input_a"
+                              }
+                          ]
+                      },
+                      "command": "",
+                      "outputs": {
+                          "files": [
+                              {
+                                  "pattern": "*.png",
+                                  "multiple": true,
+                                  "name": "output_a"
+                              }
+                          ]
+                      }
+                  },
+                  "packageVersion": "1.0.0",
+                  "name": "test-job"
+              },
+              "seedVersion": "1.0.0"
+          }
+      },
+      "event": {
+          "id": 1,
+          "type": "USER",
+          "occurred": "2018-11-01T13:30:22.522060Z"
+      },
+      "recipe": null,
+      "batch": null,
+      "is_superseded": false,
+      "superseded_job": null,
+      "node": null,
+      "error": null,
+      "num_exes": 1,
+      "input_file_size": 1.0,
+      "source_started": null,
+      "source_ended": null,
+      "created": "2018-11-01T13:30:22.530638Z",
+      "queued": "2018-11-01T13:30:22.593052Z",
+      "started": null,
+      "ended": null,
+      "last_status_change": "2018-11-01T13:30:22.593052Z",
+      "superseded": null,
+      "last_modified": "2018-11-01T13:30:23.026289Z",
+      "superseded_by_job": null,
+      "resources": {
+          "resources": {
+              "mem": 128.0,
+              "gpus": 0.0,
+              "disk": 1.0,
+              "cpus": 0.25
+          }
+      },
+      "execution": null,
+      "input": {
+          "files": {
+              "input_a": [
+                  1
+              ]
+          },
+          "json": {}
+      },
+      "output": {
+          "files": {},
+          "json": {}
+      }
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Queue New Job**                                                                                                       |
++=========================================================================================================================+
+| Creates a new job and places it onto the queue                                                                          |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/job/                                                                                                       |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_id        | Integer           | Required | The ID of the job type for the new job                              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| input              | JSON Object       | Required | JSON defining the data to run the job on.                           |
+|                    |                   |          | See :ref:`Data JSON <rest_v6_data_data>`                            |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | optional | JSON defining the data to run the job on                            |
+|                    |                   |          | See :ref:`Job Type Configuration <rest_v6_job_type_configuration>`  |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 CREATED                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details for the newly queued job                                               |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Body**           | JSON containing the details of the newly queued job, see :ref:`Job Details <rest_v6_job_details`>  |
++--------------------+----------------------------------------------------------------------------------------------------+
+
 .. _rest_v6_job_details:
 
 v6 Job Details

@@ -132,6 +132,23 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/job_list'
+    post:
+      operationId: _rest_v6_job_post
+      description: creates a new job and adds it to the queue
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/job_post'
+      responses:
+        '200':
+          description: |-
+            201 CREATED response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/job_details'
 
   /jobs/{id}/:
     get:
@@ -375,6 +392,21 @@ components:
             $ref: '#/components/schemas/job'
           description: List of Job objects
 
+    job_post:
+      title: Job Post
+      type: object
+      required: [job_type_id,input]
+      properties:
+        job_type_id:
+          type: int
+          description: the ID of the job type
+        input:
+            description: The input data for the job.
+            $ref: '#/components/schemas/data'
+        configuration:
+            description: The job type configuration for the job.
+            $ref: '#/components/schemas/job_type_config'
+    
     job_base:
       title: Job Base
       type: object
@@ -788,6 +820,7 @@ components:
     task_workspace:
       title: Task Workspace
       type: object
+      required: [mode]
       properties:
         mode:
           type: string
@@ -797,8 +830,7 @@ components:
           type: string
           description: The name of Docker volume that will be mounted into the
             task’s container in order to make the workspace available.
-      required:
-      - mode
+
     task_volume:
       title: Task Volume
       type: object

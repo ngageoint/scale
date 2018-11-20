@@ -6,6 +6,7 @@ import time
 import django
 from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
+from mock import patch
 
 import job.test.utils as job_test_utils
 import product.test.utils as product_test_utils
@@ -18,12 +19,15 @@ from error.models import reset_error_cache
 from data.data.data import Data
 from data.data.json.data_v6 import convert_data_to_v6_json
 from job.configuration.data.job_data import JobData
+
+from job.data.job_data import JobData as JobDataV6
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.models import Recipe, RecipeNode
+from data.data.json.data_v6 import DataV6
 
 
 class TestJobLoadManager(TestCase):
@@ -300,7 +304,8 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
         job = Queue.objects.queue_new_job(job_type, data, event)
         self.assertEqual(job.status, 'QUEUED')
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.queue_new_job() successfully with a Seed job type"""
 
         workspace = storage_test_utils.create_workspace()
@@ -344,10 +349,9 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
                 'workspace_id': workspace.id
             }]
         }
-        data = JobData(data_dict)
-        
-        job = Queue.objects.queue_new_job(job_type, data, event)
+        data = JobDataV6(data_dict)
 
+        job = Queue.objects.queue_new_job_v6(job_type, data._new_data, event)
         self.assertEqual(job.status, 'QUEUED')
 
 
@@ -443,7 +447,29 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         self.data = LegacyRecipeData(data)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+        recipetype1 = recipe_test_utils.create_recipe_type_v6()
+ 
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobDataV6(data_dict)
+
+        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event)
+
+    def test_successful_legacy(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
 
         recipe = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
