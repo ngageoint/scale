@@ -32,7 +32,7 @@ Response: 200 OK
                 "title": "My Job", 
                 "description": "A simple job type", 
                 "icon_code": "f013", 
-                "num_versions": 1, 
+                "versions": ["1.0.0"], 
                 "latest_version": "1.0.0" 
             }
         ] 
@@ -53,6 +53,9 @@ Response: 200 OK
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| id                 | Integer           | Optional | Return only job types with one version has a matching id.           |
+|                    |                   |          | Duplicate to search for multiple ids.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_active          | Boolean           | Optional | Return only job types with one version that matches is_active flag. |
 |                    |                   |          | Defaults to all job types.                                          |
@@ -88,7 +91,7 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .icon_code               | String            | A font-awesome icon code for the latest version of this job type.        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .num_versions            | Ingeger           | The number of versions of this job type.                                 |
+| .versions                | Array             | List of versions of this job type.                                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .latest_version          | String            | The latest version of this job type.                                     |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -184,10 +187,10 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_system               | Boolean           | Whether this is a system type.                                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .max_scheduled           | Ingeger           | Maximum  number of jobs of this type that may be scheduled to run at the |
+| .max_scheduled           | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
 |                          |                   | same time. May be null.                                                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .revision_num            | Ingeger           | The number of versions of this job type.                                 |
+| .revision_num            | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -269,10 +272,10 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | is_system                | Boolean           | Whether this is a system type.                                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| max_scheduled            | Ingeger           | Maximum  number of jobs of this type that may be scheduled to run at the |
+| max_scheduled            | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
 |                          |                   | same time. May be null.                                                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| revision_num             | Ingeger           | The number of versions of this job type.                                 |
+| revision_num             | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -360,7 +363,7 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .job_type                | JSON Object       | The job type                                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .revision_num            | Ingeger           | The number for this revision of the job type.                            |
+| .revision_num            | Integer           | The number for this revision of the job type.                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -415,7 +418,7 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .job_type                | JSON Object       | The job type                                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| revision_num             | Ingeger           | The number for this revision of the job type.                            |
+| revision_num             | Integer           | The number for this revision of the job type.                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
