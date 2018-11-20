@@ -460,7 +460,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0047_jobtype_versionarray">job.migrations.0047_jobtype_versionarray module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0048_auto_20180913_1632">job.migrations.0048_auto_20180913_1632 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0049_auto_20180927_1531">job.migrations.0049_auto_20180927_1531 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0050_auto_20181109_2037">job.migrations.0050_auto_20181109_2037 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0050_job_configuration">job.migrations.0050_job_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1122,6 +1122,7 @@ queued.</li>
 <li><strong>input_file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for input files for this job</li>
 <li><strong>output</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description defining the results for this job. This field is populated when the job is
 successfully completed.</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON describing the overriding job configuration for this job instance</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The start time of the source data for this job</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The end time of the source data for this job</li>
 <li><strong>source_sensor_class</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The class of sensor used to produce the source file for this job</li>
@@ -1373,6 +1374,13 @@ never been queued before.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="job.models.Job.configuration">
+<code class="descname">configuration</code><a class="headerlink" href="#job.models.Job.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="job.models.Job.created">
 <code class="descname">created</code><a class="headerlink" href="#job.models.Job.created" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -1444,6 +1452,22 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input data for this job</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.get_job_configuration">
+<code class="descname">get_job_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_job_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job configuration for this job type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job configuration for this job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1570,6 +1594,22 @@ object the first time, the query is executed.</p>
 <dt id="job.models.Job.get_status_display">
 <code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.get_v6_configuration_json">
+<code class="descname">get_v6_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_v6_configuration_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job configuration in v6 of the JSON schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job configuration in v6 of the JSON schema</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.models.Job.get_v6_input_data_json">
@@ -3760,7 +3800,7 @@ job is superseding. The returned job model will have not yet been saved in the d
 
 <dl class="method">
 <dt id="job.models.JobManager.create_job_v6">
-<code class="descname">create_job_v6</code><span class="sig-paren">(</span><em>job_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_job_v6</code><span class="sig-paren">(</span><em>job_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>job_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given job type revision and returns the (unsaved) job model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3774,6 +3814,7 @@ job is superseding. The returned job model will have not yet been saved in the d
 <li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this job</li>
 <li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this job</li>
 <li><strong>superseded_job</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job that the created job is superseding, possibly None</li>
+<li><strong>job_config</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The configuration overrides for running this job, possibly None</li>
 </ul>
 </td>
 </tr>
@@ -4173,8 +4214,8 @@ setting of their associated job type.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.populate_job_data">
-<code class="descname">populate_job_data</code><span class="sig-paren">(</span><em>job</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.populate_job_data" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.JobManager.populate_job_data_v5">
+<code class="descname">populate_job_data_v5</code><span class="sig-paren">(</span><em>job</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.populate_job_data_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
 on the job model. The job should have its related job_type and job_type_rev models populated.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -8210,6 +8251,24 @@ example: input_1</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.views.JobsView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new job, places it on the queue, and returns the new job information in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>

@@ -439,6 +439,24 @@ possibly None</p>
 <p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the configuration is invalid</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.validate_old">
+<code class="descname">validate_old</code><span class="sig-paren">(</span><em>interface_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.validate_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the configuration against old interface to find setting and mount usages</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface_dict</strong> (<em>dict</em>) &#8211; The interface for the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>

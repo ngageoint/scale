@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">v6 Ingest Services</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Job Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#v6-job-list">v6 Job List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-job-queue-new-job">v6 Job Queue new Job</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-job-details">v6 Job Details</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-job-input-file-list">v6 Job Input File List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-job-executions-list">v6 Job Executions List</a></li>
@@ -567,6 +568,181 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td colspan="2">.last_modified</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-job-queue-new-job">
+<span id="rest-v6-job-queue-new-job"></span><h2>v6 Job Queue new Job<a class="headerlink" href="#v6-job-queue-new-job" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/jobs/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/jobs/">http://.../v6/jobs/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`rest_v6_data_data`</span><span class="p">,</span>
+  <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`rest_v6_job_type_configuration`</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 201 Created
+Headers:
+Location <a class="reference external" href="http://.../v6/job/1/">http://.../v6/job/1/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test-job&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;QUEUED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test-job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;fake&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:22.485611Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;maintainer&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;email&quot;</span><span class="o">:</span> <span class="s2">&quot;jdoe@example.com&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;jobVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Test Job&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a test job&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_a&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">]</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;pattern&quot;</span><span class="o">:</span> <span class="s2">&quot;*.png&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;multiple&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_a&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">]</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;packageVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test-job&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;seedVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:22.522060Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;batch&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;source_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;source_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:22.530638Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:22.593052Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:22.593052Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:23.026289Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">128.0</span><span class="p">,</span>
+            <span class="s2">&quot;gpus&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">0.25</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;execution&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_a&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="mi">1</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">{}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Queue New Job</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Creates a new job and places it onto the queue</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/job/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>job_type_id</td>
+<td>Integer</td>
+<td>Required</td>
+<td>The ID of the job type for the new job</td>
+</tr>
+<tr class="row-odd"><td>input</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>JSON defining the data to run the job on.
+See <a class="reference internal" href="data.html#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a></td>
+</tr>
+<tr class="row-even"><td>configuration</td>
+<td>JSON Object</td>
+<td>optional</td>
+<td>JSON defining the data to run the job on
+See <a class="reference internal" href="job_type.html#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration</span></a></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="3">URL pointing to the details for the newly queued job</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="3">JSON containing the details of the newly queued job, see <span class="xref std std-ref">Job Details &lt;rest_v6_job_details</span>&gt;</td>
 </tr>
 </tbody>
 </table>

@@ -110,6 +110,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-forced-nodes-json">Recipe Forced Nodes JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-instance-json">Recipe Instance JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-queue-new-recipe">Recipe Queue New Recipe</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
@@ -459,6 +460,105 @@ will not be created or processed.</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of completed sub-recipes in the recipe</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="recipe-queue-new-recipe">
+<span id="rest-v6-recipe-queue-new-recipe"></span><h2>Recipe Queue New Recipe<a class="headerlink" href="#recipe-queue-new-recipe" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/recipe/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/recipe/">http://.../v6/recipe/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`rest_v6_data_data`</span><span class="p">,</span>
+ <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+ <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`rest_v6_recipe_type_configuration`</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 201 CREATED</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test-recipe-type-1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Test Recipe Type 1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Test Description 1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;recipe_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+          <span class="p">},</span>
+          <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:59:38.462027Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;root_superseded_recipe&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;superseded_recipe&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;superseded_by_recipe&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:59:38.471071Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:59:38.471175Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Queue New Recipe</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Creates a new recipe and places it onto the queue</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/recipe/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>recipe_type_id</td>
+<td>Integer</td>
+<td colspan="2">Required | The ID of the recipe type to queue</td>
+</tr>
+<tr class="row-odd"><td>input</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>JSON defining the data to run the recipe on.
+See <a class="reference internal" href="data.html#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a></td>
+</tr>
+<tr class="row-even"><td>configuration</td>
+<td>JSON Object</td>
+<td>optional</td>
+<td>JSON defining the data to run the job on
+See <span class="xref std std-ref">Recipe Configuration</span></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="3">URL pointing to the details for the newly queued recipe data</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="3">JSON containing the details of the newly queued recipe
+see <span class="xref std std-ref">Recipe Details &lt;rest_v6_recipe_details</span>&gt;</td>
 </tr>
 </tbody>
 </table>

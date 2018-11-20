@@ -995,7 +995,7 @@ job_exe, and queue models are saved in the database in an atomic transaction.</p
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_job_for_user">
-<code class="descname">queue_new_job_for_user</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_for_user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_job_for_user</code><span class="sig-paren">(</span><em>job_type</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_for_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
 the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
 job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
@@ -1014,6 +1014,64 @@ invalid, a <a class="reference internal" href="job.configuration.data.html#job.c
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.models.QueueManager.queue_new_job_for_user_v6">
+<code class="descname">queue_new_job_for_user_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_for_user_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
+the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
+job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
+invalid, a <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></code></a> will be thrown.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
+<li><strong>job_data</strong> (<em>data.data.data.data</em>) &#8211; JSON description defining the job data to run on</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The ID of the new job</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.models.QueueManager.queue_new_job_v6">
+<code class="descname">queue_new_job_v6</code><span class="sig-paren">(</span><em>job_type</em>, <em>data</em>, <em>event</em>, <em>job_configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
+job_exe, and queue models are saved in the database in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
+<li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">data.data.data.data</span></code>) &#8211; The job data to run on</li>
+<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this job</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new queued job</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><strong>job.configuration.data.exceptions.InvalidData</strong></a> &#8211; If the job data is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -1053,7 +1111,7 @@ All database changes occur in an atomic transaction.</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_recipe_for_user">
-<code class="descname">queue_new_recipe_for_user</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_recipe_for_user</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given type and data at the request of a user.</p>
 <p>The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
 event model must have already been saved in the database (it must have an ID). All database changes occur in an
@@ -1069,6 +1127,66 @@ atomic transaction.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.models.QueueManager.queue_new_recipe_for_user_v6">
+<code class="descname">queue_new_recipe_for_user_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new recipe for the given type and data at the request of a user.</p>
+<p>The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
+event model must have already been saved in the database (it must have an ID). All database changes occur in an
+atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
+<li><strong>recipe_input</strong> (<code class="xref py py-class docutils literal"><span class="pre">data.data.data.data</span></code>) &#8211; The recipe data to run on, should be None if superseded_recipe is provided</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A handler for the new recipe</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.handler.RecipeHandler" title="recipe.handlers.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.handler.RecipeHandler</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.models.QueueManager.queue_new_recipe_v6">
+<code class="descname">queue_new_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>recipe_input</em>, <em>event</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
+new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
+caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
+All database changes occur in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
+<li><strong>recipe_input</strong> (<code class="xref py py-class docutils literal"><span class="pre">data.data.data.data</span></code>) &#8211; The recipe data to run on, should be None if superseded_recipe is provided</li>
+<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this recipe</li>
+<li><strong>recipe_config</strong> &#8211; config of the recipe</li>
+<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this recipe</li>
+<li><strong>superseded_recipe</strong> (<a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">New recipe type</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>

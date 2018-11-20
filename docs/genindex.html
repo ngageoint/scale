@@ -515,10 +515,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler.add_rule">add_rule() (ingest.handlers.file_handler.FileHandler method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.add_running_job">add_running_job() (job.messages.running_jobs.RunningJobs method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.add_running_job_exes">add_running_job_exes() (job.execution.metrics.TotalJobExeMetrics method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.factory.add_scanner_type">add_scanner_type() (in module ingest.scan.scanners.factory)</a>
@@ -700,6 +700,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.api">(job.test.test_views.TestJobTypesViewV6 attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6.api">(job.test.test_views.TestJobsPostViewV6 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.api">(job.test.test_views.TestJobsUpdateView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.api">(job.test.test_views.TestJobsViewV5 attribute)</a>
@@ -753,6 +755,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.api">(recipe.test.test_views.TestRecipeTypesViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.api">(recipe.test.test_views.TestRecipeTypesViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.api">(recipe.test.test_views.TestRecipesPostViewV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.api">(recipe.test.test_views.TestRecipesViewV5 attribute)</a>
 </li>
@@ -1404,6 +1408,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.configuration">(ingest.models.Strike attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.configuration">(job.models.Job attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.configuration">(job.models.JobExecution attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.configuration">(job.models.JobType attribute)</a>
@@ -1567,10 +1573,10 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.create">create() (batch.views.BatchesView method)</a>
 
       <ul>
@@ -2354,7 +2360,7 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0049_auto_20180927_1531.Migration.dependencies">(job.migrations.0049_auto_20180927_1531.Migration attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_auto_20181109_2037.Migration.dependencies">(job.migrations.0050_auto_20181109_2037.Migration attribute)</a>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_job_configuration.Migration.dependencies">(job.migrations.0050_job_configuration.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -4067,8 +4073,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_job">get_job() (job.seed.manifest.SeedManifest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_job_configuration">get_job_configuration() (job.models.JobType method)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_job_configuration">get_job_configuration() (job.models.Job method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_job_configuration">(job.models.JobType method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.get_job_data">get_job_data() (in module queue.migrations.0015_auto_20170731_1527)</a>
 
       <ul>
@@ -5163,6 +5173,8 @@
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_v6_configuration_json">(ingest.models.Scan method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.get_v6_configuration_json">(ingest.models.Strike method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_v6_configuration_json">(job.models.Job method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_v6_configuration_json">(job.models.JobType method)</a>
 </li>
@@ -6517,7 +6529,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0049_auto_20180927_1531">job.migrations.0049_auto_20180927_1531 (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0050_auto_20181109_2037">job.migrations.0050_auto_20181109_2037 (module)</a>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0050_job_configuration">job.migrations.0050_job_configuration (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
@@ -8134,7 +8146,7 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0049_auto_20180927_1531.Migration">(class in job.migrations.0049_auto_20180927_1531)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_auto_20181109_2037.Migration">(class in job.migrations.0050_auto_20181109_2037)</a>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_job_configuration.Migration">(class in job.migrations.0050_job_configuration)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
@@ -9060,7 +9072,7 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0049_auto_20180927_1531.Migration.operations">(job.migrations.0049_auto_20180927_1531.Migration attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_auto_20181109_2037.Migration.operations">(job.migrations.0050_auto_20181109_2037.Migration attribute)</a>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_job_configuration.Migration.operations">(job.migrations.0050_job_configuration.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -9537,7 +9549,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0016_auto_20160421_1553.Migration.populate_job_configuration">populate_job_configuration() (job.migrations.0016_auto_20160421_1553.Migration method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.populate_job_data">populate_job_data() (job.models.JobManager method)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.populate_job_data_v5">populate_job_data_v5() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0046_jobtyperevision_docker_image.Migration.populate_job_type_revision_docker_image">populate_job_type_revision_docker_image() (job.migrations.0046_jobtyperevision_docker_image.Migration method)</a>
 </li>
@@ -9616,6 +9628,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesValidationView.post">(job.views.JobTypesValidationView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.JobsView.post">(job.views.JobsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.RequeueJobsView.post">(job.views.RequeueJobsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.post">(port.views.ConfigurationUploadView method)</a>
@@ -9633,6 +9647,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.post">(recipe.views.RecipeReprocessView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesValidationView.post">(recipe.views.RecipeTypesValidationView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipesView.post">(recipe.views.RecipesView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.PurgeSourceFileView.post">(storage.views.PurgeSourceFileView method)</a>
 </li>
@@ -10067,12 +10083,12 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.DoesNotExist">Queue.DoesNotExist</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_exe">queue.job_exe (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_load">queue.job_load (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages">queue.messages (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.queued_jobs">queue.messages.queued_jobs (module)</a>
@@ -10163,9 +10179,17 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_job_for_user">queue_new_job_for_user() (queue.models.QueueManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_job_for_user_v6">queue_new_job_for_user_v6() (queue.models.QueueManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_job_v6">queue_new_job_v6() (queue.models.QueueManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe">queue_new_recipe() (queue.models.QueueManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe_for_user">queue_new_recipe_for_user() (queue.models.QueueManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe_for_user_v6">queue_new_recipe_for_user_v6() (queue.models.QueueManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe_v6">queue_new_recipe_v6() (queue.models.QueueManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.queue_roulette_jobs">queue_roulette_jobs() (diagnostic.views.QueueScaleRouletteView method)</a>
 </li>
@@ -12134,6 +12158,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.setUp">(job.test.test_views.TestJobTypesViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6.setUp">(job.test.test_views.TestJobsPostViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.setUp">(job.test.test_views.TestJobsUpdateView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.setUp">(job.test.test_views.TestJobsViewV5 method)</a>
@@ -12389,6 +12415,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.setUp">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.setUp">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.setUp">(recipe.test.test_views.TestRecipesPostViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.setUp">(recipe.test.test_views.TestRecipesViewV5 method)</a>
 </li>
@@ -15258,6 +15286,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.test_invalid_configuration">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6.test_invalid_configuration">(job.test.test_views.TestJobsPostViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateViewV5.test_invalid_configuration">(storage.test.test_views.TestWorkspaceCreateViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateViewV6.test_invalid_configuration">(storage.test.test_views.TestWorkspaceCreateViewV6 method)</a>
@@ -15267,6 +15297,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspacesValidationViewV6.test_invalid_configuration">(storage.test.test_views.TestWorkspacesValidationViewV6 method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6.test_invalid_data">test_invalid_data() (job.test.test_views.TestJobsPostViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_invalid_data_types">test_invalid_data_types() (ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit method)</a>
 
       <ul>
@@ -16215,8 +16247,6 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_invalid">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing">test_parse_datetime_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_datetime_missing_timezone">test_parse_datetime_missing_timezone() (util.test.test_parse.TestParse method)</a>
@@ -16225,6 +16255,8 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing_timezone">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
@@ -16998,6 +17030,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.test_successful">(job.test.test_views.TestJobTypesViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6.test_successful">(job.test.test_views.TestJobsPostViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_successful">(job.test.test_views.TestJobsUpdateView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_successful">(job.test.test_views.TestJobsViewV5 method)</a>
@@ -17070,6 +17104,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.test_successful">(recipe.test.test_views.TestRecipesPostViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/source.test.configuration.html#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.test_successful">(source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceIngestsViewV5.test_successful">(source.test.test_views.TestSourceIngestsViewV5 method)</a>
@@ -17135,9 +17171,11 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_batch">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_successful_configuration">test_successful_configuration() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6.test_successful_configuration">test_successful_configuration() (job.test.test_views.TestJobsPostViewV6 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_successful_configuration">(job.test.test_views.TestJobTypesValidationViewV5 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV6.test_successful_configuration">(job.test.test_views.TestJobTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
@@ -17196,7 +17234,11 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewJob.test_successful_legacy">test_successful_legacy() (queue.test.test_models.TestQueueManagerQueueNewJob method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_legacy">(queue.test.test_models.TestQueueManagerQueueNewRecipe method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeRevisionsViewV6.test_successful_list">test_successful_list() (job.test.test_views.TestJobTypeRevisionsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_successful_new">test_successful_new() (recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
@@ -17571,6 +17613,12 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_v6">test_v6() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewJobView.test_v6_404">test_v6_404() (queue.test.test_views.TestQueueNewJobView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewRecipeView.test_v6_404">(queue.test.test_views.TestQueueNewRecipeView method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsViewsV6.test_v6_products">test_v6_products() (product.test.test_views.TestProductsViewsV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestIngestAddDataTypeTag.test_valid">test_valid() (ingest.test.test_models.TestIngestAddDataTypeTag method)</a>
@@ -18167,6 +18215,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData">TestJobResultsAddOutputToData (class in job.test.configuration.results.test_job_results)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsPostViewV6">TestJobsPostViewV6 (class in job.test.test_views)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView">TestJobsUpdateView (class in job.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5">TestJobsViewV5 (class in job.test.test_views)</a>
@@ -18440,6 +18490,8 @@
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5">TestRecipeReprocessViewV5 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6">TestRecipeReprocessViewV6 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6">TestRecipesPostViewV6 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5">TestRecipesViewV5 (class in recipe.test.test_views)</a>
 </li>
@@ -19063,8 +19115,6 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.update_from_model">update_from_model() (scheduler.node.node_class.Node method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_auto_20181109_2037.Migration.update_job_inputs">update_job_inputs() (job.migrations.0050_auto_20181109_2037.Migration method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.update_job_nodes">update_job_nodes() (recipe.definition.definition.RecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTagManager.update_job_type_tags">update_job_type_tags() (job.models.JobTypeTagManager method)</a>
@@ -19105,10 +19155,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.update_status">update_status() (job.models.JobManager method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.update_task_id_for_lost_task">update_task_id_for_lost_task() (job.execution.tasks.exe_task.JobExecutionTask method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now">update_to_now() (job.execution.metrics.FinishedJobExeMetricsOverTime method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.update_uuid">update_uuid() (storage.models.ScaleFile method)</a>
@@ -19396,6 +19446,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager.validate_job_type_v6">validate_job_type_v6() (job.models.JobTypeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.error.html#job.error.mapping.JobErrorMapping.validate_legacy">validate_legacy() (job.error.mapping.JobErrorMapping method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.configuration.JobConfiguration.validate_old">validate_old() (job.configuration.configuration.JobConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.validate_output_files">validate_output_files() (job.configuration.data.job_data.JobData method)</a>
 
