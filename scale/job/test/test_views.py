@@ -1975,13 +1975,13 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
 
-        url = '/%s/job-types/?id=%d?id=%d' % (self.api, self.job_type1.id, self.job_type2.id)
+        url = '/%s/job-types/?id=%d&id=%d' % (self.api, self.job_type1.id, self.job_type2.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
 
-        url = '/%s/job-types/?id=%d?id=%d' % (self.api, self.job_type4.id, self.job_type5.id)
+        url = '/%s/job-types/?id=%d&id=%d' % (self.api, self.job_type4.id, self.job_type5.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
