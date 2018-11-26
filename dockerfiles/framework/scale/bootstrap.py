@@ -65,32 +65,38 @@ def run(client):
     if not len(db_host):
         deploy_database(client, db_app_name)
 
-    # Determine if logstash should be deployed.
+    blocking_apps = []
+
+    # Determine if Logstash should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
         deploy_logstash(client, log_app_name, es_urls, es_lb)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
+        blocking_apps.append(log_app_name)
 
-    # Wait for all needed apps to be healthy
+    # Determine if RabbitMQ should be deployed.
     if not len(broker_url):
-        rabbitmq_port = get_host_port_from_healthy_app(client, rabbitmq_app_name, 0)
-        broker_url = 'amqp://guest:guest@%s.marathon.mesos:%s//' % (subdomain_gen(rabbitmq_app_name), rabbitmq_port)
+        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(rabbitmq_app_name)
         print("BROKER_URL=%s" % broker_url)
+        blocking_apps.append(rabbitmq_app_name)
 
+    # Determine if Postgres should be deployed.
     if not len(db_host):
-        db_port = get_host_port_from_healthy_app(client, db_app_name, 0)
-        db_host = "%s.marathon.mesos" % subdomain_gen(db_app_name)
+        db_port = '5432'
+        db_host = "%s.marathon.l4lb.thisdcos.directory" % subdomain_gen(db_app_name)
         print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
-
-    if not len(SCALE_LOGGING_ADDRESS):
-        log_port = get_host_port_from_healthy_app(client, log_app_name, 0)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (subdomain_gen(log_app_name), log_port))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
+        blocking_apps.append(db_app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
         webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), webserver_port))
+
+    # Wait for all needed apps to be healthy
+    for app_name in blocking_apps:
+        get_host_port_from_healthy_app(client, app_name, 0)
 
 
 def subdomain_gen(app_name):

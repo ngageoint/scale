@@ -11,7 +11,10 @@
             "portMappings": [
                 {
                     "containerPort": 5432,
-                    "hostPort": 0
+                    "hostPort": 0,
+                    "labels": {
+                        "VIP_0": "/scale-template-db:5432"
+                    }
                 }
             ],
             "forcePullImage": true
