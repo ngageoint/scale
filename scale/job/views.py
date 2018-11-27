@@ -123,14 +123,14 @@ class JobTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        # TODO: Revisit passing multiple keywords
-        keyword = rest_util.parse_string(request, 'keyword', required=False)
+
+        keywords = rest_util.parse_string_list(request, 'keyword', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_system = rest_util.parse_bool(request, 'is_system', required=False)
         ids = rest_util.parse_int_list(request, 'id', required=False)
         order = ['name']
 
-        job_types = JobType.objects.get_job_types_v6(keyword=keyword, ids=ids, is_active=is_active,
+        job_types = JobType.objects.get_job_types_v6(keywords=keywords, ids=ids, is_active=is_active,
                                                      is_system=is_system, order=order)
 
         page = self.paginate_queryset(job_types)

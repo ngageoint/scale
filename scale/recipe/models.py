@@ -1851,11 +1851,11 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.order_by('last_modified')
         return recipe_types
 
-    def get_recipe_types_v6(self, keyword=None, is_active=None, is_system=None, order=None):
+    def get_recipe_types_v6(self, keywords=None, is_active=None, is_system=None, order=None):
         """Returns a list of recipe types within the given time range.
 
-        :param keyword: Query recipe types with name, title, description or tag matching the keyword
-        :type keyword: string
+        :param keywords: Query recipe types with name, title, description or tag matching a keyword
+        :type keywords: list
         :param is_active: Query recipe types that are actively available for use.
         :type is_active: bool
         :param is_system: Query recipe types that are system recipe types.
@@ -1868,9 +1868,13 @@ class RecipeTypeManager(models.Manager):
 
         # Fetch a list of recipe types
         recipe_types = self.all()
-        if keyword: # TODO: Revisit passing multiple keywords
-            recipe_types = recipe_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
-                                         Q(description__icontains=keyword))
+        if keywords:
+            key_query = Q()
+            for keyword in keywords:
+                key_query |= Q(name__icontains=keyword)
+                key_query |= Q(title__icontains=keyword)
+                key_query |= Q(description__icontains=keyword)
+            recipe_types = recipe_types.filter(key_query)
         if is_active is not None:
             recipe_types = recipe_types.filter(is_active=is_active)
         if is_system is not None:

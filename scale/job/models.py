@@ -3009,11 +3009,11 @@ class JobTypeManager(models.Manager):
             job_types = job_types.order_by('last_modified')
         return job_types
 
-    def get_job_types_v6(self, keyword=None, ids=None, is_active=None, is_system=None, order=None):
+    def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
-        :param keyword: Query job types with name, title, description or tag matching the keyword
-        :type keyword: string
+        :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
+        :type keywords: list
         :param ids: Query job types with a version matching the given ids
         :type keyword: list
         :param is_active: Query job types that are actively available for use.
@@ -3028,9 +3028,14 @@ class JobTypeManager(models.Manager):
 
         # Execute a sub-query that returns distinct job type names that match the provided filter arguments
         sub_query = self.all()
-        if keyword: # TODO: Revisit passing multiple keywords
-            sub_query = sub_query.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
-                                         Q(description__icontains=keyword) | Q(jobtypetag__tag__icontains=keyword))
+        if keywords:
+            key_query = Q()
+            for keyword in keywords:
+                key_query |= Q(name__icontains=keyword)
+                key_query |= Q(title__icontains=keyword)
+                key_query |= Q(description__icontains=keyword)
+                key_query |= Q(jobtypetag__tag__icontains=keyword)
+            sub_query = sub_query.filter(key_query)
         if ids:
             sub_query = sub_query.filter(id__in=ids)
         if is_active is not None:
