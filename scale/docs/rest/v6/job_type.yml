@@ -24,7 +24,8 @@ paths:
           name: keyword
           schema:
             type: string
-          description: Keyword to perform a 'like' search on name, title, description, and tag
+          description: Keyword to perform a 'like' search on name, title, description, and tag |
+            may be duplicated to search for multiple keywords
         - in: query
           name: id
           schema:

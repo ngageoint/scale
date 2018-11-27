@@ -53,6 +53,7 @@ Response: 200 OK
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
+|                    |                   |          | Duplicate to search for multiple keywords.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | id                 | Integer           | Optional | Return only job types with one version has a matching id.           |
 |                    |                   |          | Duplicate to search for multiple ids.                               |
