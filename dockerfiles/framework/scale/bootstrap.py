@@ -12,6 +12,7 @@ import time
 import requests
 from mesoshttp.acs import DCOSServiceAuth
 
+APPLICATION_GROUP = os.getenv('APPLICATION_GROUP', None)
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
 SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
@@ -64,38 +65,50 @@ def run(client):
     if not len(db_host):
         deploy_database(client, db_app_name)
 
-    # Determine if logstash should be deployed.
+    blocking_apps = []
+
+    # Determine if Logstash should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
         deploy_logstash(client, log_app_name, es_urls, es_lb)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
+        blocking_apps.append(log_app_name)
 
-    # Wait for all needed apps to be healthy
+    # Determine if RabbitMQ should be deployed.
     if not len(broker_url):
-        rabbitmq_port = get_host_port_from_healthy_app(client, rabbitmq_app_name, 0)
-        broker_url = 'amqp://guest:guest@%s.marathon.mesos:%s//' % (rabbitmq_app_name, rabbitmq_port)
+        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(rabbitmq_app_name)
         print("BROKER_URL=%s" % broker_url)
+        blocking_apps.append(rabbitmq_app_name)
 
+    # Determine if Postgres should be deployed.
     if not len(db_host):
-        db_port = get_host_port_from_healthy_app(client, db_app_name, 0)
-        db_host = "%s.marathon.mesos" % db_app_name
+        db_port = '5432'
+        db_host = "%s.marathon.l4lb.thisdcos.directory" % subdomain_gen(db_app_name)
         print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
-
-    if not len(SCALE_LOGGING_ADDRESS):
-        log_port = get_host_port_from_healthy_app(client, log_app_name, 0)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (log_app_name, log_port))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % log_app_name)
+        blocking_apps.append(db_app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
         webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver)
-        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
+        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), webserver_port))
+
+    # Wait for all needed apps to be healthy
+    for app_name in blocking_apps:
+        get_host_port_from_healthy_app(client, app_name, 0)
+
+
+def subdomain_gen(app_name):
+    prefix = APPLICATION_GROUP if APPLICATION_GROUP else ""
+
+    return "%s%s" % (prefix, app_name)
 
 
 def delete_marathon_app(client, app_name, fail_on_error=False, sleep_secs=5):
     print("Attempting delete of Marathon app: %s" % app_name)
     try:
-        response = client.delete_app(app_name, force=True)
+        response = client.delete_app(get_group_app_name(app_name), force=True)
         print(response, file=sys.stderr)
     except NotFoundError:
         if fail_on_error:
@@ -147,21 +160,33 @@ def apply_set_envs(marathon_json, env_pairs):
 
 def check_app_exists(client, app_name):
     try:
-        client.get_app(app_name)
+        client.get_app(get_group_app_name(app_name))
         return True
     except NotFoundError:
         return False
 
 
 def get_host_port_from_healthy_app(client, app_name, port_index):
-    wait_app_healthy(client, app_name)
+    group_app_name = get_group_app_name(app_name)
 
-    return get_marathon_app_single_task_host_port(client, app_name, port_index)
+    wait_app_healthy(client, group_app_name)
+
+    return get_marathon_app_single_task_host_port(client, group_app_name, port_index)
 
 
 def get_marathon_app_single_task_host_port(client, app_name, port_index):
     app = client.get_app(app_name)
     return app.tasks[0].ports[port_index]
+
+
+def get_group_app_name(app_name):
+    # Add in the application group, if specified
+    if APPLICATION_GROUP:
+        group_app_name = '/%s/%s' % (APPLICATION_GROUP, app_name)
+    else:
+        group_app_name = '/%s' % app_name
+
+    return group_app_name
 
 
 def initialize_app_template(template_name, app_name, image_name):
@@ -171,7 +196,7 @@ def initialize_app_template(template_name, app_name, image_name):
     marathon_json_file.close()
 
     # Update id and VIPs to reflect app_name
-    marathon = search_replace(marathon, 'scale-template-%s' % template_name, app_name)
+    marathon = search_replace(marathon, 'scale-template-%s' % template_name, get_group_app_name(app_name))
 
     # Set container.docker.image
     if image_name:
@@ -253,9 +278,8 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
     marathon['labels']['HAPROXY_0_VHOST'] = vhost
 
     deploy_marathon_app(client, marathon)
-    wait_app_healthy(client, app_name)
 
-    webserver_port = get_marathon_app_single_task_host_port(client, app_name, 0)
+    webserver_port = get_host_port_from_healthy_app(client, app_name, 0)
 
     return webserver_port
 
