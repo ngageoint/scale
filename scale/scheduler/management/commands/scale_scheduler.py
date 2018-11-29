@@ -63,7 +63,11 @@ class Command(BaseCommand):
         elif settings.PRINCIPAL and settings.SECRET:
             self.client.set_credentials(settings.PRINCIPAL, settings.SECRET)
 
+        mesos_role = settings.MESOS_ROLE
+        logger.info('Launching scheduler with role %s' % mesos_role)
         self.client.set_role(settings.MESOS_ROLE)
+
+        logger.info('Accepting offers from roles %s' % settings.ACCEPTED_RESOURCE_ROLES)
 
         self.client.add_capability('GPU_RESOURCES')
 

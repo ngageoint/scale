@@ -7,6 +7,7 @@ import logging
 import threading
 
 from django.utils.timezone import now
+from django.conf import settings
 
 from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
@@ -246,6 +247,7 @@ class ScaleScheduler(object):
         agents = {}
         resource_offers = []
         total_resources = NodeResources()
+        skipped_roles = set()
         for offer in offers:
             offer = from_mesos_offer(offer)
             offer_id = offer.id.value
@@ -254,18 +256,27 @@ class ScaleScheduler(object):
             hostname = offer.hostname
             resource_list = []
             for resource in offer.resources:
-                if resource.type == RESOURCE_TYPE_SCALAR:  # This is the SCALAR type
-                    resource_list.append(ScalarResource(resource.name, resource.scalar.value))
-            resources = NodeResources(resource_list)
-            total_resources.add(resources)
-            agents[agent_id] = Agent(agent_id, hostname)
-            resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+                # Only accept resource that are of SCALAR type and have a role matching our accept list
+                if resource.type == RESOURCE_TYPE_SCALAR:
+                    if resource.role in settings.ACCEPTED_RESOURCE_ROLES:
+                        resource_list.append(ScalarResource(resource.name, resource.scalar.value))
+                    else:
+                        skipped_roles.add(resource.role)
+                        break
+
+            # Only register agent, if offers are being received
+            if len(resource_list):
+                resources = NodeResources(resource_list)
+                total_resources.add(resources)
+                agents[agent_id] = Agent(agent_id, hostname)
+                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
 
         node_mgr.register_agents(agents.values())
         resource_mgr.add_new_offers(resource_offers)
-
         num_offers = len(resource_offers)
         logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))
+        if skipped_roles:
+            logger.warning('Skipped offers that do not match accepted roles: %s', skipped_roles)
         scheduler_mgr.add_new_offer_count(num_offers)
 
         duration = now() - started
@@ -318,6 +329,7 @@ class ScaleScheduler(object):
 
         if mesos_status == 'TASK_ERROR':
             logger.error('Status update for task %s: %s', task_id, mesos_status)
+            logger.debug(status)
         if mesos_status == 'TASK_LOST':
             logger.warning('Status update for task %s: %s', task_id, mesos_status)
         else:

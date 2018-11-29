@@ -24,8 +24,11 @@ DOCKER_VERSION = scale.__docker_version__
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
 MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 
-# We by default, use the '*' role, meaning all resources are unreserved offers are received
+# By default, use the '*' role, meaning all resources are unreserved offers are received
 MESOS_ROLE = os.getenv('MESOS_ROLE', '*')
+
+# By default, pair the accepted resource roles with MESOS_ROLE
+ACCEPTED_RESOURCE_ROLES = os.getenv('ACCEPTED_RESOURCE_ROLES', [MESOS_ROLE])
 
 # Placeholder for service secret that will be overridden in local_settings_docker
 SERVICE_SECRET = None
