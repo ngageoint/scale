@@ -186,9 +186,9 @@ class Node(object):
         with self._lock:
             if self._cleanup_task and self._cleanup_task.id == task.id:
                 logger.warning('Cleanup task on node %s timed out', self._hostname)
+                self._conditions.handle_cleanup_task_timeout(self._cleanup_task.job_exes)
                 if self._cleanup_task.has_ended:
                     self._cleanup_task = None
-                self._conditions.handle_cleanup_task_timeout()
             elif self._health_task and self._health_task.id == task.id:
                 logger.warning('Health check task on node %s timed out', self._hostname)
                 if self._health_task.has_ended:
@@ -433,7 +433,7 @@ class Node(object):
             self._conditions.handle_cleanup_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
             logger.warning('Cleanup task on node %s failed', self._hostname)
-            self._conditions.handle_cleanup_task_failed()
+            self._conditions.handle_cleanup_task_failed(self._cleanup_task.job_exes)
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Cleanup task on node %s killed', self._hostname)
         elif task_update.status == TaskStatusUpdate.LOST:
