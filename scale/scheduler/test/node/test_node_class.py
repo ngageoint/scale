@@ -70,6 +70,8 @@ class TestNode(TestCase):
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
+        job_exes = [job_test_utils.create_job_exe()]
+        task._job_exes = job_exes
         task_1_id = task.id
 
         # Fail task after running and get different task next time
@@ -92,6 +94,8 @@ class TestNode(TestCase):
         task = node.get_next_tasks(new_time)[0]
         self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
+        self.assertTrue(NodeConditions.CLEANUP_ERR.name in node._conditions._active_errors)
+        self.assertTrue(NodeConditions.CLEANUP_FAILURE.name in node._conditions._active_warnings.keys()[0])
 
     def test_handle_initial_cleanup_task(self):
         """Tests handling the initial cleanup task"""

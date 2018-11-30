@@ -86,10 +86,10 @@ class NodeConditions(object):
     CLEANUP_WARNING = NodeWarning(name='CLEANUP', title='Slow Cleanup',
                                   description='There are %s job executions waiting to be cleaned up on this node.')
                                   
-    CLEANUP_FAILURE = NodeWarning(name='CLEANUP FAILURE %d', title='Cleanup Failure',
+    CLEANUP_FAILURE = NodeWarning(name='CLEANUP FAILURE', title='Cleanup Failure',
                                   description='There was a failure cleaning up some of the following jobs: %s')
                                   
-    CLEANUP_TIMEOUT = NodeWarning(name='CLEANUP TIMEOUT %d', title='Cleanup Timeout',
+    CLEANUP_TIMEOUT = NodeWarning(name='CLEANUP TIMEOUT', title='Cleanup Timeout',
                                   description='There was a timeout cleaning up some of the following jobs: %s')
 
     def __init__(self, hostname):
@@ -148,11 +148,11 @@ class NodeConditions(object):
             # this will aid in debugging if a node or specific jobs continually have failures cleaning up
             global WARNING_NAME_COUNTER
             ids = [exe.job_id for exe in job_exes]
-            name = NodeConditions.CLEANUP_FAILURE.name % WARNING_NAME_COUNTER
+            name = NodeConditions.CLEANUP_FAILURE.name + ' %d' % WARNING_NAME_COUNTER
             WARNING_NAME_COUNTER += 1
             title = NodeConditions.CLEANUP_FAILURE.title
             description = NodeConditions.CLEANUP_FAILURE.description % ids
-            self._warning_active(NodeWarning(name=name, title=title), description)
+            self._warning_active(NodeWarning(name=name, title=title, description=None), description)
         else:
             logger.warning('Cleanup task failed with no job exes')
         
@@ -168,11 +168,11 @@ class NodeConditions(object):
             # add a warning that a timeout has occurred; this will remain after the error has been cleared due with a successful cleanup
             global WARNING_NAME_COUNTER
             ids = [exe.job_id for exe in job_exes]
-            name = NodeConditions.CLEANUP_TIMEOUT.name % WARNING_NAME_COUNTER
+            name = NodeConditions.CLEANUP_TIMEOUT.name + ' %d' % WARNING_NAME_COUNTER
             WARNING_NAME_COUNTER += 1
             title = NodeConditions.CLEANUP_TIMEOUT.title
             description = NodeConditions.CLEANUP_TIMEOUT.description % ids
-            self._warning_active(NodeWarning(name=name, title=title), description)
+            self._warning_active(NodeWarning(name=name, title=title, description=None), description)
         else:
             logger.warning('Cleanup task timed out with no job exes')
         
