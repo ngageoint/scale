@@ -32,7 +32,8 @@ class S3Monitor(Monitor):
         self._region_name = None
 
         # Set the event version supported in message
-        self.event_version_supported = '2.0'
+        # We are going to support all 2.x versions trusting AWS will not break interface until 3.x
+        self.event_version_supported = '2.'
 
         # TODO: move these values into Strike configuration
         ###################################################
@@ -150,11 +151,15 @@ class S3Monitor(Monitor):
             # Previously we checked for body.Subject and body.Type, but this unnecessarily forced us to deliver
             # messages via SNS. When writing tools to mirror the S3 Event Notifications delivered via S3 -> SNS -> SQS
             # this arbitrarily required use of SNS to apply the Subject and Type keys. Lifting these checks allows 
-            # us to immitate the format with direct programmtic SQS enqueue.
+            # us to imitate the format with direct programmatic SQS enqueue.
             try:
-                for record in body['Records']:
-                    if 'eventName' in record and record['eventName'].startswith('ObjectCreated') and \
-                                    'eventVersion' in record and record['eventVersion'] == self.event_version_supported:
+                message = json.loads(body['Message'])
+
+                for record in message['Records']:
+                    if 'eventName' in record and \
+                            record['eventName'].startswith('ObjectCreated') and \
+                            'eventVersion' in record and \
+                            record['eventVersion'].startswith(self.event_version_supported):
                         self._ingest_s3_notification_object(record['s3'])
                     else:
                         # Log message that didn't match with valid EventName and EventVersion
