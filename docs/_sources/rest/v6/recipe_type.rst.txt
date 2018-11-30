@@ -309,7 +309,8 @@ Response: 200 OK
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
+| keyword            | String            | Optional | Performs a like search on name, title, and description              |
+|                    |                   |          | Duplicate to search for multiple keywords.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_active          | Boolean           | Optional | Return only recipe types with one version that matches is_active    |
 |                    |                   |          | flag.  Defaults to all recipe types.                                |
