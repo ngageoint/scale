@@ -70,8 +70,7 @@ class TestNode(TestCase):
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
-        job_exes = [job_test_utils.create_job_exe()]
-        task._job_exes = job_exes
+        task._job_exes = [self.job_exe]
         task_1_id = task.id
 
         # Fail task after running and get different task next time
