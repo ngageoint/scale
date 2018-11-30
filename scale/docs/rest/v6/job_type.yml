@@ -24,7 +24,14 @@ paths:
           name: keyword
           schema:
             type: string
-          description: Keyword to perform a 'like' search on name, title, description, and tag
+          description: Keyword to perform a 'like' search on name, title, description, and tag |
+            may be duplicated to search for multiple keywords
+        - in: query
+          name: id
+          schema:
+            type: integer
+          description: if provided, only return names with a version matching the given id. |
+            may be duplicated to search for multiple ids
         - in: query
           name: is_active
           schema:
@@ -267,9 +274,12 @@ components:
         icon_code:
           type: string
           example: f186 
-        num_versions:
-          type: integer
-          example: 1
+        versions:
+          type: array
+          style: simple
+          items:
+            type: string 
+          example: ["1.1.0"]
         latest_version:
           type: string
           example: 1.1.0
@@ -615,7 +625,9 @@ components:
           example: true
         validation_error:
           type: array
-          $ref: '#/components/schemas/validation_error'
+          items:
+            $ref: '#/components/schemas/validation_error'
         validation_warning:
           type: array
-          $ref: '#/components/schemas/validation_warning'
+          items:
+            $ref: '#/components/schemas/validation_warning'

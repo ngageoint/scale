@@ -42,7 +42,7 @@ class JobTypeListSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
     id = None
     version = None
-    num_versions = serializers.IntegerField()
+    versions = serializers.ListField(child=serializers.CharField())
     latest_version = serializers.CharField(source='version')
 
 # TODO: remove this function when REST API v5 is removed

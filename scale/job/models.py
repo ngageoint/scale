@@ -3009,11 +3009,13 @@ class JobTypeManager(models.Manager):
             job_types = job_types.order_by('last_modified')
         return job_types
 
-    def get_job_types_v6(self, keyword=None, is_active=None, is_system=None, order=None):
+    def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
-        :param keyword: Query jobs with name, title, description or tag matching the keyword
-        :type keyword: string
+        :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
+        :type keywords: list
+        :param ids: Query job types with a version matching the given ids
+        :type keyword: list
         :param is_active: Query job types that are actively available for use.
         :type is_active: bool
         :param is_system: Query job types that are system job types.
@@ -3026,9 +3028,16 @@ class JobTypeManager(models.Manager):
 
         # Execute a sub-query that returns distinct job type names that match the provided filter arguments
         sub_query = self.all()
-        if keyword: # TODO: Revisit passing multiple keywords
-            sub_query = sub_query.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
-                                         Q(description__icontains=keyword) | Q(jobtypetag__tag__icontains=keyword))
+        if keywords:
+            key_query = Q()
+            for keyword in keywords:
+                key_query |= Q(name__icontains=keyword)
+                key_query |= Q(title__icontains=keyword)
+                key_query |= Q(description__icontains=keyword)
+                key_query |= Q(jobtypetag__tag__icontains=keyword)
+            sub_query = sub_query.filter(key_query)
+        if ids:
+            sub_query = sub_query.filter(id__in=ids)
         if is_active is not None:
             sub_query = sub_query.filter(is_active=is_active)
         if is_system is not None:
@@ -3038,19 +3047,19 @@ class JobTypeManager(models.Manager):
         if not job_type_names:
             return []
 
-        num_versions_by_id = {}
+        versions_by_id = {}
         # Execute main query to find job type IDs and their matching num_versions
-        qry = 'SELECT DISTINCT ON (jt.name) jt.id, nv.num_versions FROM job_type jt '
-        qry += 'JOIN (SELECT name, count(*) AS num_versions FROM job_type GROUP BY name) nv ON jt.name = nv.name '
+        qry = 'SELECT DISTINCT ON (jt.name) jt.id, nv.versions FROM job_type jt '
+        qry += 'JOIN (SELECT name, array_agg(version) AS versions FROM job_type GROUP BY name) nv ON jt.name = nv.name '
         qry += 'WHERE jt.name IN %s '
         qry += 'ORDER BY jt.name, jt.version_array DESC'
         with connection.cursor() as cursor:
             cursor.execute(qry, [tuple(job_type_names)])
             for row in cursor.fetchall():
-                num_versions_by_id[row[0]] = row[1]
+                versions_by_id[row[0]] = row[1]
 
         # Retrieve job types by ID
-        job_types = self.filter(id__in=num_versions_by_id.keys())
+        job_types = self.filter(id__in=versions_by_id.keys())
         # Apply sorting
         if order:
             job_types = job_types.order_by(*order)
@@ -3060,7 +3069,7 @@ class JobTypeManager(models.Manager):
         # Add num_versions to each job type
         results = []
         for job_type in job_types:
-            job_type.num_versions = num_versions_by_id[job_type.id]
+            job_type.versions = versions_by_id[job_type.id]
             results.append(job_type)
         return results
         

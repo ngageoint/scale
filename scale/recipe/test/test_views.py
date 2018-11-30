@@ -286,6 +286,12 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.recipe_type2.name)
+        
+        url = '/%s/recipe-types/?keyword=%s&keyword=%s' % (self.api, 'main', 'sub')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
 
     def test_is_active(self):
         """Tests successfully calling the recipetypes view filtered by inactive state."""
