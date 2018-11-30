@@ -152,16 +152,14 @@ class S3Monitor(Monitor):
             # this arbitrarily required use of SNS to apply the Subject and Type keys. Lifting these checks allows 
             # us to immitate the format with direct programmtic SQS enqueue.
             try:
-                message = json.loads(body['Message'])
-
-                for record in message['Records']:
+                for record in body['Records']:
                     if 'eventName' in record and record['eventName'].startswith('ObjectCreated') and \
                                     'eventVersion' in record and record['eventVersion'] == self.event_version_supported:
                         self._ingest_s3_notification_object(record['s3'])
                     else:
                         # Log message that didn't match with valid EventName and EventVersion
                         raise SQSNotificationError('Unable to process message as it does not match '
-                                                   'EventName and EventVersion: {}'.format(json.dumps(message)))
+                                                   'EventName and EventVersion: {}'.format(json.dumps(record)))
             except KeyError as ex:
                 raise SQSNotificationError(
                     'Exception: {}'
