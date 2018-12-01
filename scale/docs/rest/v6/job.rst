@@ -993,6 +993,7 @@ Request: POST http://.../v6/jobs/cancel/
     "status": "FAILED",
     "job_ids": [ 101, 102, 103 ],
     "job_type_ids": [ 1, 2, 3 ],
+    "job_types": [ {"name": "my-job-type", "version": "1.0.0"} ],
     "job_type_names": [ 'test-job-type' ],
     "batch_ids": [ 201, 202, 203 ],
     "recipe_ids": [ 301, 302, 303 ],
@@ -1029,6 +1030,8 @@ Response: 202 ACCEPTED
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_ids       | Array[Integer]    | Optional | Cancel only jobs with these job types                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_types          | Array             | Optional | Cancel only jobs with these job types specified by name/version     |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_names     | Array[String]     | Optional | Cancel only jobs with these job type names                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | batch_ids          | Array[Integer]    | Optional | Cancel only jobs that were part of these batches                    |
@@ -1063,6 +1066,7 @@ Request: POST http://.../v6/jobs/requeue/
     "status": "FAILED",
     "job_ids": [ 101, 102, 103 ],
     "job_type_ids": [ 1, 2, 3 ],
+    "job_types": [ {"name": "my-job-type", "version": "1.0.0"} ],
     "job_type_names": [ 'test-job-type' ],
     "batch_ids": [ 201, 202, 203 ],
     "recipe_ids": [ 301, 302, 303 ],
@@ -1099,6 +1103,8 @@ Response: 202 ACCEPTED
 | job_ids            | Array[Integer]    | Optional | Re-queue only jobs with these IDs                                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_ids       | Array[Integer]    | Optional | Re-queue only jobs with these job types                             |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_types          | Array             | Optional | Re-queue only jobs with these job types specified by name/version   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_names     | Array[String]     | Optional | Re-queue only jobs with these job type names                        |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
