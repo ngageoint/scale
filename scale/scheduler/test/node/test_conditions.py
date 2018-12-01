@@ -9,6 +9,7 @@ from mock import patch
 
 from job.test import utils as job_test_utils
 from job.tasks.health_task import HealthTask
+from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
 from scheduler.node.conditions import NodeConditions, NodeWarning, CLEANUP_WARN_THRESHOLD, WARNING_NAME_COUNTER
 from util.parse import datetime_to_string
 
@@ -339,3 +340,113 @@ class TestNodeConditions(TestCase):
 
             self.assertItemsEqual(node_dict['errors'], expected_results['errors'])
             self.assertFalse(self.conditions.is_health_check_normal)
+
+        @patch('scheduler.node.conditions.now')
+        def test_handle_pull_task_completed(self, mock_now):
+            """Tests calling handle_pull_task_completed"""
+
+            right_now = now()
+            self.conditions._error_active(NodeConditions.IMAGE_PULL_ERR)
+            self.conditions.is_pull_bad = True
+
+            self.conditions.handle_pull_task_completed()
+
+            expected_results = {
+                'errors': [],
+                'warnings': []}
+            node_dict = {}
+            self.conditions.generate_status_json(node_dict)
+
+            self.assertDictEqual(node_dict, expected_results)
+            self.assertFalse(self.conditions.is_pull_bad)
+
+        @patch('scheduler.node.conditions.now')
+        def test_handle_pull_task_failed(self, mock_now):
+            """Tests calling handle_pull_task_failed"""
+
+            right_now = now()
+            self.conditions.is_pull_bad = False
+
+            self.conditions.handle_pull_task_failed()
+
+            expected_results = {
+                'errors': [{'name': 'IMAGE_PULL', 'title': NodeConditions.IMAGE_PULL_ERR.title,
+                            'description': NodeConditions.IMAGE_PULL_ERR.description,
+                            'started': datetime_to_string(right_now),
+                            'last_updated': datetime_to_string(right_now)}
+                           ],
+                'warnings': []}
+            node_dict = {}
+            self.conditions.generate_status_json(node_dict)
+
+            self.assertDictEqual(node_dict, expected_results)
+            self.assertTrue(self.conditions.is_pull_bad)
+
+        @patch('scheduler.node.conditions.now')
+        def test_handle_pull_task_timeout(self, mock_now):
+            """Tests calling handle_pull_task_timeout"""
+
+            right_now = now()
+            self.conditions._error_active(NodeConditions.IMAGE_PULL_ERR)
+            self.conditions.is_pull_bad = True
+
+            self.conditions.handle_pull_task_completed()
+
+            expected_results = {
+                'errors': [{'name': 'IMAGE_PULL', 'title': NodeConditions.IMAGE_PULL_ERR.title,
+                            'description': NodeConditions.IMAGE_PULL_ERR.description,
+                            'started': datetime_to_string(right_now),
+                            'last_updated': datetime_to_string(right_now)}
+                           ],
+                'warnings': []}
+            node_dict = {}
+            self.conditions.generate_status_json(node_dict)
+
+            self.assertDictEqual(node_dict, expected_results)
+            self.assertTrue(self.conditions.is_pull_bad)
+
+        @patch('scheduler.node.conditions.now')
+        def test_last_cleanup_task_error(self, mock_now):
+            """Tests calling last_cleanup_task_error"""
+
+            right_now = now()
+            when = self.conditions.last_cleanup_task_error()
+            self.assertIsNone(when)
+            self.conditions._error_active(NodeConditions.CLEANUP_ERR)
+            when = self.conditions.last_cleanup_task_error()
+            self.assertEqual(when, right_now)
+
+        @patch('scheduler.node.conditions.now')
+        def test_last_image_pull_task_error(self, mock_now):
+            """Tests calling last_image_pull_task_error"""
+
+            right_now = now()
+            when = self.conditions.last_image_pull_task_error()
+            self.assertIsNone(when)
+            self.conditions._error_active(NodeConditions.IMAGE_PULL_ERR)
+            when = self.conditions.last_image_pull_task_error()
+            self.assertEqual(when, right_now)
+
+        @patch('scheduler.node.conditions.now')
+        def test_update_cleanup_count(self, mock_now):
+            """Tests calling update_cleanup_count"""
+
+            right_now = now()
+            self.conditions._warning_active(NodeConditions.SLOW_CLEANUP, NodeConditions.SLOW_CLEANUP.description % 1)
+            self.conditions.update_cleanup_count(0)
+            expected_results = { 'errors': [], 'warnings': []}
+            node_dict = {}
+            self.conditions.generate_status_json(node_dict)
+            self.assertDictEqual(node_dict, expected_results)
+
+            self.conditions.update_cleanup_count(JOB_EXES_WARNING_THRESHOLD + 1)
+            expected_results = {
+                'errors': [],
+                'warnings': [{'name': 'SLOW_CLEANUP', 'title': NodeConditions.SLOW_CLEANUP.title,
+                              'description': NodeConditions.SLOW_CLEANUP.description % JOB_EXES_WARNING_THRESHOLD + 1,
+                              'started': datetime_to_string(right_now),
+                              'last_updated': datetime_to_string(right_now)}
+                             ]}
+            node_dict = {}
+            self.conditions.generate_status_json(node_dict)
+            self.assertDictEqual(node_dict, expected_results)
