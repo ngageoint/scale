@@ -138,7 +138,7 @@ class S3Monitor(Monitor):
         """Extracts an S3 notification object from SQS message body and calls on to ingest.
         We want to ensure we have the following minimal values before passing S3 object on:
         - body.Records[x].eventName starts with 'ObjectCreated'
-        - body.Records[x].eventVersion == '2.0'
+        - body.Records[x].eventVersion starts with '2.'
         Once the above have been validated we will pass the S3 record on to ingest, otherwise
         exception will be raised
         :param message: SQS message containing S3 notification object
@@ -153,7 +153,11 @@ class S3Monitor(Monitor):
             # this arbitrarily required use of SNS to apply the Subject and Type keys. Lifting these checks allows 
             # us to imitate the format with direct programmatic SQS enqueue.
             try:
-                message = json.loads(body['Message'])
+                # Support messages delivered via both direct S3->SQS and S3->SNS->SQS event notification channels
+                if 'Message' in body:
+                    message = json.loads(body['Message'])
+                else:
+                    message = body
 
                 for record in message['Records']:
                     if 'eventName' in record and \
