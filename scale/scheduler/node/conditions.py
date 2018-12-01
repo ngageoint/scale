@@ -358,11 +358,11 @@ class NodeConditions(object):
             
     def _warning_inactive_old(self):
         """Inactivates all old warnings
-
-        :param warning: The node warning
-        :type warning: :class:`scheduler.node.conditions.NodeWarning`
         """
 
-        for warning in self._active_warnings:
-            if when - warning.last_updated > CLEANUP_WARN_THRESHOLD:
-                del self._active_warnings[warning.name]
+        warnings_to_delete = []
+        for name in self._active_warnings:
+            if now() - self._active_warnings[name].last_updated >= CLEANUP_WARN_THRESHOLD:
+                warnings_to_delete.append(name)
+        for name in warnings_to_delete:
+            del self._active_warnings[name]

@@ -8,7 +8,7 @@ from django.utils.timezone import now
 from mock import patch
 
 from job.test import utils as job_test_utils
-from scheduler.node.conditions import NodeConditions
+from scheduler.node.conditions import NodeConditions, NodeWarning, CLEANUP_WARN_THRESHOLD
 from util.parse import datetime_to_string
 
 class TestNodeConditions(TestCase):
@@ -41,7 +41,6 @@ class TestNodeConditions(TestCase):
 
         node_dict = {}
         self.conditions.generate_status_json(node_dict)
-        print node_dict
 
         expected_results = {
                              'errors': [{'name': 'BAD_DAEMON', 'title': NodeConditions.BAD_DAEMON_ERR.title,
@@ -87,5 +86,58 @@ class TestNodeConditions(TestCase):
                                            'last_updated': datetime_to_string(right_now)}
                                           ]}
 
-        self.assertListEqual(node_dict['errors'], expected_results['errors'])
-        self.assertListEqual(node_dict['warnings'], expected_results['warnings'])
+        self.assertCountEqual(node_dict['errors'], expected_results['errors'])
+        self.assertCountEqual(node_dict['warnings'], expected_results['warnings'])
+        self.assertItemsEqual(node_dict['errors'], expected_results['errors'])
+        self.assertItemsEqual(node_dict['warnings'], expected_results['warnings'])
+
+    @patch('scheduler.node.conditions.now')
+    def test_handle_cleanup_task_completed(self, mock_now):
+        """Tests calling handle_cleanup_task_completed"""
+
+        right_now = now()
+        then = right_now - CLEANUP_WARN_THRESHOLD
+        mock_now.return_value = right_now
+
+        self.conditions._error_active(NodeConditions.CLEANUP_ERR)
+        self.conditions._warning_active(NodeConditions.CLEANUP_FAILURE,
+                                        NodeConditions.CLEANUP_FAILURE.description % [1, 2, 3])
+        self.conditions._warning_active(NodeWarning(name='old-warning', title='old', description=None))
+        self.conditions._active_warnings['old-warning'].last_updated = then
+
+        node_dict = {}
+        self.conditions.generate_status_json(node_dict)
+        self.maxDiff = None
+
+        expected_results = {
+                             'errors': [{'name': 'CLEANUP', 'title': NodeConditions.CLEANUP_ERR.title,
+                                         'description': NodeConditions.CLEANUP_ERR.description,
+                                         'started': datetime_to_string(right_now),
+                                         'last_updated': datetime_to_string(right_now)}
+                                        ],
+                             'warnings': [{'name': 'CLEANUP_FAILURE', 'title': NodeConditions.CLEANUP_FAILURE.title,
+                                           'description': NodeConditions.CLEANUP_FAILURE.description % [1,2,3],
+                                           'started': datetime_to_string(right_now),
+                                           'last_updated': datetime_to_string(right_now)},
+                                          {'name': 'old-warning', 'title': 'old',
+                                           'description': None,
+                                           'started': datetime_to_string(right_now),
+                                           'last_updated': datetime_to_string(then)}
+                                          ]}
+
+        self.assertItemsEqual(node_dict['errors'], expected_results['errors'])
+        self.assertItemsEqual(node_dict['warnings'], expected_results['warnings'])
+
+        self.conditions.handle_cleanup_task_completed()
+        node_dict = {}
+        self.conditions.generate_status_json(node_dict)
+
+        expected_results = {
+                             'errors': [],
+                             'warnings': [{'name': 'CLEANUP_FAILURE', 'title': NodeConditions.CLEANUP_FAILURE.title,
+                                           'description': NodeConditions.CLEANUP_FAILURE.description % [1,2,3],
+                                           'started': datetime_to_string(right_now),
+                                           'last_updated': datetime_to_string(right_now)}
+                                          ]}
+
+        self.assertDictEqual(node_dict, expected_results)
