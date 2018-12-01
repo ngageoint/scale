@@ -55,8 +55,8 @@ class TestNode(TestCase):
                                          'description': NodeConditions.IMAGE_PULL_ERR.description,
                                          'started': datetime_to_string(right_now),
                                          'last_updated': datetime_to_string(right_now)}],
-                             'warnings': [{'name': 'CLEANUP', 'title': NodeConditions.CLEANUP_WARNING.title,
-                                           'description': NodeConditions.CLEANUP_WARNING.description % num_job_exes,
+                             'warnings': [{'name': 'SLOW_CLEANUP', 'title': NodeConditions.SLOW_CLEANUP.title,
+                                           'description': NodeConditions.SLOW_CLEANUP.description % num_job_exes,
                                            'started': datetime_to_string(right_now),
                                            'last_updated': datetime_to_string(right_now)}]}]
         self.assertListEqual(nodes_list, expected_results)

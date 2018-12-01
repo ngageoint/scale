@@ -83,13 +83,13 @@ class NodeConditions(object):
     HEALTH_ERRORS = [BAD_DAEMON_ERR, BAD_LOGSTASH_ERR, HEALTH_FAIL_ERR, HEALTH_TIMEOUT_ERR, LOW_DOCKER_SPACE_ERR]
 
     # Warnings
-    CLEANUP_WARNING = NodeWarning(name='CLEANUP', title='Slow Cleanup',
+    SLOW_CLEANUP = NodeWarning(name='SLOW_CLEANUP', title='Slow Cleanup',
                                   description='There are %s job executions waiting to be cleaned up on this node.')
                                   
-    CLEANUP_FAILURE = NodeWarning(name='CLEANUP FAILURE', title='Cleanup Failure',
+    CLEANUP_FAILURE = NodeWarning(name='CLEANUP_FAILURE', title='Cleanup Failure',
                                   description='There was a failure cleaning up some of the following jobs: %s')
                                   
-    CLEANUP_TIMEOUT = NodeWarning(name='CLEANUP TIMEOUT', title='Cleanup Timeout',
+    CLEANUP_TIMEOUT = NodeWarning(name='CLEANUP_TIMEOUT', title='Cleanup Timeout',
                                   description='There was a timeout cleaning up some of the following jobs: %s')
 
     def __init__(self, hostname):
@@ -278,10 +278,10 @@ class NodeConditions(object):
         """
 
         if num_job_exes < JOB_EXES_WARNING_THRESHOLD:
-            self._warning_inactive(NodeConditions.CLEANUP_WARNING)
+            self._warning_inactive(NodeConditions.SLOW_CLEANUP)
         else:
-            description = NodeConditions.CLEANUP_WARNING.description % str(num_job_exes)
-            self._warning_active(NodeConditions.CLEANUP_WARNING, description)
+            description = NodeConditions.SLOW_CLEANUP.description % str(num_job_exes)
+            self._warning_active(NodeConditions.SLOW_CLEANUP, description)
         self._update_state()
 
     def _error_active(self, error):
