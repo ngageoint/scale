@@ -5409,6 +5409,8 @@ class TestCancelJobsViewV6(TestCase):
         job_ids = [3, 4]
         job_status = 'FAILED'
         job_type_ids = [5, 6]
+        job_types = [{'name': 'my-job-type', 'version': '1.0.0'},
+                     {'name': 'my-job-type', 'version': '1.0.1'}]
         job_type_names = ['name']
         batch_ids = [7, 8]
         recipe_ids = [9, 10]
@@ -5419,6 +5421,7 @@ class TestCancelJobsViewV6(TestCase):
             'status': job_status,
             'job_ids': job_ids,
             'job_type_ids': job_type_ids,
+            'job_types': job_types,
             'job_type_names': job_type_names,
             'batch_ids': batch_ids,
             'recipe_ids': recipe_ids,
@@ -5433,7 +5436,7 @@ class TestCancelJobsViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                       status=job_status, job_type_names=job_type_names, 
+                                       status=job_status, job_types=job_types, job_type_names=job_type_names,
                                        batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
 
 class TestRequeueJobsViewV5(TestCase):
@@ -5500,6 +5503,8 @@ class TestRequeueJobsViewV6(TestCase):
         job_ids = [3, 4]
         job_status = 'FAILED'
         job_type_ids = [5, 6]
+        job_types = [{'name': 'my-job-type', 'version': '1.0.0'},
+                     {'name': 'my-job-type', 'version': '1.0.1'}]
         job_type_names = ['name']
         batch_ids = [7, 8]
         recipe_ids = [9, 10]
@@ -5511,6 +5516,7 @@ class TestRequeueJobsViewV6(TestCase):
             'status': job_status,
             'job_ids': job_ids,
             'job_type_ids': job_type_ids,
+            'job_types': job_types,
             'job_type_names': job_type_names,
             'batch_ids': batch_ids,
             'recipe_ids': recipe_ids,
@@ -5526,7 +5532,8 @@ class TestRequeueJobsViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                       priority=priority, status=job_status, job_type_names=job_type_names, 
-                                       batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
+                                       priority=priority, status=job_status, job_types=job_types,
+                                       job_type_names=job_type_names, batch_ids=batch_ids,
+                                       recipe_ids=recipe_ids, is_superseded=is_superseded)
 
 
