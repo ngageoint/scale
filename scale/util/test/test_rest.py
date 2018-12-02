@@ -699,11 +699,49 @@ class TestRest(TestCase):
         })
         self.assertDictEqual(rest_util.parse_dict(request, 'test'), result)
 
+    def test_parse_dict_post(self):
+        """Tests parsing a dictionary provided via POST."""
+        result = {
+            'name': 'value',
+        }
+        request = MagicMock(Request)
+        request.data = QueryDict('', mutable=True)
+        request.data.update({
+            'test': result,
+        })
+        self.assertDictEqual(rest_util.parse_dict(request, 'test'), result)
+
     def test_parse_dict_optional(self):
         """Tests parsing an optional dict with no default value."""
         request = MagicMock(Request)
         request.query_params = QueryDict('', mutable=True)
         self.assertDictEqual(rest_util.parse_dict(request, 'test', required=False), {})
+
+    def test_parse_dict_list_post(self):
+        """Tests parsing a list of dictionaries."""
+        results = [{ 'name': 'value' }, { 'name2': 'value2' }]
+        request = MagicMock(Request)
+        request.data = QueryDict('', mutable=True)
+        request.data.update({
+            'test': results,
+        })
+        self.assertItemsEqual(rest_util.parse_dict_list(request, 'test'), results)
+
+    def test_parse_dict_list_invalid_post(self):
+        """Tests parsing a required list of dictionaries that is not all dictionaries."""
+        results = [{'name': 'value'}, 'BAD']
+        request = MagicMock(Request)
+        request.query_params = QueryDict('', mutable=True)
+        request.query_params.update({
+            'test': results,
+        })
+        self.assertRaises(BadParameter, rest_util.parse_dict_list, request, 'test')
+
+    def test_parse_dict_list_optional(self):
+        """Tests parsing an optional dict list with no default value."""
+        request = MagicMock(Request)
+        request.query_params = QueryDict('', mutable=True)
+        self.assertDictEqual(rest_util.parse_dict(request, 'test', required=False), [])
 
     def test_title_to_name(self):
         """Tests parsing an optional dict with no default value."""
