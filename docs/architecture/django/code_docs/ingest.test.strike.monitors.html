@@ -292,6 +292,24 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_minimal_notification_success">
+<code class="descname">test_process_s3_minimal_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_minimal_notification_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() successfully with minimal v2.0 message from SNS-&gt;SQS</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_event_name">
+<code class="descname">test_process_s3_notification_invalid_event_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_event_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() with invalid JSON</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_event_version">
+<code class="descname">test_process_s3_notification_invalid_event_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_event_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() with invalid JSON</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_json">
 <code class="descname">test_process_s3_notification_invalid_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling S3Monitor._process_s3_notification() with invalid JSON</p>
@@ -304,9 +322,27 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_success">
-<code class="descname">test_process_s3_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_success" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling S3Monitor._process_s3_notification() successfully</p>
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notional_v2_notification_success">
+<code class="descname">test_process_s3_notional_v2_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notional_v2_notification_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() successfully with notional v2 message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_sqs_direct_notification_success">
+<code class="descname">test_process_s3_sqs_direct_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_sqs_direct_notification_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() successfully with minimal v2.0 direct S3 event</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_v20_notification_success">
+<code class="descname">test_process_s3_v20_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_v20_notification_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() successfully with eventVersion 2.0</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_v21_notification_success">
+<code class="descname">test_process_s3_v21_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_v21_notification_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() successfully with eventVersion 2.1</p>
 </dd></dl>
 
 <dl class="method">
