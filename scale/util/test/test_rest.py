@@ -731,8 +731,8 @@ class TestRest(TestCase):
         """Tests parsing a required list of dictionaries that is not all dictionaries."""
         results = [{'name': 'value'}, 'BAD']
         request = MagicMock(Request)
-        request.query_params = QueryDict('', mutable=True)
-        request.query_params.update({
+        request.data = QueryDict('', mutable=True)
+        request.data.update({
             'test': results,
         })
         self.assertRaises(BadParameter, rest_util.parse_dict_list, request, 'test')
@@ -740,8 +740,8 @@ class TestRest(TestCase):
     def test_parse_dict_list_optional(self):
         """Tests parsing an optional dict list with no default value."""
         request = MagicMock(Request)
-        request.query_params = QueryDict('', mutable=True)
-        self.assertDictEqual(rest_util.parse_dict(request, 'test', required=False), [])
+        request.data = QueryDict('', mutable=True)
+        self.assertEqual(rest_util.parse_dict_list(request, 'test', required=False), [])
 
     def test_title_to_name(self):
         """Tests parsing an optional dict with no default value."""

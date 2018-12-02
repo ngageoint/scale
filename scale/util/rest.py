@@ -499,7 +499,6 @@ def parse_dict_list(request, name, default_value=None, required=True):
     """
 
     param_list = _get_param_list(request, name, default_value, required)
-    print param_list
 
     if param_list and len(param_list):
         for param in param_list:
