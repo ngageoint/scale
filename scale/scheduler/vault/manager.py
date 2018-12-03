@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.conf import settings
 from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, InvalidSecretsValue
 from vault.secrets_handler import SecretsHandler
 
@@ -56,5 +57,28 @@ class SecretsManager(object):
                 
         self._all_secrets = updated_secrets
 
+    def generate_status_json(self, status_dict):
+        """Generates the portion of the status JSON that describes the sectets settings and metrics
+
+        :param status_dict: The status JSON dict
+        :type status_dict: dict
+        """
+
+        if not settings.SECRETS_URL:
+            status_dict['vault'] = {'status': 'Secrets Not Configured'}
+        try:
+            sh = SecretsHandler()
+            jobs_with_secrets = sh.list_job_types()
+        except (InvalidSecretsAuthorization) as e:
+            logger.exception('Secrets Error: %s', e.message)
+            status_dict['vault'] = {'status': 'Secrets Improperly Configured'}
+            return
+        except (InvalidSecretsRequest) as e:
+            logger.exception('Secrets Error: %s', e.message)
+            status_dict['vault'] = {'status': 'Secrets Improperly Configured'}
+            return
+        except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken) as e:
+            logger.exception('Secrets Error: %s', e.message)
+            return
 
 secrets_mgr = SecretsManager()
