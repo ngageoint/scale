@@ -64,21 +64,61 @@ class SecretsManager(object):
         :type status_dict: dict
         """
 
+        status_dict['vault'] = {}
+        status_dict['vault']['status'] = 'Ok'
+        status_dict['vault']['sealed'] = False
+        status_dict['vault']['message'] = ''
         if not settings.SECRETS_URL:
-            status_dict['vault'] = {'status': 'Secrets Not Configured'}
+            status_dict['vault']['status'] = 'Secrets Not Configured'
+            status_dict['vault']['sealed'] = False
+            status_dict['vault']['message'] = ''
         try:
             sh = SecretsHandler()
             jobs_with_secrets = sh.list_job_types()
         except (InvalidSecretsAuthorization) as e:
             logger.exception('Secrets Error: %s', e.message)
-            status_dict['vault'] = {'status': 'Secrets Improperly Configured'}
+            status_dict['vault']['status'] = 'Secrets Improperly Configured'
+            status_dict['vault']['sealed'] = False
+            status_dict['vault']['message'] = e.message
             return
         except (InvalidSecretsRequest) as e:
             logger.exception('Secrets Error: %s', e.message)
-            status_dict['vault'] = {'status': 'Secrets Improperly Configured'}
+            if 'is currently sealed' in e.message:
+                status_dict['vault']['status'] = 'Sealed'
+                status_dict['vault']['sealed'] = True
+            status_dict['vault']['message'] = e.message
             return
-        except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken) as e:
+        except (InvalidSecretsToken) as e:
             logger.exception('Secrets Error: %s', e.message)
+            status_dict['vault']['status'] = 'Invalid Token'
+            status_dict['vault']['sealed'] = False
+            status_dict['vault']['message'] = e.message
             return
+
+        for job in jobs_with_secrets:
+            try:
+                job_secrets = sh.get_job_type_secrets(job)
+            except (InvalidSecretsAuthorization) as e:
+                logger.exception('Secrets Error: %s', e.message)
+                status_dict['vault']['status'] = 'Invalid Credentials'
+                status_dict['vault']['sealed'] = False
+                status_dict['vault']['message'] = e.message
+                return
+            except (InvalidSecretsRequest) as e:
+                logger.exception('Secrets Error: %s', e.message)
+                if 'is currently sealed' in e.message:
+                    status_dict['vault']['status'] = 'Sealed'
+                    status_dict['vault']['sealed'] = True
+                else:
+                    status_dict['vault']['status'] = 'Secret Error'
+                status_dict['vault']['message'] = e.message
+                return
+            except (InvalidSecretsValue) as e:
+                logger.exception('Secrets Error: %s', e.message)
+                status_dict['vault']['status'] = 'Invalid Secret'
+                status_dict['vault']['sealed'] = False
+                status_dict['vault']['message'] = e.message
+                return
+
 
 secrets_mgr = SecretsManager()
