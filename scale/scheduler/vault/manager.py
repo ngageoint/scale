@@ -58,7 +58,7 @@ class SecretsManager(object):
         self._all_secrets = updated_secrets
 
     def generate_status_json(self, status_dict):
-        """Generates the portion of the status JSON that describes the sectets settings and metrics
+        """Generates the portion of the status JSON that describes the secrets settings and metrics
 
         :param status_dict: The status JSON dict
         :type status_dict: dict
