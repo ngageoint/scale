@@ -16,13 +16,7 @@ class InvalidSecretsConfiguration(Exception):
 class InvalidSecretsRequest(Exception):
     """Exception indicating that the secrets request was invalid
     """
-    def __init__(self, message, status_code):
-
-        # Call the base class constructor with the parameters it needs
-        super(InvalidSecretsRequest, self).__init__(message)
-
-        # Now for your custom code...
-        self.status_code = status_code
+    pass
 
 
 class InvalidSecretsToken(Exception):
