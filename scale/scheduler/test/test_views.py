@@ -210,12 +210,14 @@ class TestStatusView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertEqual(result['timestamp'], datetime_to_string(when))
+        self.assertDictEqual(result['vault'], {u'status': u'Secrets Not Configured', u'message': u'', u'sealed': False})
         
         url = '/v6/status/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertEqual(result['timestamp'], datetime_to_string(when))
+        self.assertDictEqual(result['vault'], {u'status': u'Secrets Not Configured', u'message': u'', u'sealed': False})
 
     # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_scheduler')

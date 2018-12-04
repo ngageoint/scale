@@ -72,6 +72,7 @@ class SecretsManager(object):
             status_dict['vault']['status'] = 'Secrets Not Configured'
             status_dict['vault']['sealed'] = False
             status_dict['vault']['message'] = ''
+            return
         try:
             sh = SecretsHandler()
             jobs_with_secrets = sh.list_job_types()
