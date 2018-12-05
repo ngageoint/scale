@@ -15,6 +15,7 @@ from scheduler.resources.manager import resource_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.tasks.manager import system_task_mgr
 from scheduler.threads.base_thread import BaseSchedulerThread
+from scheduler.vault.manager import secrets_mgr
 from util.parse import datetime_to_string
 
 
@@ -56,4 +57,5 @@ class SchedulerStatusThread(BaseSchedulerThread):
         job_exe_mgr.generate_status_json(status_dict['nodes'], when)
         task_mgr.generate_status_json(status_dict['nodes'])
         job_type_mgr.generate_status_json(status_dict)
+        secrets_mgr.generate_status_json(status_dict)
         Scheduler.objects.all().update(status=status_dict)

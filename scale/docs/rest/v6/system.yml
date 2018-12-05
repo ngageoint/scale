@@ -63,6 +63,9 @@ components:
           items:
             $ref: '#/components/schemas/node'
           description: List of node objects, with a few basic fields including the current node state
+        vault:
+          $ref: '#/components/schemas/vault'
+
     scheduler:
       title: Scheduler
       type: object
@@ -454,3 +457,21 @@ components:
           type: string
           description: The full version identifier of Scale. 
           example: 6.0.0
+
+    vault:
+      title: Secrets Vault
+      type: object
+      description: Secrets Vault status and info
+      properties:
+        status:
+          type: string
+          description: The status of the secrets vault
+          example: Secrets Improperly Configured
+        sealed:
+          type: boolean
+          description: Whether the secrets vault is sealed or not
+          example: False
+        message:
+          type: string
+          description: Description of error reading the secrets vault, if any
+          example: A secrets backend is not properly configured with Scale.

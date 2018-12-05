@@ -258,7 +258,7 @@ class SecretsHandler(object):
             if r.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
             else:
-                raise InvalidSecretsRequest('Invalid request return: ' + self.secrets_error_codes[r.status_code])
+                raise InvalidSecretsRequest('Invalid request return: ' + self.secrets_error_codes[r.status_code], r.status_code)
 
         return r
 

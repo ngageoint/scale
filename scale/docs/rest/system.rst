@@ -46,6 +46,14 @@ These services provide access to general system information.
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | system.services          | Array             | List of services, with name, title, description, and task counts               |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault                    | JSON Object       | Secrets Vault information                                                      |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault.status             | String            | The status of the secrets vault                                                |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault.sealed             | Boolean           | Whether the secrets vault is currently sealed                                  |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault.message            | String            | Description of error reading the secrets vault, if any                         |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
 | num_offers               | Integer           | Number of resource offers currently held by Scale                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | resources                | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
@@ -121,6 +129,11 @@ These services provide access to general system information.
 |               "desired_count": 1                                                                                              |
 |            }                                                                                                                  |
 |         ]                                                                                                                     |
+|      },                                                                                                                       |
+|      "vault": {                                                                                                               |
+|         "status": "Secrets Improperly Configured",                                                                            |
+|         "sealed": false,                                                                                                      |
+|         "message": "A secrets backend is not properly configured with Scale."                                                 |
 |      },                                                                                                                       |
 |      "num_offers": 4,                                                                                                         |
 |      "resources": {                                                                                                           |
