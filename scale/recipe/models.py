@@ -1984,7 +1984,6 @@ class RecipeTypeManager(models.Manager):
                     warnings.append(ValidationWarning('RECIPE_TYPE_NOT_FOUND', msg))
                 pass
             except Exception as ex:
-                print ex
                 errors.append(ex.error)
                 logger.exception('Unable to generate RecipeDiff: %s' % ex)
                 pass

@@ -55,8 +55,8 @@ class TestNode(TestCase):
                                          'description': NodeConditions.IMAGE_PULL_ERR.description,
                                          'started': datetime_to_string(right_now),
                                          'last_updated': datetime_to_string(right_now)}],
-                             'warnings': [{'name': 'CLEANUP', 'title': NodeConditions.CLEANUP_WARNING.title,
-                                           'description': NodeConditions.CLEANUP_WARNING.description % num_job_exes,
+                             'warnings': [{'name': 'SLOW_CLEANUP', 'title': NodeConditions.SLOW_CLEANUP.title,
+                                           'description': NodeConditions.SLOW_CLEANUP.description % num_job_exes,
                                            'started': datetime_to_string(right_now),
                                            'last_updated': datetime_to_string(right_now)}]}]
         self.assertListEqual(nodes_list, expected_results)
@@ -70,6 +70,7 @@ class TestNode(TestCase):
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
+        task._job_exes = [self.job_exe]
         task_1_id = task.id
 
         # Fail task after running and get different task next time
@@ -92,6 +93,8 @@ class TestNode(TestCase):
         task = node.get_next_tasks(new_time)[0]
         self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
+        self.assertTrue(NodeConditions.CLEANUP_ERR.name in node._conditions._active_errors)
+        self.assertTrue(NodeConditions.CLEANUP_FAILURE.name in node._conditions._active_warnings.keys()[0])
 
     def test_handle_initial_cleanup_task(self):
         """Tests handling the initial cleanup task"""

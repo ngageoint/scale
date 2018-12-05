@@ -75,9 +75,7 @@ def _create_command_task(task):
     if task.command_arguments:
         command += ' ' + task.command_arguments
 
-    mesos_task['command'].update(
-        {'value': command}
-    )
+    mesos_task['command']['value'] = command
 
     return mesos_task
 
@@ -92,12 +90,9 @@ def _create_docker_task(task):
     """
 
     mesos_task = _create_base_task(task)
-    mesos_task['command'].update(
-        {
-            'shell': False,
-            'arguments': [x for x in task.command_arguments.split(" ")]
-        }
-    )
+    mesos_task['command']['shell'] = False
+    mesos_task['command']['arguments'] = [x for x in task.command_arguments.split(" ")]
+
     mesos_task['container'] = {
         'type': CONTAINER_TYPE_DOCKER,
         'docker': {

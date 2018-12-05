@@ -1,6 +1,7 @@
 """Defines the class that holds a node's current conditions"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 from collections import namedtuple
 
@@ -10,10 +11,14 @@ from job.tasks.health_task import HealthTask
 from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
 from util.parse import datetime_to_string
 
+CLEANUP_WARN_THRESHOLD = datetime.timedelta(hours=3)
+
 
 logger = logging.getLogger(__name__)
 NodeError = namedtuple('NodeError', ['name', 'title', 'description', 'daemon_bad', 'pull_bad'])
 NodeWarning = namedtuple('NodeWarning', ['name', 'title', 'description'])
+
+WARNING_NAME_COUNTER = 1
 
 
 class ActiveError(object):
@@ -78,8 +83,14 @@ class NodeConditions(object):
     HEALTH_ERRORS = [BAD_DAEMON_ERR, BAD_LOGSTASH_ERR, HEALTH_FAIL_ERR, HEALTH_TIMEOUT_ERR, LOW_DOCKER_SPACE_ERR]
 
     # Warnings
-    CLEANUP_WARNING = NodeWarning(name='CLEANUP', title='Slow Cleanup',
+    SLOW_CLEANUP = NodeWarning(name='SLOW_CLEANUP', title='Slow Cleanup',
                                   description='There are %s job executions waiting to be cleaned up on this node.')
+                                  
+    CLEANUP_FAILURE = NodeWarning(name='CLEANUP_FAILURE', title='Cleanup Failure',
+                                  description='There was a failure cleaning up some of the following jobs: %s')
+                                  
+    CLEANUP_TIMEOUT = NodeWarning(name='CLEANUP_TIMEOUT', title='Cleanup Timeout',
+                                  description='There was a timeout cleaning up some of the following jobs: %s')
 
     def __init__(self, hostname):
         """Constructor
@@ -123,20 +134,48 @@ class NodeConditions(object):
         """
 
         self._error_inactive(NodeConditions.CLEANUP_ERR)
+        self._warning_inactive_old()
         self._update_state()
 
-    def handle_cleanup_task_failed(self):
+    def handle_cleanup_task_failed(self, job_exes):
         """Handles the failure of a node cleanup task
         """
 
         self._error_active(NodeConditions.CLEANUP_ERR)
+        
+        if job_exes:
+            # add a warning that a cleanup failure has occurred; this will remain after the error has been cleared due with a successful cleanup
+            # this will aid in debugging if a node or specific jobs continually have failures cleaning up
+            global WARNING_NAME_COUNTER
+            ids = [exe.job_id for exe in job_exes]
+            name = NodeConditions.CLEANUP_FAILURE.name + ' %d' % WARNING_NAME_COUNTER
+            WARNING_NAME_COUNTER += 1
+            title = NodeConditions.CLEANUP_FAILURE.title
+            description = NodeConditions.CLEANUP_FAILURE.description % ids
+            self._warning_active(NodeWarning(name=name, title=title, description=None), description)
+        else:
+            logger.warning('Cleanup task failed with no job exes')
+        
         self._update_state()
 
-    def handle_cleanup_task_timeout(self):
+    def handle_cleanup_task_timeout(self, job_exes):
         """Indicates that a node cleanup task has timed out
         """
 
         self._error_active(NodeConditions.CLEANUP_ERR)
+        
+        if job_exes:
+            # add a warning that a timeout has occurred; this will remain after the error has been cleared due with a successful cleanup
+            global WARNING_NAME_COUNTER
+            ids = [exe.job_id for exe in job_exes]
+            name = NodeConditions.CLEANUP_TIMEOUT.name + ' %d' % WARNING_NAME_COUNTER
+            WARNING_NAME_COUNTER += 1
+            title = NodeConditions.CLEANUP_TIMEOUT.title
+            description = NodeConditions.CLEANUP_TIMEOUT.description % ids
+            self._warning_active(NodeWarning(name=name, title=title, description=None), description)
+        else:
+            logger.warning('Cleanup task timed out with no job exes')
+        
         self._update_state()
 
     def handle_health_task_completed(self):
@@ -239,10 +278,10 @@ class NodeConditions(object):
         """
 
         if num_job_exes < JOB_EXES_WARNING_THRESHOLD:
-            self._warning_inactive(NodeConditions.CLEANUP_WARNING)
+            self._warning_inactive(NodeConditions.SLOW_CLEANUP)
         else:
-            description = NodeConditions.CLEANUP_WARNING.description % str(num_job_exes)
-            self._warning_active(NodeConditions.CLEANUP_WARNING, description)
+            description = NodeConditions.SLOW_CLEANUP.description % str(num_job_exes)
+            self._warning_active(NodeConditions.SLOW_CLEANUP, description)
         self._update_state()
 
     def _error_active(self, error):
@@ -316,3 +355,14 @@ class NodeConditions(object):
 
         if warning.name in self._active_warnings:
             del self._active_warnings[warning.name]
+            
+    def _warning_inactive_old(self):
+        """Inactivates all old warnings
+        """
+
+        warnings_to_delete = []
+        for name in self._active_warnings:
+            if now() - self._active_warnings[name].last_updated >= CLEANUP_WARN_THRESHOLD:
+                warnings_to_delete.append(name)
+        for name in warnings_to_delete:
+            del self._active_warnings[name]
