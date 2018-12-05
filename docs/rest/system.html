@@ -261,6 +261,22 @@ provide.</td>
 <td>Array</td>
 <td>List of services, with name, title, description, and task counts</td>
 </tr>
+<tr class="row-odd"><td>vault</td>
+<td>JSON Object</td>
+<td>Secrets Vault information</td>
+</tr>
+<tr class="row-even"><td>vault.status</td>
+<td>String</td>
+<td>The status of the secrets vault</td>
+</tr>
+<tr class="row-odd"><td>vault.sealed</td>
+<td>Boolean</td>
+<td>Whether the secrets vault is currently sealed</td>
+</tr>
+<tr class="row-even"><td>vault.message</td>
+<td>String</td>
+<td>Description of error reading the secrets vault, if any</td>
+</tr>
 <tr class="row-odd"><td>num_offers</td>
 <td>Integer</td>
 <td>Number of resource offers currently held by Scale</td>
@@ -354,6 +370,11 @@ category.</td>
             <span class="s2">&quot;desired_count&quot;</span><span class="o">:</span> <span class="mi">1</span>
          <span class="p">}</span>
       <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;vault&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;Secrets Improperly Configured&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;sealed&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;message&quot;</span><span class="o">:</span> <span class="s2">&quot;A secrets backend is not properly configured with Scale.&quot;</span>
    <span class="p">},</span>
    <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
    <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
