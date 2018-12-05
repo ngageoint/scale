@@ -542,7 +542,7 @@ class RecipeManager(models.Manager):
 
         return self.select_related('recipe_type_rev', 'recipe__recipe_type_rev').get(id=recipe_id)
 
-    def get_recipes(self, started=None, ended=None, source_started=None, source_ended=None,
+    def get_recipes_v6(self, started=None, ended=None, source_started=None, source_ended=None,
                     source_sensor_classes=None, source_sensors=None, source_collections=None,
                     source_tasks=None, type_ids=None, type_names=None, batch_ids=None,
                     include_superseded=False, order=None):
@@ -580,7 +580,7 @@ class RecipeManager(models.Manager):
 
         # Fetch a list of recipes
         recipes = Recipe.objects.all()
-        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event')
+        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event', 'batch')
         recipes = recipes.defer('recipe_type__definition', 'recipe_type_rev__recipe_type',
                                 'recipe_type_rev__definition')
 
