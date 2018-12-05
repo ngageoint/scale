@@ -17,7 +17,7 @@ Request: GET http://.../v6/jobs/?batch_id=1
 
 Response: 200 OK
 
- .. code-block:: javascript 
+.. code-block:: javascript
  
     {
       "count": 1,
@@ -417,7 +417,7 @@ Request: GET http://.../v6/jobs/{id}/
 
 Response: 200 OK
 
- .. code-block:: javascript 
+.. code-block:: javascript
 
     {
       "id": 3,

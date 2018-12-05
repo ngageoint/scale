@@ -487,9 +487,9 @@ Response: 200 OK
 V6 Recipe Details
 -----------------
 
-**Example GET /v6/recipes/{id} API call**
+**Example GET /v6/recipes/{id}/ API call**
 
-Request: GET http://.../v6/recipes/{id}
+Request: GET http://.../v6/recipes/{id}/
 
 Response: 200 OK
 
@@ -520,7 +520,12 @@ Response: 200 OK
       "batch": null
       "is_superseded": false,
       "superseded_recipe": null,
+      "superseded_by_recipe": null,
       "num_exes": 1,
+      "input": {
+        "files": {'input_a': [1234], 'input_b': [1235, 1236]},
+        "json": {'input_c': 999, 'input_d': {'hello'}}
+      },
       "input_file_size": 64.0,
       "source_started": "2015-08-28T17:55:41.005Z",
       "source_ended": "2015-08-28T17:56:41.005Z",
@@ -542,15 +547,152 @@ Response: 200 OK
       "completed": null,
       "superseded": null,
       "last_modified": "2018-11-01T13:59:38.471175Z"
+      "details":
+      "job_types": [
+        {
+            "id": 1,
+            "name": "my-job",
+            "version": "1.0.0",
+            "title": "My Job",
+            "description": "A simple job type",
+            "icon_code": "f013"
+        },...
+      ],
+      "sub_recipe_types": [
+        {
+            "id": 1,
+            "name": "test-recipe-type-1",
+            "title": "Test Recipe Type 1",
+            "description": "Test Description 1",
+            "revision_num": 1
+        },...
+      ]
   }
 
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Recipe Details**                                                                                                      |
 +=========================================================================================================================+
-| Returns details for a given recipe                                    |
+| Returns details for a given recipe                                                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/recipes/                                                                                                    |
+| **GET** /v6/recipes/{id}/                                                                                               |
+|         Where {id} is the unique identifier of an existing model.                                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| id                     | Integer           | The unique identifier of the model. Can be passed to the details API call. |
+|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| recipe_type            | JSON Object       | The recipe type that is associated with the recipe.                        |
+|                        |                   | This represents the latest version of the definition.                      |
+|                        |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)             |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| recipe_type_rev        | JSON Object       | The recipe type revision that is associated with the recipe.               |
+|                        |                   | This represents the definition at the time the recipe was scheduled.       |
+|                        |                   | (See :ref:`Recipe Type Revision Details <rest_v6_recipe_type_rev_details>`)|
++------------------------+-------------------+----------------------------------------------------------------------------+
+| event                  | JSON Object       | The trigger event that is associated with the recipe.                      |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| containing_recipe      | JSON Object       | The recipe instance containing this recipe.                                |
+|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| batch                  | JSON Object       | The batch instance associated with this recipe                             |
+|                        |                   | (See :ref:`Batch Details <rest_v6_batch_details>`)                         |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| is_superseded          | Boolean           | Whether this recipe has been replaced and is now obsolete.                 |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| superseded_recipe      | JSON Object       | The previous recipe in the chain that was superseded by this recipe.       |
+|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| superseded_by_recipe   | JSON Object       | The next recipe in the chain that superseded this recipe                   |
+|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| num_exes               | Integer           | The number of executions this recipe has had.                              |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| input                  | JSON Object       | The input data for the recipe.                                             |
+|                        |                   | (See :ref:`Data <rest_v6_data_data>`)                                      |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| input_file_size        | Decimal           | The amount of disk space in MiB required for input files for this job.     |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| source_started         | ISO-8601 Datetime | When collection of the underlying source file started.                     |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| source_ended           | ISO-8601 Datetime | When collection of the underlying source file ended.                       |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| source_sensor_class    | String            | The class of sensor used to produce the source file.                       |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| source_sensor          | String            | The specific identifier of the sensor used to produce the source file.     |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| source_collection      | String            | The collection of the source file.                                         |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| source_task            | String            | The task that produced the source file.                                    |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_total             | Integer           | The total count of jobs within this recipe                                 |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_pending           | Integer           | The count of PENDING jobs within this recipe                               |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_blocked           | Integer           | The count of BLOCKED jobs within this recipe                               |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_queued            | Integer           | The count of QUEUED jobs within this recipe                                |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_running           | Integer           | The count of RUNNING jobs within this recipe                               |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_failed            | Integer           | The count of FAILED jobs within this recipe                                |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_completed         | Integer           | The count of COMPLETED jobs within this recipe                             |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| jobs_canceled          | Integer           | The count of CANCELED jobs within this recipe                              |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| sub_recipes_total      | Integer           | The total count of sub-recipes within this recipe                          |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| sub_recipes_completed  | Integer           | The count of completed sub-recipes within this recipe                      |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| created                | ISO-8601 Datetime | When the associated database model was initially created.                  |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| completed              | ISO-8601 Datetime | When every job in the recipe was completed successfully.                   |
+|                        |                   | This field will remain null if a job in the recipe is blocked or failed.   |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| superseded             | ISO-8601 Datetime | When the the recipe became superseded by another recipe.                   |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| last_modified          | ISO-8601 Datetime | When the associated database model was last saved.                         |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| details                | JSON Object       | The running recipe instance details                                        |
+|                        |                   | (See :ref:`Recipe Instance <rest_v6_recipe_json_instance>`)                |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| job_types              | Array             | List of job type revisions in the recipe definition                        |
+|                        |                   | (See :ref:`Job Type Revision <rest_v6_job_type_revision_details>`)         |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| sub_recipe_types       | Array             | List of sub recipe types in the recipe definition                          |
+|                        |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)             |
++------------------------+-------------------+----------------------------------------------------------------------------+
+
+.. _rest_v6_recipe_input_files:
+
+v6 Recipe Input File List
+-------------------------
+
+**Example GET /v6/recipes/{id}/input_files/ API call**
+
+Request: GET http://.../v6/recipes/{id}/input_files/
+
+Response: 200 OK
+
+ .. code-block:: javascript
+
+See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Recipe Input Files**                                                                                                  |
++=========================================================================================================================+
+| Returns detailed information about input files associated with a given Job ID.                                          |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/recipes/{id}/input_files/                                                                                   |
+|         Where {id} is the unique identifier of an existing recipe.                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -563,51 +705,23 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
+| ended              | ISO-8601 Datetime | Optional | The end of the time range to query.                                 |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| source_started     | ISO-8601 Datetime | Optional | The start of the source file time range to query.                   |
-|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
+| time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
+|                    |                   |          | time filtering. Valid values are:                                   |
+|                    |                   |          |                                                                     |
+|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
+|                    |                   |          | - *data* - data time of input file (*data_started*, *data_ended*)   |
+|                    |                   |          | - *source* - collection time of source file (*source_started*,      |
+|                    |                   |          |              *source_ended*)                                        |
+|                    |                   |          |                                                                     |
+|                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| source_ended       | ISO-8601 Datetime | Optional | End of the source file time range to query, default is current time.|
-|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
+| file_name          | String            | Optional | Returns only input files with this file name.                       |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| source_sensor_class| String            | Optional | Return only recipes for the given source sensor class               |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| source_sensor      | String            | Optional | Return only recipes for the given source sensor                     |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| source_collection  | String            | Optional | Return only recipes for the given source collection                 |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| source_task        | String            | Optional | Return only recipes for the given source task                       |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| recipe_id          | Integer           | Optional | Return only recipes with a given recipe identifier.                 |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| recipe_type_id     | Integer           | Optional | Return only recipes with a given recipe type identifier.            |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| type_name          | String            | Optional | Return only recipes with a given recipe type name.                  |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| batch_id           | Integer           | Optional | Return only recipes associated with the given batch identifier.     |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| is_superseded      | Boolean           | Optional | Return only recipes that match this value, indicating if the recipe |
-|                    |                   |          | has/has not been superseded.                                        |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| is_completed       | Boolean           | Optional | Return only recipes that match this value, indicating if the recipe |
-|                    |                   |          | has/has not been completed.                                         |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| order              | String            | Optional | One or more fields to use when ordering the results.                |
-|                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
-|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
+| recipe_input       | String            | Optional | Returns files for this recipe input.                                |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -616,81 +730,13 @@ Response: 200 OK
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| count                  | Integer           | The total number of results that match the query parameters.               |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| next                   | URL               | A URL to the next page of results.                                         |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| previous               | URL               | A URL to the previous page of results.                                     |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| results                | Array             | List of result JSON objects that match the query parameters.               |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .id                    | Integer           | The unique identifier of the model. Can be passed to the details API call. |
-|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .recipe_type           | JSON Object       | The recipe type that is associated with the recipe.                        |
-|                        |                   | This represents the latest version of the definition.                      |
-|                        |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)             |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .recipe_type_rev       | JSON Object       | The recipe type revision that is associated with the recipe.               |
-|                        |                   | This represents the definition at the time the recipe was scheduled.       |
-|                        |                   | (See :ref:`Recipe Type Revision Details <rest_v6_recipe_type_rev_details>`)|
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .event                 | JSON Object       | The trigger event that is associated with the recipe.                      |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .containing_recipe     | JSON Object       | The recipe instance containing this recipe.                                |
-|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .batch                 | JSON Object       | The batch instance associated with this recipe                             |
-|                        |                   | (See :ref:`Batch Details <rest_v6_batch_details>`)                         |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .is_superseded         | Boolean           | Whether this recipe has been replaced and is now obsolete.                 |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .superseded_recipe     | JSON Object       | The previous recipe in the chain that was superseded by this recipe.       |
-|                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .num_exes              | Integer           | The number of executions this recipe has had.                              |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .input_file_size       | Decimal           | The amount of disk space in MiB required for input files for this job.     |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .source_started        | ISO-8601 Datetime | When collection of the underlying source file started.                     |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .source_ended          | ISO-8601 Datetime | When collection of the underlying source file ended.                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .source_sensor_class   | String            | The class of sensor used to produce the source file.                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .source_sensor         | String            | The specific identifier of the sensor used to produce the source file.     |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .source_collection     | String            | The collection of the source file.                                         |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .source_task           | String            | The task that produced the source file.                                    |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_total            | Integer           | The total count of jobs within this recipe                                 |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_pending          | Integer           | The count of PENDING jobs within this recipe                               |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_blocked          | Integer           | The count of BLOCKED jobs within this recipe                               |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_queued           | Integer           | The count of QUEUED jobs within this recipe                                |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_running          | Integer           | The count of RUNNING jobs within this recipe                               |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_failed           | Integer           | The count of FAILED jobs within this recipe                                |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_completed        | Integer           | The count of COMPLETED jobs within this recipe                             |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .jobs_canceled         | Integer           | The count of CANCELED jobs within this recipe                              |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .sub_recipes_total     | Integer           | The total count of sub-recipes within this recipe                          |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .sub_recipes_completed | Integer           | The count of completed sub-recipes within this recipe                      |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .created               | ISO-8601 Datetime | When the associated database model was initially created.                  |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .completed             | ISO-8601 Datetime | When every job in the recipe was completed successfully.                   |
-|                        |                   | This field will remain null if a job in the recipe is blocked or failed.   |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .superseded            | ISO-8601 Datetime | When the the recipe became superseded by another recipe.                   |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .last_modified         | ISO-8601 Datetime | When the associated database model was last saved.                         |
-+------------------------+-------------------+----------------------------------------------------------------------------+
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
+|                    |                   | (See :ref:`Scale Files <rest_v6_scale_file_list>`)                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
