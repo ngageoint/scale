@@ -393,7 +393,7 @@ def parse_timestamp(request, name, default_value=None, required=True):
         result = parse_util.parse_timestamp(value)
         if result:
             return result
-        raise
+        raise BadParameter('Did not parse a result for parameter: %s' % name)
     except:
         raise BadParameter('Invalid ISO timestamp format for parameter: %s' % name)
 
@@ -423,7 +423,7 @@ def parse_duration(request, name, default_value=None, required=True):
         result = parse_util.parse_duration(value)
         if result:
             return result
-        raise
+        raise BadParameter('Did not parse a result for parameter: %s' % name)
     except:
         raise BadParameter('Invalid duration format for parameter: %s' % name)
 
@@ -453,7 +453,7 @@ def parse_datetime(request, name, default_value=None, required=True):
         result = parse_util.parse_datetime(value)
         if result:
             return result
-        raise
+        raise BadParameter('Did not parse a result for parameter: %s' % name)
     except:
         raise BadParameter('Datetime values must follow ISO-8601 and include a timezone: %s' % name)
 
@@ -479,6 +479,32 @@ def parse_dict(request, name, default_value=None, required=True):
     if required and not isinstance(value, dict):
         raise BadParameter('Parameter must be a valid JSON object: "%s"' % name)
     return value or {}
+
+def parse_dict_list(request, name, default_value=None, required=True):
+    """Parses a list of dictionary parameters from the given request.
+
+    :param request: The context of an active HTTP request.
+    :type request: :class:`rest_framework.request.Request`
+    :param name: The name of the parameter to parse.
+    :type name: string
+    :param default_value: The name of the parameter to parse.
+    :type default_value: dict
+    :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
+        does not exist, there is no default value, and required is True.
+    :type required: bool
+    :returns: The value of the named parameter or the default value if provided.
+    :rtype: [dict]
+
+    :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
+    """
+
+    param_list = _get_param_list(request, name, default_value, required)
+
+    if param_list and len(param_list):
+        for param in param_list:
+            if not isinstance(param, dict):
+                raise BadParameter('Parameter must be a valid JSON object: "%s"' % name)
+    return param_list or []
 
 def title_to_name(queryset, title):
     """Generates an identifying name for a model from a human readable title

@@ -1287,6 +1287,16 @@ class CancelJobsView(GenericAPIView):
         recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
         is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
 
+        job_types = rest_util.parse_dict_list(request, 'job_types', required=False)
+
+        for jt in job_types:
+            if 'name' not in jt or 'version' not in jt:
+                raise BadParameter('Job types argument invalid: %s' % job_types)
+            existing_job_type = JobType.objects.filter(name=jt['name'], version=jt['version']).first()
+            if not existing_job_type:
+                raise BadParameter('Job Type with name: %s and version: %s does not exist' % (jt['name'], jt['version']))
+            job_type_ids.append(existing_job_type.id)
+
         # Create and send message
         msg = create_cancel_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
                                               error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
@@ -1370,12 +1380,21 @@ class RequeueJobsView(GenericAPIView):
         recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
         is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
 
+        job_types = rest_util.parse_dict_list(request, 'job_types', required=False)
+
+        for jt in job_types:
+            if 'name' not in jt or 'version' not in jt:
+                raise BadParameter('Job types argument invalid: %s' % job_types)
+            existing_job_type = JobType.objects.filter(name=jt['name'], version=jt['version']).first()
+            if not existing_job_type:
+                raise BadParameter('Job Type with name: %s and version: %s does not exist' % (jt['name'], jt['version']))
+            job_type_ids.append(existing_job_type.id)
+
         # Create and send message
         msg = create_requeue_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
                                                error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                                priority=priority, status=job_status, job_type_names=job_type_names,
-                                               batch_ids=batch_ids, recipe_ids=recipe_ids,
-                                               is_superseded=is_superseded)
+                                               batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)

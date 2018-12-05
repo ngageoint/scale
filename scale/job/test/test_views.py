@@ -5422,6 +5422,12 @@ class TestCancelJobsViewV6(TestCase):
     def setUp(self):
         django.setup()
 
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-type'
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        manifest['job']['jobVersion'] = '1.0.1'
+        self.job_type2 = job_test_utils.create_seed_job_type(manifest=manifest)
+
     @patch('job.views.CommandMessageManager')
     @patch('job.views.create_cancel_jobs_bulk_message')
     def test_cancel(self, mock_create, mock_msg_mgr):
@@ -5437,6 +5443,8 @@ class TestCancelJobsViewV6(TestCase):
         job_ids = [3, 4]
         job_status = 'FAILED'
         job_type_ids = [5, 6]
+        job_types = [{'name': 'my-job-type', 'version': '1.0.0'},
+                     {'name': 'my-job-type', 'version': '1.0.1'}]
         job_type_names = ['name']
         batch_ids = [7, 8]
         recipe_ids = [9, 10]
@@ -5447,6 +5455,7 @@ class TestCancelJobsViewV6(TestCase):
             'status': job_status,
             'job_ids': job_ids,
             'job_type_ids': job_type_ids,
+            'job_types': job_types,
             'job_type_names': job_type_names,
             'batch_ids': batch_ids,
             'recipe_ids': recipe_ids,
@@ -5458,11 +5467,30 @@ class TestCancelJobsViewV6(TestCase):
         url = '/%s/jobs/cancel/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
 
+        job_type_ids.append(self.job_type1.id)
+        job_type_ids.append(self.job_type2.id)
+
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                       status=job_status, job_type_names=job_type_names, 
+                                       status=job_status, job_type_names=job_type_names,
                                        batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
+
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_cancel_jobs_bulk_message')
+    def test_cancel_invalid(self, mock_create, mock_msg_mgr):
+        """Tests calling the job cancel view with an invalid jobtype name/version"""
+
+        job_types = [{'name': 'bad', 'version': '1.0.0'}]
+
+        json_data = {
+            'job_types': job_types
+        }
+
+        url = '/%s/jobs/cancel/' % self.api
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
 
 class TestRequeueJobsViewV5(TestCase):
 
@@ -5513,6 +5541,13 @@ class TestRequeueJobsViewV6(TestCase):
     def setUp(self):
         django.setup()
 
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-type'
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        manifest['job']['jobVersion'] = '1.0.1'
+        self.job_type2 = job_test_utils.create_seed_job_type(manifest=manifest)
+
+
     @patch('job.views.CommandMessageManager')
     @patch('job.views.create_requeue_jobs_bulk_message')
     def test_requeue(self, mock_create, mock_msg_mgr):
@@ -5528,6 +5563,8 @@ class TestRequeueJobsViewV6(TestCase):
         job_ids = [3, 4]
         job_status = 'FAILED'
         job_type_ids = [5, 6]
+        job_types = [{'name': 'my-job-type', 'version': '1.0.0'},
+                     {'name': 'my-job-type', 'version': '1.0.1'}]
         job_type_names = ['name']
         batch_ids = [7, 8]
         recipe_ids = [9, 10]
@@ -5539,6 +5576,7 @@ class TestRequeueJobsViewV6(TestCase):
             'status': job_status,
             'job_ids': job_ids,
             'job_type_ids': job_type_ids,
+            'job_types': job_types,
             'job_type_names': job_type_names,
             'batch_ids': batch_ids,
             'recipe_ids': recipe_ids,
@@ -5551,10 +5589,27 @@ class TestRequeueJobsViewV6(TestCase):
         url = '/%s/jobs/requeue/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
 
+        job_type_ids.append(self.job_type1.id)
+        job_type_ids.append(self.job_type2.id)
+
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                       priority=priority, status=job_status, job_type_names=job_type_names, 
-                                       batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
+                                       priority=priority, status=job_status,
+                                       job_type_names=job_type_names, batch_ids=batch_ids,
+                                       recipe_ids=recipe_ids, is_superseded=is_superseded)
 
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_requeue_jobs_bulk_message')
+    def test_requeue_invalid(self, mock_create, mock_msg_mgr):
+        """Tests calling the job requeue view with an invalid jobtype name/version"""
 
+        job_types = [{'name': 'bad', 'version': '1.0.0'}]
+
+        json_data = {
+            'job_types': job_types
+        }
+
+        url = '/%s/jobs/requeue/' % self.api
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

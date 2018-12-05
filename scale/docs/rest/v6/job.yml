@@ -923,6 +923,11 @@ components:
           type: array
           items:
             type: integer
+        job_types:
+          description: Cancel only jobs with these job type name/version combos
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_key'
         job_type_names:
           description: Cancel only jobs with these job type names
           type: array
@@ -951,6 +956,7 @@ components:
         is_superseded: 
           type: boolean
           description: Cancel only jobs with matching is_superseded flag.
+
     job_requeue_post:
       title: Requeue Jobs Post
       allof:
@@ -961,7 +967,21 @@ components:
               type: integer
               description: Change the priority of matching jobs when adding them
                 to the queue. Defaults to jobs current priority; lower number is higher priority.
-              
+
+    job_type_key:
+      title: Job Type Key
+      type: object
+      required: [name, version]
+      properties:
+        name:
+          type: string
+          description: The job type name
+          example: my-job-type
+        version:
+          type: string
+          description: The job type version
+          example: 1.0.0
+
     job_execution_log:
       title: Job Execution Log
       type: object
