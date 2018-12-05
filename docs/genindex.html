@@ -1271,7 +1271,9 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.CLEANUP_ERR_THRESHOLD">CLEANUP_ERR_THRESHOLD (scheduler.node.node_class.Node attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.CLEANUP_WARNING">CLEANUP_WARNING (scheduler.node.conditions.NodeConditions attribute)</a>
+      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.CLEANUP_FAILURE">CLEANUP_FAILURE (scheduler.node.conditions.NodeConditions attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.CLEANUP_TIMEOUT">CLEANUP_TIMEOUT (scheduler.node.conditions.NodeConditions attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.manager.CleanupManager">CleanupManager (class in scheduler.cleanup.manager)</a>
 </li>
@@ -9343,6 +9345,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.parse_dict">parse_dict() (in module util.rest)</a>
 </li>
+      <li><a href="architecture/django/code_docs/util.html#util.rest.parse_dict_list">parse_dict_list() (in module util.rest)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.html#util.parse.parse_duration">parse_duration() (in module util.parse)</a>
 
       <ul>
@@ -11509,6 +11513,8 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#module-scheduler.test.node">scheduler.test.node (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.test.node.html#module-scheduler.test.node.test_conditions">scheduler.test.node.test_conditions (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#module-scheduler.test.node.test_manager">scheduler.test.node.test_manager (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#module-scheduler.test.node.test_node_class">scheduler.test.node.test_node_class (module)</a>
@@ -12428,6 +12434,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.messages.html#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.setUp">(scheduler.test.messages.test_restart_scheduler.TestRestartScheduler method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_conditions.TestNodeConditions.setUp">(scheduler.test.node.test_conditions.TestNodeConditions method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.setUp">(scheduler.test.node.test_manager.TestNodeManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.setUp">(scheduler.test.node.test_node_class.TestNode method)</a>
@@ -12660,6 +12668,8 @@
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.slave_id">slave_id (node.models.Node attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.SlaveInfo">SlaveInfo (class in mesos_api.api)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.SLOW_CLEANUP">SLOW_CLEANUP (scheduler.node.conditions.NodeConditions attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.source">source (job.models.TaskUpdate attribute)</a>
 
@@ -13717,6 +13727,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.test_cancel_bad_value">test_cancel_bad_value() (job.test.test_views.OldTestJobDetailsViewV5 method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsViewV6.test_cancel_invalid">test_cancel_invalid() (job.test.test_views.TestCancelJobsViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.test_cancel_successful">test_cancel_successful() (job.test.test_views.OldTestJobDetailsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_canceled_job_execution">test_canceled_job_execution() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
@@ -14676,6 +14688,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.TestTaskManager.test_generate_status_json">(job.test.tasks.test_manager.TestTaskManager method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_conditions.TestNodeConditions.test_generate_status_json">(scheduler.test.node.test_conditions.TestNodeConditions method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_generate_status_json">(scheduler.test.node.test_node_class.TestNode method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_generate_status_json">(scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
@@ -14964,6 +14978,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/source.test.triggers.html#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_had_all_data_types">test_had_all_data_types() (source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_conditions.TestNodeConditions.test_handle_cleanup_task_completed">test_handle_cleanup_task_completed() (scheduler.test.node.test_conditions.TestNodeConditions method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.html#scheduler.test.tasks.test_manager.TestSystemTaskManager.test_handle_completed_db_update_task">test_handle_completed_db_update_task() (scheduler.test.tasks.test_manager.TestSystemTaskManager method)</a>
 </li>
@@ -16261,11 +16277,19 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_list_invalid_post">test_parse_dict_list_invalid_post() (util.test.test_rest.TestRest method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_list_optional">test_parse_dict_list_optional() (util.test.test_rest.TestRest method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_list_post">test_parse_dict_list_post() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_post">test_parse_dict_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration">test_parse_duration() (util.test.test_parse.TestParse method)</a>
 
@@ -16600,6 +16624,8 @@
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_requeue_failed">test_requeue_failed() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_requeue_ignored">test_requeue_ignored() (queue.test.test_views.TestRequeueJobsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestRequeueJobsViewV6.test_requeue_invalid">test_requeue_invalid() (job.test.test_views.TestRequeueJobsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_required_missing">test_required_missing() (job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles method)</a>
 
@@ -18334,6 +18360,8 @@
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration">TestNfsBrokerValidateConfiguration (class in storage.test.brokers.test_nfs_broker)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode">TestNode (class in scheduler.test.node.test_node_class)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_conditions.TestNodeConditions">TestNodeConditions (class in scheduler.test.node.test_conditions)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5">TestNodeDetailsViewV5 (class in node.test.test_views)</a>
 </li>

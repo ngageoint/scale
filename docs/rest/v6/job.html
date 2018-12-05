@@ -1556,6 +1556,7 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
   <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
   <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span> <span class="p">],</span>
   <span class="s2">&quot;job_type_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span>
+  <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">}</span> <span class="p">],</span>
   <span class="s2">&quot;job_type_names&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;test-job-type&#39;</span> <span class="p">],</span>
   <span class="s2">&quot;batch_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">202</span><span class="p">,</span> <span class="mi">203</span> <span class="p">],</span>
   <span class="s2">&quot;recipe_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">301</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="mi">303</span> <span class="p">],</span>
@@ -1618,37 +1619,42 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 <td>Optional</td>
 <td>Cancel only jobs with these job types</td>
 </tr>
-<tr class="row-odd"><td>job_type_names</td>
+<tr class="row-odd"><td>job_types</td>
+<td>Array</td>
+<td>Optional</td>
+<td>Cancel only jobs with these job types specified by name/version</td>
+</tr>
+<tr class="row-even"><td>job_type_names</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>Cancel only jobs with these job type names</td>
 </tr>
-<tr class="row-even"><td>batch_ids</td>
+<tr class="row-odd"><td>batch_ids</td>
 <td>Array[Integer]</td>
 <td>Optional</td>
 <td>Cancel only jobs that were part of these batches</td>
 </tr>
-<tr class="row-odd"><td>recipe_ids</td>
+<tr class="row-even"><td>recipe_ids</td>
 <td>Array[Integer]</td>
 <td>Optional</td>
 <td>Cancel only jobs that were part of these recipes</td>
 </tr>
-<tr class="row-even"><td>error_categories</td>
+<tr class="row-odd"><td>error_categories</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>Cancel only jobs that failed with these error categories</td>
 </tr>
-<tr class="row-odd"><td>error_ids</td>
+<tr class="row-even"><td>error_ids</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>Cancel only jobs that failed with these errors</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">202 Accepted</td>
 </tr>
-<tr class="row-even"><td colspan="4">No response body</td>
+<tr class="row-odd"><td colspan="4">No response body</td>
 </tr>
 </tbody>
 </table>
@@ -1664,6 +1670,7 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
   <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
   <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span> <span class="p">],</span>
   <span class="s2">&quot;job_type_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span>
+  <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">}</span> <span class="p">],</span>
   <span class="s2">&quot;job_type_names&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;test-job-type&#39;</span> <span class="p">],</span>
   <span class="s2">&quot;batch_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">202</span><span class="p">,</span> <span class="mi">203</span> <span class="p">],</span>
   <span class="s2">&quot;recipe_ids&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="mi">301</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="mi">303</span> <span class="p">],</span>
@@ -1727,40 +1734,45 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 <td>Optional</td>
 <td>Re-queue only jobs with these job types</td>
 </tr>
-<tr class="row-odd"><td>job_type_names</td>
+<tr class="row-odd"><td>job_types</td>
+<td>Array</td>
+<td>Optional</td>
+<td>Re-queue only jobs with these job types specified by name/version</td>
+</tr>
+<tr class="row-even"><td>job_type_names</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>Re-queue only jobs with these job type names</td>
 </tr>
-<tr class="row-even"><td>batch_ids</td>
+<tr class="row-odd"><td>batch_ids</td>
 <td>Array[Integer]</td>
 <td>Optional</td>
 <td>Re-queue only jobs that were part of these batches</td>
 </tr>
-<tr class="row-odd"><td>recipe_ids</td>
+<tr class="row-even"><td>recipe_ids</td>
 <td>Array[Integer]</td>
 <td>Optional</td>
 <td>Re-queue only jobs that were part of these recipes</td>
 </tr>
-<tr class="row-even"><td>error_categories</td>
+<tr class="row-odd"><td>error_categories</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>Re-queue only jobs that failed with these error categories</td>
 </tr>
-<tr class="row-odd"><td>error_ids</td>
+<tr class="row-even"><td>error_ids</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>Re-queue only jobs that failed with these errors</td>
 </tr>
-<tr class="row-even"><td>priority</td>
+<tr class="row-odd"><td>priority</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Change the priority of matching jobs when adding them to the queue.
 Defaults to jobs current priority, lower number is higher priority.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">202 Accepted</td>
 </tr>
 </tbody>

@@ -274,8 +274,13 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.node.conditions.NodeConditions.CLEANUP_WARNING">
-<code class="descname">CLEANUP_WARNING</code><em class="property"> = NodeWarning(name=u'CLEANUP', title=u'Slow Cleanup', description=u'There are %s job executions waiting to be cleaned up on this node.')</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.CLEANUP_WARNING" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.node.conditions.NodeConditions.CLEANUP_FAILURE">
+<code class="descname">CLEANUP_FAILURE</code><em class="property"> = NodeWarning(name=u'CLEANUP_FAILURE', title=u'Cleanup Failure', description=u'There was a failure cleaning up some of the following jobs: %s')</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.CLEANUP_FAILURE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.CLEANUP_TIMEOUT">
+<code class="descname">CLEANUP_TIMEOUT</code><em class="property"> = NodeWarning(name=u'CLEANUP_TIMEOUT', title=u'Cleanup Timeout', description=u'There was a timeout cleaning up some of the following jobs: %s')</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.CLEANUP_TIMEOUT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -303,6 +308,11 @@
 <code class="descname">LOW_DOCKER_SPACE_ERR</code><em class="property"> = NodeError(name=u'LOW_DOCKER_SPACE', title=u'Low Docker Disk Space', description=u'The free disk space available to Docker is low.', daemon_bad=False, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.LOW_DOCKER_SPACE_ERR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.SLOW_CLEANUP">
+<code class="descname">SLOW_CLEANUP</code><em class="property"> = NodeWarning(name=u'SLOW_CLEANUP', title=u'Slow Cleanup', description=u'There are %s job executions waiting to be cleaned up on this node.')</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.SLOW_CLEANUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.node.conditions.NodeConditions.generate_status_json">
 <code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>node_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.generate_status_json" title="Permalink to this definition">¶</a></dt>
@@ -325,13 +335,13 @@
 
 <dl class="method">
 <dt id="scheduler.node.conditions.NodeConditions.handle_cleanup_task_failed">
-<code class="descname">handle_cleanup_task_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_failed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_cleanup_task_failed</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles the failure of a node cleanup task</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.node.conditions.NodeConditions.handle_cleanup_task_timeout">
-<code class="descname">handle_cleanup_task_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_timeout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_cleanup_task_timeout</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_timeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates that a node cleanup task has timed out</p>
 </dd></dl>
 
