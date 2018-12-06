@@ -128,7 +128,7 @@ components:
           example: host.com
     node_object:
       title: Node
-      allof:
+      allOf:
         - ref: '#/components/schemas/node_base'
         - type: object
           properties:

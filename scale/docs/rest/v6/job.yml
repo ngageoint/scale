@@ -142,7 +142,7 @@ paths:
             schema:
               $ref: '#/components/schemas/job_post'
       responses:
-        '200':
+        '201':
           description: |-
             201 CREATED response
           content:
@@ -423,7 +423,7 @@ components:
           example: QUEUED
     job:
       title: Job
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_base'
         - type: object
           properties:      
@@ -457,9 +457,9 @@ components:
               description: The number of executions this job has had.  
               example: 1
             input_file_size:
-              type: integer
+              type: number
               description: The amount of disk space in MiB required for input files for this job. 
-              example: 1
+              example: 1.0
             source_started:
               type: string
               format: date-time
@@ -524,7 +524,7 @@ components:
 
     job_details:
       title: Job Details
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job'
         - type: object
           properties:      
@@ -625,7 +625,7 @@ components:
           $ref: '#/components/schemas/job_type_base'
     job_execution:
       title: Job Execution
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_execution_base'
         - type: object
           properties:
@@ -649,7 +649,7 @@ components:
               example: 10.0
     job_execution_details:
       title: Job Execution Details
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_execution'
         - type: object
           properties:
@@ -953,7 +953,7 @@ components:
           description: Cancel only jobs with matching is_superseded flag.
     job_requeue_post:
       title: Requeue Jobs Post
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_cancel_post'
         - type: object
           properties:

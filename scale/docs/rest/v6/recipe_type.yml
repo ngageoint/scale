@@ -264,7 +264,7 @@ components:
 
     recipe_type:
       title: Recipe Type
-      allof:
+      allOf:
         - ref: '#/components/schemas/recipe_type_base'
         - type: object
           properties:
@@ -297,7 +297,7 @@ components:
               
     recipe_type_detail:
       title: Recipe Type Details
-      allof:
+      allOf:
         - ref: '#/components/schemas/recipe_type'
         - type: object
           properties:
@@ -336,6 +336,21 @@ components:
           items:
             $ref: '#/components/schemas/recipe_type_revision'
           description: List of Recipe Type Revisions
+
+    recipe_type_revision_base:
+      title: Recipe Type Revision Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call
+          example: 4
+        recipe_type:
+          type: integer
+          example: 1
+        revision_num:
+          type: integer
+          example: 1
 
     recipe_type_revision:
       title: Recipe Type Revision

@@ -387,7 +387,7 @@ components:
           example: 2015-09-10T15:24:53.987Z
     job_type_detail:
       title: Job Type Details
-      allof:
+      allOf:
         - ref: '#/components/schemas/job_type'
         - type: object
           properties:      
@@ -519,7 +519,7 @@ components:
           example: 1
     job_type_revision:
       title: Job Type Revision
-      allof:
+      allOf:
         - ref: '#/components/schemas/job_type_revision_base'
         - type: object
           properties:   

@@ -184,9 +184,9 @@ A recipe instance JSON describes an instance of a running recipe.
 Recipe Queue New Recipe
 -----------------------
 
-**Example POST /v6/recipe/ API call**
+**Example POST /v6/recipes/ API call**
 
-Request: POST http://.../v6/recipe/
+Request: POST http://.../v6/recipes/
 
 .. code-block:: javascript
 
@@ -221,23 +221,65 @@ Response: 201 CREATED
             "type": "USER",
             "occurred": "2018-11-01T13:59:38.462027Z"
       },
+      "containing_recipe": null,
+      "batch": null
       "is_superseded": false,
-      "root_superseded_recipe": null,
       "superseded_recipe": null,
       "superseded_by_recipe": null,
+      "num_exes": 1,
+      "input": {
+        "files": {'input_a': [1234], 'input_b': [1235, 1236]},
+        "json": {'input_c': 999, 'input_d': {'hello'}}
+      },
+      "input_file_size": 64.0,
+      "source_started": "2015-08-28T17:55:41.005Z",
+      "source_ended": "2015-08-28T17:56:41.005Z",
+      "source_sensor_class": "classA",
+      "source_sensor": "1",
+      "source_collection": "12345",
+      "source_task": "my-task",
+      "jobs_total": 10,
+      "jobs_pending": 0,
+      "jobs_blocked": 0,
+      "jobs_queued": 1,
+      "jobs_running": 3,
+      "jobs_failed": 0,
+      "jobs_completed": 6,
+      "jobs_canceled": 0,
+      "sub_recipes_total": 2,
+      "sub_recipes_completed": 1,
       "created": "2018-11-01T13:59:38.471071Z",
       "completed": null,
       "superseded": null,
       "last_modified": "2018-11-01T13:59:38.471175Z"
+      "details":
+      "job_types": [
+        {
+            "id": 1,
+            "name": "my-job",
+            "version": "1.0.0",
+            "title": "My Job",
+            "description": "A simple job type",
+            "icon_code": "f013"
+        },...
+      ],
+      "sub_recipe_types": [
+        {
+            "id": 1,
+            "name": "test-recipe-type-1",
+            "title": "Test Recipe Type 1",
+            "description": "Test Description 1",
+            "revision_num": 1
+        },...
+      ]
   }
-
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Queue New Recipe**                                                                                                    |
 +=========================================================================================================================+
 | Creates a new recipe and places it onto the queue                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /v6/recipe/                                                                                                    |
+| **POST** /v6/recipes/                                                                                                   |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -471,6 +513,8 @@ Response: 200 OK
 | .sub_recipes_total     | Integer           | The total count of sub-recipes within this recipe                          |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .sub_recipes_completed | Integer           | The count of completed sub-recipes within this recipe                      |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .is_completed          | Boolean           | Whether this recipe is completed                                           |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .created               | ISO-8601 Datetime | When the associated database model was initially created.                  |
 +------------------------+-------------------+----------------------------------------------------------------------------+

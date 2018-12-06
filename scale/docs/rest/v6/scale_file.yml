@@ -489,7 +489,7 @@ components:
           example: 62
 
     file_details:
-      allof:
+      allOf:
         - ref: '#/components/schemas/file'
         - title: File Details
         - type: object
