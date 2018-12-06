@@ -1,6 +1,7 @@
 """Defines the classes that handle processing job and execution configuration"""
 from __future__ import absolute_import, unicode_literals
 
+import json
 import logging
 import math
 
@@ -59,6 +60,7 @@ class QueuedExecutionConfigurator(object):
         :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
+        print 'configure_queued_job'
         config = ExecutionConfiguration()
         data = job.get_job_data()
 
@@ -318,6 +320,20 @@ class ScheduledExecutionConfigurator(object):
                 env_vars['SCALE_RECIPE_ID'] = unicode(job_exe.recipe_id)
             if job_exe.batch_id:
                 env_vars['SCALE_BATCH_ID'] = unicode(job_exe.batch_id)
+                
+            # Configure the input_metadata env variables
+            # import pdb; pdb.set_trace()
+            input_metadata = {}
+            input_metadata['JOB'] = {}
+            for i in config._configuration['input_files'].keys():
+                input_metadata['JOB'][i] = [x['workspace_path'] for x in config._configuration['input_files'][i]]
+            if job_exe.recipe_id:
+                # Configure 
+                print 'Recipe has input? ', job_exe.recipe.has_input()
+                input_metadata['RECIPE'] = {}
+            print json.dumps(input_metadata)
+            
+            # env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
 
             # Configure workspace volumes
             workspace_volumes = {}
