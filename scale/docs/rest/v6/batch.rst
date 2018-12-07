@@ -106,7 +106,7 @@ Response: 200 OK
 |                         |                   |          | Duplicate it to filter by multiple values.                         |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | is_creation_done        | Boolean           | Optional | Return only batches that match this value, indicating if the batch |
-|                         |                   |          | has/has not finishing creating its recipes.                        |
+|                         |                   |          | has/has not finished creating its recipes.                         |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | is_superseded           | Boolean           | Optional | Return only batches that match this value, indicating if the batch |
 |                         |                   |          | has/has not been superseded.                                       |
@@ -305,7 +305,7 @@ Location http://.../v6/batches/105/
 +=========================================================================================================================+
 | Creates a new batch with the given fields                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /batches/                                                                                                      |
+| **POST** /v6/batches/                                                                                                   |
 +---------------------+---------------------------------------------------------------------------------------------------+
 | **Content Type**    | *application/json*                                                                                |
 +---------------------+---------------------------------------------------------------------------------------------------+

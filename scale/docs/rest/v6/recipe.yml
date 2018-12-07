@@ -9,108 +9,108 @@ paths:
       summary: Recipe List
       description: Returns a list of all recipes
       parameters:
-      - in: query
-        name: page
-        schema:
-          type: integer
-        description: The page of the results to return. Defaults to 1.
-      - in: query
-        name: page_size
-        schema:
-          type: integer
-        description: The size of the page to use for pagination of results.
-            Defaults to 100, and can be anywhere from 1-1000.
-      - in: query
-        name: started
-        schema:
-          type: string
-          format: date-time
-        description: The start of the time range to query
-      - in: query
-        name: ended
-        schema:
-          type: string
-          format: date-time
-        description: End of the time range to query, defaults to the current time
-      - in: query
-        name: source_started
-        schema:
-          type: string
-          format: date-time
-        description: The start of the source time range to query
-      - in: query
-        name: source_ended
-        schema:
-          type: string
-          format: date-time
-        description: End of the source time range to query, defaults to the current time
-      - in: query
-        name: source_sensor_class
-        schema:
-          type: string
-        description: Return only recipes for the given source sensor class.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: source_sensor
-        schema:
-          type: string
-        description: Return only recipes for the given source sensor.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: source_collection
-        schema:
-          type: string
-        description: Return only recipes for the given source collection.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: source_task
-        schema:
-          type: string
-        description: Return only recipes for the given source task.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: recipe_id
-        schema:
-          type: integer
-        description: Return only recipes with a given identifier.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: recipe_type_id
-        schema:
-          type: integer
-        description: Return only recipes with a given job type identifier.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: type_name
-        schema:
-          type: string
-        description: Return only recipes with a given job type name.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: batch_id
-        schema:
-          type: integer
-        description: Return only recipes with the given batch identifier.
-            Duplicate it to filter by multiple values.
-      - in: query
-        name: is_superseded
-        schema:
-          type: boolean
-        description: Return only recipes that match this value, indicating if the recipe
-            has/has not been superseded
-      - in: query
-        name: is_completed
-        schema:
-          type: boolean
-        description: Return only recipes that match this value, indicating if the recipe
-            has/has not been completed
-      - in: query
-        name: order
-        schema:
-          type: string
-        description: "One or more fields to use when ordering the results.
-                      Duplicate it to multi-sort, (ex: order=host_name&order=created)
-                      Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+              Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: source_started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the source time range to query
+        - in: query
+          name: source_ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the source time range to query, defaults to the current time
+        - in: query
+          name: source_sensor_class
+          schema:
+            type: string
+          description: Return only recipes for the given source sensor class.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: source_sensor
+          schema:
+            type: string
+          description: Return only recipes for the given source sensor.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: source_collection
+          schema:
+            type: string
+          description: Return only recipes for the given source collection.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: source_task
+          schema:
+            type: string
+          description: Return only recipes for the given source task.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: recipe_id
+          schema:
+            type: integer
+          description: Return only recipes with a given identifier.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: recipe_type_id
+          schema:
+            type: integer
+          description: Return only recipes with a given recipe type identifier.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: type_name
+          schema:
+            type: string
+          description: Return only recipes with a given job type name.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: batch_id
+          schema:
+            type: integer
+          description: Return only recipes with the given batch identifier.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: is_superseded
+          schema:
+            type: boolean
+          description: Return only recipes that match this value, indicating if the recipe
+              has/has not been superseded
+        - in: query
+          name: is_completed
+          schema:
+            type: boolean
+          description: Return only recipes that match this value, indicating if the recipe
+              has/has not been completed
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
           description: 200 response
