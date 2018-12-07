@@ -265,10 +265,10 @@ components:
               $ref: '#/components/schemas/recipe_type_revision_base'
             event:
               $ref: '#/components/schemas/event_base'
+            containing_recipe:
+              $ref: '#/components/schemas/recipe_base'
             batch:
               $ref: '#/components/schemas/batch_base'
-            definition:
-              $ref: '#/components/schemas/recipe_type_def'
             is_superseded:
               type: boolean
               description: Whether this recipe has been replaced and is now obsolete.
