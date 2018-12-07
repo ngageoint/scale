@@ -413,6 +413,11 @@ components:
       properties:
         previous_batch:
           $ref: '#/components/schemas/previous_batch_definition'
+          description: Indicates that the batch should re-process the recipes from a |
+            previous batch. This will link the previous and new batch together |
+            so that their metrics can be easily compared. The previous batch |
+            must have the same recipe type as the new batch and must have |
+            finished creating all of its recipes.
 
     previous_batch_definition:
       title: Batch Definition
@@ -424,6 +429,10 @@ components:
           description: The root batch ID of the previous batch. Scale will find the last |
             (non-superseded) batch with this root ID and it will be reprocessed by this batch.
           example: 4
+        forced_nodes:
+          $ref: '#/components/schemas/forced_nodes'
+          description:  A forced nodes JSON object that defines the batch recipe nodes to |
+            force to re-process even if there are no changes to them.
       
     job_type_validation_post:
       title: Job Type Validation Post
