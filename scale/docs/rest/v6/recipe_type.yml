@@ -407,8 +407,8 @@ components:
         input:
           $ref: '#/components/schemas/interface'
         nodes:
-          type: array
-          items:
+          type: object
+          additionalProperties:
             $ref: '#/components/schemas/recipe_definition_node'
           description: List of Nodes in this recipe definition
 

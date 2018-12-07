@@ -399,12 +399,12 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/job_type_base'
-              description: List of Job Types in this recipe type
+              description: List of Job Types in this recipe
             sub_recipe_types:
               type: array
               items:
                 $ref: '#/components/schemas/recipe_type_base'
-              description: List of Sub Recipe Types in this recipe type
+              description: List of Sub Recipe Types in this recipe
 
     recipe_post:
       title: Recipe Post
@@ -420,3 +420,176 @@ components:
         configuration:
             description: The job type configuration for the recipe.
             $ref: '#/components/schemas/recipe_type_config'
+
+    recipe_instance:
+      title: Recipe Instance
+      type: object
+      required: [nodes]
+      properties:
+        nodes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/recipe_instance_node'
+          description: List of Nodes in this recipe instance
+
+    recipe_instance_node:
+      title: Recipe Instance Node
+      type: object
+      required: [dependencies, node_type]
+      properties:
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_definition_dependency'
+        node_type:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/condition_node_instance'
+            - $ref: '#/components/schemas/job_node_instance'
+            - $ref: '#/components/schemas/recipe_node_instance'
+
+    condition_node_instance:
+      title: Recipe Instance Condition Node
+      required: [node_type, condition_id, is_processed, is_accepted]
+      properties:
+        node_type:
+          type: string
+          enum: [condition]
+          description: the name of the node type
+        condition_id:
+          type: integer
+          description: the unique id of the condition
+          example: 1
+        is_processed:
+          type: boolean
+          description: Whether the condition has been processed (evaluated)
+          example: true
+        is_accepted:
+          type: boolean
+          description: Whether the condition has been accepted. If |
+            accepted, the nodes depending on the condition will be created and |
+            processed. If not accepted, the nodes depending on the condition   |
+            will not be created or processed.
+          example: true
+
+    job_node_instance:
+      title: Recipe Instance Job Node
+      required: [node_type, job_type_name, job_type_version, job_type_revision, job_id, status]
+      properties:
+        node_type:
+          type: string
+          enum: [job]
+          description: the name of the node type
+        job_type_name:
+          type: string
+          description: the name of the job type
+          example: my-job-type
+        job_type_version:
+          type: string
+          description: the job type version
+          example: 1.0.1
+        job_type_revision:
+          type: integer
+          description: the job type revision
+          example: 2
+        job_id:
+          type: integer
+          description: the unique id of the job
+          example: 1
+        status:
+          type: string
+          description: the job's status
+          example: COMPLETED
+
+    recipe_node_instance:
+      title: Recipe Instance Recipe Node
+      required: [node_type, recipe_type_name, recipe_type_revision, recipe_id, is_completed,
+                 jobs_total, jobs_pending, jobs_blocked, jobs_queued, jobs_running, jobs_failed,
+                 jobs_completed, jobs_canceled, sub_recipes_total, sub_recipes_completed]
+      properties:
+        node_type:
+          type: string
+          enum: [recipe]
+          description: the name of the node type
+        recipe_type_name:
+          type: string
+          description: the name of the recipe type
+          example: my-recipe-type
+        recipe_type_revision:
+          type: integer
+          description: the recipe type revision
+          example: 2
+        recipe_id:
+          type: integer
+          description: the unique id of the recipe
+          example: 1
+        is_completed:
+          type: boolean
+          description: Whether the recipe has completed or not
+          example: true
+        jobs_total:
+          type: integer
+          description: The total count of jobs within this recipe
+          example: 1
+        jobs_pending:
+          type: integer
+          description: The count of PENDING jobs within this recipe
+          example: 1
+        jobs_blocked:
+          type: integer
+          description: The count of BLOCKED jobs within this recipe
+          example: 1
+        jobs_queued:
+          type: integer
+          description: The count of QUEUED jobs within this recipe
+          example: 1
+        jobs_running:
+          type: integer
+          description: The count of RUNNING jobs within this recipe
+          example: 1
+        jobs_failed:
+          type: integer
+          description: The count of FAILED jobs within this recipe
+          example: 1
+        jobs_completed:
+          type: integer
+          description: The count of COMPLETED jobs within this recipe
+          example: 1
+        jobs_canceled:
+          type: integer
+          description: The count of CANCELED jobs within this recipe
+          example: 1
+        sub_recipes_total:
+          type: integer
+          description: The total count of sub-recipes within this recipe
+          example: 1
+        sub_recipes_completed:
+          type: integer
+          description: The count of completed sub-recipes within this recipe
+          example: 1
+
+    event_base:
+      title: Event Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        type:
+          type: string
+          example: PARSE
+        occurred:
+          type: string
+          format: date-time
+          description: When the trigger event occurred.
+          example: 2015-09-10T15:24:53.503Z
+    event_details:
+      allOf:
+        - ref: '#/components/schemas/event_base'
+        - title: Event Details
+        - type: object
+          properties:
+            description:
+              type: object
+              additionalProperties: true

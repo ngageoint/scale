@@ -558,7 +558,12 @@ Response: 200 OK
       "event": {
             "id": 3,
             "type": "USER",
-            "occurred": "2018-11-01T13:59:38.462027Z"
+            "occurred": "2018-11-01T13:59:38.462027Z",
+            "description": {
+                "file_name": "data-file.png",
+                "version": "1.0",
+                "parse_id": 1
+            }
       },
       "containing_recipe": null,
       "batch": null

@@ -121,7 +121,7 @@ components:
           example: true
     error_details:
       allOf:
-        - ref: '#/components/schemas/error_details'
+        - ref: '#/components/schemas/error_base'
         - title: Error Details
         - type: object
           properties:
