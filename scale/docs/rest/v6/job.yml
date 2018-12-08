@@ -429,13 +429,12 @@ components:
           properties:      
             job_type_rev:
               $ref: '#/components/schemas/job_type_revision_base'
-            # Commenting out until defined
-            # event:
-            #   $ref: '#/components/schemas/event_base'
-            # recipe:
-            #   $ref: '#/components/schemas/recipe_base'
-            # batch:
-            #   $ref: '#/components/schemas/batch_base'
+            event:
+              $ref: '#/components/schemas/event_base'
+            recipe:
+              $ref: '#/components/schemas/recipe_base'
+            batch:
+              $ref: '#/components/schemas/batch_base'
             is_superseded: 
               type: boolean
               description: Whether this job has been replaced and is now obsolete.
