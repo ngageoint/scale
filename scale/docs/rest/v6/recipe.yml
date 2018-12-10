@@ -384,7 +384,7 @@ components:
         - type: object
           properties:
             recipe_type_rev:
-              $ref: '#/components/schemas/recipe_type_revision_details'
+              $ref: './recipe_type.yml#/components/schemas/recipe_type_revision_details'
             event:
               $ref: '#/components/schemas/event_details'
             superseded_recipe:
@@ -392,18 +392,18 @@ components:
             superseded_by_recipe:
               $ref: '#/components/schemas/recipe_base'
             input:
-              $ref: '#/components/schemas/data'
+              $ref: './data.yml#/components/schemas/data'
             details:
               $ref: '#/components/schemas/recipe_instance'
             job_types:
               type: array
               items:
-                $ref: '#/components/schemas/job_type_base'
+                $ref: './job_type.yml#/components/schemas/job_type_base'
               description: List of Job Types in this recipe
             sub_recipe_types:
               type: array
               items:
-                $ref: '#/components/schemas/recipe_type_base'
+                $ref: './recipe_type.yml#/components/schemas/recipe_type_base'
               description: List of Sub Recipe Types in this recipe
 
     recipe_post:
@@ -416,10 +416,10 @@ components:
           description: the ID of the recipe type
         input:
             description: The input data for the recipe.
-            $ref: '#/components/schemas/data'
+            $ref: './data.yml#/components/schemas/data'
         configuration:
             description: The job type configuration for the recipe.
-            $ref: '#/components/schemas/recipe_type_config'
+            $ref: './recipe_type.yml#/components/schemas/recipe_type_config'
 
     recipe_instance:
       title: Recipe Instance

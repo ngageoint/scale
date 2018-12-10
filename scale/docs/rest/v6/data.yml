@@ -1,0 +1,83 @@
+openapi: "3.0.0"
+info:
+  title: Data Services
+  version: v6
+
+components:
+  schemas:
+    data:
+      title: Data Object
+      type: object
+      properties:
+        files:
+          description: Represents file-based values in the data. Each key is the unique name of a data value (parameter) |
+            and each value is an array of one or more file IDs
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: integer
+          example: {'foo': [1234, 1235]}
+        json:
+          description: Represents JSON values in the data. Each key is the unique name of a data value (parameter) |
+            and each value is the appropriate JSON type/object that matches the parameter
+          type: object
+          additionalProperties: true
+          example: {'bar': 'hello, this is a string value'}
+
+    interface:
+      title: Interface
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/file_param'
+          description: Lists the parameters that take file(s) as input. Defaults to [].
+        json:
+          type: array
+          items:
+            $ref: '#/components/schemas/json_param'
+          description: Lists the parameters that take JSON as input. Defaults to [].
+
+    file_param:
+      title: File parameter
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          description: The unique name of the parameter. Can only contain the following characters \[a-zA-Z_-\]
+          example: foo
+        required:
+          type: boolean
+          description: Indicates whether the parameter is required. Defaults to True.
+          example: true
+        media_types:
+          type: array
+          items:
+            type: string
+          description: List of strings describing the accepted media types for the parameter's file(s)
+          example: ['image/tiff']
+        multiple:
+          type: boolean
+          description: Indicates whether the parameter takes multiple files. Defaults to False.
+          example: false
+          
+    json_param:
+      title: JSON parameter
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+          description: The unique name of the parameter. Can only contain the following characters \[a-zA-Z_-\]
+          example: foo
+        required:
+          type: boolean
+          description: Indicates whether the parameter is required. Defaults to True.
+          example: true
+        type:
+          type: string
+          description: The accepted JSON data type. Must be one of 'array', 'boolean', 'integer', 'number', 'object', or 'string'.
+          example: string
