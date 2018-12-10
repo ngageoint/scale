@@ -390,10 +390,9 @@ components:
       allOf:
         - ref: '#/components/schemas/job_type'
         - type: object
-          properties:      
-            # Commenting out until added
-            # manifest:
-            #   $ref: '#/components/schemas/seed_manifest'
+          properties: 
+            manifest:
+              $ref: '../../../job/seed/schema/seed.manifest.schema.json'
             configuration:
               $ref: '#/components/schemas/job_type_config'
     job_type_config:
@@ -554,9 +553,8 @@ components:
           format: date-time
           description: When the associated database model was initially created.
           example: 2015-09-10T15:24:53.503Z
-        # Commenting out until added
-        # manifest:
-        #   $ref: '#/components/schemas/seed_manifest'
+        manifest:
+         $ref: '../../../job/seed/schema/seed.manifest.schema.json'
           
     job_type_update:
       title: Job Type Update
@@ -590,9 +588,8 @@ components:
         docker_image:
           type: string
           example: "my-job-1.0.0-seed:1.0.0"
-        # Commenting out until added
-        # manifest:
-        #   $ref: '#/components/schemas/seed_manifest'
+        manifest:
+          $ref: '../../../job/seed/schema/seed.manifest.schema.json'
         configuration:
           $ref: '#/components/schemas/job_type_config'
         auto_update:
@@ -606,10 +603,9 @@ components:
     job_type_validation_post:
       title: Job Type Validation Post
       type: object
-      properties:      
-        # Commenting out until added
-        # manifest:
-        #   $ref: '#/components/schemas/seed_manifest'
+      properties: 
+        manifest:
+          $ref: '../../../job/seed/schema/seed.manifest.schema.json'
         configuration:
           $ref: '#/components/schemas/job_type_config'
       required:

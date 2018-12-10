@@ -371,7 +371,6 @@ components:
         - ref: '#/components/schemas/file'
         - title: File Details
         - type: object
-          # Commenting out until added
           properties:      
             meta_data:
               $ref: '#/components/schemas/metadata'
