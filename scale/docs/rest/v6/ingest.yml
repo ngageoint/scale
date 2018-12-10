@@ -297,15 +297,6 @@ components:
         configuration:
           $ref: '#/components/schemas/scan_config'
 
-#TODO: Finish job spec after v6 details have been nailed down        
-    job:
-      title: Job Details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
-          example: 4
     scanner:
       title: Scanner
       type: object
@@ -398,9 +389,8 @@ components:
           description: The sqs_name field is a required string that defines the name of the SQS queue
             that should be polled for object creation notifications that describe new files in the S3 bucket.
           example: my-sqs
-        # Commenting out until added
-        # credentials:
-        #   $ref: '#/components/schemas/credentials'
+        credentials:
+          $ref: './workspace.yml#/components/schemas/credentials'
         region_name:
           type: string
           description: The region_name is an optional string that specifies the AWS region where the
@@ -421,7 +411,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: '#/components/schemas/workspace_base'
+          $ref: './workspace.yml#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.
@@ -481,9 +471,8 @@ components:
           type: string
           description: The central geospatial location of the source file.
           example: POINT(11 -11)
-        # Commenting out until added
-        # meta_data:
-        #   $ref: '#/components/schemas/metadata'
+        meta_data:
+          $ref: './scale_file#/components/schemas/metadata'
         countries:
           type: array
           style: simple
