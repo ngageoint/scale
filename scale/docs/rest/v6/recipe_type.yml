@@ -405,66 +405,12 @@ components:
             you include the version so that future changes to the specification will still accept your configuration.
           example: 6
         input:
-          $ref: '#/components/schemas/interface'
+          $ref: './data.yml#/components/schemas/interface'
         nodes:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/recipe_definition_node'
           description: List of Nodes in this recipe definition
-
-      interface:
-        title: Interface
-        type: object
-        required: [files,json]
-        properties:
-          files:
-            type: array
-            items:
-              $ref: '#/components/schemas/interface_file'
-          json:
-            type: array
-            items:
-              $ref: '#/components/schemas/interface_json'
-      interface_file:
-        title: Interface
-        type: object
-        required: [name,media_types,multiple,required]
-        properties:
-          name:
-            type: string
-            description: The unique name of the input
-            pattern: '^[a-zA-Z_-]+$'
-          media_types:
-            type: array
-            style: simple
-            items:
-              type: string
-            description: The list of acceptable media types
-          multiple:
-            type: boolean
-            description: whether this input contains multiple files
-            example: true
-          required:
-            type: boolean
-            description: whether this file is required
-            example: false
-      interface_json:
-        title: Interface
-        type: object
-        required: [name,type,required]
-        properties:
-          name:
-            type: string
-            description: The unique name of the input
-            pattern: '^[a-zA-Z_-]+$'
-          type:
-            type: string
-            description: The JSON type accepted
-            enum: [array,boolean,integer,number,object,string]
-          required:
-            type: boolean
-            description: whether this input is required
-            example: false
 
       recipe_definition_node:
         title: Recipe Definition Node
