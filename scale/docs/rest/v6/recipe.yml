@@ -81,10 +81,10 @@ paths:
           description: Return only recipes with a given recipe type identifier.
               Duplicate it to filter by multiple values.
         - in: query
-          name: type_name
+          name: recipe_type_name
           schema:
             type: string
-          description: Return only recipes with a given job type name.
+          description: Return only recipes with a given recipe type name.
               Duplicate it to filter by multiple values.
         - in: query
           name: batch_id

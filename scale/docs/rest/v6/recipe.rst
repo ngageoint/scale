@@ -422,7 +422,7 @@ Response: 200 OK
 | recipe_type_id     | Integer           | Optional | Return only recipes with a given recipe type identifier.            |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| type_name          | String            | Optional | Return only recipes with a given recipe type name.                  |
+| recipe_type_name   | String            | Optional | Return only recipes with a given recipe type name.                  |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | batch_id           | Integer           | Optional | Return only recipes associated with the given batch identifier.     |
