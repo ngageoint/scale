@@ -242,6 +242,7 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
 class RecipeDetailsSerializerV6(RecipeSerializerV6):
     """Converts related recipe model fields to REST output."""
     from trigger.serializers import TriggerEventDetailsSerializerV6
+    from jobs.job_type_serializers import JobTypeBaseSerializerV6
 
     recipe_type_rev = RecipeTypeRevisionDetailsSerializerV6()
     event = TriggerEventDetailsSerializerV6()

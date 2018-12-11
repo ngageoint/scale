@@ -542,10 +542,92 @@ class RecipeManager(models.Manager):
 
         return self.select_related('recipe_type_rev', 'recipe__recipe_type_rev').get(id=recipe_id)
 
-    def get_recipes_v6(self, started=None, ended=None, source_started=None, source_ended=None,
+    def get_recipes_v5(self, started=None, ended=None, source_started=None, source_ended=None,
                     source_sensor_classes=None, source_sensors=None, source_collections=None,
                     source_tasks=None, type_ids=None, type_names=None, batch_ids=None,
                     include_superseded=False, order=None):
+        """Returns a list of recipes within the given time range.
+
+        :param started: Query recipes updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query recipes updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param source_started: Query recipes where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query recipes where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query recipes with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query recipes with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query recipes with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query recipes with the given source tasks.
+        :type source_tasks: list
+        :param type_ids: Query recipes of the type associated with the identifier.
+        :type type_ids: [int]
+        :param type_names: Query recipes of the type associated with the name.
+        :type type_names: [string]
+        :param batch_ids: Query jobs associated with batches with the given identifiers.
+        :type batch_ids: list[int]
+        :param include_superseded: Whether to include recipes that are superseded.
+        :type include_superseded: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of recipes that match the time range.
+        :rtype: [:class:`recipe.models.Recipe`]
+        """
+
+        # Fetch a list of recipes
+        recipes = Recipe.objects.all()
+        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event',)
+        recipes = recipes.defer('recipe_type__definition', 'recipe_type_rev__recipe_type',
+                                'recipe_type_rev__definition')
+
+        # Apply time range filtering
+        if started:
+            recipes = recipes.filter(last_modified__gte=started)
+        if ended:
+            recipes = recipes.filter(last_modified__lte=ended)
+
+        if source_started:
+            recipes = recipes.filter(source_started__gte=source_started)
+        if source_ended:
+            recipes = recipes.filter(source_ended__lte=source_ended)
+        if source_sensor_classes:
+            recipes = recipes.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            recipes = recipes.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            recipes = recipes.filter(source_collection__in=source_collections)
+        if source_tasks:
+            recipes = recipes.filter(source_task__in=source_tasks)
+
+        # Apply type filtering
+        if type_ids:
+            recipes = recipes.filter(recipe_type_id__in=type_ids)
+        if type_names:
+            recipes = recipes.filter(recipe_type__name__in=type_names)
+
+        # Apply batch filtering 
+        if batch_ids:
+            recipes = recipes.filter(batch_id__in=batch_ids)
+
+        # Apply additional filters
+        if not include_superseded:
+            recipes = recipes.filter(is_superseded=False)
+
+        # Apply sorting
+        if order:
+            recipes = recipes.order_by(*order)
+        else:
+            recipes = recipes.order_by('last_modified')
+        return recipes
+
+    def get_recipes_v6(self, started=None, ended=None, source_started=None, source_ended=None,
+                    source_sensor_classes=None, source_sensors=None, source_collections=None,
+                    source_tasks=None, type_ids=None, type_names=None, batch_ids=None,
+                    include_superseded=None, order=None):
         """Returns a list of recipes within the given time range.
 
         :param started: Query recipes updated after this amount of time.
