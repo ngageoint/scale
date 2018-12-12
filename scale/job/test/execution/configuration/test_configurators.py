@@ -1,6 +1,7 @@
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import os
+import json
 
 import django
 from django.test import TestCase
@@ -585,7 +586,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         framework_id = '1234'
         node = node_test_utils.create_node()
         broker_dict = {'version': '1.0', 'broker': {'type': 'host', 'host_path': '/w_1/host/path'}}
-        input_workspace = storage_test_utils.create_workspace(json_config=broker_dict)
+        input_workspace = storage_test_utils.create_workspace(json_config=broker_dict, base_url="http://host/my/path/")
         broker_dict = {'version': '1.0', 'broker': {'type': 's3', 'bucket_name': 'bucket1',
                                                     'host_path': '/w_2/host/path', 'region_name': 'us-east-1'}}
         output_workspace = storage_test_utils.create_workspace(json_config=broker_dict)
@@ -630,7 +631,6 @@ class TestScheduledExecutionConfigurator(TestCase):
         queued_job_exe = QueuedJobExecution(queue)
         queued_job_exe.scheduled('agent_1', node.id, resources)
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
-
         # Test method
         with patch('job.execution.configuration.configurators.settings') as mock_settings:
             with patch('job.execution.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
@@ -658,7 +658,14 @@ class TestScheduledExecutionConfigurator(TestCase):
         output_vol_name = get_job_exe_output_vol_name(job_exe_model)
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
+
         expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
+        input_metadata = {}
+        input_metadata['JOB'] = {}
+        from storage.models import ScaleFile
+        for i in expected_input_files.keys():
+            input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in expected_input_files[i]]
+
         expected_output_workspaces = {'output_1': output_workspace.name}
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
                               'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
@@ -811,7 +818,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'ALLOCATED_DISK': unicode(main_resources.disk),
                                            'ALLOCATED_GPUS': unicode(main_resources.gpus),
                                            'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
+                                           'INPUT_METADATA': unicode(json.dumps(input_metadata))
                               },
                               'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                               'mounts': {'m_1': m_1_vol_name, 'm_2': None, 'm_3': None, input_mnt_name: input_vol_name,
@@ -841,6 +849,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                 {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
                                                 {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
+                                                {'flag': 'env', 'value': 'INPUT_METADATA=%s' % unicode(json.dumps(input_metadata))},
                                                 {'flag': 'label',
                                                  'value': 'scale-job-execution-id=%s' % unicode(job.num_exes)},
                                                 {'flag': 'label',
@@ -863,7 +872,6 @@ class TestScheduledExecutionConfigurator(TestCase):
                            'input_files': expected_input_files,
                            'output_workspaces': expected_output_workspaces,
                            'tasks': [expected_pull_task, expected_pre_task, expected_main_task, expected_pst_task]}
-
         # Ensure configuration is valid
         ExecutionConfiguration(exe_config_with_secrets.get_dict())
         # Compare results including secrets, but convert Docker param lists to sets so order is ignored
