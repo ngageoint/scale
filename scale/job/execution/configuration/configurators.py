@@ -27,7 +27,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
 from scheduler.vault.manager import secrets_mgr
 from storage.container import get_workspace_volume_path
-from storage.models import Workspace
+from storage.models import Workspace, ScaleFile
 from util.environment import normalize_env_var_name
 from util.command import environment_expansion
 
@@ -60,7 +60,6 @@ class QueuedExecutionConfigurator(object):
         :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
-        print 'configure_queued_job'
         config = ExecutionConfiguration()
         data = job.get_job_data()
 
@@ -320,21 +319,7 @@ class ScheduledExecutionConfigurator(object):
                 env_vars['SCALE_RECIPE_ID'] = unicode(job_exe.recipe_id)
             if job_exe.batch_id:
                 env_vars['SCALE_BATCH_ID'] = unicode(job_exe.batch_id)
-                
-            # Configure the input_metadata env variables
-            # import pdb; pdb.set_trace()
-            input_metadata = {}
-            input_metadata['JOB'] = {}
-            for i in config._configuration['input_files'].keys():
-                input_metadata['JOB'][i] = [x['workspace_path'] for x in config._configuration['input_files'][i]]
-            if job_exe.recipe_id:
-                # Configure 
-                print 'Recipe has input? ', job_exe.recipe.has_input()
-                input_metadata['RECIPE'] = {}
-            print json.dumps(input_metadata)
-            
-            # env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
-
+          
             # Configure workspace volumes
             workspace_volumes = {}
             for task_workspace in config.get_workspaces(task_type):
@@ -424,6 +409,20 @@ class ScheduledExecutionConfigurator(object):
 
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
                                env_vars=env_vars)
+        
+        # Configure the input_metadata env variable
+        input_metadata = {}
+        if 'input_files' in config._configuration:
+            input_metadata['JOB'] = {}
+            for i in config._configuration['input_files'].keys():
+                input_metadata['JOB'][i] = [x['workspace_path'] for x in config._configuration['input_files'][i]]
+        if job_exe.recipe_id and job_exe.recipe.has_input():
+            input_metadata['RECIPE'] = {}
+            r_input_data = job_exe.recipe.get_input_data() 
+            for i in r_input_data.values.keys():
+                input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f).file_path for f in r_input_data.values[i].file_ids]
+        if input_metadata:
+            config.add_to_task('main', env_vars={'INPUT_METADATA': json.dumps(input_metadata)})
 
         job_config = job_exe.job.get_job_configuration()
         mount_volumes = {}
