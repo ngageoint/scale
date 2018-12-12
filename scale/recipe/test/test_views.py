@@ -2094,8 +2094,8 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['name'] = 'scale-batch-creator'
 
-        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
-        self.job_type2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.jt1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.jt2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
 
         def_v6_dict_sub = {'version': '6',
                        'input': { 'files': [],
@@ -2114,8 +2114,8 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
                        'nodes': {'node_a': {'dependencies': [],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
                                                       'input_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
-                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
-                                                          'job_type_version': self.job_type1.version,
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
+                                                          'job_type_version': self.jt1.version,
                                                           'job_type_revision': 1}},
                                  'node_b': {'dependencies': [],
                                             'input': {},
@@ -2174,7 +2174,7 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         self.assertEqual(result['input'], {'test': "test!"})
         self.assertEqual(result['details'], {'test': "test!"})
         
-        self.assertEqual(result['job_types'][0]['id'], self.job_type1.id)
+        self.assertEqual(result['job_types'][0]['id'], self.jt1.id)
         self.assertEqual(result['sub_recipe_types'][0]['id'], self.sub.id)
 
     def test_superseded(self):
@@ -2804,8 +2804,8 @@ class TestRecipeInputFilesViewV6(TestCase):
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['name'] = 'scale-batch-creator'
 
-        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
-        self.job_type2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+        self.jt1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.jt2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
 
         def_v6_dict_sub = {'version': '6',
                        'input': { 'files': [],
@@ -2824,8 +2824,8 @@ class TestRecipeInputFilesViewV6(TestCase):
                        'nodes': {'node_a': {'dependencies': [],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
                                                       'input_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
-                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
-                                                          'job_type_version': self.job_type1.version,
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
+                                                          'job_type_version': self.jt1.version,
                                                           'job_type_revision': 1}},
                                  'node_b': {'dependencies': [],
                                             'input': {},
