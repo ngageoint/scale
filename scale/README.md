@@ -88,25 +88,6 @@ make code_docs
 make html
 ```
 
-### Definition of Done
-
-We welcome community contributions to the Scale project, and the following guidelines will help with making Pull
-Requests (PRs) that ensure the projects long term maintainability. Before PRs are accepted, your code must meet all
-conditions of the "Definition of Done."
-
-1. Proper heading in all files
-1. Properly organized imports in all files, organized first in three separate sections separated by a new line (section
-ordering below), `import FOO` statements precede `from FOO import BAR` statements and finally ordered alphabetically
-    1. Standard Python imports (math, logging, etc)
-    1. Python library imports (Django, etc)
-    1. Scale code imports
-1. Add or update necessary unit tests for code updates
-1. All unit tests run successfully and there are no deprecation warnings (ignore warnings for dependencies)
-1. No Pep8 warnings in code
-1. All Python files have appropriate docstring information filled out
-1. Any necessary updates are made to the documentation
-1. All documentation is generated successfully with no warnings
-
 ### Development Platforms
 
 Scale development requires a local Postgres database with PostGIS extensions installed. The easiest way to get started
@@ -116,7 +97,7 @@ method. The following are the baseline prerequisites for Scale development:
 - Running Docker Community Edition 1.11+ Engine (use Docker for Windows or Mac on those platforms)
 - Python 2.7.x
 
-The core Scale team uses JetBrains PyCharm or Cloud9 IDE for development. These are in no way required but are
+The core Scale team uses Visual Studio Code or Cloud9 IDE for development. These are in no way required but are
 our preferred choices.
 
 #### Cloud IDEs
