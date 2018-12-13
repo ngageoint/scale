@@ -1,6 +1,6 @@
 <!--
 Thank you for your pull request (PR).  PRs should correlate to an issue that has been created 
-with appropiate metadata (assignee(s), label(s), project(s), sprint, etc.).
+with appropriate metadata (assignee(s), label(s), project(s), sprint, etc.).
 
 PR Name format: [GitHub issue #] - [GitHub issue title] 
 Example: #1446 - Add contribution guidelines
