@@ -348,16 +348,20 @@ class ScheduledExecutionConfigurator(object):
             input_metadata = {}
             if 'input_files' in config._configuration:
                 input_metadata['JOB'] = {}
-                for i in config._configuration['input_files'].keys():
-                    input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in config._configuration['input_files'][i]]
+                input_data = job_exe.job.get_input_data()
+                for i in input_data.values.keys():
+                    if type(input_data.values[i]) is JsonValue:
+                        input_metadata['JOB'][i] = input_data.values[i].value
+                    elif type(input_data.values[i]) is FileValue:
+                        input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
             if job_exe.recipe_id and job_exe.recipe.has_input():
                 input_metadata['RECIPE'] = {}
-                r_input_data = job_exe.recipe.get_input_data() 
-                for i in r_input_data.values.keys():
-                    if type(r_input_data.values[i]) is JsonValue:
-                        input_metadata['RECIPE'][i] = r_input_data.values[i].value
-                    elif type(r_input_data.values[i]) is FileValue:
-                        input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in r_input_data.values[i].file_ids]
+                input_data = job_exe.recipe.get_input_data() 
+                for i in input_data.values.keys():
+                    if type(input_data.values[i]) is JsonValue:
+                        input_metadata['RECIPE'][i] = input_data.values[i].value
+                    elif type(input_data.values[i]) is FileValue:
+                        input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
             if input_metadata:
                 env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
             

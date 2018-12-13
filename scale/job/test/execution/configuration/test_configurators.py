@@ -663,7 +663,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
         
         input_metadata = {}
-        input_metadata['JOB'] = {}
+        input_metadata['JOB'] = {'input_1': 'my_val'}
         from storage.models import ScaleFile
         for i in expected_input_files.keys():
             input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in expected_input_files[i]]
