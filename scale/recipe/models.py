@@ -28,6 +28,7 @@ from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
+from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -1078,6 +1079,16 @@ class Recipe(models.Model):
         """
 
         return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
+
+    def get_v6_recipe_instance_json(self):
+        """Returns the recipe instance details as json
+
+        :returns: The v6 JSON instance details dict for this recipe
+        :rtype: dict
+        """
+
+        instance = Recipe.objects.get_recipe_instance(self.id)
+        return rest_utils.strip_schema_version(convert_recipe_to_v6_json(instance).get_dict())
 
     def has_input(self):
         """Indicates whether this recipe has its input

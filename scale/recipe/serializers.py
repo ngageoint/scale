@@ -150,6 +150,7 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     recipe_type_rev = RecipeTypeRevisionBaseSerializerV6()
     event = TriggerEventBaseSerializerV6()
     batch = BatchBaseSerializerV6()
+    containing_recipe = RecipeBaseSerializerV6()
 
     is_superseded = serializers.BooleanField()
     superseded_recipe = ModelIdSerializer()
@@ -249,12 +250,12 @@ class RecipeDetailsSerializerV6(RecipeSerializerV6):
     superseded_recipe = RecipeBaseSerializerV6()
     superseded_by_recipe = RecipeBaseSerializerV6()
 
-    input = serializers.JSONField(source='get_v6_input_data_json()')
+    input = serializers.JSONField(source='get_v6_input_data_json')
 
-    details = serializers.JSONField(source='get_recipe_instance()')
+    details = serializers.JSONField(source='get_v6_recipe_instance_json')
 
-    job_types = JobTypeBaseSerializerV6()
-    sub_recipe_types = RecipeTypeBaseSerializerV6()
+    job_types = JobTypeBaseSerializerV6(many=True)
+    sub_recipe_types = RecipeTypeBaseSerializerV6(many=True)
 
 
 # TODO: remove this class when REST API v5 is removed

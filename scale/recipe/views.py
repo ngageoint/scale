@@ -31,7 +31,7 @@ from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSeriali
                                 RecipeTypeSerializerV5, RecipeTypeListSerializerV6,
                                 RecipeTypeRevisionSerializerV6, RecipeTypeRevisionDetailsSerializerV6)
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializerV5
+from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from trigger.models import TriggerEvent
 from util.rest import BadParameter, title_to_name
@@ -780,7 +780,14 @@ class RecipeDetailsView(RetrieveAPIView):
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
     queryset = RecipeInputFile.objects.all()
-    serializer_class = ScaleFileSerializerV5
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScaleFileSerializerV6
+        else:
+            return ScaleFileSerializerV5
 
     def get(self, request, recipe_id):
         """Retrieve detailed information about the input files for a recipe
