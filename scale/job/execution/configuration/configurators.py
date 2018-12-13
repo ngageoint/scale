@@ -9,6 +9,7 @@ from django.conf import settings
 
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
+from data.data.value import FileValue, JsonValue
 from job.execution.configuration.docker_param import DockerParameter
 from job.execution.configuration.input_file import InputFile
 from job.configuration.interface.job_interface import JobInterface
@@ -341,7 +342,25 @@ class ScheduledExecutionConfigurator(object):
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
                                         driver_opts=driver_opts)
                     workspace_volumes[task_workspace.name] = volume
-
+            
+            
+            # Configure the input_metadata env variable
+            input_metadata = {}
+            if 'input_files' in config._configuration:
+                input_metadata['JOB'] = {}
+                for i in config._configuration['input_files'].keys():
+                    input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in config._configuration['input_files'][i]]
+            if job_exe.recipe_id and job_exe.recipe.has_input():
+                input_metadata['RECIPE'] = {}
+                r_input_data = job_exe.recipe.get_input_data() 
+                for i in r_input_data.values.keys():
+                    if type(r_input_data.values[i]) is JsonValue:
+                        input_metadata['RECIPE'][i] = r_input_data.values[i].value
+                    elif type(r_input_data.values[i]) is FileValue:
+                        input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in r_input_data.values[i].file_ids]
+            if input_metadata:
+                env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
+            
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
         # Labels for metric grouping
@@ -409,20 +428,6 @@ class ScheduledExecutionConfigurator(object):
 
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
                                env_vars=env_vars)
-        
-        # Configure the input_metadata env variable
-        input_metadata = {}
-        if 'input_files' in config._configuration:
-            input_metadata['JOB'] = {}
-            for i in config._configuration['input_files'].keys():
-                input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in config._configuration['input_files'][i]]
-        if job_exe.recipe_id and job_exe.recipe.has_input():
-            input_metadata['RECIPE'] = {}
-            r_input_data = job_exe.recipe.get_input_data() 
-            for i in r_input_data.values.keys():
-                input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in r_input_data.values[i].file_ids]
-        if input_metadata:
-            config.add_to_task('main', env_vars={'INPUT_METADATA': json.dumps(input_metadata)})
 
         job_config = job_exe.job.get_job_configuration()
         mount_volumes = {}
