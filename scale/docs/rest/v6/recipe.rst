@@ -226,7 +226,6 @@ Response: 201 CREATED
       "is_superseded": false,
       "superseded_recipe": null,
       "superseded_by_recipe": null,
-      "num_exes": 1,
       "input": {
         "files": {'input_a': [1234], 'input_b': [1235, 1236]},
         "json": {'input_c': 999, 'input_d': {'hello'}}
@@ -348,7 +347,6 @@ Response: 200 OK
           "batch": null
           "is_superseded": false,
           "superseded_recipe": null,
-          "num_exes": 1,
           "input_file_size": 64.0,
           "source_started": "2015-08-28T17:55:41.005Z",
           "source_ended": "2015-08-28T17:56:41.005Z",
@@ -478,8 +476,6 @@ Response: 200 OK
 | .superseded_recipe     | JSON Object       | The previous recipe in the chain that was superseded by this recipe.       |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
 +------------------------+-------------------+----------------------------------------------------------------------------+
-| .num_exes              | Integer           | The number of executions this recipe has had.                              |
-+------------------------+-------------------+----------------------------------------------------------------------------+
 | .input_file_size       | Decimal           | The amount of disk space in MiB required for input files for this job.     |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .source_started        | ISO-8601 Datetime | When collection of the underlying source file started.                     |
@@ -570,7 +566,6 @@ Response: 200 OK
       "is_superseded": false,
       "superseded_recipe": null,
       "superseded_by_recipe": null,
-      "num_exes": 1,
       "input": {
         "files": {'input_a': [1234], 'input_b': [1235, 1236]},
         "json": {'input_c': 999, 'input_d': {'hello'}}
@@ -661,8 +656,6 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | superseded_by_recipe   | JSON Object       | The next recipe in the chain that superseded this recipe                   |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| num_exes               | Integer           | The number of executions this recipe has had.                              |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | input                  | JSON Object       | The input data for the recipe.                                             |
 |                        |                   | (See :ref:`Data <rest_v6_data_data>`)                                      |

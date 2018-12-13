@@ -1770,7 +1770,6 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(first['source_sensor_class'], self.s_class)
         self.assertIn('containing_recipe', first)
         self.assertIn('batch', first)
-        #self.assertEqual(first['num_exes'], 0)
         self.assertEqual(first['input_file_size'], 104857600.0)
         self.assertEqual(first['source_started'], self.date_1)
         self.assertEqual(first['source_ended'], self.date_2)

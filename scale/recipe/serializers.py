@@ -155,8 +155,6 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     superseded_recipe = ModelIdSerializer()
     superseded_by_recipe = None
 
-#TODO: remove num_exes from here and docs or implement
-    #num_exes = serializers.IntegerField()
     input_file_size = serializers.FloatField()
 
     source_started = serializers.DateTimeField()
