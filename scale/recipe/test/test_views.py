@@ -1767,9 +1767,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.recipe2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type2, input=self.data2)
         self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
 
-        Recipe.objects.process_recipe_input(self.recipe1)
-        Recipe.objects.process_recipe_input(self.recipe2)
-        Recipe.objects.process_recipe_input(self.recipe3)
+        recipe_test_utils.process_recipe_inputs([self.recipe1.id, self.recipe2.id, self.recipe3.id])
 
     def test_successful_all(self):
         """Tests getting recipes"""

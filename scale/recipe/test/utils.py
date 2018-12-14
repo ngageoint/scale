@@ -6,9 +6,12 @@ import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
+from batch.models import Batch
 from data.data.exceptions import InvalidData
 from job.messages.create_jobs import RecipeJob
-from job.models import Job
+from job.models import Job, JobTypeRevision
+from queue.messages.queued_jobs import QueuedJob
+from queue.models import Queue
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
@@ -283,22 +286,24 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
 
     return recipe
 
-def process_recipe_input(recipe):
+def process_recipe_inputs(recipe_ids):
     """Mimics effect of process_recipe_input messages for unit testing """
 
-    if not recipe.has_input():
-        if not recipe.recipe:
-            raise Exception('Recipe %d has no input and is not in a recipe. Message will not re-run.', recipe.id)
+    for recipe_id in recipe_ids:
+        recipe = Recipe.objects.get_recipe_with_interfaces(recipe_id)
+        if not recipe.has_input():
+            if not recipe.recipe:
+                raise Exception('Recipe %d has no input and is not in a recipe. Message will not re-run.', recipe.id)
 
-        generate_input_data_from_recipe(recipe)
+            generate_input_data_from_recipe(recipe)
 
-    # Lock recipe model and process recipe's input data
-    with transaction.atomic():
-        recipe = Recipe.objects.get_locked_recipe(recipe.recipe_id)
-        root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
-        Recipe.objects.process_recipe_input(recipe)
+        # Lock recipe model and process recipe's input data
+        with transaction.atomic():
+            recipe = Recipe.objects.get_locked_recipe(recipe.recipe_id)
+            root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
+            Recipe.objects.process_recipe_input(recipe)
 
-    update_recipe(root_recipe_id)
+        update_recipe(root_recipe_id)
 
 def generate_input_data_from_recipe(sub_recipe):
     """Generates the sub-recipe's input data from its recipe dependencies and validates and sets the input data on
@@ -621,7 +626,7 @@ def update_recipe_metrics(recipe_ids=[], job_ids=None):
 
     # If any of these recipes are sub-recipes, grab root recipe IDs and update those recipes
     root_recipe_ids = set()
-    for recipe in Recipe.objects.filter(id__in=self._recipe_ids):
+    for recipe in Recipe.objects.filter(id__in=recipe_ids):
         if recipe.root_recipe_id:
             root_recipe_ids.add(recipe.root_recipe_id)
     if root_recipe_ids:
@@ -680,6 +685,8 @@ def create_subrecipes(recipe_model, subrecipes):
             process_input_sub_ids.append(recipe.id)
 
     # Set up recipe diffs
+    # Uncomment and implement if needed to test superseding recipes
+    """
     if self.superseded_recipe_id:
         for node_name, recipe in sub_recipes_map.items():
             pair = _RecipePair(recipe.superseded_recipe, recipe)
@@ -691,39 +698,10 @@ def create_subrecipes(recipe_model, subrecipes):
                 sub_forced_nodes = self.forced_nodes.get_forced_nodes_for_subrecipe(node_name)
                 if sub_forced_nodes:
                     diff.set_force_reprocess(sub_forced_nodes)
-            self._recipe_diffs.append(_RecipeDiff(diff, [pair]))
-            
-    process_sub_inputs(process_input_sub_ids)
+            self._recipe_diffs.append(_RecipeDiff(diff, [pair]))"""
+
+    process_recipe_inputs(process_input_sub_ids)
     update_recipe_metrics([recipe_model.recipe_id])
-
-def process_job_inputs(process_input_job_ids):
-    """Mimics effect of create_process_job_input_messages for unit testing"""
-    
-    queued_jobs = []
-    for job_id in process_input_job_ids:
-        job = Job.objects.get_job_with_interfaces(job_id)
-
-        if not job.has_input():
-            if not job.recipe:
-                print ('Job %d has no input and is not in a recipe. Message will not re-run.', job_id)
-                continue
-
-            try:
-                generate_job_input_data_from_recipe(job)
-            except InvalidData:
-                print ('Recipe created invalid input data for job %d. Message will not re-run.', job_id)
-                continue
-
-        # Lock job model and process job's input data
-        with transaction.atomic():
-            job = Job.objects.get_locked_job(job_id)
-            Job.objects.process_job_input(job)
-
-        # queue the job
-        if job.num_exes == 0:
-            queued_jobs.append(QueuedJob(job.id, 0))
-            
-    queue_jobs(queued_jobs)
 
 def create_recipe_condition(root_recipe=None, recipe=None, batch=None, is_processed=None, is_accepted=None, save=False):
     """Creates a recipe_node model for unit testing
