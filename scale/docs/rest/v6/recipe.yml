@@ -265,7 +265,7 @@ components:
               $ref: '#/components/schemas/recipe_type_revision_base'
             event:
               $ref: '#/components/schemas/event_base'
-            containing_recipe:
+            recipe:
               $ref: '#/components/schemas/recipe_base'
             batch:
               $ref: '#/components/schemas/batch_base'

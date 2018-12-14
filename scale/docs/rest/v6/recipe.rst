@@ -221,7 +221,7 @@ Response: 201 CREATED
             "type": "USER",
             "occurred": "2018-11-01T13:59:38.462027Z"
       },
-      "containing_recipe": null,
+      "recipe": null,
       "batch": null
       "is_superseded": false,
       "superseded_recipe": null,
@@ -343,7 +343,7 @@ Response: 200 OK
                 "type": "USER",
                 "occurred": "2018-11-01T13:59:38.462027Z"
           },
-          "containing_recipe": null,
+          "recipe": null,
           "batch": null
           "is_superseded": false,
           "superseded_recipe": null,
@@ -465,7 +465,7 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .event                 | JSON Object       | The trigger event that is associated with the recipe.                      |
 +------------------------+-------------------+----------------------------------------------------------------------------+
-| .containing_recipe     | JSON Object       | The recipe instance containing this recipe.                                |
+| .recipe                | JSON Object       | The recipe instance containing this recipe.                                |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .batch                 | JSON Object       | The batch instance associated with this recipe                             |
@@ -561,7 +561,7 @@ Response: 200 OK
                 "parse_id": 1
             }
       },
-      "containing_recipe": null,
+      "recipe": null,
       "batch": null
       "is_superseded": false,
       "superseded_recipe": null,
@@ -643,7 +643,7 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | event                  | JSON Object       | The trigger event that is associated with the recipe.                      |
 +------------------------+-------------------+----------------------------------------------------------------------------+
-| containing_recipe      | JSON Object       | The recipe instance containing this recipe.                                |
+| recipe                 | JSON Object       | The recipe instance containing this recipe.                                |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | batch                  | JSON Object       | The batch instance associated with this recipe                             |

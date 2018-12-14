@@ -1695,6 +1695,17 @@ class TestRecipesViewV6(TransactionTestCase):
         manifest['job']['name'] = 'scale-batch-creator'
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.jt2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+
+        def_v6_dict_sub = {'version': '6',
+                       'input': { 'files': [],
+                                  'json': []},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.jt2.name,
+                                                          'job_type_version': self.jt2.version, 'job_type_revision': self.jt2.revision_num}}}}
+
+        self.sub = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_sub)
 
         def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
@@ -1703,7 +1714,11 @@ class TestRecipesViewV6(TransactionTestCase):
                        'nodes': {'node_a': {'dependencies': [],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
-                                                          'job_type_version': self.job_type1.version, 'job_type_revision': 1}}
+                                                          'job_type_version': self.job_type1.version, 'job_type_revision': 1}},
+                                 'node_b': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
+                                                          'recipe_type_revision': self.sub.revision_num}}
                            
                        }
             
@@ -1769,7 +1784,8 @@ class TestRecipesViewV6(TransactionTestCase):
         # check new/removed fields
         for result in results['results']:
             if result['id'] == self.recipe1.id:
-                self.assertIn('containing_recipe', result)
+                self.assertIn('recipe', result)
+                self.assertEqual(result['recipe']['id'], 1)
                 self.assertIn('batch', result)
                 self.assertEqual(result['input_file_size'], 104857600.0)
                 self.assertEqual(result['source_started'], self.date_1)
@@ -1808,7 +1824,6 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         results = result['results']
-        print results
         self.assertEqual(len(results), 3)
         
         url = '/%s/recipes/?started=%s&ended=%s' % (self.api, yesterday, today)

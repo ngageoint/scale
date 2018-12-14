@@ -150,7 +150,7 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     recipe_type_rev = RecipeTypeRevisionBaseSerializerV6()
     event = TriggerEventBaseSerializerV6()
     batch = BatchBaseSerializerV6()
-    containing_recipe = RecipeBaseSerializerV6()
+    recipe = RecipeBaseSerializerV6()
 
     is_superseded = serializers.BooleanField()
     superseded_recipe = ModelIdSerializer()
