@@ -1710,9 +1710,10 @@ class TestRecipesViewV6(TransactionTestCase):
         def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
-                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'inpub_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
                                                           'job_type_version': self.job_type1.version, 'job_type_revision': 1}},
                                  'node_b': {'dependencies': [],
@@ -1735,31 +1736,11 @@ class TestRecipesViewV6(TransactionTestCase):
                                                source_sensor_class=self.s_class2, source_sensor=self.s_sensor2,
                                                source_collection=self.collection2, source_task=self.task2)
 
-        self.data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file1.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
+        self.data = {'version': '6', 'files': {'INPUT_FILE': [self.file1.id]},
+                'json': {'INPUT_JSON': 'hello'}}
 
-        self.data2 = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file2.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
+        self.data2 = {'version': '6', 'files': {'INPUT_FILE': [self.file2.id]},
+                'json': {'INPUT_JSON': 'hello2'}}
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
@@ -2146,18 +2127,9 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
                                                     source_sensor_class=self.s_class, source_sensor=self.s_sensor,
                                                     source_collection=self.collection, source_task=self.task)
 
-        self.data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file1.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
+
+        self.data = {'version': '6', 'files': {'INPUT_FILE': [self.file1.id]},
+                'json': {'INPUT_JSON': 'hello'}}
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
