@@ -1712,8 +1712,8 @@ class TestRecipesViewV6(TransactionTestCase):
                                             'multiple': True}],
                                  'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
-                                                      'inpub_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
                                                           'job_type_version': self.job_type1.version, 'job_type_revision': 1}},
                                  'node_b': {'dependencies': [],
@@ -1758,36 +1758,40 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['count'], 3)
+        self.assertEqual(results['count'], 5)
         
         # check new/removed fields
         for result in results['results']:
             if result['id'] == self.recipe1.id:
                 self.assertIn('recipe', result)
-                self.assertEqual(result['recipe']['id'], 1)
                 self.assertIn('batch', result)
-                self.assertEqual(result['input_file_size'], 104857600.0)
-                self.assertEqual(result['source_started'], self.date_1)
-                self.assertEqual(result['source_ended'], self.date_2)
+                self.assertEqual(result['input_file_size'], 100.0)
+                self.assertEqual(result['source_started'], '2016-01-01T00:00:00Z')
+                self.assertEqual(result['source_ended'], '2016-01-02T00:00:00Z')
                 self.assertEqual(result['source_sensor_class'], self.s_class)
                 self.assertEqual(result['source_sensor'], self.s_sensor)
                 self.assertEqual(result['source_collection'], self.collection)
                 self.assertEqual(result['source_task'], self.task)
-                self.assertEqual(result['jobs_total'], 1)
-                self.assertEqual(result['jobs_pending'], 1)
+                self.assertEqual(result['jobs_total'], 2)
+                self.assertEqual(result['jobs_pending'], 0)
                 self.assertEqual(result['jobs_blocked'], 0)
-                self.assertEqual(result['jobs_queued'], 0)
+                self.assertEqual(result['jobs_queued'], 2)
                 self.assertEqual(result['jobs_running'], 0)
                 self.assertEqual(result['jobs_failed'], 0)
                 self.assertEqual(result['jobs_completed'], 0)
                 self.assertEqual(result['jobs_canceled'], 0)
-                self.assertEqual(result['sub_recipes_total'], 0)
+                self.assertEqual(result['sub_recipes_total'], 1)
                 self.assertEqual(result['sub_recipes_completed'], 0)
                 self.assertFalse(result['is_completed'])
                 self.assertNotIn('root_superseded_recipe', result)
                 self.assertNotIn('superseded_by_recipe', result)
             else:
-                self.assertTrue(result['id'] == self.recipe2.id or result['id'] == self.recipe3.id)
+                id = result['id']
+                if result['recipe']:
+                    id = result['recipe']['id']
+                    self.assertTrue(id in [self.recipe1.id, self.recipe2.id])
+                else:
+                    self.assertTrue(id in [self.recipe2.id, self.recipe3.id])
 
     def test_time_successful(self):
         """Tests successfully calling the get recipes by time"""
@@ -1803,7 +1807,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         results = result['results']
-        self.assertEqual(len(results), 3)
+        self.assertEqual(len(results), 5)
         
         url = '/%s/recipes/?started=%s&ended=%s' % (self.api, yesterday, today)
         response = self.client.get(url)
@@ -1926,7 +1930,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['count'], 2)
+        self.assertEqual(results['count'], 4)
 
     def test_successful_completed(self):
         """Tests getting completed recipes"""
@@ -1943,7 +1947,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['count'], 3)
+        self.assertEqual(results['count'], 5)
 
     def test_successful_order(self):
         """Tests ordering recipes"""
@@ -1953,7 +1957,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['results'][2]['source_sensor_class'], 'A')
+        self.assertEqual(results['results'][4]['source_sensor_class'], 'A')
 
 class TestRecipesPostViewV6(TransactionTestCase):
     
@@ -2106,10 +2110,10 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         self.def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
-                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': False}]},
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
-                                                      'input_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
                                                           'job_type_version': self.jt1.version,
                                                           'job_type_revision': 1}},
@@ -2133,9 +2137,8 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
-        
 
-        Recipe.objects.process_recipe_input(self.recipe1)
+        recipe_test_utils.process_recipe_inputs([self.recipe1.id])
 
     def test_successful(self):
         """Tests getting recipe details"""
@@ -2157,8 +2160,34 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         self.assertTrue('inputs' not in result)
         self.assertTrue('definiton' not in result['recipe_type'])
         self.maxDiff = None
-        self.assertEqual(result['input'], {u'files': {u'INPUT_FILE': [self.file1.id]}, u'json': {}})
-        self.assertEqual(result['details'], {'test': "test!"})
+        self.assertEqual(result['input'], {u'files': {u'INPUT_FILE': [self.file1.id]}, u'json': {u'INPUT_JSON': u'hello'}})
+        job_id = result['details']['nodes']['node_a']['node_type']['job_id']
+        recipe_id = result['details']['nodes']['node_b']['node_type']['recipe_id']
+        details_dict = {u'nodes':
+              {u'node_a': {u'dependencies': [],
+                          u'node_type': {u'job_id': job_id,
+                                         u'job_type_name': u'scale-batch-creator',
+                                         u'job_type_revision': 1,
+                                         u'job_type_version': u'1.0.0',
+                                         u'node_type': u'job',
+                                         u'status': u'QUEUED'}},
+               u'node_b': {u'dependencies': [],
+                          u'node_type': {u'is_completed': False,
+                                         u'jobs_blocked': 0,
+                                         u'jobs_canceled': 0,
+                                         u'jobs_completed': 0,
+                                         u'jobs_failed': 0,
+                                         u'jobs_pending': 0,
+                                         u'jobs_queued': 1,
+                                         u'jobs_running': 0,
+                                         u'jobs_total': 1,
+                                         u'node_type': u'recipe',
+                                         u'recipe_id': recipe_id,
+                                         u'recipe_type_name': self.sub.name,
+                                         u'recipe_type_revision': 1,
+                                         u'sub_recipes_completed': 0,
+                                         u'sub_recipes_total': 0}}}}
+        self.assertEqual(result['details'], details_dict)
         
         self.assertEqual(result['job_types'][0]['id'], self.jt1.id)
         self.assertEqual(result['sub_recipe_types'][0]['id'], self.sub.id)
@@ -2803,10 +2832,10 @@ class TestRecipeInputFilesViewV6(TestCase):
         self.def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
-                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': False}]},
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
-                                                      'input_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
                                                           'job_type_version': self.jt1.version,
                                                           'job_type_revision': 1}},

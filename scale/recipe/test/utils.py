@@ -293,7 +293,7 @@ def process_recipe_inputs(recipe_ids):
         recipe = Recipe.objects.get_recipe_with_interfaces(recipe_id)
         if not recipe.has_input():
             if not recipe.recipe:
-                print 'Recipe %d has no input and is not in a recipe. Message will not re-run.' % recipe.id
+                #print 'Recipe %d has no input and is not in a recipe. Message will not re-run.' % recipe.id
                 continue
 
             generate_input_data_from_recipe(recipe)
@@ -473,6 +473,7 @@ def process_conditions(process_input_condition_ids):
                 RecipeCondition.objects.set_condition_data_v6(condition, data, node_name)
             except InvalidData as ex:
                 print 'Recipe created invalid input data for condition %d' % condition_id
+                print ex
                 continue
 
             # Process filter and set whether condition was accepted
@@ -538,14 +539,14 @@ def process_job_inputs(process_input_job_ids):
 
         if not job.has_input():
             if not job.recipe:
-                print ('Job %d has no input and is not in a recipe. Message will not re-run.', job_id)
+                #print ('Job %d has no input and is not in a recipe. Message will not re-run.', job_id)
                 continue
 
             try:
                 generate_job_input_data_from_recipe(job)
             except InvalidData as ex:
-                import pdb; pdb.set_trace()
                 print 'Recipe created invalid input data for job %d. Message will not re-run.' % job_id
+                print ex
                 continue
 
         # Lock job model and process job's input data
@@ -583,7 +584,6 @@ def generate_job_input_data_from_recipe(job):
 
     # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
     job.recipe.input = old_recipe_input_dict
-    import pdb; pdb.set_trace()
 
     definition = job.recipe.recipe_type_rev.get_definition()
     input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
