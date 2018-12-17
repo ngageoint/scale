@@ -2516,6 +2516,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
+        recipe_test_utils.process_recipe_inputs([self.recipe1.id])
 
     def test_all_jobs(self):
         """Tests reprocessing all jobs in an existing recipe"""
@@ -2544,24 +2545,19 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
-    def test_priority(self):
-        """Tests reprocessing all jobs in an existing recipe with a priority override"""
+    def test_bad_job(self):
+        """Tests reprocessing a non-existant job throws and error"""
 
         json_data = {
-            'all_jobs': True,
-            'priority': 1111,
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['does-not-exist']
+            }
         }
 
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        results = json.loads(response.content)
-        self.assertNotEqual(results['id'], self.recipe1.id)
-        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
-
-        recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], node_name='kml')
-        self.assertEqual(recipe_job_1.job.priority, 1111)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_superseded(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
