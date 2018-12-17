@@ -214,6 +214,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/file_list'
 
+  /recipes/{id}/reprocess/:
+    post:
+      operationId: _rest_v6_recipe_reprocess
+      summary: Reprocess Recipe
+      description: Creates a new recipe using its latest type revision by superseding an existing recipe and associated|
+        jobs. Note that if the recipe type definition has not changed since the recipe was created, then one or more   |
+        job names must be specified to force the recipe to be re-processed. A recipe that is already superseded cannot |
+        be re-processed again.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/forced_nodes'
+      responses:
+        '202':
+          description: 202 accepted
+
 components:
   schemas:
     recipe_list:
@@ -589,3 +607,30 @@ components:
             description:
               type: object
               additionalProperties: true
+              
+    forced_nodes:
+      title: Forced Nodes
+      required: [all]
+      properties:
+        all:
+          type: boolean
+          description: If true, then all nodes within the recipe should be forced to |
+            re-process and the 'nodes' and 'sub_recipes' fields should be omitted. If|
+            false, then the 'nodes' array is used to indicate which nodes should be |
+            forced to re-process.
+          example: false
+        nodes:
+          type: array
+          items:
+            type: string
+          description: An array listing the names of the recipe nodes that should be |
+            forced to re-process
+          example: ["job_a_1", "job_a_2", "recipe_b", "recipe_c"]
+        sub_recipes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/forced_nodes'
+          description: A JSON object where the key names are the sub-recipe node names |
+            that are being forced to re-process. The values are forced nodes JSON |
+            objects that recursively define the nodes with the sub-recipe to force to |
+            reprocess.
