@@ -75,7 +75,9 @@ Future v6 Services
    v6/job_type
    v6/metrics
    v6/node
+   v6/queue
    v6/recipe
+   v6/recipe_type
    v6/scale_file
    v6/scan
    v6/scheduler

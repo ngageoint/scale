@@ -508,7 +508,7 @@ Request: POST http://.../v6/recipe-types/validation/
  
    {
       "name": "my-recipe-type",
-      "definition": { :ref: #`Recipe Definition <rest_v6_recipe_json_definition>` }
+      "definition": { :ref: `Recipe Definition <rest_v6_recipe_json_definition>` }
    }
     
 Response: 200 OK
@@ -652,7 +652,7 @@ Request: PATCH http://.../v6/recipe-types/test/
     {
       "title": "My Recipe",
       "description": "A simple recipe type"
-      "definition": {:ref: #`Recipe Definition <rest_v6_recipe_json_definition>`},
+      "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`},
       "auto_update": true
     }
 
@@ -759,7 +759,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 
-.. _rest_v6_recipe_type_revision_details:
+.. _rest_v6_recipe_type_rev_details:
 
 v6 Recipe Type Revision Details
 -------------------------------

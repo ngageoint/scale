@@ -526,7 +526,7 @@ Response: 200 OK
 | .last_modified         | ISO-8601 Datetime | When the associated database model was last saved.                         |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 
-.. _rest_v6_recipe_list:
+.. _rest_v6_recipe_details:
 
 V6 Recipe Details
 -----------------

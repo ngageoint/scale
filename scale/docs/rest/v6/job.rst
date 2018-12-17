@@ -194,7 +194,7 @@ Response: 200 OK
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .job_type_rev       | JSON Object       | The job type revision that is associated with the job.                        |
 |                     |                   | This represents the definition at the time the job was scheduled.             |
-|                     |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_rev_details>`)         |
+|                     |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_revision_details>`)    |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .event              | JSON Object       | The trigger event that is associated with the job.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -403,7 +403,7 @@ Location http://.../v6/job/1/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Body**           | JSON containing the details of the newly queued job, see :ref:`Job Details <rest_v6_job_details`>  |
+| **Body**           | JSON containing the details of the newly queued job, see :ref:`Job Details <rest_v6_job_details>`  |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_job_details:
@@ -584,7 +584,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type_rev       | JSON Object       | The job type revision that is associated with the job.                         |
 |                    |                   | This represents the definition at the time the job was scheduled.              |
-|                    |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_rev_details>`)          |
+|                    |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_revision_details>`)     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | event              | JSON Object       | The trigger event that is associated with the job.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
