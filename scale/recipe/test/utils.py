@@ -6,12 +6,21 @@ import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
+from batch.models import Batch
+from data.data.exceptions import InvalidData
+from job.messages.create_jobs import RecipeJob
+from job.models import Job, JobTypeRevision
+from queue.messages.queued_jobs import QueuedJob
+from queue.models import Queue
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
+from recipe.messages.create_conditions import Condition
+from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
@@ -277,6 +286,426 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
 
     return recipe
 
+def process_recipe_inputs(recipe_ids):
+    """Mimics effect of process_recipe_input messages for unit testing """
+
+    for recipe_id in recipe_ids:
+        recipe = Recipe.objects.get_recipe_with_interfaces(recipe_id)
+        if not recipe.has_input():
+            if not recipe.recipe:
+                #print 'Recipe %d has no input and is not in a recipe. Message will not re-run.' % recipe.id
+                continue
+
+            generate_input_data_from_recipe(recipe)
+
+        # Lock recipe model and process recipe's input data
+        with transaction.atomic():
+            recipe = Recipe.objects.get_locked_recipe(recipe_id)
+            root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
+            Recipe.objects.process_recipe_input(recipe)
+
+        if root_recipe_id:
+            update_recipe(root_recipe_id)
+
+def generate_input_data_from_recipe(sub_recipe):
+    """Generates the sub-recipe's input data from its recipe dependencies and validates and sets the input data on
+    the sub-recipe
+
+    :param sub_recipe: The sub-recipe with related recipe_type_rev and recipe__recipe_type_rev models
+    :type sub_recipe: :class:`recipe.models.Recipe`
+
+    :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+    """
+
+    # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+    old_recipe_input_dict = dict(sub_recipe.recipe.input)
+
+    # Get sub-recipe input from dependencies in the recipe
+    recipe_input_data = sub_recipe.recipe.get_input_data()
+    node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
+    for node_output in node_outputs.values():
+        if node_output.node_type == 'recipe' and node_output.id == sub_recipe.id:
+            node_name = node_output.node_name
+            break
+
+    # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+    sub_recipe.recipe.input = old_recipe_input_dict
+
+    definition = sub_recipe.recipe.recipe_type_rev.get_definition()
+    input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+    Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
+
+def update_recipe(root_recipe_id):
+    """Mimics effect of update recipe messages for unit testing """
+
+    recipe = Recipe.objects.get_recipe_instance_from_root(root_recipe_id)
+    recipe_model = recipe.recipe_model
+    when = timezone.now()
+
+    jobs_to_update = recipe.get_jobs_to_update()
+    blocked_job_ids = jobs_to_update['BLOCKED']
+    pending_job_ids = jobs_to_update['PENDING']
+
+    nodes_to_create = recipe.get_nodes_to_create()
+    nodes_to_process_input = recipe.get_nodes_to_process_input()
+
+    if not recipe_model.is_completed and recipe.has_completed():
+        Recipe.objects.complete_recipes([recipe_model.id], when)
+
+    # Create new messages for changing job statuses
+    if len(blocked_job_ids):
+        update_jobs_status(blocked_job_ids, when, status='BLOCKED')
+    if len(pending_job_ids):
+        update_jobs_status(pending_job_ids, when, status='PENDING')
+
+    # Create recipe nodes
+    conditions = []
+    recipe_jobs = []
+    subrecipes = []
+    for node_name, node_def in nodes_to_create.items():
+        process_input = False
+        if node_name in nodes_to_process_input:
+            process_input = True
+            del nodes_to_process_input[node_name]
+        if node_def.node_type == ConditionNodeDefinition.NODE_TYPE:
+            condition = Condition(node_name, process_input)
+            conditions.append(condition)
+        elif node_def.node_type == JobNodeDefinition.NODE_TYPE:
+            job = RecipeJob(node_def.job_type_name, node_def.job_type_version, node_def.revision_num, node_name,
+                            process_input)
+            recipe_jobs.append(job)
+        elif node_def.node_type == RecipeNodeDefinition.NODE_TYPE:
+            subrecipe = SubRecipe(node_def.recipe_type_name, node_def.revision_num, node_name, process_input)
+            subrecipes.append(subrecipe)
+    if len(conditions):
+        create_conditions(recipe_model, conditions)
+    if len(recipe_jobs):
+        create_jobs_for_recipe(recipe_model, recipe_jobs)
+    if len(subrecipes):
+        create_subrecipes(recipe_model, subrecipes)
+
+    # Create new messages for processing recipe node input
+    process_condition_ids = []
+    process_job_ids = []
+    process_recipe_ids = []
+    for node_name, node in nodes_to_process_input.items():
+        if node.node_type == ConditionNodeDefinition.NODE_TYPE:
+            process_condition_ids.append(node.condition.id)
+        elif node.node_type == JobNodeDefinition.NODE_TYPE:
+            process_job_ids.append(node.job.id)
+        elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
+            process_recipe_ids.append(node.recipe.id)
+    if len(process_condition_ids):
+        process_conditions(process_condition_ids)
+    if len(process_job_ids):
+        process_job_inputs(process_job_ids)
+    if len(process_recipe_ids):
+        process_recipe_inputs(process_recipe_ids)
+
+def update_jobs_status(job_ids, when=timezone.now(), status='BLOCKED'):
+    """Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing """
+
+    with transaction.atomic():
+        jobs = []
+        # Retrieve locked job models
+        for job_model in Job.objects.get_locked_jobs(job_ids):
+            if not job_model.last_status_change or job_model.last_status_change < when:
+                # Status update is not old, so perform the update
+                jobs.append(job_model)
+
+        # Update jobs that need status set to BLOCKED
+        if jobs:
+            if status == 'BLOCKED':
+                job_ids = Job.objects.update_jobs_to_blocked(jobs, when)
+            if status == 'PENDING':
+                job_ids = Job.objects.update_jobs_to_pending(jobs, when)
+
+    update_recipe_metrics(job_ids=job_ids)
+
+def create_conditions(recipe_model, conditions):
+    """Mimics effect of create_conditions_messages for unit testing"""
+
+    condition_models = {}  # {Node name: condition model}
+
+    # Create new condition models
+    process_input_by_node = {}
+    for condition in conditions:
+        node_name = condition.node_name
+        process_input_by_node[node_name] = condition.process_input
+        condition = RecipeCondition.objects.create_condition(recipe_model.id, root_recipe_id=recipe_model.root_recipe_id,
+                                                             batch_id=recipe_model.batch_id)
+        condition_models[node_name] = condition
+
+    RecipeCondition.objects.bulk_create(condition_models.values())
+
+    # Create recipe nodes
+    recipe_nodes = RecipeNode.objects.create_recipe_condition_nodes(recipe_model.id, condition_models)
+    RecipeNode.objects.bulk_create(recipe_nodes)
+
+    # Set up process input dict
+    process_input_condition_ids = []
+    for condition in conditions:
+        condition_model = condition_models[condition.node_name]
+        if condition.process_input:
+            process_input_condition_ids.append(condition_model.id)
+    process_conditions(process_input_condition_ids)
+
+def process_conditions(process_input_condition_ids):
+    """Mimics effect of create_process_condition_messages for unit testing"""
+
+    for condition_id in process_input_condition_ids:
+        condition = RecipeCondition.objects.get_condition_with_interfaces(condition_id)
+
+        if not condition.is_processed:
+            definition = condition.recipe.recipe_type_rev.get_definition()
+
+            # Get condition data from dependencies in the recipe
+            recipe_input_data = condition.recipe.get_input_data()
+            node_outputs = RecipeNode.objects.get_recipe_node_outputs(condition.recipe_id)
+            for node_output in node_outputs.values():
+                if node_output.node_type == 'condition' and node_output.id == condition.id:
+                    node_name = node_output.node_name
+                    break
+
+            # Set data on the condition model
+            try:
+                data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+                RecipeCondition.objects.set_condition_data_v6(condition, data, node_name)
+            except InvalidData as ex:
+                print 'Recipe created invalid input data for condition %d' % condition_id
+                print ex
+                continue
+
+            # Process filter and set whether condition was accepted
+            data_filter = definition.graph[node_name].data_filter
+            is_accepted = data_filter.is_data_accepted(data)
+            RecipeCondition.objects.set_processed(condition.id, is_accepted)
+
+        # update the condition's recipe
+        root_recipe_id = condition.recipe.root_recipe_id if condition.recipe.root_recipe_id else condition.recipe_id
+        update_recipe(root_recipe_id)
+
+def create_jobs_for_recipe(recipe_model, recipe_jobs):
+    """Mimics effect of create_jobs_messages_for_recipe for unit testing"""
+
+    recipe_jobs_map = {}  # {Node name: job model}
+
+    superseded_jobs = {}
+    # Get superseded jobs from superseded recipe
+    if recipe_model.superseded_recipe_id:
+        superseded_jobs = RecipeNode.objects.get_recipe_jobs(recipe_model.superseded_recipe_id)
+
+    # Get job type revisions
+    revision_tuples = [(j.job_type_name, j.job_type_version, j.job_type_rev_num) for j in recipe_jobs]
+    revs_by_id = JobTypeRevision.objects.get_revisions(revision_tuples)
+    revs_by_tuple = {(j.job_type.name, j.job_type.version, j.revision_num): j for j in revs_by_id.values()}
+
+    # Create new job models
+    process_input_by_node = {}
+    for recipe_job in recipe_jobs:
+        node_name = recipe_job.node_name
+        process_input_by_node[node_name] = recipe_job.process_input
+        tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
+        revision = revs_by_tuple[tup]
+        superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
+        job = Job.objects.create_job_v6(revision, recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
+                                        recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
+                                        superseded_job=superseded_job)
+        recipe_jobs_map[node_name] = job
+
+    Job.objects.bulk_create(recipe_jobs_map.values())
+
+    # Create recipe nodes
+    recipe_nodes = RecipeNode.objects.create_recipe_job_nodes(recipe_model.id, recipe_jobs_map)
+    RecipeNode.objects.bulk_create(recipe_nodes)
+
+    # Set up process input dict
+    process_input_job_ids = []
+    for recipe_job in recipe_jobs:
+        job = recipe_jobs_map[recipe_job.node_name]
+        process_input = recipe_model.id and recipe_job.process_input
+        if job.has_input() or process_input:
+            process_input_job_ids.append(job.id)
+            
+    process_job_inputs(process_input_job_ids)
+    update_recipe_metrics([recipe_model.id])
+
+def process_job_inputs(process_input_job_ids):
+    """Mimics effect of create_process_job_input_messages for unit testing"""
+    
+    queued_jobs = []
+    for job_id in process_input_job_ids:
+        job = Job.objects.get_job_with_interfaces(job_id)
+
+        if not job.has_input():
+            if not job.recipe:
+                #print ('Job %d has no input and is not in a recipe. Message will not re-run.', job_id)
+                continue
+
+            try:
+                generate_job_input_data_from_recipe(job)
+            except InvalidData as ex:
+                print 'Recipe created invalid input data for job %d. Message will not re-run.' % job_id
+                print ex
+                continue
+
+        # Lock job model and process job's input data
+        with transaction.atomic():
+            job = Job.objects.get_locked_job(job_id)
+            Job.objects.process_job_input(job)
+
+        # queue the job
+        if job.num_exes == 0:
+            queued_jobs.append(QueuedJob(job.id, 0))
+            
+    queue_jobs(queued_jobs)
+            
+def generate_job_input_data_from_recipe(job):
+    """Generates the job's input data from its recipe dependencies and validates and sets the input data on the job
+
+    :param job: The job with related job_type_rev and recipe__recipe_type_rev models
+    :type job: :class:`job.models.Job`
+
+    :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+    """
+
+    from recipe.models import RecipeNode
+
+    # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+    old_recipe_input_dict = dict(job.recipe.input)
+
+    # Get job input from dependencies in the recipe
+    recipe_input_data = job.recipe.get_input_data()
+    node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
+    for node_output in node_outputs.values():
+        if node_output.node_type == 'job' and node_output.id == job.id:
+            node_name = node_output.node_name
+            break
+
+    # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+    job.recipe.input = old_recipe_input_dict
+
+    definition = job.recipe.recipe_type_rev.get_definition()
+    input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+    Job.objects.set_job_input_data_v6(job, input_data)
+
+def queue_jobs(queued_jobs, requeue=False, priority=None):
+    """Mimics effect of create_queued_jobs_messages for unit testing"""
+    
+    job_ids = []
+    for queued_job in queued_jobs:
+        job_ids.append(queued_job.job_id)
+
+    with transaction.atomic():
+        # Retrieve locked job models
+        job_models = {}
+        for job in Job.objects.get_locked_jobs(job_ids):
+            job_models[job.id] = job
+
+        jobs_to_queue = []
+        for queued_job in queued_jobs:
+            job_model = job_models[queued_job.job_id]
+
+            # If execution number does not match, then this update is obsolete
+            if job_model.num_exes != queued_job.exe_num:
+                # Ignore this job
+                continue
+
+            jobs_to_queue.append(job_model)
+
+        # Queue jobs
+        if jobs_to_queue:
+            _ = Queue.objects.queue_jobs(jobs_to_queue, requeue=requeue, priority=priority)
+
+def update_recipe_metrics(recipe_ids=[], job_ids=None):
+    """Mimics effects of create_update_recipe_metrics_messages methods for unit testing"""
+    
+    if job_ids:
+        recipe_ids.extend(Recipe.objects.get_recipe_ids_for_jobs(job_ids))
+    if recipe_ids:
+        sub_recipe_ids = Recipe.objects.get_recipe_ids_for_sub_recipes(recipe_ids)
+        update_recipe_metrics(recipe_ids=sub_recipe_ids)
+
+    Recipe.objects.update_recipe_metrics(recipe_ids)
+
+    # If any of these recipes are sub-recipes, grab root recipe IDs and update those recipes
+    root_recipe_ids = set()
+    for recipe in Recipe.objects.filter(id__in=recipe_ids):
+        if recipe.root_recipe_id:
+            root_recipe_ids.add(recipe.root_recipe_id)
+    if root_recipe_ids:
+        for root_recipe_id in root_recipe_ids:
+            update_recipe(root_recipe_id)
+
+    # For any top-level recipes (not a sub-recipe) update any batches that these recipes belong to
+    from batch.messages.update_batch_metrics import create_update_batch_metrics_messages
+    batch_ids = set()
+    qry = Recipe.objects.filter(id__in=recipe_ids, recipe__isnull=True, batch__isnull=False).only('batch_id')
+    for recipe in qry:
+        batch_ids.add(recipe.batch_id)
+    if batch_ids:
+        Batch.objects.update_batch_metrics(batch_ids)
+
+def create_subrecipes(recipe_model, subrecipes):
+    """Mimics effect of create_subrecipes_messages for unit testing"""
+
+    sub_recipes_map = {}  # {Node name: recipe model}
+
+    superseded_sub_recipes = {}
+    revision_ids = []
+    # Get superseded sub-recipes from superseded recipe
+    if recipe_model.superseded_recipe_id:
+        superseded_sub_recipes = RecipeNode.objects.get_subrecipes(recipe_model.superseded_recipe_id)
+        revision_ids = [r.recipe_type_rev_id for r in superseded_sub_recipes.values()]
+
+    # Get recipe type revisions
+    revision_tuples = [(sub.recipe_type_name, sub.recipe_type_rev_num) for sub in subrecipes]
+    revs_by_id = RecipeTypeRevision.objects.get_revision_map(revision_ids, revision_tuples)
+    revs_by_tuple = {(rev.recipe_type.name, rev.revision_num): rev for rev in revs_by_id.values()}
+
+    # Create new recipe models
+    process_input_by_node = {}
+    for sub_recipe in subrecipes:
+        node_name = sub_recipe.node_name
+        process_input_by_node[node_name] = sub_recipe.process_input
+        revision = revs_by_tuple[(sub_recipe.recipe_type_name, sub_recipe.recipe_type_rev_num)]
+        superseded_recipe = superseded_sub_recipes[node_name] if node_name in superseded_sub_recipes else None
+        recipe = Recipe.objects.create_recipe_v6(revision, recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
+                                                 recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
+                                                 superseded_recipe=superseded_recipe)
+        sub_recipes_map[node_name] = recipe
+
+    Recipe.objects.bulk_create(sub_recipes_map.values())
+
+    # Create recipe nodes
+    recipe_nodes = RecipeNode.objects.create_subrecipe_nodes(recipe_model.id, sub_recipes_map)
+    RecipeNode.objects.bulk_create(recipe_nodes)
+
+    # Set up process input dict
+    process_input_sub_ids = []
+    for sub_recipe in subrecipes:
+        recipe = sub_recipes_map[sub_recipe.node_name]
+        if sub_recipe.process_input:
+            process_input_sub_ids.append(recipe.id)
+
+    # Set up recipe diffs
+    # Uncomment and implement if needed to test superseding recipes
+    """
+    if self.superseded_recipe_id:
+        for node_name, recipe in sub_recipes_map.items():
+            pair = _RecipePair(recipe.superseded_recipe, recipe)
+            rev_id = recipe.superseded_recipe.recipe_type_rev_id
+            old_revision = revs_by_id[rev_id]
+            new_revision = revs_by_tuple[(recipe.recipe_type.name, recipe.recipe_type_rev.revision_num)]
+            diff = RecipeDiff(old_revision.get_definition(), new_revision.get_definition())
+            if self.forced_nodes:
+                sub_forced_nodes = self.forced_nodes.get_forced_nodes_for_subrecipe(node_name)
+                if sub_forced_nodes:
+                    diff.set_force_reprocess(sub_forced_nodes)
+            self._recipe_diffs.append(_RecipeDiff(diff, [pair]))"""
+
+    process_recipe_inputs(process_input_sub_ids)
+    update_recipe_metrics([recipe_model.id])
 
 def create_recipe_condition(root_recipe=None, recipe=None, batch=None, is_processed=None, is_accepted=None, save=False):
     """Creates a recipe_node model for unit testing

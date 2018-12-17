@@ -221,12 +221,11 @@ Response: 201 CREATED
             "type": "USER",
             "occurred": "2018-11-01T13:59:38.462027Z"
       },
-      "containing_recipe": null,
+      "recipe": null,
       "batch": null
       "is_superseded": false,
       "superseded_recipe": null,
       "superseded_by_recipe": null,
-      "num_exes": 1,
       "input": {
         "files": {'input_a': [1234], 'input_b': [1235, 1236]},
         "json": {'input_c': 999, 'input_d': {'hello'}}
@@ -344,11 +343,10 @@ Response: 200 OK
                 "type": "USER",
                 "occurred": "2018-11-01T13:59:38.462027Z"
           },
-          "containing_recipe": null,
+          "recipe": null,
           "batch": null
           "is_superseded": false,
           "superseded_recipe": null,
-          "num_exes": 1,
           "input_file_size": 64.0,
           "source_started": "2015-08-28T17:55:41.005Z",
           "source_ended": "2015-08-28T17:56:41.005Z",
@@ -467,7 +465,7 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .event                 | JSON Object       | The trigger event that is associated with the recipe.                      |
 +------------------------+-------------------+----------------------------------------------------------------------------+
-| .containing_recipe     | JSON Object       | The recipe instance containing this recipe.                                |
+| .recipe                | JSON Object       | The recipe instance containing this recipe.                                |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .batch                 | JSON Object       | The batch instance associated with this recipe                             |
@@ -477,8 +475,6 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .superseded_recipe     | JSON Object       | The previous recipe in the chain that was superseded by this recipe.       |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| .num_exes              | Integer           | The number of executions this recipe has had.                              |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | .input_file_size       | Decimal           | The amount of disk space in MiB required for input files for this job.     |
 +------------------------+-------------------+----------------------------------------------------------------------------+
@@ -565,12 +561,11 @@ Response: 200 OK
                 "parse_id": 1
             }
       },
-      "containing_recipe": null,
+      "recipe": null,
       "batch": null
       "is_superseded": false,
       "superseded_recipe": null,
       "superseded_by_recipe": null,
-      "num_exes": 1,
       "input": {
         "files": {'input_a': [1234], 'input_b': [1235, 1236]},
         "json": {'input_c': 999, 'input_d': {'hello'}}
@@ -648,7 +643,7 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | event                  | JSON Object       | The trigger event that is associated with the recipe.                      |
 +------------------------+-------------------+----------------------------------------------------------------------------+
-| containing_recipe      | JSON Object       | The recipe instance containing this recipe.                                |
+| recipe                 | JSON Object       | The recipe instance containing this recipe.                                |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | batch                  | JSON Object       | The batch instance associated with this recipe                             |
@@ -661,8 +656,6 @@ Response: 200 OK
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | superseded_by_recipe   | JSON Object       | The next recipe in the chain that superseded this recipe                   |
 |                        |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                       |
-+------------------------+-------------------+----------------------------------------------------------------------------+
-| num_exes               | Integer           | The number of executions this recipe has had.                              |
 +------------------------+-------------------+----------------------------------------------------------------------------+
 | input                  | JSON Object       | The input data for the recipe.                                             |
 |                        |                   | (See :ref:`Data <rest_v6_data_data>`)                                      |

@@ -181,7 +181,10 @@ class SeedManifest(object):
 
         from util.command import environment_expansion
 
-        return environment_expansion(env_vars, self.get_command())
+        cmd = self.get_command()
+        if not cmd:
+            cmd = ''
+        return environment_expansion(env_vars, cmd)
 
     def get_interface(self):
         """Gets the interface for the Seed job

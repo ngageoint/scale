@@ -265,7 +265,7 @@ components:
               $ref: '#/components/schemas/recipe_type_revision_base'
             event:
               $ref: '#/components/schemas/event_base'
-            containing_recipe:
+            recipe:
               $ref: '#/components/schemas/recipe_base'
             batch:
               $ref: '#/components/schemas/batch_base'
@@ -276,10 +276,6 @@ components:
             superseded_recipe:
               type: integer
               description: The previous recipe in the chain that was superseded by this recipe.
-              example: 1
-            num_exes:
-              type: integer
-              description: The number of executions this recipe has had.
               example: 1
             input_file_size:
               type: number

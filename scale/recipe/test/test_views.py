@@ -1695,15 +1695,31 @@ class TestRecipesViewV6(TransactionTestCase):
         manifest['job']['name'] = 'scale-batch-creator'
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.jt2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+
+        def_v6_dict_sub = {'version': '6',
+                       'input': { 'files': [],
+                                  'json': []},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.jt2.name,
+                                                          'job_type_version': self.jt2.version, 'job_type_revision': self.jt2.revision_num}}}}
+
+        self.sub = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_sub)
 
         def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
-                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
-                                                          'job_type_version': self.job_type1.version, 'job_type_revision': 1}}
+                                                          'job_type_version': self.job_type1.version, 'job_type_revision': 1}},
+                                 'node_b': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
+                                                          'recipe_type_revision': self.sub.revision_num}}
                            
                        }
             
@@ -1720,31 +1736,11 @@ class TestRecipesViewV6(TransactionTestCase):
                                                source_sensor_class=self.s_class2, source_sensor=self.s_sensor2,
                                                source_collection=self.collection2, source_task=self.task2)
 
-        self.data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file1.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
+        self.data = {'version': '6', 'files': {'INPUT_FILE': [self.file1.id]},
+                'json': {'INPUT_JSON': 'hello'}}
 
-        self.data2 = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file2.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
+        self.data2 = {'version': '6', 'files': {'INPUT_FILE': [self.file2.id]},
+                'json': {'INPUT_JSON': 'hello2'}}
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
@@ -1752,8 +1748,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.recipe2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type2, input=self.data2)
         self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
 
-        Recipe.objects.process_recipe_input(self.recipe1)
-        Recipe.objects.process_recipe_input(self.recipe2)
+        recipe_test_utils.process_recipe_inputs([self.recipe1.id, self.recipe2.id, self.recipe3.id])
 
     def test_successful_all(self):
         """Tests getting recipes"""
@@ -1763,34 +1758,40 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['count'], 3)
+        self.assertEqual(results['count'], 5)
         
         # check new/removed fields
-        first = results['results'][0]
-        self.assertEqual(first['source_sensor_class'], self.s_class)
-        self.assertIn('containing_recipe', first)
-        self.assertIn('batch', first)
-        #self.assertEqual(first['num_exes'], 0)
-        self.assertEqual(first['input_file_size'], 104857600.0)
-        self.assertEqual(first['source_started'], self.date_1)
-        self.assertEqual(first['source_ended'], self.date_2)
-        self.assertEqual(first['source_sensor_class'], self.s_class)
-        self.assertEqual(first['source_sensor'], self.s_sensor)
-        self.assertEqual(first['source_collection'], self.collection)
-        self.assertEqual(first['source_task'], self.task)
-        self.assertEqual(first['jobs_total'], 1)
-        self.assertEqual(first['jobs_pending'], 1)
-        self.assertEqual(first['jobs_blocked'], 0)
-        self.assertEqual(first['jobs_queued'], 0)
-        self.assertEqual(first['jobs_running'], 0)
-        self.assertEqual(first['jobs_failed'], 0)
-        self.assertEqual(first['jobs_completed'], 0)
-        self.assertEqual(first['jobs_canceled'], 0)
-        self.assertEqual(first['sub_recipes_total'], 0)
-        self.assertEqual(first['sub_recipes_completed'], 0)
-        self.assertFalse(first['is_completed'])
-        self.assertNotIn('root_superseded_recipe', first)
-        self.assertNotIn('superseded_by_recipe', first)
+        for result in results['results']:
+            if result['id'] == self.recipe1.id:
+                self.assertIn('recipe', result)
+                self.assertIn('batch', result)
+                self.assertEqual(result['input_file_size'], 100.0)
+                self.assertEqual(result['source_started'], '2016-01-01T00:00:00Z')
+                self.assertEqual(result['source_ended'], '2016-01-02T00:00:00Z')
+                self.assertEqual(result['source_sensor_class'], self.s_class)
+                self.assertEqual(result['source_sensor'], self.s_sensor)
+                self.assertEqual(result['source_collection'], self.collection)
+                self.assertEqual(result['source_task'], self.task)
+                self.assertEqual(result['jobs_total'], 2)
+                self.assertEqual(result['jobs_pending'], 0)
+                self.assertEqual(result['jobs_blocked'], 0)
+                self.assertEqual(result['jobs_queued'], 2)
+                self.assertEqual(result['jobs_running'], 0)
+                self.assertEqual(result['jobs_failed'], 0)
+                self.assertEqual(result['jobs_completed'], 0)
+                self.assertEqual(result['jobs_canceled'], 0)
+                self.assertEqual(result['sub_recipes_total'], 1)
+                self.assertEqual(result['sub_recipes_completed'], 0)
+                self.assertFalse(result['is_completed'])
+                self.assertNotIn('root_superseded_recipe', result)
+                self.assertNotIn('superseded_by_recipe', result)
+            else:
+                id = result['id']
+                if result['recipe']:
+                    id = result['recipe']['id']
+                    self.assertTrue(id in [self.recipe1.id, self.recipe2.id])
+                else:
+                    self.assertTrue(id in [self.recipe2.id, self.recipe3.id])
 
     def test_time_successful(self):
         """Tests successfully calling the get recipes by time"""
@@ -1798,18 +1799,17 @@ class TestRecipesViewV6(TransactionTestCase):
         yesterday = yesterday.isoformat() + 'T00:00:00Z'
         today = timezone.now().date()
         today = today.isoformat() + 'T00:00:00Z'
-        tomorrow = timezone.now() + timezone.timedelta(days=1)
+        tomorrow = timezone.now().date() + timezone.timedelta(days=1)
+        tomorrow = tomorrow.isoformat() + 'T00:00:00Z'
         
-        url = '/%s/recipes/?started=%s&ended=%s' % (self.api, yesterday, today)
+        url = '/%s/recipes/?started=%s&ended=%s' % (self.api, today, tomorrow)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         results = result['results']
-        self.assertEqual(len(results), 3)
+        self.assertEqual(len(results), 5)
         
-        url = '/%s/recipes/?started=%s&ended=%s' % (self.api,
-                                                    today.isoformat(),
-                                                    tomorrow.isoformat())
+        url = '/%s/recipes/?started=%s&ended=%s' % (self.api, yesterday, today)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
@@ -1930,7 +1930,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['count'], 2)
+        self.assertEqual(results['count'], 4)
 
     def test_successful_completed(self):
         """Tests getting completed recipes"""
@@ -1947,7 +1947,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['count'], 3)
+        self.assertEqual(results['count'], 5)
 
     def test_successful_order(self):
         """Tests ordering recipes"""
@@ -1957,7 +1957,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results[2]['source_sensor_class'], 'A')
+        self.assertEqual(results['results'][4]['source_sensor_class'], 'A')
 
 class TestRecipesPostViewV6(TransactionTestCase):
     
@@ -2110,10 +2110,10 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         self.def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
-                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': False}]},
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
-                                                      'input_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
                                                           'job_type_version': self.jt1.version,
                                                           'job_type_revision': 1}},
@@ -2131,24 +2131,14 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
                                                     source_sensor_class=self.s_class, source_sensor=self.s_sensor,
                                                     source_collection=self.collection, source_task=self.task)
 
-        self.data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file1.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
+
+        self.data = {'version': '6', 'files': {'INPUT_FILE': [self.file1.id]},
+                'json': {'INPUT_JSON': 'hello'}}
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
-        
 
-        Recipe.objects.process_recipe_input(self.recipe1)
+        recipe_test_utils.process_recipe_inputs([self.recipe1.id])
 
     def test_successful(self):
         """Tests getting recipe details"""
@@ -2167,12 +2157,37 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         self.assertEqual(result['source_collection'], self.collection)
         self.assertEqual(result['source_task'], self.task)
         
-        self.assertDictEqual(result['input'], self.def_v6_dict['input'])
         self.assertTrue('inputs' not in result)
         self.assertTrue('definiton' not in result['recipe_type'])
         self.maxDiff = None
-        self.assertEqual(result['input'], {'test': "test!"})
-        self.assertEqual(result['details'], {'test': "test!"})
+        self.assertEqual(result['input'], {u'files': {u'INPUT_FILE': [self.file1.id]}, u'json': {u'INPUT_JSON': u'hello'}})
+        job_id = result['details']['nodes']['node_a']['node_type']['job_id']
+        recipe_id = result['details']['nodes']['node_b']['node_type']['recipe_id']
+        details_dict = {u'nodes':
+              {u'node_a': {u'dependencies': [],
+                          u'node_type': {u'job_id': job_id,
+                                         u'job_type_name': u'scale-batch-creator',
+                                         u'job_type_revision': 1,
+                                         u'job_type_version': u'1.0.0',
+                                         u'node_type': u'job',
+                                         u'status': u'QUEUED'}},
+               u'node_b': {u'dependencies': [],
+                          u'node_type': {u'is_completed': False,
+                                         u'jobs_blocked': 0,
+                                         u'jobs_canceled': 0,
+                                         u'jobs_completed': 0,
+                                         u'jobs_failed': 0,
+                                         u'jobs_pending': 0,
+                                         u'jobs_queued': 1,
+                                         u'jobs_running': 0,
+                                         u'jobs_total': 1,
+                                         u'node_type': u'recipe',
+                                         u'recipe_id': recipe_id,
+                                         u'recipe_type_name': self.sub.name,
+                                         u'recipe_type_revision': 1,
+                                         u'sub_recipes_completed': 0,
+                                         u'sub_recipes_total': 0}}}}
+        self.assertEqual(result['details'], details_dict)
         
         self.assertEqual(result['job_types'][0]['id'], self.jt1.id)
         self.assertEqual(result['sub_recipe_types'][0]['id'], self.sub.id)
@@ -2193,7 +2208,6 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
 
         result = json.loads(response.content)
         self.assertTrue(result['is_superseded'])
-        self.assertIsNone(result['root_superseded_recipe'])
         self.assertIsNotNone(result['superseded_by_recipe'])
         self.assertEqual(result['superseded_by_recipe']['id'], new_recipe.id)
         self.assertIsNotNone(result['superseded'])
@@ -2204,8 +2218,6 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
 
         result = json.loads(response.content)
         self.assertFalse(result['is_superseded'])
-        self.assertIsNotNone(result['root_superseded_recipe'])
-        self.assertEqual(result['root_superseded_recipe']['id'], self.recipe1.id)
         self.assertIsNotNone(result['superseded_recipe'])
         self.assertEqual(result['superseded_recipe']['id'], self.recipe1.id)
         self.assertIsNone(result['superseded'])
@@ -2820,10 +2832,10 @@ class TestRecipeInputFilesViewV6(TestCase):
         self.def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
-                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': False}]},
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
                        'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'},
-                                                      'input_b': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
                                                           'job_type_version': self.jt1.version,
                                                           'job_type_revision': 1}},
@@ -2834,8 +2846,14 @@ class TestRecipeInputFilesViewV6(TestCase):
                                  }
 
                        }
+        
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
+        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
 
-        self.workspace2 = storage_test_utils.create_workspace()
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v5(name='my-type2', definition=definition)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type2, data=data)
+        self.legacy_recipe = recipe_handler.recipe
+        
         # Create RecipeInputFile entry files
         self.f3_file_name = 'foo.bar'
         self.f3_last_modified = datetime.datetime(2016, 1, 11, tzinfo=utc)
@@ -2843,48 +2861,25 @@ class TestRecipeInputFilesViewV6(TestCase):
         self.f3_source_ended = datetime.datetime(2016, 1, 11, tzinfo=utc)
         self.file3 = recipe_test_utils.create_input_file(file_name=self.f3_file_name,
                                                          source_started=self.f3_source_started,
-                                                         source_ended=self.f3_source_ended, recipe=self.recipe,
+                                                         source_ended=self.f3_source_ended, recipe=self.recipe1,
                                                          last_modified=self.f3_last_modified)
 
         self.f4_file_name = 'qaz.bar'
-        self.f4_recipe_input = 'input_1'
+        self.f4_recipe_input = 'INPUT_FILE'
         self.f4_last_modified = datetime.datetime(2016, 1, 12, tzinfo=utc)
         self.f4_source_started = datetime.datetime(2016, 1, 11, tzinfo=utc)
         self.f4_source_ended = datetime.datetime(2016, 1, 12, tzinfo=utc)
         self.file4 = recipe_test_utils.create_input_file(file_name=self.f4_file_name,
                                                          source_started=self.f4_source_started,
-                                                         source_ended=self.f4_source_ended, recipe=self.recipe,
+                                                         source_ended=self.f4_source_ended, recipe=self.recipe1,
                                                          last_modified=self.f4_last_modified,
                                                          recipe_input=self.f4_recipe_input)
 
-        self.data2 = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'INPUT_FILE',
-                'file_id': self.file3.id
-            },
-            {
-                'name': 'input_1',
-                'file_id': self.file4.id
-            }],
-            'workspace_id': self.workspace.id,
-            'output_data': [{
-                'name': 'output_file_pngs',
-                'workspace_id': self.workspace.id
-            }]
-        }
-
-        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
-        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data2)
-
-        self.recipe_type2 = recipe_test_utils.create_recipe_type_v5(name='my-type2', definition=definition)
-        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type2, data=data)
-        self.legacy_recipe = recipe_handler.recipe
 
     def test_successful_file(self):
         """Tests successfully calling the recipe input files view"""
 
-        url = '/%s/recipes/%i/input_files/' % (self.api, self.recipe.id)
+        url = '/%s/recipes/%i/input_files/' % (self.api, self.recipe1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

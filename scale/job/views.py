@@ -1465,7 +1465,6 @@ class JobDetailsView(GenericAPIView):
 class JobInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a job."""
     queryset = JobInputFile.objects.all()
-    serializer_class = ScaleFileSerializerV5
 
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
