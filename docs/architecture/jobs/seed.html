@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Jobs and Recipes &mdash; Scale 5.7.1-snapshot documentation</title>
+  <title>Seed Manifest &mdash; Scale 5.7.1-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Batch Definition" href="batch_definition.html" />
-    <link rel="prev" title="Overview" href="../overview.html" />
+    <link rel="next" title="Task Results" href="task_results.html" />
+    <link rel="prev" title="Resources" href="resources.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -95,7 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Jobs and Recipes</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch_definition.html">Batch Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
@@ -105,7 +105,10 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_data.html">Recipe Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resources.html">Resources</a></li>
-<li class="toctree-l3"><a class="reference internal" href="seed.html">Seed Manifest</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Seed Manifest</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#seed-manifest-specification-version-1-0">Seed Manifest Specification Version 1.0</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="task_results.html">Task Results</a></li>
 </ul>
 </li>
@@ -169,13 +172,15 @@
         
           <li><a href="../index.html">Architecture</a> &raquo;</li>
         
-      <li>Jobs and Recipes</li>
+          <li><a href="index.html">Jobs and Recipes</a> &raquo;</li>
+        
+      <li>Seed Manifest</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/architecture/jobs/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/architecture/jobs/seed.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -188,24 +193,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="jobs-and-recipes">
-<span id="architecture-jobs"></span><h1>Jobs and Recipes<a class="headerlink" href="#jobs-and-recipes" title="Permalink to this headline">¶</a></h1>
-<p>Jobs represent the various algorithms or units of work that get executed in Scale. Recipes represent a graph/workflow of
-jobs that allow jobs to depend upon one another and for files produced by one job to be fed as input into another job.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="batch_definition.html">Batch Definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job_configuration.html">Job Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job_data.html">Job Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="exe_configuration.html">Execution Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recipe_data.html">Recipe Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources</a></li>
-<li class="toctree-l1"><a class="reference internal" href="seed.html">Seed Manifest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="task_results.html">Task Results</a></li>
-</ul>
+  <div class="section" id="seed-manifest">
+<span id="architecture-seed-manifest"></span><h1>Seed Manifest<a class="headerlink" href="#seed-manifest" title="Permalink to this headline">¶</a></h1>
+<p>Seed is a general standard to aid in the discovery and consumption of a discrete unit of work contained within a Docker image.
+Scale job types in v6 have a Seed manifest that takes the place of the old job interface <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><span class="std std-ref">Job Interface</span></a>.
+Like the old job interface, the Seed manifest describes how to run a job. What inputs it expects, what outputs it produces,
+and how to invoke the algorithm.</p>
+<div class="section" id="seed-manifest-specification-version-1-0">
+<span id="architecture-seed-manifest-spec"></span><h2>Seed Manifest Specification Version 1.0<a class="headerlink" href="#seed-manifest-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>The full Seed manifest definition can be found here:
+<a class="reference external" href="https://ngageoint.github.io/seed/seed.html">https://ngageoint.github.io/seed/seed.html</a></p>
 </div>
 </div>
 
@@ -217,10 +214,10 @@ jobs that allow jobs to depend upon one another and for files produced by one jo
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="batch_definition.html" class="btn btn-neutral float-right" title="Batch Definition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="task_results.html" class="btn btn-neutral float-right" title="Task Results" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../overview.html" class="btn btn-neutral" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="resources.html" class="btn btn-neutral" title="Resources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

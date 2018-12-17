@@ -117,7 +117,9 @@
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">v6 Queue Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">v6 Recipe Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
@@ -319,7 +321,7 @@ Duplicate it to filter by multiple values.</td>
 <td>Boolean</td>
 <td>Optional</td>
 <td>Return only batches that match this value, indicating if the batch
-has/has not finishing creating its recipes.</td>
+has/has not finished creating its recipes.</td>
 </tr>
 <tr class="row-odd"><td>is_superseded</td>
 <td>Boolean</td>
@@ -589,7 +591,7 @@ Location <a class="reference external" href="http://.../v6/batches/105/">http://
 <tbody valign="top">
 <tr class="row-even"><td colspan="5">Creates a new batch with the given fields</td>
 </tr>
-<tr class="row-odd"><td colspan="5"><strong>POST</strong> /batches/</td>
+<tr class="row-odd"><td colspan="5"><strong>POST</strong> /v6/batches/</td>
 </tr>
 <tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
@@ -1261,7 +1263,7 @@ See <a class="reference internal" href="recipe.html#rest-v6-recipe-json-forced-n
 <col width="56%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Batch Definition</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Batch Configuration</strong></th>
 </tr>
 </thead>
 <tbody valign="top">

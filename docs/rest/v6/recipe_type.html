@@ -30,6 +30,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="v6 Scale File Services" href="scale_file.html" />
+    <link rel="prev" title="v6 Recipe Services" href="recipe.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -87,12 +89,49 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">REST API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">v6 Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">v6 Ingest Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">v6 Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">v6 Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Type Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-definition-json">Recipe Definition JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-diff-json">Recipe Diff JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-type-configuration-json">Recipe Type Configuration JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-recipe-type-list">v6 Recipe Type List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-recipe-type-create">v6 Recipe Type Create</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-validate-recipe-type">v6 Validate Recipe Type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-recipe-type-details">v6 Recipe Type Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-edit-recipe-type">v6 Edit Recipe Type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-recipe-type-revisions">v6 Recipe Type Revisions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-recipe-type-revision-details">v6 Recipe Type Revision Details</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">V6 Workspace Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
 </ul>
@@ -139,6 +178,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">REST API</a> &raquo;</li>
         
       <li>v6 Recipe Type Services</li>
     
@@ -544,6 +585,109 @@ revision, if changed in the newer revision</td>
 </tr>
 </tbody>
 </table>
+<p>#TODO: update when recipe type config is defined
+.. _rest_v6_recipe_type_configuration:</p>
+</div>
+<div class="section" id="recipe-type-configuration-json">
+<h2>Recipe Type Configuration JSON<a class="headerlink" href="#recipe-type-configuration-json" title="Permalink to this headline">¶</a></h2>
+<p>A recipe type configuration JSON describes a set of configuration settings that affect how a recipe executes.</p>
+<p><strong>Example interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;mount_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/host/path&quot;</span><span class="p">},</span>
+      <span class="s2">&quot;mount_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;driver&quot;</span><span class="o">:</span> <span class="s2">&quot;docker-driver&quot;</span><span class="p">,</span> <span class="s2">&quot;driver_opts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;opt_1&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">}}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;output_workspaces&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;default&quot;</span><span class="o">:</span> <span class="s2">&quot;workspace_1&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;output_1&quot;</span><span class="o">:</span> <span class="s2">&quot;workspace_2&quot;</span><span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+   <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;setting_1&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;setting_2&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Configuration</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mounts</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the configuration for each mount to
+provide to the job. Each key is the name of a mount defined in the
+job&#8217;s Seed manifest and each value is the configuration for that
+mount.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>String</td>
+<td>Required</td>
+<td>The type of the mount configuration. Must be either &#8216;host&#8217; or
+&#8216;volume&#8217;.</td>
+</tr>
+<tr class="row-even"><td>host_path</td>
+<td>String</td>
+<td>Required</td>
+<td>(host mount) The absolute file-system path on the host to mount
+into the job&#8217;s container.</td>
+</tr>
+<tr class="row-odd"><td>driver</td>
+<td>String</td>
+<td>Optional</td>
+<td>(volume mount) The Docker driver to use for creating the Docker
+volume that will be mounted into the job&#8217;s container.</td>
+</tr>
+<tr class="row-even"><td>driver_opts</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>(volume mount) An object of key-value strings specifying the name
+and value of the Docker driver options to use for creating the
+Docker volume that will be mounted into the job&#8217;s container.</td>
+</tr>
+<tr class="row-odd"><td>output_workspaces</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the workspaces to use for storing the
+job&#8217;s output files for each defined file output in the job&#8217;s Seed
+manifest.</td>
+</tr>
+<tr class="row-even"><td>default</td>
+<td>String</td>
+<td>Optional</td>
+<td>The unique name of the default workspace to use for storing any
+output files that don&#8217;t belong to an output configured in
+<em>outputs</em>.</td>
+</tr>
+<tr class="row-odd"><td>outputs</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the workspaces to use for storing the
+job&#8217;s output files for specific job file outputs. Each key is the
+name of a file output defined in the job&#8217;s Seed manifest and each
+value is the unique name of the workspace to use.</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The priority to use for scheduling the job off of the queue.</td>
+</tr>
+<tr class="row-odd"><td>settings</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the configuration for each setting to
+provide to the job. Each key is the name of a setting defined in
+the job&#8217;s Seed manifest and each value is the value to provide for
+that setting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="v6-recipe-type-list">
 <span id="rest-v6-recipe-type-list"></span><h2>v6 Recipe Type List<a class="headerlink" href="#v6-recipe-type-list" title="Permalink to this headline">¶</a></h2>
@@ -790,10 +934,10 @@ Location <a class="reference external" href="http://.../v6/recipe-types/my-recip
 <p><strong>Example POST /v6/recipe-types/validation/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/recipe-types/validation/">http://.../v6/recipe-types/validation/</a></p>
 <blockquote>
-<div><div class="highlight-javascript"><div class="highlight"><pre><span></span>{
-   &quot;name&quot;: &quot;my-recipe-type&quot;,
-   &quot;definition&quot;: { :ref: #`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;` }
-}
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe-type&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`</span> <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -995,12 +1139,12 @@ and <em>description</em> string fields.</td>
 <p><strong>Example PATCH /v6/recipe-types/{name}/ API call</strong></p>
 <p>Request: PATCH <a class="reference external" href="http://.../v6/recipe-types/test/">http://.../v6/recipe-types/test/</a></p>
 <blockquote>
-<div><div class="highlight-javascript"><div class="highlight"><pre><span></span>{
-  &quot;title&quot;: &quot;My Recipe&quot;,
-  &quot;description&quot;: &quot;A simple recipe type&quot;
-  &quot;definition&quot;: {:ref: #`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`},
-  &quot;auto_update&quot;: true
-}
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple recipe type&quot;</span>
+  <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`</span><span class="p">},</span>
+  <span class="s2">&quot;auto_update&quot;</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -1166,7 +1310,7 @@ Defaults to 100, and can be anywhere from 1-1000.</td>
 </table>
 </div>
 <div class="section" id="v6-recipe-type-revision-details">
-<span id="rest-v6-recipe-type-revision-details"></span><h2>v6 Recipe Type Revision Details<a class="headerlink" href="#v6-recipe-type-revision-details" title="Permalink to this headline">¶</a></h2>
+<span id="rest-v6-recipe-type-rev-details"></span><h2>v6 Recipe Type Revision Details<a class="headerlink" href="#v6-recipe-type-revision-details" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example GET /v6/recipe-types/{name}/revisions/{revision_num}/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/recipe-types">http://.../v6/recipe-types</a>/{name}/revisions/{revision_num}</p>
 <p>Response: 200 OK</p>
@@ -1252,6 +1396,15 @@ Defaults to 100, and can be anywhere from 1-1000.</td>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scale_file.html" class="btn btn-neutral float-right" title="v6 Scale File Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recipe.html" class="btn btn-neutral" title="v6 Recipe Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

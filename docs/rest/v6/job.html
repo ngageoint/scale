@@ -118,7 +118,9 @@
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">v6 Queue Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">v6 Recipe Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
@@ -205,8 +207,7 @@
 <p><strong>Example GET /v6/jobs/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/jobs/?batch_id=1">http://.../v6/jobs/?batch_id=1</a></p>
 <p>Response: 200 OK</p>
-<blockquote>
-<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
   <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -284,7 +285,6 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -470,7 +470,7 @@ Duplicate it to filter by multiple values.</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <span class="xref std std-ref">Job Type Revision Details</span>)</td>
+(See <a class="reference internal" href="job_type.html#rest-v6-job-type-revision-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -479,7 +479,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td colspan="2">.recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The recipe instance associated with this job.
-(See <span class="xref std std-ref">Recipe Details</span>)</td>
+(See <a class="reference internal" href="recipe.html#rest-v6-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.batch</td>
 <td colspan="2">JSON Object</td>
@@ -742,7 +742,7 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
 <td colspan="3"><em>application/json</em></td>
 </tr>
 <tr class="row-odd"><td><strong>Body</strong></td>
-<td colspan="3">JSON containing the details of the newly queued job, see <span class="xref std std-ref">Job Details &lt;rest_v6_job_details</span>&gt;</td>
+<td colspan="3">JSON containing the details of the newly queued job, see <a class="reference internal" href="#rest-v6-job-details"><span class="std std-ref">Job Details</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -752,8 +752,7 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
 <p><strong>Example GET /v6/jobs/{id}/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/jobs">http://.../v6/jobs</a>/{id}/</p>
 <p>Response: 200 OK</p>
-<blockquote>
-<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
   <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -896,7 +895,6 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
 <span class="p">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -939,7 +937,7 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
 <td>JSON Object</td>
 <td>The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <span class="xref std std-ref">Job Type Revision Details</span>)</td>
+(See <a class="reference internal" href="job_type.html#rest-v6-job-type-revision-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>event</td>
 <td>JSON Object</td>
@@ -948,7 +946,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>recipe</td>
 <td>JSON Object</td>
 <td>The recipe instance associated with this job.
-(See <span class="xref std std-ref">Recipe Details</span>)</td>
+(See <a class="reference internal" href="recipe.html#rest-v6-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>batch</td>
 <td>JSON Object</td>
