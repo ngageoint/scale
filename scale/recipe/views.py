@@ -22,7 +22,9 @@ from recipe.configuration.data.exceptions import InvalidRecipeConnection, Invali
 from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
+from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.forced_nodes import ForcedNodes
+from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
 from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,
@@ -880,6 +882,24 @@ class RecipeReprocessView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v5':
+            return self._post_v5(request)
+
+        raise Http404()
+
+    def post_v5(self, request, recipe_id):
+        """Schedules a recipe for reprocessing and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         job_names = rest_util.parse_string_list(request, 'job_names', required=False)
         all_jobs = rest_util.parse_bool(request, 'all_jobs', required=False)
         priority = rest_util.parse_int(request, 'priority', required=False)
@@ -919,11 +939,71 @@ class RecipeReprocessView(GenericAPIView):
 
         new_recipe = Recipe.objects.get(root_superseded_recipe_id=root_recipe_id, is_superseded=False)
         try:
-            # TODO: remove this check when REST API v5 is removed
-            if request.version == 'v6':
-                new_recipe = Recipe.objects.get_details(new_recipe.id)
-            else:
-                new_recipe = Recipe.objects.get_details_v5(new_recipe.id)
+            new_recipe = Recipe.objects.get_details_v5(new_recipe.id)
+        except Recipe.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(new_recipe)
+
+        url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+    def post_v6(self, request, recipe_id):
+        """Schedules a recipe for reprocessing and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        forced_nodes_json = rest_util.parse_dict(request, 'forced_nodes', required=True)
+
+        try:
+            forced_nodes = ForcedNodesV6(forced_nodes_json, do_validate=True)
+        except InvalidDiff as ex:
+            logger.exception('Unable to reprocess recipe. Invalid input: %s', forced_nodes_json)
+            raise BadParameter(unicode(ex))
+
+        try:
+            recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(id=recipe_id)
+        except Recipe.DoesNotExist:
+            raise Http404
+        if recipe.is_superseded:
+            raise BadParameter('Cannot reprocess a superseded recipe')
+        
+        event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
+        root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
+        recipe_type_name = recipe.recipe_type.name
+        revision_num = recipe.recipe_type_rev.revision_num
+        forced_nodes = ForcedNodes()
+        if all_jobs:
+            forced_nodes.set_all_nodes()
+        elif job_names:
+            for job_name in job_names:
+                forced_nodes.add_node(job_name)
+
+        # Execute all of the messages to perform the reprocess
+        messages = create_reprocess_messages([root_recipe_id], recipe_type_name, revision_num, event.id,
+                                             forced_nodes=forced_nodes)
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                raise Exception('Reprocess failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
+
+        # Update job priorities
+        if priority is not None:
+            Job.objects.filter(event_id=event.id).update(priority=priority)
+            from queue.models import Queue
+            Queue.objects.filter(job__event_id=event.id).update(priority=priority)
+
+        new_recipe = Recipe.objects.get(root_superseded_recipe_id=root_recipe_id, is_superseded=False)
+        try:
+            new_recipe = Recipe.objects.get_details_v5(new_recipe.id)
         except Recipe.DoesNotExist:
             raise Http404
 

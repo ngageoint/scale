@@ -2559,6 +2559,19 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_bad_json(self):
+        """Tests reprocessing with bad forced_nodes json input"""
+
+        json_data = {
+            'forced_nodes': {
+                'invalid': 'missing "all" field'
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
     def test_superseded(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
 

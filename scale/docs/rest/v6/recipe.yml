@@ -227,7 +227,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/forced_nodes'
+              $ref: '#/components/schemas/reprocess_post'
       responses:
         '202':
           description: 202 accepted
@@ -607,7 +607,14 @@ components:
             description:
               type: object
               additionalProperties: true
-              
+
+    reprocess_post:
+      title: Reprocess Post
+      required: [forced_nodes]
+      properties:
+        forced_nodes:
+          $ref: '#/components/schemas/forced_nodes'
+
     forced_nodes:
       title: Forced Nodes
       required: [all]
