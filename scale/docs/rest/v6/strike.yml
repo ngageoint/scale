@@ -200,7 +200,7 @@ components:
           $ref: '#/components/schemas/strike_config'
 
     strike_details:
-      allof:
+      allOf:
         - ref: '#/components/schemas/strike_base'
         - title: Strike Details
         - type: object

@@ -144,15 +144,19 @@ class RecipeSerializerV5(RecipeBaseSerializerV5):
 
 class RecipeSerializerV6(RecipeBaseSerializerV6):
     """Converts recipe model fields to REST output."""
+    from batch.serializers import BatchBaseSerializerV6
     from trigger.serializers import TriggerEventBaseSerializerV6
 
-    recipe_type_rev = RecipeTypeRevisionBaseSerializer()
+    recipe_type_rev = RecipeTypeRevisionBaseSerializerV6()
     event = TriggerEventBaseSerializerV6()
+    batch = BatchBaseSerializerV6()
+    recipe = RecipeBaseSerializerV6()
 
     is_superseded = serializers.BooleanField()
-    root_superseded_recipe = ModelIdSerializer()
     superseded_recipe = ModelIdSerializer()
-    superseded_by_recipe = ModelIdSerializer()
+    superseded_by_recipe = None
+
+    input_file_size = serializers.FloatField()
 
     source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()
@@ -160,6 +164,18 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     source_sensor = serializers.CharField()
     source_collection = serializers.CharField()
     source_task = serializers.CharField()
+
+    jobs_total = serializers.IntegerField()
+    jobs_pending = serializers.IntegerField()
+    jobs_blocked = serializers.IntegerField()
+    jobs_queued = serializers.IntegerField()
+    jobs_running = serializers.IntegerField()
+    jobs_failed = serializers.IntegerField()
+    jobs_completed = serializers.IntegerField()
+    jobs_canceled = serializers.IntegerField()
+    sub_recipes_total = serializers.IntegerField()
+    sub_recipes_completed = serializers.IntegerField()
+    is_completed = serializers.BooleanField()
 
     created = serializers.DateTimeField()
     completed = serializers.DateTimeField()
@@ -226,16 +242,20 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
 class RecipeDetailsSerializerV6(RecipeSerializerV6):
     """Converts related recipe model fields to REST output."""
     from trigger.serializers import TriggerEventDetailsSerializerV6
+    from job.job_type_serializers import JobTypeBaseSerializerV6
 
-    recipe_type_rev = RecipeTypeRevisionSerializer()
+    recipe_type_rev = RecipeTypeRevisionDetailsSerializerV6()
     event = TriggerEventDetailsSerializerV6()
-    input = serializers.JSONField(default=dict)
 
-    jobs = RecipeJobsDetailsSerializerV6(many=True)
-
-    root_superseded_recipe = RecipeBaseSerializerV6()
     superseded_recipe = RecipeBaseSerializerV6()
     superseded_by_recipe = RecipeBaseSerializerV6()
+
+    input = serializers.JSONField(source='get_v6_input_data_json')
+
+    details = serializers.JSONField(source='get_v6_recipe_instance_json')
+
+    job_types = JobTypeBaseSerializerV6(many=True)
+    sub_recipe_types = RecipeTypeBaseSerializerV6(many=True)
 
 
 # TODO: remove this class when REST API v5 is removed

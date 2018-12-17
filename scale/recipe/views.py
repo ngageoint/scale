@@ -31,7 +31,7 @@ from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSeriali
                                 RecipeTypeSerializerV5, RecipeTypeListSerializerV6,
                                 RecipeTypeRevisionSerializerV6, RecipeTypeRevisionDetailsSerializerV6)
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializerV5
+from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from trigger.models import TriggerEvent
 from util.rest import BadParameter, title_to_name
@@ -666,18 +666,21 @@ class RecipesView(ListAPIView):
         source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
         source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
 
-        type_ids = rest_util.parse_int_list(request, 'type_id', required=False)
-        type_names = rest_util.parse_string_list(request, 'type_name', required=False)
+        recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
+        type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
+        type_names = rest_util.parse_string_list(request, 'recipe_type_name', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
-        include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
+        is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
+        is_completed = rest_util.parse_bool(request, 'is_completed', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        recipes = Recipe.objects.get_recipes(started=started, ended=ended,
+        recipes = Recipe.objects.get_recipes_v6(started=started, ended=ended,
                                              source_started=source_started, source_ended=source_ended,
                                              source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
                                              source_collections=source_collections, source_tasks=source_tasks,
-                                             type_ids=type_ids, type_names=type_names,
-                                             batch_ids=batch_ids, include_superseded=include_superseded, order=order)
+                                             ids=recipe_ids, type_ids=type_ids, type_names=type_names,
+                                             batch_ids=batch_ids, is_superseded=is_superseded,
+                                             is_completed=is_completed, order=order)
 
         page = self.paginate_queryset(recipes)
         serializer = self.get_serializer(page, many=True)
@@ -701,7 +704,7 @@ class RecipesView(ListAPIView):
         include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        recipes = Recipe.objects.get_recipes(started=started, ended=ended, type_ids=type_ids, type_names=type_names,
+        recipes = Recipe.objects.get_recipes_v5(started=started, ended=ended, type_ids=type_ids, type_names=type_names,
                                              batch_ids=batch_ids, include_superseded=include_superseded, order=order)
 
         page = self.paginate_queryset(recipes)
@@ -777,7 +780,14 @@ class RecipeDetailsView(RetrieveAPIView):
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
     queryset = RecipeInputFile.objects.all()
-    serializer_class = ScaleFileSerializerV5
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScaleFileSerializerV6
+        else:
+            return ScaleFileSerializerV5
 
     def get(self, request, recipe_id):
         """Retrieve detailed information about the input files for a recipe

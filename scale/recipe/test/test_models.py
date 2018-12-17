@@ -376,7 +376,7 @@ class TestRecipePopulateJobs(TransactionTestCase):
     def test_successful(self):
         """Tests calling ProductFileManager.populate_source_ancestors() successfully"""
 
-        recipe = Recipe.objects.get_details(self.recipe.id)
+        recipe = Recipe.objects.get_details_v5(self.recipe.id)
         jobs = list(recipe.jobs)
         self.assertEqual(len(jobs), 3)
         self.assertTrue(jobs[0].node_name in ['job 1', 'job 2', 'job 3'])

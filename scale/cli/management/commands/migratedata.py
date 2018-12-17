@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from ingest.serializers import IngestDetailsSerializer
+from ingest.serializers import IngestDetailsSerializerV5
 from ingest.models import Ingest
 from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
 from source.models import SourceFile

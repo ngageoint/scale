@@ -28,6 +28,7 @@ from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
+from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -542,9 +543,7 @@ class RecipeManager(models.Manager):
 
         return self.select_related('recipe_type_rev', 'recipe__recipe_type_rev').get(id=recipe_id)
 
-    def get_recipes(self, started=None, ended=None, source_started=None, source_ended=None,
-                    source_sensor_classes=None, source_sensors=None, source_collections=None,
-                    source_tasks=None, type_ids=None, type_names=None, batch_ids=None,
+    def get_recipes_v5(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None,
                     include_superseded=False, order=None):
         """Returns a list of recipes within the given time range.
 
@@ -552,18 +551,6 @@ class RecipeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query recipes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param source_started: Query recipes where source collection started after this time.
-        :type source_started: :class:`datetime.datetime`
-        :param source_ended: Query recipes where source collection ended before this time.
-        :type source_ended: :class:`datetime.datetime`
-        :param source_sensor_classes: Query recipes with the given source sensor class.
-        :type source_sensor_classes: list
-        :param source_sensor: Query recipes with the given source sensor.
-        :type source_sensor: list
-        :param source_collection: Query recipes with the given source class.
-        :type source_collection: list
-        :param source_tasks: Query recipes with the given source tasks.
-        :type source_tasks: list
         :param type_ids: Query recipes of the type associated with the identifier.
         :type type_ids: [int]
         :param type_names: Query recipes of the type associated with the name.
@@ -580,7 +567,7 @@ class RecipeManager(models.Manager):
 
         # Fetch a list of recipes
         recipes = Recipe.objects.all()
-        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event')
+        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event',)
         recipes = recipes.defer('recipe_type__definition', 'recipe_type_rev__recipe_type',
                                 'recipe_type_rev__definition')
 
@@ -589,19 +576,6 @@ class RecipeManager(models.Manager):
             recipes = recipes.filter(last_modified__gte=started)
         if ended:
             recipes = recipes.filter(last_modified__lte=ended)
-
-        if source_started:
-            recipes = recipes.filter(source_started__gte=source_started)
-        if source_ended:
-            recipes = recipes.filter(source_ended__lte=source_ended)
-        if source_sensor_classes:
-            recipes = recipes.filter(source_sensor_class__in=source_sensor_classes)
-        if source_sensors:
-            recipes = recipes.filter(source_sensor__in=source_sensors)
-        if source_collections:
-            recipes = recipes.filter(source_collection__in=source_collections)
-        if source_tasks:
-            recipes = recipes.filter(source_task__in=source_tasks)
 
         # Apply type filtering
         if type_ids:
@@ -624,6 +598,97 @@ class RecipeManager(models.Manager):
             recipes = recipes.order_by('last_modified')
         return recipes
 
+    def get_recipes_v6(self, started=None, ended=None, source_started=None, source_ended=None,
+                    source_sensor_classes=None, source_sensors=None, source_collections=None,
+                    source_tasks=None, ids=None, type_ids=None, type_names=None, batch_ids=None,
+                    is_superseded=None, is_completed=None, order=None):
+        """Returns a list of recipes within the given time range.
+
+        :param started: Query recipes updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query recipes updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param source_started: Query recipes where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query recipes where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query recipes with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query recipes with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query recipes with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query recipes with the given source tasks.
+        :type source_tasks: list
+        :param ids: Query recipes associated with the given identifiers.
+        :type ids: [int]
+        :param type_ids: Query recipes of the type associated with the identifiers.
+        :type type_ids: [int]
+        :param type_names: Query recipes of the type associated with the name.
+        :type type_names: [string]
+        :param batch_ids: Query recipes associated with batches with the given identifiers.
+        :type batch_ids: list[int]
+        :param is_superseded: Query recipes that match the is_superseded flag.
+        :type is_superseded: bool
+        :param is_completed: Query recipes that match the is_completed flag.
+        :type is_completed: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of recipes that match the time range.
+        :rtype: [:class:`recipe.models.Recipe`]
+        """
+
+        # Fetch a list of recipes
+        recipes = Recipe.objects.all()
+        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event', 'batch')
+        recipes = recipes.defer('recipe_type__definition', 'recipe_type_rev__recipe_type',
+                                'recipe_type_rev__definition')
+
+        # Apply time range filtering
+        if started:
+            recipes = recipes.filter(last_modified__gte=started)
+        if ended:
+            recipes = recipes.filter(last_modified__lte=ended)
+
+        if source_started:
+            recipes = recipes.filter(source_started__gte=source_started)
+        if source_ended:
+            recipes = recipes.filter(source_ended__lte=source_ended)
+        if source_sensor_classes:
+            recipes = recipes.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            recipes = recipes.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            recipes = recipes.filter(source_collection__in=source_collections)
+        if source_tasks:
+            recipes = recipes.filter(source_task__in=source_tasks)
+
+        if ids:
+            recipes = recipes.filter(id__in=ids)
+
+        # Apply type filtering
+        if type_ids:
+            recipes = recipes.filter(recipe_type_id__in=type_ids)
+        if type_names:
+            recipes = recipes.filter(recipe_type__name__in=type_names)
+
+        # Apply batch filtering 
+        if batch_ids:
+            recipes = recipes.filter(batch_id__in=batch_ids)
+
+        # Apply additional filters
+        if is_superseded is not None:
+            recipes = recipes.filter(is_superseded=is_superseded)
+        if is_completed is not None:
+            recipes = recipes.filter(is_completed=is_completed)
+
+        # Apply sorting
+        if order:
+            recipes = recipes.order_by(*order)
+        else:
+            recipes = recipes.order_by('last_modified')
+        return recipes
+
     def get_details(self, recipe_id):
         """Gets the details for a given recipe including its associated jobs and input files.
 
@@ -635,15 +700,16 @@ class RecipeManager(models.Manager):
 
         # Attempt to fetch the requested recipe
         recipe = Recipe.objects.select_related(
-            'recipe_type_rev', 'event', 'event__rule', 'root_superseded_recipe',
+            'recipe_type_rev', 'event', 'batch', 'root_superseded_recipe',
             'root_superseded_recipe__recipe_type', 'superseded_recipe', 'superseded_recipe__recipe_type',
             'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
         ).get(pk=recipe_id)
 
-        # Update the recipe with job models
-        jobs = RecipeNode.objects.filter(recipe_id=recipe.id)
-        jobs = jobs.select_related('job', 'job__job_type', 'job__event', 'job__error')
-        recipe.jobs = jobs
+        # Update the recipe with job types and sub recipes
+        jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe.recipe_type.id])
+        recipe.job_types = JobType.objects.all().filter(id__in=jt_ids)
+        sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe.recipe_type.id])
+        recipe.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
         return recipe
 
     # TODO: remove function when REST API v5 is removed
@@ -1013,6 +1079,16 @@ class Recipe(models.Model):
         """
 
         return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
+
+    def get_v6_recipe_instance_json(self):
+        """Returns the recipe instance details as json
+
+        :returns: The v6 JSON instance details dict for this recipe
+        :rtype: dict
+        """
+
+        instance = Recipe.objects.get_recipe_instance(self.id)
+        return rest_utils.strip_schema_version(convert_recipe_to_v6_json(instance).get_dict())
 
     def has_input(self):
         """Indicates whether this recipe has its input

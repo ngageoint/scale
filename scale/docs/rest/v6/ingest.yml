@@ -129,11 +129,10 @@ paths:
       responses:
         '200':
           description: 200 response
-          # Commenting out until added
-          # content:
-          #   application/json: 
-          #     schema:
-          #       $ref: '#/components/schemas/ingest_status'
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/ingest_status_list'
 
 components:
   schemas:
@@ -297,15 +296,6 @@ components:
         configuration:
           $ref: '#/components/schemas/scan_config'
 
-#TODO: Finish job spec after v6 details have been nailed down        
-    job:
-      title: Job Details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
-          example: 4
     scanner:
       title: Scanner
       type: object
@@ -398,9 +388,8 @@ components:
           description: The sqs_name field is a required string that defines the name of the SQS queue
             that should be polled for object creation notifications that describe new files in the S3 bucket.
           example: my-sqs
-        # Commenting out until added
-        # credentials:
-        #   $ref: '#/components/schemas/credentials'
+        credentials:
+          $ref: './workspace.yml#/components/schemas/credentials'
         region_name:
           type: string
           description: The region_name is an optional string that specifies the AWS region where the
@@ -421,7 +410,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: '#/components/schemas/workspace_base'
+          $ref: './workspace.yml#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.
@@ -481,9 +470,8 @@ components:
           type: string
           description: The central geospatial location of the source file.
           example: POINT(11 -11)
-        # Commenting out until added
-        # meta_data:
-        #   $ref: '#/components/schemas/metadata'
+        meta_data:
+          $ref: './scale_file#/components/schemas/metadata'
         countries:
           type: array
           style: simple
@@ -508,3 +496,70 @@ components:
       required:
       - id
       - secret_access_key
+
+    ingest_status_list:
+      title: Ingest Status List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_status'
+          description: List of ingest status objects
+
+    ingest_status:
+      title: Ingest Status
+      type: object
+      properties:
+        strike:
+          $ref: './strike.yml#/components/schemas/strike_base'
+        most_recent:
+          type: string
+          format: date-time
+          description: The date/time when the strike process last completed an ingest.
+          example: 2015-09-10T15:24:53.987Z  
+        files:
+          type: integer
+          description: The total number files ingested by the strike process.
+          example: 1234          
+        size:
+          type: integer
+          description: The total size of files ingested by the strike process in bytes.
+          example: 1234          
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_stats'
+          description: List of ingest statistics grouped into 1 hour time slots.
+
+    ingest_stats:
+      title: Ingest Statistics
+      type: object
+      properties:
+        time:
+          type: string
+          format: date-time
+          description: The date/time when the strike process last completed an ingest.
+          example: 2015-09-10T15:24:53.987Z  
+        files:
+          type: integer
+          description: The number of files ingested by the strike process within the time slot.
+          example: 10          
+        size:
+          type: integer
+          description: The size of files ingested by the strike process in bytes within the time slot.
+          example: 123456789     

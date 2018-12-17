@@ -120,8 +120,8 @@ components:
           description: Whether the error was loaded during the installation process.
           example: true
     error_details:
-      allof:
-        - ref: '#/components/schemas/error_details'
+      allOf:
+        - ref: '#/components/schemas/error_base'
         - title: Error Details
         - type: object
           properties:

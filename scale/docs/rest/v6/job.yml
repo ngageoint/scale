@@ -142,7 +142,7 @@ paths:
             schema:
               $ref: '#/components/schemas/job_post'
       responses:
-        '200':
+        '201':
           description: |-
             201 CREATED response
           content:
@@ -402,7 +402,7 @@ components:
           description: the ID of the job type
         input:
             description: The input data for the job.
-            $ref: '#/components/schemas/data'
+            $ref: './data.yml#/components/schemas/data'
         configuration:
             description: The job type configuration for the job.
             $ref: '#/components/schemas/job_type_config'
@@ -423,19 +423,18 @@ components:
           example: QUEUED
     job:
       title: Job
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_base'
         - type: object
           properties:      
             job_type_rev:
               $ref: '#/components/schemas/job_type_revision_base'
-            # Commenting out until defined
-            # event:
-            #   $ref: '#/components/schemas/event_base'
-            # recipe:
-            #   $ref: '#/components/schemas/recipe_base'
-            # batch:
-            #   $ref: '#/components/schemas/batch_base'
+            event:
+              $ref: '#/components/schemas/event_base'
+            recipe:
+              $ref: '#/components/schemas/recipe_base'
+            batch:
+              $ref: '#/components/schemas/batch_base'
             is_superseded: 
               type: boolean
               description: Whether this job has been replaced and is now obsolete.
@@ -457,9 +456,9 @@ components:
               description: The number of executions this job has had.  
               example: 1
             input_file_size:
-              type: integer
+              type: number
               description: The amount of disk space in MiB required for input files for this job. 
-              example: 1
+              example: 1.0
             source_started:
               type: string
               format: date-time
@@ -524,7 +523,7 @@ components:
 
     job_details:
       title: Job Details
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job'
         - type: object
           properties:      
@@ -539,13 +538,12 @@ components:
           execution:
             description: The most recent execution of the job.
             $ref: '#/components/schemas/job_execution_details'
-          # Commenting out until defined
-          # input:
-          #   description: The input data for the job.
-          #   $ref: '#/components/schemas/data'
-          # output:
-          #   description: The output data for the job.
-          #   $ref: '#data.yml/components/schemas/data'
+          input:
+            description: The input data for the job.
+            $ref: './data.yml#/components/schemas/data'
+          output:
+            description: The output data for the job.
+            $ref: './data.yml#/components/schemas/data'
 
     job_execution_list:
       title: Job Execution List
@@ -625,7 +623,7 @@ components:
           $ref: '#/components/schemas/job_type_base'
     job_execution:
       title: Job Execution
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_execution_base'
         - type: object
           properties:
@@ -649,7 +647,7 @@ components:
               example: 10.0
     job_execution_details:
       title: Job Execution Details
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_execution'
         - type: object
           properties:
@@ -959,7 +957,7 @@ components:
 
     job_requeue_post:
       title: Requeue Jobs Post
-      allof:
+      allOf:
         - $ref: '#/components/schemas/job_cancel_post'
         - type: object
           properties:

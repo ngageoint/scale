@@ -5230,8 +5230,8 @@ class TestJobInputFilesViewV6(TestCase):
             'output_data': []
         }
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest)
-        self.job_type = job_test_utils.create_job_type(interface=job_interface)
-        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
+        self.job_type2 = job_test_utils.create_job_type(interface=job_interface)
+        self.legacy_job = job_test_utils.create_job(job_type=self.job_type2, input=job_data, output=job_results)
         self.job = job_test_utils.create_job(job_type=self.job_type)
 
         # Create JobInputFile entry files

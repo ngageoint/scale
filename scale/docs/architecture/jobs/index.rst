@@ -19,4 +19,5 @@ jobs that allow jobs to depend upon one another and for files produced by one jo
    recipe_definition
    recipe_data
    resources
+   seed
    task_results

@@ -551,7 +551,7 @@ class QueueManager(models.Manager):
             recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input,None,None, batch_id=None, superseded_recipe=None )
             recipe.save()
             CommandMessageManager().send_messages(create_process_recipe_input_messages([recipe.pk]))
-            Recipe.objects.process_recipe_input(recipe)
+
         return recipe
 
     # TODO: once Django user auth is used, have the user information passed into here

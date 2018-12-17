@@ -1,0 +1,591 @@
+openapi: "3.0.0"
+info:
+  title: Recipe Services
+  version: v6
+paths:
+  /recipes/:
+    get:
+      operationId: _rest_v6_recipe_list
+      summary: Recipe List
+      description: Returns a list of all recipes
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+              Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: source_started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the source time range to query
+        - in: query
+          name: source_ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the source time range to query, defaults to the current time
+        - in: query
+          name: source_sensor_class
+          schema:
+            type: string
+          description: Return only recipes for the given source sensor class.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: source_sensor
+          schema:
+            type: string
+          description: Return only recipes for the given source sensor.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: source_collection
+          schema:
+            type: string
+          description: Return only recipes for the given source collection.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: source_task
+          schema:
+            type: string
+          description: Return only recipes for the given source task.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: recipe_id
+          schema:
+            type: integer
+          description: Return only recipes with a given identifier.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: recipe_type_id
+          schema:
+            type: integer
+          description: Return only recipes with a given recipe type identifier.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: recipe_type_name
+          schema:
+            type: string
+          description: Return only recipes with a given recipe type name.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: batch_id
+          schema:
+            type: integer
+          description: Return only recipes with the given batch identifier.
+              Duplicate it to filter by multiple values.
+        - in: query
+          name: is_superseded
+          schema:
+            type: boolean
+          description: Return only recipes that match this value, indicating if the recipe
+              has/has not been superseded
+        - in: query
+          name: is_completed
+          schema:
+            type: boolean
+          description: Return only recipes that match this value, indicating if the recipe
+              has/has not been completed
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recipe_list'
+    post:
+      operationId: _rest_v6_recipe_post
+      description: creates a new recipe and adds it to the queue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recipe_post'
+      responses:
+        '201':
+          description: |-
+            201 CREATED response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recipe_details'
+                
+  /recipes/{id}/:
+    get:
+      operationId: _rest_v6_recipe_details
+      summary: Recipe Details
+      description: Returns detailed information about the recipe with the specified id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: id of an existing recipe type
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recipe_detail'
+
+  /recipes/{id}/input_files/:
+    get:
+      operationId: _rest_v6_recipe_input_files
+      summary: Recipe Input Files
+      description: Returns detailed information about input files associated with a given Recipe ID.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: id of an existing recipe
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: The page of the results to return. Defaults to 1.
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+      - in: query
+        name: started
+        schema:
+          type: string
+          format: date-time
+        description: The start of the time range to query
+      - in: query
+        name: ended
+        schema:
+          type: string
+          format: date-time
+        description: End of the time range to query, defaults to the current time
+      - in: query
+        name: time_field
+        schema:
+          type: string
+        description: "Indicates the time field(s) that *started* and *ended*
+                      will use for time filtering. Valid values are: *last_modified*,
+                      *data* and *source*. The default value is *last_modified*."
+      - in: query
+        name: file_name
+        schema:
+          type: string
+        description: Returns only input files with this file name.
+      - in: query
+        name: recipe_input
+        schema:
+          type: string
+        description: Returns files for this recipe input.
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file_list'
+
+components:
+  schemas:
+    recipe_list:
+      title: Recipe List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe'
+          description: List of Recipe objects
+
+    recipe_base:
+      title: Recipe Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        recipe_type:
+          $ref: '#/components/schemas/recipe_type_base'
+        recipe_type_rev:
+          type: integer
+          example: 1
+        event:
+          $ref: '#/components/schemas/event_base'
+
+    recipe:
+      title: Recipe
+      allOf:
+        - ref: '#/components/schemas/recipe_base'
+        - type: object
+          properties:
+            recipe_type_rev:
+              $ref: '#/components/schemas/recipe_type_revision_base'
+            event:
+              $ref: '#/components/schemas/event_base'
+            recipe:
+              $ref: '#/components/schemas/recipe_base'
+            batch:
+              $ref: '#/components/schemas/batch_base'
+            is_superseded:
+              type: boolean
+              description: Whether this recipe has been replaced and is now obsolete.
+              example: false
+            superseded_recipe:
+              type: integer
+              description: The previous recipe in the chain that was superseded by this recipe.
+              example: 1
+            input_file_size:
+              type: number
+              description: The amount of disk space in MiB required for input files for this recipe.
+              example: 1.0
+            source_started:
+              type: string
+              format: date-time
+              description: When collection of the source file started.
+              example: 2015-09-10T15:24:53.503Z
+            source_ended:
+              type: string
+              format: date-time
+              description: When collection of the source file ended.
+              example: 2015-09-10T15:24:53.503Z
+            source_sensor_class:
+              type: string
+              description: The class of sensor used to produce the source file.
+              example: classA
+            source_sensor:
+              type: string
+              description: The specific identifier of the sensor used to produce the source file.
+              example: 1
+            source_collection:
+              type: string
+              description: The collection of the source file.
+              example: 12345
+            source_task:
+              type: string
+              description: The task that produced the source file.
+              example: my-task
+            jobs_total:
+              type: integer
+              description: The total count of jobs within this recipe
+              example: 1
+            jobs_pending:
+              type: integer
+              description: The count of PENDING jobs within this recipe
+              example: 1
+            jobs_blocked:
+              type: integer
+              description: The count of BLOCKED jobs within this recipe
+              example: 1
+            jobs_queued:
+              type: integer
+              description: The count of QUEUED jobs within this recipe
+              example: 1
+            jobs_running:
+              type: integer
+              description: The count of RUNNING jobs within this recipe
+              example: 1
+            jobs_failed:
+              type: integer
+              description: The count of FAILED jobs within this recipe
+              example: 1
+            jobs_completed:
+              type: integer
+              description: The count of COMPLETED jobs within this recipe
+              example: 1
+            jobs_canceled:
+              type: integer
+              description: The count of CANCELED jobs within this recipe
+              example: 1
+            sub_recipes_total:
+              type: integer
+              description: The total count of sub-recipes within this recipe
+              example: 1
+            sub_recipes_completed:
+              type: integer
+              description: The count of completed sub-recipes within this recipe
+              example: 1
+            is_completed:
+              type: boolean
+              description: Whether this recipe is completed
+              example: true
+            created:
+              type: string
+              format: date-time
+              description: When the associated database model was initially created.
+              example: 2015-09-10T15:24:53.503Z
+            completed:
+              type: string
+              format: date-time
+              description: When every job and sub-recipe in this was completed successfully. |
+                This field will remain null if a job or sub-recipe in the recipe is blocked or failed.
+              example: 2015-09-10T15:24:53.987Z
+            superseded:
+              type: string
+              format: date-time
+              description: When the the recipe became superseded by another recipe.
+              example: 2015-09-10T15:24:53.987Z
+            last_modified:
+              type: string
+              format: date-time
+              description: When the associated database model was last saved.
+              example: 2015-09-10T15:24:53.987Z
+              
+    recipe_detail:
+      title: Recipe Details
+      allOf:
+        - ref: '#/components/schemas/recipe'
+        - type: object
+          properties:
+            recipe_type_rev:
+              $ref: './recipe_type.yml#/components/schemas/recipe_type_revision_details'
+            event:
+              $ref: '#/components/schemas/event_details'
+            superseded_recipe:
+              $ref: '#/components/schemas/recipe_base'
+            superseded_by_recipe:
+              $ref: '#/components/schemas/recipe_base'
+            input:
+              $ref: './data.yml#/components/schemas/data'
+            details:
+              $ref: '#/components/schemas/recipe_instance'
+            job_types:
+              type: array
+              items:
+                $ref: './job_type.yml#/components/schemas/job_type_base'
+              description: List of Job Types in this recipe
+            sub_recipe_types:
+              type: array
+              items:
+                $ref: './recipe_type.yml#/components/schemas/recipe_type_base'
+              description: List of Sub Recipe Types in this recipe
+
+    recipe_post:
+      title: Recipe Post
+      type: object
+      required: [recipe_type_id,input]
+      properties:
+        recipe_type_id:
+          type: int
+          description: the ID of the recipe type
+        input:
+            description: The input data for the recipe.
+            $ref: './data.yml#/components/schemas/data'
+        configuration:
+            description: The job type configuration for the recipe.
+            $ref: './recipe_type.yml#/components/schemas/recipe_type_config'
+
+    recipe_instance:
+      title: Recipe Instance
+      type: object
+      required: [nodes]
+      properties:
+        nodes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/recipe_instance_node'
+          description: List of Nodes in this recipe instance
+
+    recipe_instance_node:
+      title: Recipe Instance Node
+      type: object
+      required: [dependencies, node_type]
+      properties:
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_definition_dependency'
+        node_type:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/condition_node_instance'
+            - $ref: '#/components/schemas/job_node_instance'
+            - $ref: '#/components/schemas/recipe_node_instance'
+
+    condition_node_instance:
+      title: Recipe Instance Condition Node
+      required: [node_type, condition_id, is_processed, is_accepted]
+      properties:
+        node_type:
+          type: string
+          enum: [condition]
+          description: the name of the node type
+        condition_id:
+          type: integer
+          description: the unique id of the condition
+          example: 1
+        is_processed:
+          type: boolean
+          description: Whether the condition has been processed (evaluated)
+          example: true
+        is_accepted:
+          type: boolean
+          description: Whether the condition has been accepted. If |
+            accepted, the nodes depending on the condition will be created and |
+            processed. If not accepted, the nodes depending on the condition   |
+            will not be created or processed.
+          example: true
+
+    job_node_instance:
+      title: Recipe Instance Job Node
+      required: [node_type, job_type_name, job_type_version, job_type_revision, job_id, status]
+      properties:
+        node_type:
+          type: string
+          enum: [job]
+          description: the name of the node type
+        job_type_name:
+          type: string
+          description: the name of the job type
+          example: my-job-type
+        job_type_version:
+          type: string
+          description: the job type version
+          example: 1.0.1
+        job_type_revision:
+          type: integer
+          description: the job type revision
+          example: 2
+        job_id:
+          type: integer
+          description: the unique id of the job
+          example: 1
+        status:
+          type: string
+          description: the job's status
+          example: COMPLETED
+
+    recipe_node_instance:
+      title: Recipe Instance Recipe Node
+      required: [node_type, recipe_type_name, recipe_type_revision, recipe_id, is_completed,
+                 jobs_total, jobs_pending, jobs_blocked, jobs_queued, jobs_running, jobs_failed,
+                 jobs_completed, jobs_canceled, sub_recipes_total, sub_recipes_completed]
+      properties:
+        node_type:
+          type: string
+          enum: [recipe]
+          description: the name of the node type
+        recipe_type_name:
+          type: string
+          description: the name of the recipe type
+          example: my-recipe-type
+        recipe_type_revision:
+          type: integer
+          description: the recipe type revision
+          example: 2
+        recipe_id:
+          type: integer
+          description: the unique id of the recipe
+          example: 1
+        is_completed:
+          type: boolean
+          description: Whether the recipe has completed or not
+          example: true
+        jobs_total:
+          type: integer
+          description: The total count of jobs within this recipe
+          example: 1
+        jobs_pending:
+          type: integer
+          description: The count of PENDING jobs within this recipe
+          example: 1
+        jobs_blocked:
+          type: integer
+          description: The count of BLOCKED jobs within this recipe
+          example: 1
+        jobs_queued:
+          type: integer
+          description: The count of QUEUED jobs within this recipe
+          example: 1
+        jobs_running:
+          type: integer
+          description: The count of RUNNING jobs within this recipe
+          example: 1
+        jobs_failed:
+          type: integer
+          description: The count of FAILED jobs within this recipe
+          example: 1
+        jobs_completed:
+          type: integer
+          description: The count of COMPLETED jobs within this recipe
+          example: 1
+        jobs_canceled:
+          type: integer
+          description: The count of CANCELED jobs within this recipe
+          example: 1
+        sub_recipes_total:
+          type: integer
+          description: The total count of sub-recipes within this recipe
+          example: 1
+        sub_recipes_completed:
+          type: integer
+          description: The count of completed sub-recipes within this recipe
+          example: 1
+
+    event_base:
+      title: Event Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        type:
+          type: string
+          example: PARSE
+        occurred:
+          type: string
+          format: date-time
+          description: When the trigger event occurred.
+          example: 2015-09-10T15:24:53.503Z
+    event_details:
+      allOf:
+        - ref: '#/components/schemas/event_base'
+        - title: Event Details
+        - type: object
+          properties:
+            description:
+              type: object
+              additionalProperties: true
