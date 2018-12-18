@@ -773,9 +773,9 @@ class RecipeDetailsView(RetrieveAPIView):
         """
 
         if request.version == 'v6':
-            return self._retrieve_v5(request, recipe_id)
-        elif request.version == 'v5':
             return self._retrieve_v6(request, recipe_id)
+        elif request.version == 'v5':
+            return self._retrieve_v5(request, recipe_id)
 
         raise Http404()
 
@@ -928,9 +928,9 @@ class RecipeReprocessView(GenericAPIView):
         """
 
         if request.version == 'v6':
-            return self._post_v6(request)
+            return self._post_v6(request, recipe_id)
         elif request.version == 'v5':
-            return self._post_v5(request)
+            return self._post_v5(request, recipe_id)
 
         raise Http404()
 
@@ -1018,6 +1018,13 @@ class RecipeReprocessView(GenericAPIView):
             raise Http404
         if recipe.is_superseded:
             raise BadParameter('Cannot reprocess a superseded recipe')
+
+        validation = recipe.recipe_type_rev.validate_forced_nodes(forced_nodes_json)
+        if not validation.is_valid:
+            raise BadParameter('Unable to reprocess recipe. Errors in validating forced_nodes: %s' % validation.errors)
+
+        if validation.warnings:
+            logger.warning('Warnings encountered when reprocessing: %s' % validation.warnings)
 
         event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id

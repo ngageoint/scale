@@ -2537,7 +2537,26 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         json_data = {
             'forced_nodes': {
                 'all': False,
-                'nodes': [self.job_type1.name]
+                'nodes': ['node_a']
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+
+    def test_full_recipe(self):
+        """Tests reprocessing a full recipe"""
+
+        json_data = {
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['node_a, node_b'],
+                'sub_recipes': {
+                    'node_b': {
+                        'all': False,
+                        'nodes': ['node_a']}
+                }
             }
         }
 
@@ -2546,12 +2565,31 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
     def test_bad_job(self):
-        """Tests reprocessing a non-existant job throws and error"""
+        """Tests reprocessing a non-existant job throws an error"""
 
         json_data = {
             'forced_nodes': {
                 'all': False,
                 'nodes': ['does-not-exist']
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_recipe(self):
+        """Tests reprocessing a non-existant job throws an error"""
+
+        json_data = {
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['node_a'],
+                'sub_recipes': {
+                    'node_a': {
+                        'all': False,
+                        'nodes': ['node_a']}
+                }
             }
         }
 
