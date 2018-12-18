@@ -2391,7 +2391,7 @@ class RecipeTypeRevision(models.Model):
         """
 
         from recipe.diff.exceptions import InvalidDiff
-        from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
+        from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6, convert_forced_nodes_to_v6
 
         is_valid = True
         errors = []
@@ -2448,7 +2448,8 @@ class RecipeTypeRevision(models.Model):
                     errors.append(msg % (name, node.recipe_type_name, node.revision_num))
                     is_valid = False
                     continue
-                validate = sub.validate_forced_nodes(forced_nodes.get_forced_nodes_for_subrecipe(name))
+                sub_nodes = forced_nodes.get_forced_nodes_for_subrecipe(name)
+                validate = sub.validate_forced_nodes(convert_forced_nodes_to_v6(sub_nodes).get_dict())
                 is_valid &= validate.is_valid
                 errors.extend(validate.errors)
                 warnings.extend(validate.warnings)

@@ -2551,7 +2551,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         json_data = {
             'forced_nodes': {
                 'all': False,
-                'nodes': ['node_a, node_b'],
+                'nodes': ['node_a', 'node_b'],
                 'sub_recipes': {
                     'node_b': {
                         'all': False,
