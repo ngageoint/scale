@@ -268,7 +268,6 @@ class OldRecipeDetailsSerializer(RecipeSerializerV5):
     event = TriggerEventDetailsSerializerV5()
     data = serializers.JSONField(default=dict, source='input')
 
-    inputs = RecipeDetailsInputSerializer(many=True)
     jobs = RecipeJobsDetailsSerializerV5(many=True)
 
     root_superseded_recipe = RecipeBaseSerializerV5()

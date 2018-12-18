@@ -6,6 +6,7 @@ import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from django.utils.timezone import now
+
 from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
 from rest_framework.response import Response
@@ -16,6 +17,7 @@ import trigger.handler as trigger_handler
 import util.rest as rest_util
 
 from data.data.json.data_v6 import DataV6
+from messaging.manager import CommandMessageManager
 from job.models import Job, JobType
 from queue.models import Queue
 from recipe.configuration.data.exceptions import InvalidRecipeConnection, InvalidRecipeData
@@ -65,8 +67,10 @@ class RecipeTypesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return self.list_v6(request)
-        else:
+        elif self.request.version == 'v5':
             return self.list_v5(request)
+
+        raise Http404
 
     def list_v5(self, request):
         """Retrieves the list of all recipe types returns it in JSON form
@@ -120,8 +124,10 @@ class RecipeTypesView(ListCreateAPIView):
         
         if self.request.version == 'v6':
             return self._create_v6(request)
-        else:
+        elif self.request.version == 'v5':
             return self._create_v5(request)
+
+        raise Http404
         
     def _create_v5(self, request):
         """Creates a new recipe type and returns a link to the detail URL
@@ -234,7 +240,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        if self.request.version == 'v4' or self.request.version == 'v5':
+        if self.request.version == 'v5':
             return self.get_v5(request, recipe_type_id)
         else:
             raise Http404
@@ -274,7 +280,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v4' or self.request.version == 'v5':
+        if self.request.version == 'v5':
             return self.patch_v5(request, recipe_type_id)
         else:
             raise Http404
@@ -546,8 +552,10 @@ class RecipeTypesValidationView(APIView):
 
         if self.request.version == 'v6':
             return self._post_v6(request)
-        else:
+        elif self.request.version == 'v5':
             return self._post_v5(request)
+
+        raise Http404
 
     def _post_v5(self, request):
         """Validates a new recipe type and returns any warnings discovered
@@ -642,8 +650,6 @@ class RecipesView(ListAPIView):
         if request.version == 'v6':
             return self._list_v6(request)
         elif request.version == 'v5':
-            return self._list_v5(request)
-        elif request.version == 'v4':
             return self._list_v5(request)
 
         raise Http404()
@@ -766,18 +772,50 @@ class RecipeDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        if request.version == 'v6':
+            return self._retrieve_v5(request, recipe_id)
+        elif request.version == 'v5':
+            return self._retrieve_v6(request, recipe_id)
+
+        raise Http404()
+
+    def _retrieve_v5(self, request, recipe_id):
+        """Retrieves the details for a recipe and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         try:
-            # TODO: remove check when REST API v5 is removed
-            if request.version == 'v6':
-                recipe = Recipe.objects.get_details(recipe_id)
-            else:
-                recipe = Recipe.objects.get_details_v5(recipe_id)
+            recipe = Recipe.objects.get_details_v5(recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(recipe)
         return Response(serializer.data)
 
+    def _retrieve_v6(self, request, recipe_id):
+        """Retrieves the details for a recipe and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            recipe = Recipe.objects.get_details(recipe_id)
+        except Recipe.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(recipe)
+        return Response(serializer.data)
 
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
@@ -794,43 +832,50 @@ class RecipeInputFilesView(ListAPIView):
     def get(self, request, recipe_id):
         """Retrieve detailed information about the input files for a recipe
 
-        -*-*-
-        parameters:
-          - name: recipe_id
-            in: path
-            description: The ID of the recipe the file is associated with
-            required: true
-            example: 113
-          - name: started
-            in: query
-            description: The start time of a start/end time range
-            required: false
-            example: 2016-01-01T00:00:00Z
-          - name: ended
-            in: query
-            description: The end time of a start/end time range
-            required: false
-            example: 2016-01-02T00:00:00Z
-          - name: time_field
-            in: query
-            description: 'The database time field to apply `started` and `ended` time filters
-                          [Valid fields: `source`, `data`, `last_modified`]'
-            required: false
-            example: source
-          - name: file_name
-            in: query
-            description: The name of a specific file in Scale
-            required: false
-            example: some_file_i_need_to_find.zip
-          - name: recipe_input
-            in: query
-            description: The name of the input the file is passed to in a recipe
-            required: false
-            example: input_1
-        responses:
-          '200':
-            description: A JSON list of files with metadata
-        -*-*-
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The ID for the recipe.
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v6':
+            return self._get_v6(request, recipe_id)
+        elif request.version == 'v5':
+            return self._get_v5(request, recipe_id)
+
+        raise Http404()
+
+    def _get_v5(self, request, recipe_id):
+        """Retrieve detailed information about the input files for a recipe
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The ID for the recipe.
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
+        file_name = rest_util.parse_string(request, 'file_name', required=False)
+        recipe_input = rest_util.parse_string(request, 'recipe_input', required=False)
+
+        files = RecipeInputFile.objects.get_recipe_input_files(recipe_id, started=started, ended=ended,
+                                                               time_field=time_field, file_name=file_name,
+                                                               recipe_input=recipe_input)
+
+        page = self.paginate_queryset(files)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def _get_v6(self, request, recipe_id):
+        """Retrieve detailed information about the input files for a recipe
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -889,7 +934,7 @@ class RecipeReprocessView(GenericAPIView):
 
         raise Http404()
 
-    def post_v5(self, request, recipe_id):
+    def _post_v5(self, request, recipe_id):
         """Schedules a recipe for reprocessing and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -948,7 +993,7 @@ class RecipeReprocessView(GenericAPIView):
         url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
-    def post_v6(self, request, recipe_id):
+    def _post_v6(self, request, recipe_id):
         """Schedules a recipe for reprocessing and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -973,41 +1018,16 @@ class RecipeReprocessView(GenericAPIView):
             raise Http404
         if recipe.is_superseded:
             raise BadParameter('Cannot reprocess a superseded recipe')
-        
+
         event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
         recipe_type_name = recipe.recipe_type.name
         revision_num = recipe.recipe_type_rev.revision_num
-        forced_nodes = ForcedNodes()
-        if all_jobs:
-            forced_nodes.set_all_nodes()
-        elif job_names:
-            for job_name in job_names:
-                forced_nodes.add_node(job_name)
 
         # Execute all of the messages to perform the reprocess
         messages = create_reprocess_messages([root_recipe_id], recipe_type_name, revision_num, event.id,
-                                             forced_nodes=forced_nodes)
-        while messages:
-            msg = messages.pop(0)
-            result = msg.execute()
-            if not result:
-                raise Exception('Reprocess failed on message type \'%s\'' % msg.type)
-            messages.extend(msg.new_messages)
+                                             forced_nodes=forced_nodes.get_forced_nodes())
 
-        # Update job priorities
-        if priority is not None:
-            Job.objects.filter(event_id=event.id).update(priority=priority)
-            from queue.models import Queue
-            Queue.objects.filter(job__event_id=event.id).update(priority=priority)
+        CommandMessageManager().send_messages(messages)
 
-        new_recipe = Recipe.objects.get(root_superseded_recipe_id=root_recipe_id, is_superseded=False)
-        try:
-            new_recipe = Recipe.objects.get_details_v5(new_recipe.id)
-        except Recipe.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(new_recipe)
-
-        url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+        return Response(status=status.HTTP_202_ACCEPTED)
