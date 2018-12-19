@@ -321,7 +321,7 @@ class TestPurgeRecipe(TransactionTestCase):
             source_file_id=file_2.id), 0)
 
     def test_execute_dummy_recipe(self):
-        """Tests callign PurgeRecipe.execute() with dummy nodes"""
+        """Tests calling PurgeRecipe.execute() with dummy nodes"""
 
         file_2 = storage_test_utils.create_file(file_type='SOURCE')
         trigger = trigger_test_utils.create_trigger_event()
