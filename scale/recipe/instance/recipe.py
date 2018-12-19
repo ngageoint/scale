@@ -108,7 +108,9 @@ class RecipeInstance(object):
         :rtype: dict
         """
 
-        leaf_nodes = {n.name: n for n in self.graph.values() if n.is_original and not n.children}  # {Name: Node}
+        leaf_nodes = {n.name: n for n in self.graph.values() if n.is_original
+                                                                and n.is_real_node
+                                                                and not n.children}  # {Name: Node}
 
         return leaf_nodes
 

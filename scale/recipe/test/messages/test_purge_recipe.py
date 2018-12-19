@@ -2,11 +2,16 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TransactionTestCase
+import mock
 
+from data.filter.filter import DataFilter
 from data.interface.interface import Interface
+from data.interface.parameter import FileParameter, JsonParameter
 from job.test import utils as job_test_utils
+from job.models import Job
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
+from recipe.instance.recipe import RecipeInstance
 from recipe.messages.purge_recipe import create_purge_recipe_message, PurgeRecipe
 from recipe.models import Recipe, RecipeNode
 from recipe.test import utils as recipe_test_utils
@@ -314,3 +319,70 @@ class TestPurgeRecipe(TransactionTestCase):
         # Check results are accurate
         self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
             source_file_id=file_2.id), 0)
+
+    def test_execute_dummy_recipe(self):
+        """Tests calling PurgeRecipe.execute() with dummy nodes"""
+
+        file_2 = storage_test_utils.create_file(file_type='SOURCE')
+        trigger = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=file_2.id, trigger_event=trigger, force_stop_purge=True)
+        self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
+            trigger_event=trigger.id), 0)
+
+        job_type_1 = job_test_utils.create_job_type()
+        job_type_2 = job_test_utils.create_job_type()
+        job_type_3 = job_test_utils.create_job_type()
+        job_type_4 = job_test_utils.create_job_type()
+        recipe_type_1 = recipe_test_utils.create_recipe_type_v5()
+
+        interface = Interface()
+        interface.add_parameter(FileParameter('file_param_1', ['image/gif']))
+        interface.add_parameter(JsonParameter('json_param_1', 'object'))
+
+        definition = RecipeDefinition(interface)
+        definition.add_job_node('A', job_type_1.name, job_type_1.version, job_type_1.revision_num)
+        definition.add_job_node('B', job_type_2.name, job_type_2.version, job_type_2.revision_num)
+        definition.add_job_node('C', job_type_3.name, job_type_3.version, job_type_3.revision_num)
+        definition.add_recipe_node('D', recipe_type_1.name, recipe_type_1.revision_num)
+        definition.add_job_node('E', job_type_4.name, job_type_4.version, job_type_4.revision_num)
+        definition.add_condition_node('F', Interface(), DataFilter(False))
+        definition.add_job_node('G', job_type_4.name, job_type_4.version, job_type_4.revision_num)
+        definition.add_dependency('A', 'B')
+        definition.add_dependency('A', 'C')
+        definition.add_dependency('B', 'E')
+        definition.add_dependency('C', 'D')
+        definition.add_dependency('A', 'F')
+        definition.add_dependency('F', 'G')
+        definition.add_recipe_input_connection('A', 'input_1', 'file_param_1')
+        definition.add_dependency_input_connection('B', 'b_input_1', 'A', 'a_output_1')
+        definition.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
+        definition.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
+        definition.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
+
+        recipe = recipe_test_utils.create_recipe()
+        job_a = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED', save=False)
+        job_b = job_test_utils.create_job(job_type=job_type_2, status='RUNNING', save=False)
+        job_c = job_test_utils.create_job(job_type=job_type_3, status='COMPLETED', save=False)
+        job_e = job_test_utils.create_job(job_type=job_type_4, status='PENDING', num_exes=0, save=False)
+        Job.objects.bulk_create([job_a, job_b, job_c, job_e])
+        condition_f = recipe_test_utils.create_recipe_condition(is_processed=True, is_accepted=False, save=True)
+        recipe_d = recipe_test_utils.create_recipe(recipe_type=recipe_type_1)
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False)
+        recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', job=job_b, save=False)
+        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=False)
+        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', sub_recipe=recipe_d,
+                                                             save=False)
+        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=False)
+        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', condition=condition_f,
+                                                             save=False)
+        recipe_nodes = [recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e, recipe_node_f]
+
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=trigger.id,
+                                              source_file_id=file_2.id)
+
+        # Execute message
+        with mock.patch('recipe.models.RecipeManager.get_recipe_instance', 
+                        return_value=RecipeInstance(definition, recipe, recipe_nodes)) as recipe_instance_mock:
+            result = message.execute()
+            self.assertTrue(result)
