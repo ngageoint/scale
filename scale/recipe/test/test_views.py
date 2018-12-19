@@ -2518,8 +2518,8 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
 
-    @patch('recipe.models.CommandMessageManager')
-    @patch('recipe.messages.create_recipes.create_reprocess_messages')
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
     def test_all_jobs(self, mock_create, mock_msg_mgr):
         """Tests reprocessing all jobs in an existing recipe"""
 
@@ -2535,8 +2535,8 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
 
         mock_create.assert_called()
 
-    @patch('recipe.models.CommandMessageManager')
-    @patch('recipe.messages.create_recipes.create_reprocess_messages')
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
     def test_job(self, mock_create, mock_msg_mgr):
         """Tests reprocessing one job in an existing recipe"""
 
@@ -2553,8 +2553,8 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
 
         mock_create.assert_called()
 
-    @patch('recipe.models.CommandMessageManager')
-    @patch('recipe.messages.create_recipes.create_reprocess_messages')
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
     def test_full_recipe(self, mock_create, mock_msg_mgr):
         """Tests reprocessing a full recipe"""
 
