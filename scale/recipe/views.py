@@ -22,6 +22,8 @@ from job.models import Job, JobType
 from queue.models import Queue
 from recipe.configuration.data.exceptions import InvalidRecipeConnection, InvalidRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
+from recipe.configuration.exceptions import InvalidRecipeConfiguration
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.exceptions import InvalidDiff
@@ -732,14 +734,25 @@ class RecipesView(ListAPIView):
 
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         recipe_data = rest_util.parse_dict(request, 'input', {})
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+        
         recipeData = DataV6(recipe_data, do_validate=True)
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
- # TODO: get config like jobs method
+            
+        if configuration_dict:
+            try:
+                configuration = RecipeConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            except InvalidRecipeConfiguration as ex:
+                message = 'Recipe configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                
         try:
-            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data())
+            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(), recipe_config=configuration)
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
             

@@ -4,10 +4,9 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.configuration import DEFAULT_PRIORITY, JobConfiguration
 from job.configuration.mount import HostMountConfig, VolumeMountConfig
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
-from recipe.configuration.configuration import RecipeConfiguration
+from recipe.configuration.configuration import DEFAULT_PRIORITY, RecipeConfiguration
 from recipe.configuration.exceptions import InvalidRecipeConfiguration
 
 SCHEMA_VERSION = '6'

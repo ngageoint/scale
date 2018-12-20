@@ -127,8 +127,8 @@ class CreateJobs(CommandMessage):
         self.recipe_id = None
         self.root_recipe_id = None
         self.superseded_recipe_id = None
-        self.recipe_jobs = []
         self.recipe_config = {} # recipe configuration to merge with job type configuration
+        self.recipe_jobs = []
         self._process_input = {}  # process_input flags stored by new job ID
 
     def add_recipe_job(self, recipe_job):
@@ -306,10 +306,12 @@ class CreateJobs(CommandMessage):
             process_input_by_node[node_name] = recipe_job.process_input
             tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
             revision = revs_by_tuple[tup]
+            config = revision.job_type.get_configuration()
+            config.merge_recipe_config(self.recipe_config)
             superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
             job = Job.objects.create_job_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
                                             recipe_id=self.recipe_id, batch_id=self.batch_id,
-                                            superseded_job=superseded_job, recipe_config=self.recipe_config)
+                                            superseded_job=superseded_job, job_config=config)
             recipe_jobs[node_name] = job
 
         Job.objects.bulk_create(recipe_jobs.values())

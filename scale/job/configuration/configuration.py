@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from job.deprecation import JobInterfaceSunset
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE, Volume
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from storage.models import Workspace
 from util.validation import ValidationWarning
 
@@ -142,6 +143,29 @@ class JobConfiguration(object):
 
         return None
 
+    def merge_recipe_config(self, recipe_config):
+        """Merges a recipe configuration object values into this job configuration, overriding any common fields
+
+        :param recipe_config: The recipe config dictionary
+        :type recipe_config: dict
+
+        :raises :class:`recipe.configuration.exceptions.InvalidRecipeConfiguration`: If the recipe_config is invalid
+        """
+
+        config_to_merge = RecipeConfigurationV6(recipe_config).get_configuration()
+
+        if config_to_merge.default_output_workspace:
+            self.default_output_workspace = config_to_merge.default_output_workspace
+            
+        self.output_workspaces.update(config_to_merge.output_workspaces)
+
+        if config_to_merge.priority:
+            self.priority = config_to_merge.priority
+
+        self.mounts.update(config_to_merge.mounts)
+        
+        self.settings.update(config_to_merge.settings)
+        
     def remove_secret_settings(self, manifest):
         """Removes and returns the secret setting values from this job configuration
 
