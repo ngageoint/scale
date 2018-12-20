@@ -260,10 +260,10 @@ class JobExecutionSerializerV5(JobExecutionBaseSerializerV5):
     """Converts job execution model fields to REST output"""
 
     from error.serializers import ErrorBaseSerializerV5
-    from node.serializers import NodeBaseSerializerV4
+    from node.serializers import NodeBaseSerializer
 
     job = JobBaseSerializerV5()
-    node = NodeBaseSerializerV4()
+    node = NodeBaseSerializer()
     error = ErrorBaseSerializerV5(source='jobexecutionend.error')
 
 
@@ -287,10 +287,10 @@ class JobExecutionDetailsSerializerV5(JobExecutionSerializerV5):
     """Converts job execution model fields to REST output"""
 
     from error.serializers import ErrorSerializerV5
-    from node.serializers import NodeSerializerV4
+    from node.serializers import NodeSerializer
 
     job = JobSerializerV5()
-    node = NodeSerializerV4()
+    node = NodeSerializer()
     error = ErrorSerializerV5(source='jobexecutionend.error')
 
 
