@@ -949,6 +949,8 @@ class Recipe(models.Model):
     :type input: :class:`django.contrib.postgres.fields.JSONField`
     :keyword input_file_size: The total size in MiB for all input files in this recipe
     :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword configuration: JSON describing the overriding recipe configuration for this recipe instance
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword source_started: The start time of the source data for this recipe
     :type source_started: :class:`django.db.models.DateTimeField`
@@ -1014,6 +1016,7 @@ class Recipe(models.Model):
 
     input = django.contrib.postgres.fields.JSONField(default=dict)
     input_file_size = models.FloatField(blank=True, null=True)
+    configuration = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
     # Supplemental sensor metadata fields
     source_started = models.DateTimeField(blank=True, null=True, db_index=True)
