@@ -25,6 +25,7 @@ class ProductsView(ListAPIView):
     # TODO: remove when REST API v5 is removed
     def get_serializer_class(self):
         """Override the serializer for legacy API calls."""
+
         if self.request.version == 'v6':
             return ProductFileSerializer
         return ProductFileSerializerV5
@@ -38,13 +39,11 @@ class ProductsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the product for a given file name and returns it in JSON form
 
@@ -53,6 +52,7 @@ class ProductsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -94,7 +94,8 @@ class ProductDetailsView(RetrieveAPIView):
     # TODO: remove when REST API v5 is removed
     def get_serializer_class(self):
         """Override the serializer for legacy API calls."""
-        if self.request.version == 'v4' or self.request.version == 'v5':
+        
+        if self.request.version == 'v5':
             return ProductFileDetailsSerializerV5
         return ProductFileDetailsSerializer
 
@@ -107,34 +108,10 @@ class ProductDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.retrieve_v4(request, product_id, file_name)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.retrieve_v5(request, product_id, file_name)
 
         raise Http404()
-        
-    # TODO: remove the `file_name` arg when REST API v5 is removed
-    def retrieve_v4(self, request, product_id=None, file_name=None):
-        """Retrieves the details for a product file and return them in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param product_id: The id of the product
-        :type product_id: int encoded as a string
-        :param file_name: The name of the product
-        :type file_name: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        try:
-            product = ProductFile.objects.get_details(product_id)
-        except ScaleFile.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(product)
-        return Response(serializer.data)
 
     # TODO: remove when REST API v5 is removed
     def retrieve_v5(self, request, product_id=None, file_name=None):
@@ -181,13 +158,11 @@ class ProductSourcesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request, product_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request, product_id)
 
         raise Http404()
-            
+
     def list_impl(self, request, product_id=None):
         """Retrieves the source files for a given product id and returns it in JSON form
 
@@ -228,10 +203,10 @@ class ProductUpdatesView(ListAPIView):
     # TODO: remove when REST API v5 is removed
     def get_serializer_class(self):
         """Override the serializer for legacy API calls."""
+
         if self.request.version == 'v6':
             return ProductFileUpdateSerializer
         return ProductFileUpdateSerializerV5
-
 
     def list(self, request):
         """Determine api version and call specific method
@@ -242,13 +217,11 @@ class ProductUpdatesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the product updates for a given time range and returns it in JSON form
 
@@ -257,6 +230,7 @@ class ProductUpdatesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)

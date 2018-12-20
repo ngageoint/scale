@@ -27,7 +27,7 @@ class ErrorsView(GenericAPIView):
             return ErrorSerializerV6
         else:
             return ErrorSerializerV5
-    
+
     def get(self, request):
         """Retrieves the list of all errors and returns it in JSON form
 
@@ -41,9 +41,7 @@ class ErrorsView(GenericAPIView):
             return self._get_v6(request)
         elif self.request.version == 'v5':
             return self._get_v5(request)
-        elif self.request.version == 'v4': #TODO: Remove with REST API v4
-            return self._get_v5(request)
-            
+
         raise Http404
 
     def _get_v5(self, request):
@@ -66,7 +64,7 @@ class ErrorsView(GenericAPIView):
         page = self.paginate_queryset(errors)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-        
+
     def _get_v6(self, request):
         """Retrieves the list of all errors and returns it in JSON form
 
@@ -101,11 +99,9 @@ class ErrorsView(GenericAPIView):
             raise Http404
         elif self.request.version == 'v5':
             return self._post_v5(request)
-        elif self.request.version == 'v4': #TODO: Remove with REST API v4
-            return self._post_v5(request)
-            
+
         raise Http404
-        
+
     def _post_v5(self, request):
         """Creates a new error and returns a link to the info URL
 
@@ -143,7 +139,7 @@ class ErrorDetailsView(GenericAPIView):
             return ErrorDetailsSerializerV6
         else:
             return ErrorDetailsSerializerV5
-            
+
     def get(self, request, error_id):
         """Retrieves the details for an error and return them in JSON form
 
@@ -159,11 +155,9 @@ class ErrorDetailsView(GenericAPIView):
             return self._get_v6(request, error_id)
         elif self.request.version == 'v5':
             return self._get_v5(request, error_id)
-        elif self.request.version == 'v4': #TODO: Remove with REST API v4
-            return self._get_v5(request, error_id)
-            
+
         raise Http404
-        
+
     def _get_v5(self, request, error_id):
         """Retrieves the details for an error and return them in JSON form
 
@@ -174,6 +168,7 @@ class ErrorDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             error = Error.objects.get(pk=error_id)
         except Error.DoesNotExist:
@@ -181,7 +176,7 @@ class ErrorDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(error)
         return Response(serializer.data)
-        
+
     def _get_v6(self, request, error_id):
         """Retrieves the details for an error and return them in JSON form
 
@@ -192,6 +187,7 @@ class ErrorDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             error = Error.objects.get(pk=error_id)
         except Error.DoesNotExist:
@@ -210,14 +206,12 @@ class ErrorDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if self.request.version == 'v6':
             raise Http404
         elif self.request.version == 'v5':
             return self._patch_v5(request, error_id)
-        elif self.request.version == 'v4': #TODO: Remove with REST API v4
-            return self._patch_v5(request, error_id)
-            
+
         raise Http404
 
     def _patch_v5(self, request, error_id):
@@ -230,6 +224,7 @@ class ErrorDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             error = Error.objects.get(pk=error_id)
         except Error.DoesNotExist:

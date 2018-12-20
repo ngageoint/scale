@@ -43,8 +43,6 @@ class BatchesView(ListCreateAPIView):
             return BatchSerializerV6
         elif self.request.version == 'v5':
             return BatchSerializerV5
-        elif self.request.version == 'v4':
-            return BatchSerializerV5
 
     def list(self, request):
         """Retrieves the batches and returns them in JSON form
@@ -58,8 +56,6 @@ class BatchesView(ListCreateAPIView):
         if request.version == 'v6':
             return self._list_v6(request)
         elif request.version == 'v5':
-            return self._list_v5(request)
-        elif request.version == 'v4':
             return self._list_v5(request)
 
         raise Http404()
@@ -76,8 +72,6 @@ class BatchesView(ListCreateAPIView):
         if request.version == 'v6':
             return self._create_v6(request)
         elif request.version == 'v5':
-            return self._create_v5(request)
-        elif request.version == 'v4':
             return self._create_v5(request)
 
         raise Http404()
@@ -232,8 +226,6 @@ class BatchDetailsView(RetrieveUpdateAPIView):
             return BatchDetailsSerializerV6
         elif self.request.version == 'v5':
             return BatchDetailsSerializerV5
-        elif self.request.version == 'v4':
-            return BatchDetailsSerializerV5
 
     def retrieve(self, request, batch_id):
         """Retrieves the details for a batch and returns them in JSON form
@@ -249,8 +241,6 @@ class BatchDetailsView(RetrieveUpdateAPIView):
         if request.version == 'v6':
             return self._retrieve_v6(batch_id)
         elif request.version == 'v5':
-            return self._retrieve_v5(batch_id)
-        elif request.version == 'v4':
             return self._retrieve_v5(batch_id)
 
         raise Http404()

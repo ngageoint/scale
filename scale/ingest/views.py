@@ -41,8 +41,6 @@ class IngestsView(ListAPIView):
             return IngestSerializerV6
         elif self.request.version == 'v5':
             return IngestSerializerV5
-        elif self.request.version == 'v4':
-            return IngestSerializerV5
 
     def list(self, request):
         """Determine api version and call specific method
@@ -53,15 +51,13 @@ class IngestsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request)
         elif request.version == 'v6':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the list of all ingests and returns it in JSON form
 
@@ -95,15 +91,13 @@ class IngestsView(ListAPIView):
 class IngestDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of an ingest."""
     queryset = Ingest.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API"""
 
         if self.request.version == 'v6':
             return IngestDetailsSerializerV6
         elif self.request.version == 'v5':
-            return IngestDetailsSerializerV5
-        elif self.request.version == 'v4':
             return IngestDetailsSerializerV5
 
     def retrieve(self, request, ingest_id=None, file_name=None):
@@ -119,15 +113,13 @@ class IngestDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.retrieve_v5(request, ingest_id, file_name)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.retrieve_v5(request, ingest_id, file_name)
         elif request.version == 'v6':
             return self.retrieve_v6(request, ingest_id)
 
         raise Http404()
-        
+
     def retrieve_v5(self, request, ingest_id=None, file_name=None):
         """Retrieves the details for an ingest and return them in JSON form
 
@@ -155,7 +147,7 @@ class IngestDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(ingest)
         return Response(serializer.data)
-        
+
     def retrieve_v6(self, request, ingest_id):
         """Retrieves the details for an ingest and return them in JSON form
 
@@ -178,15 +170,13 @@ class IngestDetailsView(RetrieveAPIView):
 class IngestsStatusView(ListAPIView):
     """This view is the endpoint for retrieving summarized ingest status."""
     queryset = Ingest.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API"""
 
         if self.request.version == 'v6':
             return IngestStatusSerializerV6
         elif self.request.version == 'v5':
-            return IngestStatusSerializerV5
-        elif self.request.version == 'v4':
             return IngestStatusSerializerV5
 
     def list(self, request):
@@ -198,15 +188,13 @@ class IngestsStatusView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request)
         elif request.version == 'v6':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the ingest status information and returns it in JSON form
 
@@ -231,7 +219,7 @@ class IngestsStatusView(ListAPIView):
 class ScansProcessView(GenericAPIView):
     """This view is the endpoint for launching a scan execution to ingest"""
     queryset = Scan.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
@@ -251,10 +239,7 @@ class ScansProcessView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        #TODO: Remove with v4 API
-        if request.version == 'v4':
-            return self._post_v5(request, scan_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self._post_v5(request, scan_id)
         elif request.version == 'v6':
             return self._post_v6(request, scan_id)
@@ -282,7 +267,7 @@ class ScansProcessView(GenericAPIView):
         serializer = self.get_serializer(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
-        
+
     def _post_v6(self, request, scan_id=None):
         """Launches a scan to ingest from an existing scan model instance
 
@@ -307,7 +292,7 @@ class ScansProcessView(GenericAPIView):
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""
     queryset = Scan.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
@@ -325,16 +310,13 @@ class ScansView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        #TODO: Remove with v4 API
-        if request.version == 'v4':
-            return self._list_v5(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self._list_v5(request)
         elif request.version == 'v6':
             return self._list_v6(request)
 
         raise Http404()
-        
+
     def _list_v5(self, request):
         """Retrieves the list of all Scan process and returns it in JSON form
 
@@ -356,7 +338,7 @@ class ScansView(ListCreateAPIView):
         page = self.paginate_queryset(scans)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-        
+
     def _list_v6(self, request):
         """Retrieves the list of all Scan process and returns it in JSON form
 
@@ -388,16 +370,13 @@ class ScansView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        #TODO: Remove with v4 API
-        if request.version == 'v4':
-            return self._create_v5(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self._create_v5(request)
         elif request.version == 'v6':
             return self._create_v6(request)
 
         raise Http404()
-        
+
     def _create_v5(self, request):
         """Creates a new Scan process and returns a link to the detail URL
 
@@ -411,7 +390,7 @@ class ScansView(ListCreateAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
-        
+
         config = None
         try:
             config = ScanConfigurationV1(configuration, do_validate=True).get_configuration()
@@ -426,7 +405,7 @@ class ScansView(ListCreateAPIView):
         serializer = ScanDetailsSerializerV5(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
-        
+
     def _create_v6(self, request):
         """Creates a new Scan process and returns a link to the detail URL
 
@@ -446,7 +425,7 @@ class ScansView(ListCreateAPIView):
             config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
             raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
-            
+
         try:
             scan = Scan.objects.create_scan(name, title, description, config)
         except InvalidScanConfiguration as ex:
@@ -459,7 +438,7 @@ class ScansView(ListCreateAPIView):
 class ScansDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Scan process."""
     queryset = Scan.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
@@ -478,17 +457,14 @@ class ScansDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
-        #TODO: Remove with v4 API
-        if request.version == 'v4':
-            return self._get_v5(request, scan_id)
-        elif request.version == 'v5':
+
+        if request.version == 'v5':
             return self._get_v5(request, scan_id)
         elif request.version == 'v6':
             return self._get_v6(request, scan_id)
 
         raise Http404()
-        
+
     def _get_v5(self, request, scan_id):
         """Retrieves the details for a Scan process and return them in JSON form
 
@@ -499,6 +475,7 @@ class ScansDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             scan = Scan.objects.get_details(scan_id)
         except Scan.DoesNotExist:
@@ -517,6 +494,7 @@ class ScansDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             scan = Scan.objects.get_details(scan_id)
         except Scan.DoesNotExist:
@@ -536,10 +514,7 @@ class ScansDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        #TODO: Remove with v4 API
-        if request.version == 'v4':
-            return self._patch_v5(request, scan_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self._patch_v5(request, scan_id)
         elif request.version == 'v6':
             return self._patch_v6(request, scan_id)
@@ -567,7 +542,7 @@ class ScansDetailsView(GenericAPIView):
                 config = ScanConfigurationV1(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
             raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
-            
+
         try:
             Scan.objects.edit_scan(scan_id, title, description, config)
 
@@ -602,7 +577,7 @@ class ScansDetailsView(GenericAPIView):
                 config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
             raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
-            
+
         try:
             Scan.objects.edit_scan(scan_id, title, description, config)
         except Scan.DoesNotExist:
@@ -612,7 +587,8 @@ class ScansDetailsView(GenericAPIView):
             raise BadParameter(unicode(ex))
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
+
+
 class ScansValidationView(APIView):
     """This view is the endpoint for validating a new Scan process before attempting to actually create it"""
     queryset = Scan.objects.all()
@@ -626,16 +602,13 @@ class ScansValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        #TODO: Remove with v4 API
-        if request.version == 'v4':
-            return self._post_v5(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self._post_v5(request)
         elif request.version == 'v6':
             return self._post_v6(request)
 
         raise Http404()
-        
+
     def _post_v5(self, request):
         """Validates a new Scan process and returns any warnings discovered
 
@@ -657,7 +630,7 @@ class ScansValidationView(APIView):
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
-        
+
     def _post_v6(self, request):
         """Validates a new Scan process and returns any warnings discovered
 
@@ -668,12 +641,12 @@ class ScansValidationView(APIView):
         """
 
         configuration = rest_util.parse_dict(request, 'configuration')
-        
+
         # Validate the Scan configuration
         validation = Scan.objects.validate_scan_v6(configuration=configuration)
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
-                     
+
         if not resp_dict['is_valid']:
             return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)
@@ -689,8 +662,6 @@ class StrikesView(ListCreateAPIView):
             return StrikeSerializerV6
         elif self.request.version == 'v5':
             return StrikeSerializerV5
-        elif self.request.version == 'v4':
-            return StrikeSerializerV5
 
     def list(self, request):
         """Determine api version and call specific method
@@ -701,15 +672,13 @@ class StrikesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request)
         elif request.version == 'v6':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the list of all Strike process and returns it in JSON form
 
@@ -741,15 +710,13 @@ class StrikesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.create_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.create_impl(request)
         elif request.version == 'v6':
             return self.create_impl_v6(request)
 
         raise Http404()
-        
+
     def create_impl(self, request):
         """Creates a new Strike process and returns a link to the detail URL
 
@@ -763,7 +730,7 @@ class StrikesView(ListCreateAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
-        
+
         config = None
         try:
             if configuration:
@@ -785,7 +752,7 @@ class StrikesView(ListCreateAPIView):
         serializer = StrikeDetailsSerializerV5(strike)
         strike_url = reverse('strike_details_view', args=[strike.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
-        
+
     def create_impl_v6(self, request):
         """Creates a new Strike process and returns a link to the detail URL
 
@@ -799,7 +766,7 @@ class StrikesView(ListCreateAPIView):
         name = title_to_name(self.queryset, title)
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
-        
+
         config = None
         try:
             if configuration:
@@ -826,15 +793,13 @@ class StrikesView(ListCreateAPIView):
 class StrikeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Strike process."""
     queryset = Strike.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API"""
 
         if self.request.version == 'v6':
             return StrikeDetailsSerializerV6
         elif self.request.version == 'v5':
-            return StrikeDetailsSerializerV5
-        elif self.request.version == 'v4':
             return StrikeDetailsSerializerV5
 
     def get(self, request, strike_id):
@@ -848,15 +813,13 @@ class StrikeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.get_impl(request, strike_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.get_impl(request, strike_id)
         elif request.version == 'v6':
             return self.get_impl(request, strike_id)
 
         raise Http404()
-        
+
     def get_impl(self, request, strike_id):
         """Retrieves the details for a Strike process and return them in JSON form
 
@@ -867,6 +830,7 @@ class StrikeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             strike = Strike.objects.get_details(strike_id)
         except Strike.DoesNotExist:
@@ -886,15 +850,13 @@ class StrikeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.patch_impl(request, strike_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.patch_impl(request, strike_id)
         elif request.version == 'v6':
             return self.patch_impl_v6(request, strike_id)
 
         raise Http404()
-        
+
     def patch_impl(self, request, strike_id):
         """Edits an existing Strike process and returns the updated details
 
@@ -916,7 +878,7 @@ class StrikeDetailsView(GenericAPIView):
                 config = StrikeConfigurationV2(configuration, do_validate=True).get_configuration()
         except InvalidStrikeConfiguration as ex:
             raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
-            
+
         try:
             Strike.objects.edit_strike(strike_id, title, description, config)
 
@@ -976,15 +938,13 @@ class StrikesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.post_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.post_impl(request)
         elif request.version == 'v6':
             return self.post_impl_v6(request)
 
         raise Http404()
-        
+
     def post_impl(self, request):
         """Validates a new Strike process and returns any warnings discovered
 
@@ -1026,7 +986,7 @@ class StrikesValidationView(APIView):
         validation = Strike.objects.validate_strike_v6(configuration=configuration)
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
-                     
+
         if not resp_dict['is_valid']:
             return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)

@@ -16,7 +16,6 @@ from product.models import ProductFile
 from product.serializers import ProductFileSerializer, ProductFileSerializerV5
 from source.models import SourceFile
 from source.serializers import SourceFileSerializer, SourceFileUpdateSerializer, SourceFileDetailsSerializer
-from source.serializers_extra import SourceFileDetailsSerializerV4
 from storage.models import ScaleFile
 
 logger = logging.getLogger(__name__)
@@ -36,13 +35,11 @@ class SourcesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the source files for a given time range and returns it in JSON form
 
@@ -51,6 +48,7 @@ class SourcesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -72,14 +70,7 @@ class SourcesView(ListAPIView):
 class SourceDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of a source file."""
     queryset = ScaleFile.objects.all()
-
-    # TODO: remove when REST API v4 is removed
-    def get_serializer_class(self):
-        """Override the serializer for legacy API calls."""
-        if self.request.version == 'v4':
-            return SourceFileDetailsSerializerV4
-        elif self.request.version == 'v5':
-            return SourceFileDetailsSerializer
+    serializer_class = SourceFileDetailsSerializer
 
     def retrieve(self, request, source_id=None, file_name=None):
         """Retrieves the details for a source file and return them in JSON form
@@ -94,49 +85,15 @@ class SourceDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.retrieve_v4(request, source_id, file_name)
-        elif request.version == 'v5':
-            try:
-                source = SourceFile.objects.get_details(source_id)
-            except ScaleFile.DoesNotExist:
-                raise Http404
-    
-            serializer = self.get_serializer(source)
-            return Response(serializer.data)
-        
-        raise Http404()
-
-    # TODO: remove when REST API v4 is removed
-    def retrieve_v4(self, request, source_id=None, file_name=None):
-        """Retrieves the details for a source file and return them in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param source_id: The id of the source
-        :type source_id: int encoded as a string
-        :param file_name: The name of the source
-        :type file_name: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        # Support retrieving by file name in addition to the usual identifier
-        if file_name:
-            sources = ScaleFile.objects.filter(file_name=file_name, file_type='SOURCE').values('id').order_by('-parsed')
-            if not sources:
-                raise Http404
-            source_id = sources[0]['id']
-
-        include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
-
         try:
-            source = SourceFile.objects.get_details_v4(source_id, include_superseded=include_superseded)
+            source = SourceFile.objects.get_details(source_id)
         except ScaleFile.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(source)
         return Response(serializer.data)
+
+        raise Http404()
 
 
 class SourceIngestsView(ListAPIView):
@@ -150,8 +107,6 @@ class SourceIngestsView(ListAPIView):
             return IngestSerializerV6
         elif self.request.version == 'v5':
             return IngestSerializerV5
-        elif self.request.version == 'v4':
-            return IngestSerializerV5
 
     def list(self, request, source_id=None):
         """Determine api version and call specific method
@@ -164,9 +119,7 @@ class SourceIngestsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
         
-        if request.version == 'v4':
-            return self.list_impl(request, source_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request, source_id)
 
         raise Http404()
@@ -221,9 +174,7 @@ class SourceJobsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
         
-        if request.version == 'v4':
-            return self.list_impl(request, source_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request, source_id)
 
         raise Http404()
@@ -293,9 +244,7 @@ class SourceProductsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
         
-        if request.version == 'v4':
-            return self.list_impl(request, source_id)
-        elif request.version == 'v5':
+        if request.version == 'v5':
             return self.list_impl(request, source_id)
 
         raise Http404()
@@ -364,14 +313,12 @@ class SourceUpdatesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
-        if request.version == 'v4':
-            return self.list_impl(request)
-        elif request.version == 'v5':
+
+        if request.version == 'v5':
             return self.list_impl(request)
 
         raise Http404()
-        
+
     def list_impl(self, request):
         """Retrieves the source file updates for a given time range and returns it in JSON form
 
@@ -380,6 +327,7 @@ class SourceUpdatesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
