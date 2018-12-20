@@ -119,14 +119,6 @@ components:
           type: string
           description: Mesos master framework ID
           example: framework-1234
-        master_hostname:
-          type: string
-          description: Mesos master hostname
-          example: 192.168.1.1
-        master_port:
-          type: number
-          description: Mesos master port number
-          example: 5050
     state:
       title: State
       type: object
