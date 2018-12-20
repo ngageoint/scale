@@ -413,6 +413,7 @@
 <li class="toctree-l5"><a class="reference internal" href="recipe.test.diff.json.html">recipe.test.diff.json package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#submodules">Submodules</a></li>
 <li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json.test_diff_v6">recipe.test.diff.json.test_diff_v6 module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json.test_forced_nodes_v6">recipe.test.diff.json.test_forced_nodes_v6 module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json">Module contents</a></li>
 </ul>
 </li>
@@ -630,6 +631,36 @@ as new Seed compliant interfaces.</p>
 <div class="section" id="module-recipe.models">
 <span id="recipe-models-module"></span><h2>recipe.models module<a class="headerlink" href="#module-recipe.models" title="Permalink to this headline">¶</a></h2>
 <p>Defines the database models for recipes and recipe types</p>
+<dl class="class">
+<dt id="recipe.models.ForcedNodesValidation">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">ForcedNodesValidation</code><span class="sig-paren">(</span><em>is_valid</em>, <em>errors</em>, <em>warnings</em>, <em>forced_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.ForcedNodesValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.models.ForcedNodesValidation.errors">
+<code class="descname">errors</code><a class="headerlink" href="#recipe.models.ForcedNodesValidation.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.ForcedNodesValidation.forced_nodes">
+<code class="descname">forced_nodes</code><a class="headerlink" href="#recipe.models.ForcedNodesValidation.forced_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.ForcedNodesValidation.is_valid">
+<code class="descname">is_valid</code><a class="headerlink" href="#recipe.models.ForcedNodesValidation.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.ForcedNodesValidation.warnings">
+<code class="descname">warnings</code><a class="headerlink" href="#recipe.models.ForcedNodesValidation.warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="recipe.models.Recipe">
 <em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">Recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe" title="Permalink to this definition">¶</a></dt>
@@ -3653,7 +3684,7 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe type validation.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">job.models.RecipeTypeValidation</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeTypeValidation" title="recipe.models.RecipeTypeValidation"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeValidation</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -3867,6 +3898,24 @@ object the first time, the query is executed.</p>
 <code class="descname">revision_num</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.revision_num" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeRevision.validate_forced_nodes">
+<code class="descname">validate_forced_nodes</code><span class="sig-paren">(</span><em>forced_nodes_json</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision.validate_forced_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a forced nodes object against the definition for this recipe type revision</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>forced_nodes_json</strong> (<em>dict</em>) &#8211; The definition of nodes to be forced to reprocess</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ForcedNodes validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.ForcedNodesValidation" title="recipe.models.ForcedNodesValidation"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.ForcedNodesValidation</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -4615,60 +4664,6 @@ made in an atomic transaction.</p>
 <dt id="recipe.views.RecipeInputFilesView.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeInputFilesView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve detailed information about the input files for a recipe</p>
-<p>-<em>-</em>-
-parameters:</p>
-<blockquote>
-<div><ul>
-<li><p class="first">name: recipe_id
-in: path
-description: The ID of the recipe the file is associated with
-required: true
-example: 113</p>
-</li>
-<li><p class="first">name: started
-in: query
-description: The start time of a start/end time range
-required: false
-example: 2016-01-01T00:00:00Z</p>
-</li>
-<li><p class="first">name: ended
-in: query
-description: The end time of a start/end time range
-required: false
-example: 2016-01-02T00:00:00Z</p>
-</li>
-<li><p class="first">name: time_field
-in: query
-description: &#8216;The database time field to apply <cite>started</cite> and <cite>ended</cite> time filters</p>
-<blockquote>
-<div><p>[Valid fields: <cite>source</cite>, <cite>data</cite>, <cite>last_modified</cite>]&#8217;</p>
-</div></blockquote>
-<p>required: false
-example: source</p>
-</li>
-<li><p class="first">name: file_name
-in: query
-description: The name of a specific file in Scale
-required: false
-example: some_file_i_need_to_find.zip</p>
-</li>
-<li><p class="first">name: recipe_input
-in: query
-description: The name of the input the file is passed to in a recipe
-required: false
-example: input_1</p>
-</li>
-</ul>
-</div></blockquote>
-<dl class="docutils">
-<dt>responses:</dt>
-<dd><dl class="first last docutils">
-<dt>&#8216;200&#8217;:</dt>
-<dd>description: A JSON list of files with metadata</dd>
-</dl>
-</dd>
-</dl>
-<p>-<em>-</em>-</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

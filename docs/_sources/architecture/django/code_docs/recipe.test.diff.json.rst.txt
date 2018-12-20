@@ -12,6 +12,14 @@ recipe\.test\.diff\.json\.test\_diff\_v6 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.test\.diff\.json\.test\_forced\_nodes\_v6 module
+--------------------------------------------------------
+
+.. automodule:: recipe.test.diff.json.test_forced_nodes_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -731,7 +731,7 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Recipe Input Files**                                                                                                  |
 +=========================================================================================================================+
-| Returns detailed information about input files associated with a given Job ID.                                          |
+| Returns detailed information about input files associated with a given Recipe ID.                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /v6/recipes/{id}/input_files/                                                                                   |
 |         Where {id} is the unique identifier of an existing recipe.                                                      |
@@ -782,3 +782,40 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 |                    |                   | (See :ref:`Scale Files <rest_v6_scale_file_list>`)                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_recipe_reprocess:
+
+v6 Reprocess Recipe
+-------------------
+
+**Example POST /v6/recipes/{id}/reprocess/ API call**
+
+Request: POST http://.../v6/recipes/{id}/reprocess/
+
+.. code-block:: javascript
+
+  {
+    "forced_nodes": :ref:`rest_v6_recipe_json_forced_nodes`
+  }
+
+Response: 202 ACCEPTED
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Re-process Recipe**                                                                                                   |
++=========================================================================================================================+
+| Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.              |
+| Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be|
+| specified to force the recipe to be re-processed. A recipe that is already superseded cannot be re-processed again.     |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/recipes/{id}/reprocess/                                                                                    |
+|          Where {id} is the unique identifier of an existing recipe.                                                     |
++-------------------------------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| forced_nodes       | JSON Object       | Required | Set of recipe nodes that should be forced to re-process             |
+|                    |                   |          | See :ref:`Recipe Forced Nodes <rest_v6_recipe_json_forced_nodes>`   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 202 ACCEPTED                                                                                       |
++--------------------+----------------------------------------------------------------------------------------------------+

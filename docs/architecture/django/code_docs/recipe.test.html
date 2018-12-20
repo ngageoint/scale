@@ -262,6 +262,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.test.diff.json.html">recipe.test.diff.json package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.diff.json.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json.test_diff_v6">recipe.test.diff.json.test_diff_v6 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json.test_forced_nodes_v6">recipe.test.diff.json.test_forced_nodes_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json">Module contents</a></li>
 </ul>
 </li>
@@ -843,20 +844,38 @@ change is made</p>
 
 <dl class="method">
 <dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_all_jobs">
-<code class="descname">test_all_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_all_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_all_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_all_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing all jobs in an existing recipe</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_job">
-<code class="descname">test_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing one job in an existing recipe</p>
+<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_job">
+<code class="descname">test_bad_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a non-existant job throws an error</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_priority">
-<code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing all jobs in an existing recipe with a priority override</p>
+<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_json">
+<code class="descname">test_bad_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing with bad forced_nodes json input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_recipe">
+<code class="descname">test_bad_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a non-existant job throws an error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_full_recipe">
+<code class="descname">test_full_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_full_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a full recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_job">
+<code class="descname">test_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing one job in an existing recipe</p>
 </dd></dl>
 
 <dl class="method">
@@ -1772,7 +1791,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2018</em>, <em>12</em>, <em>19</em>, <em>18</em>, <em>23</em>, <em>2</em>, <em>240950</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2018</em>, <em>12</em>, <em>20</em>, <em>14</em>, <em>29</em>, <em>4</em>, <em>118842</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 
