@@ -220,8 +220,8 @@ class RecipeDefinition(object):
 
         :param recipe_type_name: The name of the recipe type
         :type recipe_type_name: string
-        :returns: list of JobNodeDefinition objects
-        :rtype: list[:class:`recipe.definition.node.JobNodeDefinition`]
+        :returns: list of RecipeNodeDefinition objects
+        :rtype: list[:class:`recipe.definition.node.RecipeNodeDefinition`]
         """
 
         nodes = []

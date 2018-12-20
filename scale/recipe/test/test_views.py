@@ -2463,95 +2463,164 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
+        self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.s_class = 'A'
+        self.s_sensor = '1'
+        self.collection = '12345'
+        self.task = 'abcd'
+        
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'scale-batch-creator'
 
-        definition = {
-            'version': '1.0',
-            'input_data': [{
-                'media_types': [
-                    'image/x-hdf5-image',
-                ],
-                'type': 'file',
-                'name': 'input_file',
-            }],
-            'jobs': [{
-                'job_type': {
-                    'name': self.job_type1.name,
-                    'version': self.job_type1.version,
-                },
-                'name': 'kml',
-                'recipe_inputs': [{
-                    'job_input': 'input_file',
-                    'recipe_input': 'input_file',
-                }],
-            }],
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.jt2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+
+        def_v6_dict_sub = {'version': '6',
+                       'input': { 'files': [],
+                                  'json': []},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.jt2.name,
+                                                          'job_type_version': self.jt2.version, 'job_type_revision': self.jt2.revision_num}}}}
+
+        self.sub = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_sub)
+
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
+                                                          'job_type_version': self.job_type1.version, 'job_type_revision': 1}},
+                                 'node_b': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
+                                                          'recipe_type_revision': self.sub.revision_num}}
+                           
+                       }
+            
         }
 
-        workspace1 = storage_test_utils.create_workspace()
-        file1 = storage_test_utils.create_file(workspace=workspace1)
+        self.workspace = storage_test_utils.create_workspace()
+        self.file1 = storage_test_utils.create_file(workspace=self.workspace, file_size=104857600.0,
+                                               source_started=self.date_1, source_ended=self.date_2,
+                                               source_sensor_class=self.s_class, source_sensor=self.s_sensor,
+                                               source_collection=self.collection, source_task=self.task)
 
-        data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_file',
-                'file_id': file1.id,
-            }],
-            'workspace_id': workspace1.id,
-        }
 
-        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=definition)
-        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
-        self.recipe1 = recipe_handler.recipe
-        self.recipe1_jobs = recipe_handler.recipe_jobs
+        self.data = {'version': '6', 'files': {'INPUT_FILE': [self.file1.id]},
+                'json': {'INPUT_JSON': 'hello'}}
 
-    def test_all_jobs(self):
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
+        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
+        recipe_test_utils.process_recipe_inputs([self.recipe1.id])
+
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
+    def test_all_jobs(self, mock_create, mock_msg_mgr):
         """Tests reprocessing all jobs in an existing recipe"""
 
         json_data = {
-            'all_jobs': True,
+            'forced_nodes': {
+                'all': True
+            }
         }
 
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
-        results = json.loads(response.content)
-        self.assertNotEqual(results['id'], self.recipe1.id)
-        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+        mock_create.assert_called()
 
-    def test_job(self):
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
+    def test_job(self, mock_create, mock_msg_mgr):
         """Tests reprocessing one job in an existing recipe"""
 
         json_data = {
-            'job_names': ['kml'],
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['node_a']
+            }
         }
 
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
-        results = json.loads(response.content)
-        self.assertNotEqual(results['id'], self.recipe1.id)
-        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+        mock_create.assert_called()
 
-    def test_priority(self):
-        """Tests reprocessing all jobs in an existing recipe with a priority override"""
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
+    def test_full_recipe(self, mock_create, mock_msg_mgr):
+        """Tests reprocessing a full recipe"""
 
         json_data = {
-            'all_jobs': True,
-            'priority': 1111,
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['node_a', 'node_b'],
+                'sub_recipes': {
+                    'node_b': {
+                        'all': False,
+                        'nodes': ['node_a']}
+                }
+            }
         }
 
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
-        results = json.loads(response.content)
-        self.assertNotEqual(results['id'], self.recipe1.id)
-        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+        mock_create.assert_called()
 
-        recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], node_name='kml')
-        self.assertEqual(recipe_job_1.job.priority, 1111)
+    def test_bad_job(self):
+        """Tests reprocessing a non-existant job throws an error"""
+
+        json_data = {
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['does-not-exist']
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_recipe(self):
+        """Tests reprocessing a non-existant job throws an error"""
+
+        json_data = {
+            'forced_nodes': {
+                'all': False,
+                'nodes': ['node_a'],
+                'sub_recipes': {
+                    'node_a': {
+                        'all': False,
+                        'nodes': ['node_a']}
+                }
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_json(self):
+        """Tests reprocessing with bad forced_nodes json input"""
+
+        json_data = {
+            'forced_nodes': {
+                'invalid': 'missing "all" field'
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_superseded(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
@@ -2560,7 +2629,9 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.recipe1.save()
 
         json_data = {
-            'all_jobs': True,
+            'forced_nodes': {
+                'all': True
+            }
         }
 
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)

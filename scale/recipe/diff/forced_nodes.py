@@ -65,6 +65,15 @@ class ForcedNodes(object):
 
         return self._nodes
 
+    def get_sub_recipe_names(self):
+        """Returns the sub-recipe node names
+
+        :returns: The sub-recipe node names
+        :rtype: set
+        """
+
+        return self._subrecipe_nodes.keys()
+
     def is_node_forced_to_reprocess(self, node_name):
         """Indicates whether the given node is forced to reprocess
 

@@ -21,6 +21,10 @@ FORCED_NODES_SCHEMA = {
             'required': ['all'],
             'additionalProperties': False,
             'properties': {
+                'version': {
+                    'description': 'Version of the forced nodes schema',
+                    'type': 'string',
+                },
                 'all': {
                     'description': 'Whether all nodes should be forced to be reprocessed',
                     'type': 'boolean',

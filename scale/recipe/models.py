@@ -44,6 +44,8 @@ RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'node_type', 'id
 
 RecipeTypeValidation = namedtuple('RecipeTypeValidation', ['is_valid', 'errors', 'warnings', 'diff'])
 
+ForcedNodesValidation = namedtuple('ForcedNodesValidation', ['is_valid', 'errors', 'warnings', 'forced_nodes'])
+
 
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating RecipeInputFile models
@@ -2010,7 +2012,7 @@ class RecipeTypeManager(models.Manager):
         :param definition_dict: The definition for running a recipe of this type
         :type definition_dict: dict
         :returns: The recipe type validation.
-        :rtype: :class:`job.models.RecipeTypeValidation`
+        :rtype: :class:`recipe.models.RecipeTypeValidation`
         """
 
         from recipe.definition.exceptions import InvalidDefinition
@@ -2278,8 +2280,6 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return revs
 
-
-
     def get_revision_map(self, revision_ids, revision_tuples):
         """Returns a dict that maps revision ID to recipe type revision for the recipe type revisions that match the
         given values. Each revision model will have its related recipe type model populated.
@@ -2380,6 +2380,81 @@ class RecipeTypeRevision(models.Model):
         """
 
         return rest_utils.strip_schema_version(convert_recipe_definition_to_v6_json(self.get_definition()).get_dict())
+
+    def validate_forced_nodes(self, forced_nodes_json):
+        """Validates a forced nodes object against the definition for this recipe type revision
+
+        :param forced_nodes_json: The definition of nodes to be forced to reprocess
+        :type forced_nodes_json: dict
+        :returns: The ForcedNodes validation.
+        :rtype: :class:`recipe.models.ForcedNodesValidation`
+        """
+
+        from recipe.diff.exceptions import InvalidDiff
+        from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6, convert_forced_nodes_to_v6
+
+        is_valid = True
+        errors = []
+        warnings = []
+        diff = {}
+
+        definition = None
+
+        try:
+            forced_nodes_v6 = ForcedNodesV6(forced_nodes_json, do_validate=True)
+        except InvalidDiff as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Invalid forced nodes definition: %s' % ex
+            logger.info(message)
+            pass
+
+        if forced_nodes_v6:
+            forced_nodes = forced_nodes_v6.get_forced_nodes()
+            node_names = forced_nodes.get_forced_node_names()
+            sub_names = forced_nodes.get_sub_recipe_names()
+            if forced_nodes.all_nodes and node_names:
+                warnings.append('nodes defined with all field set to True')
+            definition = self.get_definition()
+            top_level_names = definition.get_topological_order()
+            for name in forced_nodes.get_forced_node_names():
+                if name not in top_level_names:
+                    errors.append('Recipe definition does not have a top level node with name: %s' % name)
+                    is_valid = False
+                    continue
+                node = definition.graph[name]
+                if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                    if name not in sub_names:
+                        warnings.append('Node %s is a recipe node but is not defined in sub_recipes' % name)
+
+            if forced_nodes.all_nodes and sub_names:
+                warnings.append('sub_recipes defined with all field set to True')
+            for name in sub_names:
+                if name not in forced_nodes.get_forced_node_names():
+                    warnings.append('Sub-recipe %s defined but not listed in nodes' % name)
+                if name not in top_level_names:
+                    errors.append('Recipe definition does not have a top level node with name: %s' % name)
+                    is_valid = False
+                    continue
+                node = definition.graph[name]
+                if node.node_type != RecipeNodeDefinition.NODE_TYPE:
+                    errors.append('Sub-recipe node %s is not a recipe node' % name)
+                    is_valid = False
+                    continue
+                try:
+                    sub = RecipeTypeRevision.objects.get_revision(node.recipe_type_name, node.revision_num)
+                except RecipeTypeRevision.DoesNotExist as ex:
+                    msg = 'Unable to get recipe type revision for sub-recipe %s with name %s and revision %d'
+                    errors.append(msg % (name, node.recipe_type_name, node.revision_num))
+                    is_valid = False
+                    continue
+                sub_nodes = forced_nodes.get_forced_nodes_for_subrecipe(name)
+                validate = sub.validate_forced_nodes(convert_forced_nodes_to_v6(sub_nodes).get_dict())
+                is_valid &= validate.is_valid
+                errors.extend(validate.errors)
+                warnings.extend(validate.warnings)
+
+        return ForcedNodesValidation(is_valid, errors, warnings, forced_nodes)
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type revision as the combination of job type and
