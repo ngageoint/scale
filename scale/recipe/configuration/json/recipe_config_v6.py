@@ -1,8 +1,14 @@
-"""Manages the v6 job configuration schema"""
+"""Manages the v6 recipe configuration schema"""
 from __future__ import unicode_literals
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
+
+from job.configuration.configuration import DEFAULT_PRIORITY, JobConfiguration
+from job.configuration.mount import HostMountConfig, VolumeMountConfig
+from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
+from recipe.configuration.configuration import RecipeConfiguration
+from recipe.configuration.exceptions import InvalidRecipeConfiguration
 
 SCHEMA_VERSION = '6'
 
@@ -17,20 +23,20 @@ RECIPE_CONFIG_SCHEMA = {
             'type': 'string',
         },
         'mounts': {
-            'description': 'Defines volumes to use for the job\'s mounts',
+            'description': 'Defines volumes to use for the jobs\' mounts',
             'type': 'object',
             'additionalProperties': {
                 '$ref': '#/definitions/mount'
             },
         },
         'output_workspaces': {
-            'description': 'Defines workspaces to use for the job\'s output files',
+            'description': 'Defines workspaces to use for the jobs\' output files',
             'type': 'object',
             'required': ['default', 'outputs'],
             'additionalProperties': False,
             'properties': {
                 'default': {
-                    'description': 'Defines the job\'s default output workspace',
+                    'description': 'Defines the jobs\' default output workspace',
                     'type': 'string',
                 },
                 'outputs': {
@@ -43,12 +49,12 @@ RECIPE_CONFIG_SCHEMA = {
             },
         },
         'priority': {
-            'description': 'Defines the job\'s priority',
+            'description': 'Defines the jobs\' priority',
             'type': 'integer',
             'minimum': 1,
         },
         'settings': {
-            'description': 'Defines values to use for the job\'s settings',
+            'description': 'Defines values to use for the jobs\' settings',
             'type': 'object',
             'additionalProperties': {
                 'type': 'string',
@@ -121,23 +127,23 @@ def convert_config_to_v6_json(config):
     config_dict = {'version': SCHEMA_VERSION, 'mounts': mounts_dict, 'output_workspaces': workspace_dict,
                    'priority': config.priority, 'settings': config.settings}
 
-    return JobConfigurationV6(config=config_dict, do_validate=False)
+    return RecipeConfigurationV6(config=config_dict, do_validate=False)
 
 
-class JobConfigurationV6(object):
-    """Represents a v6 job configuration JSON"""
+class RecipeConfigurationV6(object):
+    """Represents a v6 recipe configuration JSON"""
 
     def __init__(self, config=None, existing=None, do_validate=False):
         """Creates a v6 job configuration JSON object from the given dictionary
 
-        :param config: The job configuration JSON dict
+        :param config: The recipe configuration JSON dict
         :type config: dict
-        :param existing: Existing JobConfiguration to use for default values for unspecified fields
-        :type existing: JobConfigurationV6
+        :param existing: Existing RecipeConfiguration to use for default values for unspecified fields
+        :type existing: RecipeConfigurationV6
         :param do_validate: Whether to perform validation on the JSON schema
         :type do_validate: bool
 
-        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
+        :raises :class:`recipe.configuration.exceptions.InvalidRecipeConfiguration`: If the given configuration is invalid
         """
 
         if not config:
@@ -151,24 +157,25 @@ class JobConfigurationV6(object):
             self._config['version'] = SCHEMA_VERSION
 
         if self._config['version'] != SCHEMA_VERSION:
-            self._convert_from_v2(do_validate)
+            msg = '%s is an unsupported version number'
+            raise InvalidRecipeConfiguration('INVALID_VERSION', msg % self._config['version'])
 
         self._populate_default_values()
 
         try:
             if do_validate:
-                validate(self._config, JOB_CONFIG_SCHEMA)
+                validate(self._config, RECIPE_CONFIG_SCHEMA)
         except ValidationError as ex:
-            raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Invalid configuration: %s' % unicode(ex))
+            raise InvalidRecipeConfiguration('INVALID_CONFIGURATION', 'Invalid configuration: %s' % unicode(ex))
 
     def get_configuration(self):
-        """Returns the job configuration represented by this JSON
+        """Returns the recipe configuration represented by this JSON
 
-        :returns: The job configuration
-        :rtype: :class:`job.configuration.configuration.JobConfiguration`:
+        :returns: The recipe configuration
+        :rtype: :class:`recipe.configuration.configuration.RecipeConfiguration`:
         """
 
-        config = JobConfiguration()
+        config = RecipeConfiguration()
 
         for name, mount_dict in self._config['mounts'].items():
             if mount_dict['type'] == 'host':
@@ -197,24 +204,6 @@ class JobConfigurationV6(object):
         """
 
         return self._config
-
-    def _convert_from_v2(self, do_validate):
-        """Converts the JSON dict from v2 to the current version
-
-        :param do_validate: Whether to perform validation on the JSON schema
-        :type do_validate: bool
-
-        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
-        """
-
-        v2_json_dict = JobConfigurationV2(self._config, do_validate=do_validate).get_dict()
-
-        # Only the version needs changed when going from v2 to v6
-        if 'version' in v2_json_dict:
-            del v2_json_dict['version']
-        v2_json_dict['version'] = SCHEMA_VERSION
-
-        self._data = v2_json_dict
 
     def _populate_default_values(self):
         """Populates any missing required values with defaults
