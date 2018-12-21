@@ -261,43 +261,6 @@ class SourceFileManager(models.GeoManager):
 
         return ScaleFile.objects.all().select_related('workspace').get(pk=source_id, file_type='SOURCE')
 
-    # TODO: remove when REST API v4 is removed
-    def get_details_v4(self, source_id, include_superseded=False):
-        """Gets additional details for the given source model based on related model attributes (v4 version).
-
-        :param source_id: The unique identifier of the source.
-        :type source_id: int
-        :param include_superseded: Whether or not superseded products should be included.
-        :type include_superseded: bool
-        :returns: The source with extra related attributes: ingests and products.
-        :rtype: :class:`storage.models.ScaleFile`
-
-        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
-        """
-
-        # Attempt to fetch the requested source
-        source = ScaleFile.objects.all().select_related('workspace')
-        source = source.get(pk=source_id, file_type='SOURCE')
-
-        # Attempt to fetch all ingests for the source
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from ingest.models import Ingest
-            source.ingests = Ingest.objects.filter(source_file=source).order_by('created')
-        except:
-            source.ingests = []
-
-        # Attempt to fetch all products derived from the source
-        products = ScaleFile.objects.filter(ancestors__ancestor_id=source.id, file_type='PRODUCT')
-        # Exclude superseded products by default
-        if not include_superseded:
-            products = products.filter(is_superseded=False)
-        products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
-        products = products.prefetch_related('countries').order_by('created')
-        source.products = products
-
-        return source
-
     @transaction.atomic
     def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path):
         """Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
