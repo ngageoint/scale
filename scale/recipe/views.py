@@ -16,6 +16,7 @@ from rest_framework.views import APIView
 import trigger.handler as trigger_handler
 import util.rest as rest_util
 
+from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobType
@@ -737,7 +738,12 @@ class RecipesView(ListAPIView):
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
         
-        recipeData = DataV6(recipe_data, do_validate=True)
+        try:
+            recipeData = DataV6(recipe_data, do_validate=True)
+        except InvalidData as ex:
+            logger.exception('Unable to queue new recipe. Invalid input: %s', recipe_data)
+            raise BadParameter(unicode(ex))
+
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
@@ -759,6 +765,7 @@ class RecipesView(ListAPIView):
         serializer = RecipeSerializerV6(recipe)
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
+
 
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""
