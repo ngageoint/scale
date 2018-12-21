@@ -106,7 +106,7 @@ class TestNodeDetailsViewV5(TransactionTestCase):
         self.node2 = node_test_utils.create_node()
         self.node3 = node_test_utils.create_node()
 
-        Scheduler.objects.create(id=1, master_hostname='localhost', master_port=5050)
+        Scheduler.objects.create(id=1)
 
     def test_get_node_success(self):
         """Test successfully calling the Get Node method."""
@@ -118,19 +118,6 @@ class TestNodeDetailsViewV5(TransactionTestCase):
         result = json.loads(response.content)
         self.assertIn('hostname', result)
         self.assertEqual(result['hostname'], self.node2.hostname)
-
-    # TODO: remove when REST API v4 is removed
-    @patch('mesos_api.api.get_slave')
-    def test_get_node_master_disconnected(self, mock_get_slave):
-        """Test calling the Get Node method with a disconnected master."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port)
-
-        response = self.client.get('/v4/nodes/%d/' % self.node2.id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertNotIn('resources', result)
-        self.assertEqual(result['disconnected'], True)
 
     def test_get_node_not_found(self):
         """Test calling the Get Node method with a bad node id."""
@@ -230,7 +217,7 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         self.node2 = node_test_utils.create_node()
         self.node3 = node_test_utils.create_node()
 
-        Scheduler.objects.create(id=1, master_hostname='localhost', master_port=5050)
+        Scheduler.objects.create(id=1)
 
     def test_get_node_success(self):
         """Test successfully calling the Get Node method."""
@@ -315,139 +302,3 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
-
-        
-# TODO: remove when REST API v4 is removed
-class TestNodesStatusViewV4(TransactionTestCase):
-    """ Test class to test the REST service to retrieve the node status for all the nodes in the cluster."""
-
-    def setUp(self):
-        django.setup()
-
-        self.scheduler = Scheduler.objects.create(id=1, master_hostname='master', master_port=5050)
-
-        self.node1 = node_test_utils.create_node()
-        self.node2 = node_test_utils.create_node()
-        self.node3 = node_test_utils.create_node()
-
-        self.job = job_test_utils.create_job(status='COMPLETED')
-
-        data_error = error_test_utils.create_error(category='DATA')
-        system_error = error_test_utils.create_error(category='SYSTEM')
-
-        job_exe_1 = job_test_utils.create_job_exe(job=self.job, status='FAILED', error=data_error, node=self.node2)
-        job_exe_1.created = now() - timedelta(hours=3)
-        job_exe_1.job_completed = now() - timedelta(hours=2)
-        job_exe_1.save()
-        job_exe_2 = job_test_utils.create_job_exe(job=self.job, status='FAILED', error=system_error, node=self.node2)
-        job_exe_2.created = now() - timedelta(hours=3)
-        job_exe_2.job_completed = now() - timedelta(hours=2)
-        job_exe_2.save()
-        job_exe_3 = job_test_utils.create_job_exe(job=self.job, status='FAILED', error=system_error, node=self.node1)
-        job_exe_3.created = now() - timedelta(hours=2)
-        job_exe_3.job_completed = now() - timedelta(hours=1)
-        job_exe_3.save()
-        job_exe_4 = job_test_utils.create_job_exe(job=self.job, status='COMPLETED', node=self.node1)
-        job_exe_4.created = now() - timedelta(hours=1)
-        job_exe_4.job_completed = now()
-        job_exe_4.save()
-        job_exe_5 = job_test_utils.create_job_exe(job=self.job, status='RUNNING', node=self.node3)
-        job_exe_5.created = now()
-        job_exe_5.save()
-
-    # TODO: remove when REST API v4 is removed
-    @patch('mesos_api.api.get_slaves')
-    def test_nodes_system_stats(self, mock_get_slaves):
-        """This method tests for when a node has not processed any jobs for the duration of time requested."""
-        mock_get_slaves.return_value = [
-            SlaveInfo(self.node1.hostname, self.node1.port, HardwareResources(1, 2, 3)),
-            SlaveInfo(self.node3.hostname, self.node3.port, HardwareResources(4, 5, 6)),
-        ]
-
-        response = self.client.generic('GET', '/v4/nodes/status/?started=PT1H30M0S')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-
-        assert_message = '({0} != 3) Expected to get the 3 nodes'.format(len(result['results']))
-        self.assertEqual(len(result['results']), 3, assert_message)
-
-        for entry in result['results']:
-            hostname = entry['node']['hostname']
-            self.assertIn(hostname, [self.node1.hostname, self.node2.hostname, self.node3.hostname])
-
-            if hostname == self.node1.hostname:
-                self.assertTrue(entry['is_online'])
-                self.assertEqual(len(entry['job_exe_counts']), 2)
-                for status_count in entry['job_exe_counts']:
-                    if status_count['status'] == 'COMPLETED':
-                        self.assertEqual(status_count['count'], 1)
-                    elif status_count['status'] == 'FAILED':
-                        self.assertEqual(status_count['count'], 1)
-                    else:
-                        self.fail('Unexpected job execution status found: %s' % status_count['status'])
-            elif hostname == self.node2.hostname:
-                self.assertFalse(entry['is_online'])
-                for status_count in entry['job_exe_counts']:
-                    if status_count['status'] == 'FAILED' and status_count['category'] == 'DATA':
-                        self.assertEqual(status_count['count'], 1)
-                    elif status_count['status'] == 'FAILED' and status_count['category'] == 'SYSTEM':
-                        self.assertEqual(status_count['count'], 1)
-                    else:
-                        self.fail('Unexpected job execution status found: %s' % status_count['status'])
-            elif hostname == self.node3.hostname:
-                self.assertTrue(entry['is_online'])
-                self.assertEqual(len(entry['job_exes_running']), 1)
-                for status_count in entry['job_exe_counts']:
-                    if status_count['status'] == 'RUNNING':
-                        self.assertEqual(status_count['count'], 1)
-
-    # TODO: remove when REST API v4 is removed
-    @patch('mesos_api.api.get_slaves')
-    def test_nodes_stats(self, mock_get_slaves):
-        """This method tests retrieving all the nodes statistics
-        for the three hour duration requested"""
-        mock_get_slaves.return_value = [
-            SlaveInfo(self.node1.hostname, self.node1.port, HardwareResources(1, 2, 3)),
-            SlaveInfo(self.node3.hostname, self.node3.port, HardwareResources(4, 5, 6)),
-        ]
-
-        response = self.client.generic('GET', '/v4/nodes/status/?started=PT3H00M0S')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-
-        assert_message = '({0} != 3) Expected to get the 3 nodes'.format(len(result['results']))
-        self.assertEqual(len(result['results']), 3, assert_message)
-
-        for entry in result['results']:
-            hostname = entry['node']['hostname']
-            self.assertIn(hostname, [self.node1.hostname, self.node2.hostname, self.node3.hostname])
-
-            if hostname == self.node1.hostname:
-                self.assertTrue(entry['is_online'])
-                self.assertEqual(len(entry['job_exe_counts']), 2)
-                for status_count in entry['job_exe_counts']:
-                    if status_count['status'] == 'COMPLETED':
-                        self.assertEqual(status_count['count'], 1)
-                    elif status_count['status'] == 'FAILED':
-                        self.assertEqual(status_count['count'], 1)
-                    else:
-                        self.fail('Unexpected job execution status found: %s' % status_count['status'])
-            elif hostname == self.node2.hostname:
-                self.assertFalse(entry['is_online'])
-                for status_count in entry['job_exe_counts']:
-                    if status_count['status'] == 'FAILED' and status_count['category'] == 'DATA':
-                        self.assertEqual(status_count['count'], 1)
-                    elif status_count['status'] == 'FAILED' and status_count['category'] == 'SYSTEM':
-                        self.assertEqual(status_count['count'], 1)
-                    else:
-                        self.fail('Unexpected job execution status found: %s' % status_count['status'])
-            elif hostname == self.node3.hostname:
-                self.assertTrue(entry['is_online'])
-                self.assertEqual(len(entry['job_exes_running']), 1)
-                for status_count in entry['job_exe_counts']:
-                    if status_count['status'] == 'RUNNING':
-                        self.assertEqual(status_count['count'], 1)
