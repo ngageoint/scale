@@ -306,8 +306,10 @@ class CreateJobs(CommandMessage):
             process_input_by_node[node_name] = recipe_job.process_input
             tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
             revision = revs_by_tuple[tup]
-            config = revision.job_type.get_job_configuration()
-            config.merge_recipe_config(self.recipe_config)
+            config = None
+            if self.recipe_config:
+                config = revision.job_type.get_job_configuration()
+                config.merge_recipe_config(self.recipe_config)
             superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
             job = Job.objects.create_job_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
                                             recipe_id=self.recipe_id, batch_id=self.batch_id,
