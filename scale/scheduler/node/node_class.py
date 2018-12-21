@@ -77,7 +77,6 @@ class Node(object):
         self._is_scheduler_paused = scheduler_config.is_paused
         self._last_health_task = None
         self._lock = threading.Lock()
-        self._port = node.port
         self._pull_task = None
         self._state = None
         self._update_state()
@@ -255,13 +254,11 @@ class Node(object):
 
         return not self._is_active and not self._is_online
 
-    def update_from_mesos(self, agent_id=None, port=None, is_online=None):
+    def update_from_mesos(self, agent_id=None, is_online=None):
         """Updates this node's data from Mesos
 
         :param agent_id: The Mesos agent ID for the node
         :type agent_id: string
-        :param port: The Mesos port of the node
-        :type port: int
         :param is_online: Whether the Mesos agent is online
         :type is_online: bool
         """
@@ -269,8 +266,6 @@ class Node(object):
         with self._lock:
             if agent_id:
                 self._agent_id = agent_id
-            if port:
-                self._port = port
             if is_online is not None:
                 self._is_online = is_online
                 if not is_online:
