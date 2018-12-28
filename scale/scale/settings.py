@@ -27,8 +27,8 @@ MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 # By default, use the '*' role, meaning all resources are unreserved offers are received
 MESOS_ROLE = os.getenv('MESOS_ROLE', '*')
 
-# By default, pair the accepted resource roles with MESOS_ROLE
-ACCEPTED_RESOURCE_ROLES = os.getenv('ACCEPTED_RESOURCE_ROLES', [MESOS_ROLE])
+# By default, pair the accepted resource roles with MESOS_ROLE and *
+ACCEPTED_RESOURCE_ROLES = os.getenv('ACCEPTED_RESOURCE_ROLES', '*,%s' % MESOS_ROLE).split(',')
 
 # Placeholder for service secret that will be overridden in local_settings_docker
 SERVICE_SECRET = None
