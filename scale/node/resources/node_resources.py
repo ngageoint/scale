@@ -10,12 +10,14 @@ class NodeResources(object):
     """This class encapsulates a set of node resources
     """
 
-    def __init__(self, resources=None):
+    def __init__(self, resources=None, reservation=None):
         """Constructor
 
         :param resources: The list of node resources
         :type resources: list
         """
+
+        self._reservation = reservation
 
         self._resources = {}  # {Name: Resource}
         if resources:
@@ -42,7 +44,11 @@ class NodeResources(object):
         """
 
         logging_str = ', '.join(['%.2f %s' % (resource.value, resource.name) for resource in self._resources.values()])
-        return '[%s]' % logging_str
+        if self._reservation:
+            logging_str = '[%s](%s)' % (logging_str, self._reservation)
+        else:
+            logging_str = '[%s]' % logging_str
+        return logging_str
 
     @property
     def cpus(self):
@@ -94,12 +100,35 @@ class NodeResources(object):
 
         return self._resources.values()
 
+    @property
+    def reservation(self):
+        """The associated principal for resource reservation
+
+        :returns: The principal resource is reserved for
+        :rtype: str
+        """
+
+        return self._reservation
+
+    def _check_reservation(self, node_resources):
+        """Validates that operation is made against compatible object
+
+        :param node_resources: Object to compare reservation
+        :type node_resources: class:`node.resources.node_resources.NodeResources`
+        :throws: ResourceReservationMismatch
+        """
+        if self._reservation and self._reservation != node_resources.reservation:
+            raise ResourceReservationMismatch
+
+
     def add(self, node_resources):
         """Adds the given resources
 
         :param node_resources: The resources to add
         :type node_resources: :class:`node.resources.NodeResources`
         """
+
+        self._check_reservation(node_resources)
 
         for resource in node_resources.resources:
             if resource.name in self._resources:
@@ -114,12 +143,14 @@ class NodeResources(object):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        resources_copy = NodeResources()
+        resources_copy = NodeResources(reservation=self.reservation)
         resources_copy.add(self)
         return resources_copy
 
     def generate_status_json(self, resources_dict, key_name):
         """Generates the portion of the status JSON that describes these resources
+
+        TODO: Update status json to include principal associated with reservation
 
         :param resources_dict: The dict for all resources
         :type resources_dict: dict
@@ -157,6 +188,8 @@ class NodeResources(object):
         :type node_resources: :class:`node.resources.NodeResources`
         """
 
+        self._check_reservation(node_resources)
+
         for resource in node_resources.resources:
             if resource.name in self._resources:
                 if self._resources[resource.name].value < resource.value:  # Assumes SCALAR type
@@ -172,6 +205,8 @@ class NodeResources(object):
         :returns: True if these resources are equal, False otherwise
         :rtype: bool
         """
+
+        self._check_reservation(node_resources)
 
         # Make sure they have the exact same set of resource names
         names = set()
@@ -195,6 +230,9 @@ class NodeResources(object):
         :rtype: bool
         """
 
+        if node_resources.reservation != self.reservation:
+            return False
+
         for resource in node_resources.resources:
             if resource.name in self._resources:
                 if self._resources[resource.name].value < resource.value:  # Assumes SCALAR type
@@ -212,6 +250,8 @@ class NodeResources(object):
         :param node_resources: The resources
         :type node_resources: :class:`node.resources.NodeResources`
         """
+
+        self._check_reservation(node_resources)
 
         for resource in self._resources.values():
             if resource.name in node_resources._resources:
@@ -246,6 +286,8 @@ class NodeResources(object):
         :param node_resources: The resources to subtract
         :type node_resources: :class:`node.resources.NodeResources`
         """
+
+        self._check_reservation(node_resources)
 
         for resource in node_resources.resources:
             if resource.name in self._resources:
