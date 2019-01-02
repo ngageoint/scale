@@ -906,7 +906,7 @@ A job type configuration JSON describes a set of configuration settings that aff
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Job Configuration**                                                                                                       |
 +============================+================+==========+====================================================================+
-| mounts                     | JSON Object    | Optional | A JSON object representing the configuration for each mount to     |
+| mounts                     | JSON Object    | Required | A JSON object representing the configuration for each mount to     |
 |                            |                |          | provide to the job. Each key is the name of a mount defined in the |
 |                            |                |          | job's Seed manifest and each value is the configuration for that   |
 |                            |                |          | mount.                                                             |
@@ -924,7 +924,7 @@ A job type configuration JSON describes a set of configuration settings that aff
 |                            |                |          | and value of the Docker driver options to use for creating the     |
 |                            |                |          | Docker volume that will be mounted into the job's container.       |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| output_workspaces          | JSON Object    | Optional | A JSON object representing the workspaces to use for storing the   |
+| output_workspaces          | JSON Object    | Required | A JSON object representing the workspaces to use for storing the   |
 |                            |                |          | job's output files for each defined file output in the job's Seed  |
 |                            |                |          | manifest.                                                          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
@@ -937,9 +937,9 @@ A job type configuration JSON describes a set of configuration settings that aff
 |                            |                |          | name of a file output defined in the job's Seed manifest and each  |
 |                            |                |          | value is the unique name of the workspace to use.                  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| priority                   | Integer        | Optional | The priority to use for scheduling the job off of the queue.       |
+| priority                   | Integer        | Required | The priority to use for scheduling the job off of the queue.       |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| settings                   | JSON Object    | Optional | A JSON object representing the configuration for each setting to   |
+| settings                   | JSON Object    | Required | A JSON object representing the configuration for each setting to   |
 |                            |                |          | provide to the job. Each key is the name of a setting defined in   |
 |                            |                |          | the job's Seed manifest and each value is the value to provide for |
 |                            |                |          | that setting.                                                      |

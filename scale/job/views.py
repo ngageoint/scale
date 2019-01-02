@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 from data.data.exceptions import InvalidData
+from data.data.json.data_v6 import DataV6
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
@@ -52,7 +53,6 @@ from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerT
 import util.rest as rest_util
 from util.rest import BadParameter
 from vault.exceptions import InvalidSecretsConfiguration
-from data.data.json.data_v6 import DataV6
 
 logger = logging.getLogger(__name__)
 

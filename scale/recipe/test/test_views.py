@@ -1966,98 +1966,51 @@ class TestRecipesPostViewV6(TransactionTestCase):
     def setUp(self):
             django.setup()
 
-            workspace = storage_test_utils.create_workspace()
-            source_file = source_test_utils.create_source(workspace=workspace)
-            self.event = trigger_test_utils.create_trigger_event()
+            self.workspace = storage_test_utils.create_workspace()
+            self.source_file = source_test_utils.create_source(workspace=self.workspace)
 
-            interface_1 = {
-                'version': '1.0',
-                'command': 'test_command',
-                'command_arguments': 'test_arg',
-                'input_data': [{
-                    'name': 'Test Input 1',
-                    'type': 'file',
-                    'media_types': ['text/plain'],
-                }],
-                'output_data': [{
-                    'name': 'Test Output 1',
-                    'type': 'files',
-                    'media_type': 'image/png',
-                }]
-            }
-            self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+            self.jt1 = job_test_utils.create_seed_job_type()
 
-            interface_2 = {
-                'version': '1.0',
-                'command': 'test_command',
-                'command_arguments': 'test_arg',
-                'input_data': [{
-                    'name': 'Test Input 2',
-                    'type': 'files',
-                    'media_types': ['image/png', 'image/tiff'],
-                }],
-                'output_data': [{
-                    'name': 'Test Output 2',
-                    'type': 'file',
-                }]
-            }
-            self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+            self.jt2 = job_test_utils.create_seed_job_type()
 
-            definition = {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'Recipe Input',
-                    'type': 'file',
-                    'media_types': ['text/plain'],
-                }],
-                'jobs': [{
-                    'name': 'Job 1',
-                    'job_type': {
-                        'name': self.job_type_1.name,
-                        'version': self.job_type_1.version,
-                    },
-                    'recipe_inputs': [{
-                        'recipe_input': 'Recipe Input',
-                        'job_input': 'Test Input 1',
-                    }]
-                }, {
-                    'name': 'Job 2',
-                    'job_type': {
-                        'name': self.job_type_2.name,
-                        'version': self.job_type_2.version,
-                    },
-                    'dependencies': [{
-                        'name': 'Job 1',
-                        'connections': [{
-                            'output': 'Test Output 1',
-                            'input': 'Test Input 2',
-                        }]
-                    }]
-                }]
-            }
+            self.def_v6_dict = {'version': '6',
+                                'input': {
+                                    'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/tiff'], 'required': True,
+                                               'multiple': True}],
+                                    'json': []},
+                                'nodes': {'node_a': {'dependencies': [],
+                                                     'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                     'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
+                                                                   'job_type_version': self.jt1.version,
+                                                                   'job_type_revision': 1}},
+                                          'node_b': {'dependencies': [{'name': 'node_a'}],
+                                                     'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_a',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                     'node_type': {'node_type': 'job', 'job_type_name': self.jt2.name,
+                                                                   'job_type_version': self.jt2.version,
+                                                                   'job_type_revision': 1}}
+                                          }
 
-            self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
+                                }
+
+            self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=self.def_v6_dict)
 
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_recipe_input_messages')
-    def test_successful(self, mock_create, mock_msg_mgr):
+    def test_successful_v1data(self, mock_create, mock_msg_mgr):
 
-        workspace = storage_test_utils.create_workspace()
-        source_file = source_test_utils.create_source(workspace=workspace)
-        event = trigger_test_utils.create_trigger_event()
- 
         data_dict = {
             'version': '1.0',
             'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': source_file.id,
+                'name': 'INPUT_IMAGE',
+                'file_id': self.source_file.id,
             }],
             'output_data': [{
                 'name': 'output_a',
-                'workspace_id': workspace.id
+                'workspace_id': self.workspace.id
             }]
         }
-        # TODO: Add recipe configuration once it exists
+
         json_data = { 
             "input" : data_dict,
             "recipe_type_id" : self.recipe_type.pk
@@ -2074,7 +2027,77 @@ class TestRecipesPostViewV6(TransactionTestCase):
         
         mock_create.assert_called_once()
 
-            
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful_v6data(self, mock_create, mock_msg_mgr):
+
+        data = {'version': '6', 'files': {'INPUT_IMAGE': [self.source_file.id]}, 'json': {}}
+        json_data = {
+            "input": data,
+            "recipe_type_id": self.recipe_type.pk
+        }
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        # Response should be new v6 recipe detail response
+        result = json.loads(response.content)
+        self.assertTrue('data' not in result)
+        self.assertTrue('/%s/recipes/' % self.api in response['location'])
+
+        mock_create.assert_called_once()
+
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful_config(self, mock_create, mock_msg_mgr):
+
+        data = {'version': '6', 'files': {'INPUT_IMAGE': [self.source_file.id]}, 'json': {}}
+        config = {'version': '6', 'output_workspaces': {'default': self.workspace.name}}
+        json_data = {
+            "input": data,
+            "recipe_type_id": self.recipe_type.pk,
+            "configuration": config
+        }
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        # Response should be new v6 recipe detail response
+        result = json.loads(response.content)
+        self.assertTrue('data' not in result)
+        self.assertTrue('/%s/recipes/' % self.api in response['location'])
+
+        mock_create.assert_called_once()
+
+    def test_bad_data(self):
+
+        data = {'version': 'bad', 'files': {'INPUT_IMAGE': [self.source_file.id]}, 'json': {}}
+        json_data = {
+            "input": data,
+            "recipe_type_id": self.recipe_type.pk
+        }
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_config(self):
+
+        data = {'version': '6', 'files': {'INPUT_IMAGE': [self.source_file.id]}, 'json': {}}
+        config = {'version': 'bad'}
+        json_data = {
+            "input": data,
+            "recipe_type_id": self.recipe_type.pk,
+            "configuration": config
+        }
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
 class TestRecipeDetailsViewV6(TransactionTestCase):
     
     api = 'v6'

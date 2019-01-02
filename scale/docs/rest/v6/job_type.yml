@@ -398,6 +398,7 @@ components:
     job_type_config:
       title: Job Type Configuration
       type: object
+      required: ['mounts', 'output_workspaces', 'priority', 'settings']
       properties:
         version:
           type: string

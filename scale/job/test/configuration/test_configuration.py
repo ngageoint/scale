@@ -50,6 +50,31 @@ class TestJobConfiguration(TestCase):
         with self.assertRaises(InvalidJobConfiguration) as context:
             configuration.add_setting('setting_2', None)
         self.assertEqual(context.exception.error.name, 'INVALID_SETTING')
+        
+    def test_merge_recipe_config(self):
+        """Tests calling JobConfiguration.merge_recipe_config()"""
+        
+        configuration = JobConfiguration()
+        host_mount = HostMountConfig('mount_1', '/the/host/path')
+        configuration.add_mount(host_mount)
+        configuration.add_output_workspace('output_1', 'workspace_1')
+        configuration.add_setting('setting_1', 'value_1')
+        recipe_config = {'version': '6', 'mounts': {'mount_1': {'type': 'host', 'host_path': '/the/host/path2'},
+                                                    'mount_2': {'type': 'volume', 'driver': 'driver',
+                                                                'driver_opts': {'opt_1': 'foo', 'opt_2': 'bar'}}},
+                       'output_workspaces': {'default': 'workspace_1', 'outputs': {'output': 'workspace_2'}},
+                       'priority': 999, 'settings': {}}
+        
+        configuration.merge_recipe_config(recipe_config)               
+        self.assertEqual(configuration.default_output_workspace, 'workspace_1')
+        self.assertEqual(configuration.priority, 999)
+        self.assertDictEqual(configuration.output_workspaces, {'output': 'workspace_2', 'output_1': 'workspace_1'})
+        self.assertItemsEqual(configuration.mounts.keys(), ['mount_1', 'mount_2'])
+        self.assertEqual(configuration.mounts['mount_1'].host_path, '/the/host/path2')
+        self.assertDictEqual(configuration.mounts['mount_2'].driver_opts, {'opt_1': 'foo', 'opt_2': 'bar'})
+        self.assertDictEqual(configuration.settings, {'setting_1': 'value_1'})
+        
+        
 
     def test_remove_secret_settings(self):
         """Tests calling JobConfiguration.remove_secret_settings()"""

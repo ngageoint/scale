@@ -432,8 +432,8 @@ components:
             description: The input data for the recipe.
             $ref: './data.yml#/components/schemas/data'
         configuration:
-            description: The job type configuration for the recipe.
-            $ref: './recipe_type.yml#/components/schemas/recipe_type_config'
+            description: The configuration for the recipe.
+            $ref: '#/components/schemas/recipe_config'
 
     recipe_instance:
       title: Recipe Instance
@@ -641,3 +641,40 @@ components:
             that are being forced to re-process. The values are forced nodes JSON |
             objects that recursively define the nodes with the sub-recipe to force to |
             reprocess.
+
+    recipe_config:
+      title: Recipe Configuration
+      type: object
+      required: ['output_workspaces']
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the version of the
+            configuration used. This allows updates to be made to the specification while
+            maintaining backwards compatibility by allowing Scale to recognize an older version
+            and convert it to the current version. The default value for version if it is not included
+            is the latest version, which is currently 6. It is recommended, though not required, that
+            you include the version so that future changes to the specification will still accept your configuration.
+          example: 6
+        mounts:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: './job_type.yml#/components/schemas/host_mount'
+            - $ref: './job_type.yml#/components/schemas/volume_mount'
+        priority:
+          type: integer
+          description: The priority to use for scheduling the job off of the queue.
+            Jobs with a lower value will be processed before those with higher values
+          example: 100
+        output_workspaces:
+          type: array
+          items:
+            $ref: './job_type.yml#/components/schemas/output_workspace'
+        settings:
+          type: object
+          description: A JSON object representing the configuration for each setting
+            to provide to the job. Each key is the name of a setting defined in the
+            job’s Seed manifest and each value is the value to provide for that setting.
+          additionalProperties:
+            type: string

@@ -545,10 +545,11 @@ class QueueManager(models.Manager):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
-# TODO: Use recipe_config
+
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         with transaction.atomic():
-            recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input,None,None, batch_id=None, superseded_recipe=None )
+            recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=event.pk, input_data=recipe_input, 
+                                                     recipe_config=recipe_config, batch_id=batch_id, superseded_recipe=superseded_recipe)
             recipe.save()
             CommandMessageManager().send_messages(create_process_recipe_input_messages([recipe.pk]))
 
@@ -576,7 +577,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        return self.queue_new_recipe_v6(recipe_type, recipe_input, event, recipe_config)
+        return self.queue_new_recipe_v6(recipe_type, recipe_input, event, recipe_config=recipe_config)
 
     def queue_new_recipe_for_user(self, recipe_type, data):
         """Creates a new recipe for the given type and data at the request of a user.

@@ -18,6 +18,7 @@ from data.interface.parameter import FileParameter
 from job.models import Job, JobType
 from messaging.manager import CommandMessageManager
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.configuration.json.recipe_config_v6 import convert_config_to_v6_json
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
@@ -117,7 +118,7 @@ class RecipeManager(models.Manager):
         return recipe
 
     def create_recipe_v6(self, recipe_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None,
-                         batch_id=None, superseded_recipe=None, copy_superseded_input=False):
+                         recipe_config=None, batch_id=None, superseded_recipe=None, copy_superseded_input=False):
         """Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model
 
         :param recipe_type_rev: The recipe type revision (with populated recipe_type model) of the recipe to create
@@ -132,6 +133,8 @@ class RecipeManager(models.Manager):
         :type recipe_id: int
         :param batch_id: The ID of the batch that contains this recipe, possibly None
         :type batch_id: int
+        :param recipe_config: The configuration for running this recipe, possibly None
+        :type recipe_config: :class:`recipe.configuration.configuration.RecipeConfiguration`
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :param copy_superseded_input: Whether to copy the input data from the superseded recipe
@@ -149,6 +152,9 @@ class RecipeManager(models.Manager):
         recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         recipe.recipe_id = recipe_id
         recipe.batch_id = batch_id
+        
+        if recipe_config:
+            recipe.configuration = convert_config_to_v6_json(recipe_config).get_dict()
 
         if superseded_recipe:
             root_id = superseded_recipe.root_superseded_recipe_id
@@ -949,6 +955,8 @@ class Recipe(models.Model):
     :type input: :class:`django.contrib.postgres.fields.JSONField`
     :keyword input_file_size: The total size in MiB for all input files in this recipe
     :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword configuration: JSON describing the overriding recipe configuration for this recipe instance
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword source_started: The start time of the source data for this recipe
     :type source_started: :class:`django.db.models.DateTimeField`
@@ -1014,6 +1022,7 @@ class Recipe(models.Model):
 
     input = django.contrib.postgres.fields.JSONField(default=dict)
     input_file_size = models.FloatField(blank=True, null=True)
+    configuration = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
     # Supplemental sensor metadata fields
     source_started = models.DateTimeField(blank=True, null=True, db_index=True)

@@ -116,7 +116,7 @@ class JobManager(models.Manager):
         job.recipe_id = recipe_id
         job.batch_id = batch_id
         job.max_tries = job_type_rev.job_type.max_tries
-
+        
         if input_data:
             input_data.validate(job_type_rev.get_input_interface())
             job.input = convert_data_to_v6_json(input_data).get_dict()
@@ -1447,9 +1447,9 @@ class Job(models.Model):
         return self.status == 'CANCELED' and not self.has_been_queued()
 
     def get_job_configuration(self):
-        """Returns the job configuration for this job type
+        """Returns the job configuration for this job
 
-        :returns: The job configuration for this job type
+        :returns: The job configuration for this job
         :rtype: :class:`job.configuration.configuration.JobConfiguration`
         """
 
