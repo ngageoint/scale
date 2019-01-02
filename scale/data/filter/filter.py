@@ -4,24 +4,57 @@ from __future__ import unicode_literals
 
 from data.filter.exceptions import InvalidDataFilter
 
+CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'is in'}
 
 class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
-    def __init__(self, accept):
+    def __init__(self, filters):
         """Constructor
 
-        :param accept: Whether this filter should accept or deny the data
-        :type accept: bool
+        :param filters: Filters to determine whether to accept or deny data
+        :type filters: dict
         """
 
-        # TODO: take out accept param and do real implementation
         # TODO: there are a number of unit tests that will need to have real DataFilters created instead of
         # DataFilter(True) or DataFilter(False)
-        self.accept = accept
 
         # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
+        self.filters = []
+
+    def add_filter(self, name, type, condition, values):
+        """Adds a condition node to the recipe graph
+
+        :param name: Name of the data value to compare against
+        :type name: string
+        :param type: The type of the data value being compared
+        :type type: string
+        :param condition: The condition to test (<, >, ==, between, contains, etc)
+        :type condition: string
+        :param values: The values to compare for the condition
+        :type values: list
+
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
+        """
+
+        if not name:
+            raise InvalidDataFilter('MISSING_NAME', 'Missing name for \'%s\'' % name)
+
+        if not type:
+            raise InvalidDataFilter('MISSING_TYPE', 'Missing type for \'%s\'' % name)
+
+        if not condition:
+            raise InvalidDataFilter('MISSING_CONDITION', 'Missing condition for \'%s\'' % name)
+
+        if condition not in CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, CONDITIONS))
+
+        if not values:
+            raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
+
+        self.filters.append({'name': name, 'type': type, 'condition': condition, 'values': values})
 
     def is_data_accepted(self, data):
         """Indicates whether the given data passes the filter or not
