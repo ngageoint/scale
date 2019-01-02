@@ -17,6 +17,69 @@ DATA_FILTER_SCHEMA = {
     'required': [],
     'additionalProperties': False,
     'properties': {
+        'version': {
+            'description': 'Version of the data filter schema',
+            'type': 'string',
+        },
+        'mounts': {
+            'description': 'Defines volumes to use for the job\'s mounts',
+            'type': 'object',
+            'additionalProperties': {
+                '$ref': '#/definitions/mount'
+            },
+        },
+        'output_workspaces': {
+            'description': 'Defines workspaces to use for the job\'s output files',
+            'type': 'object',
+            'required': ['default', 'outputs'],
+            'additionalProperties': False,
+            'properties': {
+                'default': {
+                    'description': 'Defines the job\'s default output workspace',
+                    'type': 'string',
+                },
+                'outputs': {
+                    'description': 'Defines a workspace for each given output name',
+                    'type': 'object',
+                    'additionalProperties': {
+                        'type': 'string',
+                    },
+                },
+            },
+        },
+        'priority': {
+            'description': 'Defines the job\'s priority',
+            'type': 'integer',
+            'minimum': 1,
+        },
+        'settings': {
+            'description': 'Defines values to use for the job\'s settings',
+            'type': 'object',
+            'additionalProperties': {
+                'type': 'string',
+            },
+        },
+    },
+    'definitions': {
+        'filter': {
+            {
+                'type': 'object',
+                'description': 'A configuration for a data filter',
+                'required': ['name', 'type', 'condition', 'values'],
+                'additionalProperties': False,
+                'properties': {
+                    'name': {
+                        'type': 'string',
+                    },
+                    'type': {
+                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string'],
+                    },
+                    'condition': {
+                        'type': 'string',
+                    },
+                },
+            }
+        },
     },
 }
 
