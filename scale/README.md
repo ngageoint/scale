@@ -247,7 +247,7 @@ below for reference.
 
 | Env Var                     | Default Value                   | Meaning                                    |
 | --------------------------- | ------------------------------- | -------------------------------------------|
-| ACCEPTED_RESOURCE_ROLES     | [MESOS_ROLE]                    | Resource roles to accept in offers         |
+| ACCEPTED_RESOURCE_ROLES     | *,MESOS_ROLE                    | Resource roles to accept in offers         |
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |

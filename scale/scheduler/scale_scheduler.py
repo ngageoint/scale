@@ -259,10 +259,11 @@ class ScaleScheduler(object):
                 # Only accept resource that are of SCALAR type and have a role matching our accept list
                 if resource.type == RESOURCE_TYPE_SCALAR:
                     if resource.role in settings.ACCEPTED_RESOURCE_ROLES:
-                        resource_list.append(ScalarResource(resource.name, resource.scalar.value))
+                        logger.debug("Received scalar resource %s with value %i associated with role %s" %
+                                     (resource.name, resource.scalar.value, resource.role))
+                        resource_list.append(ScalarResource(resource.name, resource.scalar.value, resource.role))
                     else:
                         skipped_roles.add(resource.role)
-                        break
 
             # Only register agent, if offers are being received
             if len(resource_list):
@@ -270,13 +271,14 @@ class ScaleScheduler(object):
                 total_resources.add(resources)
                 agents[agent_id] = Agent(agent_id, hostname)
                 resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+                logger.debug(','.join([x.resources for x in resource_offers]))
 
         node_mgr.register_agents(agents.values())
         resource_mgr.add_new_offers(resource_offers)
         num_offers = len(resource_offers)
         logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))
-        if skipped_roles:
-            logger.warning('Skipped offers that do not match accepted roles: %s', skipped_roles)
+        if len(skipped_roles):
+            logger.warning('Skipped offers from roles that are marked as accepted: %s', ','.join(skipped_roles))
         scheduler_mgr.add_new_offer_count(num_offers)
 
         duration = now() - started

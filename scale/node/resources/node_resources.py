@@ -6,24 +6,31 @@ from util.exceptions import ScaleLogicBug
 from node.resources.resource import Cpus, Disk, Mem, Gpus
 
 
+class ResourceReservationMismatch(object):
+    pass
+
+
 class NodeResources(object):
     """This class encapsulates a set of node resources
     """
 
-    def __init__(self, resources=None, reservation=None):
+    def __init__(self, resources=None):
         """Constructor
 
         :param resources: The list of node resources
         :type resources: list
         """
 
-        self._reservation = reservation
+        self._reservation = None
 
         self._resources = {}  # {Name: Resource}
         if resources:
             for resource in resources:
                 if resource.resource_type != 'SCALAR':
                     raise ScaleLogicBug('Resource type "%s" is not currently supported', resource.resource_type)
+                if resource.reservation and '*' not in resource.reservation:
+                    # TODO: Evaluate how to handle mismatched reservations
+                    self._reservation = resource.reservation
                 self._resources[resource.name] = resource
 
         # Make sure standard resources are defined
@@ -120,7 +127,6 @@ class NodeResources(object):
         if self._reservation and self._reservation != node_resources.reservation:
             raise ResourceReservationMismatch
 
-
     def add(self, node_resources):
         """Adds the given resources
 
@@ -143,20 +149,20 @@ class NodeResources(object):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        resources_copy = NodeResources(reservation=self.reservation)
+        resources_copy = NodeResources()
         resources_copy.add(self)
         return resources_copy
 
     def generate_status_json(self, resources_dict, key_name):
         """Generates the portion of the status JSON that describes these resources
 
-        TODO: Update status json to include principal associated with reservation
-
         :param resources_dict: The dict for all resources
         :type resources_dict: dict
         :param key_name: The key name for describing these resources
         :type key_name: string
         """
+
+        # TODO: Update status json to include principal associated with reservation
 
         for resource in self._resources.values():
             if resource.name in resources_dict:
@@ -230,7 +236,9 @@ class NodeResources(object):
         :rtype: bool
         """
 
-        if node_resources.reservation != self.reservation:
+        # If a reservation is associated with request
+        # it is INSUFFICIENT if the requested and available resource reservations are mismatched
+        if node_resources.reservation and node_resources.reservation != self.reservation:
             return False
 
         for resource in node_resources.resources:

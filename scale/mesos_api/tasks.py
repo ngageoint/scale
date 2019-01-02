@@ -53,8 +53,10 @@ def _create_base_task(task):
     for resource in resources.resources:
         if resource.value > 0.0:
             task_resource = {}
-            if resources.reservation:
-                task_resource['reservation'] = {'principal': resources.reservation }
+            logger.debug(resource)
+            logger.debug(resource.__dict__)
+            if task.reservation:
+                task_resource['reservation'] = {'principal': task.reservation }
             task_resource['name'] = resource.name
             task_resource['type'] = RESOURCE_TYPE_SCALAR
             task_resource['scalar'] = {'value': resource.value}
