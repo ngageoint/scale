@@ -237,8 +237,174 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.configuration.json.html">recipe.configuration.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.json.html#module-recipe.configuration.json.recipe_config_v6">recipe.configuration.json.recipe_config_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.json.html#module-recipe.configuration.json">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.configuration.configuration">
+<span id="recipe-configuration-configuration-module"></span><h2>recipe.configuration.configuration module<a class="headerlink" href="#module-recipe.configuration.configuration" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that represents a job configuration</p>
+<dl class="class">
+<dt id="recipe.configuration.configuration.RecipeConfiguration">
+<em class="property">class </em><code class="descclassname">recipe.configuration.configuration.</code><code class="descname">RecipeConfiguration</code><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the configuration for running a recipe</p>
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.add_mount">
+<code class="descname">add_mount</code><span class="sig-paren">(</span><em>mount_config</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.add_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given mount configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mount_config</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.mount.MountConfig" title="job.configuration.mount.MountConfig"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.mount.MountConfig</span></code></a>) &#8211; The mount configuration to add</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.configuration.exceptions.InvalidRecipeConfiguration" title="recipe.configuration.exceptions.InvalidRecipeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.exceptions.InvalidRecipeConfiguration</span></code></a>: If the mount is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.add_output_workspace">
+<code class="descname">add_output_workspace</code><span class="sig-paren">(</span><em>output</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.add_output_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output_workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output</strong> (<em>string</em>) &#8211; The output name</li>
+<li><strong>workspace</strong> (<em>string</em>) &#8211; The workspace name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.html#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the output is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.add_setting">
+<code class="descname">add_setting</code><span class="sig-paren">(</span><em>setting_name</em>, <em>setting_value</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.add_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given setting value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>setting_name</strong> (<em>string</em>) &#8211; The setting name</li>
+<li><strong>setting_value</strong> (<em>string</em>) &#8211; The setting value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.exceptions.InvalidJobConfiguration</span></code>: If the setting is a duplicate or invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.get_mount_volume">
+<code class="descname">get_mount_volume</code><span class="sig-paren">(</span><em>mount_name</em>, <em>volume_name</em>, <em>container_path</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.get_mount_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the volume that has been configured for the given mount name. If the given mount is not defined in
+this configuration, None is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mount_name</strong> (<em>string</em>) &#8211; The name of the mount defined in the job type</li>
+<li><strong>volume_name</strong> (<em>string</em>) &#8211; The name of the volume</li>
+<li><strong>container_path</strong> (<em>string</em>) &#8211; The path within the container onto which the volume will be mounted</li>
+<li><strong>mode</strong> (<em>string</em>) &#8211; Either &#8216;ro&#8217; for read-only or &#8216;rw&#8217; for read-write</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The volume that should be mounted into the job container, possibly None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.execution.configuration.html#job.execution.configuration.volume.Volume" title="job.execution.configuration.volume.Volume"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.volume.Volume</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.get_output_workspace">
+<code class="descname">get_output_workspace</code><span class="sig-paren">(</span><em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.get_output_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the output workspace that is configured to store the products for the given output name,
+possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>output</strong> (<em>string</em>) &#8211; The name of the output</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The name of the workspace for storing the output products, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.get_setting_value">
+<code class="descname">get_setting_value</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.get_setting_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the given setting if defined in this configuration, otherwise returns None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the setting</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value of the setting, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.configuration.RecipeConfiguration.remove_secret_settings">
+<code class="descname">remove_secret_settings</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.configuration.RecipeConfiguration.remove_secret_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes and returns the secret setting values from this recipe configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed manifest</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dict of secret settings where the key is the setting name and the value is the secret setting value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.configuration.exceptions">
+<span id="recipe-configuration-exceptions-module"></span><h2>recipe.configuration.exceptions module<a class="headerlink" href="#module-recipe.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with job configuration</p>
+<dl class="exception">
+<dt id="recipe.configuration.exceptions.InvalidRecipeConfiguration">
+<em class="property">exception </em><code class="descclassname">recipe.configuration.exceptions.</code><code class="descname">InvalidRecipeConfiguration</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.exceptions.InvalidRecipeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
+<p>Exception indicating that the provided recipe configuration was invalid</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-recipe.configuration">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.configuration" title="Permalink to this headline">¶</a></h2>

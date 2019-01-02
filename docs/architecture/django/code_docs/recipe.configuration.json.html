@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>recipe.test.configuration package &mdash; Scale 5.7.1-snapshot documentation</title>
+  <title>recipe.configuration.json package &mdash; Scale 5.7.1-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="recipe.test.configuration.data package" href="recipe.test.configuration.data.html" />
-    <link rel="prev" title="recipe.test package" href="recipe.test.html" />
+    <link rel="next" title="recipe.definition package" href="recipe.definition.html" />
+    <link rel="prev" title="recipe.configuration.definition package" href="recipe.configuration.definition.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -197,15 +197,15 @@
         
           <li><a href="recipe.html">recipe package</a> &raquo;</li>
         
-          <li><a href="recipe.test.html">recipe.test package</a> &raquo;</li>
+          <li><a href="recipe.configuration.html">recipe.configuration package</a> &raquo;</li>
         
-      <li>recipe.test.configuration package</li>
+      <li>recipe.configuration.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/recipe.test.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/recipe.configuration.json.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -218,70 +218,74 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="recipe-test-configuration-package">
-<h1>recipe.test.configuration package<a class="headerlink" href="#recipe-test-configuration-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="recipe.test.configuration.data.html">recipe.test.configuration.data package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.data.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.data.html#module-recipe.test.configuration.data.test_recipe_data">recipe.test.configuration.data.test_recipe_data module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.data.html#module-recipe.test.configuration.data">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe.test.configuration.definition.html">recipe.test.configuration.definition package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.definition.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.definition.html#module-recipe.test.configuration.definition.test_recipe_definition">recipe.test.configuration.definition.test_recipe_definition module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.definition.html#module-recipe.test.configuration.definition">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="recipe-configuration-json-package">
+<h1>recipe.configuration.json package<a class="headerlink" href="#recipe-configuration-json-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-recipe.test.configuration.test_configuration">
-<span id="recipe-test-configuration-test-configuration-module"></span><h2>recipe.test.configuration.test_configuration module<a class="headerlink" href="#module-recipe.test.configuration.test_configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-recipe.configuration.json.recipe_config_v6">
+<span id="recipe-configuration-json-recipe-config-v6-module"></span><h2>recipe.configuration.json.recipe_config_v6 module<a class="headerlink" href="#module-recipe.configuration.json.recipe_config_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 recipe configuration schema</p>
 <dl class="class">
-<dt id="recipe.test.configuration.test_configuration.TestRecipeConfiguration">
-<em class="property">class </em><code class="descclassname">recipe.test.configuration.test_configuration.</code><code class="descname">TestRecipeConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.test_configuration.TestRecipeConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dt id="recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6">
+<em class="property">class </em><code class="descclassname">recipe.configuration.json.recipe_config_v6.</code><code class="descname">RecipeConfigurationV6</code><span class="sig-paren">(</span><em>config=None</em>, <em>existing=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a v6 recipe configuration JSON</p>
 <dl class="method">
-<dt id="recipe.test.configuration.test_configuration.TestRecipeConfiguration.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.test_configuration.TestRecipeConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_mount">
-<code class="descname">test_add_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_mount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeConfiguration.add_mount()</p>
+<dt id="recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe configuration represented by this JSON</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.html#recipe.configuration.configuration.RecipeConfiguration" title="recipe.configuration.configuration.RecipeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.configuration.RecipeConfiguration</span></code></a>:</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_output_workspace">
-<code class="descname">test_add_output_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_output_workspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeConfiguration.add_output_workspace()</p>
+<dt id="recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_setting">
-<code class="descname">test_add_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_setting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeConfiguration.add_setting()</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_remove_secret_settings">
-<code class="descname">test_remove_secret_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_remove_secret_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeConfiguration.remove_secret_settings()</p>
-</dd></dl>
-
+<dl class="function">
+<dt id="recipe.configuration.json.recipe_config_v6.convert_config_to_v6_json">
+<code class="descclassname">recipe.configuration.json.recipe_config_v6.</code><code class="descname">convert_config_to_v6_json</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.json.recipe_config_v6.convert_config_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 recipe configuration JSON for the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="recipe.configuration.html#recipe.configuration.configuration.RecipeConfiguration" title="recipe.configuration.configuration.RecipeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.configuration.RecipeConfiguration</span></code></a>) &#8211; The recipe configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 recipe configuration JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6" title="recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-recipe.test.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-recipe.configuration.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.configuration.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -293,10 +297,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.test.configuration.data.html" class="btn btn-neutral float-right" title="recipe.test.configuration.data package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recipe.definition.html" class="btn btn-neutral float-right" title="recipe.definition package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.test.html" class="btn btn-neutral" title="recipe.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.configuration.definition.html" class="btn btn-neutral" title="recipe.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

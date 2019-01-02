@@ -116,6 +116,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#v6-recipe-details">V6 Recipe Details</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-recipe-input-file-list">v6 Recipe Input File List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-reprocess-recipe">v6 Reprocess Recipe</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-configuration-json">Recipe Configuration JSON</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_type.html">v6 Recipe Type Services</a></li>
@@ -591,7 +592,7 @@ See <a class="reference internal" href="data.html#rest-v6-data-data"><span class
 <td>JSON Object</td>
 <td>optional</td>
 <td>JSON defining the data to run the job on
-See <span class="xref std std-ref">Recipe Configuration</span></td>
+See <a class="reference internal" href="#rest-v6-recipe-configuration"><span class="std std-ref">Recipe Configuration</span></a></td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -1389,6 +1390,26 @@ specified to force the recipe to be re-processed. A recipe that is already super
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="recipe-configuration-json">
+<span id="rest-v6-recipe-configuration"></span><h2>Recipe Configuration JSON<a class="headerlink" href="#recipe-configuration-json" title="Permalink to this headline">¶</a></h2>
+<p>A recipe configuration JSON describes a set of configuration settings that affect how a recipe executes. A recipe
+configuration is merged with job type configurations for jobs in a recipe to affect how those jobs execute.</p>
+<p><strong>Example interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;mount_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/host/path&quot;</span><span class="p">},</span>
+      <span class="s2">&quot;mount_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;driver&quot;</span><span class="o">:</span> <span class="s2">&quot;docker-driver&quot;</span><span class="p">,</span> <span class="s2">&quot;driver_opts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;opt_1&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">}}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;output_workspaces&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;default&quot;</span><span class="o">:</span> <span class="s2">&quot;workspace_1&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;output_1&quot;</span><span class="o">:</span> <span class="s2">&quot;workspace_2&quot;</span><span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+   <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;setting_1&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;setting_2&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 

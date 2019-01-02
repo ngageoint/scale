@@ -8,6 +8,27 @@ Subpackages
 
     recipe.configuration.data
     recipe.configuration.definition
+    recipe.configuration.json
+
+Submodules
+----------
+
+recipe\.configuration\.configuration module
+-------------------------------------------
+
+.. automodule:: recipe.configuration.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.configuration\.exceptions module
+----------------------------------------
+
+.. automodule:: recipe.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

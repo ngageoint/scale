@@ -237,8 +237,17 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.configuration.json.html">recipe.configuration.json package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.json.html#module-recipe.configuration.json.recipe_config_v6">recipe.configuration.json.recipe_config_v6 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.json.html#module-recipe.configuration.json">Module contents</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#module-recipe.configuration.configuration">recipe.configuration.configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#module-recipe.configuration.exceptions">recipe.configuration.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#module-recipe.configuration">Module contents</a></li>
 </ul>
 </li>
@@ -360,6 +369,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0031_auto_20181026_1417">recipe.migrations.0031_auto_20181026_1417 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0032_recipe_type_link_tables">recipe.migrations.0032_recipe_type_link_tables module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0033_auto_20181102_0307">recipe.migrations.0033_auto_20181102_0307 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0034_recipe_configuration">recipe.migrations.0034_recipe_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -389,6 +399,8 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#module-recipe.test.configuration.test_configuration">recipe.test.configuration.test_configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#module-recipe.test.configuration">Module contents</a></li>
 </ul>
 </li>
@@ -687,6 +699,7 @@ the first recipe in the chain (i.e. recipes that have a null superseded_recipe f
 accessed using &#8216;superseded_by_recipe&#8217;.</li>
 <li><strong>input</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description defining the input for this recipe</li>
 <li><strong>input_file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total size in MiB for all input files in this recipe</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON describing the overriding recipe configuration for this recipe instance</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The start time of the source data for this recipe</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The end time of the source data for this recipe</li>
 <li><strong>source_sensor_class</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The class of sensor used to produce the source file for this recipe</li>
@@ -795,6 +808,13 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.configuration">
+<code class="descname">configuration</code><a class="headerlink" href="#recipe.models.Recipe.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1975,7 +1995,7 @@ actually be replaced by the new recipe definition.</li>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.create_recipe_v6">
-<code class="descname">create_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em>, <em>copy_superseded_input=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em>, <em>copy_superseded_input=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1988,6 +2008,7 @@ actually be replaced by the new recipe definition.</li>
 <li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this sub-recipe, possibly None</li>
 <li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this sub-recipe, possibly None</li>
 <li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this recipe, possibly None</li>
+<li><strong>recipe_config</strong> (<a class="reference internal" href="recipe.configuration.html#recipe.configuration.configuration.RecipeConfiguration" title="recipe.configuration.configuration.RecipeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.configuration.RecipeConfiguration</span></code></a>) &#8211; The configuration for running this recipe, possibly None</li>
 <li><strong>superseded_recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
 <li><strong>copy_superseded_input</strong> (<em>bool</em>) &#8211; Whether to copy the input data from the superseded recipe</li>
 </ul>

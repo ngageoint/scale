@@ -403,6 +403,21 @@ possibly None</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.merge_recipe_config">
+<code class="descname">merge_recipe_config</code><span class="sig-paren">(</span><em>recipe_config</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.merge_recipe_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges a recipe configuration object values into this job configuration, overriding any common fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_config</strong> (<em>dict</em>) &#8211; The recipe config dictionary</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.configuration.html#recipe.configuration.exceptions.InvalidRecipeConfiguration" title="recipe.configuration.exceptions.InvalidRecipeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.exceptions.InvalidRecipeConfiguration</span></code></a>: If the recipe_config is invalid</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.configuration.configuration.JobConfiguration.remove_secret_settings">
 <code class="descname">remove_secret_settings</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.remove_secret_settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes and returns the secret setting values from this job configuration</p>

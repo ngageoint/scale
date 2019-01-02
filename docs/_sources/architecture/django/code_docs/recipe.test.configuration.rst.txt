@@ -9,6 +9,18 @@ Subpackages
     recipe.test.configuration.data
     recipe.test.configuration.definition
 
+Submodules
+----------
+
+recipe\.test\.configuration\.test\_configuration module
+-------------------------------------------------------
+
+.. automodule:: recipe.test.configuration.test_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 

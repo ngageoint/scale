@@ -1,0 +1,22 @@
+recipe\.configuration\.json package
+===================================
+
+Submodules
+----------
+
+recipe\.configuration\.json\.recipe\_config\_v6 module
+------------------------------------------------------
+
+.. automodule:: recipe.configuration.json.recipe_config_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.configuration.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

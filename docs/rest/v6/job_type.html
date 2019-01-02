@@ -1406,7 +1406,7 @@ scheduled to run at the same time.</td>
 <tbody valign="top">
 <tr class="row-even"><td>mounts</td>
 <td>JSON Object</td>
-<td>Optional</td>
+<td>Required</td>
 <td>A JSON object representing the configuration for each mount to
 provide to the job. Each key is the name of a mount defined in the
 job&#8217;s Seed manifest and each value is the configuration for that
@@ -1439,7 +1439,7 @@ Docker volume that will be mounted into the job&#8217;s container.</td>
 </tr>
 <tr class="row-odd"><td>output_workspaces</td>
 <td>JSON Object</td>
-<td>Optional</td>
+<td>Required</td>
 <td>A JSON object representing the workspaces to use for storing the
 job&#8217;s output files for each defined file output in the job&#8217;s Seed
 manifest.</td>
@@ -1461,12 +1461,12 @@ value is the unique name of the workspace to use.</td>
 </tr>
 <tr class="row-even"><td>priority</td>
 <td>Integer</td>
-<td>Optional</td>
+<td>Required</td>
 <td>The priority to use for scheduling the job off of the queue.</td>
 </tr>
 <tr class="row-odd"><td>settings</td>
 <td>JSON Object</td>
-<td>Optional</td>
+<td>Required</td>
 <td>A JSON object representing the configuration for each setting to
 provide to the job. Each key is the name of a setting defined in
 the job&#8217;s Seed manifest and each value is the value to provide for
