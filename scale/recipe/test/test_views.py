@@ -896,6 +896,10 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
 
         self.assertIn('deprecated', result)
         self.assertNotIn('trigger_rule', result)
+        
+        versionless = copy.deepcopy(self.main_definition)
+        del versionless['version']
+        self.assertDictEqual(result['definition'], versionless)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a recipe type"""
