@@ -72,7 +72,7 @@ class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     is_active = serializers.BooleanField()
     is_system = serializers.BooleanField()
     revision_num = serializers.IntegerField()
-    definition = serializers.JSONField(default=dict)
+    definition = None
     job_types = None
     sub_recipe_types = None
     created = serializers.DateTimeField()
@@ -95,6 +95,7 @@ class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
 class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
     """Converts recipe type model fields to REST output."""
     from job.job_type_serializers import JobTypeDetailsSerializerV6
+    definition = serializers.JSONField(source='get_v6_definition_json')
     job_types = JobTypeDetailsSerializerV6(many=True)
     sub_recipe_types = RecipeTypeSerializerV6(many=True)
 
