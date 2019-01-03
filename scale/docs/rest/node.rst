@@ -13,11 +13,6 @@ These services provide access to information about the nodes.
 +=========================================================================================================================+
 | Returns a list of nodes.                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **DEPRECATED**                                                                                                          |
-|                This table describes the current v4 version of the node list API, which is now deprecated.               |
-|                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, and          |
-|                *last_offer* fields in the response. Also the *archived* field has been renamed to *deprecated*.         |
-+-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/                                                                                                         |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
@@ -64,26 +59,17 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .hostname          | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .port              | Integer           | The port being used by the executor on this node. (*DEPRECATED*, gone in v5)   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .slave_id          | String            | The slave ID used by Mesos for the node. (*DEPRECATED*, gone in v5)            |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | .pause_reason      | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_paused         | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .is_paused_errors  | Boolean           | True if the node was automatically paused due to a high error rate.            |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_active         | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .deprecated        | ISO-8601 Datetime | When the node was removed (is_active == False) from the cluster.               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_offer        | ISO-8601 Datetime | When the node last received an offer from Mesos. (*DEPRECATED*, gone in v5)    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -97,14 +83,10 @@ These services provide access to information about the nodes.
 |            {                                                                                                            |
 |                "id": 4,                                                                                                 |
 |                "hostname": "host.com",                                                                                  |
-|                "port": 5051,                                                                                            |
-|                "slave_id": "20150828-143216-659603848-5050-13473-S9",                                                   |
 |                "is_paused": false,                                                                                      |
-|                "is_paused_errors": false,                                                                               |
 |                "is_active": true,                                                                                       |
 |                "deprecated": null,                                                                                      |
 |                "created": "2015-08-28T18:32:33.954Z",                                                                   |
-|                "last_offer": null,                                                                                      |
 |                "last_modified": "2015-09-04T13:53:46.670Z"                                                              |
 |            },                                                                                                           |
 |           ...                                                                                                           |
@@ -118,12 +100,6 @@ These services provide access to information about the nodes.
 | **Node Details**                                                                                                        |
 +=========================================================================================================================+
 |  Returns a specific job and all its related model information including resource usage.                                 |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **DEPRECATED**                                                                                                          |
-|                This table describes the current v4 version of the node details API, which is now deprecated.            |
-|                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, *last_offer*,|
-|                *resources*, *disconnected*, and *job_exes_running* fields in the response. Also the *archived* field    |
-|                has been renamed *deprecated*.                                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/{id}/                                                                                                    |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -141,18 +117,11 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | The port being used by the executor on this node. (*DEPRECATED*, gone in v5)   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| slave_id           | String            | The slave ID used by Mesos for the node. (*DEPRECATED*, gone in v5)            |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | pause_reason       | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -160,13 +129,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos. (*DEPRECATED*, gone in v5)    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| resources          | JSON Object       | (Optional) Information about the hardware resources of the node                |
-|                    |                   | NOTE: Resource information may not always be available                         |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .total             | JSON Object       | The total hardware resources for the node                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -197,84 +160,17 @@ These services provide access to information about the nodes.
 |                    |                   | database but mesos does not have a corresponding active slave.                 |
 |                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_exes_running  | Array             | A list of job executions currently running on the node.                        |
-|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |   {                                                                                                                     |
 |       "id": 4,                                                                                                          |
 |       "hostname": "host.com",                                                                                           |
-|       "port": 5051,                                                                                                     |
-|       "slave_id": "20150616-103057-1800454536-5050-6193-S2",                                                            | 
 |       "is_paused": false,                                                                                               |
 |       "is_paused_errors": false,                                                                                        |
 |       "is_active": true,                                                                                                |
 |       "deprecated": null,                                                                                               |
 |       "created": "2015-06-15T17:18:52.414Z",                                                                            |
-|       "last_offer": null,                                                                                               |
 |       "last_modified": "2015-06-17T20:05:16.041Z",                                                                      |
-|       "job_exes_running": [                                                                                             |
-|           {                                                                                                             |
-|               "id": 1,                                                                                                  |
-|               "status": "RUNNING",                                                                                      |
-|               "command_arguments": "",                                                                                  |
-|               "timeout": 0,                                                                                             |
-|               "pre_started": null,                                                                                      |
-|               "pre_completed": null,                                                                                    |
-|               "pre_exit_code": null,                                                                                    |
-|               "job_started": "2015-08-28T18:32:34.295Z",                                                                |
-|               "job_completed": null,                                                                                    |
-|               "job_exit_code": null,                                                                                    |
-|               "post_started": null,                                                                                     |
-|               "post_completed": null,                                                                                   |
-|               "post_exit_code": null,                                                                                   |
-|               "created": "2015-08-28T18:32:33.862Z",                                                                    |
-|               "queued": "2015-08-28T18:32:33.833Z",                                                                     |
-|               "started": "2015-08-28T18:32:34.040Z",                                                                    |
-|               "ended": null,                                                                                            |
-|               "last_modified": "2015-08-28T18:32:34.389Z",                                                              |
-|               "job": {                                                                                                  |
-|                   "id": 1,                                                                                              |
-|                   "job_type": {                                                                                         |
-|                       "id": 3,                                                                                          |
-|                       "name": "scale-clock",                                                                            |
-|                       "version": "1.0",                                                                                 |
-|                       "title": "Scale Clock",                                                                           |
-|                       "description": "Performs Scale system functions that need to be executed periodically",           | 
-|                       "category": "system",                                                                             |
-|                       "author_name": null,                                                                              |
-|                       "author_url": null,                                                                               |
-|                       "is_system": true,                                                                                |
-|                       "is_long_running": true,                                                                          |
-|                       "is_active": true,                                                                                |
-|                       "is_operational": true,                                                                           |
-|                       "is_paused": false,                                                                               |
-|                       "icon_code": "f013"                                                                               |
-|                   },                                                                                                    |
-|                   "job_type_rev": {                                                                                     |
-|                       "id": 5,                                                                                          |
-|                   },                                                                                                    |
-|                   "event": {                                                                                            |
-|                       "id": 1                                                                                           |
-|                   },                                                                                                    |
-|                   "error": null,                                                                                        |
-|                   "status": "RUNNING",                                                                                  |
-|                   "priority": 1,                                                                                        |
-|                   "num_exes": 19                                                                                        |
-|               },                                                                                                        |
-|               "node": {                                                                                                 |
-|                   "id": 7                                                                                               |
-|               },                                                                                                        |
-|               "error": null,                                                                                            |
-|               "cpus_scheduled": 1.0,                                                                                    |
-|               "mem_scheduled": 1024.0,                                                                                  |
-|               "disk_in_scheduled": 0.0,                                                                                 |
-|               "disk_out_scheduled": 0.0,                                                                                |
-|               "disk_total_scheduled": 0.0                                                                               |
-|           }                                                                                                             |
-|       ],                                                                                                                |
 |       "resources": {                                                                                                    | 
 |           "total": {                                                                                                    | 
 |               "cpus": 16.0,                                                                                             |
@@ -301,12 +197,6 @@ These services provide access to information about the nodes.
 | **Update Node**                                                                                                         |
 +=========================================================================================================================+
 | Update one or more fields in an existing node.                                                                          |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **DEPRECATED**                                                                                                          |
-|                This table describes the current v4 version of the node details API, which is now deprecated.            |
-|                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, *last_offer*,|
-|                *resources*, *disconnected*, and *job_exes_running* fields in the response. Also the *archived* field    |
-|                has been renamed to *deprecated*.                                                                        |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **PATCH** /nodes/{id}/                                                                                                  |
 |           Where {id} is the unique identifier of an existing model.                                                     |
@@ -339,18 +229,11 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | The port being used by the executor on this node. (*DEPRECATED*, gone in v5)   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| slave_id           | String            | The slave ID used by Mesos for the node. (*DEPRECATED*, gone in v5)            |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | pause_reason       | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -358,13 +241,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos. (*DEPRECATED*, gone in v5)    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| resources          | JSON Object       | (Optional) Information about the hardware resources of the node                |
-|                    |                   | NOTE: Resource information may not always be available                         |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .total             | JSON Object       | The total hardware resources for the node                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -391,88 +268,16 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..disk             | Float             | The used amount of disk space in MiB at this node                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| disconnected       | Boolean           | (Optional) If present and true, there is an active Node entry in the scale     |
-|                    |                   | database but mesos does not have a corresponding active slave.                 |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_exes_running  | Array             | A list of job executions currently running on the node.                        |
-|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
-|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |   {                                                                                                                     |
 |       "id": 4,                                                                                                          |
 |       "hostname": "host.com",                                                                                           |
-|       "port": 5051,                                                                                                     |
-|       "slave_id": "20150616-103057-1800454536-5050-6193-S2",                                                            |
 |       "is_paused": false,                                                                                               |
 |       "is_paused_errors": false,                                                                                        |
 |       "is_active": true,                                                                                                |
-|       "deprecated": null,                                                                                               |
 |       "created": "2015-06-15T17:18:52.414Z",                                                                            |
-|       "last_offer": null,                                                                                               |
 |       "last_modified": "2015-06-17T20:05:16.041Z",                                                                      |
-|       "job_exes_running": [                                                                                             |
-|           {                                                                                                             |
-|               "id": 1,                                                                                                  |
-|               "status": "RUNNING",                                                                                      |
-|               "command_arguments": "",                                                                                  |
-|               "timeout": 0,                                                                                             |
-|               "pre_started": null,                                                                                      |
-|               "pre_completed": null,                                                                                    |
-|               "pre_exit_code": null,                                                                                    |
-|               "job_started": "2015-08-28T18:32:34.295Z",                                                                |
-|               "job_completed": null,                                                                                    |
-|               "job_exit_code": null,                                                                                    |
-|               "post_started": null,                                                                                     |
-|               "post_completed": null,                                                                                   |
-|               "post_exit_code": null,                                                                                   |
-|               "created": "2015-08-28T18:32:33.862Z",                                                                    |
-|               "queued": "2015-08-28T18:32:33.833Z",                                                                     |
-|               "started": "2015-08-28T18:32:34.040Z",                                                                    |
-|               "ended": null,                                                                                            |
-|               "last_modified": "2015-08-28T18:32:34.389Z",                                                              |
-|               "job": {                                                                                                  |
-|                   "id": 1,                                                                                              |
-|                   "job_type": {                                                                                         |
-|                       "id": 3,                                                                                          |
-|                       "name": "scale-clock",                                                                            |
-|                       "version": "1.0",                                                                                 |
-|                       "title": "Scale Clock",                                                                           |
-|                       "description": "Performs Scale system functions that need to be executed periodically",           |
-|                       "category": "system",                                                                             |
-|                       "author_name": null,                                                                              |
-|                       "author_url": null,                                                                               |
-|                       "is_system": true,                                                                                |
-|                       "is_long_running": true,                                                                          |
-|                       "is_active": true,                                                                                |
-|                       "is_operational": true,                                                                           |
-|                       "is_paused": false,                                                                               |
-|                       "icon_code": "f013"                                                                               |
-|                   },                                                                                                    |
-|                   "job_type_rev": {                                                                                     |
-|                       "id": 5,                                                                                          |
-|                   },                                                                                                    |
-|                   "event": {                                                                                            |
-|                       "id": 1                                                                                           |
-|                   },                                                                                                    |
-|                   "error": null,                                                                                        |
-|                   "status": "RUNNING",                                                                                  |
-|                   "priority": 1,                                                                                        |
-|                   "num_exes": 19                                                                                        |
-|               },                                                                                                        |
-|               "node": {                                                                                                 |
-|                   "id": 7                                                                                               |
-|               },                                                                                                        |
-|               "error": null,                                                                                            |
-|               "cpus_scheduled": 1.0,                                                                                    |
-|               "mem_scheduled": 1024.0,                                                                                  |
-|               "disk_in_scheduled": 0.0,                                                                                 |
-|               "disk_out_scheduled": 0.0,                                                                                |
-|               "disk_total_scheduled": 0.0                                                                               |
-|           }                                                                                                             |
-|       ],                                                                                                                |
 |       "resources": {                                                                                                    |
 |           "total": {                                                                                                    |
 |               "cpus": 16.0,                                                                                             |
@@ -491,188 +296,4 @@ These services provide access to information about the nodes.
 |           }                                                                                                             |
 |       }                                                                                                                 |
 |   }                                                                                                                     |
-+-------------------------------------------------------------------------------------------------------------------------+
-
-+-------------------------------------------------------------------------------------------------------------------------+
-| **Nodes Status**                                                                                                        |
-+=========================================================================================================================+
-| Returns a list of overall node statistics, based on counts of job executions organized by status.                       |
-| This only returns data for nodes marked as active in the database. For status information on nodes which are no         |
-| longer in the cluster (is_active is false), request node details for that specific node ID.                             |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **DEPRECATED**                                                                                                          |
-|                This table describes the v4 version of the node status API, which is now deprecated.                     |
-|                There is no v5 version of this API; please use the /v5/status/ API instead.                              |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /nodes/status/                                                                                                  |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **Query Parameters**                                                                                                    |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
-|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
-|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
-|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| **Successful Response**                                                                                                 |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| **Status**         | 200 OK                                                                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The total number of results that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | Array             | List of result JSON objects that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .node              | JSON Object       | The node that is associated with the statistics.                               |
-|                    |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .is_online         | Boolean           | (Optional) Whether or not the node is running and available.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_exe_counts    | Array             | A list of recent job execution counts for the node, grouped by status.         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..status           | String            | The type of job execution status the count represents.                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..count            | Integer           | The number of job executions for the status attempted by the node.             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..most_recent      | ISO-8601 Datetime | The date/time when the node last ran a job execution with the status.          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..category         | String            | The category of the status, which is only used by a FAILED status.             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_exes_running  | Array             | A list of job executions currently running on the node.                        |
-|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|   "count": 2,                                                                                                           | 
-|   "next": null,                                                                                                         |
-|   "previous": null,                                                                                                     |
-|   "results": [                                                                                                          |
-|        {                                                                                                                |
-|            "node": {                                                                                                    |
-|                "id": 2                                                                                                  |
-|                "hostname": "host1.com",                                                                                 |
-|                "port": 5051,                                                                                            |
-|                "slave_id": "20150821-144617-659603848-5050-22035-S2",                                                   |
-|                "is_paused": false,                                                                                      |
-|                "is_paused_errors": false,                                                                               |
-|                "is_active": true,                                                                                       |
-|                "archived": null,                                                                                        |
-|                "created": "2015-07-08T17:49:21.771Z",                                                                   |
-|                "last_modified": "2015-07-08T17:49:21.771Z",                                                             |
-|            },                                                                                                           |
-|            "is_online": true,                                                                                           |
-|            "job_exe_counts": [                                                                                          |
-|                {                                                                                                        |
-|                    "status": "RUNNING",                                                                                 |
-|                    "count": 1,                                                                                          |
-|                    "most_recent": "2015-08-31T22:09:12.674Z",                                                           |
-|                    "category": null                                                                                     |
-|                },                                                                                                       |
-|                {                                                                                                        |
-|                    "status": "FAILED",                                                                                  |
-|                    "count": 2,                                                                                          |
-|                    "most_recent": "2015-08-31T19:28:30.799Z",                                                           |
-|                    "category": "SYSTEM"                                                                                 |
-|                },                                                                                                       |
-|                {                                                                                                        |
-|                    "status": "COMPLETED",                                                                               |
-|                    "count": 57,                                                                                         |
-|                    "most_recent": "2015-08-31T21:51:40.900Z",                                                           |
-|                    "category": null                                                                                     |
-|                }                                                                                                        |
-|            ],                                                                                                           |
-|            "job_exes_running": [                                                                                        |
-|                {                                                                                                        |
-|                   "id": 1,                                                                                              |
-|                   "status": "RUNNING",                                                                                  |
-|                   "command_arguments": "",                                                                              |
-|                   "timeout": 0,                                                                                         |
-|                   "pre_started": null,                                                                                  |
-|                   "pre_completed": null,                                                                                |
-|                   "pre_exit_code": null,                                                                                |
-|                   "job_started": "2015-08-28T18:32:34.295Z",                                                            |
-|                   "job_completed": null,                                                                                |
-|                   "job_exit_code": null,                                                                                |
-|                   "post_started": null,                                                                                 |
-|                   "post_completed": null,                                                                               |
-|                   "post_exit_code": null,                                                                               |
-|                   "created": "2015-08-28T18:32:33.862Z",                                                                |
-|                   "queued": "2015-08-28T18:32:33.833Z",                                                                 |
-|                   "started": "2015-08-28T18:32:34.040Z",                                                                |
-|                   "ended": null,                                                                                        |
-|                   "last_modified": "2015-08-28T18:32:34.389Z",                                                          |
-|                   "job": {                                                                                              |
-|                       "id": 1,                                                                                          |
-|                       "job_type": {                                                                                     |
-|                           "id": 3,                                                                                      |
-|                           "name": "scale-clock",                                                                        |
-|                           "version": "1.0",                                                                             |
-|                           "title": "Scale Clock",                                                                       |
-|                           "description": "Performs Scale system functions that need to be executed periodically",       | 
-|                           "category": "system",                                                                         |
-|                           "author_name": null,                                                                          |
-|                           "author_url": null,                                                                           |
-|                           "is_system": true,                                                                            |
-|                           "is_long_running": true,                                                                      |
-|                           "is_active": true,                                                                            |
-|                           "is_operational": true,                                                                       |
-|                           "is_paused": false,                                                                           |
-|                           "icon_code": "f013"                                                                           |
-|                       },                                                                                                |
-|                       "job_type_rev": {                                                                                 |
-|                           "id": 5,                                                                                      |
-|                       },                                                                                                |
-|                       "event": {                                                                                        |
-|                           "id": 1                                                                                       |
-|                       },                                                                                                |
-|                       "error": null,                                                                                    |
-|                       "status": "RUNNING",                                                                              |
-|                       "priority": 1,                                                                                    |
-|                       "num_exes": 19                                                                                    |
-|                   },                                                                                                    |
-|                   "node": {                                                                                             |
-|                       "id": 7                                                                                           |
-|                   },                                                                                                    |
-|                   "error": null,                                                                                        |
-|                   "cpus_scheduled": 1.0,                                                                                |
-|                   "mem_scheduled": 1024.0,                                                                              |
-|                   "disk_in_scheduled": 0.0,                                                                             |
-|                   "disk_out_scheduled": 0.0,                                                                            |
-|                   "disk_total_scheduled": 0.0                                                                           |
-|                }                                                                                                        |
-|            ]                                                                                                            |
-|        },                                                                                                               |
-|        {                                                                                                                |
-|            "node": {                                                                                                    |
-|                "id": 1                                                                                                  |
-|                "hostname": "host2.com",                                                                                 |
-|                "port": 5051,                                                                                            |
-|                "slave_id": "20150821-144617-659603848-5050-22035-S1",                                                   |
-|                "is_paused": false,                                                                                      |
-|                "is_paused_errors": false,                                                                               |
-|                "is_active": true,                                                                                       |
-|                "archived": null,                                                                                        |
-|                "created": "2015-07-08T17:49:21.771Z",                                                                   |
-|                "last_modified": "2015-07-08T17:49:21.771Z"                                                              |
-|            },                                                                                                           |
-|            "is_online": false,                                                                                          |
-|            "job_exe_counts": [],                                                                                        |
-|            "job_exes_running": []                                                                                       |
-|        },                                                                                                               |
-|        ...                                                                                                              |
-|    ]                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+

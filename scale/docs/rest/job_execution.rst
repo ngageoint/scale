@@ -181,8 +181,6 @@ These services provide access to information about "all", "currently running" an
 |                "node": {                                                                                                |
 |                    "id": 1,                                                                                             |
 |                    "hostname": "machine.com",                                                                           |
-|                    "port": 5051,                                                                                        |
-|                    "slave_id": "20150821-123454-1683014024-5050-8216-S2"                                                |
 |                },                                                                                                       |
 |                "error": null                                                                                            |
 |            },                                                                                                           |
@@ -334,8 +332,6 @@ These services provide access to information about "all", "currently running" an
 |      "node": {                                                                                                            |
 |          "id": 1,                                                                                                         |
 |          "hostname": "machine.com",                                                                                       |
-|          "port": 5051,                                                                                                    |
-|          "slave_id": "20150821-123454-1683014024-5050-8216-S2",                                                           |
 |          "is_paused": false,                                                                                              |
 |          "is_active": true,                                                                                               |
 |          "archived": null,                                                                                                |

@@ -81,12 +81,10 @@ class JobTypesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-
         if self.request.version == 'v6':
             return self.list_v6(request)
         else:
             return self.list_v5(request)
-
 
     def list_v5(self, request):
         """Retrieves the list of all job types and returns it in JSON form
@@ -113,7 +111,6 @@ class JobTypesView(ListCreateAPIView):
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
 
     def list_v6(self, request):
         """Retrieves the list of all job types and returns it in JSON form
@@ -392,7 +389,7 @@ class JobTypeIDDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        if self.request.version == 'v4' or self.request.version == 'v5':
+        if self.request.version == 'v5':
             return self.get_v5(request, job_type_id)
         else:
             raise Http404
@@ -407,6 +404,7 @@ class JobTypeIDDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             job_type = JobType.objects.get_details_v5(job_type_id)
         except JobType.DoesNotExist:
@@ -444,8 +442,7 @@ class JobTypeIDDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-                
-                
+
         # Validate the job interface
         interface_dict = rest_util.parse_dict(request, 'interface', required=False)
         interface = None
@@ -576,6 +573,7 @@ class JobTypeVersionsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         if self.request.version == 'v6':
             return self.list_v6(request, name)
         else:
@@ -591,6 +589,7 @@ class JobTypeVersionsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         order = ['-version']
 
@@ -735,6 +734,7 @@ class JobTypeRevisionsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         if self.request.version == 'v6':
             return self.list_v6(request, name, version)
         else:
@@ -759,7 +759,6 @@ class JobTypeRevisionsView(ListAPIView):
             job_type_revisions = JobTypeRevision.objects.get_job_type_revisions_v6(name, version, order)
         except JobType.DoesNotExist:
             raise Http404
-
 
         page = self.paginate_queryset(job_type_revisions)
         serializer = self.get_serializer(page, many=True)
@@ -846,6 +845,7 @@ class JobTypesValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         name = rest_util.parse_string(request, 'name', required=False)
         version = rest_util.parse_string(request, 'version', required=False)
 
@@ -1172,6 +1172,7 @@ class JobsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         if request.version != 'v6':
             raise Http404
         job_type_id = rest_util.parse_int(request, 'job_type_id')
@@ -1313,7 +1314,7 @@ class RequeueJobsView(GenericAPIView):
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
     serializer_class = JobSerializerV5
-    
+
     def post(self, request):
         """Submit command message to re-queue jobs that fit the given filter criteria
 
@@ -1321,7 +1322,7 @@ class RequeueJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v6':
             return self._post_v6(request)
         elif request.version == 'v5':
@@ -1355,7 +1356,7 @@ class RequeueJobsView(GenericAPIView):
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)
-        
+
     def _post_v6(self, request):
         """Submit command message to re-queue jobs that fit the given filter criteria
 
@@ -1496,44 +1497,6 @@ class JobInputFilesView(ListAPIView):
     def get(self, request, job_id):
         """Retrieve detailed information about the input files for a job
 
-        -*-*-
-        parameters:
-          - name: job_id
-            in: path
-            description: The ID of the job the file is associated with
-            required: true
-            example: 67302
-          - name: started
-            in: query
-            description: The start time of a start/end time range
-            required: false
-            example: 2016-01-01T00:00:00Z
-          - name: ended
-            in: query
-            description: The end time of a start/end time range
-            required: false
-            example: 2016-01-02T00:00:00Z
-          - name: time_field
-            in: query
-            description: 'The database time field to apply `started` and `ended` time filters
-                          [Valid fields: `source`, `data`, `last_modified`]'
-            required: false
-            example: source
-          - name: file_name
-            in: query
-            description: The name of a specific file in Scale
-            required: false
-            example: some_file_i_need_to_find.zip
-          - name: job_input
-            in: query
-            description: The name of the input the file is passed to in a job
-            required: false
-            example: input_1
-        responses:
-          '200':
-            description: A JSON list of files with metadata
-        -*-*-
-
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param job_id: The ID for the job.
@@ -1632,6 +1595,7 @@ class JobsWithExecutionView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -1728,7 +1692,7 @@ class JobExecutionsView(ListAPIView):
         page = self.paginate_queryset(job_exes)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-        
+
     def list_v6(self, request, job_id):
         """Gets job executions and their associated job_type id, name, and version
 
@@ -1777,7 +1741,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v5':
             return self._retrieve_v5(request, job_id, exe_num)
         elif request.version == 'v6':
@@ -1801,7 +1765,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if not exe_num:
             job_exe_id = job_id
             try:
@@ -1816,7 +1780,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
-        
+
     def _retrieve_v6(self, request, job_id, exe_num):
         """Gets job execution and associated job_type id, name, and version
 
@@ -1829,7 +1793,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         try:
             job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
         except JobExecution.DoesNotExist:
@@ -1854,7 +1818,7 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v5':
             return self._retrieve_impl(request, job_exe_id, log_id)
         elif request.version == 'v6':

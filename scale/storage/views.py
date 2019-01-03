@@ -42,9 +42,7 @@ class FilesView(ListAPIView):
             return ScaleFileSerializerV6
         elif self.request.version == 'v5':
             return ScaleFileSerializerV5
-        elif self.request.version == 'v4':
-            return ScaleFileSerializerV5
-        
+
     def list(self, request):
         """Retrieves the batches and returns them in JSON form
 
@@ -58,41 +56,11 @@ class FilesView(ListAPIView):
             return self._list_v6(request)
         elif request.version == 'v5':
             return self._list_v5(request)
-        elif request.version == 'v4':
-            return self._list_v5(request)
 
         raise Http404()
 
     def _list_v5(self, request):
         """Retrieves a list of files based of filters and returns it in JSON form
-
-        -*-*-
-        parameters:
-          - name: started
-            in: query
-            description: The start time of a start/end time range
-            required: false
-            example: 2016-01-01T00:00:00Z
-          - name: ended
-            in: query
-            description: The end time of a start/end time range
-            required: false
-            example: 2016-01-02T00:00:00Z
-          - name: time_field
-            in: query
-            description: 'The database time field to apply `started` and `ended` time filters
-                          [Valid fields: `source`, `data`, `last_modified`]'
-            required: false
-            example: source
-          - name: file_name
-            in: query
-            description: The name of a specific file in Scale
-            required: false
-            example: some_file_i_need_to_find.zip
-        responses:
-          '200':
-            description: A JSON list of files with metadata
-        -*-*-
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -122,6 +90,7 @@ class FilesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         data_started = rest_util.parse_timestamp(request, 'data_started', required=False)
         data_ended = rest_util.parse_timestamp(request, 'data_ended', required=False)
         rest_util.check_time_range(data_started, data_ended)
@@ -221,7 +190,7 @@ class PurgeSourceFileView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version in ['v4', 'v5']:
+        if self.request.version == 'v5':
             content = 'This endpoint is supported with REST API v6+'
             return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
@@ -263,8 +232,6 @@ class WorkspacesView(ListCreateAPIView):
             return WorkspaceSerializerV6
         elif self.request.version == 'v5':
             return WorkspaceSerializerV5
-        elif self.request.version == 'v4':
-            return WorkspaceSerializerV5
 
     def list(self, request):
         """Retrieves the list of all workspaces and returns it in JSON form
@@ -278,8 +245,6 @@ class WorkspacesView(ListCreateAPIView):
         if request.version == 'v6':
             return self._list_v6(request)
         elif request.version == 'v5':
-            return self._list_v5(request)
-        elif request.version == 'v4':
             return self._list_v5(request)
 
         raise Http404()
@@ -340,8 +305,6 @@ class WorkspacesView(ListCreateAPIView):
         if request.version == 'v6':
             return self._create_v6(request)
         elif request.version == 'v5':
-            return self._create_v5(request)
-        elif request.version == 'v4':
             return self._create_v5(request)
 
         raise Http404()
@@ -439,8 +402,6 @@ class WorkspaceDetailsView(GenericAPIView):
             return WorkspaceDetailsSerializerV6
         elif self.request.version == 'v5':
             return WorkspaceDetailsSerializerV5
-        elif self.request.version == 'v4':
-            return WorkspaceDetailsSerializerV5
 
     def get(self, request, workspace_id):
         """Retrieves the details for a workspace and return them in JSON form
@@ -456,8 +417,6 @@ class WorkspaceDetailsView(GenericAPIView):
         if request.version == 'v6':
             return self._get_v6(request, workspace_id)
         elif request.version == 'v5':
-            return self._get_v5(request, workspace_id)
-        elif request.version == 'v4':
             return self._get_v5(request, workspace_id)
 
         raise Http404()
@@ -491,6 +450,7 @@ class WorkspaceDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         try:
             workspace = Workspace.objects.get_details(workspace_id)
         except Workspace.DoesNotExist:
@@ -513,8 +473,6 @@ class WorkspaceDetailsView(GenericAPIView):
         if request.version == 'v6':
             return self._patch_v6(request, workspace_id)
         elif request.version == 'v5':
-            return self._patch_v5(request, workspace_id)
-        elif request.version == 'v4':
             return self._patch_v5(request, workspace_id)
 
         raise Http404()
@@ -611,8 +569,6 @@ class WorkspacesValidationView(APIView):
         if request.version == 'v6':
             return self._post_v6(request)
         elif request.version == 'v5':
-            return self._post_v5(request)
-        elif request.version == 'v4':
             return self._post_v5(request)
 
         raise Http404()

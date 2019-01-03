@@ -24,4 +24,4 @@ def create_node(hostname=None, slave_id=None):
         slave_id = '123-456-789-%i' % SLAVEID_COUNTER
         SLAVEID_COUNTER = SLAVEID_COUNTER + 1
 
-    return Node.objects.create_nodes([hostname], [slave_id])[0]
+    return Node.objects.create_nodes([hostname])[0]

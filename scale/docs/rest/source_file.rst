@@ -157,17 +157,11 @@ This documentation describes the API **v5** version of Source File services. The
 | products that are superseded are excluded by default.                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **DEPRECATED**                                                                                                          |
-|                This table describes the current v4 version of the source file details API, which is now deprecated.     |
-|                The new v5 version of this API does not include the *ingests* and *products* arrays in the response.     |
-|                The new v5 version also does not support the use of *file_name* in the URL (only source ID supported).   |
-|                Starting with API **v6** this endpoint will be removed.                                                  |
+|                This documentation describes the API **v5** version of the Source File Details response.  Starting       |
+|                with API **v6** this endpoint will be removed.                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /sources/{file_name}/                                                                                           |
-|         Where {file_name} is the unique name of a source file associated with an existing model.                        |
-|         *DEPRECATED*: removed in v5                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -223,12 +217,6 @@ This documentation describes the API **v5** version of Source File services. The
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | parsed             | ISO-8601 Datetime | When the source file was originally parsed by Scale.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ingests            | Array             | A list of records that represent each attempt to parse and ingest the file.    |
-|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`) (*DEPRECATED*, gone in v5)   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| products           | Array             | A list of all product files derived from this source file during jobs.         |
-|                    |                   | (See :ref:`Product Details <rest_product_details>`) (*DEPRECATED*, gone in v5) |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -254,85 +242,7 @@ This documentation describes the API **v5** version of Source File services. The
 |        "countries": [],                                                                                                 |
 |        "last_modified": "1970-01-01T00:00:00Z",                                                                         |
 |        "is_parsed": true,                                                                                               |
-|        "parsed": "1970-01-01T00:00:00Z",                                                                                |
-|        "ingests": [                                                                                                     |
-|            {                                                                                                            |
-|                "id": 1,                                                                                                 |
-|                "file_name": "my_file.kml",                                                                              |
-|                "strike": {                                                                                              |
-|                    "id": 1                                                                                              |
-|                },                                                                                                       |
-|                "status": "INGESTED",                                                                                    |
-|                "bytes_transferred": 100,                                                                                |
-|                "transfer_started": "1970-01-01T00:00:00Z",                                                              |
-|                "transfer_ended": "1970-01-01T00:00:00Z",                                                                |
-|                "media_type": "application/vnd.google-earth.kml+xml",                                                    |
-|                "file_size": 4806986,                                                                                    |
-|                "data_type": [],                                                                                         |
-|                "ingest_started": "1970-01-01T00:00:00Z",                                                                |
-|                "ingest_ended": "1970-01-01T00:00:00Z",                                                                  |
-|                "source_file": {                                                                                         |
-|                    "id": 1                                                                                              |
-|                },                                                                                                       |
-|                "created": "1970-01-01T00:00:00Z",                                                                       |
-|                "last_modified": "1970-01-01T00:00:00Z"                                                                  |
-|            },                                                                                                           |
-|            ...                                                                                                          |
-|        ],                                                                                                               |
-|        "products": [                                                                                                    |
-|            {                                                                                                            |
-|                "id": 2,                                                                                                 |
-|                "workspace": {                                                                                           |
-|                    "id": 2,                                                                                             |
-|                    "name": "Products"                                                                                   |
-|                },                                                                                                       |
-|                "file_name": "my_file.png",                                                                              |
-|                "media_type": "image/png",                                                                               |
-|                "file_size": 50,                                                                                         |
-|                "data_type": [],                                                                                         |
-|                "is_deleted": false,                                                                                     |
-|                "uuid": "03696f8c30b1757c9108fb9a7d67924f",                                                              |
-|                "url": "http://host.com/file/path/my_file.png",                                                          |
-|                "created": "1970-01-01T00:00:00Z",                                                                       |
-|                "deleted": null,                                                                                         |
-|                "data_started": "1970-01-01T00:00:00Z",                                                                  |
-|                "data_ended": null,                                                                                      |
-|                "geometry": null,                                                                                        |
-|                "center_point": null,                                                                                    |
-|                "meta_data": null,                                                                                       |
-|                "countries": [],                                                                                         |
-|                "last_modified": "1970-01-01T00:00:00Z",                                                                 |
-|                "is_operational": true,                                                                                  |
-|                "is_published": true,                                                                                    |
-|                "published": "1970-01-01T00:00:00Z",                                                                     |
-|                "unpublished": null,                                                                                     |
-|                "is_superseded": false,                                                                                  |
-|                "superseded": null,                                                                                      |
-|                "job_type": {                                                                                            |
-|                    "id": 6,                                                                                             |
-|                    "name": "kml-parse",                                                                                 |
-|                    "version": "1.0.0",                                                                                  |
-|                    "title": "KML Parse",                                                                                |
-|                    "description": "Parse KML into a PNG image",                                                         |
-|                    "category": null,                                                                                    |
-|                    "author_name": null,                                                                                 |
-|                    "author_url": null,                                                                                  |
-|                    "is_system": false,                                                                                  |
-|                    "is_long_running": false,                                                                            |
-|                    "is_active": true,                                                                                   |
-|                    "is_operational": true,                                                                              |
-|                    "is_paused": false,                                                                                  |
-|                    "icon_code": null                                                                                    |
-|                },                                                                                                       |
-|                "job": {                                                                                                 |
-|                    "id": 6                                                                                              |
-|                },                                                                                                       |
-|                "job_exe": {                                                                                             |
-|                    "id": 6                                                                                              |
-|                }                                                                                                        |
-|            },                                                                                                           |
-|            ...                                                                                                          |
-|        ]                                                                                                                |
+|        "parsed": "1970-01-01T00:00:00Z"                                                                                 |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 

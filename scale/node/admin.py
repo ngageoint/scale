@@ -5,6 +5,6 @@ from node.models import Node
 
 
 class NodeAdmin(admin.ModelAdmin):
-    list_display = ('hostname', 'is_paused', 'is_paused_errors', 'pause_reason', 'last_offer', 'slave_id', 'is_active', 'deprecated')
+    list_display = ('hostname', 'is_paused', 'pause_reason', 'is_active', 'deprecated')
 
 admin.site.register(Node, NodeAdmin)

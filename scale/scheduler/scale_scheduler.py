@@ -175,12 +175,6 @@ class ScaleScheduler(object):
         logger.info('Scale scheduler registered as framework %s with Mesos master at %s:%i',
                     self._framework_id, self._master_host_address.hostname, self._master_host_address.port)
 
-        ########################################
-        # TODO: Remove when API v4 is removed. #
-        ########################################
-        Scheduler.objects.update_master(self._master_host_address.hostname, self._master_host_address.port)
-        ########################################
-
         scheduler_mgr.update_from_mesos(self._framework_id, self._master_host_address)
 
         # Update driver for background threads
@@ -203,12 +197,6 @@ class ScaleScheduler(object):
 
         logger.info('Scale scheduler re-registered with Mesos master at %s:%i',
                     self._master_host_address.hostname, self._master_host_address.port)
-
-        ########################################
-        # TODO: Remove when API v4 is removed. #
-        ########################################
-        Scheduler.objects.update_master(self._master_host_address.hostname, self._master_host_address.port)
-        ########################################
 
         scheduler_mgr.update_from_mesos(mesos_address=self._master_host_address)
 

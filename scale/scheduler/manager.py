@@ -114,8 +114,6 @@ class SchedulerManager(object):
             self._task_launch_count = 0
             self._task_update_count = 0
 
-        mesos_address = self.mesos_address
-
         duration = (when - last_json).total_seconds()
         job_fin_per_sec = self._round_count_per_sec(job_fin_count / duration)
         job_launch_per_sec = self._round_count_per_sec(job_launch_count / duration)
@@ -125,11 +123,7 @@ class SchedulerManager(object):
         task_launch_per_sec = self._round_count_per_sec(task_launch_count / duration)
         task_update_per_sec = self._round_count_per_sec(task_update_count / duration)
 
-        if mesos_address:
-            mesos_dict = {'framework_id': self.framework_id, 'master_hostname': mesos_address.hostname,
-                          'master_port': mesos_address.port}
-        else:
-            mesos_dict = {'framework_id': self.framework_id, 'master_hostname': None, 'master_port': None}
+        mesos_dict = {'framework_id': self.framework_id}
         metrics_dict = {'new_offers_per_sec': new_offer_per_sec, 'task_updates_per_sec': task_update_per_sec,
                         'tasks_finished_per_sec': task_fin_per_sec, 'jobs_finished_per_sec': job_fin_per_sec,
                         'jobs_launched_per_sec': job_launch_per_sec, 'tasks_launched_per_sec': task_launch_per_sec,
