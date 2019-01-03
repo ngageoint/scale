@@ -21,43 +21,16 @@ DATA_FILTER_SCHEMA = {
             'description': 'Version of the data filter schema',
             'type': 'string',
         },
-        'mounts': {
-            'description': 'Defines volumes to use for the job\'s mounts',
-            'type': 'object',
-            'additionalProperties': {
-                '$ref': '#/definitions/mount'
+        'filters': {
+            'description': 'Defines filters to run on data parameters',
+            'type': 'array',
+            'items': {
+                '$ref': '#/definitions/filter'
             },
         },
-        'output_workspaces': {
-            'description': 'Defines workspaces to use for the job\'s output files',
-            'type': 'object',
-            'required': ['default', 'outputs'],
-            'additionalProperties': False,
-            'properties': {
-                'default': {
-                    'description': 'Defines the job\'s default output workspace',
-                    'type': 'string',
-                },
-                'outputs': {
-                    'description': 'Defines a workspace for each given output name',
-                    'type': 'object',
-                    'additionalProperties': {
-                        'type': 'string',
-                    },
-                },
-            },
-        },
-        'priority': {
-            'description': 'Defines the job\'s priority',
-            'type': 'integer',
-            'minimum': 1,
-        },
-        'settings': {
-            'description': 'Defines values to use for the job\'s settings',
-            'type': 'object',
-            'additionalProperties': {
-                'type': 'string',
-            },
+        'all': {
+            'description': 'Specifies whether all filters must pass. Defaults to True.',
+            'type': 'boolean',
         },
     },
     'definitions': {
@@ -72,10 +45,16 @@ DATA_FILTER_SCHEMA = {
                         'type': 'string',
                     },
                     'type': {
-                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string'],
+                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type'],
                     },
                     'condition': {
                         'type': 'string',
+                    },
+                    'values': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'string',
+                        }
                     },
                 },
             }

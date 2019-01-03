@@ -4,24 +4,39 @@ from __future__ import unicode_literals
 
 from data.filter.exceptions import InvalidDataFilter
 
-CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'is in'}
+ALL_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in', 'contains'}
+
+STRING_TYPES = {'string', 'filename', 'media-type'}
+
+STRING_CONDITIONS = {'==', '!=', 'in', 'contains'}
+
+NUMBER_TYPES = {'integer', 'number'}
+
+NUMBER_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in'}
+
+BOOL_TYPES = {'boolean'}
+
+BOOL_CONDITIONS = {'==', '!='}
 
 class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
-    def __init__(self, filters):
+    def __init__(self, filters, all=True):
         """Constructor
 
         :param filters: Filters to determine whether to accept or deny data
         :type filters: dict
+        :param all: Whether all filters need to pass to accept data
+        :type filters: boolean
         """
 
         # TODO: there are a number of unit tests that will need to have real DataFilters created instead of
         # DataFilter(True) or DataFilter(False)
 
         # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
-        self.filters = []
+        self.filters = filters
+        self.all = all
 
     def add_filter(self, name, type, condition, values):
         """Adds a condition node to the recipe graph
@@ -39,7 +54,7 @@ class DataFilter(object):
         """
 
         if not name:
-            raise InvalidDataFilter('MISSING_NAME', 'Missing name for \'%s\'' % name)
+            raise InvalidDataFilter('MISSING_NAME', 'Missing name for filter')
 
         if not type:
             raise InvalidDataFilter('MISSING_TYPE', 'Missing type for \'%s\'' % name)
@@ -47,10 +62,21 @@ class DataFilter(object):
         if not condition:
             raise InvalidDataFilter('MISSING_CONDITION', 'Missing condition for \'%s\'' % name)
 
-        if condition not in CONDITIONS:
+        if condition not in ALL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
-                                    % (condition, name, CONDITIONS))
+                                    % (condition, name, ALL_CONDITIONS))
 
+        if type in STRING_TYPES and condition not in STRING_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, STRING_CONDITIONS))
+
+        if type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, NUMBER_CONDITIONS))
+
+        if type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, BOOL_CONDITIONS))
         if not values:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
 
