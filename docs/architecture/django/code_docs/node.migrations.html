@@ -121,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="node.html#module-node.apps">node.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="node.html#module-node.models">node.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers">node.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers_extra">node.serializers_extra module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="node.html#module-node.urls">node.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="node.html#module-node.views">node.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="node.html#module-node">Module contents</a></li>
@@ -292,6 +291,25 @@
 <dl class="attribute">
 <dt id="node.migrations.0004_auto_20170524_1639.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;RenameField  new_name=u'deprecated', model_name=u'node', old_name=u'archived'&gt;]</em><a class="headerlink" href="#node.migrations.0004_auto_20170524_1639.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-node.migrations.0005_auto_20181220_2014">
+<span id="node-migrations-0005-auto-20181220-2014-module"></span><h2>node.migrations.0005_auto_20181220_2014 module<a class="headerlink" href="#module-node.migrations.0005_auto_20181220_2014" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="node.migrations.0005_auto_20181220_2014.Migration">
+<em class="property">class </em><code class="descclassname">node.migrations.0005_auto_20181220_2014.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#node.migrations.0005_auto_20181220_2014.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="node.migrations.0005_auto_20181220_2014.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'node', u'0004_auto_20170524_1639')]</em><a class="headerlink" href="#node.migrations.0005_auto_20181220_2014.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="node.migrations.0005_auto_20181220_2014.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'is_paused_errors', model_name=u'node'&gt;, &lt;RemoveField  name=u'last_offer', model_name=u'node'&gt;, &lt;RemoveField  name=u'port', model_name=u'node'&gt;, &lt;RemoveField  name=u'slave_id', model_name=u'node'&gt;]</em><a class="headerlink" href="#node.migrations.0005_auto_20181220_2014.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

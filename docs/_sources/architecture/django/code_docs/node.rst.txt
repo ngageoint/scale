@@ -45,14 +45,6 @@ node\.serializers module
     :undoc-members:
     :show-inheritance:
 
-node\.serializers\_extra module
--------------------------------
-
-.. automodule:: node.serializers_extra
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 node\.urls module
 -----------------
 

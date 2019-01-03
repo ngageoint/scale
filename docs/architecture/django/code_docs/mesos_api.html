@@ -276,43 +276,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="mesos_api.api.SchedulerInfo">
-<em class="property">class </em><code class="descclassname">mesos_api.api.</code><code class="descname">SchedulerInfo</code><span class="sig-paren">(</span><em>hostname</em>, <em>is_online</em>, <em>total=None</em>, <em>scheduled=None</em>, <em>used=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.SchedulerInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents summary information about a host system.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>is_online</strong> (<em>bool</em>) &#8211; True if the system is online, False otherwise.</li>
-<li><strong>total</strong> (<a class="reference internal" href="#mesos_api.api.HardwareResources" title="mesos_api.api.HardwareResources"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.api.HardwareResources</span></code></a>) &#8211; The total hardware resources available to the system.</li>
-<li><strong>scheduled</strong> (<a class="reference internal" href="#mesos_api.api.HardwareResources" title="mesos_api.api.HardwareResources"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.api.HardwareResources</span></code></a>) &#8211; The hardware resources allocated for potential use by the system.</li>
-<li><strong>used</strong> (<a class="reference internal" href="#mesos_api.api.HardwareResources" title="mesos_api.api.HardwareResources"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.api.HardwareResources</span></code></a>) &#8211; The hardware resources actively being used by the system.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="mesos_api.api.SchedulerInfo.to_dict">
-<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.SchedulerInfo.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts this object to a dictionary representation.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All of the object attributes formatted as a dictionary.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="mesos_api.api.SlaveInfo">
 <em class="property">class </em><code class="descclassname">mesos_api.api.</code><code class="descname">SlaveInfo</code><span class="sig-paren">(</span><em>hostname=None</em>, <em>port=0</em>, <em>total=None</em>, <em>scheduled=None</em>, <em>used=None</em>, <em>slave_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.SlaveInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
@@ -349,85 +312,6 @@
 </table>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="mesos_api.api.get_scheduler">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_scheduler</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_scheduler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the Mesos master REST API to get hardware resource usage for the entire cluster</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the master</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the master</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A summary of resource utilization and allocation for the cluster scheduler</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mesos_api.api.SchedulerInfo" title="mesos_api.api.SchedulerInfo"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.api.SchedulerInfo</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesos_api.api.get_slave">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_slave</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>slave_id</em>, <em>resources=False</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slave" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the Mesos master REST API to get information for the given slave</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the master</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the master</li>
-<li><strong>slave_id</strong> (<em>str</em>) &#8211; The ID of the slave</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A summary of the slave information</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#mesos_api.api.SlaveInfo" title="mesos_api.api.SlaveInfo"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.api.SlaveInfo</span></code></a></p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mesos_api.api.MesosError" title="mesos_api.api.MesosError"><strong>MesosError</strong></a> &#8211; If the slave cannot be found</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesos_api.api.get_slaves">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_slaves</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slaves" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the Mesos master REST API to get information for all registered slaves.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the master</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the master</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of slave information.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list[<a class="reference internal" href="#mesos_api.api.SlaveInfo" title="mesos_api.api.SlaveInfo"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.api.SlaveInfo</span></code></a>]</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mesos_api.api.MesosError" title="mesos_api.api.MesosError"><strong>MesosError</strong></a> &#8211; If the slave cannot be found</p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

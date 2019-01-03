@@ -36,6 +36,14 @@ node\.migrations\.0004\_auto\_20170524\_1639 module
     :undoc-members:
     :show-inheritance:
 
+node\.migrations\.0005\_auto\_20181220\_2014 module
+---------------------------------------------------
+
+.. automodule:: node.migrations.0005_auto_20181220_2014
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

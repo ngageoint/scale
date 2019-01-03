@@ -6906,8 +6906,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializerV5.NodeSerializerV4">
-<em class="property">class </em><code class="descname">NodeSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializerV5.NodeSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dt id="job.serializers.JobExecutionDetailsSerializerV5.NodeSerializer">
+<em class="property">class </em><code class="descname">NodeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializerV5.NodeSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="node.html#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -6948,8 +6948,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionSerializerV5.NodeBaseSerializerV4">
-<em class="property">class </em><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializerV5.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dt id="job.serializers.JobExecutionSerializerV5.NodeBaseSerializer">
+<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializerV5.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -7369,60 +7369,6 @@ object the first time, the query is executed.</p>
 <dt id="job.views.JobInputFilesView.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobInputFilesView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve detailed information about the input files for a job</p>
-<p>-<em>-</em>-
-parameters:</p>
-<blockquote>
-<div><ul>
-<li><p class="first">name: job_id
-in: path
-description: The ID of the job the file is associated with
-required: true
-example: 67302</p>
-</li>
-<li><p class="first">name: started
-in: query
-description: The start time of a start/end time range
-required: false
-example: 2016-01-01T00:00:00Z</p>
-</li>
-<li><p class="first">name: ended
-in: query
-description: The end time of a start/end time range
-required: false
-example: 2016-01-02T00:00:00Z</p>
-</li>
-<li><p class="first">name: time_field
-in: query
-description: &#8216;The database time field to apply <cite>started</cite> and <cite>ended</cite> time filters</p>
-<blockquote>
-<div><p>[Valid fields: <cite>source</cite>, <cite>data</cite>, <cite>last_modified</cite>]&#8217;</p>
-</div></blockquote>
-<p>required: false
-example: source</p>
-</li>
-<li><p class="first">name: file_name
-in: query
-description: The name of a specific file in Scale
-required: false
-example: some_file_i_need_to_find.zip</p>
-</li>
-<li><p class="first">name: job_input
-in: query
-description: The name of the input the file is passed to in a job
-required: false
-example: input_1</p>
-</li>
-</ul>
-</div></blockquote>
-<dl class="docutils">
-<dt>responses:</dt>
-<dd><dl class="first last docutils">
-<dt>&#8216;200&#8217;:</dt>
-<dd>description: A JSON list of files with metadata</dd>
-</dl>
-</dd>
-</dl>
-<p>-<em>-</em>-</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

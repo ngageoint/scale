@@ -34,8 +34,6 @@ Response: 200 OK
           "hostname": "scheduler-host.com",
           "mesos": {
              "framework_id": "framework-1234",
-             "master_hostname": "192.168.1.1", 
-             "master_port": 5050 
           }, 
           "state": { 
              "name": "READY", 
@@ -260,8 +258,6 @@ Response: 200 OK
 | scheduler                | JSON Object       | Scheduler configuration and metrics information                                |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | scheduler.metrics        | JSON Object       | Contains various near real-time metrics related to scheudling tasks and jobs   |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.hostname       | String            | The name of the host where the scheduler is running                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | scheduler.mesos          | JSON Object       | Contains Scale's framework ID and hostname and port of the Mesos master        |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+

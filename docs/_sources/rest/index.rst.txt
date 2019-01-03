@@ -14,7 +14,6 @@ API Versions
 ------------
 Future Version: ``v6``
 Current Version: ``v5``
-Deprecated Versions: ``v4``
 
 The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
