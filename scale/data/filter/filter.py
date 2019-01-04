@@ -80,7 +80,23 @@ class DataFilter(object):
         if not values:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
 
-        self.filters.append({'name': name, 'type': type, 'condition': condition, 'values': values})
+        filter_values = []
+        if type == 'number':
+            for value in values:
+                try:
+                    filter_values.append(float(value))
+                except ValueError:
+                    raise InvalidDataFilter('VALUE_ERROR', 'Expected float for \'%s\', found %s' % (name, value))
+        elif type == 'integer':
+            for value in values:
+                try:
+                    filter_values.append(int(value))
+                except ValueError:
+                    raise InvalidDataFilter('VALUE_ERROR', 'Expected int for \'%s\', found %s' % (name, value))
+        else:
+            filter_values.extend(values)
+
+        self.filters.append({'name': name, 'type': type, 'condition': condition, 'values': filter_values})
 
     def is_data_accepted(self, data):
         """Indicates whether the given data passes the filter or not
