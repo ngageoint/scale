@@ -13,11 +13,11 @@ FILE_TYPES = {'filename', 'media-type'}
 
 STRING_TYPES = {'string', 'filename', 'media-type'}
 
-STRING_CONDITIONS = {'==', '!=', 'in', 'contains'}
+STRING_CONDITIONS = {'==', '!=', 'in', 'not in', 'contains'}
 
 NUMBER_TYPES = {'integer', 'number'}
 
-NUMBER_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in'}
+NUMBER_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in'}
 
 BOOL_TYPES = {'boolean'}
 
@@ -153,12 +153,30 @@ def _in(input, values):
         if input in value:
             return True
     return False
+    
+def _not_in(input, values):
+    """Checks if the given input is not in the list of values and is not a subset of a value
+
+    :param input: The input to check
+    :type input: int/float/string
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    if input in values:
+        return False
+    for value in values:
+        if input in value:
+            return False
+    return True
 
 def _contains(input, values):
     """Checks if the given input contains a value from the given list
 
     :param input: The input to check
-    :type input: int/float
+    :type input: string/list
     :param values: The values to check
     :type values: list
     :returns: True if the condition check passes, False otherwise
@@ -172,7 +190,7 @@ def _contains(input, values):
 
 
 ALL_CONDITIONS = {'<': _less_than, '<=': _less_than_equal, '>': _greater_than,'>=': _greater_than_equal,
-                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'contains': _contains}
+                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'not in': _not_in, 'contains': _contains}
 
 class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
@@ -263,25 +281,35 @@ class DataFilter(object):
         :rtype: bool
         """
 
+        success = True
         for filter in self.filters:
             name = filter['name']
             type = filter['type']
             cond = filter['condition']
             values = filter['values']
-            success = True
+            filter_success = True
             if name in data.values:
                 param = data.values[name]
                 try:
                     if type == 'filename':
-                        filenames = [scale_file.id for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        success = ALL_CONDITIONS[cond](filenames, values)
+                        filenames = [scale_file.file_name for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        for filename in filenames:
+                            filter_success |= ALL_CONDITIONS[cond](filename, values)
+                    if type == 'media-type':
+                        media_types = [scale_file.media_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        filter_success &= ALL_CONDITIONS[cond](media_types, values)
                 except AttributeError:
                     logger.error('Attempting to run file filter on json parameter or vice versa')
+                    success = False
+                except KeyError:
+                    logger.error('Condition %s does not exist' % cond)
                     success = False
                 except ScaleFile.DoesNotExist:
                     logger.error('Attempting to run file filter on non-existant file(s): %d' % param.file_ids)
                     success = False
-        return self.accept
+            if success and not self.all:
+                return True # One filter passed, so return True
+        return success
 
     def is_filter_equal(self, data_filter):
         """Indicates whether the given data filter is equal to this filter or not
@@ -292,8 +320,10 @@ class DataFilter(object):
         :rtype: bool
         """
 
-        # TODO: provide real implementation
-        return self.accept == data_filter.accept
+        equal = self.all == data_filter.all
+        equal &= self.filters == data_filter.filters
+        
+        return equal
 
     def validate(self, interface):
         """Validates this data filter against the given interface
