@@ -45,7 +45,7 @@ DATA_FILTER_SCHEMA = {
                         'type': 'string',
                     },
                     'type': {
-                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type'],
+                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type'],
                     },
                     'condition': {
                         'type': 'string',

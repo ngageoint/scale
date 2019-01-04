@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 FILE_TYPES = {'filename', 'media-type'}
 
-STRING_TYPES = {'string', 'filename', 'media-type'}
+STRING_TYPES = {'string', 'filename', 'media-type', 'data-type'}
 
 STRING_CONDITIONS = {'==', '!=', 'in', 'not in', 'contains'}
 
@@ -183,9 +183,12 @@ def _contains(input, values):
     :rtype: bool
     """
 
-    for value in values:
-        if value in input:
-            return True
+    try:
+        for value in values:
+            if value in input:
+                return True
+    except TypeError:
+        return False # catch error if input is not an iterable
     return False
 
 
@@ -244,13 +247,16 @@ class DataFilter(object):
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, STRING_CONDITIONS))
 
-        if type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
+        elif type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, NUMBER_CONDITIONS))
 
-        if type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
+        elif type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, BOOL_CONDITIONS))
+                                    
+        else:
+            raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
         if not values:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
 
@@ -287,17 +293,29 @@ class DataFilter(object):
             type = filter['type']
             cond = filter['condition']
             values = filter['values']
-            filter_success = True
+            filter_success = False
             if name in data.values:
                 param = data.values[name]
                 try:
                     if type == 'filename':
                         filenames = [scale_file.file_name for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        # attempt to run condition on list first, i.e. in case we're checking 'contains'
+                        filter_success |= ALL_CONDITIONS[cond](filenames, values)
                         for filename in filenames:
+                            # attempt to run condition on inidividual items, if any succeed we pass the filter
                             filter_success |= ALL_CONDITIONS[cond](filename, values)
-                    if type == 'media-type':
+                    elif type == 'media-type':
                         media_types = [scale_file.media_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        filter_success &= ALL_CONDITIONS[cond](media_types, values)
+                        filter_success |= ALL_CONDITIONS[cond](media_types, values)
+                        for media_type in media_types:
+                            filter_success |= ALL_CONDITIONS[cond](media_type, values)
+                    elif type == 'data-type':
+                        data_types = [scale_file.data_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        filter_success |= ALL_CONDITIONS[cond](data_types, values)
+                        for data_type in data_types:
+                            filter_success |= ALL_CONDITIONS[cond](data_type, values)
+                    else:
+                        filter_success |= ALL_CONDITIONS[cond](param.value, values)
                 except AttributeError:
                     logger.error('Attempting to run file filter on json parameter or vice versa')
                     success = False
@@ -307,8 +325,9 @@ class DataFilter(object):
                 except ScaleFile.DoesNotExist:
                     logger.error('Attempting to run file filter on non-existant file(s): %d' % param.file_ids)
                     success = False
-            if success and not self.all:
+            if filter_success and not self.all:
                 return True # One filter passed, so return True
+            success &= filter_success
         return success
 
     def is_filter_equal(self, data_filter):
