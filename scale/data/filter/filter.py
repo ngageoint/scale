@@ -9,7 +9,7 @@ from storage.models import ScaleFile
 
 logger = logging.getLogger(__name__)
 
-FILE_TYPES = {'filename', 'media-type'}
+FILE_TYPES = {'filename', 'media-type', 'data-type'}
 
 STRING_TYPES = {'string', 'filename', 'media-type', 'data-type'}
 
@@ -247,16 +247,17 @@ class DataFilter(object):
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, STRING_CONDITIONS))
 
-        elif type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
+        if type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, NUMBER_CONDITIONS))
 
-        elif type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
+        if type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, BOOL_CONDITIONS))
                                     
-        else:
+        if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES:
             raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
+            
         if not values:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
 
@@ -327,6 +328,8 @@ class DataFilter(object):
                     success = False
             if filter_success and not self.all:
                 return True # One filter passed, so return True
+            if not filter_success and self.all:
+                return False # One filter failed, so return False
             success &= filter_success
         return success
 
@@ -357,6 +360,26 @@ class DataFilter(object):
 
         warnings = []
 
-        # TODO: implement
+        for filter in self.filters:
+            name = filter['name']
+            type = filter['type']
+            if name in interface.parameters:
+                if interface.parameters[name].param_type == 'file' and type not in FILE_TYPES:
+                    raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a file type and requires a file type filter.')
+                if interface.parameters[name].param_type == 'json' and type in FILE_TYPES:
+                    raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a json type and will not work with a file type filter.')
+                if interface.parameters[name].param_type == 'json':
+                    if interface.parameters[name].json_type in STRING_TYPES and type not in STRING_TYPES:
+                        raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a string and filter is not a string type filter')
+                    if interface.parameters[name].json_type in NUMBER_TYPES and type not in NUMBER_TYPES:
+                        raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a number and filter is not a number type filter')
+                    if interface.parameters[name].json_type in BOOL_TYPES and type not in BOOL_TYPES:
+                        raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a number and filter is not a number type filter')
+                    json_type = interface.parameters[name].json_type
+                    if json_type not in BOOL_TYPES and json_type not in STRING_TYPES and json_type not in NUMBER_TYPES:
+                        raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter type is not supported by data filters')
+            else:
+                warnings.append(ValidationWarning('UNMATCHED_FILTER',
+                                                  'Filter with name \'%s\' does not have a matching parameter'))
 
         return warnings
