@@ -2,9 +2,14 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from data.filter.exceptions import InvalidDataFilter
+import logging
 
-ALL_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in', 'contains'}
+from data.filter.exceptions import InvalidDataFilter
+from storage.models import ScaleFile
+
+logger = logging.getLogger(__name__)
+
+FILE_TYPES = {'filename', 'media-type'}
 
 STRING_TYPES = {'string', 'filename', 'media-type'}
 
@@ -17,6 +22,157 @@ NUMBER_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in'}
 BOOL_TYPES = {'boolean'}
 
 BOOL_CONDITIONS = {'==', '!='}
+
+
+def _less_than(input, values):
+    """Checks if the given input is < the first value in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input < values[0]
+    except IndexError:
+        return False
+
+def _less_than_equal(input, values):
+    """Checks if the given input is <= the first value in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input <= values[0]
+    except IndexError:
+        return False
+
+def _greater_than(input, values):
+    """Checks if the given input is > the first value in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input > values[0]
+    except IndexError:
+        return False
+
+def _greater_than_equal(input, values):
+    """Checks if the given input is >= the first value in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input >= values[0]
+    except IndexError:
+        return False
+
+def _equal(input, values):
+    """Checks if the given input is equal to the first value in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input == values[0]
+    except IndexError:
+        return False
+
+def _not_equal(input, values):
+    """Checks if the given input is not equal to the first value in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input != values[0]
+    except IndexError:
+        return False
+
+def _between(input, values):
+    """Checks if the given input is between the first two values in the list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return input >= values[0] and input <= values[1]
+    except IndexError:
+        return False
+
+def _in(input, values):
+    """Checks if the given input is in the list of values, or is a subset of a value
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    if input in values:
+        return True
+    for value in values:
+        if input in value:
+            return True
+    return False
+
+def _contains(input, values):
+    """Checks if the given input contains a value from the given list
+
+    :param input: The input to check
+    :type input: int/float
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    for value in values:
+        if value in input:
+            return True
+    return False
+
+
+ALL_CONDITIONS = {'<': _less_than, '<=': _less_than_equal, '>': _greater_than,'>=': _greater_than_equal,
+                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'contains': _contains}
 
 class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
@@ -107,7 +263,24 @@ class DataFilter(object):
         :rtype: bool
         """
 
-        # TODO: provide real implementation
+        for filter in self.filters:
+            name = filter['name']
+            type = filter['type']
+            cond = filter['condition']
+            values = filter['values']
+            success = True
+            if name in data.values:
+                param = data.values[name]
+                try:
+                    if type == 'filename':
+                        filenames = [scale_file.id for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        success = ALL_CONDITIONS[cond](filenames, values)
+                except AttributeError:
+                    logger.error('Attempting to run file filter on json parameter or vice versa')
+                    success = False
+                except ScaleFile.DoesNotExist:
+                    logger.error('Attempting to run file filter on non-existant file(s): %d' % param.file_ids)
+                    success = False
         return self.accept
 
     def is_filter_equal(self, data_filter):
