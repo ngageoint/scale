@@ -75,6 +75,9 @@ def convert_filter_to_v6_json(data_filter):
 
     filter_dict = {'version': SCHEMA_VERSION}
 
+    filter_dict['filters'] = data_filter.filters
+    filter_dict['all'] = data_filter.all
+
     return DataFilterV6(data_filter=filter_dict, do_validate=False)
 
 
@@ -113,7 +116,10 @@ class DataFilterV6(object):
         :rtype: :class:`data.filter.filter.DataFilter`:
         """
 
-        data_filter = DataFilter(True)
+        data_filter = DataFilter({}, self._data_filter['all'])
+
+        for filter in self._data_filter['filters']:
+            data_filter.add_filter(filter['name'], filter['type'], filter['condition'], filter['values'])
 
         return data_filter
 

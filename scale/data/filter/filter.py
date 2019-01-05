@@ -6,6 +6,7 @@ import logging
 
 from data.filter.exceptions import InvalidDataFilter
 from storage.models import ScaleFile
+from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
