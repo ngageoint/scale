@@ -19,17 +19,21 @@ class TestDataFilterV6(TestCase):
         # Try interface with nothing set
         filter = DataFilter()
         json = convert_filter_to_v6_json(filter)
-        DataFilterV6(data=json.get_dict(), do_validate=True)  # Revalidate
+        DataFilterV6(data_filter=json.get_dict(), do_validate=True)  # Revalidate
 
         # Try data with a variety of values
-        filter = DataFilter()
-        filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
-        filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
-        filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': [0]})
-        filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': [0,100]})
+        filter_dict = {'version': '6', 'filters': [
+            {'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']},
+            {'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']},
+            {'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']},
+            {'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']}
+        ]}
+        filter = DataFilter(filters=filter_dict['filters'])
         json = convert_filter_to_v6_json(filter)
-        DataFilterV6(data=json.get_dict(), do_validate=True)  # Revalidate
-        self.assertSetEqual(set(json.get_filter().filters.keys()), {'input_a', 'input_b', 'input_c', 'input_d'})
+        DataFilterV6(data_filter=json.get_dict(), do_validate=True)  # Revalidate
+        filter_dict['filters'][2]['values'] = [0]
+        filter_dict['filters'][3]['values'] = [0,100]
+        self.assertItemsEqual(json.get_filter().filters, filter_dict['filters'])
 
     def test_init_validation(self):
         """Tests the validation done in __init__"""
@@ -57,9 +61,6 @@ class TestDataFilterV6(TestCase):
             {'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': [0]},
             {'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': [0, 100]}
         ]}
-        data1 = DataFilterV6(data_filter=filter, do_validate=True).get_data()
-        self.assertItemsEqual(data1.filters['input_a'], [1234])
-        self.assertItemsEqual(data1.filters['input_b'], [1235, 1236])
-        self.assertEqual(data1.filters['input_c'], 999)
-        self.assertItemsEqual(data1.filters['input_d'], ['hello'])
+        data1 = DataFilterV6(data_filter=filter, do_validate=True).get_filter()
+        self.assertItemsEqual(data1.filters, filter['filters'])
 

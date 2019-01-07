@@ -11,10 +11,8 @@ from data.filter.exceptions import InvalidDataFilter
 SCHEMA_VERSION = '6'
 
 
-# TODO: design and implement
 DATA_FILTER_SCHEMA = {
     'type': 'object',
-    'required': [],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -24,6 +22,7 @@ DATA_FILTER_SCHEMA = {
         'filters': {
             'description': 'Defines filters to run on data parameters',
             'type': 'array',
+            'minItems': 0,
             'items': {
                 '$ref': '#/definitions/filter'
             },
@@ -35,29 +34,25 @@ DATA_FILTER_SCHEMA = {
     },
     'definitions': {
         'filter': {
-            {
-                'type': 'object',
-                'description': 'A configuration for a data filter',
-                'required': ['name', 'type', 'condition', 'values'],
-                'additionalProperties': False,
-                'properties': {
-                    'name': {
-                        'type': 'string',
-                    },
-                    'type': {
-                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type'],
-                    },
-                    'condition': {
-                        'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains'],
-                    },
-                    'values': {
-                        'type': 'array',
-                        'items': {
-                            'type': 'string',
-                        }
-                    },
+            'type': 'object',
+            'description': 'A configuration for a data filter',
+            'required': ['name', 'type', 'condition', 'values'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
                 },
-            }
+                'type': {
+                    'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type'],
+                },
+                'condition': {
+                    'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains'],
+                },
+                'values': {
+                    'type': 'array',
+                    'minItems': 1,
+                },
+            },
         },
     },
 }
@@ -95,12 +90,22 @@ class DataFilterV6(object):
         """
 
         if not data_filter:
-            data_filter = {}
+            data_filter = {'filters': [], 'all': True}
         self._data_filter = data_filter
 
         if 'version' not in self._data_filter:
             self._data_filter['version'] = SCHEMA_VERSION
+            
+        if self._data_filter['version'] != SCHEMA_VERSION:
+            msg = '%s is an unsupported version number'
+            raise InvalidDataFilter('INVALID_VERSION', msg % self._data_filter['version'])
 
+        if 'all' not in self._data_filter:
+            self._data_filter['all'] = True
+            
+        if 'filters' not in self._data_filter:
+            self._data_filter['filters'] = []
+            
         try:
             if do_validate:
                 validate(self._data_filter, DATA_FILTER_SCHEMA)
@@ -116,10 +121,10 @@ class DataFilterV6(object):
         :rtype: :class:`data.filter.filter.DataFilter`:
         """
 
-        data_filter = DataFilter({}, self._data_filter['all'])
+        data_filter = DataFilter([], self._data_filter['all'])
 
         for filter in self._data_filter['filters']:
-            data_filter.add_filter(filter['name'], filter['type'], filter['condition'], filter['values'])
+            data_filter.add_filter(filter)
 
         return data_filter
 

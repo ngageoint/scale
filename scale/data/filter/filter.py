@@ -14,7 +14,7 @@ FILE_TYPES = {'filename', 'media-type', 'data-type'}
 
 STRING_TYPES = {'string', 'filename', 'media-type', 'data-type'}
 
-STRING_CONDITIONS = {'==', '!=', 'in', 'not in', 'contains'}
+STRING_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains'}
 
 NUMBER_TYPES = {'integer', 'number'}
 
@@ -200,7 +200,7 @@ class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
-    def __init__(self, filters, all=True):
+    def __init__(self, filters=[], all=True):
         """Constructor
 
         :param filters: Filters to determine whether to accept or deny data
@@ -216,22 +216,16 @@ class DataFilter(object):
         self.filters = filters
         self.all = all
 
-    def add_filter(self, name, type, condition, values):
+    def add_filter(self, filter):
         """Adds a filter definition
 
-        :param name: Name of the data value to compare against
-        :type name: string
-        :param type: The type of the data value being compared
-        :type type: string
-        :param condition: The condition to test (<, >, ==, between, contains, etc)
-        :type condition: string
-        :param values: The values to compare for the condition
-        :type values: list
+        :param filter: data filter to add
+        :type filter: dict
 
         :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
         """
 
-        filter = DataFilter.validate_filter(name, type, condition, values)
+        filter = DataFilter.validate_filter(filter)
 
         self.filters.append(filter)
 
@@ -340,17 +334,12 @@ class DataFilter(object):
 
         return warnings
 
-    def validate_filter(name, type, condition, values):
+    @staticmethod
+    def validate_filter(filter):
         """Validates a data filter dictionary
 
-        :param name: Name of the data value to compare against
-        :type name: string
-        :param type: The type of the data value being compared
-        :type type: string
-        :param condition: The condition to test (<, >, ==, between, contains, etc)
-        :type condition: string
-        :param values: The values to compare for the condition
-        :type values: list
+        :param filter: data filter to validate
+        :type filter: dict
 
         :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
 
@@ -358,15 +347,23 @@ class DataFilter(object):
         :rtype: dict
         """
 
-        if not name:
+        if 'name' not in filter:
             raise InvalidDataFilter('MISSING_NAME', 'Missing name for filter')
 
-        if not type:
+        name = filter['name']
+        if 'type' not in filter:
             raise InvalidDataFilter('MISSING_TYPE', 'Missing type for \'%s\'' % name)
 
-        if not condition:
+        if 'condition' not in filter:
             raise InvalidDataFilter('MISSING_CONDITION', 'Missing condition for \'%s\'' % name)
 
+        if 'values' not in filter:
+            raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
+            
+        type = filter['type']
+        condition = filter['condition']
+        values = filter['values']
+        
         if condition not in ALL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, ALL_CONDITIONS))
@@ -385,9 +382,6 @@ class DataFilter(object):
 
         if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES:
             raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
-
-        if not values:
-            raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
 
         filter_values = []
         if type == 'number':
