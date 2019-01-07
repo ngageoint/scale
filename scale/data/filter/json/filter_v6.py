@@ -48,7 +48,7 @@ DATA_FILTER_SCHEMA = {
                         'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type'],
                     },
                     'condition': {
-                        'type': 'string',
+                        'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains'],
                     },
                     'values': {
                         'type': 'array',
@@ -63,7 +63,6 @@ DATA_FILTER_SCHEMA = {
 }
 
 
-# TODO: implement
 def convert_filter_to_v6_json(data_filter):
     """Returns the v6 data filter JSON for the given data filter
 
@@ -105,10 +104,11 @@ class DataFilterV6(object):
         try:
             if do_validate:
                 validate(self._data_filter, DATA_FILTER_SCHEMA)
+                for filter in data_filter['filters']:
+                    DataFilter.validate_filter(filter)
         except ValidationError as ex:
             raise InvalidDataFilter('INVALID_DATA_FILTER', 'Invalid data filter: %s' % unicode(ex))
 
-    # TODO: implement
     def get_filter(self):
         """Returns the data filter represented by this JSON
 

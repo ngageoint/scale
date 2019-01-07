@@ -217,7 +217,7 @@ class DataFilter(object):
         self.all = all
 
     def add_filter(self, name, type, condition, values):
-        """Adds a condition node to the recipe graph
+        """Adds a filter definition
 
         :param name: Name of the data value to compare against
         :type name: string
@@ -228,57 +228,12 @@ class DataFilter(object):
         :param values: The values to compare for the condition
         :type values: list
 
-        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
+        :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
         """
 
-        if not name:
-            raise InvalidDataFilter('MISSING_NAME', 'Missing name for filter')
+        filter = DataFilter.validate_filter(name, type, condition, values)
 
-        if not type:
-            raise InvalidDataFilter('MISSING_TYPE', 'Missing type for \'%s\'' % name)
-
-        if not condition:
-            raise InvalidDataFilter('MISSING_CONDITION', 'Missing condition for \'%s\'' % name)
-
-        if condition not in ALL_CONDITIONS:
-            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
-                                    % (condition, name, ALL_CONDITIONS))
-
-        if type in STRING_TYPES and condition not in STRING_CONDITIONS:
-            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
-                                    % (condition, name, STRING_CONDITIONS))
-
-        if type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
-            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
-                                    % (condition, name, NUMBER_CONDITIONS))
-
-        if type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
-            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
-                                    % (condition, name, BOOL_CONDITIONS))
-                                    
-        if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES:
-            raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
-            
-        if not values:
-            raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
-
-        filter_values = []
-        if type == 'number':
-            for value in values:
-                try:
-                    filter_values.append(float(value))
-                except ValueError:
-                    raise InvalidDataFilter('VALUE_ERROR', 'Expected float for \'%s\', found %s' % (name, value))
-        elif type == 'integer':
-            for value in values:
-                try:
-                    filter_values.append(int(value))
-                except ValueError:
-                    raise InvalidDataFilter('VALUE_ERROR', 'Expected int for \'%s\', found %s' % (name, value))
-        else:
-            filter_values.extend(values)
-
-        self.filters.append({'name': name, 'type': type, 'condition': condition, 'values': filter_values})
+        self.filters.append(filter)
 
     def is_data_accepted(self, data):
         """Indicates whether the given data passes the filter or not
@@ -384,3 +339,70 @@ class DataFilter(object):
                                                   'Filter with name \'%s\' does not have a matching parameter'))
 
         return warnings
+
+    def validate_filter(name, type, condition, values):
+        """Validates a data filter dictionary
+
+        :param name: Name of the data value to compare against
+        :type name: string
+        :param type: The type of the data value being compared
+        :type type: string
+        :param condition: The condition to test (<, >, ==, between, contains, etc)
+        :type condition: string
+        :param values: The values to compare for the condition
+        :type values: list
+
+        :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
+
+        :returns: Validated filter if the tests pass
+        :rtype: dict
+        """
+
+        if not name:
+            raise InvalidDataFilter('MISSING_NAME', 'Missing name for filter')
+
+        if not type:
+            raise InvalidDataFilter('MISSING_TYPE', 'Missing type for \'%s\'' % name)
+
+        if not condition:
+            raise InvalidDataFilter('MISSING_CONDITION', 'Missing condition for \'%s\'' % name)
+
+        if condition not in ALL_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, ALL_CONDITIONS))
+
+        if type in STRING_TYPES and condition not in STRING_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, STRING_CONDITIONS))
+
+        if type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, NUMBER_CONDITIONS))
+
+        if type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
+            raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
+                                    % (condition, name, BOOL_CONDITIONS))
+
+        if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES:
+            raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
+
+        if not values:
+            raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
+
+        filter_values = []
+        if type == 'number':
+            for value in values:
+                try:
+                    filter_values.append(float(value))
+                except ValueError:
+                    raise InvalidDataFilter('VALUE_ERROR', 'Expected float for \'%s\', found %s' % (name, value))
+        elif type == 'integer':
+            for value in values:
+                try:
+                    filter_values.append(int(value))
+                except ValueError:
+                    raise InvalidDataFilter('VALUE_ERROR', 'Expected int for \'%s\', found %s' % (name, value))
+        else:
+            filter_values.extend(values)
+
+        return {'name': name, 'type': type, 'condition': condition, 'values': filter_values}
