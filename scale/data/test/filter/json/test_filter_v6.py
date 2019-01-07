@@ -47,6 +47,13 @@ class TestDataFilterV6(TestCase):
             DataFilterV6(filter, do_validate=True)
         self.assertEqual(context.exception.error.name, 'INVALID_VERSION')
 
+        # invalid type
+        filter = {'version': '6', 'filters': [
+            {'name': 'input_a', 'type': 'BAD', 'condition': '>', 'values': ['application/json']}
+        ]}
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilterV6(filter, do_validate=True
+        
         # invalid condition
         filter = {'version': '6', 'filters': [
             {'name': 'input_a', 'type': 'media-type', 'condition': 'BAD', 'values': ['application/json']}

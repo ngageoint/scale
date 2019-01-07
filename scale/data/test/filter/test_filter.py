@@ -80,38 +80,45 @@ class TestDataFilter(TestCase):
 
         self.assertTrue(filter.is_data_accepted(data))
 
-    def test_validate(self):
-        """Tests calling Data.validate()"""
+    def test_validate_filter(self):
+        """Tests calling DataFilter.validate_filter()"""
 
-        interface = Interface()
-        data = Data()
-
-        interface.add_parameter(FileParameter('input_1', ['application/json']))
-        interface.add_parameter(JsonParameter('input_2', 'integer'))
-        data.add_value(FileValue('input_1', [123]))
-        data.add_value(JsonValue('input_2', 100))
-        data.add_value(JsonValue('extra_input_1', 'hello'))
-        data.add_value(JsonValue('extra_input_2', 'there'))
-
-        # Valid data
-        data.validate(interface)
-        # Ensure extra data values are removed
-        self.assertSetEqual(set(data.values.keys()), {'input_1', 'input_2'})
-
-        # Data is missing required input 3
-        interface.add_parameter(FileParameter('input_3', ['image/gif'], required=True))
-        with self.assertRaises(InvalidData) as context:
-            data.validate(interface)
-        self.assertEqual(context.exception.error.name, 'PARAM_REQUIRED')
-
-        data.add_value(FileValue('input_3', [999]))  # Input 3 taken care of now
-
-        # Invalid data
-        interface.add_parameter(JsonParameter('input_4', 'string'))
-        mock_value = MagicMock()
-        mock_value.name = 'input_4'
-        mock_value.validate.side_effect = InvalidData('MOCK', '')
-        data.add_value(mock_value)
-        with self.assertRaises(InvalidData) as context:
-            data.validate(interface)
-        self.assertEqual(context.exception.error.name, 'MOCK')
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({})
+        self.assertEqual(context.exception.error.name, 'MISSING_NAME')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a'})
+        self.assertEqual(context.exception.error.name, 'MISSING_TYPE')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'integer'})
+        self.assertEqual(context.exception.error.name, 'MISSING_CONDITION')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'integer', 'condition': '>'})
+        self.assertEqual(context.exception.error.name, 'MISSING_VALUES')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'integer', 'condition': 'BAD', 'values': [0]})
+        self.assertEqual(context.exception.error.name, 'INVALID_CONDITION')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'string', 'condition': 'between', 'values': ['0']})
+        self.assertEqual(context.exception.error.name, 'INVALID_CONDITION')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'integer', 'condition': 'contains', 'values': [0]})
+        self.assertEqual(context.exception.error.name, 'INVALID_CONDITION')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'boolean', 'condition': 'contains', 'values': [0]})
+        self.assertEqual(context.exception.error.name, 'INVALID_CONDITION')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'bad', 'condition': 'contains', 'values': [0]})
+        self.assertEqual(context.exception.error.name, 'INVALID_TYPE')
+        
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'integer', 'condition': '<', 'values': ['not a number']})
+        self.assertEqual(context.exception.error.name, 'VALUE_ERROR')
