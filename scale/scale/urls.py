@@ -11,7 +11,7 @@ admin.autodiscover()
 # Add all the applications that expose REST APIs
 REST_API_APPS = [
     'batch',
-    'datasets',
+    'dataset',
     'diagnostic',
     'error',
     'ingest',

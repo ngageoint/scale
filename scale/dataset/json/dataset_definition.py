@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from dataset.exceptions import InvalidDataSetDefinition()
+from datasets.exceptions import InvalidDataSetDefinition
 
 SCHEMA_VERSION = '6'
-DATA_SET_DEFINITIONA_SCHEMA = {
+DATASET_DEFINITION_SCHEMA = {
     'type': 'object',
     'required': ['definition'],
     'additionalProperties': False,
@@ -20,10 +20,22 @@ DATA_SET_DEFINITIONA_SCHEMA = {
         'definition': {
             'description': 'The data',
             'type': 'object',
+            'additionalProperties': {
+                '$ref': '#/definitions/parameter'  
+            },
         }
-    }
+    },
+    'definitions': {
+        'parameter': {
+            'description': 'The data set parameter defintion',
+            'type': 'object',
+            'required': [],
+            'properties': {
+                
+            },
+        },
+    },
 }
-
 
 def convert_definition_to_v6_json(definition):
     """Returns the v6 dataset definition JSON for the given definition
@@ -64,22 +76,19 @@ class DataSetDefinition(object):
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION
             
-        if self._definition['version'] != SCHEMA_VERSION:
-            self
-            
         self._populate_default_values()
         
         try:
             if do_validate:
-                validate(definition, DATA_SET_DEFINITIONA_SCHEMA)
+                validate(definition, DATASET_DEFINITION_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidDataSetDefinition(validation_error)
+            raise InvalidDataSetDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
         
-    def get_definition_dict(self):
+    def get_dict(self):
         """Returns the dict of the definition
         """
- 
-        
+
+        return self._definition
         
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values
