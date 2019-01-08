@@ -10,7 +10,7 @@ class Resource(object):
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, resource_type, reservation=None):
+    def __init__(self, name, resource_type, reservation='*'):
         """Constructor
 
         :param name: The name of the resource
@@ -38,7 +38,7 @@ class ScalarResource(Resource):
     """A type of resource represented by a scalar floating point value
     """
 
-    def __init__(self, name, value, reservation=None):
+    def __init__(self, name, value, reservation='*'):
         """Constructor
 
         :param name: The name of the resource
@@ -64,13 +64,13 @@ class Cpus(ScalarResource):
     """A scalar resource representing the number of CPUs
     """
 
-    def __init__(self, value, reservation=None):
+    def __init__(self, value, reservation='*'):
         """Constructor
 
         :param value: The number of CPUs
         :type value: float
         :param reservation: The principal of resource reservation
-        :type reservation: string
+        :type reservation: str
         """
 
         super(Cpus, self).__init__('cpus', value, reservation)
@@ -80,13 +80,13 @@ class Mem(ScalarResource):
     """A scalar resource representing the amount of memory in MiB
     """
 
-    def __init__(self, value, reservation=None):
+    def __init__(self, value, reservation='*'):
         """Constructor
 
         :param value: The amount of memory in MiB
         :type value: float
         :param reservation: The principal of resource reservation
-        :type reservation: string
+        :type reservation: str
         """
 
         super(Mem, self).__init__('mem', value, reservation)
@@ -96,13 +96,13 @@ class Disk(ScalarResource):
     """A scalar resource representing the amount of disk space in MiB
     """
 
-    def __init__(self, value, reservation=None):
+    def __init__(self, value, reservation='*'):
         """Constructor
 
         :param value: The amount of disk space in MiB
         :type value: float
         :param reservation: The principal of resource reservation
-        :type reservation: string
+        :type reservation: str
         """
 
         super(Disk, self).__init__('disk', value, reservation)
@@ -111,13 +111,13 @@ class Gpus(ScalarResource):
     """A scalar resource representing the number of GPUs
     """
 
-    def __init__(self, value, reservation=None):
+    def __init__(self, value, reservation='*'):
         """Constructor
 
         :param value: The number of GPUs
         :type value: float
         :param reservation: The principal of resource reservation
-        :type reservation: string
+        :type reservation: str
         """
 
         super(Gpus, self).__init__('gpus', value, reservation)
