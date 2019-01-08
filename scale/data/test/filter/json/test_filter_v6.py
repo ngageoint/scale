@@ -52,7 +52,8 @@ class TestDataFilterV6(TestCase):
             {'name': 'input_a', 'type': 'BAD', 'condition': '>', 'values': ['application/json']}
         ]}
         with self.assertRaises(InvalidDataFilter) as context:
-            DataFilterV6(filter, do_validate=True
+            DataFilterV6(filter, do_validate=True)
+        self.assertEqual(context.exception.error.name, 'INVALID_DATA_FILTER')
         
         # invalid condition
         filter = {'version': '6', 'filters': [
@@ -60,6 +61,7 @@ class TestDataFilterV6(TestCase):
         ]}
         with self.assertRaises(InvalidDataFilter) as context:
             DataFilterV6(filter, do_validate=True)
+        self.assertEqual(context.exception.error.name, 'INVALID_DATA_FILTER')
 
         # Valid v6 filter
         filter = {'version': '6', 'filters': [

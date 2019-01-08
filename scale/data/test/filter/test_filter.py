@@ -6,10 +6,13 @@ from django.test.testcases import TestCase
 from mock import MagicMock
 
 from data.data.data import Data
-from data.data.exceptions import InvalidData
 from data.data.value import FileValue, JsonValue
+from data.filter.filter import DataFilter
+from data.filter.exceptions import InvalidDataFilter
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
+
+import storage.test.utils as storage_test_utils
 
 
 class TestDataFilter(TestCase):
@@ -80,6 +83,40 @@ class TestDataFilter(TestCase):
 
         self.assertTrue(filter.is_data_accepted(data))
 
+    def test_validate(self):
+        """Tests calling DataFilter.validate()"""
+
+        filter = DataFilter(all=False)
+        filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
+        filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
+        filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
+        filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
+        
+        interface = Interface()
+        interface.add_parameter(FileParameter('input_a', ['application/json']))
+        warnings = filter.validate(interface)
+        self.assertEqual(len(warnings), 3)
+        self.assertEqual(warnings[0].name, 'UNMATCHED_FILTER')
+        
+        interface.add_parameter(JsonParameter('input_e', 'integer'))
+        warnings = filter.validate(interface)
+        self.assertEqual(len(warnings), 4)
+        self.assertEqual(warnings[3].name, 'UNMATCHED_PARAMETERS')
+        
+        interface.add_parameter(JsonParameter('input_b', 'integer'))
+        with self.assertRaises(InvalidDataFilter) as context:
+            filter.validate(interface)
+        self.assertEqual(context.exception.error.name, 'MISSING_NAME')
+        
+        interface2 = Interface()
+        interface2.add_parameter(FileParameter('input_a', ['application/json']))
+        interface2.add_parameter(JsonParameter('input_b', 'string'))
+        interface2.add_parameter(JsonParameter('input_c', 'integer'))
+        interface2.add_parameter(JsonParameter('input_d', 'integer'))
+        warnings = filter.validate(interface)
+        self.assertEqual(len(warnings), 0)
+        
+        
     def test_validate_filter(self):
         """Tests calling DataFilter.validate_filter()"""
 

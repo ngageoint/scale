@@ -14,7 +14,7 @@ FILE_TYPES = {'filename', 'media-type', 'data-type'}
 
 STRING_TYPES = {'string', 'filename', 'media-type', 'data-type'}
 
-STRING_CONDITIONS = {'<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains'}
+STRING_CONDITIONS = {'==', '!=', 'in', 'not in', 'contains'}
 
 NUMBER_TYPES = {'integer', 'number'}
 
@@ -309,11 +309,13 @@ class DataFilter(object):
         """
 
         warnings = []
+        unmatched = interface.parameters.keys()
 
         for filter in self.filters:
             name = filter['name']
             type = filter['type']
             if name in interface.parameters:
+                unmatched.remove(name)
                 if interface.parameters[name].param_type == 'file' and type not in FILE_TYPES:
                     raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a file type and requires a file type filter.')
                 if interface.parameters[name].param_type == 'json' and type in FILE_TYPES:
@@ -331,6 +333,9 @@ class DataFilter(object):
             else:
                 warnings.append(ValidationWarning('UNMATCHED_FILTER',
                                                   'Filter with name \'%s\' does not have a matching parameter'))
+        
+        if unmatched:
+            warnings.append(ValidationWarning('UNMATCHED_PARAMETERS', 'No matching filters for these parameters: \'%s\' ' % unmatched))
 
         return warnings
 
