@@ -265,16 +265,26 @@ class ScaleScheduler(object):
                     else:
                         skipped_roles.add(resource.role)
 
+            logger.info("Number of resources: %i" % len(resource_list))
+
             # Only register agent, if offers are being received
-            if len(resource_list):
+            if len(resource_list) > 0:
                 resources = NodeResources(resource_list)
                 total_resources.add(resources)
                 agents[agent_id] = Agent(agent_id, hostname)
                 resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
-                logger.debug(','.join([x.resources for x in resource_offers]))
+
+        logger.debug("Offer analysis complete with %i resource offers." % len(resource_offers))
 
         node_mgr.register_agents(agents.values())
+        logger.debug("Agents registered.")
         resource_mgr.add_new_offers(resource_offers)
+        logger.debug("Resource offers added.")
+        try:
+            logger.info("ResourceOffer: %s" % ",".join([x for x in resource_offers]))
+        except:
+            logger.exception("Failed to output details about resource offers.")
+
         num_offers = len(resource_offers)
         logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))
         if len(skipped_roles):

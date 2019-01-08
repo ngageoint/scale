@@ -204,6 +204,7 @@ class SchedulingManager(object):
             for offer in offers:
                 total_offer_count += 1
                 total_offer_resources.add(offer.resources)
+                logger.debug(offer.resources)
                 mesos_offer = create_simple_offer(offer.id)
                 mesos_offers.append(mesos_offer)
             tasks = node.allocated_tasks
