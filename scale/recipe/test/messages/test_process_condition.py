@@ -26,7 +26,7 @@ class TestProcessCondition(TestCase):
 
         definition = RecipeDefinition(Interface())
         # TODO: once DataFilter is implemented, create a DataFilter object here that accepts the inputs
-        definition.add_condition_node('node_a', Interface(), DataFilter(True))
+        definition.add_condition_node('node_a', Interface(), DataFilter()) #True
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
@@ -126,7 +126,7 @@ class TestProcessCondition(TestCase):
         definition.add_job_node('node_a', job_type_1.name, job_type_1.version, job_type_1.revision_num)
         definition.add_job_node('node_b', job_type_2.name, job_type_2.version, job_type_2.revision_num)
         # TODO: once DataFilter is implemented, create a DataFilter object here that accepts the inputs
-        definition.add_condition_node('node_c', cond_interface, DataFilter(True))
+        definition.add_condition_node('node_c', cond_interface, DataFilter()) #True
         definition.add_dependency('node_a', 'node_c')
         definition.add_dependency('node_b', 'node_c')
         definition.add_dependency_input_connection('node_c', 'INPUT_C_1', 'node_a', 'OUTPUT_A')

@@ -200,7 +200,7 @@ class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
-    def __init__(self, filter_list=[], all=True):
+    def __init__(self, filter_list=None, all=True):
         """Constructor
 
         :param filters: Filters to determine whether to accept or deny data
@@ -209,10 +209,9 @@ class DataFilter(object):
         :type filters: boolean
         """
 
-        # TODO: there are a number of unit tests that will need to have real DataFilters created instead of
-        # DataFilter(True) or DataFilter(False)
-
         # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
+        if not filter_list:
+            filter_list = []
         self.filter_list = filter_list
         self.all = all
 

@@ -281,7 +281,7 @@ class TestRecipeDefinition(TestCase):
         definition.add_job_node('A', 'job_type_1', '1.0', 1)
         condition_interface = Interface()
         condition_interface.add_parameter(JsonParameter('cond_param', 'integer'))
-        definition.add_condition_node('B', condition_interface, DataFilter(True))
+        definition.add_condition_node('B', condition_interface, DataFilter()) #True
         definition.add_recipe_node('C', 'recipe_type_1', 1)
         definition.add_dependency('A', 'B')
         definition.add_dependency('B', 'C')

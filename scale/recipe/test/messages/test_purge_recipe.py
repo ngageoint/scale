@@ -345,7 +345,7 @@ class TestPurgeRecipe(TransactionTestCase):
         definition.add_job_node('C', job_type_3.name, job_type_3.version, job_type_3.revision_num)
         definition.add_recipe_node('D', recipe_type_1.name, recipe_type_1.revision_num)
         definition.add_job_node('E', job_type_4.name, job_type_4.version, job_type_4.revision_num)
-        definition.add_condition_node('F', Interface(), DataFilter(False))
+        definition.add_condition_node('F', Interface(), DataFilter()) #False
         definition.add_job_node('G', job_type_4.name, job_type_4.version, job_type_4.revision_num)
         definition.add_dependency('A', 'B')
         definition.add_dependency('A', 'C')

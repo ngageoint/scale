@@ -125,8 +125,8 @@ class TestUpdateRecipe(TestCase):
         definition.add_job_node('node_f', job_type_f.name, job_type_f.version, job_type_f.revision_num)
         definition.add_job_node('node_g', job_g.job_type.name, job_g.job_type.version, job_g.job_type_rev.revision_num)
         definition.add_job_node('node_h', job_h.job_type.name, job_h.job_type.version, job_h.job_type_rev.revision_num)
-        definition.add_condition_node('node_i', Interface(), DataFilter(True))
-        definition.add_condition_node('node_j', Interface(), DataFilter(True))
+        definition.add_condition_node('node_i', Interface(), DataFilter()) #True
+        definition.add_condition_node('node_j', Interface(), DataFilter()) #True
         definition.add_job_node('node_k', job_type_k.name, job_type_k.version, job_type_k.revision_num)
         definition.add_dependency('node_a', 'node_c')
         definition.add_dependency('node_a', 'node_e')

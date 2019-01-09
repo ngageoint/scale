@@ -26,7 +26,7 @@ class TestDataFilter(TestCase):
     def test_add_filter(self):
         """Tests calling DataFilter.add_value()"""
 
-        data_filter = DataFilter(filter_list=[], all=True)
+        data_filter = DataFilter()
         data_filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
         data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
         data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
@@ -55,7 +55,7 @@ class TestDataFilter(TestCase):
     def test_is_data_accepted(self):
         """Tests calling DataFilter.is_data_accepted()"""
 
-        data_filter = DataFilter(filter_list=[], all=False)
+        data_filter = DataFilter(all=False)
         data_filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
         data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
         data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
@@ -85,7 +85,7 @@ class TestDataFilter(TestCase):
     def test_validate(self):
         """Tests calling DataFilter.validate()"""
 
-        data_filter = DataFilter(filter_list=[], all=False)
+        data_filter = DataFilter(all=False)
         data_filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
         data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
         data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
@@ -94,8 +94,6 @@ class TestDataFilter(TestCase):
         interface = Interface()
         interface.add_parameter(FileParameter('input_a', ['application/json']))
         warnings = data_filter.validate(interface)
-        for warn in warnings:
-            print warn.name
         self.assertEqual(len(warnings), 3)
         self.assertEqual(warnings[0].name, 'UNMATCHED_FILTER')
         
