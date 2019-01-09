@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import django
 
 from django.test.testcases import TestCase
-from mock import MagicMock
 
 from data.data.data import Data
 from data.data.value import FileValue, JsonValue
@@ -27,11 +26,11 @@ class TestDataFilter(TestCase):
     def test_add_filter(self):
         """Tests calling DataFilter.add_value()"""
 
-        filter = DataFilter()
-        filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
-        filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
-        filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
-        filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
+        data_filter = DataFilter(filter_list=[], all=True)
+        data_filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
+        data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
+        data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
+        data_filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
 
         filter_dict = {'version': '6', 'filters': [
             {'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']},
@@ -39,28 +38,28 @@ class TestDataFilter(TestCase):
             {'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': [0]},
             {'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': [0,100]}
         ]}
-        self.assertItemsEqual(filter.filters, filter_dict['filters'])
+        self.assertItemsEqual(data_filter.filter_list, filter_dict['filters'])
         
         with self.assertRaises(InvalidDataFilter) as context:
-            filter.add_filter({})
+            data_filter.add_filter({})
         self.assertEqual(context.exception.error.name, 'MISSING_NAME')
         
         with self.assertRaises(InvalidDataFilter) as context:
-            filter.add_filter({'name': 'input_a'})
+            data_filter.add_filter({'name': 'input_a'})
         self.assertEqual(context.exception.error.name, 'MISSING_TYPE')
         
         with self.assertRaises(InvalidDataFilter) as context:
-            filter.add_filter({'name': 'input_a', 'type': 'integer'})
+            data_filter.add_filter({'name': 'input_a', 'type': 'integer'})
         self.assertEqual(context.exception.error.name, 'MISSING_CONDITION')
 
     def test_is_data_accepted(self):
         """Tests calling DataFilter.is_data_accepted()"""
 
-        filter = DataFilter(all=False)
-        filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
-        filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
-        filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
-        filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
+        data_filter = DataFilter(filter_list=[], all=False)
+        data_filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
+        data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
+        data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
+        data_filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
         
         data = Data()
 
@@ -68,10 +67,10 @@ class TestDataFilter(TestCase):
         data.add_value(file_value)
         
         # first filter passes, so data is accepted if all is set to false
-        self.assertTrue(filter.is_data_accepted(data))
-        filter.all = True
+        self.assertTrue(data_filter.is_data_accepted(data))
+        data_filter.all = True
         # other filters fail so data is not accepted
-        self.assertFalse(filter.is_data_accepted(data))
+        self.assertFalse(data_filter.is_data_accepted(data))
         
         # get other filters to pass
         json_value = JsonValue('input_b', 'abcdefg')
@@ -81,31 +80,33 @@ class TestDataFilter(TestCase):
         json_value = JsonValue('input_d', 50)
         data.add_value(json_value)
 
-        self.assertTrue(filter.is_data_accepted(data))
+        self.assertTrue(data_filter.is_data_accepted(data))
 
     def test_validate(self):
         """Tests calling DataFilter.validate()"""
 
-        filter = DataFilter(all=False)
-        filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
-        filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
-        filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
-        filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
-        
+        data_filter = DataFilter(filter_list=[], all=False)
+        data_filter.add_filter({'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']})
+        data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
+        data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
+        data_filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
+
         interface = Interface()
         interface.add_parameter(FileParameter('input_a', ['application/json']))
-        warnings = filter.validate(interface)
+        warnings = data_filter.validate(interface)
+        for warn in warnings:
+            print warn.name
         self.assertEqual(len(warnings), 3)
         self.assertEqual(warnings[0].name, 'UNMATCHED_FILTER')
         
         interface.add_parameter(JsonParameter('input_e', 'integer'))
-        warnings = filter.validate(interface)
+        warnings = data_filter.validate(interface)
         self.assertEqual(len(warnings), 4)
         self.assertEqual(warnings[3].name, 'UNMATCHED_PARAMETERS')
         
         interface.add_parameter(JsonParameter('input_b', 'integer'))
         with self.assertRaises(InvalidDataFilter) as context:
-            filter.validate(interface)
+            data_filter.validate(interface)
         self.assertEqual(context.exception.error.name, 'MISSING_NAME')
         
         interface2 = Interface()
@@ -113,7 +114,7 @@ class TestDataFilter(TestCase):
         interface2.add_parameter(JsonParameter('input_b', 'string'))
         interface2.add_parameter(JsonParameter('input_c', 'integer'))
         interface2.add_parameter(JsonParameter('input_d', 'integer'))
-        warnings = filter.validate(interface)
+        warnings = data_filter.validate(interface)
         self.assertEqual(len(warnings), 0)
         
         

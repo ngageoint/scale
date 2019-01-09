@@ -200,7 +200,7 @@ class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
-    def __init__(self, filters=[], all=True):
+    def __init__(self, filter_list=[], all=True):
         """Constructor
 
         :param filters: Filters to determine whether to accept or deny data
@@ -213,21 +213,25 @@ class DataFilter(object):
         # DataFilter(True) or DataFilter(False)
 
         # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
-        self.filters = filters
+        print len(filter_list)
+        self.filter_list = filter_list
+        print len(self.filter_list)
         self.all = all
 
-    def add_filter(self, filter):
+    def add_filter(self, filter_dict):
         """Adds a filter definition
 
-        :param filter: data filter to add
-        :type filter: dict
+        :param filter_dict: data filter to add
+        :type filter_dict: dict
 
         :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
         """
 
-        filter = DataFilter.validate_filter(filter)
+        #print filter_dict
+        filter_dict = DataFilter.validate_filter(filter_dict)
+        #print filter_dict
 
-        self.filters.append(filter)
+        self.filter_list.append(filter_dict)
 
     def is_data_accepted(self, data):
         """Indicates whether the given data passes the filter or not
@@ -239,11 +243,11 @@ class DataFilter(object):
         """
 
         success = True
-        for filter in self.filters:
-            name = filter['name']
-            type = filter['type']
-            cond = filter['condition']
-            values = filter['values']
+        for f in self.filter_list:
+            name = f['name']
+            type = f['type']
+            cond = f['condition']
+            values = f['values']
             filter_success = False
             if name in data.values:
                 param = data.values[name]
@@ -293,7 +297,7 @@ class DataFilter(object):
         """
 
         equal = self.all == data_filter.all
-        equal &= self.filters == data_filter.filters
+        equal &= self.filter_list == data_filter.filter_list
         
         return equal
 
@@ -311,11 +315,12 @@ class DataFilter(object):
         warnings = []
         unmatched = interface.parameters.keys()
 
-        for filter in self.filters:
-            name = filter['name']
-            type = filter['type']
+        for f in self.filter_list:
+            name = f['name']
+            type = f['type']
             if name in interface.parameters:
-                unmatched.remove(name)
+                if name in unmatched:
+                    unmatched.remove(name)
                 if interface.parameters[name].param_type == 'file' and type not in FILE_TYPES:
                     raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a file type and requires a file type filter.')
                 if interface.parameters[name].param_type == 'json' and type in FILE_TYPES:
@@ -331,6 +336,7 @@ class DataFilter(object):
                     if json_type not in BOOL_TYPES and json_type not in STRING_TYPES and json_type not in NUMBER_TYPES:
                         raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter type is not supported by data filters')
             else:
+                print name
                 warnings.append(ValidationWarning('UNMATCHED_FILTER',
                                                   'Filter with name \'%s\' does not have a matching parameter'))
         
@@ -340,11 +346,11 @@ class DataFilter(object):
         return warnings
 
     @staticmethod
-    def validate_filter(filter):
+    def validate_filter(filter_dict):
         """Validates a data filter dictionary
 
-        :param filter: data filter to validate
-        :type filter: dict
+        :param filter_dict: data filter to validate
+        :type filter_dict: dict
 
         :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
 
@@ -352,22 +358,22 @@ class DataFilter(object):
         :rtype: dict
         """
 
-        if 'name' not in filter:
+        if 'name' not in filter_dict:
             raise InvalidDataFilter('MISSING_NAME', 'Missing name for filter')
 
-        name = filter['name']
-        if 'type' not in filter:
+        name = filter_dict['name']
+        if 'type' not in filter_dict:
             raise InvalidDataFilter('MISSING_TYPE', 'Missing type for \'%s\'' % name)
 
-        if 'condition' not in filter:
+        if 'condition' not in filter_dict:
             raise InvalidDataFilter('MISSING_CONDITION', 'Missing condition for \'%s\'' % name)
 
-        if 'values' not in filter:
+        if 'values' not in filter_dict:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
             
-        type = filter['type']
-        condition = filter['condition']
-        values = filter['values']
+        type = filter_dict['type']
+        condition = filter_dict['condition']
+        values = filter_dict['values']
         
         if condition not in ALL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'

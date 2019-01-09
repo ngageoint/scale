@@ -69,7 +69,7 @@ def convert_filter_to_v6_json(data_filter):
 
     filter_dict = {'version': SCHEMA_VERSION}
 
-    filter_dict['filters'] = data_filter.filters
+    filter_dict['filters'] = data_filter.filter_list
     filter_dict['all'] = data_filter.all
 
     return DataFilterV6(data_filter=filter_dict, do_validate=False)
@@ -109,8 +109,8 @@ class DataFilterV6(object):
         try:
             if do_validate:
                 validate(self._data_filter, DATA_FILTER_SCHEMA)
-                for filter in data_filter['filters']:
-                    DataFilter.validate_filter(filter)
+                for f in data_filter['filters']:
+                    DataFilter.validate_filter(f)
         except ValidationError as ex:
             raise InvalidDataFilter('INVALID_DATA_FILTER', 'Invalid data filter: %s' % unicode(ex))
 
@@ -123,8 +123,8 @@ class DataFilterV6(object):
 
         data_filter = DataFilter([], self._data_filter['all'])
 
-        for filter in self._data_filter['filters']:
-            data_filter.add_filter(filter)
+        for f in self._data_filter['filters']:
+            data_filter.add_filter(f)
 
         return data_filter
 
