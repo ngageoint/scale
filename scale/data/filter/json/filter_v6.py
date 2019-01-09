@@ -57,17 +57,25 @@ DATA_FILTER_SCHEMA = {
                     'minItems': 1,
                 },
                 'fields': {
-                    'description': 'List of slash separated paths to fields inside a json object or file meta-data',
+                    'description': ' List of key paths to fields with each path being a list of keys in an object or file meta-data',
                     'type': 'array',
                     'minItems': 1,
                     'items': {
-                        'type': 'string',
-                    }
+                        'type': 'array',
+                        'minItems': 1,
+                        'items': {
+                            'type': 'string',
+                        },
+                    },
                 },
                 'all_fields': {
                     'description': 'Specifies whether all fields need to pass for filter to pass. Defaults to True.',
                     'type': 'boolean',
-                }
+                },
+                'all_files': {
+                    'description': 'Specifies whether all files need to pass for filter to pass. Defaults to False.',
+                    'type': 'boolean',
+                },
             },
         },
     },

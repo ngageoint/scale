@@ -110,7 +110,8 @@ A data filter JSON describes a set of filters that determines whether a set of d
          "type": "meta-data",
          "condition": "between",
          "values": [[0,100]],
-         "fields": ["path/to/field"]
+         "fields": [["path", "to", "field"]],
+         "all_fields": true
        }
      ],
      "all": true
@@ -135,11 +136,14 @@ A data filter JSON describes a set of filters that determines whether a set of d
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | values                     | Array          | Required | List of values to compare data against. May be any type.           |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| fields                     | Array          | Optional | List of slash separated paths to fields inside a json object or    |
-|                            |                |          | file meta-data                                                     |
+| fields                     | Array          | Optional | List of key paths to fields with each path being a list of keys in |
+|                            |                |          | an object or file meta-data                                        |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | all_fields                 | Boolean        | Optional | Specifies whether all fields need to pass for filter to pass.      |
 |                            |                |          | Defaults to true                                                   |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| all_files                  | Boolean        | Optional | Specifies whether all files need to pass for filter to pass.       |
+|                            |                |          | Defaults to false                                                  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | all                        | Boolean        | Optional | Specifies whether all filters need to pass for data to be accepted |
 |                            |                |          | Defaults to true                                                   |
