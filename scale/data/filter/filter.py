@@ -24,6 +24,10 @@ BOOL_TYPES = {'boolean'}
 
 BOOL_CONDITIONS = {'==', '!='}
 
+OBJECT_TYPES = {'meta-data', 'object'}
+
+OBJECT_CONDITIONS = {'subset of', 'superset of'}
+
 
 def _less_than(input, values):
     """Checks if the given input is < the first value in the list
@@ -191,10 +195,48 @@ def _contains(input, values):
     except TypeError:
         return False # catch error if input is not an iterable
     return False
+    
+def _subset(input, values):
+    """Checks if the given input is a subset of the given value
 
+    :param input: The input to check
+    :type input: dict
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return all(item in values[0].items() for item in input.items())
+    except AttributeError:
+        return False # catch error if input or values are not a dictionary
+    except IndexError:
+        return False
+    return False
+
+def _superset(input, values):
+    """Checks if the given input is a superset of the given value
+
+    :param input: The input to check
+    :type input: dict
+    :param values: The values to check
+    :type values: list
+    :returns: True if the condition check passes, False otherwise
+    :rtype: bool
+    """
+
+    try:
+        return all(item in input.items() for item in values[0].items())
+    except AttributeError:
+        return False # catch error if input or values are not a dictionary
+    except IndexError:
+        return False
+    return False
 
 ALL_CONDITIONS = {'<': _less_than, '<=': _less_than_equal, '>': _greater_than,'>=': _greater_than_equal,
-                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'not in': _not_in, 'contains': _contains}
+                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'not in': _not_in, 
+                  'contains': _contains, 'subset of': _subset, 'superset of': _superset}
 
 class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
@@ -264,6 +306,18 @@ class DataFilter(object):
                         filter_success |= ALL_CONDITIONS[cond](data_types, values)
                         for data_type in data_types:
                             filter_success |= ALL_CONDITIONS[cond](data_type, values)
+                    elif type == 'meta-data':
+                        meta_data_list = [scale_file.meta_data for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        if 'fields' in f:
+                            if len(f['fields']) != len(values):
+                                logger.exception('Length of fields (%s) and values (%s) are not equal' % (f['fields'], values))
+                                return False
+                            for field, value in zip(f['fields'], values):
+                                filter_success &= ALL_CONDITIONS[cond](meta_data[field], value)
+                        else:
+                            filter_success |= ALL_CONDITIONS[cond](meta_data_list, values)
+                            for item in meta_data_list:
+                                filter_success |= ALL_CONDITIONS[cond](item, values)
                     else:
                         filter_success |= ALL_CONDITIONS[cond](param.value, values)
                 except AttributeError:

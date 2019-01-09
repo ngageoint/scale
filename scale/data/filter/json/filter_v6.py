@@ -40,18 +40,34 @@ DATA_FILTER_SCHEMA = {
             'additionalProperties': False,
             'properties': {
                 'name': {
+                    'description': 'The name of the parameter this filter runs against. Multiple filters can run on the same parameter.',
                     'type': 'string',
                 },
                 'type': {
-                    'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type'],
+                    'description': 'Type of parameter this filter runs against.',
+                    'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type', 'meta-data'],
                 },
                 'condition': {
-                    'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains'],
+                    'description': 'Condition to test data value against.',
+                    'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains', 'subset of', 'superset of'],
                 },
                 'values': {
+                    'description': 'List of values to compare data against. May be any type.',
                     'type': 'array',
                     'minItems': 1,
                 },
+                'fields': {
+                    'description': 'List of slash separated paths to fields inside a json object or file meta-data',
+                    'type': 'array',
+                    'minItems': 1,
+                    'items': {
+                        'type': 'string',
+                    }
+                },
+                'all_fields': {
+                    'description': 'Specifies whether all fields need to pass for filter to pass. Defaults to True.',
+                    'type': 'boolean',
+                }
             },
         },
     },
