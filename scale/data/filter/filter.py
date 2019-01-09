@@ -213,9 +213,7 @@ class DataFilter(object):
         # DataFilter(True) or DataFilter(False)
 
         # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
-        print len(filter_list)
         self.filter_list = filter_list
-        print len(self.filter_list)
         self.all = all
 
     def add_filter(self, filter_dict):
@@ -227,9 +225,7 @@ class DataFilter(object):
         :raises :class:`recipe.definition.exceptions.InvalidDataFilter`: If the filter is invalid
         """
 
-        #print filter_dict
         filter_dict = DataFilter.validate_filter(filter_dict)
-        #print filter_dict
 
         self.filter_list.append(filter_dict)
 
@@ -336,7 +332,6 @@ class DataFilter(object):
                     if json_type not in BOOL_TYPES and json_type not in STRING_TYPES and json_type not in NUMBER_TYPES:
                         raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter type is not supported by data filters')
             else:
-                print name
                 warnings.append(ValidationWarning('UNMATCHED_FILTER',
                                                   'Filter with name \'%s\' does not have a matching parameter'))
         

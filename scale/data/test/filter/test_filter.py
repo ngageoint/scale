@@ -107,14 +107,14 @@ class TestDataFilter(TestCase):
         interface.add_parameter(JsonParameter('input_b', 'integer'))
         with self.assertRaises(InvalidDataFilter) as context:
             data_filter.validate(interface)
-        self.assertEqual(context.exception.error.name, 'MISSING_NAME')
+        self.assertEqual(context.exception.error.name, 'MISMATCHED_TYPE')
         
         interface2 = Interface()
         interface2.add_parameter(FileParameter('input_a', ['application/json']))
         interface2.add_parameter(JsonParameter('input_b', 'string'))
         interface2.add_parameter(JsonParameter('input_c', 'integer'))
         interface2.add_parameter(JsonParameter('input_d', 'integer'))
-        warnings = data_filter.validate(interface)
+        warnings = data_filter.validate(interface2)
         self.assertEqual(len(warnings), 0)
         
         
