@@ -57,7 +57,7 @@ DATA_FILTER_SCHEMA = {
                     'minItems': 1,
                 },
                 'fields': {
-                    'description': ' List of key paths to fields with each path being a list of keys in an object or file meta-data',
+                    'description': 'List of key paths to fields with each path being a list of keys in an object or file meta-data',
                     'type': 'array',
                     'minItems': 1,
                     'items': {

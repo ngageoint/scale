@@ -10,7 +10,7 @@ from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
-FILE_TYPES = {'filename', 'media-type', 'data-type'}
+FILE_TYPES = {'filename', 'media-type', 'data-type', 'meta-data'}
 
 STRING_TYPES = {'string', 'filename', 'media-type', 'data-type'}
 
@@ -238,6 +238,13 @@ ALL_CONDITIONS = {'<': _less_than, '<=': _less_than_equal, '>': _greater_than,'>
                   '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'not in': _not_in, 
                   'contains': _contains, 'subset of': _subset, 'superset of': _superset}
 
+def _getNestedDictField(data_dict, map_list):
+    try:
+        for k in map_list: data_dict = data_dict[k]
+        return data_dict
+    except KeyError:
+        return None
+
 class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
@@ -286,38 +293,81 @@ class DataFilter(object):
             cond = f['condition']
             values = f['values']
             filter_success = False
+            all_fields = False
+            if 'all_fields' in f and f['all_files']:
+                all_fields = True
+            all_files = False
+            if 'all_files' in f and f['all_files']:
+                all_files = True
             if name in data.values:
                 param = data.values[name]
                 try:
-                    if type == 'filename':
-                        filenames = [scale_file.file_name for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        # attempt to run condition on list first, i.e. in case we're checking 'contains'
-                        filter_success |= ALL_CONDITIONS[cond](filenames, values)
-                        for filename in filenames:
-                            # attempt to run condition on inidividual items, if any succeed we pass the filter
-                            filter_success |= ALL_CONDITIONS[cond](filename, values)
-                    elif type == 'media-type':
-                        media_types = [scale_file.media_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        filter_success |= ALL_CONDITIONS[cond](media_types, values)
-                        for media_type in media_types:
-                            filter_success |= ALL_CONDITIONS[cond](media_type, values)
-                    elif type == 'data-type':
-                        data_types = [scale_file.data_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        filter_success |= ALL_CONDITIONS[cond](data_types, values)
-                        for data_type in data_types:
-                            filter_success |= ALL_CONDITIONS[cond](data_type, values)
+                    if type in {'filename', 'media-type', 'data-type'}:
+                        if type == 'filename':
+                            file_values = [scale_file.file_name for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        elif type == 'media-type':
+                            file_values = [scale_file.media_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        elif type == 'data-type':
+                            file_values = [scale_file.data_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                        # attempt to run condition on list, i.e. in case we're checking 'contains'
+                        filter_success |= ALL_CONDITIONS[cond](file_values, values)
+                        file_success = all_files
+                        for value in file_values:
+                            if all_files:
+                                # attempt to run condition on individual items, if any fail we fail the filter
+                                file_success &= ALL_CONDITIONS[cond](value, values)
+                            else:
+                                # attempt to run condition on individual items, if any succeed we pass the filter
+                                file_success |= ALL_CONDITIONS[cond](value, values)
+                        filter_success |= file_success
                     elif type == 'meta-data':
                         meta_data_list = [scale_file.meta_data for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
                         if 'fields' in f:
                             if len(f['fields']) != len(values):
                                 logger.exception('Length of fields (%s) and values (%s) are not equal' % (f['fields'], values))
                                 return False
-                            for field, value in zip(f['fields'], values):
-                                filter_success &= ALL_CONDITIONS[cond](meta_data[field], value)
+                            file_success = all_files
+                            for meta_data in meta_data_list:
+                                field_success = all_fields
+                                for field_path, value in zip(f['fields'], values):
+                                    item = _getNestedDictField(meta_data, field_path)
+                                    if all_fields:
+                                        # attempt to run condition on individual items, if any fail we fail the filter
+                                        field_success &= ALL_CONDITIONS[cond](item, value)
+                                    else:
+                                        # attempt to run condition on individual items, if any succeed we pass the filter
+                                        field_success |= ALL_CONDITIONS[cond](item, value)
+                                if all_files:
+                                    file_success &= field_success
+                                else:
+                                    file_success |= field_success
+                            filter_success |= file_success
                         else:
                             filter_success |= ALL_CONDITIONS[cond](meta_data_list, values)
+                            file_success = all_files
                             for item in meta_data_list:
-                                filter_success |= ALL_CONDITIONS[cond](item, values)
+                                if all_files:
+                                    # attempt to run condition on individual items, if any fail we fail the filter
+                                    file_success &= ALL_CONDITIONS[cond](item, values)
+                                else:
+                                    # attempt to run condition on individual items, if any succeed we pass the filter
+                                    file_success |= ALL_CONDITIONS[cond](item, values)
+                            filter_success |= file_success
+                    elif type == 'object':
+                        if 'fields' in f:
+                            if len(f['fields']) != len(values):
+                                logger.exception('Length of fields (%s) and values (%s) are not equal' % (f['fields'], values))
+                                return False
+                            field_success = all_fields
+                            for field_path, value in zip(f['fields'], values):
+                                item = _getNestedDictField(param.value, field_path)
+                                if all_fields:
+                                    field_success &= ALL_CONDITIONS[cond](item, values)
+                                else:
+                                    field_success |= ALL_CONDITIONS[cond](item, values)
+                            filter_success |= field_success
+                        else:
+                            filter_success |= ALL_CONDITIONS[cond](param.value, values)
                     else:
                         filter_success |= ALL_CONDITIONS[cond](param.value, values)
                 except AttributeError:
@@ -439,7 +489,16 @@ class DataFilter(object):
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, BOOL_CONDITIONS))
 
-        if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES:
+        if type in OBJECT_TYPES and condition not in OBJECT_CONDITIONS:
+            if 'fields' not in filter_dict or not filter_dict['fields']:
+                msg = 'Object %s does not have object condition (%s) and fields property is not set'
+                raise InvalidDataFilter('INVALID_CONDITION', msg % (name, OBJECT_CONDITIONS))
+
+        if 'fields' in filter_dict:
+            if len(filter_dict['fields']) != len(values):
+                raise InvalidDataFilter('INVALID_FIELDS', 'Fields property must be same length as values')
+
+        if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES and type not in OBJECT_TYPES:
             raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
 
         filter_values = []
