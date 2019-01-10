@@ -256,11 +256,15 @@ class JobConfiguration(object):
                 warnings.append(ValidationWarning('DEPRECATED_WORKSPACE', 'Workspace \'%s\' is deprecated' % name))
             # TODO: add RO/RW mode to workspaces and add warning if using a RO workspace for output
 
+        missing_workspace_names = []
         if not self.default_output_workspace:
             for name in seed_outputs:
                 if name not in self.output_workspaces:
-                    msg = 'Missing workspace for output \'%s\''
-                    warnings.append(ValidationWarning('MISSING_WORKSPACE', msg % name))
+                    missing_workspace_names.append(name)
+
+        if missing_workspace_names:
+            msg = 'Missing workspace for outputs \'%s\''
+            raise InvalidJobConfiguration('MISSING_WORKSPACE', msg % missing_workspace_names)
 
         return warnings
 

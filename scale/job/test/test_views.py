@@ -2090,7 +2090,8 @@ class TestJobTypesPostViewV6(TestCase):
             'output_data': [],
             'shared_resources': [],
         }
-        
+
+        self.output_workspace = storage_test_utils.create_workspace()
         self.configuration = {
             'version': '6',
             'mounts': {
@@ -2099,6 +2100,7 @@ class TestJobTypesPostViewV6(TestCase):
                     'host_path': '/path/to/dted',
                     },
             },
+            'output_workspaces': {'default': self.output_workspace.name},
             'settings': {
                 'DB_HOST': 'scale',
             },
@@ -3136,6 +3138,7 @@ class TestJobTypeDetailsViewV6(TestCase):
 
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
+        self.output_workspace = storage_test_utils.create_workspace()
         self.configuration = {
             'version': '6',
             'mounts': {
@@ -3148,6 +3151,7 @@ class TestJobTypeDetailsViewV6(TestCase):
                     'host_path': '/path/to/dted',
                     },
             },
+            'output_workspaces': {'default': self.output_workspace.name},
             'settings': {
                 'DB_HOST': 'scale',
             },
@@ -3269,14 +3273,16 @@ class TestJobTypeRevisionsViewV6(TestCase):
         
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
+        self.output_workspace = storage_test_utils.create_workspace()
         self.configuration = {
-            'version': '2.0',
+            'version': '6',
             'mounts': {
                 'dted': {
                     'type': 'host',
                     'host_path': '/path/to/dted',
                     },
             },
+            'output_workspaces': {'default': self.output_workspace.name},
             'settings': {
                 'DB_HOST': 'scale',
             },
@@ -4130,10 +4136,9 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertTrue(results['is_valid'])
-        self.assertEqual(len(results['warnings']), 2)
-        self.assertEqual(results['warnings'][0]['name'], 'MISSING_WORKSPACE')
-        self.assertEqual(results['warnings'][1]['name'], 'MISSING_WORKSPACE')
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'MISSING_WORKSPACE')
 
 
 class TestJobTypesStatusView(TestCase):

@@ -451,6 +451,10 @@ Request: POST http://.../v6/job-types/
             "host_path": "/path/on/host"
           }
         },
+        "output_workspaces": {
+         "default": "workspace_1",
+         "outputs": {"output_1": "workspace_2"}
+        },
         "settings": {
           "DB_HOST": "som.host.name",
           "DB_PASS": "secret_password"
@@ -652,6 +656,10 @@ Request: POST http://.../v6/job-types/validation/
             "host_path": "/path/on/host"
           }
         },
+        "output_workspaces": {
+         "default": "workspace_1",
+         "outputs": {"output_1": "workspace_2"}
+        },
         "settings": {
           "DB_HOST": "som.host.name",
           "DB_PASS": "secret_password"
@@ -838,6 +846,10 @@ Request: PATCH http://.../v6/job-types/test/1.0.0/
             "type": "host",
             "host_path": "/path/on/host"
           }
+        },
+        "output_workspaces": {
+         "default": "workspace_1",
+         "outputs": {"output_1": "workspace_2"}
         },
         "settings": {
           "DB_HOST": "som.host.name",

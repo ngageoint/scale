@@ -476,9 +476,10 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
 
     if not configuration:
         configuration = {
-            'version': '1.0',
-            'default_settings': {}
+            'version': '6',
+            'output_workspaces': {'default': storage_test_utils.create_workspace().name}
         }
+        configuration = JobConfigurationV6(config=configuration).get_dict()
 
     job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
                                       manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],

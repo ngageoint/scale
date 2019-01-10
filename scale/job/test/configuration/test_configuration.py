@@ -203,10 +203,9 @@ class TestJobConfiguration(TestCase):
         configuration = JobConfiguration()
 
         # No workspaces defined
-        warnings = configuration.validate(manifest)
-        self.assertEqual(len(warnings), 2)
-        self.assertEqual(warnings[0].name, 'MISSING_WORKSPACE')
-        self.assertEqual(warnings[1].name, 'MISSING_WORKSPACE')
+        with self.assertRaises(InvalidJobConfiguration) as context:
+            warnings = configuration.validate(manifest)
+        self.assertEqual(context.exception.error.name, 'MISSING_WORKSPACE')
 
         # Workspace does not exist
         configuration.default_output_workspace = 'workspace_1'
@@ -222,9 +221,9 @@ class TestJobConfiguration(TestCase):
         # Workspace is only defined for output_a
         configuration.default_output_workspace = None
         configuration.add_output_workspace('output_a', 'workspace_1')
-        warnings = configuration.validate(manifest)
-        self.assertEqual(len(warnings), 1)
-        self.assertEqual(warnings[0].name, 'MISSING_WORKSPACE')
+        with self.assertRaises(InvalidJobConfiguration) as context:
+            warnings = configuration.validate(manifest)
+        self.assertEqual(context.exception.error.name, 'MISSING_WORKSPACE')
 
         # Workspace defined for both outputs
         storage_test_utils.create_workspace(name='workspace_2')
@@ -265,10 +264,9 @@ class TestJobConfiguration(TestCase):
         configuration = JobConfiguration()
 
         # No workspaces defined for outputs
-        warnings = configuration.validate(manifest)
-        self.assertEqual(len(warnings), 2)
-        self.assertEqual(warnings[0].name, 'MISSING_WORKSPACE')
-        self.assertEqual(warnings[1].name, 'MISSING_WORKSPACE')
+        with self.assertRaises(InvalidJobConfiguration) as context:
+            warnings = configuration.validate(manifest)
+        self.assertEqual(context.exception.error.name, 'MISSING_WORKSPACE')
 
     def test_validate_priority(self):
         """Tests calling JobConfiguration.validate() to validate priority"""
