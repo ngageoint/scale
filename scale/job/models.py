@@ -2907,7 +2907,7 @@ class JobTypeManager(models.Manager):
             currentManifest = SeedManifest(job_type.manifest)
 
         if not configuration:
-            configuration = JobConfiguration()
+            configuration = job_type.get_job_configuration()
         configuration.validate(currentManifest)
         secrets = configuration.remove_secret_settings(currentManifest)
         job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
