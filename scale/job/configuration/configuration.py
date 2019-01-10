@@ -236,7 +236,7 @@ class JobConfiguration(object):
             for name in seed_outputs:
                 if name not in self.output_workspaces:
                     msg = 'Missing workspace for output \'%s\''
-                    warnings.append(ValidationWarning('MISSING_WORKSPACE', msg % name))
+                    raise InvalidJobConfiguration('MISSING_WORKSPACE', msg % name)
 
         return warnings
 
