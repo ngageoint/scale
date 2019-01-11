@@ -9,27 +9,23 @@ from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
 
-class DataSetBaseSerializer(ModelIdSerializer):
+class DataSetBaseSerializerV6(ModelIdSerializer):
     """Converts dataset model fields to REST output"""
     name = serializers.CharField()
     version = serializers.CharField()
     title = serializers.CharField()
-    description = serializers.CharField()
 
-class DataSetListSerializerV6(DataSetBaseSerializer):
+class DataSetListSerializerV6(DataSetBaseSerializerV6):
     """Converts dataset model fields to REST output"""
-    id = None
-    version = None
-    versions = serializers.ListField(child=serializers.CharField())
+    id = serializers.IntegerField()
+    # version = serializers.CharField()
+    # versions = serializers.ListField(child=serializers.CharField())
     latest_version = serializers.CharField(source='version')
 
-class DataSetSerializer(DataSetBaseSerializer):
-    """Converts dataset model fields to REST output"""
-    
-    created_time = serializers.DateTimeField()
-
-class DataSetDetailsSerializer(DataSetSerializer):
+class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
     """Converts dataset model feields to REST output"""
-    
+
+    description = serializers.CharField()
+    created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json')
-    
+

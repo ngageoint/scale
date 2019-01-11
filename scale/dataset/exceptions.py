@@ -2,6 +2,19 @@
 from __future__ import unicode_literals
 from util.exceptions import ValidationException
 
+class InvalidDataSet(ValidationException):
+    """Exception indicating the dataset is invalid
+    """
+    
+    def __init__(self, description):
+        """Constructor
+        
+        :param description: The description of the error
+        :type description: string
+        """
+        
+        super(InvalidDataSet, self).__init__(description)
+
 class InvalidDataSetDefinition(ValidationException):
     """Exception indicating that a dataset definition was given an invalid value
     """
