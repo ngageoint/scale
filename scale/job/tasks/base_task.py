@@ -92,7 +92,7 @@ class Task(object):
         self._staging_timeout_threshold = BASE_STAGING_TIMEOUT_THRESHOLD
 
         # If reserved resource satisfying this task, track to use when launching task
-        self._resource_reservation = None
+        self._final_resources = None
 
     @property
     def command(self):
@@ -309,19 +309,21 @@ class Task(object):
         self._force_recon = True
 
     @property
-    def reservation(self):
-        """Gets the name of the reservation associated with the resources satisfying task requirements
+    def final_resources(self):
+        """Gets reservations associated with the resources satisfying task requirements
         """
 
-        return self._resource_reservation
+        if self._final_resources:
+            return self._final_resources
 
-    @reservation.setter
-    def reservation(self, reservation):
-        """Sets the name of the reservation associated with the resources satisfying task requirements
+        return self.get_resources()
+
+    @final_resources.setter
+    def final_resources(self, resources):
+        """Sets the final resources satisfying task requirements with associated reservations
         """
 
-        self._resource_reservation = reservation
-
+        self._final_resources = resources
 
     @abstractmethod
     def get_resources(self):
