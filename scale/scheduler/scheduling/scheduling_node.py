@@ -135,11 +135,12 @@ class SchedulingNode(object):
             task_resources = task.get_resources()
             if self._remaining_resources.is_sufficient_to_meet(task_resources):
                 # Associate the actual resources used to the task so reservations are tracked
-                task_resources = self._remaining_resources.find_resources(task_resources)
-                logger.debug(task_resources)
+                matched_resources = self._remaining_resources.find_resources(task_resources)
+                task.final_resources = matched_resources
+                logger.debug(task.final_resources)
                 self.allocated_tasks.append(task)
-                self.allocated_resources.add(task_resources)
-                self._remaining_resources.subtract(task_resources)
+                self.allocated_resources.add(matched_resources)
+                self._remaining_resources.subtract(matched_resources)
             else:
                 waiting_tasks.append(task)
                 result = True
@@ -160,12 +161,12 @@ class SchedulingNode(object):
         task_resources = system_task.get_resources()
         if self._remaining_resources.is_sufficient_to_meet(task_resources):
             # Associate the actual resources used to the task so reservations are tracked
-            task_resources = self._remaining_resources.find_resources(task_resources)
-            logger.debug(task_resources)
+            matched_resources = self._remaining_resources.find_resources(task_resources)
+            system_task.final_resources = matched_resources
             system_task.agent_id = self.agent_id  # Must set agent ID for task
             self.allocated_tasks.append(system_task)
-            self.allocated_resources.add(task_resources)
-            self._remaining_resources.subtract(task_resources)
+            self.allocated_resources.add(matched_resources)
+            self._remaining_resources.subtract(matched_resources)
             return True
 
         return False
