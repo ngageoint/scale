@@ -81,3 +81,66 @@ components:
           type: string
           description: The accepted JSON data type. Must be one of 'array', 'boolean', 'integer', 'number', 'object', or 'string'.
           example: string
+
+    data_filter:
+      title: Data Filter Object
+      type: object
+      properties:
+        filters:
+          description: List of filter definitions. Defaults to []. An empty list will not accept any data.
+          type: array
+            items:
+              $ref: '#/components/schemas/filter_def'
+        all:
+          description: Specifies whether all filters need to pass for data to be accepted. Defaults to true
+          type: boolean
+          example: true
+
+    filter_def:
+      title: Filter definition
+      type: object
+      required: [name, type, condition, values]
+      properties:
+        name:
+          type: string
+          description: The name of the parameter this filter runs against. Multiple filters can run on the same parameter.
+          example: foo
+        type:
+          type: string
+          enum: [array, boolean, integer, number, object, string, filename, media-type, data-type, meta-data]
+          description: Type of parameter this filter runs against. Must be one of 'array', |
+            'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', |
+            'data-type', or 'meta-data'
+          example: string
+        condition:
+          type: string
+          enum: ['<', '<=','>','>=', '==', '!=', 'between', 'in', 'not in', 'contains','subset of', 'superset of']
+          description: Condition to test data value against. Must be one of '<', '<=', |
+            '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains', 'subset of', or 'superset of'
+          example: <
+        values:
+          type: array
+          minItems: 1
+          description: List of values to compare data against. May be any type.
+          example: ['image/tiff']
+        fields:
+          type: array
+          minItems: 1
+          items:
+            type: array
+            minItems: 1
+            items:
+              type: string
+          description: List of lists with each item being a list of keys for a path to a |
+            field in an object or file meta-data to be tested.  e.g. For this data, |
+            {'foo': {'bar': 100}}, [['foo','bar']] will check the value 100. If provided, |
+            this property must be of equal length to values                                                   |
+          example: [['foo','bar']]
+        all_fields:
+          description: Specifies whether all fields need to pass for data to be accepted. Defaults to true
+          type: boolean
+          example: true
+        all_files:
+          description: Specifies whether all files need to pass for data to be accepted. Defaults to true
+          type: boolean
+          example: true

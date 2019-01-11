@@ -63,12 +63,20 @@ class TestDataFilterV6(TestCase):
             DataFilterV6(filter_dict, do_validate=True)
         self.assertEqual(context.exception.error.name, 'INVALID_DATA_FILTER')
 
+        # invalid fields
+        filter_dict = {'version': '6', 'filters': [
+            {'name': 'input_a', 'type': 'media-type', 'condition': 'BAD', 'values': ['application/json'], 'fields': ['foo', 'bar']}
+        ]}
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilterV6(filter_dict, do_validate=True)
+        self.assertEqual(context.exception.error.name, 'INVALID_DATA_FILTER')
+        
         # Valid v6 filter
         filter_dict = {'version': '6', 'filters': [
             {'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']},
             {'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']},
             {'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': [0]},
-            {'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': [0, 100]}
+            {'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': [0, 100], 'fields': [['foo', 'bar'], ['baz']]}
         ]}
         data1 = DataFilterV6(data_filter=filter_dict, do_validate=True).get_filter()
         self.assertItemsEqual(data1.filter_list, filter_dict['filters'])

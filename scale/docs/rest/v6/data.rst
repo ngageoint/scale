@@ -136,8 +136,11 @@ A data filter JSON describes a set of filters that determines whether a set of d
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | values                     | Array          | Required | List of values to compare data against. May be any type.           |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| fields                     | Array          | Optional | List of key paths to fields with each path being a list of keys in |
-|                            |                |          | an object or file meta-data                                        |
+| fields                     | Array          | Optional | List of lists with each item being a list of keys for a path to a  |
+|                            |                |          | field in an object or file meta-data to be tested.                 |
+|                            |                |          | e.g. For this data, {'foo': {'bar': 100}}, [['foo','bar']] will    |
+|                            |                |          | check the value 100. If provided, this property must be of equal   |
+|                            |                |          | length to values                                                   |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | all_fields                 | Boolean        | Optional | Specifies whether all fields need to pass for filter to pass.      |
 |                            |                |          | Defaults to true                                                   |

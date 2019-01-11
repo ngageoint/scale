@@ -153,11 +153,14 @@ def _in(input, values):
     :rtype: bool
     """
 
-    if input in values:
-        return True
-    for value in values:
-        if input in value:
+    try:
+        if input in values:
             return True
+        for value in values:
+            if input in value:
+                return True
+    except TypeError:
+        return False
     return False
     
 def _not_in(input, values):
@@ -171,11 +174,14 @@ def _not_in(input, values):
     :rtype: bool
     """
 
-    if input in values:
-        return False
-    for value in values:
-        if input in value:
+    try:
+        if input in values:
             return False
+        for value in values:
+            if input in value:
+                return False
+    except TypeError:
+        return True
     return True
 
 def _contains(input, values):
