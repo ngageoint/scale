@@ -44,7 +44,7 @@ def _create_base_task(task):
         'resources': []
     }
 
-    resources = task.get_resources()
+    resources = task.final_resources
 
     if settings.CONFIG_URI:
         mesos_task['command'] = {'uris': [{'value': settings.CONFIG_URI}]}
@@ -55,8 +55,8 @@ def _create_base_task(task):
             task_resource = {}
             logger.debug(resource)
             logger.debug(resource.__dict__)
-            if task.reservation:
-                task_resource['reservation'] = {'principal': task.reservation }
+            if resource.reservation != '*':
+                task_resource['reservation'] = {'principal': resource.reservation}
             task_resource['name'] = resource.name
             task_resource['type'] = RESOURCE_TYPE_SCALAR
             task_resource['scalar'] = {'value': resource.value}

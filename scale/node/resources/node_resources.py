@@ -171,11 +171,11 @@ class NodeResources(object):
         :rtype: set
         """
 
-        resource_names = set()
+        resource_names = []
         for dicts in self._resources.values():
-            resource_names.union(set(dicts.keys()))
+            resource_names.extend(dicts.keys())
 
-        return resource_names
+        return set(resource_names)
 
     def get_resources_by_reservation(self, reservation):
         """Retrieve all resources associated with a given reservation
@@ -264,8 +264,10 @@ class NodeResources(object):
                 self._add_resource(grow_resource)
                 logger.info("Increased beyond existing resource using: %s." % grow_resource)
 
-    def is_equal(self, node_resources):
-        """Indicates if these resources are equal. This should be used for testing only.
+    def __eq__(self, other):
+        """Indicates if NodeResources are logically equal.
+
+        This will evaluate the entire self._resources private member for equality
 
         :param node_resources: The resources to compare
         :type node_resources: :class:`node.resources.NodeResources`
@@ -274,21 +276,42 @@ class NodeResources(object):
         """
 
         # Make sure the roles match
-        if set(self._resources.keys()).difference(set(node_resources._resources.keys())):
+        if set(self._resources.keys()).difference(set(other._resources.keys())):
             return False
 
         for reservation in self._resources.keys():
             # Make sure they have the exact same set of resource names
             names = set()
-            for resource in node_resources.get_resources_by_reservation(reservation):
+            for resource in other.get_resources_by_reservation(reservation):
                 names.add(resource.name)
             if len(set([x.name for x in self.get_resources_by_reservation(reservation)]).difference(names)):
                 return False
 
-            for role in node_resources._resources:
-                for resource in node_resources._resources[role]:
-                    if round(self._resources[role][resource].value, 5) != round(node_resources._resources[role][resource].value, 5):  # Assumes SCALAR type
+            for role in other._resources:
+                for resource in other._resources[role]:
+                    if round(self._resources[role][resource].value, 5) != round(
+                            other._resources[role][resource].value, 5):  # Assumes SCALAR type
                         return False
+
+        return True
+
+    def is_equal(self, node_resources):
+        """Indicates if the resource sums are equal. This should be used for testing only.
+
+        :param node_resources: The resources to compare
+        :type node_resources: :class:`node.resources.NodeResources`
+        :returns: True if these resources are equal, False otherwise
+        :rtype: bool
+        """
+
+        # Make sure the resource names match
+        if set(self.resource_names).difference(set(node_resources.resource_names)):
+            return False
+
+        # Make sure the scalar values match, round to eliminate floating point inequality
+        for name in self.resource_names:
+            if round(self._get_resource_sum(name), 5) != round(node_resources._get_resource_sum(name), 5):
+                return False
 
         return True
 
