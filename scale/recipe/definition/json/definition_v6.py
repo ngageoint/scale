@@ -281,7 +281,7 @@ class RecipeDefinitionV6(object):
             if node_type_dict['node_type'] == 'condition':
                 # TODO: complete recipe condition implementation
                 cond_interface_json = InterfaceV6(node_type_dict['interface'], do_validate=False)
-                definition.add_condition_node(node_name, cond_interface_json.get_interface(), DataFilter(True))
+                definition.add_condition_node(node_name, cond_interface_json.get_interface(), DataFilter()) #True
             elif node_type_dict['node_type'] == 'job':
                 definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_version'],
                                         node_type_dict['job_type_revision'])

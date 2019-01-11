@@ -93,9 +93,9 @@ class TestRecipe(TestCase):
         # Create recipe
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
-        definition.add_condition_node('B', Interface(), DataFilter(True))
-        definition.add_condition_node('C', Interface(), DataFilter(True))
-        definition.add_condition_node('D', Interface(), DataFilter(False))
+        definition.add_condition_node('B', Interface(), DataFilter()) #True
+        definition.add_condition_node('C', Interface(), DataFilter()) #True
+        definition.add_condition_node('D', Interface(), DataFilter()) #False
         definition.add_job_node('E', job_type.name, job_type.version, job_type.revision_num)
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
@@ -138,9 +138,9 @@ class TestRecipe(TestCase):
         # Create recipe
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
-        definition.add_condition_node('B', Interface(), DataFilter(True))
-        definition.add_condition_node('C', Interface(), DataFilter(True))
-        definition.add_condition_node('D', Interface(), DataFilter(False))
+        definition.add_condition_node('B', Interface(), DataFilter()) #True
+        definition.add_condition_node('C', Interface(), DataFilter()) #True
+        definition.add_condition_node('D', Interface(), DataFilter()) #False
         definition.add_job_node('E', job_type.name, job_type.version, job_type.revision_num)
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
@@ -346,7 +346,7 @@ class TestRecipe(TestCase):
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
         definition.add_job_node('H', job_type.name, job_type.version, job_type.revision_num)
-        definition.add_condition_node('I', Interface(), DataFilter(False))
+        definition.add_condition_node('I', Interface(), DataFilter()) #False
         definition.add_job_node('J', job_type.name, job_type.version, job_type.revision_num)
         definition.add_dependency('A', 'C')
         definition.add_dependency('A', 'E')

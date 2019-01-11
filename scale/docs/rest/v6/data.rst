@@ -73,3 +73,81 @@ An interface JSON describes a set of parameters that can be passed data values t
 | type                       | String         | Required | (JSON parameter) The accepted JSON data type. Must be one of       |
 |                            |                |          | 'array', 'boolean', 'integer', 'number', 'object', or 'string'.    |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
+
+.. _rest_v6_data_filter:
+
+Data Filter JSON
+----------------
+
+A data filter JSON describes a set of filters that determines whether a set of data is accepted or not.
+
+**Example interface:**
+
+.. code-block:: javascript
+
+   {
+     "filters": [
+       {
+         "name": "input_a",
+         "type": "media-type",
+         "condition": "==",
+         "values": ["application/json"]
+       },
+       {
+         "name": "input_b",
+         "type": "string",
+         "condition": "contains",
+         "values": ["abcde"]
+       },
+       {
+         "name": "input_c",
+         "type": "integer",
+         "condition": ">",
+         "values": [0]
+       },
+       {
+         "name": "input_d",
+         "type": "meta-data",
+         "condition": "between",
+         "values": [[0,100]],
+         "fields": [["path", "to", "field"]],
+         "all_fields": true
+       }
+     ],
+     "all": true
+   }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Data Filter**                                                                                                             |
++============================+================+==========+====================================================================+
+| filters                    | Array          | Optional | List of filter definitions. Defaults to []. An empty list will not |
+|                            |                |          | accept any data.                                                   |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| name                       | String         | Required | The name of the parameter this filter runs against. Multiple       |
+|                            |                |          | filters can run on the same parameter.                             |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| type                       | String         | Required | Type of parameter this filter runs against. Must be one of 'array',|
+|                            |                |          | 'boolean', 'integer', 'number', 'object', 'string', 'filename',    |
+|                            |                |          | 'media-type', 'data-type', or 'meta-data'                          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| condition                  | String         | Required | Condition to test data value against. Must be one of '<', '<=',    |
+|                            |                |          | '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains',       |
+|                            |                |          | 'subset of', or 'superset of'                                      |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| values                     | Array          | Required | List of values to compare data against. May be any type.           |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| fields                     | Array          | Optional | List of lists with each item being a list of keys for a path to a  |
+|                            |                |          | field in an object or file meta-data to be tested.                 |
+|                            |                |          | e.g. For this data, {'foo': {'bar': 100}}, [['foo','bar']] will    |
+|                            |                |          | check the value 100. If provided, this property must be of equal   |
+|                            |                |          | length to values                                                   |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| all_fields                 | Boolean        | Optional | Specifies whether all fields need to pass for filter to pass.      |
+|                            |                |          | Defaults to true                                                   |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| all_files                  | Boolean        | Optional | Specifies whether all files need to pass for filter to pass.       |
+|                            |                |          | Defaults to false                                                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| all                        | Boolean        | Optional | Specifies whether all filters need to pass for data to be accepted |
+|                            |                |          | Defaults to true                                                   |
++----------------------------+----------------+----------+--------------------------------------------------------------------+

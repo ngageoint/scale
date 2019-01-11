@@ -11,17 +11,77 @@ from data.filter.exceptions import InvalidDataFilter
 SCHEMA_VERSION = '6'
 
 
-# TODO: design and implement
 DATA_FILTER_SCHEMA = {
     'type': 'object',
-    'required': [],
     'additionalProperties': False,
     'properties': {
+        'version': {
+            'description': 'Version of the data filter schema',
+            'type': 'string',
+        },
+        'filters': {
+            'description': 'Defines filters to run on data parameters',
+            'type': 'array',
+            'minItems': 0,
+            'items': {
+                '$ref': '#/definitions/filter'
+            },
+        },
+        'all': {
+            'description': 'Specifies whether all filters must pass. Defaults to True.',
+            'type': 'boolean',
+        },
+    },
+    'definitions': {
+        'filter': {
+            'type': 'object',
+            'description': 'A configuration for a data filter',
+            'required': ['name', 'type', 'condition', 'values'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'description': 'The name of the parameter this filter runs against. Multiple filters can run on the same parameter.',
+                    'type': 'string',
+                },
+                'type': {
+                    'description': 'Type of parameter this filter runs against.',
+                    'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type', 'meta-data'],
+                },
+                'condition': {
+                    'description': 'Condition to test data value against.',
+                    'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains', 'subset of', 'superset of'],
+                },
+                'values': {
+                    'description': 'List of values to compare data against. May be any type.',
+                    'type': 'array',
+                    'minItems': 1,
+                },
+                'fields': {
+                    'description': 'List of key paths to fields with each path being a list of keys in an object or file meta-data',
+                    'type': 'array',
+                    'minItems': 1,
+                    'items': {
+                        'type': 'array',
+                        'minItems': 1,
+                        'items': {
+                            'type': 'string',
+                        },
+                    },
+                },
+                'all_fields': {
+                    'description': 'Specifies whether all fields need to pass for filter to pass. Defaults to True.',
+                    'type': 'boolean',
+                },
+                'all_files': {
+                    'description': 'Specifies whether all files need to pass for filter to pass. Defaults to False.',
+                    'type': 'boolean',
+                },
+            },
+        },
     },
 }
 
 
-# TODO: implement
 def convert_filter_to_v6_json(data_filter):
     """Returns the v6 data filter JSON for the given data filter
 
@@ -32,6 +92,9 @@ def convert_filter_to_v6_json(data_filter):
     """
 
     filter_dict = {'version': SCHEMA_VERSION}
+
+    filter_dict['filters'] = data_filter.filter_list
+    filter_dict['all'] = data_filter.all
 
     return DataFilterV6(data_filter=filter_dict, do_validate=False)
 
@@ -51,19 +114,30 @@ class DataFilterV6(object):
         """
 
         if not data_filter:
-            data_filter = {}
+            data_filter = {'filters': [], 'all': True}
         self._data_filter = data_filter
 
         if 'version' not in self._data_filter:
             self._data_filter['version'] = SCHEMA_VERSION
+            
+        if self._data_filter['version'] != SCHEMA_VERSION:
+            msg = '%s is an unsupported version number'
+            raise InvalidDataFilter('INVALID_VERSION', msg % self._data_filter['version'])
 
+        if 'all' not in self._data_filter:
+            self._data_filter['all'] = True
+            
+        if 'filters' not in self._data_filter:
+            self._data_filter['filters'] = []
+            
         try:
             if do_validate:
                 validate(self._data_filter, DATA_FILTER_SCHEMA)
+                for f in data_filter['filters']:
+                    DataFilter.validate_filter(f)
         except ValidationError as ex:
             raise InvalidDataFilter('INVALID_DATA_FILTER', 'Invalid data filter: %s' % unicode(ex))
 
-    # TODO: implement
     def get_filter(self):
         """Returns the data filter represented by this JSON
 
@@ -71,7 +145,10 @@ class DataFilterV6(object):
         :rtype: :class:`data.filter.filter.DataFilter`:
         """
 
-        data_filter = DataFilter(True)
+        data_filter = DataFilter([], self._data_filter['all'])
+
+        for f in self._data_filter['filters']:
+            data_filter.add_filter(f)
 
         return data_filter
 
