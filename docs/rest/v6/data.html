@@ -102,6 +102,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Data Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#data-json">Data JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interface-json">Interface JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-filter-json">Data Filter JSON</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
@@ -296,6 +297,116 @@ files. Defaults to False.</td>
 <td>Required</td>
 <td>(JSON parameter) The accepted JSON data type. Must be one of
 &#8216;array&#8217;, &#8216;boolean&#8217;, &#8216;integer&#8217;, &#8216;number&#8217;, &#8216;object&#8217;, or &#8216;string&#8217;.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="data-filter-json">
+<span id="rest-v6-data-filter"></span><h2>Data Filter JSON<a class="headerlink" href="#data-filter-json" title="Permalink to this headline">¶</a></h2>
+<p>A data filter JSON describes a set of filters that determines whether a set of data is accepted or not.</p>
+<p><strong>Example interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;filters&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_a&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;media-type&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;values&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;application/json&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_b&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="s2">&quot;contains&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;values&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;abcde&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_c&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;values&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_d&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;meta-data&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="s2">&quot;between&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;values&quot;</span><span class="o">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">]],</span>
+      <span class="s2">&quot;fields&quot;</span><span class="o">:</span> <span class="p">[[</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">]],</span>
+      <span class="s2">&quot;all_fields&quot;</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Data Filter</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>filters</td>
+<td>Array</td>
+<td>Optional</td>
+<td>List of filter definitions. Defaults to []. An empty list will not
+accept any data.</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td>Required</td>
+<td>The name of the parameter this filter runs against. Multiple
+filters can run on the same parameter.</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>String</td>
+<td>Required</td>
+<td>Type of parameter this filter runs against. Must be one of &#8216;array&#8217;,
+&#8216;boolean&#8217;, &#8216;integer&#8217;, &#8216;number&#8217;, &#8216;object&#8217;, &#8216;string&#8217;, &#8216;filename&#8217;,
+&#8216;media-type&#8217;, &#8216;data-type&#8217;, or &#8216;meta-data&#8217;</td>
+</tr>
+<tr class="row-odd"><td>condition</td>
+<td>String</td>
+<td>Required</td>
+<td>Condition to test data value against. Must be one of &#8216;&lt;&#8217;, &#8216;&lt;=&#8217;,
+&#8216;&gt;&#8217;,&#8217;&gt;=&#8217;, &#8216;==&#8217;, &#8216;!=&#8217;, &#8216;between&#8217;, &#8216;in&#8217;, &#8216;not in&#8217;, &#8216;contains&#8217;,
+&#8216;subset of&#8217;, or &#8216;superset of&#8217;</td>
+</tr>
+<tr class="row-even"><td>values</td>
+<td>Array</td>
+<td>Required</td>
+<td>List of values to compare data against. May be any type.</td>
+</tr>
+<tr class="row-odd"><td>fields</td>
+<td>Array</td>
+<td>Optional</td>
+<td>List of lists with each item being a list of keys for a path to a
+field in an object or file meta-data to be tested.
+e.g. For this data, {&#8216;foo&#8217;: {&#8216;bar&#8217;: 100}}, [[&#8216;foo&#8217;,&#8217;bar&#8217;]] will
+check the value 100. If provided, this property must be of equal
+length to values</td>
+</tr>
+<tr class="row-even"><td>all_fields</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Specifies whether all fields need to pass for filter to pass.
+Defaults to true</td>
+</tr>
+<tr class="row-odd"><td>all_files</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Specifies whether all files need to pass for filter to pass.
+Defaults to false</td>
+</tr>
+<tr class="row-even"><td>all</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Specifies whether all filters need to pass for data to be accepted
+Defaults to true</td>
 </tr>
 </tbody>
 </table>

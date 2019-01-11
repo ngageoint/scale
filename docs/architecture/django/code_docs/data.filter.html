@@ -244,9 +244,24 @@
 <p>Defines the class for filtering data</p>
 <dl class="class">
 <dt id="data.filter.filter.DataFilter">
-<em class="property">class </em><code class="descclassname">data.filter.filter.</code><code class="descname">DataFilter</code><span class="sig-paren">(</span><em>accept</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">data.filter.filter.</code><code class="descname">DataFilter</code><span class="sig-paren">(</span><em>filter_list=None</em>, <em>all=True</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a filter that either accepts or denies a set of data values</p>
+<dl class="method">
+<dt id="data.filter.filter.DataFilter.add_filter">
+<code class="descname">add_filter</code><span class="sig-paren">(</span><em>filter_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter.add_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a filter definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filter_dict</strong> (<em>dict</em>) &#8211; data filter to add</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDataFilter</span></code>: If the filter is invalid</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="data.filter.filter.DataFilter.is_data_accepted">
 <code class="descname">is_data_accepted</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter.is_data_accepted" title="Permalink to this definition">¶</a></dt>
@@ -300,6 +315,31 @@
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#data.filter.exceptions.InvalidDataFilter" title="data.filter.exceptions.InvalidDataFilter"><code class="xref py py-class docutils literal"><span class="pre">data.filter.exceptions.InvalidDataFilter</span></code></a>: If the data filter is invalid</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="data.filter.filter.DataFilter.validate_filter">
+<em class="property">static </em><code class="descname">validate_filter</code><span class="sig-paren">(</span><em>filter_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter.validate_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a data filter dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filter_dict</strong> (<em>dict</em>) &#8211; data filter to validate</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDataFilter</span></code>: If the filter is invalid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Validated filter if the tests pass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
