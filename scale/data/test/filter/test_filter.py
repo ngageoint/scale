@@ -21,7 +21,8 @@ class TestDataFilter(TestCase):
         django.setup()
         
         self.workspace = storage_test_utils.create_workspace()
-        self.file = storage_test_utils.create_file(media_type='application/json')
+        self.file1 = storage_test_utils.create_file(media_type='application/json')
+        self.file2 = storage_test_utils.create_file(media_type='application/json', meta_data={'a': {'b': 'foo'}})
 
     def test_add_filter(self):
         """Tests calling DataFilter.add_value()"""
@@ -60,10 +61,12 @@ class TestDataFilter(TestCase):
         data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
         data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
         data_filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
+        data_filter.add_filter({'name': 'input_f', 'type': 'meta-data', 'condition': 'in', 'values': [['foo', 'baz']],
+                                'fields': [['a', 'b']]})
         
         data = Data()
 
-        file_value = FileValue('input_a', [self.file.id])
+        file_value = FileValue('input_a', [self.file1.id])
         data.add_value(file_value)
         
         # first filter passes, so data is accepted if all is set to false
@@ -79,6 +82,8 @@ class TestDataFilter(TestCase):
         data.add_value(json_value)
         json_value = JsonValue('input_d', 50)
         data.add_value(json_value)
+        file_value = FileValue('input_f', [self.file2.id])
+        data.add_value(file_value)
 
         self.assertTrue(data_filter.is_data_accepted(data))
 
@@ -90,17 +95,20 @@ class TestDataFilter(TestCase):
         data_filter.add_filter({'name': 'input_b', 'type': 'string', 'condition': 'contains', 'values': ['abcde']})
         data_filter.add_filter({'name': 'input_c', 'type': 'integer', 'condition': '>', 'values': ['0']})
         data_filter.add_filter({'name': 'input_d', 'type': 'integer', 'condition': 'between', 'values': ['0', '100']})
+        data_filter.add_filter({'name': 'input_f', 'type': 'meta-data', 'condition': 'in', 'values': [['foo','baz']],
+                                'fields': [['a','b']]})
 
         interface = Interface()
         interface.add_parameter(FileParameter('input_a', ['application/json']))
         warnings = data_filter.validate(interface)
-        self.assertEqual(len(warnings), 3)
+        self.assertEqual(len(warnings), 4)
         self.assertEqual(warnings[0].name, 'UNMATCHED_FILTER')
         
         interface.add_parameter(JsonParameter('input_e', 'integer'))
         warnings = data_filter.validate(interface)
-        self.assertEqual(len(warnings), 4)
-        self.assertEqual(warnings[3].name, 'UNMATCHED_PARAMETERS')
+        self.assertEqual(len(warnings), 5)
+        self.assertEqual(warnings[3].name, 'UNMATCHED_FILTER')
+        self.assertEqual(warnings[4].name, 'UNMATCHED_PARAMETERS')
         
         interface.add_parameter(JsonParameter('input_b', 'integer'))
         with self.assertRaises(InvalidDataFilter) as context:
@@ -112,6 +120,7 @@ class TestDataFilter(TestCase):
         interface2.add_parameter(JsonParameter('input_b', 'string'))
         interface2.add_parameter(JsonParameter('input_c', 'integer'))
         interface2.add_parameter(JsonParameter('input_d', 'integer'))
+        interface2.add_parameter(FileParameter('input_f', ['integer']))
         warnings = data_filter.validate(interface2)
         self.assertEqual(len(warnings), 0)
         
@@ -158,3 +167,11 @@ class TestDataFilter(TestCase):
         with self.assertRaises(InvalidDataFilter) as context:
             DataFilter.validate_filter({'name': 'input_a', 'type': 'integer', 'condition': '<', 'values': ['not a number']})
         self.assertEqual(context.exception.error.name, 'VALUE_ERROR')
+
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'object', 'condition': '<', 'values': [['not a number']]})
+        self.assertEqual(context.exception.error.name, 'INVALID_CONDITION')
+
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilter.validate_filter({'name': 'input_a', 'type': 'object', 'condition': '<', 'values': [['not a number']], 'fields': [['a'],['b']]})
+        self.assertEqual(context.exception.error.name, 'INVALID_FIELDS')

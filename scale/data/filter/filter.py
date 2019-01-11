@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import copy
 import logging
 
 from data.filter.exceptions import InvalidDataFilter
@@ -517,4 +518,6 @@ class DataFilter(object):
         else:
             filter_values.extend(values)
 
-        return {'name': name, 'type': type, 'condition': condition, 'values': filter_values}
+        ret_val = copy.deepcopy(filter_dict)
+        ret_val['values'] = filter_values
+        return ret_val
