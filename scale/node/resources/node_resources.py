@@ -59,15 +59,16 @@ class NodeResources(object):
         """
 
         try:
-        if resource.reservation not in self._resources:
-            self._initialize_default_resources(resource.reservation)
+            if resource.reservation not in self._resources:
+                self._initialize_default_resources(resource.reservation)
 
-        if resource.name in self._resources[resource.reservation]:
-            self._resources[resource.reservation][resource.name].value += resource.value  # Assumes SCALAR type
-        else:
-            self._resources[resource.reservation] = {resource.name: resource.copy()}
+            if resource.name in self._resources[resource.reservation]:
+                self._resources[resource.reservation][resource.name].value += resource.value  # Assumes SCALAR type
+            else:
+                self._resources[resource.reservation] = {resource.name: resource.copy()}
         except Exception:
-            logger.exception()
+            logger.exception('Unable to add resource: %s' % str(resource))
+            raise
 
     def __str__(self):
         """Converts the resource to a readable logging string
@@ -158,7 +159,7 @@ class NodeResources(object):
 
         resources = []
         for dicts in self._resources.values():
-            resources.append(dicts.values())
+            resources.extend(dicts.values())
 
         return resources
 
@@ -172,18 +173,20 @@ class NodeResources(object):
 
         resource_names = set()
         for dicts in self._resources.values():
-            resource_names.add(dicts.keys())
+            resource_names.union(set(dicts.keys()))
 
         return resource_names
 
     def get_resources_by_reservation(self, reservation):
+        """Retrieve all resources associated with a given reservation
+
+        :param reservation: Name of reservation to retrieve resources for
+        :type reservation: str
+        :return: Associated resources
+        :rtype: [:class:`node.resources.resource.ScalarResource`]
         """
 
-        @param reservation:
-        @return:
-        """
-
-        return self._resources[reservation]
+        return self._resources[reservation].values()
 
     def add(self, node_resources):
         """Adds the given resources
@@ -279,12 +282,13 @@ class NodeResources(object):
             names = set()
             for resource in node_resources.get_resources_by_reservation(reservation):
                 names.add(resource.name)
-            if set(self.get_resources_by_reservation(reservation).keys()) != names:
+            if len(set([x.name for x in self.get_resources_by_reservation(reservation)]).difference(names)):
                 return False
 
-            for resource in node_resources.get_resources_by_reservation(reservation):
-                if round(self.get_resources_by_reservation(reservation)[resource.name].value, 5) != round(resource.value, 5):  # Assumes SCALAR type
-                    return False
+            for role in node_resources._resources:
+                for resource in node_resources._resources[role]:
+                    if round(self._resources[role][resource].value, 5) != round(node_resources._resources[role][resource].value, 5):  # Assumes SCALAR type
+                        return False
 
         return True
 
@@ -320,6 +324,59 @@ class NodeResources(object):
             else:
                 self.remove_resource(resource_name)
 
+    def find_resources(self, node_resources):
+        """Identify the resources and the associated reservations that will satisfy a tasks requirements
+
+        Preference should be given for reserved resources
+
+        :param node_resources: The resources
+        :type node_resources: :class:`node.resources.NodeResources`
+        :returns: The resources
+        :rtype: :class:`node.resources.NodeResources`
+        """
+
+        resources = []
+        for name in node_resources.resource_names:
+            value = node_resources._get_resource_sum(name)
+            resources.extend(self._find_resource_matches(name, value))
+
+        return NodeResources(resources)
+
+
+    def _find_resource_matches(self, name, need):
+        """Identify the available resource(s) that will match the needed resource request
+
+        :param name: Resource name: 'cpu', 'mem', etc.
+        :type name: str
+        :param need: Scalar value of resource
+        :type need: float
+        :return: Matching resource(s) that satisfy resource need
+        :rtype: [:class:`node.resources.resource.ScalarResource`]
+        """
+
+        resources = []
+
+        roles = self._resources.keys()
+        # Ensure we evaluate reserved resources LAST
+        if '*' in roles:
+            roles.append(roles.pop(roles.index('*')))
+
+
+        for role in roles:
+            if name in self._resources[role]:
+                if need > 0.0:
+                    resource = self._resources[role][name]
+                    if resource.value < need:
+                        resources.append(resource.copy())
+                        need -= resource.value
+                    else:
+                        limited  = resource.copy()
+                        limited.value = need
+                        resources.append(limited)
+                        need = 0
+
+        return resources
+
     def remove_resource(self, name, limit=0.0):
         """Removes or reduces to specified limit the resource with the given name
 
@@ -337,7 +394,7 @@ class NodeResources(object):
         if remainder <= limit:
             return
 
-        roles = self._resources.values()
+        roles = self._resources.keys()
         # Ensure we evaluate unreserved resources first
         if '*' in roles:
             roles.insert(0, roles.pop(roles.index('*')))
@@ -357,8 +414,9 @@ class NodeResources(object):
         """Rounds all of the resource values
         """
 
-        for resource in self._resources.values():
-            resource.value = round(resource.value, 2)  # Assumes SCALAR type
+        for role in self._resources.values():
+            for resource in role.values():
+                resource.value = round(resource.value, 2) # Assumes SCALAR type
 
     def subtract(self, node_resources):
         """Subtracts the given resources, irrespective of associated reservations
@@ -367,7 +425,7 @@ class NodeResources(object):
         :type node_resources: :class:`node.resources.NodeResources`
         """
 
-        roles = self._resources.values()
+        roles = self._resources.keys()
         # Ensure we evaluate unreserved resources first
         if '*' in roles:
             roles.insert(0, roles.pop(roles.index('*')))
