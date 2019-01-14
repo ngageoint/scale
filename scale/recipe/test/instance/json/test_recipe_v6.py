@@ -42,6 +42,9 @@ class TestRecipeInstanceV6(TestCase):
         interface = Interface()
         interface.add_parameter(FileParameter('file_param_1', ['image/gif']))
         interface.add_parameter(JsonParameter('json_param_1', 'object'))
+        df1 = DataFilter(filter_list=[{'name': 'file_param_1', 'type': 'media-type', 'condition': '==', 'values': ['image/gif']},
+                                      {'name': 'json_param_1', 'type': 'object', 'condition': 'superset of', 'values': [{}]}],
+                        all=False) 
 
         definition = RecipeDefinition(interface)
         definition.add_job_node('A', job_type_1.name, job_type_1.version, job_type_1.revision_num)
@@ -49,7 +52,7 @@ class TestRecipeInstanceV6(TestCase):
         definition.add_job_node('C', job_type_3.name, job_type_3.version, job_type_3.revision_num)
         definition.add_recipe_node('D', recipe_type_1.name, recipe_type_1.revision_num)
         definition.add_job_node('E', job_type_4.name, job_type_4.version, job_type_4.revision_num)
-        definition.add_condition_node('F', Interface(), DataFilter()) #False
+        definition.add_condition_node('F', interface, df1) #False
         definition.add_job_node('G', job_type_4.name, job_type_4.version, job_type_4.revision_num)
         definition.add_dependency('A', 'B')
         definition.add_dependency('A', 'C')

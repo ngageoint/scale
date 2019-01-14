@@ -7,6 +7,7 @@ from data.data.data import Data
 from data.data.json.data_v6 import convert_data_to_v6_json
 from data.filter.filter import DataFilter
 from data.interface.interface import Interface
+from data.interface.parameter import JsonParameter
 from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
@@ -92,10 +93,18 @@ class TestRecipe(TestCase):
 
         # Create recipe
         definition = RecipeDefinition(Interface())
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(JsonParameter('cond_int', 'integer'))
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
-        definition.add_condition_node('B', Interface(), DataFilter()) #True
-        definition.add_condition_node('C', Interface(), DataFilter()) #True
-        definition.add_condition_node('D', Interface(), DataFilter()) #False
+        df1 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]},
+                                      {'name': 'cond_int', 'type': 'integer', 'condition': '!=', 'values': [0]}],
+                        all=False) #always True
+        df2 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]},
+                                      {'name': 'cond_int', 'type': 'integer', 'condition': '!=', 'values': [0]}],
+                        all=True) #always False
+        definition.add_condition_node('B', cond_interface_1, df1) #True
+        definition.add_condition_node('C', cond_interface_1, df1) #True
+        definition.add_condition_node('D', cond_interface_1, df2) #False
         definition.add_job_node('E', job_type.name, job_type.version, job_type.revision_num)
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
@@ -137,10 +146,18 @@ class TestRecipe(TestCase):
 
         # Create recipe
         definition = RecipeDefinition(Interface())
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(JsonParameter('cond_int', 'integer'))
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
-        definition.add_condition_node('B', Interface(), DataFilter()) #True
-        definition.add_condition_node('C', Interface(), DataFilter()) #True
-        definition.add_condition_node('D', Interface(), DataFilter()) #False
+        df1 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]},
+                                      {'name': 'cond_int', 'type': 'integer', 'condition': '!=', 'values': [0]}],
+                        all=False) #always True
+        df2 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]},
+                                      {'name': 'cond_int', 'type': 'integer', 'condition': '!=', 'values': [0]}],
+                        all=True) #always False
+        definition.add_condition_node('B', cond_interface_1, df1) #True
+        definition.add_condition_node('C', cond_interface_1, df1) #True
+        definition.add_condition_node('D', cond_interface_1, df2) #False
         definition.add_job_node('E', job_type.name, job_type.version, job_type.revision_num)
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
@@ -336,7 +353,12 @@ class TestRecipe(TestCase):
         data_dict = convert_data_to_v6_json(Data()).get_dict()
         job_type = job_test_utils.create_job_type()
         sub_recipe_type = recipe_test_utils.create_recipe_type_v5()
-
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(JsonParameter('cond_int', 'integer'))
+        df2 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]},
+                                      {'name': 'cond_int', 'type': 'integer', 'condition': '!=', 'values': [0]}],
+                        all=True) #always False
+                        
         definition = RecipeDefinition(Interface())
         definition.add_job_node('A', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('B', sub_recipe_type.name, sub_recipe_type.revision_num)
@@ -346,7 +368,7 @@ class TestRecipe(TestCase):
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
         definition.add_job_node('H', job_type.name, job_type.version, job_type.revision_num)
-        definition.add_condition_node('I', Interface(), DataFilter()) #False
+        definition.add_condition_node('I', cond_interface_1, df2) #False
         definition.add_job_node('J', job_type.name, job_type.version, job_type.revision_num)
         definition.add_dependency('A', 'C')
         definition.add_dependency('A', 'E')

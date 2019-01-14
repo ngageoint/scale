@@ -29,11 +29,10 @@ class TestRecipeDiff(TestCase):
 
         cond_interface_1 = Interface()
         cond_interface_1.add_parameter(FileParameter('cond_file', ['image/gif']))
-        # TODO: eventually implement two "real" and identical filters
-        filter_1 = DataFilter() #False
+        filter_1 = DataFilter(filter_list=[{'name': 'cond_file', 'type': 'filename', 'condition': 'contains', 'values': ['good_name.gif']}])
         cond_interface_2 = Interface()
         cond_interface_2.add_parameter(FileParameter('cond_file', ['image/gif']))
-        filter_2 = DataFilter() #False
+        filter_2 = DataFilter(filter_list=[{'name': 'cond_file', 'type': 'filename', 'condition': 'contains', 'values': ['good_name.gif']}])
 
         definition_1 = RecipeDefinition(interface_1)
         definition_1.add_job_node('A', 'job_type_1', '1.0', 1)
@@ -154,11 +153,10 @@ class TestRecipeDiff(TestCase):
 
         cond_interface_1 = Interface()
         cond_interface_1.add_parameter(FileParameter('cond_file', ['image/gif']))
-        # TODO: eventually implement two "real" and different filters
-        filter_1 = DataFilter(all=True) #False
+        filter_1 = DataFilter(all=True)
         cond_interface_2 = Interface()
         cond_interface_2.add_parameter(FileParameter('cond_file', ['image/gif']))
-        filter_2 = DataFilter(all=False) #True
+        filter_2 = DataFilter(all=False)
 
         definition_1 = RecipeDefinition(interface_1)
         definition_1.add_job_node('A', 'job_type_1', '1.0', 1)
