@@ -108,7 +108,7 @@ RECIPE_DEFINITION_SCHEMA = {
         'condition_node': {
             'description': 'A condition node in the recipe graph',
             'type': 'object',
-            'required': ['node_type', 'interface'],
+            'required': ['node_type', 'interface', 'data_filter'],
             'additionalProperties': False,
             'properties': {
                 'node_type': {
