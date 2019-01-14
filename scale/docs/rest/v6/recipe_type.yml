@@ -479,8 +479,10 @@ components:
             type: string
             enum: [condition]
             description: the name of the node type
-          interface:
-            $ref: '#/components/schemas/interface'
+          input_interface:
+            $ref: './data.yml#/components/schemas/interface'
+          data_filter:
+            $ref: './data.yml#/components/schemas/data_filter'
       job_node:
         title: Recipe Definition Job Node
         type: object

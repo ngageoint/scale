@@ -93,7 +93,13 @@ another.
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | node_type                  | JSON object    | Required | An object describing the type of the node                          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| node_type                  | String         | Required | The type of the node, either 'job' or 'recipe'                     |
+| node_type                  | String         | Required | The type of the node, either 'connection', 'job' or 'recipe'       |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| input_interface            | JSON object    | Required | ('condition' node) The input interface of the condition            |
+|                            |                |          | See :ref:`rest_v6_data_interface`                                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| data_filter                | JSON object    | Required | ('condition' node) The data filter of the condition                |
+|                            |                |          | See :ref:`rest_v6_data_filter`                                     |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | job_type_name              | String         | Required | ('job' node) The name of the job type                              |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
