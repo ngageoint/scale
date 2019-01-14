@@ -162,6 +162,33 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
         self.assertEqual(job_exe._scheduled_node_id, node.id)
 
+    def test_accept_new_job_exe_with_reserved_resources(self):
+        """Tests successfully calling accept_new_job_exe() when reserved resources are offered"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources([Cpus(10.0, reservation='test'), Mem(50.0)])
+        task_resources = NodeResources()
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
+
+        queue_model = queue_test_utils.create_queue(cpus_required=1.0, mem_required=10.0, disk_in_required=0.0,
+                                                    disk_out_required=0.0, disk_total_required=0.0)
+        job_exe = QueuedJobExecution(queue_model)
+
+        accepted = scheduling_node.accept_new_job_exe(job_exe)
+        self.assertTrue(accepted)
+        self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 1)
+        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0)])))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
+        self.assertEqual(job_exe._scheduled_node_id, node.id)
+
     def test_accept_new_job_exe_gpu_full_node(self):
         """Tests successfully calling accept_new_job_exe() when job requires all GPUs per node"""
 
@@ -735,6 +762,34 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
         offered_resources = NodeResources([Cpus(20.0), Mem(100.0)])
+        watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
+        resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
+        job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_id,
+                                                          resources=NodeResources([Cpus(10.0), Mem(50.0)]))
+        job_exe_2 = job_test_utils.create_running_job_exe(agent_id=self.agent_id,
+                                                          resources=NodeResources([Cpus(5.0), Mem(25.0)]))
+        scheduling_node.accept_job_exe_next_task(job_exe_1, [])
+        scheduling_node.accept_job_exe_next_task(job_exe_2, [])
+        self.assertEqual(len(scheduling_node._allocated_running_job_exes), 2)
+
+        job_exe_1.execution_canceled(now())  # Execution canceled, so it will not have a next task to start
+
+        scheduling_node.start_job_exe_tasks()
+        self.assertEqual(len(scheduling_node._allocated_running_job_exes), 0)
+        self.assertEqual(len(scheduling_node.allocated_tasks), 1)  # Only job_exe_2 had a next task
+
+    def test_start_job_exe_tasks_with_reserved_resources(self):
+        """Tests calling start_job_exe_tasks() successfully"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources([Cpus(20.0, reservation='test'), Mem(100.0)])
         watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)

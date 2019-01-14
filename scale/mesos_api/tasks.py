@@ -56,6 +56,7 @@ def _create_base_task(task):
             logger.debug(resource)
             logger.debug(resource.__dict__)
             if resource.reservation != '*':
+                task_resource['role'] = resource.reservation
                 task_resource['reservation'] = {'principal': resource.reservation}
             task_resource['name'] = resource.name
             task_resource['type'] = RESOURCE_TYPE_SCALAR

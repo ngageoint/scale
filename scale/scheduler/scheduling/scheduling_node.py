@@ -110,10 +110,14 @@ class SchedulingNode(object):
                 logger.info('GPU resource required by Job Execution. '
                             'Greedy resource logic scaling up from %i to %s GPUs.' %
                             (original_gpus, resources.gpus))
+
+            # Associate the actual resources used to the task so reservations are tracked
+            matched_resources = self._remaining_resources.find_resources(resources)
+            logger.debug(matched_resources)
             self._allocated_queued_job_exes.append(job_exe)
-            self.allocated_resources.add(resources)
-            self._remaining_resources.subtract(resources)
-            job_exe.scheduled(self.agent_id, self.node_id, resources)
+            self.allocated_resources.add(matched_resources)
+            self._remaining_resources.subtract(matched_resources)
+            job_exe.scheduled(self.agent_id, self.node_id, matched_resources)
             return True
 
         return False
