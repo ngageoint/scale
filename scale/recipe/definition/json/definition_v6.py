@@ -7,6 +7,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from data.filter.filter import DataFilter
+from data.filter.json.filter_v6 import DATA_FILTER_SCHEMA, convert_filter_to_v6_json, DataFilterV6
 from data.interface.interface import Interface
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA, convert_interface_to_v6_json, InterfaceV6
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
@@ -115,6 +116,7 @@ RECIPE_DEFINITION_SCHEMA = {
                     'enum': ['condition'],
                 },
                 'interface': INTERFACE_SCHEMA,
+                'data_filter': DATA_FILTER_SCHEMA,
             },
         },
         'job_node': {
@@ -217,9 +219,9 @@ def convert_node_to_v6_json(node):
         input_dict[connection.input_name] = conn_dict
 
     if isinstance(node, ConditionNodeDefinition):
-        # TODO: complete recipe condition implementation
         interface_dict = convert_interface_to_v6_json(node.input_interface).get_dict()
-        node_type_dict = {'node_type': 'condition', 'interface': interface_dict}
+        filter_dict = convert_filter_to_v6_json(node.data_filter).get_dict()
+        node_type_dict = {'node_type': 'condition', 'interface': interface_dict, 'data_filter': filter_dict}
     elif isinstance(node, JobNodeDefinition):
         node_type_dict = {'node_type': 'job', 'job_type_name': node.job_type_name,
                           'job_type_version': node.job_type_version, 'job_type_revision': node.revision_num}
@@ -279,9 +281,9 @@ class RecipeDefinitionV6(object):
         for node_name, node_dict in self._definition['nodes'].items():
             node_type_dict = node_dict['node_type']
             if node_type_dict['node_type'] == 'condition':
-                # TODO: complete recipe condition implementation
                 cond_interface_json = InterfaceV6(node_type_dict['interface'], do_validate=False)
-                definition.add_condition_node(node_name, cond_interface_json.get_interface(), DataFilter()) #True
+                data_filter_json = DataFilterV6(node_type_dict['data_filter'], do_validate=False)
+                definition.add_condition_node(node_name, cond_interface_json.get_interface(), data_filter_json.get_filter())
             elif node_type_dict['node_type'] == 'job':
                 definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_version'],
                                         node_type_dict['job_type_revision'])
