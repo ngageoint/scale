@@ -248,7 +248,7 @@ class ScaleScheduler(object):
                     if resource.role in settings.ACCEPTED_RESOURCE_ROLE:
                         logger.debug("Received scalar resource %s with value %i associated with role %s" %
                                      (resource.name, resource.scalar.value, resource.role))
-                        resource_list.append(ScalarResource(resource.name, resource.scalar.value, resource.role))
+                        resource_list.append(ScalarResource(resource.name, resource.scalar.value))
                     else:
                         skipped_roles.add(resource.role)
 
