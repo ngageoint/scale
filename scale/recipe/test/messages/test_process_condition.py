@@ -4,9 +4,12 @@ from __future__ import absolute_import
 import django
 from django.test import TestCase
 
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.value import JsonValue
 from data.filter.filter import DataFilter
 from data.interface.interface import Interface
-from data.interface.parameter import FileParameter
+from data.interface.parameter import FileParameter, JsonParameter
 from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
@@ -25,11 +28,21 @@ class TestProcessCondition(TestCase):
         """Tests converting a ProcessCondition message to and from JSON"""
 
         definition = RecipeDefinition(Interface())
-        # TODO: once DataFilter is implemented, create a DataFilter object here that accepts the inputs
-        definition.add_condition_node('node_a', Interface(), DataFilter()) #True
+        
+        cond_interface_1 = Interface()
+        cond_interface_1.add_parameter(JsonParameter('cond_int', 'integer'))
+        df1 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]}])
+        definition = RecipeDefinition(cond_interface_1)
+        definition.add_condition_node('node_a', cond_interface_1, df1)
+        definition.add_recipe_input_connection('node_a', 'cond_int', 'cond_int')
+        
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
-        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
+        
+        data_1 = Data()
+        data_1.add_value(JsonValue('cond_int', 0))
+        data_1_dict = convert_data_to_v6_json(data_1).get_dict()
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_1_dict)
         condition = recipe_test_utils.create_recipe_condition(recipe=recipe, save=True)
         recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', condition=condition, save=True)
 
@@ -120,17 +133,19 @@ class TestProcessCondition(TestCase):
         }
 
         cond_interface = Interface()
-        cond_interface.add_parameter(FileParameter('INPUT_C_1', [], multiple=True))
-        cond_interface.add_parameter(FileParameter('INPUT_C_2', [], multiple=True))
+        cond_interface.add_parameter(FileParameter('INPUT_C_a', [], multiple=True))
+        cond_interface.add_parameter(FileParameter('INPUT_C_b', [], multiple=True))
         definition = RecipeDefinition(Interface())
         definition.add_job_node('node_a', job_type_1.name, job_type_1.version, job_type_1.revision_num)
         definition.add_job_node('node_b', job_type_2.name, job_type_2.version, job_type_2.revision_num)
-        # TODO: once DataFilter is implemented, create a DataFilter object here that accepts the inputs
-        definition.add_condition_node('node_c', cond_interface, DataFilter()) #True
+        df1 = DataFilter(filter_list=[{'name': 'INPUT_C_a', 'type': 'media-type', 'condition': '==', 'values': ['text/plain']},
+                                      {'name': 'INPUT_C_b', 'type': 'media-type', 'condition': '==', 'values': ['text/plain']}],
+                        all=False)
+        definition.add_condition_node('node_c', cond_interface, df1)
         definition.add_dependency('node_a', 'node_c')
         definition.add_dependency('node_b', 'node_c')
-        definition.add_dependency_input_connection('node_c', 'INPUT_C_1', 'node_a', 'OUTPUT_A')
-        definition.add_dependency_input_connection('node_c', 'INPUT_C_2', 'node_b', 'OUTPUT_B')
+        definition.add_dependency_input_connection('node_c', 'INPUT_C_a', 'node_a', 'OUTPUT_A')
+        definition.add_dependency_input_connection('node_c', 'INPUT_C_b', 'node_b', 'OUTPUT_B')
         def_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
@@ -164,9 +179,9 @@ class TestProcessCondition(TestCase):
         self.assertIsNotNone(condition.processed)
         self.assertTrue(condition.is_accepted)
         # Check condition for expected data
-        self.assertSetEqual(set(condition.get_data().values.keys()), {'INPUT_C_1', 'INPUT_C_2'})
-        self.assertListEqual(condition.get_data().values['INPUT_C_1'].file_ids, [file_1.id, file_2.id])
-        self.assertListEqual(condition.get_data().values['INPUT_C_2'].file_ids, [file_3.id, file_4.id])
+        self.assertSetEqual(set(condition.get_data().values.keys()), {'INPUT_C_a', 'INPUT_C_b'})
+        self.assertListEqual(condition.get_data().values['INPUT_C_a'].file_ids, [file_1.id, file_2.id])
+        self.assertListEqual(condition.get_data().values['INPUT_C_b'].file_ids, [file_3.id, file_4.id])
 
         # Test executing message again
         message_json_dict = message.to_json()
