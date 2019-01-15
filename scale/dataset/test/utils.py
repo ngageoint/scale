@@ -36,8 +36,9 @@ def create_dataset(name=None, title=None, description=None, version=None,
     if not created:
         created = datetime.now()
     if not definition:
-        definition = {}
-    # dataset_definition = DataSetDefinition(definition=definition, do_validate=False)
+        definition = {
+            'name': name,
+        }
 
     dataset = DataSet.objects.create(name=name, title=title, description=description,
         version=version, definition=definition, created=created)

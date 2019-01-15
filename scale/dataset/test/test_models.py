@@ -29,7 +29,9 @@ class TestDataSetManager(TransactionTestCase):
         title = 'Test Dataset'
         description = 'Test DataSet description'
         version = '1.0.0'
-        definition = {}
+        definition = {
+            'name': 'test-dataset',
+        }
 
         # call test
         dataset = dataset_test_utils.create_dataset(name=name, title=title, description=description,
@@ -49,10 +51,14 @@ class TestDataSetManager(TransactionTestCase):
         title = 'Test Dataset'
         description = 'Test DataSet description'
         version = '1.0.0'
-        definition = {}
+        definition = {
+            'name': 'test-dataset',
+        }
+
+        dataset_definiton = DataSetDefinition(definition)
 
         # call test
-        dataset = DataSet.objects.create_dataset_v6(version, definition, name=name, title=title, description=description)
+        dataset = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
 
         # Check results
         the_dataset = DataSet.objects.get(pk=dataset.id)
@@ -64,30 +70,111 @@ class TestDataSetManager(TransactionTestCase):
     def test_filter_datasets(self):
         """Tests calling DataSetManager filter_datasets
         """
+        name = 'test-dataset-1'
+        title = 'Test Dataset 1'
+        description = 'Test DataSet description 1'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset-1',
+        }
 
-        pass
+        dataset_definiton = DataSetDefinition(definition)
+        dataset1 = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
 
-    def test_filter_datasets_related_v6(self):
-        """Tests calling DataSetManager.filter_datasets_related() """
+        name = 'test-dataset-2'
+        title = 'Test Dataset 2'
+        description = 'Test DataSet description 2'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset-2',
+        }
 
-        pass
+        dataset_definiton = DataSetDefinition(definition)
+        dataset2 = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
+
+        name = 'test-dataset-3'
+        title = 'Test Dataset 3'
+        description = 'Test DataSet description 3'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset-3',
+        }
+
+        dataset_definiton = DataSetDefinition(definition)
+        dataset3 = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
+
+        ids = [dataset1.id, dataset3.id]
+
+        # Test the filter_datasets method
+        datasets = DataSet.objects.filter_datasets(dataset_ids=ids)
+        self.assertEqual(len(datasets), 2)
+        for ds in datasets:
+            self.assertTrue(ds.id in ids)
+            self.assertNotEquals(ds.id, dataset2.id)
+
+        datasets = DataSet.objects.filter_datasets(dataset_names=[dataset2.name])
+        self.assertEqual(len(datasets), 1)
+        self.assertEqual(datasets[0].name, dataset2.name)
 
     def test_get_datasets_v6(self):
         """Tests calling DataSetmanager.get_datasets_v6() """
 
-        pass
+        name = 'test-dataset-1'
+        title = 'Test Dataset 1'
+        description = 'Test DataSet description 1'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset-1',
+        }
 
-    def test_get_dataset_details(self):
+        dataset_definiton = DataSetDefinition(definition)
+        dataset1 = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
+
+        name = 'test-dataset-2'
+        title = 'Test Dataset 2'
+        description = 'Test DataSet description 2'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset-2',
+        }
+
+        dataset_definiton = DataSetDefinition(definition)
+        dataset2 = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
+
+        name = 'test-dataset-3'
+        title = 'Test Dataset 3'
+        description = 'Test DataSet description 3'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset-3',
+        }
+
+        dataset_definiton = DataSetDefinition(definition)
+        dataset3 = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
+
+        ids = [dataset1.id, dataset3.id]
+        datasets = DataSet.objects.get_datasets_v6(dataset_ids=ids)
+        self.assertEqual(len(datasets), 2)
+        for ds in datasets:
+            self.assertTrue(ds.id in ids)
+            self.assertNotEquals(ds.id, dataset2.id)
+
+    def test_get_details_v6(self):
         """Tests calling DataSetManager.get_dataset_details() """
 
-        pass
+        name = 'test-dataset'
+        title = 'Test Dataset'
+        description = 'Test DataSet description'
+        version = '1.0.0'
+        definition = {
+            'name': 'test-dataset',
+        }
 
-#class TestDataSet(TransactionTestCase):
+        dataset_definiton = DataSetDefinition(definition)
 
-#    def setUp(self):
-#        django.setup()
-
-        # dataset_def_str = \
-        #     """
-        #     """
-
+        # create object
+        dataset = DataSet.objects.create_dataset_v6(version, dataset_definiton, name=name, title=title, description=description)
+        dataset2 = DataSet.objects.get_details_v6(name, version)
+        self.assertEquals(dataset.name, dataset2.name)
+        self.assertEquals(dataset.version, dataset2.version)
+        self.assertDictEqual(dataset.definition, dataset2.definition)

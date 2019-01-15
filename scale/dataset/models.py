@@ -61,7 +61,7 @@ class DataSetManager(models.Manager):
         #     raise InvalidDataSetField('Version must be provided')
 
         if not definition:
-            definition = DataSetDefinition({}, do_validate=False)
+            definition = DataSetDefinition({'name': name}, do_validate=False)
 
         dataset = DataSet()
 
@@ -171,7 +171,7 @@ class DataSetManager(models.Manager):
         if order:
             datasets = datasets.order_by(*order)
         else:
-            datasets = datasets.order_by('last_modified')
+            datasets = datasets.order_by('id')
 
         return datasets
 
@@ -200,8 +200,6 @@ class DataSetManager(models.Manager):
 
         # validate other fields
         return DataSetValidation(is_valid, errors, warnings)
-
-
 
 """DataSet
 
