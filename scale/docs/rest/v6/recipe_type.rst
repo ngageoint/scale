@@ -95,7 +95,7 @@ another.
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | node_type                  | String         | Required | The type of the node, either 'connection', 'job' or 'recipe'       |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| input_interface            | JSON object    | Required | ('condition' node) The input interface of the condition            |
+| interface                  | JSON object    | Required | ('condition' node) The input interface of the condition            |
 |                            |                |          | See :ref:`rest_v6_data_interface`                                  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | data_filter                | JSON object    | Required | ('condition' node) The data filter of the condition                |
