@@ -53,6 +53,9 @@ def _create_base_task(task):
     for resource in resources.resources:
         if resource.value > 0.0:
             task_resource = {}
+            if settings.ACCEPTED_RESOURCE_ROLE != '*':
+                task_resource['role'] = settings.ACCEPTED_RESOURCE_ROLE
+                task_resource['reservation'] = {'principal': settings.ACCEPTED_RESOURCE_ROLE}
             task_resource['name'] = resource.name
             task_resource['type'] = RESOURCE_TYPE_SCALAR
             task_resource['scalar'] = {'value': resource.value}
