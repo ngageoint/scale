@@ -10,20 +10,18 @@ from dataset.definition.definition import DataSetDefinition
 SCHEMA_VERSION = '6'
 DATASET_DEFINITION_SCHEMA = {
     'type': 'object',
-    'additionalProperties': True,
+    'required': ['name', 'version'],
     'properties': {
+        'version': {
+          'description': 'Version of the dataset definition schema',
+          'type': 'string',
+        },
+        'name': {
+            'description': 'The unique name of the dataset',
+            'type': 'string',
+        },
         # dataset definition here
     },
-    # 'definitions': {
-        # 'parameter': {
-        #     'description': 'The data set parameter defintion',
-        #     'type': 'object',
-        #     'required': [],
-        #     'properties': {
-
-        #     },
-        # },
-    # },
 }
 
 DATASET_MEMBER_SCHEMA = {
@@ -31,10 +29,7 @@ DATASET_MEMBER_SCHEMA = {
     'required': ['definition'],
     'additionalProperties': False,
     'properties': {
-        'definition': {
-            'description': 'The data',
-            'type': 'object',
-        }
+        # dataset member definition here
     }
 }
 
@@ -59,7 +54,7 @@ def convert_definition_to_v6_json(definition):
 
     def_dict = {
         'version': SCHEMA_VERSION,
-        # '': definition.??
+        'name': definition['name']
     }
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
@@ -111,6 +106,9 @@ class DataSetDefinitionV6(object):
 
     def get_definition(self):
         """Returns the definition
+
+        :returns: The DataSetDefinition object
+        :rtype: :class:`dataset.definition.definition.DataSetDefinition`
         """
 
         return DataSetDefinition(definition=self.get_dict())

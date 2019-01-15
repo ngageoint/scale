@@ -118,6 +118,7 @@ class TestDataSetPostView(TestCase):
             'title': 'My Dataset',
             'description': 'A test dataset',
             'definition': {
+                'name': 'my-new-dataset',
             },
         }
 
@@ -137,6 +138,7 @@ class TestDataSetPostView(TestCase):
             'title': 'My Dataset',
             'description': 'An updated test dataset',
             'definition': {
+                'name': 'my-new-dataset',
             },
         }
         response = self.client.generic('POST', url, json.dumps(json_data_2), 'application/json')
@@ -251,7 +253,9 @@ class TestDataSetValidationView(TestCase):
             'title': 'Test Dataset',
             'description': 'My Test Dataset',
             'version': '1.0.0',
-            'definition': {}
+            'definition': {
+                'name': 'test-dataset',
+            }
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)

@@ -105,7 +105,7 @@ class DataSetView(ListCreateAPIView):
         existing_dataset = DataSet.objects.filter(name=name, version=version).first()
         if not existing_dataset:
             try:
-                dataset = DataSet.objects.create_dataset_v6(version, definition, name=name, title=title, description=description)
+                dataset = DataSet.objects.create_dataset_v6(version, dataset_def, name=name, title=title, description=description)
             except Exception as ex:
                 message = 'Unable to create new dataset'
                 logger.exception(message)
@@ -487,7 +487,7 @@ class DataSetValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        print
+
         # Validate the minimum info is present:
         name = rest_util.parse_string(request, 'name', required=True)
         version = rest_util.parse_string(request, 'version', required=True)
