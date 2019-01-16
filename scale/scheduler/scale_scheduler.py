@@ -7,6 +7,7 @@ import logging
 import threading
 
 from django.utils.timezone import now
+from django.conf import settings
 
 from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
@@ -24,7 +25,6 @@ from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
 from scheduler.manager import scheduler_mgr
 from scheduler.messages.restart_scheduler import RestartScheduler
-from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
 from scheduler.node.manager import node_mgr
 from scheduler.recon.manager import recon_mgr
@@ -234,6 +234,7 @@ class ScaleScheduler(object):
         agents = {}
         resource_offers = []
         total_resources = NodeResources()
+        skipped_roles = set()
         for offer in offers:
             offer = from_mesos_offer(offer)
             offer_id = offer.id.value
@@ -242,18 +243,35 @@ class ScaleScheduler(object):
             hostname = offer.hostname
             resource_list = []
             for resource in offer.resources:
-                if resource.type == RESOURCE_TYPE_SCALAR:  # This is the SCALAR type
-                    resource_list.append(ScalarResource(resource.name, resource.scalar.value))
-            resources = NodeResources(resource_list)
-            total_resources.add(resources)
-            agents[agent_id] = Agent(agent_id, hostname)
-            resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+                # Only accept resource that are of SCALAR type and have a role matching our accept list
+                if resource.type == RESOURCE_TYPE_SCALAR:
+                    if resource.role in settings.ACCEPTED_RESOURCE_ROLE:
+                        logger.debug("Received scalar resource %s with value %i associated with role %s" %
+                                     (resource.name, resource.scalar.value, resource.role))
+                        resource_list.append(ScalarResource(resource.name, resource.scalar.value))
+                    else:
+                        skipped_roles.add(resource.role)
+
+            logger.info("Number of resources: %i" % len(resource_list))
+
+            # Only register agent, if offers are being received
+            if len(resource_list) > 0:
+                resources = NodeResources(resource_list)
+                total_resources.add(resources)
+                agents[agent_id] = Agent(agent_id, hostname)
+                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+
+        logger.debug("Offer analysis complete with %i resource offers." % len(resource_offers))
 
         node_mgr.register_agents(agents.values())
+        logger.debug("Agents registered.")
         resource_mgr.add_new_offers(resource_offers)
+        logger.debug("Resource offers added.")
 
         num_offers = len(resource_offers)
         logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))
+        if len(skipped_roles):
+            logger.warning('Skipped offers from roles that are not marked as accepted: %s', ','.join(skipped_roles))
         scheduler_mgr.add_new_offer_count(num_offers)
 
         duration = now() - started

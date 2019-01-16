@@ -228,6 +228,7 @@ below for reference.
 
 | Env Var                     | Default Value                   | Meaning                                    |
 | --------------------------- | ------------------------------- | -------------------------------------------|
+| ACCEPTED_RESOURCE_ROLE      | MESOS_ROLE                      | Resource role to accept in offers          |
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
@@ -237,6 +238,7 @@ below for reference.
 | LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
+| MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
 | SCALE_DB_URL                | use link to `db` or 'localhost' | database host name                         |
 | SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
