@@ -1,14 +1,21 @@
 """Defines the command line method for moving a file"""
 from __future__ import unicode_literals
 
+import json
 import logging
+import os
+import signal
 import sys
+from collections import namedtuple
 
 from django.core.management.base import BaseCommand
 
-from storage.brokers.broker import FileMove
+from messaging.manager import CommandMessageManager
 from storage import move_files_job
-from storage.models import ScaleFile
+from storage.brokers.broker import FileDownload, FileMove, FileUpload
+from storage.brokers.factory import get_broker
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
+from storage.messages.move_files import create_move_files_messages
 
 
 logger = logging.getLogger(__name__)
@@ -25,22 +32,22 @@ class Command(BaseCommand):
         This method starts the file move process.
         """
 
-        logger.info('Command starting: scale_move_file')
+        logger.info('Command starting: scale_move_files')
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         files_list = json.loads(os.environ.get('FILES'))
-        workspace = json.loads(os.environ.get('WORKSPACE'))
-        uri = json.loads(os.environ.get('URI'))
+        workspaces = json.loads(os.environ.get('WORKSPACES'))
+        uris = json.loads(os.environ.get('URIS'))
 
-        workspace = self._configure_workspace(workspace)
-        files = self._configure_files(files_list, workspace, uri)
+        workspaces = self._configure_workspaces(workspaces)
+        files = self._configure_files(files_list, workspaces)
 
         logger.info('Command starting: scale_move_files')
         logger.info('File IDs: %s', [x.id for x in files])
         
         for wrkspc_name, wrkspc in workspaces.iteritems():
-            delete_files_job.delete_files(files=[f for f in files if f.workspace == wrkspc_name],
+            move_files_job.move_files(files=[f for f in files if f.workspace == wrkspc_name],
                                           broker=wrkspc['broker'], volume_path=wrkspc['volume_path'])
 
         messages = create_move_files_messages(files=files, workspace=workspace, uri=uri)
