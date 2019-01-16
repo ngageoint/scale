@@ -145,10 +145,12 @@ class ConditionNodeDefinition(NodeDefinition):
         self.input_interface = input_interface
         self.data_filter = data_filter
 
-        # TODO: generate output interface from input interface + data filter
-        # TODO: input params with required=False that are checked for existence in data filter should become
-        # required=True on output
         self.output_interface = input_interface
+        # if all is set to True, update all parameters to be required; if all is False, the filter could pass with some parameters not validating
+        if data_filter.all:
+            for f in data_filter.filter_list:
+                if f['name'] in self.output_interface.parameters:
+                    self.output_interface.parameters[f['name']].required = True
 
 
 class JobNodeDefinition(NodeDefinition):

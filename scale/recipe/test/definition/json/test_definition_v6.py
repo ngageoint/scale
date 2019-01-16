@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
+from data.filter.filter import DataFilter
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.test import utils as job_test_utils
@@ -38,20 +39,22 @@ class TestRecipeDefinitionV6(TestCase):
         definition.add_job_node('B', 'job_type_2', '2.0', 1)
         definition.add_job_node('C', 'job_type_3', '1.0', 2)
         definition.add_recipe_node('D', 'recipe_type_1', 1)
-        definition.add_job_node('E', 'job_type_4', '1.0', 1)
+        definition.add_condition_node('E', Interface(), DataFilter())
+        definition.add_job_node('F', 'job_type_4', '1.0', 1)
         definition.add_dependency('A', 'B')
         definition.add_dependency('A', 'C')
         definition.add_dependency('B', 'E')
         definition.add_dependency('C', 'D')
-        definition.add_recipe_input_connection('A', 'input_1', 'file_param_a')
-        definition.add_dependency_input_connection('B', 'b_input_1', 'A', 'a_output_1')
-        definition.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
-        definition.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
-        definition.add_recipe_input_connection('D', 'd_input_2', 'json_param_a')
+        definition.add_dependency('E', 'F')
+        definition.add_recipe_input_connection('A', 'input_a', 'file_param_a')
+        definition.add_dependency_input_connection('B', 'b_input_a', 'A', 'a_output_1')
+        definition.add_dependency_input_connection('C', 'c_input_a', 'A', 'a_output_2')
+        definition.add_dependency_input_connection('D', 'd_input_a', 'C', 'c_output_1')
+        definition.add_recipe_input_connection('D', 'd_input_b', 'json_param_a')
 
         json = convert_recipe_definition_to_v6_json(definition)
         RecipeDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
-        self.assertSetEqual(set(json.get_dict()['nodes'].keys()), {'A', 'B', 'C', 'D', 'E'})
+        self.assertSetEqual(set(json.get_dict()['nodes'].keys()), {'A', 'B', 'C', 'D', 'E', 'F'})
 
     def test_get_definition_empty(self):
         """Tests calling get_definition() from an empty JSON"""
@@ -73,7 +76,7 @@ class TestRecipeDefinitionV6(TestCase):
                 'node_a': {
                     'dependencies': [],
                     'input': {
-                        'input_1': {'type': 'recipe', 'input': 'foo'}
+                        'input_a': {'type': 'recipe', 'input': 'foo'}
                     },
                     'node_type': {
                         'node_type': 'job',
@@ -85,8 +88,8 @@ class TestRecipeDefinitionV6(TestCase):
                 'node_b': {
                     'dependencies': [{'name': 'node_a'}],
                     'input': {
-                        'input_1': {'type': 'recipe', 'input': 'foo'},
-                        'input_2': {'type': 'dependency', 'node': 'node_a', 'output': 'output_1'}
+                        'input_a': {'type': 'recipe', 'input': 'foo'},
+                        'input_b': {'type': 'dependency', 'node': 'node_a', 'output': 'output_a'}
                     },
                     'node_type': {
                         'node_type': 'job',
@@ -98,8 +101,21 @@ class TestRecipeDefinitionV6(TestCase):
                 'node_c': {
                     'dependencies': [{'name': 'node_b'}],
                     'input': {
-                        'input_1': {'type': 'recipe', 'input': 'bar'},
-                        'input_2': {'type': 'dependency', 'node': 'node_b', 'output': 'output_1'}
+                        'input_a': {'type': 'recipe', 'input': 'bar'},
+                        'input_b': {'type': 'dependency', 'node': 'node_b', 'output': 'output_a'}
+                    },
+                    'node_type': {
+                        'node_type': 'condition', 
+                        'interface': {'files': [{'name': 'input_b', 'media_types': ['image/tiff'], 'required': True, 'multiple': True}],
+                                       'json': []},
+                        'data_filter': {'filters': [{'name': 'input_b', 'type': 'media-type', 'condition': '==', 'values': ['image/tiff']}]}
+                    }
+                },
+                'node_d': {
+                    'dependencies': [{'name': 'node_c'}],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'bar'},
+                        'input_b': {'type': 'dependency', 'node': 'node_c', 'output': 'output_a'}
                     },
                     'node_type': {
                         'node_type': 'recipe',
@@ -113,7 +129,7 @@ class TestRecipeDefinitionV6(TestCase):
         json = RecipeDefinitionV6(definition=json_dict, do_validate=True)
         definition = json.get_definition()
         self.assertSetEqual(set(definition.input_interface.parameters.keys()), {'foo', 'bar'})
-        self.assertSetEqual(set(definition.graph.keys()), {'node_a', 'node_b', 'node_c'})
+        self.assertSetEqual(set(definition.graph.keys()), {'node_a', 'node_b', 'node_c', 'node_d'})
 
     def test_init_validation(self):
         """Tests the validation done in __init__"""
@@ -143,6 +159,20 @@ class TestRecipeDefinitionV6(TestCase):
                                  'node_c': {'dependencies': [{'name': 'node_b'}],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
                                                       'input_b': {'type': 'dependency', 'node': 'node_b',
+                                                                  'output': 'output_a'}},
+                                            'node_type': {'node_type': 'condition', 
+                                                                       'interface': {'files': [{'name': 'input_b', 
+                                                                                                'media_types': ['image/tiff'], 
+                                                                                                'required': True, 
+                                                                                                'multiple': True}],
+                                                                                     'json': []},
+                                                                       'data_filter': {'filters': [{'name': 'output_a', 
+                                                                                                    'type': 'media-type', 
+                                                                                                    'condition': '==', 
+                                                                                                    'values': ['image/tiff']}]}}},
+                                 'node_d': {'dependencies': [{'name': 'node_c'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_c',
                                                                   'output': 'output_a'}},
                                             'node_type': {'node_type': 'recipe', 'recipe_type_name': 'recipe-type-1',
                                                           'recipe_type_revision': 5}}}}

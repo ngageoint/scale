@@ -480,7 +480,11 @@ components:
             enum: [condition]
             description: the name of the node type
           interface:
-            $ref: '#/components/schemas/interface'
+            $ref: './data.yml#/components/schemas/interface'
+            description: The input interface of the condition
+          data_filter:
+            $ref: './data.yml#/components/schemas/data_filter'
+            description: The data filter for the condition
       job_node:
         title: Recipe Definition Job Node
         type: object
