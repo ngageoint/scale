@@ -324,7 +324,19 @@ being connected to this node</td>
 <tr class="row-odd"><td>node_type</td>
 <td>String</td>
 <td>Required</td>
-<td>The type of the node, either &#8216;job&#8217; or &#8216;recipe&#8217;</td>
+<td>The type of the node, either &#8216;connection&#8217;, &#8216;job&#8217; or &#8216;recipe&#8217;</td>
+</tr>
+<tr class="row-even"><td>interface</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>(&#8216;condition&#8217; node) The input interface of the condition
+See <a class="reference internal" href="data.html#rest-v6-data-interface"><span class="std std-ref">Interface JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td>data_filter</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>(&#8216;condition&#8217; node) The data filter of the condition
+See <a class="reference internal" href="data.html#rest-v6-data-filter"><span class="std std-ref">Data Filter JSON</span></a></td>
 </tr>
 <tr class="row-even"><td>job_type_name</td>
 <td>String</td>
