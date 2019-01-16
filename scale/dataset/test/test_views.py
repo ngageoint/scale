@@ -255,6 +255,14 @@ class TestDataSetValidationView(TestCase):
             'version': '1.0.0',
             'definition': {
                 'name': 'test-dataset',
+                'parameters': [
+                    {
+                        'name': 'parameter-1',
+                        'filter': {
+
+                        }
+                    }
+                ],
             }
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')

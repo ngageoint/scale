@@ -10,8 +10,10 @@ from dataset.definition.definition import DataSetDefinition
 SCHEMA_VERSION = '6'
 DATASET_DEFINITION_SCHEMA = {
     'type': 'object',
-    'required': ['name', 'version'],
+    'required': ['name', 'version', 'parameters'],
+    'additionalProperties': False,
     'properties': {
+        # dataset definition here
         'version': {
           'description': 'Version of the dataset definition schema',
           'type': 'string',
@@ -20,7 +22,60 @@ DATASET_DEFINITION_SCHEMA = {
             'description': 'The unique name of the dataset',
             'type': 'string',
         },
-        # dataset definition here
+        'parameters': {
+            'description': 'Defines matching input data',
+            'type': 'array',
+            'minItems': 0,
+            'items': {
+                'type': 'object',
+                'description': 'A configuration for a data filter',
+                'required': ['name', 'filter'],
+                'additionalProperties': False,
+                'properties': {
+                    'name': {
+                        'type': 'string',
+                        'description': 'name of the parameter',
+                    },
+                    'filter': {
+                        'type': 'object',
+                        'description': 'A configuration for a data filter',
+                        'required': ['name', 'type', 'condition', 'values'],
+                        'additionalProperties': False,
+                        'properties': {
+                            'name': {
+                                'description': 'The name of the parameter this filter runs against. Multiple filters can run on the same parameter.',
+                                'type': 'string',
+                            },
+                            'type': {
+                                'description': 'Type of parameter this filter runs against.',
+                                'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type', 'meta-data'],
+                            },
+                            'condition': {
+                                'description': 'Condition to test data value against.',
+                                'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains', 'subset of', 'superset of'],
+                            },
+                            'values': {
+                                'description': 'List of values to compare data against. May be any type.',
+                                'type': 'array',
+                                'minItems': 1,
+                            },
+                            'fields': {
+                                'description': 'List of key paths to fields with each path being a list of keys in an object or file meta-data',
+                                'type': 'array',
+                                'minItems': 1,
+                                'items': {
+                                    'type': 'array',
+                                    'minItems': 1,
+                                    'items': {
+                                        'type': 'string',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     },
 }
 
