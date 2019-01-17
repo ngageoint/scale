@@ -5,20 +5,33 @@ from util.exceptions import ValidationException
 class InvalidDataSet(ValidationException):
     """Exception indicating the dataset is invalid
     """
-    
-    def __init__(self, description):
+
+    def __init__(self, name, description):
         """Constructor
-        
+
         :param description: The description of the error
         :type description: string
         """
-        
-        super(InvalidDataSet, self).__init__(description)
+
+        super(InvalidDataSet, self).__init__(name, description)
+
+class InvalidDataSetMember(ValidationException):
+    """Exception indicating the dataset is invalid
+    """
+
+    def __init__(self, name, description):
+        """Constructor
+
+        :param description: The description of the error
+        :type description: string
+        """
+
+        super(InvalidDataSetMember, self).__init__(name, description)
 
 class InvalidDataSetDefinition(ValidationException):
     """Exception indicating that a dataset definition was given an invalid value
     """
-    
+
     def __init__(self, name, description):
         """Constructor
 
@@ -33,7 +46,7 @@ class InvalidDataSetDefinition(ValidationException):
 class InvalidDataSetMemberDefinition(ValidationException):
     """Exception indicating that a datasetmember definition was given an invalid value
     """
-    
+
     def __init__(self, name, description):
         """Constructor
 
@@ -44,11 +57,11 @@ class InvalidDataSetMemberDefinition(ValidationException):
         """
 
         super(InvalidDataSetMemberDefinition, self).__init__(name, description)
-        
+
 class InvalidDataSetFileDefinition(ValidationException):
     """Exception indicating that a datasetfile definition was given an invalid value
     """
-    
+
     def __init__(self, name, description):
         """Constructor
 

@@ -119,7 +119,12 @@ class TestDataSetPostView(TestCase):
             'description': 'A test dataset',
             'definition': {
                 'version': '6',
-                'parameters': []
+                'parameters': [
+                    {
+                        'name': 'param-1',
+                        'param_type': 'member',
+                    },
+                ],
             },
         }
 
@@ -140,21 +145,14 @@ class TestDataSetPostView(TestCase):
             'description': 'An updated test dataset',
             'definition': {
                 'parameters': [
-                    {
-                        'name': 'global-param-1',
-                        'param_type': {
-                            'param_type': 'global',
-                            'interface': {
-                                'files': [{
-                                   'name': 'input-1', 'media_types':['plain/text'], 'required': True, 'multiple': False
-                                }],
-                                'json':[],
-                            },
-                        },
-                    },
+                   {
+                       'name': 'param-1',
+                       'param_type': 'global',
+                   },
                 ],
             },
         }
+        print json.dumps(json_data_2)
         response = self.client.generic('POST', url, json.dumps(json_data_2), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         self.assertTrue('/%s/data-sets/my-new-dataset/1.0.0/' % self.api in response['location'])
@@ -272,18 +270,16 @@ class TestDataSetValidationView(TestCase):
             'version': '1.0.0',
             'definition': {
                 'version': '6',
-                'parameters': {
-                    'global-param': {
-                        'param_type': {
-                            'param_type': 'global',
-                        },
+                'parameters': [
+                    {
+                        'name': 'global-param',
+                        'param_type': 'global',
                     },
-                    'member-param': {
-                        'param_type': {
-                            'param_type': 'member',
-                        },
+                    {
+                        'name': 'member-param',
+                        'param_type': 'member',
                     },
-                },
+                ],
             },
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')

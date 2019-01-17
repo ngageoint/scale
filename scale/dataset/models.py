@@ -57,12 +57,8 @@ class DataSetManager(models.Manager):
         :raises :class:`dataset.exceptions.InvalidDataSet`: If a give dataset has an invalid value
         """
 
-        # Create the new dataset
-        # if not version:
-        #     raise InvalidDataSetField('Version must be provided')
-
         if not definition:
-            definition = DataSetDefinition({'parameters': []}, do_validate=False)
+            definition = DataSetDefinition({}, do_validate=False)
 
         dataset = DataSet()
 
@@ -202,7 +198,6 @@ class DataSetManager(models.Manager):
         # validate other fields
         return DataSetValidation(is_valid, errors, warnings)
 
-
     def get_dataset_files(self, dataset_id):
         """Returns the datasetFiles associated with the given dataset_id
 
@@ -211,8 +206,6 @@ class DataSetManager(models.Manager):
         """
         files = []
         return files
-
-
 
 
 """DataSet
@@ -256,7 +249,7 @@ class DataSet(models.Model):
         """Returns the dataset definition
 
         :returns: The DataSet definition
-        :rtype: :class:`dataset.json.DataSetDefinition`
+        :rtype: :class:`dataset.definition.json.DataSetDefinition`
         """
 
         if isinstance(self.definition, basestring):
@@ -313,10 +306,33 @@ class DataSet(models.Model):
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
 
-    def create_dataset_member(self, dataset_id, member_definition):
-        """Creates a dataset member"""
+    def create_dataset_member_v6(self, dataset, member_definition):
+        """Creates a dataset member
 
-        DataSetManager.objects.create()
+        :param dataset: The dataset the member is a part of
+        :type version: :class:`dataset.models.DataSet`
+        :param member_definition: Parameter definition of the dataset
+        :type definition: :class:`dataset.definition.definition.DataSetMemberDefinition`
+
+        :returns: The new dataset member
+        :rtype: :class:`dataset.models.DataSetMember`
+
+        :raises :class:`dataset.exceptions.InvalidDataSetMember`: If the dataset member has an invalid value
+        """
+
+        if not dataset:
+            raise InvalidDataSetMember('No dataset provided for dataset member')
+
+        if not member_definition:
+            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset member definition provided')
+
+        dataset_member = DataSetMember()
+        dataset_member.dataset = dataset
+        dataset_member.definition = member_definition.get_dict()
+        dataset_member.save()
+
+        return dataset_member
+
 
 """
 DataSetMember
@@ -365,7 +381,7 @@ class DataSetMember(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_dataset_definition()))
+        return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_definition()))
 
 """
 DataSetFile

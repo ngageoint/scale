@@ -1,47 +1,34 @@
 """Defines the class that represents a dataset"""
 from __future__ import unicode_literals
 
+from data.interface.interface import Interface
+from data.interface.json.interface_v6 import InterfaceV6
+from data.interface.parameter import Parameter
 from dataset.exceptions import InvalidDataSetDefinition
-
-
-class ValidationWarning(object):
-    """Tracks dataset definition warnings during validation that may not prevent the dataset from working."""
-
-    def __init__(self, key, details):
-        """Constructor sets basic attributes.
-
-        :param key: A unique identifier clients can use to recognize the warning.
-        :type key: string
-        :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: string
-        """
-        self.key = key
-        self.details = details
+from util.validation import ValidationWarning
 
 class DataSetDefinition(object):
     """Represents the dataset definition
     """
 
-    def __init__(self, definition, do_validate=True):
+    def __init__(self, definition):
         """Constructor
 
-        :param definition: dict definition
-        :type definition: dict
+        :param definition: Parameters of the definition
+        :type defintion: dict
         """
-        if 'name' in definition:
-            self.name = definition['name']
+
+        # self.name = name
+        if not definition:
+            definition = {}
         self._definition = definition
         self.param_names = set()
+        self.parameters = {}
 
-        # for param in self._definition['parameters']:
-        #     if param in self.param_names:
-        #         raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
-        #             'Invalid dataset definition: %s cannot be defined more than once' % param)
-        #     else:
-        #         self.param_names.add(param)
-
-        if do_validate:
-            self.validate()
+        if 'parameters' in self._definition:
+            for param in self._definition['parameters']:
+                # param = self._definition['parameters'][param_name]
+                self.add_parameter(Parameter(param['name'], param['param_type']))
 
     def get_dict(self):
         """Returns the internal dictionary that represents this datasets definition
@@ -52,42 +39,48 @@ class DataSetDefinition(object):
 
         return self._definition
 
-    def add_parameter(self, parameter, parameter_def):
+
+    def add_parameter(self, parameter):
         """Adds a new parameter to the dataset definition
 
         :keyword parameter: Parameter to add
         :type parameter:
-        :keyword parameter_def: Definition of the parameter
-        :type parameter_def:
         """
+        if parameter.name in self.param_names:
+            raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
+                'Invalid dataset definition: %s cannot be defined more than once' % parameter.name)
+        else:
+            self.param_names.add(parameter.name)
+            self.parameters[parameter.name] = parameter
 
     def get_parameter(self, parameter_name):
         """Retrieves the specified parameter from the dataset definition
 
         :returns: The specified parametr of the dataset definition
-        :rtype:
+        :rtype: :class:`data.interface.parameter.Parameter`
         """
+        self.parameters[parameter_name]
 
     def validate(self):
         """Validates the dataset definition
 
         :returns: A list of warnings discovered during validation
-        :rtype: :class:[`dataset.definition.definition.ValidationWarning`]
+        :rtype: :class:[`util.validation.ValidationWarning`]
         """
 
-        # validate definition parameter
-        warnings = self._validate_parameters()
-
-        return warnings
+        # validate definition parameters
+        return self._validate_parameters()
 
     def _validate_parameters(self):
         """Validates the dataset parameters
 
         :return: A list of warnings discovered during parameter validation
-        :rtype: :class:[`dataset.definition.definition.ValidationWarning`]
+        :rtype: :class:[`util.validation.ValidationWarning`]
         """
 
         warnings = []
+        for parameter in self.parameters:
+            warnings.extend(parameter.validate)
 
         return warnings
 
@@ -95,32 +88,53 @@ class DataSetMemberDefinition(object):
     """Represents a dataset member
     """
 
-    def __init__(self, definition, do_validate=True):
+    def __init__(self, definition=None):
         """Constructor
 
-        :param definition: dict definition
-        :type definition: dict
+        :param name: Name of the dataset member
+        :type name: string
+        :param interface_dict:
         """
-        if 'name' in definition:
-            self.name = definition['name']
         self._definition = definition
 
-        if do_validate:
-            self.validate()
+        if 'name' in definition:
+            self.param_name = definition['name']
+
+        if 'input' in definition:
+            self.interface = InterfaceV6(interface=definition['input']).get_interface()
+
+    def add_input(self, input_param):
+        """Adds an input
+
+        :param input_param: The input parameter
+        :type input_param: :class:`data.interface.parameter.Parameter`
+        """
+
+        self.interface.add_parameter(input_param)
+
+    def get_interface(self):
+        """Returns the input interface for this member
+
+        :returns: The input interface object for this member
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        return self.interface
 
     def get_dict(self):
-        """Returns the dictionary of the definition
-
-        :return: The member definition
+        """Returns the underlying dictionary of this member definition
+        :returns: the dataset member definition
         :rtype: dict
         """
         return self._definition
 
     def validate(self):
-        """Validates the dataset member definition
+        """Validates this dataset member definition
 
-        :returns: List of warnings found
-        :rtype: [:class:`dataset.definition.definition.ValidationWarning`]
+        :param member_definition:
+        :param_type
+        :returns: List of warnings found with the interface
+        :rtype: [:class:`util.validation.ValidationWarning`]
         """
-        warnings = []
-        return warnings
+
+        return self.interface.validate()

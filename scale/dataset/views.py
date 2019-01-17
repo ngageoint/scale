@@ -88,6 +88,7 @@ class DataSetView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         name = rest_util.parse_string(request, 'name', required=False)
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
