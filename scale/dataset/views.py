@@ -208,10 +208,42 @@ class DataSetIDDetailsView(GenericAPIView):
 
         # update the dataset
         try:
-            DataSet.objects.edit_dataset_v6(dataset_id=dataset, definition=dataset.definition)
+           dataset = DataSet.objects.edit_dataset_v6(dataset_id=dataset, definition=dataset.definition)
         except (ValueError, Exception) as ex:
             logger.exception('Unable to update dataset: %i', dataset_id)
             raise BadParameter(unicode(ex))
+
+        serializer = self.get_serializer(dataset)
+        return Response(serializer.data)
+
+    def post(self, request, dataset_id):
+        """ Adds a datsetmember to the dataset
+
+        :param request: the HTTP request
+        :type request: :class:`rest_framework.request.Request`
+        :param dataset_id: The id of the dataset
+        :type dataset_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.post_v6(request, dataset_id)
+        else:
+            raise Http404 # no datasets before v6
+
+    def post_v6(self, request, dataset_id):
+        """ Adds a datsetmember to the dataset
+
+        :param request: the HTTP request
+        :type request: :class:`rest_framework.request.Request`
+        :param dataset_id: The id of the dataset
+        :type dataset_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        return Response({'message': 'To Be implemented'})
 
 class DataSetDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of a specific dataset"""

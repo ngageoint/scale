@@ -4,76 +4,75 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+
+from data.interface.json.interface_v6 import INTERFACE_SCHEMA
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMemberDefinition, InvalidDataSetFileDefinition
 from dataset.definition.definition import DataSetDefinition
+
+FILTER_DEFINITION = {}
 
 SCHEMA_VERSION = '6'
 DATASET_DEFINITION_SCHEMA = {
     'type': 'object',
-    'required': ['name', 'version', 'parameters'],
+    'required': ['version', 'parameters'],
     'additionalProperties': False,
     'properties': {
-        # dataset definition here
         'version': {
-          'description': 'Version of the dataset definition schema',
-          'type': 'string',
-        },
-        'name': {
-            'description': 'The unique name of the dataset',
+            'description': 'The version of the dataset definition schema',
             'type': 'string',
         },
         'parameters': {
-            'description': 'Defines matching input data',
-            'type': 'array',
-            'minItems': 0,
-            'items': {
-                'type': 'object',
-                'description': 'A configuration for a data filter',
-                'required': ['name', 'filter'],
-                'additionalProperties': False,
-                'properties': {
-                    'name': {
-                        'type': 'string',
-                        'description': 'name of the parameter',
-                    },
-                    'filter': {
-                        'type': 'object',
-                        'description': 'A configuration for a data filter',
-                        'required': ['name', 'type', 'condition', 'values'],
-                        'additionalProperties': False,
-                        'properties': {
-                            'name': {
-                                'description': 'The name of the parameter this filter runs against. Multiple filters can run on the same parameter.',
-                                'type': 'string',
-                            },
-                            'type': {
-                                'description': 'Type of parameter this filter runs against.',
-                                'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string', 'filename', 'media-type', 'data-type', 'meta-data'],
-                            },
-                            'condition': {
-                                'description': 'Condition to test data value against.',
-                                'enum': ['<', '<=', '>','>=', '==', '!=', 'between', 'in', 'not in', 'contains', 'subset of', 'superset of'],
-                            },
-                            'values': {
-                                'description': 'List of values to compare data against. May be any type.',
-                                'type': 'array',
-                                'minItems': 1,
-                            },
-                            'fields': {
-                                'description': 'List of key paths to fields with each path being a list of keys in an object or file meta-data',
-                                'type': 'array',
-                                'minItems': 1,
-                                'items': {
-                                    'type': 'array',
-                                    'minItems': 1,
-                                    'items': {
-                                        'type': 'string',
-                                    },
-                                },
-                            },
-                        },
-                    },
+            'description': 'Each parameter of the dataset',
+            'type': 'object',
+            'additionalProperties': {
+                '$ref': '#/definitions/parameter',
+            },
+        },
+    },
+    'definitions': {
+        'parameter': {
+          'description': 'A parameter of a dataset',
+          'type': 'object',
+          'required': ['param_type'],
+          'additionalProperties': False,
+          'properties': {
+              'name': {
+                'description': 'The name of the parameter',
+                'type': 'string',
+              },
+              'param_type': {
+                  'description': 'The type of parameter',
+                  'oneOf':[
+                      {'$ref': '#/definitions/global_parameter'},
+                      {'$ref': '#/definitions/member_parameter'},
+                  ],
+              },
+          },
+        },
+        'global_parameter': {
+            'description': 'A global (not tied to individual members) parameter of a dataset.',
+            'type': 'object',
+            'required': ['param_type'],
+            'additionalProperties': False,
+            'properties': {
+                'param_type': {
+                    'description': 'The type of parameter',
+                    'enum': ['global'],
                 },
+                # 'input': INTERFACE_SCHEMA,
+            },
+        },
+        'member_parameter': {
+            'description': 'A member (defined by a dataset_member) parameter of a dataset',
+            'type': 'object',
+            'required': ['param_type'],
+            'additionalProperties': False,
+            'properties': {
+                'param_type': {
+                    'description': 'The type of parameter',
+                    'enum': ['member'],
+                },
+                # 'input': INTERFACE_SCHEMA,
             },
         },
     },
@@ -81,22 +80,20 @@ DATASET_DEFINITION_SCHEMA = {
 
 DATASET_MEMBER_SCHEMA = {
     'type': 'object',
-    'required': ['definition'],
+    'required': ['version', 'param_name', 'filter'],
     'additionalProperties': False,
     'properties': {
-        # dataset member definition here
-    }
+        'version': {
+            'description': 'The version of the dataset member definition schema',
+            'type': 'string',
+        },
+        'param_name': {
+            'description': 'The name of the parameter this member matches',
+            'type': 'string',
+        },
+        'filter': FILTER_DEFINITION,
+    },
 }
-
-DATASET_FILE_SCHEMA = {
-    'type': 'object',
-    'required': [],
-    'additionalProperties': False,
-    'properties': {
-        # dataset file definition here
-    }
-}
-
 
 def convert_definition_to_v6_json(definition):
     """Returns the v6 dataset definition JSON for the given definition
@@ -109,7 +106,7 @@ def convert_definition_to_v6_json(definition):
 
     def_dict = {
         'version': SCHEMA_VERSION,
-        'name': definition['name']
+        'parameters': definition['parameters']
     }
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
@@ -126,7 +123,8 @@ def convert_member_definition_to_v6_json(definition):
 
     def_dict = {
         'version': SCHEMA_VERSION,
-        'definition': definition,
+        'param_name': definition['param_name'],
+        'filter': definition['filter']
     }
 
     return DataSetMemberDefinitionV6(definition=def_dict, do_validate=False).get_dict()
@@ -155,7 +153,7 @@ class DataSetDefinitionV6(object):
 
         try:
             if do_validate:
-                validate(definition, DATASET_DEFINITION_SCHEMA)
+                validate(self._definition, DATASET_DEFINITION_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', 'Error validating against schema: %s' % validation_error)
 
@@ -234,11 +232,11 @@ class DataSetFileDefinitionV6(object):
 
         self._populate_default_values()
 
-        try:
-            if do_validate:
-                validate(definition, DATASET_FILE_SCHEMA)
-        except ValidationError as validation_error:
-            raise InvalidDataSetFileDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
+        # try:
+        #     if do_validate:
+        #         validate(definition, DATASET_FILE_SCHEMA)
+        # except ValidationError as validation_error:
+        #     raise InvalidDataSetFileDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
 
     def get_dict(self):
         """Returns the dict of the definition
