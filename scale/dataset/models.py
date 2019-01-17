@@ -9,8 +9,8 @@ from collections import namedtuple
 import django.contrib.postgres.fields
 from django.db import models, transaction
 
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
+from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
+from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6, convert_member_definition_to_v6_json, DataSetMemberDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition
 from storage.models import ScaleFile
 
@@ -62,7 +62,7 @@ class DataSetManager(models.Manager):
         #     raise InvalidDataSetField('Version must be provided')
 
         if not definition:
-            definition = DataSetDefinition({'name': name}, do_validate=False)
+            definition = DataSetDefinition({'parameters': []}, do_validate=False)
 
         dataset = DataSet()
 
@@ -202,6 +202,18 @@ class DataSetManager(models.Manager):
         # validate other fields
         return DataSetValidation(is_valid, errors, warnings)
 
+
+    def get_dataset_files(self, dataset_id):
+        """Returns the datasetFiles associated with the given dataset_id
+
+        :returns: The list of DataSetFiles matching the file_id
+        :rtype: [:class:`dataset.models.DataSetFile`]
+        """
+
+
+
+
+
 """DataSet
 
 * optional title
@@ -297,6 +309,14 @@ class DataSet(models.Model):
 
         return version_array
 
+class DataSetMemberManager(models.Manager):
+    """Provides additional methods for handling dataset members"""
+
+    def create_dataset_member(self, dataset_id, member_definition):
+        """Creates a dataset member"""
+
+        DataSetManager.objects.create()
+
 """
 DataSetMember
 
@@ -307,63 +327,65 @@ refer back to the dataset id it's located in
 * JSON field describing data in this member, must validate with DataSet definition (like job data/input)
 * created time
 """
-# class DataSetMember(models.Model):
-#     """
-#     Defines the data of a dataset? contains list/descriptors of DataFiles
+class DataSetMember(models.Model):
+    """
+    Defines the data of a dataset? contains list/descriptors of DataFiles
 
-#     :keyword dataset: Refers to dataset member belongs to
-#     :type dataset: :class:`django.db.models.ForeignKey`
-#     :keyword definition: JSON description of the data in this DataSetMember.
-#     :type definition: :class: `django.contrib.postgres.fields.JSONField(default=dict)
-#     :keyword created: Created Time
-#     :type created: datetime
-#     """
+    :keyword dataset: Refers to dataset member belongs to
+    :type dataset: :class:`django.db.models.ForeignKey`
+    :keyword definition: JSON description of the data in this DataSetMember.
+    :type definition: :class: `django.contrib.postgres.fields.JSONField(default=dict)
+    :keyword created: Created Time
+    :type created: datetime
+    """
 
-#     dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
-#     definition = django.contrib.postgres.fields.JSONField(default=dict)
-#     created = models.DateTimeField(auto_now_add=True)
+    dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
+    definition = django.contrib.postgres.fields.JSONField(default=dict)
+    created = models.DateTimeField(auto_now_add=True)
 
-#     def get_definition(self):
-#         """Returns the dataset member definition
+    objects = DataSetMemberManager()
 
-#         :returns: The dataset member definition in v6
-#         :rtype: :class:`dataset.DataSetMemberDefinition`
-#         """
+    def get_definition(self):
+        """Returns the dataset member definition
 
-#         if isinstance(self.definition, basestring):
-#             self.definition = {}
+        :returns: The dataset member definition in v6
+        :rtype: :class:`dataset.DataSetMemberDefinition`
+        """
 
-#         return DataSetMemberDefinition(definition=self.definition, do_validate=False)
+        if isinstance(self.definition, basestring):
+            self.definition = {}
 
-#     def get_v6_definition_json(self):
-#         """Returns the dataset member definition in JSON format
+        return DataSetMemberDefinition(definition=self.definition, do_validate=False)
 
-#         :returns: The dataset member definition in v6 of the JSON Schema
-#         :rtype: dict
-#         """
+    def get_v6_definition_json(self):
+        """Returns the dataset member definition in JSON format
 
-#         return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_dataset_definition()))
+        :returns: The dataset member definition in v6 of the JSON Schema
+        :rtype: dict
+        """
 
-# """
-# DataSetFile
+        return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_dataset_definition()))
 
-# * indexed foreign key to DataSet
-# * index foreign key to Scale file
-# * char field for file parameter name (from data set definition JSON)
-# * unique combined index on (DataSet ID, Scale file ID) ??
-# """
-# class DataSetFile(object):
-#     """
-#     The actual file in a dataset member
+"""
+DataSetFile
 
-#     :keyword dataset: Refers to the dataset the file is a member of
-#     :type dataset: :class:`django.db.models.ForeignKey`
-#     :keyword scale_file: Refers to the ScaleFile
-#     :type scale_file: :class:`django.db.models.ForeignKey`
-#     :keyword parameter_name: Refers to the File parameter name
-#     :type parameter_name: :class:`django.db.models.CharField`
-#     """
+* indexed foreign key to DataSet
+* index foreign key to Scale file
+* char field for file parameter name (from data set definition JSON)
+* unique combined index on (DataSet ID, Scale file ID) ??
+"""
+class DataSetFile(object):
+    """
+    The actual file in a dataset member
 
-#     dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
-#     scale_file = models.ForeignKey('storage.models.ScaleFile', on_delete=models.PROTECT)
-#     parameter_name = models.CharField(db_index=True, max_length=50)
+    :keyword dataset: Refers to the dataset the file is a member of
+    :type dataset: :class:`django.db.models.ForeignKey`
+    :keyword scale_file: Refers to the ScaleFile
+    :type scale_file: :class:`django.db.models.ForeignKey`
+    :keyword parameter_name: Refers to the File parameter name
+    :type parameter_name: :class:`django.db.models.CharField`
+    """
+
+    dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
+    scale_file = models.ForeignKey('storage.models.ScaleFile', on_delete=models.PROTECT)
+    parameter_name = models.CharField(db_index=True, max_length=50)

@@ -37,7 +37,7 @@ def create_dataset(name=None, title=None, description=None, version=None,
         created = datetime.now()
     if not definition:
         definition = {
-            'name': name,
+            'parameters': [],
         }
 
     dataset = DataSet.objects.create(name=name, title=title, description=description,
