@@ -15,7 +15,7 @@ from rest_framework import status
 from dataset.models import DataSet
 import dataset.test.utils as dataset_test_utils
 
-"""Tests the v6/datasets/ endpoint"""
+"""Tests the v6/data-sets/ endpoint"""
 class TestDatasetViews(TestCase):
     api = 'v6'
 
@@ -25,13 +25,13 @@ class TestDatasetViews(TestCase):
         self.dataset = dataset_test_utils.create_dataset(name='test-dataset-1',
             title="Test Dataset 1", description="Test Dataset Number 1", version='1.0.0')
         self.dataset2 = dataset_test_utils.create_dataset(name='test-dataset-2',
-            title="Test Dataset 2", description="Test Dataset Number 2", version='1.0.0')
+            title="Test Dataset 2", description="Test Dataset Number 2", version='2.0.0')
 
     def test_successful(self):
-        """Tests successfully calling the v6/datasets/ view.
+        """Tests successfully calling the v6/data-sets/ view.
         """
 
-        url = '/%s/datasets/' % self.api
+        url = '/%s/data-sets/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -54,7 +54,7 @@ class TestDatasetViews(TestCase):
         """Tests successfully calling the v6/datsets/?created_time= api call
         """
 
-        url = '/%s/datasets/?created=%s' % (self.api, '2016-01-01T00:00:00Z')
+        url = '/%s/data-sets/?created=%s' % (self.api, '2016-01-01T00:00:00Z')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -64,7 +64,7 @@ class TestDatasetViews(TestCase):
         """Tests successfully calling the v6/datsets/?id= api call
         """
 
-        url = '/%s/datasets/?id=%s' % (self.api, self.dataset.id)
+        url = '/%s/data-sets/?id=%s' % (self.api, self.dataset.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -74,7 +74,7 @@ class TestDatasetViews(TestCase):
         """Tests successfully calling the v6/datsets/?name= api call
         """
 
-        url = '/%s/datasets/?name=%s' % (self.api, self.dataset.name)
+        url = '/%s/data-sets/?name=%s' % (self.api, self.dataset.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -83,7 +83,7 @@ class TestDatasetViews(TestCase):
     def test_order_by(self):
         """Tests successfully calling the datasets view with sorting."""
 
-        url = '/%s/datasets/?order=name' % self.api
+        url = '/%s/data-sets/?order=name' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -91,7 +91,7 @@ class TestDatasetViews(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
 
-"""Tests the v6/datasets POST calls """
+"""Tests the v6/data-sets POST calls """
 class TestDataSetPostView(TestCase):
     """Tests the v6/dataset/ POST API call"""
     api = 'v6'
@@ -103,14 +103,14 @@ class TestDataSetPostView(TestCase):
         """Tests successfully calling POST with an invalid definition."""
         json_data = {}
 
-        url = '/%s/datasets/' % self.api
+        url = '/%s/data-sets/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_add_dataset(self):
         """Tests adding a new dataset"""
 
-        url = '/%s/datasets/' % self.api
+        url = '/%s/data-sets/' % self.api
 
         json_data = {
             'name': 'my-new-dataset',
@@ -118,13 +118,14 @@ class TestDataSetPostView(TestCase):
             'title': 'My Dataset',
             'description': 'A test dataset',
             'definition': {
-                'name': 'my-new-dataset',
+                'version': '6',
+                'parameters': []
             },
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertTrue('/%s/datasets/my-new-dataset/1.0.0/' % self.api in response['location'])
+        self.assertTrue('/%s/data-sets/my-new-dataset/1.0.0/' % self.api in response['location'])
 
         dataset = DataSet.objects.filter(name='my-new-dataset').first()
         self.assertEqual(dataset.name, json_data['name'])
@@ -138,19 +139,32 @@ class TestDataSetPostView(TestCase):
             'title': 'My Dataset',
             'description': 'An updated test dataset',
             'definition': {
-                'name': 'my-new-dataset',
+                'parameters': [
+                    {
+                        'name': 'global-param-1',
+                        'param_type': {
+                            'param_type': 'global',
+                            'interface': {
+                                'files': [{
+                                   'name': 'input-1', 'media_types':['plain/text'], 'required': True, 'multiple': False
+                                }],
+                                'json':[],
+                            },
+                        },
+                    },
+                ],
             },
         }
         response = self.client.generic('POST', url, json.dumps(json_data_2), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertTrue('/%s/datasets/my-new-dataset/1.0.0/' % self.api in response['location'])
+        self.assertTrue('/%s/data-sets/my-new-dataset/1.0.0/' % self.api in response['location'])
 
         # check the dataset was updated
         dataset = DataSet.objects.filter(name='my-new-dataset').first()
         self.assertEqual(dataset.description, json_data_2['description'])
 
 
-"""Tests the v6/datasets/<dataset_id> and v6/datsets/<dataset_name> endpoints"""
+"""Tests the v6/data-sets/<dataset_id> and v6/datsets/<dataset_name> endpoints"""
 class TestDatasetDetailsView(TestCase):
     api = 'v6'
 
@@ -166,7 +180,7 @@ class TestDatasetDetailsView(TestCase):
     # def test_successful_empty(self):
     #     """Tests successfully calling the dataset details view with no data or results"""
 
-    #     url = '/%s/datasets/%s/' % (self.api, 'empty-dataset')
+    #     url = '/%s/data-sets/%s/' % (self.api, 'empty-dataset')
     #     response = self.client.generic('GET', url)
     #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -175,10 +189,10 @@ class TestDatasetDetailsView(TestCase):
         # self.assertEqual(response[''], self.empty_dataset.)
 
     def test_datasets_id_successful(self):
-        """Tests successfully calling the v6/datasets/<dataset_id>/ view.
+        """Tests successfully calling the v6/data-sets/<dataset_id>/ view.
         """
 
-        url = '/%s/datasets/%d/' % (self.api, self.dataset.id)
+        url = '/%s/data-sets/%d/' % (self.api, self.dataset.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -195,7 +209,7 @@ class TestDatasetDetailsView(TestCase):
         """Tests successfully calling the v6/datsets/<dataset-name>/ view.
         """
 
-        url = '/%s/datasets/%s/' % (self.api, self.dataset.name)
+        url = '/%s/data-sets/%s/' % (self.api, self.dataset.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -217,10 +231,10 @@ class TestDatasetDetailsView(TestCase):
             # self.assertEqual(entry['versions'], ['1.0.0', '1.1.1'])
 
     def test_datasets_name_version_successful(self):
-        """Tests successfully calling the v6/datasets/<dataset-name>/<version> view.
+        """Tests successfully calling the v6/data-sets/<dataset-name>/<version> view.
         """
 
-        url = '/%s/datasets/%s/%s/' % (self.api, self.dataset.name, self.dataset.version)
+        url = '/%s/data-sets/%s/%s/' % (self.api, self.dataset.name, self.dataset.version)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -229,7 +243,7 @@ class TestDatasetDetailsView(TestCase):
         self.assertEqual(result['title'], self.dataset.title)
         self.assertEqual(result['description'], self.dataset.description)
 
-        url = '/%s/datasets/%s/%s/' % (self.api, self.dataset2.name, self.dataset2.version)
+        url = '/%s/data-sets/%s/%s/' % (self.api, self.dataset2.name, self.dataset2.version)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -246,7 +260,10 @@ class TestDataSetValidationView(TestCase):
         django.setup()
 
     def test_validate_successful(self):
-        url = '/%s/datasets/validation/' % self.api
+        """Tests successfully validating a new dataset using the v6/data-sets/validation API
+        """
+
+        url = '/%s/data-sets/validation/' % self.api
 
         json_data = {
             'name': 'test-dataset',
@@ -254,16 +271,20 @@ class TestDataSetValidationView(TestCase):
             'description': 'My Test Dataset',
             'version': '1.0.0',
             'definition': {
-                'name': 'test-dataset',
-                'parameters': [
-                    {
-                        'name': 'parameter-1',
-                        'filter': {
-
-                        }
-                    }
-                ],
-            }
+                'version': '6',
+                'parameters': {
+                    'global-param': {
+                        'param_type': {
+                            'param_type': 'global',
+                        },
+                    },
+                    'member-param': {
+                        'param_type': {
+                            'param_type': 'member',
+                        },
+                    },
+                },
+            },
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -274,7 +295,7 @@ class TestDataSetValidationView(TestCase):
         self.assertEqual(len(results['errors']), 0)
 
     def test_validate_missing_definition(self):
-        url = '/%s/datasets/validation/' % self.api
+        url = '/%s/data-sets/validation/' % self.api
 
         json_data = {
             'name': 'test-dataset',
@@ -292,6 +313,6 @@ class TestDataSetValidationView(TestCase):
     def test_validate_invalid_definition(self):
         """Validates an invalid dataset definition
 
-        Will complete when dataset definition is defined.
+        Will complete when dataset definition is fully defined.
         """
         pass
