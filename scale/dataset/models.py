@@ -209,7 +209,8 @@ class DataSetManager(models.Manager):
         :returns: The list of DataSetFiles matching the file_id
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
-
+        files = []
+        return files
 
 
 
