@@ -152,7 +152,6 @@ class TestDataSetPostView(TestCase):
                 ],
             },
         }
-        print json.dumps(json_data_2)
         response = self.client.generic('POST', url, json.dumps(json_data_2), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         self.assertTrue('/%s/data-sets/my-new-dataset/1.0.0/' % self.api in response['location'])

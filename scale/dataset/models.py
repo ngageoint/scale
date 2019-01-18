@@ -13,7 +13,6 @@ from dataset.definition.definition import DataSetDefinition, DataSetMemberDefini
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6, convert_member_definition_to_v6_json, DataSetMemberDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from storage.models import ScaleFile
-
 from util import rest as rest_utils
 
 """
@@ -266,7 +265,11 @@ class DataSet(models.Model):
         return rest_utils.strip_schema_version(convert_definition_to_v6_json(self.get_dataset_definition()).get_dict())
 
     def get_dataset_definition(self):
-        """Returns the dataset definition"""
+        """Returns the dataset definition
+
+        :returns: The dataset definition json
+        :rtype: dict
+        """
 
         return self.definition
 

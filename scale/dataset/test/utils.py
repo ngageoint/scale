@@ -4,14 +4,17 @@ from __future__ import absolute_import
 
 from datetime import datetime
 
+
 from dataset.models import DataSet, DataSetMember
 from dataset.definition.definition import DataSetDefinition
 
 DATASET_NAME_COUNTER = 1
 DATASET_VERSION_COUNTER = 1
+
 DATASET_MEMBER_NAME_COUNTER = 1
 
 COMPLETE_DATASET_DEF = {
+
 
 }
 
@@ -84,3 +87,6 @@ def create_dataset_member(dataset=None, definition=None, created=None):
     dataset_member = DataSetMember.objects.create(dataset=dataset, definition=definition, created=created)
     dataset_member.save()
     return dataset_member
+
+def create_dataset_member(dataset=None, definition=None):
+    """Creates a datasetmember model"""

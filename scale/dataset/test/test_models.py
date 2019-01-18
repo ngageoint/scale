@@ -26,7 +26,6 @@ class TestDataSetManager(TransactionTestCase):
             'parameters': [{'name': 'global-param', 'param_type': 'global'},
                            {'name': 'member-param', 'param_type': 'member'}],
         }
-
         self.dataset_definition = DataSetDefinition(self.definition)
 
     def test_create_dataset(self):

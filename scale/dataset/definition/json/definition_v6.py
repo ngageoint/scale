@@ -4,11 +4,9 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from data.filter.json.filter_v6 import DATA_FILTER_SCHEMA
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMemberDefinition, InvalidDataSetFileDefinition
 from dataset.definition.definition import DataSetDefinition
-
 
 SCHEMA_VERSION = '6'
 DATASET_DEFINITION_SCHEMA = {
@@ -22,6 +20,7 @@ DATASET_DEFINITION_SCHEMA = {
         },
         'parameters': {
             'description': 'Each parameter of the dataset',
+<<<<<<< HEAD
             'type': 'array',
             'items': {
                 'type': 'object',
@@ -120,7 +119,6 @@ class DataSetDefinitionV6(object):
             if do_validate:
                 validate(self._definition, DATASET_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            print unicode(ex)
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', 'Error validating against schema: %s' % unicode(ex))
 
     def get_definition(self):
@@ -184,4 +182,3 @@ class DataSetMemberDefinitionV6(object):
     def _populate_default_values(self):
         """Populates any missing required valudes with defaults
         """
-

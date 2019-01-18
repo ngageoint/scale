@@ -39,7 +39,6 @@ class DataSetDefinition(object):
 
         return self._definition
 
-
     def add_parameter(self, parameter):
         """Adds a new parameter to the dataset definition
 
@@ -67,9 +66,9 @@ class DataSetDefinition(object):
         :returns: A list of warnings discovered during validation
         :rtype: :class:[`util.validation.ValidationWarning`]
         """
-
         # validate definition parameters
         return self._validate_parameters()
+
 
     def _validate_parameters(self):
         """Validates the dataset parameters
