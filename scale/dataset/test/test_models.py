@@ -37,7 +37,6 @@ class TestDataSetManager(TransactionTestCase):
         description = 'Test DataSet description'
         version = '1.0.0'
 
-
         # call test
         dataset = dataset_test_utils.create_dataset(name=name, title=title, description=description,
             version=version, definition=self.definition)
@@ -149,7 +148,7 @@ class TestDataSetManager(TransactionTestCase):
         self.assertEquals(dataset.version, dataset2.version)
         self.assertDictEqual(dataset.definition, dataset2.definition)
 
-class TestDataSetMember(TransactionTestCase):
+class TestDataSetMemberManager(TransactionTestCase):
     """Tests the DataSetMember class"""
 
     def setUp(self):
@@ -192,21 +191,86 @@ class TestDataSetMember(TransactionTestCase):
     def test_create_dataset_member_v6(self):
         """Tests calling DataSetManager.create_dataset_v6() """
 
-        member_definition = {
+        member_definition_dict = {
             'name': 'member-param',
             'input': {
                 'files': [{'name': 'input_a', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
                 'json': [],
             },
         }
-        member_definition = DataSetMemberDefinition(definition=member_definition)
+        member_definition = DataSetMemberDefinition(definition=member_definition_dict)
 
         # call test
-        dataset = DataSet.objects.create_dataset_v6(self.dataset, member_definition)
+        dataset_member = DataSetMember.objects.create_dataset_member_v6(self.dataset, member_definition)
 
         # Check results
-        the_dataset = DataSet.objects.get(pk=dataset.id)
-        self.assertEqual(the_dataset.name, name)
-        self.assertEqual(the_dataset.title, title)
-        self.assertEqual(the_dataset.version, version)
-        self.assertDictEqual(the_dataset.definition, self.dataset_definition.get_dict())
+        the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
+        self.assertDictEqual(the_dataset_member.definition, member_definition_dict)
+
+    def test_get_dataset_members_v6(self):
+        """Tests calling DataSetMemberManager get_dataset_members"""
+
+        # Add some members
+        member_definition_1 = {
+            'name': 'member-param',
+            'input': {
+                'files': [{'name': 'input_a', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
+                'json': [],
+            },
+        }
+        # dataset_member_definition = DataSetMemberDefinition(definition=member_definition_1)
+        member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, definition=member_definition_1)
+
+        member_definition_2 = {
+            'name': 'member-param-2',
+            'input': {
+                'files': [{'name': 'input_b', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}, {'name': 'input_c', 'mediaTypes': ['application/json'], 'required': True, 'partial': True}],
+                'json': [{'name': 'input_d', 'value': 1}],
+            },
+        }
+        # dataset_member_definition = DataSetMemberDefinition(definition=member_definition_2)
+        member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, definition=member_definition_2)
+
+        members = DataSetMember.objects.get_dataset_members(self.dataset)
+        self.assertTrue(len(members), 2)
+        for member in members:
+            expected = None
+            if member.id == member_1.id:
+                expected = member_1
+            elif member.id == member_2.id:
+                expected = member_2
+            else:
+                self.fail('Found unexpected result: %s' % member.id)
+            self.assertDictEqual(member.get_v6_definition_json(), expected.get_v6_definition_json())
+
+class TestDataSetFileManager(TransactionTestCase):
+    """Tests the DataSetFileManager class"""
+
+    def setUp(self):
+        django.setup()
+
+        # create a dataset
+        self.dataset = dataset_test_utils.create_dataset(definition={'version': '6','parameters': [{'name': 'param_a', 'param_type': 'member'}, {'name': 'param_b', 'param_type': 'member'}]})
+
+        # create a couple members
+        param_a = {
+            'name': 'param_a',
+            'input': {
+                'files': [{'name': 'input_a', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
+                'json': [],
+            },
+        }
+        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset, definition=param_a)
+
+        param_b = {
+            'name': 'param_b',
+            'input': {
+                'files': [{'name': 'input_b', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}, {'name': 'input_c', 'mediaTypes': ['application/json'], 'required': True, 'partial': True}],
+                'json': [{'name': 'input_d', 'value': 1}],
+            },
+        }
+        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset, definition=param_b)
+
+    def test_create_dataset_file(self):
+        """Tests creating a dataset file"""
+        pass

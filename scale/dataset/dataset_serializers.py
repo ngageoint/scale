@@ -29,3 +29,7 @@ class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
     created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json')
 
+class DataSetMemberSerializerV6(ModelIdSerializer):
+    dataset = serializers.IntegerField()
+    created = serializers.DateTimeField()
+    definition = serializers.JSONField(source='get_v6_definition_json')

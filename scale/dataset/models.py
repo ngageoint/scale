@@ -11,7 +11,7 @@ from django.db import models, transaction
 
 from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6, convert_member_definition_to_v6_json, DataSetMemberDefinitionV6
-from dataset.exceptions import InvalidDataSetDefinition
+from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from storage.models import ScaleFile
 
 from util import rest as rest_utils
@@ -58,7 +58,7 @@ class DataSetManager(models.Manager):
         """
 
         if not definition:
-            definition = DataSetDefinition({}, do_validate=False)
+            definition = DataSetDefinition(definition={})
 
         dataset = DataSet()
 
@@ -254,7 +254,7 @@ class DataSet(models.Model):
 
         if isinstance(self.definition, basestring):
             self.definition = {}
-        return DataSetDefinition(self.definition, do_validate=False)
+        return DataSetDefinition(definition=self.definition)
 
     def get_v6_definition_json(self):
         """Returns the dataset definition in v6 of the JSON schema
@@ -321,7 +321,7 @@ class DataSetMemberManager(models.Manager):
         """
 
         if not dataset:
-            raise InvalidDataSetMember('No dataset provided for dataset member')
+            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset provided for dataset member')
 
         if not member_definition:
             raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset member definition provided')
@@ -333,6 +333,12 @@ class DataSetMemberManager(models.Manager):
 
         return dataset_member
 
+    def get_dataset_members(self, dataset):
+        """Returns dataset members for the given dataset"""
+        members = self.all()
+        members.filter(dataset=dataset)
+
+        return members
 
 """
 DataSetMember
@@ -372,16 +378,23 @@ class DataSetMember(models.Model):
         if isinstance(self.definition, basestring):
             self.definition = {}
 
-        return DataSetMemberDefinition(definition=self.definition, do_validate=False)
+        return DataSetMemberDefinition(definition=self.definition)
+
+    def get_definition_json(self):
+        """Returns the dataset member definition in JSON format
+        :returns: the dataset member definition in JSON
+        :rtype: dict
+        """
+        return self.definition
 
     def get_v6_definition_json(self):
-        """Returns the dataset member definition in JSON format
+        """Returns the dataset member definition in V6 JSON format
 
         :returns: The dataset member definition in v6 of the JSON Schema
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_definition()))
+        return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_definition_json()))
 
 """
 DataSetFile
