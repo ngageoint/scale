@@ -87,6 +87,3 @@ def create_dataset_member(dataset=None, definition=None, created=None):
     dataset_member = DataSetMember.objects.create(dataset=dataset, definition=definition, created=created)
     dataset_member.save()
     return dataset_member
-
-def create_dataset_member(dataset=None, definition=None):
-    """Creates a datasetmember model"""
