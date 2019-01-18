@@ -6,7 +6,7 @@ from jsonschema.exceptions import ValidationError
 
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMemberDefinition, InvalidDataSetFileDefinition
-from dataset.definition.definition import DataSetDefinition
+from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
 
 SCHEMA_VERSION = '6'
 DATASET_DEFINITION_SCHEMA = {
@@ -20,7 +20,6 @@ DATASET_DEFINITION_SCHEMA = {
         },
         'parameters': {
             'description': 'Each parameter of the dataset',
-<<<<<<< HEAD
             'type': 'array',
             'items': {
                 'type': 'object',
@@ -177,7 +176,7 @@ class DataSetMemberDefinitionV6(object):
     def get_member_definition(self):
         """Returns the DataSetMemberDefinitio"""
 
-        return DataSetMemberDefinition(definition_dict=self.get_dict())
+        return DataSetMemberDefinition(definition=self.get_dict())
 
     def _populate_default_values(self):
         """Populates any missing required valudes with defaults
