@@ -18,15 +18,15 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_move_files_messages(files, workspace, uri):
+def create_move_files_messages(files, new_workspace=None, new_uri=None):
     """Creates messages to move the given files
 
     :param files: The list of file IDs to move
     :type files: [collections.namedtuple]
-    :param workspace: The name of the workspace to move the files to
-    :type workspace: string
-    :param uri: The uri to move the files to
-    :type uri: string
+    :param new_workspace: The name of the workspace to move the files to
+    :type new_workspace: string
+    :param new_uri: The uri to move the files to
+    :type new_uri: string
     :return: The list of messages
     :rtype: list
     """
@@ -41,8 +41,8 @@ def create_move_files_messages(files, workspace, uri):
             messages.append(message)
             message = MoveFiles()
         message.add_file(scale_file.id)
-        message.workspace = workspace
-        message.uri = uri
+        message.new_workspace = new_workspace
+        message.new_uri = new_uri
     if message:
         messages.append(message)
 
@@ -59,8 +59,8 @@ class MoveFiles(CommandMessage):
         super(MoveFiles, self).__init__('move_files')
 
         self._file_ids = []
-        self.workspace = None
-        self.uri = None
+        self.new_workspace = None
+        self.new_uri = None
 
     def add_file(self, file_id):
         """Adds the given file to this message
@@ -86,8 +86,8 @@ class MoveFiles(CommandMessage):
 
         return {
             'file_ids': self._file_ids,
-            'workspace': self.workspace,
-            'uri': self.uri
+            'new_workspace': self.new_workspace,
+            'new_uri': self.new_uri
         }
 
     @staticmethod
@@ -96,8 +96,8 @@ class MoveFiles(CommandMessage):
         """
 
         message = MoveFiles()
-        message.workspace = json_dict['workspace']
-        message.uri = json_dict['uri']
+        message.new_workspace = json_dict['new_workspace']
+        message.new_uri = json_dict['new_uri']
         for file_id in json_dict['file_ids']:
             message.add_file(file_id)
         return message
@@ -114,6 +114,6 @@ class MoveFiles(CommandMessage):
         #check new uri and/or get new workspace id
         #move file(s) to new location, check for file io error
         #update file model
-        files_to_move.update(file_path=self.uri,workspace=self.workspace)
+        files_to_move.update(file_path=self.new_uri,workspace=self.new_workspace)
 
         return True
