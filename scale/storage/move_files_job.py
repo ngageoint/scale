@@ -26,6 +26,8 @@ def move_files(files, new_workspace=None, new_file_path=None):
     :type new_file_path: string
     """
     
+    old_files = []
+    old_workspace = None
     if new_workspace:
         # We need a local path to copy the file, try to get a direct path from the broker, if that fails we must
         # download the file and copy from there
@@ -33,6 +35,7 @@ def move_files(files, new_workspace=None, new_file_path=None):
         # download is not necessary
         old_workspace = files[0].workspace
         paths = old_workspace.get_file_system_paths([files])
+        local_paths = []
         if paths:
             local_paths = paths
         else:
@@ -46,6 +49,7 @@ def move_files(files, new_workspace=None, new_file_path=None):
         uploads = []
         for file, path in zip(files, local_paths):
             old = file.file_path
+            old_files.append(ScaleFile(file_name=file.file_name, file_path=file.file_path))
             file.file_path = new_file_path if new_file_path else file.file_path
             logger.info('Copying %s in workspace %s to %s in workspace %s', old, old_workspace.name,
                     file.file_path, new_workspace.name)
@@ -54,36 +58,29 @@ def move_files(files, new_workspace=None, new_file_path=None):
 
         ScaleFile.objects.upload_files(new_workspace, uploads)
     elif new_file_path:
-        logger.info('Moving %s to %s in workspace %s', ingest.file_path, ingest.new_file_path,
-                    ingest.workspace.name)
-        file_move = FileMove(source_file, ingest.new_file_path)
-        ScaleFile.objects.move_files([file_move])
+        moves = []
+        for file in files:
+            logger.info('Moving %s to %s in workspace %s', file.file_path, new_file_path,
+                        file.workspace.name)
+            moves.append(FileMove(file, new_file_path))
+        ScaleFile.objects.move_files(moves)
     else:
         logger.info('No new workspace or file path. Doing nothing')
 
 
-if new_workspace:
-    # Copied file to new workspace, so delete file in old workspace (if workspace provides local path to do so)
-    file_with_old_path = SourceFile.create()
-    file_with_old_path.file_name = file_name
-    file_with_old_path.file_path = ingest.file_path
-    paths = ingest.workspace.get_file_system_paths([file_with_old_path])
-    if paths:
-        _delete_file(paths[0])
-    logger.info('Moving %i files', len(files))
-    try:
-        broker.move_files(volume_path=volume_path, files=files)
-    except ScaleError as err:
-        err.log()
-        sys.exit(err.exit_code)
-    except Exception as ex:
-        exit_code = GENERAL_FAIL_EXIT_CODE
-        err = get_error_by_exception(ex.__class__.__name__)
-        if err:
-            err.log()
-            exit_code = err.exit_code
-        else:
-            logger.exception('Error performing move_files steps')
-        sys.exit(exit_code)
+    if new_workspace:
+        # Copied files to new workspace, so delete file in old workspace (if workspace provides local path to do so)
+        old_workspace.delete_files(old_files, update_model=False)
 
     return
+
+def _delete_file(file_path):
+    """Deletes the given ingest file
+
+    :param file_path: The absolute path of the file to delete
+    :type file_path: string
+    """
+
+    if os.path.exists(file_path):
+        logger.info('Deleting %s', file_path)
+        os.remove(file_path)
