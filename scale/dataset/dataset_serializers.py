@@ -22,15 +22,22 @@ class DataSetListSerializerV6(DataSetBaseSerializerV6):
     # versions = serializers.ListField(child=serializers.CharField())
     latest_version = serializers.CharField(source='version')
 
+class DataSetMemberSerializerV6(ModelIdSerializer):
+    dataset = serializers.IntegerField()
+    created = serializers.DateTimeField()
+    definition = serializers.JSONField(source='get_v6_definition_json')
+
+class DataSetFilesSerializerV6(ModelIdSerializer):
+    """Converts the datasetfile model fields to REST output"""
+    dataset = serializers.IntegerField()
+    scale_file = serializers.IntegerField()
+    parameter_name = serializers.CharField()
+
 class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
     """Converts dataset model feields to REST output"""
 
     description = serializers.CharField()
     created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json')
-
-class DataSetMemberSerializerV6(ModelIdSerializer):
-    dataset = serializers.IntegerField()
-    created = serializers.DateTimeField()
-    definition = serializers.JSONField(source='get_v6_definition_json')
-
+    members = DataSetMemberSerializerV6(required=False, many=True)
+    files = DataSetFilesSerializerV6(required=False, many=True)

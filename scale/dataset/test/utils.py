@@ -10,17 +10,7 @@ from dataset.definition.definition import DataSetDefinition
 
 DATASET_NAME_COUNTER = 1
 DATASET_VERSION_COUNTER = 1
-
 DATASET_MEMBER_NAME_COUNTER = 1
-
-COMPLETE_DATASET_DEF = {
-
-
-}
-
-MINIMUM_DATASET = {
-
-}
 
 def create_dataset(name=None, title=None, description=None, version=None,
     created=None, definition=None):

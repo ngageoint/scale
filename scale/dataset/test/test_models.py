@@ -7,7 +7,7 @@ import json
 import time
 
 import django
-import django.utils.timezone as timezone
+from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
 
 from data.interface.interface import Interface
@@ -16,6 +16,7 @@ from dataset.models import DataSet, DataSetMember
 import dataset.test.utils as dataset_test_utils
 from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
 from dataset.definition.json.definition_v6 import DataSetDefinitionV6, DataSetMemberDefinitionV6
+from storage.models import ScaleFile, Workspace
 
 class TestDataSetManager(TransactionTestCase):
 
@@ -242,11 +243,15 @@ class TestDataSetMemberManager(TransactionTestCase):
                 self.fail('Found unexpected result: %s' % member.id)
             self.assertDictEqual(member.get_v6_definition_json(), expected.get_v6_definition_json())
 
-class TestDataSetFileManager(TransactionTestCase):
+class TestDataSetFile(TransactionTestCase):
     """Tests the DataSetFileManager class"""
 
     def setUp(self):
         django.setup()
+
+        # create a workspace
+        self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
+                                                  last_modified=now())
 
         # create a dataset
         self.dataset = dataset_test_utils.create_dataset(definition={'version': '6','parameters': [{'name': 'param_a', 'param_type': 'member'}, {'name': 'param_b', 'param_type': 'member'}]})
@@ -270,6 +275,50 @@ class TestDataSetFileManager(TransactionTestCase):
         }
         self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset, definition=param_b)
 
-    def test_create_dataset_file(self):
+    def test_add_dataset_files(self):
         """Tests creating a dataset file"""
-        pass
+
+        src_file_a = ScaleFile.objects.create(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        src_file_b = ScaleFile.objects.create(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        file_a = DataSet.objects.add_dataset_files(self.dataset.id, 'param_a', [src_file_a])[0]
+        file_b = DataSet.objects.add_dataset_files(self.dataset.id, 'param_b', [src_file_b])[0]
+
+        files = DataSet.objects.get_dataset_files(dataset_id=self.dataset.id)
+        self.assertTrue(len(files), 2)
+        for f in files:
+            expected = None
+            if f.id == file_a.id:
+                expected = file_a
+            elif f.id == file_b.id:
+                expected = file_b
+            else:
+                self.fail('Found unexpected result: %s' % f.id)
+            self.assertTrue(f.parameter_name, expected.parameter_name)
+            self.assertTrue(f.dataset, expected.dataset)
+            self.assertTrue(f.scale_file, expected.scale_file)
+
+    def test_get_dataset_files(self):
+        """Tests retrieving dataset files for a dataset, parameter, member, etc
+        """
+
+        src_file_a = ScaleFile.objects.create(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        src_file_b = ScaleFile.objects.create(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        file_a = DataSet.objects.add_dataset_files(self.dataset.id, 'param_a', [src_file_a])[0]
+        file_b = DataSet.objects.add_dataset_files(self.dataset.id, 'param_b', [src_file_b])[0]
+
+        # Get files by dataset
+        files = DataSet.objects.get_dataset_files(dataset_id=self.dataset.id)
+        self.assertTrue(len(files), 2)
+
+        # Get files by member
+        # files = DataSet.objects.get_dataset_files(dataset_member)
+
+        # Get files by parameter?

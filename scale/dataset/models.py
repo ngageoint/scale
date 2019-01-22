@@ -197,13 +197,59 @@ class DataSetManager(models.Manager):
         # validate other fields
         return DataSetValidation(is_valid, errors, warnings)
 
+    def add_dataset_files(self, dataset_id, parameter_name, scale_files):
+        """Creates a DataSetFile attached to the given dataset and parameter name
+
+        :param dataset_id: The dataset to attache the file to
+        :type dataset_id:
+        :param parameter_name: The parameter_name the file belongs with
+        :type parameter_name: string
+        :param scale_file: ScaleFile to attach
+        :type scale_file: [:class:`storage.models.ScaleFile`]
+
+        :returns: The created Data Set files
+        :rtype: [:]class:`dataset.models.DataSetFile`]
+        """
+        if not dataset_id:
+            # raise exception dataset must not be null
+            return
+        if not parameter_name:
+            # raise exception
+            return
+
+        dataset = self.get_dataset_id_v6(dataset_id=dataset_id)
+
+        #verify parameter_name is in dataset.parameters
+
+        try:
+            dataset_definition = DataSetDefinition(definition=dataset.definition)
+            parameter = dataset_definition.get_parameter(parameter_name=parameter_name)
+        except Exception as ex:
+            # raise Exception parameter not within DataSet
+            return
+
+        dataset_files = []
+        # Create and return the dataset file
+        for file in scale_files:
+            dataset_file = DataSetFile()
+            dataset_file.dataset = dataset
+            dataset_file.scale_file = file
+            dataset_file.parameter_name = parameter_name
+            dataset_file.save()
+            dataset_files.append(dataset_file)
+
+        return dataset_files
+
     def get_dataset_files(self, dataset_id):
         """Returns the datasetFiles associated with the given dataset_id
 
         :returns: The list of DataSetFiles matching the file_id
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
-        files = []
+        dataset = self.get(pk=dataset_id)
+
+        files = DataSetFile.objects.all().filter(dataset=dataset)
+
         return files
 
 
@@ -337,11 +383,12 @@ class DataSetMemberManager(models.Manager):
         return dataset_member
 
     def get_dataset_members(self, dataset):
-        """Returns dataset members for the given dataset"""
-        members = self.all()
-        members.filter(dataset=dataset)
+        """Returns dataset members for the given dataset
 
-        return members
+        :returns: members for a given dataset
+        :rtype: QuerySet<DataSetMember>
+        """
+        return self.all().filter(dataset=dataset)
 
 """
 DataSetMember
@@ -399,6 +446,9 @@ class DataSetMember(models.Model):
 
         return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_definition_json()))
 
+class DataSetFileManager(models.Manager):
+    """Manages the datasetfile model"""
+
 """
 DataSetFile
 
@@ -407,7 +457,7 @@ DataSetFile
 * char field for file parameter name (from data set definition JSON)
 * unique combined index on (DataSet ID, Scale file ID) ??
 """
-class DataSetFile(object):
+class DataSetFile(models.Model):
     """
     The actual file in a dataset member
 
@@ -420,5 +470,6 @@ class DataSetFile(object):
     """
 
     dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
-    scale_file = models.ForeignKey('storage.models.ScaleFile', on_delete=models.PROTECT)
+    scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     parameter_name = models.CharField(db_index=True, max_length=50)
+    objects = DataSetFileManager

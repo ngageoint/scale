@@ -174,17 +174,6 @@ class TestDatasetDetailsView(TestCase):
         self.dataset2 = dataset_test_utils.create_dataset(name='test-dataset-1',
             title="Test Dataset 1", description="Updated Test Dataset Number 1", version='1.1.1')
 
-    # def test_successful_empty(self):
-    #     """Tests successfully calling the dataset details view with no data or results"""
-
-    #     url = '/%s/data-sets/%s/' % (self.api, 'empty-dataset')
-    #     response = self.client.generic('GET', url)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        # check response for stuff
-        # result = json.loads(response.content)
-        # self.assertEqual(response[''], self.empty_dataset.)
-
     def test_datasets_id_successful(self):
         """Tests successfully calling the v6/data-sets/<dataset_id>/ view.
         """
@@ -305,9 +294,35 @@ class TestDataSetValidationView(TestCase):
         results = json.loads(response.content)
         self.assertEqual(results['detail'], "Missing required parameter: \"definition\"")
 
-    def test_validate_invalid_definition(self):
+    def test_invalid_definition(self):
         """Validates an invalid dataset definition
 
         Will complete when dataset definition is fully defined.
         """
-        pass
+
+        url = '/%s/data-sets/validation/' % self.api
+
+        json_data = {
+            'name': 'test-dataset',
+            'title': 'Test Dataset',
+            'description': 'My Test Dataset',
+            'version': '1.0.0',
+            'definition': {
+                'version': '6',
+                'parameters': [
+                    {
+                        'name': 'global-param',
+                    },
+                    {
+                        'name': 'member-param',
+                    },
+                ],
+            },
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'INVALID_DATASET_DEFINITION')
