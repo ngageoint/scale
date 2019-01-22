@@ -37,21 +37,15 @@ class Command(BaseCommand):
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         files_list = json.loads(os.environ.get('FILES'))
-        workspaces = json.loads(os.environ.get('WORKSPACES'))
-        uris = json.loads(os.environ.get('URIS'))
+        workspace = json.loads(os.environ.get('NEW_WORKSPACE'))
+        uri = json.loads(os.environ.get('NEW_PATH'))
 
-        workspaces = self._configure_workspaces(workspaces)
-        files = self._configure_files(files_list, workspaces)
+        new_workspace = self._configure_workspace(workspace)
 
         logger.info('Command starting: scale_move_files')
         logger.info('File IDs: %s', [x.id for x in files])
         
-        for wrkspc_name, wrkspc in workspaces.iteritems():
-            move_files_job.move_files(files=[f for f in files if f.workspace == wrkspc_name],
-                                          broker=wrkspc['broker'], volume_path=wrkspc['volume_path'])
-
-        messages = create_move_files_messages(files=files, workspace=workspace, uri=uri)
-        CommandMessageManager().send_messages(messages)
+        move_files_job.move_files(files=files, new_workspace=new_workspace, new_file_path=uri)
 
         logger.info('Command completed: scale_move_files')
 
