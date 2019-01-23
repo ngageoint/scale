@@ -198,6 +198,7 @@ class DataSetDetailsView(GenericAPIView):
         else:
             raise Http404
 
+    # TODO
     def patch_v6(self, request, name=None, version=None, dataset_id=None):
         """Edits an existing dataset and returns the updated details
 

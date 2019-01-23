@@ -14,6 +14,7 @@ from rest_framework import status
 
 from dataset.models import DataSet
 import dataset.test.utils as dataset_test_utils
+from storage.models import ScaleFile, Workspace
 
 """Tests the v6/data-sets/ endpoint"""
 class TestDatasetViews(TestCase):
@@ -168,11 +169,95 @@ class TestDatasetDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
-        # Create dataset with basic values
+        # Create workspace
+        self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
+                                                  last_modified=now())
+
+        # Create datasets
+        definition = {
+            'parameters': [
+                {'name': 'member-aa-param', 'param_type': 'member'},
+                {'name': 'member-ab-param', 'param_type': 'member'}
+            ]
+        }
         self.dataset = dataset_test_utils.create_dataset(name='test-dataset-1',
-            title="Test Dataset 1", description="Test Dataset Number 1", version='1.0.0')
+            title="Test Dataset 1", description="Test Dataset Number 1", version='1.0.0', definition=definition)
+        definition = {
+            'parameters': [
+                {'name': 'member-ba-param', 'param_type': 'member'},
+                {'name': 'member-bb-param', 'param_type': 'member'}
+            ]
+        }
         self.dataset2 = dataset_test_utils.create_dataset(name='test-dataset-1',
-            title="Test Dataset 1", description="Updated Test Dataset Number 1", version='1.1.1')
+            title="Test Dataset 1", description="Updated Test Dataset Number 1", version='1.1.1',
+            definition=definition)
+
+        # Create members
+        definition = {
+            'name': 'member-aa-param',
+            'input': {
+                'files': [{'name': 'input_a', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
+                'json': [],
+            },
+        }
+        self.member_aa = dataset_test_utils.create_dataset_member(dataset=self.dataset,
+            definition=definition)
+
+        definition = {
+            'name': 'member-ab-param',
+            'input': {
+                'files': [{'name': 'input_b', 'mediaTypes': ['application/json'], 'required': True, 'partial': False},
+                          {'name': 'input_c', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
+                'json': [],
+            },
+        }
+        self.mamber_ab = dataset_test_utils.create_dataset_member(dataset=self.dataset,
+            definition=definition)
+
+        definition = {
+            'name': 'member-ba-param',
+            'input': {
+                'files': [{'name': 'input_d', 'mediaTypes': ['application/json'], 'required': True, 'partial': False},
+                          {'name': 'input_e', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
+                'json': [],
+            },
+        }
+        self.member_ba = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+            definition=definition)
+        definition = {
+            'name': 'member-bb-param',
+            'input': {
+                'files': [{'name': 'input_f', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
+                'json': [],
+            },
+        }
+        self.member_bb = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+            definition=definition)
+
+        # Create files
+        self.src_file_a = ScaleFile.objects.create(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_b = ScaleFile.objects.create(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_c = ScaleFile.objects.create(file_name='input_c.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_d = ScaleFile.objects.create(file_name='input_d.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_e = ScaleFile.objects.create(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_f = ScaleFile.objects.create(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type='type', file_path='the_path',
+                                              workspace=self.workspace)
+        DataSet.objects.add_dataset_files(self.dataset.id, 'member-aa-param', [self.src_file_a])
+        DataSet.objects.add_dataset_files(self.dataset.id, 'member-ab-param', [self.src_file_b, self.src_file_c])
+
+        DataSet.objects.add_dataset_files(self.dataset2.id, 'member-ba-param', [self.src_file_d])
+        DataSet.objects.add_dataset_files(self.dataset2.id, 'member-bb-param', [self.src_file_f])
 
     def test_datasets_id_successful(self):
         """Tests successfully calling the v6/data-sets/<dataset_id>/ view.
@@ -190,6 +275,22 @@ class TestDatasetDetailsView(TestCase):
         self.assertEqual(result['description'], self.dataset.description)
         self.assertEqual(result['version'], self.dataset.version)
         self.assertDictEqual(result['definition'], self.dataset.definition)
+        self.assertEqual(len(result['files']), 3)
+
+        url = '/%s/data-sets/%d/' % (self.api, self.dataset2.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        # Check response for dataset details
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.dataset2.id)
+        self.assertEqual(result['name'], self.dataset2.name)
+        self.assertEqual(result['title'], self.dataset2.title)
+        self.assertEqual(result['description'], self.dataset2.description)
+        self.assertEqual(result['version'], self.dataset2.version)
+        self.assertDictEqual(result['definition'], self.dataset2.definition)
+        self.assertEqual(len(result['files']), 3)
+
 
     def test_datasets_name_successful(self):
         """Tests successfully calling the v6/datsets/<dataset-name>/ view.

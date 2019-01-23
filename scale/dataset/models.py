@@ -12,6 +12,7 @@ from django.db import models, transaction
 from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6, convert_member_definition_to_v6_json, DataSetMemberDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
+from dataset.dataset_serializers import DataSetFilesSerializerV6, DataSetMemberSerializerV6
 from storage.models import ScaleFile
 from util import rest as rest_utils
 
@@ -73,6 +74,7 @@ class DataSetManager(models.Manager):
 
         return dataset
 
+    # TODO
     @transaction.atomic
     def edit_dataset_v6(self, dataset_id, definition=None, title=None, description=None):
         """Handles updating the given datset
@@ -210,6 +212,7 @@ class DataSetManager(models.Manager):
         :returns: The created Data Set files
         :rtype: [:]class:`dataset.models.DataSetFile`]
         """
+
         if not dataset_id:
             # raise exception dataset must not be null
             return
@@ -224,8 +227,7 @@ class DataSetManager(models.Manager):
         try:
             dataset_definition = DataSetDefinition(definition=dataset.definition)
             parameter = dataset_definition.get_parameter(parameter_name=parameter_name)
-        except Exception as ex:
-            # raise Exception parameter not within DataSet
+        except Exception as ex:# TODO raise Exception parameter not within DataSet
             return
 
         dataset_files = []
@@ -247,11 +249,17 @@ class DataSetManager(models.Manager):
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
         dataset = self.get(pk=dataset_id)
-
         files = DataSetFile.objects.all().filter(dataset=dataset)
-
         return files
 
+    def get_dataset_members(self, dataset_id):
+        """Returns the members associated with the given dataset_id
+        :returns: The list of DataSetMembers
+        :rtype: [:clas:`dataset.models.DataSetMember`]
+        """
+        dataset = self.get(pk=dataset_id)
+        members = DataSetMember.objects.all().filter(dataset=dataset)
+        return members
 
 """DataSet
 
@@ -284,6 +292,7 @@ class DataSet(models.Model):
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
     title = models.CharField(blank=True, max_length=50, null=True)
+    # filter = django.contrib.postgres.fields.JSONField(default=dict)
     description = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     definition = django.contrib.postgres.fields.JSONField(default=dict)
@@ -351,6 +360,26 @@ class DataSet(models.Model):
         version_array = [parts['major'], parts['minor'], parts['patch'], prerelease]
 
         return version_array
+
+    def get_dataset_members_json(self):
+        """Returns the JSON for the associated dataset members
+
+        :returns: Returns the outgoing primitive representation.
+        :rtype: dict?
+        """
+        members = DataSet.objects.get_dataset_members(dataset_id=self.id)
+        serializer = DataSetMemberSerializerV6(members, many=True)
+        return serializer.data
+
+    def get_dataset_files_json(self):
+        """Returns the JSON for the associated dataset files
+
+        :returns: Returns the outgoing primitive representation.
+        :rtype: dict?
+        """
+        files = DataSet.objects.get_dataset_files(self.id)
+        serializer = DataSetFilesSerializerV6(files, many=True)
+        return serializer.data
 
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
@@ -449,6 +478,19 @@ class DataSetMember(models.Model):
 class DataSetFileManager(models.Manager):
     """Manages the datasetfile model"""
 
+    def get_dataset_files(self, dataset_id):
+        """Returns the dataset files associated with the given dataset_id
+
+        :param dataset_id: The id of the associated dataset
+        :type dataset_id: integer
+        :returns: The DataSetFiles associated with that dataset_id
+        :rtype: [:class:`dataset.models.DataSetFile`]
+        """
+        dataset = DataSet.objects.get(pk=dataset_id)
+        files = self.all().filter(dataset=dataset)
+        return files
+
+
 """
 DataSetFile
 
@@ -473,3 +515,4 @@ class DataSetFile(models.Model):
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     parameter_name = models.CharField(db_index=True, max_length=50)
     objects = DataSetFileManager
+

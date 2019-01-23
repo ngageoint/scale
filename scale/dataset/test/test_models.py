@@ -157,19 +157,6 @@ class TestDataSetMemberManager(TransactionTestCase):
         # create a dataset
         self.dataset = dataset_test_utils.create_dataset(definition={'version': '6','parameters': [{'name': 'member-param', 'param_type': 'member'}],})
 
-
-        # global_interface = Interface()
-        # global_interface.add_parameter(FileParameter('input_a', ['text/csv']))
-        # global_interface.add_parameter(JsonParameter('input_b', 'integer'))
-
-        # member_interface = Interface()
-        # member_interface.add_parameter(FileParameter('input_c', ['application/json'], False, True))
-        # member_interface.add_parameter(JsonParameter('input_d', 'object', False))
-
-        # self.global_definition = DataSetMemberDefinition('global-param', global_interface)
-        # self.member_definition = DataSetMemberDefinition('member_param', member_interface)
-
-
     def test_create_datast_member(self):
         """Tests calling DataSetMember.create() """
         definition = {
