@@ -12,10 +12,7 @@ from django.core.management.base import BaseCommand
 
 from messaging.manager import CommandMessageManager
 from storage import move_files_job
-from storage.brokers.broker import FileDownload, FileMove, FileUpload
-from storage.brokers.factory import get_broker
-from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
-from storage.messages.move_files import create_move_files_messages
+from storage.models import Workspace
 
 
 logger = logging.getLogger(__name__)
@@ -36,57 +33,26 @@ class Command(BaseCommand):
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
 
-        files_list = json.loads(os.environ.get('FILES'))
-        workspace = json.loads(os.environ.get('NEW_WORKSPACE'))
+        file_ids = json.loads(os.environ.get('FILE_IDS'))
+        new_workspace_name = json.loads(os.environ.get('NEW_WORKSPACE'))
         uri = json.loads(os.environ.get('NEW_PATH'))
 
-        new_workspace = self._configure_workspace(workspace)
+        new_workspace = None
+        if new_workspace_name:
+            try:
+                new_workspace = Workspace.objects.get(name=new_workspace_name)
+            except Workspace.DoesNotExist:
+                logger.error('Error running command scale_move_files: Workspace %s does not exist' % new_workspace_name)
+                sys.exit(1)
 
         logger.info('Command starting: scale_move_files')
-        logger.info('File IDs: %s', [x.id for x in files])
+        logger.info('File IDs: %s', file_ids)
         
-        move_files_job.move_files(files=files, new_workspace=new_workspace, new_file_path=uri)
+        move_files_job.move_files(file_ids=file_ids, new_workspace=new_workspace, new_file_path=uri)
 
         logger.info('Command completed: scale_move_files')
 
         sys.exit(0)
-
-    def _configure_files(self, files_list):
-        """Parses and returns files associated with their respective workspace.
-
-        :param files_list: The file list that was given
-        :type files_list: [dict]
-        :return: All workspaces by given name with associated broker and volume_path
-        :rtype: dict
-        """
-
-        scale_file = namedtuple('ScaleFile', ['id', 'file_path', 'workspace'])
-
-        files = []
-        for f in files_list:
-            files.append(scale_file(id=int(f['id']), file_path=f['file_path'], workspace=f['workspace']))
-        return files
-
-    def _configure_workspace(self, workspace):
-        """Parses, validates, and returns workspace information for the given workspace
-
-        :param workspace: The workspace
-        :type workspace: dict
-        :return: Workspace with associated broker and volume_path
-        :rtype: dict
-        """
-
-        name = workspace.keys()[0]
-        wrkspc = WorkspaceConfigurationV6(workspace[name]).get_configuration()
-        wrkspc.validate_broker()
-        valid_wrkspc = wrkspc.get_dict()
-
-        ret_workspace = {
-            'broker': get_broker(valid_wrkspc['broker']['type']),
-            'volume_path' : valid_wrkspc['broker']['host_path']
-        }
-
-        return ret_workspace
 
     def _onsigterm(self, signum, _frame):
         """See signal callback registration: :py:func:`signal.signal`.

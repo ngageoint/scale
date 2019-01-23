@@ -18,8 +18,8 @@ GENERAL_FAIL_EXIT_CODE = 1
 def move_files(file_ids, new_workspace=None, new_file_path=None):
     """Moves the given files to a different workspace/uri
 
-    :param files: List of ids of ScaleFile objects to move
-    :type files: [int]
+    :param file_ids: List of ids of ScaleFile objects to move; should all be from the same workspace
+    :type file_ids: [int]
     :param new_workspace: New workspace to move files to
     :type new_workspace: `storage.models.Workspace`
     :param new_file_path: New path for files
@@ -32,7 +32,7 @@ def move_files(file_ids, new_workspace=None, new_file_path=None):
         files = files.defer('workspace__json_config')
         files = files.filter(id__in=file_ids).only('id', 'file_name', 'file_path', 'workspace')
         old_files = []
-        old_workspace = None
+        old_workspace = files[0].workspace
         if new_workspace:
             # We need a local path to copy the file, try to get a direct path from the broker, if that fails we must
             # download the file and copy from there
@@ -90,14 +90,3 @@ def move_files(file_ids, new_workspace=None, new_file_path=None):
         else:
             logger.exception('Error performing move_files steps')
         sys.exit(exit_code)
-
-def _delete_file(file_path):
-    """Deletes the given ingest file
-
-    :param file_path: The absolute path of the file to delete
-    :type file_path: string
-    """
-
-    if os.path.exists(file_path):
-        logger.info('Deleting %s', file_path)
-        os.remove(file_path)
