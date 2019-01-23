@@ -111,9 +111,7 @@ class MoveFiles(CommandMessage):
         when = timezone.now()
         files_to_move = ScaleFile.objects.filter(id__in=self._file_ids)
         
-        #check new uri and/or get new workspace id
-        #move file(s) to new location, check for file io error
-        #update file model
+        #update url metadata?
         files_to_move.update(file_path=self.new_uri,workspace=self.new_workspace)
 
         return True
