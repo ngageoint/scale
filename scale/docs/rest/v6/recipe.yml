@@ -5,6 +5,8 @@ info:
 paths:
   /recipes/:
     get:
+      tags:
+        - Recipe Services
       operationId: _rest_v6_recipe_list
       summary: Recipe List
       description: Returns a list of all recipes
@@ -119,6 +121,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_list'
     post:
+      tags:
+        - Recipe Services
       operationId: _rest_v6_recipe_post
       description: creates a new recipe and adds it to the queue
       requestBody:
@@ -129,8 +133,7 @@ paths:
               $ref: '#/components/schemas/recipe_post'
       responses:
         '201':
-          description: |-
-            201 CREATED response
+          description: 201 CREATED response
           content:
             application/json:
               schema:
@@ -138,6 +141,8 @@ paths:
                 
   /recipes/{id}/:
     get:
+      tags:
+        - Recipe Services
       operationId: _rest_v6_recipe_details
       summary: Recipe Details
       description: Returns detailed information about the recipe with the specified id
@@ -157,6 +162,8 @@ paths:
 
   /recipes/{id}/input_files/:
     get:
+      tags:
+        - Recipe Services
       operationId: _rest_v6_recipe_input_files
       summary: Recipe Input Files
       description: Returns detailed information about input files associated with a given Recipe ID.
@@ -216,12 +223,17 @@ paths:
 
   /recipes/{id}/reprocess/:
     post:
+      tags:
+        - Recipe Services
       operationId: _rest_v6_recipe_reprocess
       summary: Reprocess Recipe
-      description: Creates a new recipe using its latest type revision by superseding an existing recipe and associated|
-        jobs. Note that if the recipe type definition has not changed since the recipe was created, then one or more   |
-        job names must be specified to force the recipe to be re-processed. A recipe that is already superseded cannot |
-        be re-processed again.
+      description: "Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs. Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be specified to force the recipe to be re-processed. A recipe that is already superseded cannot be re-processed again."
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: id of an existing recipe
       requestBody:
         required: true
         content:
@@ -276,9 +288,9 @@ components:
     recipe:
       title: Recipe
       allOf:
-        - ref: '#/components/schemas/recipe_base'
+        - $ref: '#/components/schemas/recipe_base'
         - type: object
-          properties:
+        - properties:
             recipe_type_rev:
               $ref: '#/components/schemas/recipe_type_revision_base'
             event:
@@ -377,7 +389,7 @@ components:
             completed:
               type: string
               format: date-time
-              description: When every job and sub-recipe in this was completed successfully. |
+              description: When every job and sub-recipe in this was completed successfully.
                 This field will remain null if a job or sub-recipe in the recipe is blocked or failed.
               example: 2015-09-10T15:24:53.987Z
             superseded:
@@ -394,11 +406,11 @@ components:
     recipe_detail:
       title: Recipe Details
       allOf:
-        - ref: '#/components/schemas/recipe'
+        - $ref: '#/components/schemas/recipe'
         - type: object
-          properties:
+        - properties:
             recipe_type_rev:
-              $ref: './recipe_type.yml#/components/schemas/recipe_type_revision_details'
+              $ref: '#/components/schemas/recipe_type_revision_details'
             event:
               $ref: '#/components/schemas/event_details'
             superseded_recipe:
@@ -406,18 +418,18 @@ components:
             superseded_by_recipe:
               $ref: '#/components/schemas/recipe_base'
             input:
-              $ref: './data.yml#/components/schemas/data'
+              $ref: '#/components/schemas/data'
             details:
               $ref: '#/components/schemas/recipe_instance'
             job_types:
               type: array
               items:
-                $ref: './job_type.yml#/components/schemas/job_type_base'
+                $ref: '#/components/schemas/job_type_base'
               description: List of Job Types in this recipe
             sub_recipe_types:
               type: array
               items:
-                $ref: './recipe_type.yml#/components/schemas/recipe_type_base'
+                $ref: '#/components/schemas/recipe_type_base'
               description: List of Sub Recipe Types in this recipe
 
     recipe_post:
@@ -426,11 +438,11 @@ components:
       required: [recipe_type_id,input]
       properties:
         recipe_type_id:
-          type: int
+          type: integer
           description: the ID of the recipe type
         input:
             description: The input data for the recipe.
-            $ref: './data.yml#/components/schemas/data'
+            $ref: '#/components/schemas/data'
         configuration:
             description: The configuration for the recipe.
             $ref: '#/components/schemas/recipe_config'
@@ -481,10 +493,10 @@ components:
           example: true
         is_accepted:
           type: boolean
-          description: Whether the condition has been accepted. If |
-            accepted, the nodes depending on the condition will be created and |
-            processed. If not accepted, the nodes depending on the condition   |
-            will not be created or processed.
+          description: "Whether the condition has been accepted. If
+            accepted, the nodes depending on the condition will be created and
+            processed. If not accepted, the nodes depending on the condition
+            will not be created or processed."
           example: true
 
     job_node_instance:
@@ -598,12 +610,13 @@ components:
           format: date-time
           description: When the trigger event occurred.
           example: 2015-09-10T15:24:53.503Z
+
     event_details:
+      title: Event Details
       allOf:
-        - ref: '#/components/schemas/event_base'
-        - title: Event Details
+        - $ref: '#/components/schemas/event_base'
         - type: object
-          properties:
+        - properties:
             description:
               type: object
               additionalProperties: true
@@ -621,25 +634,25 @@ components:
       properties:
         all:
           type: boolean
-          description: If true, then all nodes within the recipe should be forced to |
-            re-process and the 'nodes' and 'sub_recipes' fields should be omitted. If|
-            false, then the 'nodes' array is used to indicate which nodes should be |
+          description: If true, then all nodes within the recipe should be forced to
+            re-process and the 'nodes' and 'sub_recipes' fields should be omitted. If
+            false, then the 'nodes' array is used to indicate which nodes should be
             forced to re-process.
           example: false
         nodes:
           type: array
           items:
             type: string
-          description: An array listing the names of the recipe nodes that should be |
+          description: An array listing the names of the recipe nodes that should be
             forced to re-process
           example: ["job_a_1", "job_a_2", "recipe_b", "recipe_c"]
         sub_recipes:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/forced_nodes'
-          description: A JSON object where the key names are the sub-recipe node names |
-            that are being forced to re-process. The values are forced nodes JSON |
-            objects that recursively define the nodes with the sub-recipe to force to |
+          description: A JSON object where the key names are the sub-recipe node names
+            that are being forced to re-process. The values are forced nodes JSON
+            objects that recursively define the nodes with the sub-recipe to force to
             reprocess.
 
     recipe_config:

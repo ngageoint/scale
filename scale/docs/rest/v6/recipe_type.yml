@@ -5,6 +5,8 @@ info:
 paths:
   /recipe-types/:
     get:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_list
       summary: Recipe Types
       description: Returns a list of all recipe types
@@ -24,8 +26,8 @@ paths:
           name: keyword
           schema:
             type: string
-          description: Keyword to perform a 'like' search on name, title, and description |
-            may be duplicated to search for multiple keywords
+          description: "Keyword to perform a 'like' search on name, title, and description
+            may be duplicated to search for multiple keywords"
         - in: query
           name: is_active
           schema:
@@ -44,6 +46,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_list'
     post:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_create
       summary: Recipe Type Create
       description: Creates a recipe type
@@ -68,6 +72,8 @@ paths:
                 
   /recipe-types/{name}/:
     get:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_details
       summary: Recipe Type Details
       description: Returns detailed information about the recipe type with the specified name
@@ -85,6 +91,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/recipe_type_detail'
     patch:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_update
       summary: Recipe Type Update
       description: Update one or more fields in an existing recipe type
@@ -106,6 +114,8 @@ paths:
           
   /recipe-types/{name}/revisions/:
     get:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_revisions
       summary: Recipe Type Revisions
       description: Returns a list of the revisions of a recipe type
@@ -135,6 +145,8 @@ paths:
                 $ref: '#/components/schemas/recipe_type_revisions'
   /recipe-types/{name}/revisions/{revision_num}/:
     get:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_revision_details
       summary: Recipe Type Revision Details
       description: Returns detailed information about the recipe type revision with the specified name and revision number
@@ -155,10 +167,12 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/recipe_type_revision_detail'
+                $ref: '#/components/schemas/recipe_type_revision_details'
 
   /recipe-types/validation/:
     post:
+      tags:
+        - Recipe Type Services
       operationId: _rest_v6_recipe_type_validation
       summary: Recipe Type Validation
       description: Validates a recipe type without creating/editing it
@@ -265,9 +279,9 @@ components:
     recipe_type:
       title: Recipe Type
       allOf:
-        - ref: '#/components/schemas/recipe_type_base'
+        - $ref: '#/components/schemas/recipe_type_base'
         - type: object
-          properties:
+        - properties:
             is_active:
               type: boolean
               example: true
@@ -298,9 +312,9 @@ components:
     recipe_type_detail:
       title: Recipe Type Details
       allOf:
-        - ref: '#/components/schemas/recipe_type'
+        - $ref: '#/components/schemas/recipe_type'
         - type: object
-          properties:
+        - properties:
             job_types:
               type: array
               items:
@@ -405,140 +419,146 @@ components:
             you include the version so that future changes to the specification will still accept your configuration.
           example: 6
         input:
-          $ref: './data.yml#/components/schemas/interface'
+          $ref: '#/components/schemas/interface'
         nodes:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/recipe_definition_node'
           description: List of Nodes in this recipe definition
+          
+    recipe_definition_node:
+      title: Recipe Definition Node
+      type: object
+      required: [dependencies, input, node_type]
+      properties:
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_definition_dependency'
+        input:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/dependency_connection'
+            - $ref: '#/components/schemas/recipe_connection'
+        node_type:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/condition_node'
+            - $ref: '#/components/schemas/job_node'
+            - $ref: '#/components/schemas/recipe_node'
 
-      recipe_definition_node:
-        title: Recipe Definition Node
-        type: object
-        required: [dependencies, input, node_type]
-        properties:
-          dependencies:
-            type: array
-            items:
-              $ref: '#/components/schemas/recipe_definition_dependency'
-          input:
-            type: object
-            additionalProperties:
-              oneOf:
-              - $ref: '#/components/schemas/dependency_connection'
-              - $ref: '#/components/schemas/recipe_connection'
-          node_type:
-            type: object
-            additionalProperties:
-              oneOf:
-              - $ref: '#/components/schemas/condition_node'
-              - $ref: '#/components/schemas/job_node'
-              - $ref: '#/components/schemas/recipe_node'
-      recipe_definition_dependency:
-        title: Dependency
-        type: object
-        required: [name]
-        properties:
-          name:
-            type: string
-            description: the name of the recipe node that is a dependency
-      dependency_connection:
-        title: Dependency Connection
-        type: object
-        required: [type, node, output]
-        properties:
-          type:
-            type: string
-            enum: [dependency]
-            description: the name of the input connection type
-          node:
-            type: string
-            description: the name of the dependency node
-          output:
-            type: string
-            description: the name of the dependency node's output
-            example: output_1
-      recipe_connection:
-        title: Recipe Connection
-        type: object
-        required: [type, input]
-        properties:
-          type:
-            type: string
-            enum: [recipe]
-            description: the name of the input connection type
-          input:
-            type: string
-            description: the name of the recipe input
-            example: input_1
-      condition_node:
-        title: Recipe Definition Condition Node
-        required: [node_type, interface]
-        properties:
-          node_type:
-            type: string
-            enum: [condition]
-            description: the name of the node type
-          interface:
-            $ref: '#/components/schemas/interface'
-      job_node:
-        title: Recipe Definition Job Node
-        type: object
-        required: [node_type, job_type_name, job_type_version, job_type_revision]
-        properties:
-          node_type:
-            type: string
-            enum: [job]
-            description: the name of the node type
-          job_type_name:
-            type: string
-            description: the name of the job type
-            example: my-job-type
-          prev_job_type_name:
-            type: string
-            description: the name of the previous job type
-            example: my-job-type
-          job_type_version:
-            type: string
-            description: the job type version
-            example: 1.0.1
-          prev_job_type_version:
-            type: string
-            description: the previous job type version
-            example: 1.0.0
-          job_type_revision:
-            type: integer
-            description: the job type revision
-            example: 2
-          prev_job_type_revision:
-            type: integer
-            description: the previous job type revision
-            example: 1
-      recipe_node:
-        title: Recipe Definition Recipe Node
-        type: object
-        required: [node_type, recipe_type_name, recipe_type_revision]
-        properties:
-          node_type:
-            type: string
-            enum: [recipe]
-            description: the name of the node type
-          recipe_type_name:
-            type: string
-            description: the name of the recipe type
-            example: my-recipe-type
-          prev_recipe_type_name:
-            type: string
-            description: the name of the previous recipe type
-            example: my-recipe-type
-          recipe_type_revision:
-            type: integer
-            description: the recipe type revision
-            example: 2
-          prev_recipe_type_revision:
-            type: integer
-            description: the previous recipe type revision
-            example: 1
+    recipe_definition_dependency:
+      title: Dependency
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          description: the name of the recipe node that is a dependency
+
+    dependency_connection:
+      title: Dependency Connection
+      type: object
+      required: [type, node, output]
+      properties:
+        type:
+          type: string
+          enum: [dependency]
+          description: the name of the input connection type
+        node:
+          type: string
+          description: the name of the dependency node
+        output:
+          type: string
+          description: the name of the dependency node's output
+          example: output_1
+
+    recipe_connection:
+      title: Recipe Connection
+      type: object
+      required: [type, input]
+      properties:
+        type:
+          type: string
+          enum: [recipe]
+          description: the name of the input connection type
+        input:
+          type: string
+          description: the name of the recipe input
+          example: input_1
+
+    condition_node:
+      title: Recipe Definition Condition Node
+      required: [node_type, interface]
+      properties:
+        node_type:
+          type: string
+          enum: [condition]
+          description: the name of the node type
+        interface:
+          $ref: '#/components/schemas/interface'
+
+    job_node:
+      title: Recipe Definition Job Node
+      type: object
+      required: [node_type, job_type_name, job_type_version, job_type_revision]
+      properties:
+        node_type:
+          type: string
+          enum: [job]
+          description: the name of the node type
+        job_type_name:
+          type: string
+          description: the name of the job type
+          example: my-job-type
+        prev_job_type_name:
+          type: string
+          description: the name of the previous job type
+          example: my-job-type
+        job_type_version:
+          type: string
+          description: the job type version
+          example: 1.0.1
+        prev_job_type_version:
+          type: string
+          description: the previous job type version
+          example: 1.0.0
+        job_type_revision:
+          type: integer
+          description: the job type revision
+          example: 2
+        prev_job_type_revision:
+          type: integer
+          description: the previous job type revision
+          example: 1
+
+    recipe_node:
+      title: Recipe Definition Recipe Node
+      type: object
+      required: [node_type, recipe_type_name, recipe_type_revision]
+      properties:
+        node_type:
+          type: string
+          enum: [recipe]
+          description: the name of the node type
+        recipe_type_name:
+          type: string
+          description: the name of the recipe type
+          example: my-recipe-type
+        prev_recipe_type_name:
+          type: string
+          description: the name of the previous recipe type
+          example: my-recipe-type
+        recipe_type_revision:
+          type: integer
+          description: the recipe type revision
+          example: 2
+        prev_recipe_type_revision:
+          type: integer
+          description: the previous recipe type revision
+          example: 1
 
     recipe_type_update:
       title: Recipe Type Update
@@ -592,10 +612,8 @@ components:
           description: Whether the recipe type is valid
           example: true
         validation_error:
-          type: array
           $ref: '#/components/schemas/validation_error'
         validation_warning:
-          type: array
           $ref: '#/components/schemas/validation_warning'
         diff:
           $ref: '#/components/schemas/recipe_type_diff'
@@ -607,17 +625,16 @@ components:
       properties:
         can_be_reprocessed:
           type: boolean
-          description: Indicates whether recipes from the previous revision can |
+          description: Indicates whether recipes from the previous revision can
             be reprocessed as the newer revision.
           example: true
         reasons:
-          type: array
-          description: Lists any reasons causing *can_be_reprocessed* to be false.
+          description: "Lists any reasons causing *can_be_reprocessed* to be false."
           $ref: '#/components/schemas/validation_warning'
         nodes:
           type: object
-          description: All of the diffs for each recipe node between the two |
-            revisions, stored by node name
+          description: "All of the diffs for each recipe node between the two
+            revisions, stored by node name"
           additionalPropterties:
             $ref: '#/components/schemas/node_diff'
         prev_node_type:
@@ -646,8 +663,7 @@ components:
           example: true
         force_reprocess:
           type: boolean
-          description: Indicates whether the user has requested that this node be reprocessed regardless of whether |
-            it has changed 
+          description: "Indicates whether the user has requested that this node be reprocessed regardless of whether it has changed"
           example: true
         dependencies:
           type: array

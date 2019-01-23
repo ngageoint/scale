@@ -5,6 +5,8 @@ info:
 paths:
   /strikes:
     get:
+      tags:
+        - Strike Services
       operationId: _rest_v6_strike_list
       summary: Strike List
       description: Returns a list of all strike processes
@@ -54,6 +56,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/strike_list'
     post:
+      tags:
+        - Strike Services
       operationId: _rest_v6_strike_create
       summary: Create Strike
       description: Creates a new Strike process and places it onto the queue.  
@@ -69,6 +73,8 @@ paths:
             
   /strikes/{id}/:
     get:
+      tags:
+        - Strike Services
       operationId: _rest_v6_strike_details
       summary: Strike Details
       description: Returns a specific strike process and all its related model information
@@ -86,6 +92,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/strike_details'
     patch:
+      tags:
+        - Strike Services
       operationId: _rest_v6_strike_edit
       summary: Edit Strike
       description: Edits an existing Strike process with associated configuration. 
@@ -107,6 +115,8 @@ paths:
 
   /strikes/validation/:
     post:
+      tags:
+        - Strike Services
       operationId: _rest_v6_strike_validate
       summary: Validate Strike
       description: Validates a new Strike process configuration without actually saving it.  
@@ -200,11 +210,11 @@ components:
           $ref: '#/components/schemas/strike_config'
 
     strike_details:
+      title: Strike Details
       allOf:
-        - ref: '#/components/schemas/strike_base'
-        - title: Strike Details
+        - $ref: '#/components/schemas/strike_base'
         - type: object
-          properties: 
+        - properties: 
             configuration:
               $ref: '#/components/schemas/strike_config'          
   

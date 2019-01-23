@@ -5,6 +5,8 @@ info:
 paths:
   /errors/:
     get:
+      tags:
+        - Error Services
       operationId: _rest_v6_error_list
       summary: Error List
       description: Returns a list of all errors
@@ -50,6 +52,8 @@ paths:
 
   /ingests/errors/{id}/:
     get:
+      tags:
+        - Error Services
       operationId: _rest_v6_error_details
       summary: Error Details
       description: Returns detailed information about the error with the specified id
@@ -92,6 +96,7 @@ components:
           items:
             $ref: '#/components/schemas/error_details'
           description: List of Error objects
+    
     error_base:
       title: Error Base
       type: object
@@ -119,12 +124,13 @@ components:
           type: boolean
           description: Whether the error was loaded during the installation process.
           example: true
+    
     error_details:
+      title: Error Details
       allOf:
-        - ref: '#/components/schemas/error_base'
-        - title: Error Details
+        - $ref: '#/components/schemas/error_base'
         - type: object
-          properties:
+        - properties:
             created:
               type: string
               format: date-time

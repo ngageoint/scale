@@ -5,6 +5,8 @@ info:
 paths:
   /nodes:
     get:
+      tags: 
+        - Node Services
       operationId: _rest_v6_node_list
       summary: Node List
       description: Returns a list of all nodes
@@ -53,6 +55,8 @@ paths:
                 $ref: '#/components/schemas/node_list'
   /nodes/{id}/:
     get:
+      tags: 
+        - Node Services
       operationId: _rest_v6_node_details
       summary: Node Details
       description: Returns a specific node and all its related model information
@@ -70,6 +74,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/node_object'
     patch:
+      tags: 
+        - Node Services
       operationId: _rest_v6_node_update
       summary: Node Update
       description: Update one or more fields in an existing node
@@ -129,9 +135,9 @@ components:
     node_object:
       title: Node
       allOf:
-        - ref: '#/components/schemas/node_base'
+        - $ref: '#/components/schemas/node_base'
         - type: object
-          properties:
+        - properties:
             pause_reason:
               type: string
               description: The reason this node is paused if is_paused is true.

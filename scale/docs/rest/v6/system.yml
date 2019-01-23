@@ -5,6 +5,8 @@ info:
 paths:
   /status:
     get:
+      tags:
+        - System Services
       operationId: _rest_v6_system_status
       summary: Get System Status
       description: Returns the current status of the scheduler, including information about nodes and running jobs.
@@ -20,6 +22,8 @@ paths:
             currently offline, so there is no status content to provide.
   /version:
     get:
+      tags:
+        - System Services
       operationId: _rest_v6_system_version
       summary: Get System Version
       description: Returns the current version of the scheduler

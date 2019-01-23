@@ -3,6 +3,8 @@ info:
   title: Data Services
   version: v6
 
+paths: {}
+
 components:
   schemas:
     data:

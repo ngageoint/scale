@@ -5,6 +5,8 @@ info:
 paths:
   /batches/:
     get:
+      tags:
+        - Batch Endpoints
       operationId: _rest_v6_batch_list
       summary: Batch List
       description: Returns a list of all batches
@@ -18,7 +20,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -36,33 +38,33 @@ paths:
           name: recipe_type_id
           schema:
             type: integer
-          description: Return only batches with a given recipe type identifier. |
+          description: Return only batches with a given recipe type identifier.
             Duplicate it to filter by multiple values.
         - in: query
           name: is_creation_done
           schema:
             type: boolean
-          description: Return only batches that match this value, indicating if the batch |
+          description: Return only batches that match this value, indicating if the batch
             has/has not finished creating its recipes
         - in: query
           name: is_superseded
           schema:
             type: boolean
-          description: Return only batches that match this value, indicating if the batch |
+          description: Return only batches that match this value, indicating if the batch
               has/has not been superseded
         - in: query
           name: root_batch_id
           schema:
             type: integer
-          description: Return only batches that belong to the chain with this root batch. |
+          description: Return only batches that belong to the chain with this root batch.
             Duplicate it to filter by multiple values.
         - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-                       Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-                       Prefix fields with a dash to reverse the sort, (ex: order=-created)
+          description: "One or more fields to use when ordering the results.
+            Duplicate it to multi-sort, (ex: order=host_name&order=created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
           description: 200 response
@@ -71,6 +73,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/batch_list'
     post:
+      tags:
+        - Batch Endpoints
       operationId: _rest_v6_batch_create
       summary: Job Type Post
       description: Creates or edits an existing job type
@@ -91,10 +95,12 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/batch_detail'
+                $ref: '#/components/schemas/batch_details'
                 
   /batches/{id}/:
     get:
+      tags:
+        - Batch Endpoints
       operationId: _rest_v6_batch_details
       summary: Batch Details
       description: Returns detailed information about the batch with the specified id
@@ -110,8 +116,10 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/batch_detail'
+                $ref: '#/components/schemas/batch_details'
     patch:
+      tags:
+        - Batch Endpoints
       operationId: _rest_v6_batch_update
       summary: Batch Update
       description: Update one or more fields in an existing batch
@@ -133,6 +141,8 @@ paths:
 
   /batches/comparison/{id}/:
     get:
+      tags:
+        - Batch Endpoints
       operationId: _rest_v6_batch_details
       summary: Batch Comparison
       description: Returns the list of batches with the given root batch ID along with their metrics
@@ -152,6 +162,8 @@ paths:
 
   /batches/validation/:
     post:
+      tags:
+        - Batch Endpoints
       operationId: _rest_v6_batch_validation
       summary: Batch Validation
       description: Validates a batch without creating/editing it
@@ -168,6 +180,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/batch_validation'
+
 components:
   schemas:
     batch_list:
@@ -194,31 +207,12 @@ components:
             $ref: '#/components/schemas/batch'
           description: List of Batch objects
 
-    batch_base:
-      title: Batch Base
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        title:
-          type: string
-          example: My Batch
-        description:
-          type: string
-          example: My Batch Description 
-        created:
-          type: string
-          format: date-time
-          description: When the associated database model was initially created.
-          example: 2015-09-10T15:24:53.503Z
-
     batch:
       title: Batch
       allOf:
-        - ref: '#/components/schemas/batch_base'
+        - $ref: '#/components/schemas/batch_base'
         - type: object
-          properties:
+        - properties:
             recipe_type:
               $ref: '#/components/schemas/recipe_type_base'
               description: The recipe type that is associated with the batch  
@@ -296,9 +290,9 @@ components:
     batch_details:
       title: Batch Details
       allOf:
-        - ref: '#/components/schemas/batch'
+        - $ref: '#/components/schemas/batch'
         - type: object
-          properties:
+        - properties:
             recipe_type_rev:
               $ref: '#/components/schemas/recipe_type_revision'
               description: The recipe type revision that is associated with the batch  
@@ -315,24 +309,12 @@ components:
               type: object
               additionalProperties:
                 $ref: '#/components/schemas/job_metrics'
-              description: The metrics for each top level recipe job (not in a sub-recipe) in the batch. |
-                Each recipe job name maps to the metrics for that job. The job count metrics |
-                (e.g. jobs_total) are similar to the top level batch metrics. The duration |
-                metrics (e.g. min_seed_duration) detail the minimum, average, and maximum |
-                durations for completing the Seed run and completing the overall Scale job. |
+              description: The metrics for each top level recipe job (not in a sub-recipe) in the batch.
+                Each recipe job name maps to the metrics for that job. The job count metrics
+                (e.g. jobs_total) are similar to the top level batch metrics. The duration
+                metrics (e.g. min_seed_duration) detail the minimum, average, and maximum
+                durations for completing the Seed run and completing the overall Scale job.
                 The durations are provided in the ISO-8601 duration format.
-
-    batch_definition:
-      title: Batch Definition
-      type: object
-      properties:
-        previous_batch:
-          $ref: '#/components/schemas/previous_batch_definition'
-          description: Indicates that the batch should re-process the recipes from a |
-            previous batch. This will link the previous and new batch together |
-            so that their metrics can be easily compared. The previous batch |
-            must have the same recipe type as the new batch and must have |
-            finished creating all of its recipes.
 
     previous_batch_definition:
       title: Batch Definition
@@ -341,14 +323,26 @@ components:
       properties:
         root_batch_id:
           type: integer
-          description: The root batch ID of the previous batch. Scale will find the last |
+          description: The root batch ID of the previous batch. Scale will find the last
             (non-superseded) batch with this root ID and it will be reprocessed by this batch.
           example: 4
         forced_nodes:
           $ref: '#/components/schemas/forced_nodes'
-          description:  A forced nodes JSON object that defines the batch recipe nodes to |
+          description:  A forced nodes JSON object that defines the batch recipe nodes to
             force to re-process even if there are no changes to them.
-      
+
+    batch_definition:
+      title: Batch Definition
+      type: object
+      properties:
+        previous_batch:
+          $ref: '#/components/schemas/previous_batch_definition'
+          description: Indicates that the batch should re-process the recipes from a
+            previous batch. This will link the previous and new batch together
+            so that their metrics can be easily compared. The previous batch
+            must have the same recipe type as the new batch and must have
+            finished creating all of its recipes.
+
     forced_nodes:
       title: Forced Nodes Definition
       type: object
@@ -356,8 +350,8 @@ components:
       properties:
         all:
           type: boolean
-          description: If true, then all nodes within the recipe should be forced to |
-            re-process and the 'nodes' and 'sub_recipes' fields should be omitted. |
+          description: If true, then all nodes within the recipe should be forced to
+            re-process and the 'nodes' and 'sub_recipes' fields should be omitted.
             If false, then the 'nodes' array is used to indicate which nodes should be forced to re-process.
           example: false
         nodes:
@@ -369,8 +363,8 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/forced_nodes'
-          description: Key/value pairs of sub-recipe node names and forced node |
-            objects that recursively define the nodes with the sub-recipe to |
+          description: Key/value pairs of sub-recipe node names and forced node
+            objects that recursively define the nodes with the sub-recipe to
             force to reprocess.
 
     batch_config:
@@ -450,102 +444,101 @@ components:
           type: array
           items:
             type: integer
-          description: The total count of jobs within this top level recipe for each batch |
+          description: The total count of jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_pending:
           type: array
           items:
             type: integer
-          description: The count of PENDING jobs within this top level recipe for each batch |
+          description: The count of PENDING jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_blocked:
           type: array
           items:
             type: integer
-          description: The count of BLOCKED jobs within this top level recipe for each batch |
+          description: The count of BLOCKED jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_queued:
           type: array
           items:
             type: integer
-          description: The count of QUEUED jobs within this top level recipe for each batch |
+          description: The count of QUEUED jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_running:
           type: array
           items:
             type: integer
-          description: The count of RUNNING jobs within this top level recipe for each batch |
+          description: The count of RUNNING jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_failed:
           type: array
           items:
             type: integer
-          description: The count of FAILED jobs within this top level recipe for each batch |
+          description: The count of FAILED jobs within this top level recipe for each batch
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_completed:
           type: array
           items:
             type: integer
-          description: The count of COMPLETED jobs within this top level recipe for each batch |
+          description: The count of COMPLETED jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_canceled:
           type: array
           items:
             type: integer
-          description: The count of CANCELED jobs within this top level recipe for each batch |
+          description: The count of CANCELED jobs within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         min_seed_duration:
           type: array
           items:
             type: string
-          description: Minimum seed run duration within this top level recipe for each batch |
+          description: Minimum seed run duration within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT9M12S", "PT8M12S"]
         avg_seed_duration:
           type: array
           items:
             type: string
-          description: Average seed run duration within this top level recipe for each batch |
+          description: Average seed run duration within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT10M12S", "PT10M12S"]
         max_seed_duration:
           type: array
           items:
             type: string
-          description: Maximum seed run duration within this top level recipe for each batch |
+          description: Maximum seed run duration within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT15M12S", "PT14M12S"]
         min_job_duration:
           type: array
           items:
             type: string
-            The order of the values in each array corresponds to the order of batches in the batches array
-          description: Minimum overall scale job run duration within this top level recipe for each batch |
+          description: Minimum overall scale job run duration within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT1M12S", "PT2M12S"]
         avg_job_duration:
           type: array
           items:
             type: string
-          description: Average overall scale job run duration within this top level recipe for each batch |
+          description: Average overall scale job run duration within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT10M12S", "PT10M12S"]
         max_job_duration:
           type: array
           items:
             type: string
-          description: Maximum overall scale job run duration within this top level recipe for each batch |
+          description: Maximum overall scale job run duration within this top level recipe for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT15M12S", "PT14M12S"]
-          
+
     batch_metrics_array:
       title: Batch Metrics Array
       type: object
@@ -554,84 +547,84 @@ components:
           type: array
           items:
             type: integer
-          description: The total count of jobs within the top level recipes for each batch |
+          description: The total count of jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_pending:
           type: array
           items:
             type: integer
-          description: The count of PENDING jobs within the top level recipes for each batch |
+          description: The count of PENDING jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_blocked:
           type: array
           items:
             type: integer
-          description: The count of BLOCKED jobs within the top level recipes for each batch |
+          description: The count of BLOCKED jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_queued:
           type: array
           items:
             type: integer
-          description: The count of QUEUED jobs within the top level recipes for each batch |
+          description: The count of QUEUED jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_running:
           type: array
           items:
             type: integer
-          description: The count of RUNNING jobs within the top level recipes for each batch |
+          description: The count of RUNNING jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_failed:
           type: array
           items:
             type: integer
-          description: The count of FAILED jobs within the top level recipes for each batch |
+          description: The count of FAILED jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_completed:
           type: array
           items:
             type: integer
-          description: The count of COMPLETED jobs within the top level recipes for each batch |
+          description: The count of COMPLETED jobs within the top level recipes for each batch
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         jobs_canceled:
           type: array
           items:
             type: integer
-          description: The count of CANCELED jobs within the top level recipes for each batch |
+          description: The count of CANCELED jobs within the top level recipes for each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         recipes_estimated:
           type: array
           items:
             type: integer
-          description: The estimated count of recipes (including sub-recipes) that will be created |
-            for each batch. The order of the values in each array corresponds to the order of batches in the batches array
+          description: The estimated count of recipes (including sub-recipes) that will be created for each batch.
+            The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         recipes_total:
           type: array
           items:
             type: integer
-          description: The total count of recipes (including sub-recipes) within each batch |
+          description: The total count of recipes (including sub-recipes) within each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         recipes_completed:
           type: array
           items:
             type: integer
-          description: The count of completed recipes (including sub-recipes) within each batch |
+          description: The count of completed recipes (including sub-recipes) within each batch.
             The order of the values in each array corresponds to the order of batches in the batches array
           example: [1,2]
         job_metrics:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/job_metrics_array'
-            
+
     batch_post:
       title: Batch Post
       type: object
@@ -680,11 +673,11 @@ components:
           type: object
           properties:
             metrics:
-              $ref: '#/components/schemas/job_metrics_array'
-              description: Contains the top-level and per job metrics fields for each batch in the |
-                chain. This is similar to the metrics in a batch details response, except |
-                that instead of each metric containing a single value, each metric here holds |
-                an array of values. The order of the values in each array corresponds to the |
+              $ref: '#/components/schemas/batch_metrics_array'
+              description: Contains the top-level and per job metrics fields for each batch in the
+                chain. This is similar to the metrics in a batch details response, except
+                that instead of each metric containing a single value, each metric here holds
+                an array of values. The order of the values in each array corresponds to the
                 order of the batches in the *batches* array.
 
     batch_validation_post:
@@ -728,7 +721,7 @@ components:
           description: The recipe type that is associated with the batch
         prev_batch:
           type: object
-          description: Object containing information about the previous batch |
+          description: Object containing information about the previous batch
             (will be omitted if there is no previous batch)
           properties:
             recipe_type_rev:
@@ -736,6 +729,25 @@ components:
               description: The recipe type revision of the previous batch
             diff:
               $ref: '#/components/schemas/recipe_type_diff'
-              description: The recipe graph diff between the batch's recipe type |
-                revision and the previous batch's recipe type revision. The diff |
+              description: The recipe graph diff between the batch's recipe type
+                revision and the previous batch's recipe type revision. The diff
                 explains which recipe jobs will be reprocessed by the new batch.
+      
+    batch_base:
+      title: Batch Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: My Batch
+        description:
+          type: string
+          example: My Batch Description 
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z

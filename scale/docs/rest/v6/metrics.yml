@@ -5,6 +5,8 @@ info:
 paths:
   /metrics:
     get:
+      tags:
+        - Metrics Services
       operationId: _rest_v6_metrics_list
       summary: Metrics List
       description: Returns a list of all metrics types
@@ -29,6 +31,8 @@ paths:
                 $ref: '#/components/schemas/metrics_list'
   /metrics/{name}/:
     get:
+      tags:
+        - Metrics Services
       operationId: _rest_v6_metrics_details
       summary: Metrics Details
       description: Returns a specific metrics type and all its related model information including possible filter choices
@@ -47,6 +51,8 @@ paths:
                 $ref: '#/components/schemas/metrics_type_plus_model'
   /metrics/{name}/plot-data/:
     get:
+      tags:
+        - Metrics Services
       operationId: _rest_v6_metrics_plot
       summary: Metric Plot Data
       description: Returns all the plot values for a metrics type based on optional query parameters
@@ -130,6 +136,7 @@ components:
           items:
             $ref: '#/components/schemas/metrics_type'
           description: List of metrics type objects, with a few basic fields
+
     metrics_type:
       title: Metrics Type
       type: object
@@ -161,6 +168,7 @@ components:
           items:
             $ref: '#/components/schemas/column'
           description: The column definitions that can be used to select the results returned
+
     filter:
       title: Filter
       type: object
@@ -173,6 +181,7 @@ components:
           type: string
           description: The data type of the parameter clients can use for validation (bool, date, datetime, float, int, string, time, int)
           example: string
+
     group:
       title: Group
       type: object
@@ -189,6 +198,7 @@ components:
           type: string
           description: A longer description of the metrics group
           example: Overall counts based on job status
+
     column:
       title: Column
       type: object
@@ -217,6 +227,7 @@ components:
           type: string
           description: The math operation used to aggregate certain types of metrics (avg, max, min, sum...)
           example: sum
+
     metrics_type_plus_model:
       title: Metrics Type and Model
       type: object
@@ -251,6 +262,7 @@ components:
             of the filter parameters described above are fields within the model. The list
             of choices allow clients to restrict filtering to only valid combinations. Each
             choice model is specific to a metrics type and so the actual fields vary.
+
     choice: #TODO: Update to reflect open-ended nature of this field
       title: Choice
       type: object
@@ -258,6 +270,7 @@ components:
         id:
           type: integer
           description: Unique identifier
+
     metrics_plot:
       title: Metrics Plot Data
       type: object
@@ -281,6 +294,7 @@ components:
           items:
             $ref: '#/components/schemas/plot_result'
           description: List of plot results
+
     plot_result:
       title: Plot Result
       type: object

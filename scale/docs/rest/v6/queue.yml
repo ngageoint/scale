@@ -5,48 +5,50 @@ info:
 paths:
   /v6/load/:
     get:
+      tags:
+        - Queue Services
       operationId: _rest_v6_queue_load
       summary: Queue Load
-      description: Returns statistics about the current job load organized by  |
-        job type. Jobs are counted when they are in the PENDING, QUEUED, and |
-        RUNNING states. NOTE: Time range must be within a one month period (31 days).
+      description: "Returns statistics about the current job load organized by
+        job type. Jobs are counted when they are in the PENDING, QUEUED, and
+        RUNNING states. NOTE: Time range must be within a one month period (31 days)."
       parameters:
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: job_type_id
           schema:
             type: integer
-          description: Count only jobs with a given job type identifier. |
-            Duplicate it to filter by multiple values.
-        -in: query
+          description: "Count only jobs with a given job type identifier.
+            Duplicate it to filter by multiple values."
+        - in: query
           name: job_type_name
           schema:
             type: string
-          description: Count only jobs with a given job type name. |
-            Duplicate it to filter by multiple values.
-        -in: query
+          description: "Count only jobs with a given job type name.
+            Duplicate it to filter by multiple values."
+        - in: query
           name: job_type_category
           schema:
             type: string
-          description: Count only jobs with a given job type category. |
-            Duplicate it to filter by multiple values.
-        -in: query
+          description: "Count only jobs with a given job type category.
+            Duplicate it to filter by multiple values."
+        - in: query
           name: job_type_priority
           schema:
             type: integer
-          description: Count only jobs with a given job type priority. |
-            Duplicate it to filter by multiple values.
+          description: "Count only jobs with a given job type priority.
+            Duplicate it to filter by multiple values."
       responses:
         '200':
           description: |-
@@ -57,6 +59,8 @@ paths:
                 $ref: '#/components/schemas/queue_load'
   /v6/queue/status/:
     get:
+      tags:
+        - Queue Services
       operationId: _rest_v6_queue_status
       summary: Queue Status
       description: Returns the current status of the queue by grouping the queued jobs by their types.

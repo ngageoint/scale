@@ -5,6 +5,8 @@ info:
 paths:
   /scheduler:
     get:
+      tags:
+        - Scheduler Services
       operationId: _rest_v6_scheduler_details
       summary: Get Scheduler Details
       description: Returns data for the scheduler
@@ -19,6 +21,8 @@ paths:
           description: The 204 NO CONTENT response indicates that the Scale scheduler is currently
             offline, so there is no status content to provide.
     patch:
+      tags:
+        - Scheduler Services
       operationId: _rest_v6_scheduler_update
       summary: Update Scheduler Details
       description: Update one or more fields for the scheduler

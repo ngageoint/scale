@@ -5,6 +5,8 @@ info:
 paths:
   /ingests:
     get:
+      tags:
+        - Ingest Services
       operationId: _rest_v6_ingest_list
       summary: Ingest List
       description: Returns a list of all ingests
@@ -72,6 +74,8 @@ paths:
                 $ref: '#/components/schemas/ingest_list'
   /ingests/{id}/:
     get:
+      tags:
+        - Ingest Services
       operationId: _rest_v6_ingest_details
       summary: Ingest Details
       description: Returns a specific ingest and all its related model information
@@ -90,6 +94,8 @@ paths:
                 $ref: '#/components/schemas/ingest_details'
   /ingests/status/:
     get:
+      tags:
+        - Ingest Services
       operationId: _rest_v6_ingest_status
       summary: Ingest Status
       description: "Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots.
@@ -159,6 +165,7 @@ components:
           items:
             $ref: '#/components/schemas/ingest_details'
           description: List of ingest objects
+
     ingest_details:
       title: Ingest Details
       type: object
@@ -178,7 +185,7 @@ components:
         status:
           type: string
           description: "The current status of the ingest.
-                        Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]"
+            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]"
           example: INGESTED
         bytes_transferred:
           type: integer
@@ -204,7 +211,6 @@ components:
           example: 1234
         data_type:
           type: array
-          style: simple
           items:
             type: string  
           description: A list of string data type "tags" for the file.
@@ -254,7 +260,7 @@ components:
           format: date-time
           description: When the associated database model was last saved.
           example: 2015-09-10T15:24:53.987Z
-          
+
     scan:
       title: Scan Details
       type: object
@@ -314,7 +320,7 @@ components:
           example: _tmp
       required:
       - type
-      
+
     ingest_file:
       title: File Ingest Rule
       type: object
@@ -329,7 +335,6 @@ components:
           example: "*.txt"
         data_types:
           type: array
-          style: simple
           items:
             type: string  
           description: The data_types field is an optional list of strings. Any file that matches the corresponding file
@@ -400,7 +405,7 @@ components:
       required:
       - type
       - sqs_name
-      
+
     source_file:
       title: Source File
       type: object
@@ -425,7 +430,6 @@ components:
           example: 1234
         data_type:
           type: array
-          style: simple
           items:
             type: string  
           description: A list of string data type "tags" for the file.
@@ -474,7 +478,6 @@ components:
           $ref: './scale_file#/components/schemas/metadata'
         countries:
           type: array
-          style: simple
           items:
             type: string  
           description: A list of zero or more strings with the ISO3 country codes for countries

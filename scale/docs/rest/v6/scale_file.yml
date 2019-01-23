@@ -5,6 +5,8 @@ info:
 paths:
   /ingests:
     get:
+      tags:
+        - Scale File Services
       operationId: _rest_v6_scale_file_list
       summary: Scale File List
       description: Returns a list of all scale files
@@ -157,6 +159,8 @@ paths:
                 $ref: '#/components/schemas/file_list'
   /files/{id}/:
     get:
+      tags:
+        - Scale File Services
       operationId: _rest_v6_file_details
       summary: File Details
       description: Returns a specific file and all its related model information
@@ -175,6 +179,8 @@ paths:
                 $ref: '#/components/schemas/file_details'
   /files/purge-source/:
     post:
+      tags:
+        - Scale File Services
       operationId: _rest_v6_purge_source
       summary: Purge Source File
       description: Removes all records related to the given source file. This includes records for the
@@ -235,7 +241,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: './workspace.yml#/components/schemas/workspace_base'
+          $ref: '#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.
@@ -334,26 +340,26 @@ components:
           description: The task that produced the source file.
           example: my-task
         job:
-          $ref: './job.yml#/components/schemas/job'
+          $ref: '#/components/schemas/job'
         job_exe:
-          $ref: './job.yml#/components/schemas/job_exe'
+          $ref: '#/components/schemas/job_exe'
           example: 2015-09-10T15:24:53.987Z
         job_output:
           type: string
           description: The name of the output from the job related to this file. 
           example: output_name_1
         job_type:
-          $ref: './job_type.yml#/components/schemas/job_type'
+          $ref: '#/components/schemas/job_type'
         recipe:
-          $ref: './recipe.yml#/components/schemas/recipe'
+          $ref: '#/components/schemas/recipe'
         recipe_node:
           type: string
           description: The recipe node that produced this file. 
           example: kml-footprint
         recipe_type:
-          $ref: './recipe_type.yml#/components/schemas/recipe_type'
+          $ref: '#/components/schemas/recipe_type'
         batch:
-          $ref: './batch.yml#/components/schemas/batch'
+          $ref: '#/components/schemas/batch'
         is_superseded:
           type: boolean
           description: Whether this file has been replaced and is now obsolete.
@@ -396,13 +402,12 @@ components:
           propertyName: type
           mapping:
             Geometry: '#/definitions/Geometry'
-  		      Point2D: '#/definitions/Point2D'
+            Point2D: '#/definitions/Point2D'
             Point: '#/definitions/Point'
             LineString: '#/definitions/LineString'
-  		      Polygon: '#/definitions/Polygon'
+            Polygon: '#/definitions/Polygon'
             MultiPoint: '#/definitions/MultiPoint'
-            LineString: '#/definitions/LineString'
-  		      MultiLineString: '#/definitions/MultiLineString'
+            MultiLineString: '#/definitions/MultiLineString'
             MultiPolygon: '#/definitions/MultiPolygon'
             GeometryCollection: '#/definitions/GeometryCollection'
             Feature: '#/definitions/Feature'
@@ -462,7 +467,7 @@ definitions:
       - properties:
           coordinates:
             $ref: '#/definitions/Point2D'
-    
+
   LineString:
     type: object
     description: GeoJSon geometry
@@ -507,7 +512,7 @@ definitions:
             
   MultiLineString:
     type: object
-    description:GeoJSon geometry
+    description: GeoJSon geometry
     externalDocs:
       url: http://geojson.org/geojson-spec.html#id6
     allOf:
@@ -522,7 +527,7 @@ definitions:
       
   MultiPolygon:
     type: object
-    description:GeoJSon geometry
+    description: GeoJSon geometry
     externalDocs:
       url: http://geojson.org/geojson-spec.html#id6
     allOf:
@@ -539,7 +544,7 @@ definitions:
       
   GeometryCollection:
     type: object
-    description:GeoJSon geometry collection
+    description: GeoJSon geometry collection
     required:
      - type
      - geometries
@@ -558,7 +563,7 @@ definitions:
 
   Feature:
     type: object
-    description:GeoJSon Feature
+    description: GeoJSon Feature
     required:
      - type
      - properties
@@ -591,22 +596,21 @@ definitions:
           propertyName: type
           mapping:
             Geometry: '#/definitions/Geometry'
-  		      Point2D: '#/definitions/Point2D'
+            Point2D: '#/definitions/Point2D'
             Point: '#/definitions/Point'
-            LineString: '#/definitions/LineString'
-  		      Polygon: '#/definitions/Polygon'
+            Polygon: '#/definitions/Polygon'
             MultiPoint: '#/definitions/MultiPoint'
             LineString: '#/definitions/LineString'
-  		      MultiLineString: '#/definitions/MultiLineString'
+            MultiLineString: '#/definitions/MultiLineString'
             MultiPolygon: '#/definitions/MultiPolygon'
             GeometryCollection: '#/definitions/GeometryCollection'
 
   FeatureCollection:
     type: object
-    description:GeoJSon FeatureCollection
+    description: GeoJSon FeatureCollection
     required:
-     - type
-     - features
+      - type
+      - features
     externalDocs:
       url: http://geojson.org/geojson-spec.html#geometrycollection
     properties:
