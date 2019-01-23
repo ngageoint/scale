@@ -46,7 +46,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_list'
     post:
@@ -56,7 +56,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/job_type_post'
       responses:
@@ -68,7 +68,7 @@ paths:
                 type: string
               description: The url of the created/edited job type
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_detail'
   /job-types/{name}/:
@@ -102,7 +102,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_versions'
   /job-types/{name}/{version}/:
@@ -125,7 +125,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_detail'
     patch:
@@ -135,7 +135,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/job_type_update'
       parameters:
@@ -183,7 +183,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_revisions'
   /job-types/{name}/{version}/revisions/{revision_num}/:
@@ -211,7 +211,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_revision_detail'
 
@@ -223,14 +223,14 @@ paths:
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/job_type_validation_post'
       responses:
         '200':
           description: The 200 OK response indicates a successful event
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/job_type_validation'
 components:
@@ -241,7 +241,7 @@ components:
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -262,6 +262,9 @@ components:
       title: Job Type Name
       type: object
       properties:
+        id:
+          type: integer
+          example: 3
         name:
           type: string
           example: my-job
@@ -270,15 +273,15 @@ components:
           example: My Job
         description:
           type: string
-          example: My Job Description 
+          example: My Job Description
         icon_code:
           type: string
-          example: f186 
+          example: f186
         versions:
           type: array
           style: simple
           items:
-            type: string 
+            type: string
           example: ["1.1.0"]
         latest_version:
           type: string
@@ -298,17 +301,17 @@ components:
           example: My Job
         description:
           type: string
-          example: My Job Description 
+          example: My Job Description
         icon_code:
           type: string
-          example: f186 
+          example: f186
     job_type_versions:
       title: Job Type Versions
       type: object
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -343,10 +346,10 @@ components:
           example: My Job
         description:
           type: string
-          example: My Job Type Description 
+          example: My Job Type Description
         icon_code:
           type: string
-          example: f186 
+          example: f186
         is_active:
           type: boolean
           example: true
@@ -390,7 +393,7 @@ components:
       allOf:
         - ref: '#/components/schemas/job_type'
         - type: object
-          properties: 
+          properties:
             manifest:
               $ref: '../../../job/seed/schema/seed.manifest.schema.json'
             configuration:
@@ -472,14 +475,14 @@ components:
             is the unique name of the workspace to use.
           additionalPropterties:
             type: string
-            
+
     job_type_revisions:
       title: Job Type Revision List
       type: object
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -502,7 +505,7 @@ components:
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
     job_type_revision_base:
       title: Job Type Revision Base
@@ -510,7 +513,7 @@ components:
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         job_type:
           $ref: '#/components/schemas/model'
@@ -522,7 +525,7 @@ components:
       allOf:
         - ref: '#/components/schemas/job_type_revision_base'
         - type: object
-          properties:   
+          properties:
           job_type:
             $ref: '#/components/schemas/job_type_base'
           docker_image:
@@ -539,7 +542,7 @@ components:
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         job_type:
           $ref: '#/components/schemas/job_type_base'
@@ -556,14 +559,14 @@ components:
           example: 2015-09-10T15:24:53.503Z
         manifest:
          $ref: '../../../job/seed/schema/seed.manifest.schema.json'
-          
+
     job_type_update:
       title: Job Type Update
       type: object
       properties:
         icon_code:
           type: string
-          example: f186 
+          example: f186
         is_active:
           type: boolean
           example: true
@@ -575,14 +578,14 @@ components:
           example: 1
         configuration:
           $ref: '#/components/schemas/job_type_config'
-      
+
     job_type_post:
       title: Job Type Create/Edit
       type: object
       properties:
         icon_code:
           type: string
-          example: f186 
+          example: f186
         max_scheduled:
           type: integer
           example: 1
@@ -600,18 +603,18 @@ components:
       required:
       - docker_image
       - manifest
-      
+
     job_type_validation_post:
       title: Job Type Validation Post
       type: object
-      properties: 
+      properties:
         manifest:
           $ref: '../../../job/seed/schema/seed.manifest.schema.json'
         configuration:
           $ref: '#/components/schemas/job_type_config'
       required:
       - manifest
-      
+
     job_type_validation:
       title: Job Type Validation
       type: object
