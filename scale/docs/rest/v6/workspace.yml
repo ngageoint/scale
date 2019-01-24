@@ -236,9 +236,9 @@ components:
           $ref: '#/components/schemas/workspace_config'
 
     workspace_details:
+      title: Workspace Details
       allOf:
         - $ref: '#/components/schemas/workspace_base'
-        - title: Workspace Details
         - type: object
           properties: 
             configuration:
