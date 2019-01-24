@@ -37,6 +37,9 @@ CONTAINER_PROCESS_OWNER = os.getenv('CONTAINER_PROCESS_OWNER', 'nobody')
 # By default, the accepted resources match reservations to the MESOS_ROLE
 ACCEPTED_RESOURCE_ROLE = os.getenv('ACCEPTED_RESOURCE_ROLE', MESOS_ROLE)
 
+# By default, all API calls require authentication.
+PUBLIC_READ_API = os.getenv('PUBLIC_READ_API', False)
+
 # Placeholder for service secret that will be overridden in local_settings_docker
 SERVICE_SECRET = None
 
@@ -111,6 +114,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
+    'rest_framework.authtoken',
     # Scale apps
     'batch',
     'cli',
@@ -166,6 +170,13 @@ TEMPLATES = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES':
+        ('rest_framework.permissions.AllowAny',) if PUBLIC_READ_API else ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
     ),

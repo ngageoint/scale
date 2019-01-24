@@ -241,6 +241,7 @@ below for reference.
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
+| PUBLIC_READ_API             | 'false'                         | Public API access for stateless calls      |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
 | DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
