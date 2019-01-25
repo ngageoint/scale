@@ -151,3 +151,38 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
         self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
         self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)
+        
+    def test_successful_recipe_kickoff(self):
+        """Tests successfully producing an ingest that immediately calls a recipe"""
+                
+        jt1 = job_test_utils.create_seed_job_type()
+        jt2 = job_test_utils.create_seed_job_type()
+        
+        
+        recipe_type_def = {'version': '6',
+                           'input': {'files': [{'name': 'INPUT_IMAGE', 
+                                                'media_types': ['image/tiff'], 
+                                                'required': True,
+                                                'multiple': True}],
+                                    'json': []},
+                           'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
+                                                              'job_type_version': jt1.version,
+                                                              'job_type_revision': 1}},
+                                     'node_b': {'dependencies': [{'name': 'node_a'}],
+                                                'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_a',
+                                                                          'output': 'OUTPUT_IMAGE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt2.name,
+                                                              'job_type_version': jt2.version,
+                                                              'job_type_revision': 1}}}}
+
+        recipe = recipe_test_utils.create_recipe_type_v6(definition=recipe_type_def)
+        
+        # Call method to test
+        IngestTriggerHandler().kick_off_recipe(self.source_file, now(), recipe.name)
+        queue_1 = Queue.objects.get(job_type=job_type_2.id)
+        job = Job.objects.get(id=queue_1.job_id)
+        
+        self.assertEqual(job.input['input_data'][0]['name'], 'input_file')
+        self.assertEqual(job.input['input_data'][0]['file_id'], self.source_file.id)

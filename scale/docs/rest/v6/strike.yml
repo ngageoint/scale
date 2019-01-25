@@ -226,7 +226,10 @@ components:
           items:
             $ref: '#/components/schemas/ingest_file'
           description: List of ingest objects
-          
+        recipe_type:
+          type: string
+          description: The recipe name the strike will kick off when completed.
+
     validation:
       title: Validation
       type: object

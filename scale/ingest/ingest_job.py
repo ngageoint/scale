@@ -109,7 +109,10 @@ def _complete_ingest(ingest, status):
             ingest.ingest_ended = now()
         ingest.save()
         if status == 'INGESTED':
-            IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
+            if ingest.recipe_name:
+                IngestTriggerHandler().kick_off_recipe(ingest.source_file, ingest.ingest_ended, ingest.recipe_name)
+            else:
+                IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
 
 def _delete_file(file_path):

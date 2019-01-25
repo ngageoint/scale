@@ -133,7 +133,8 @@ Request: POST http://.../v6/strikes/
             }, 
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
-            }] 
+            }],
+            "recipe": 42
         } 
     } 
 
@@ -171,7 +172,8 @@ Location http://.../v6/strikes/105/
             }, 
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
-            }] 
+            }],
+            "recipe": 42
         }
     } 
 
@@ -441,7 +443,8 @@ A strike configuration JSON describes a set of configuration settings that affec
           "new_workspace" : "workspace_name",
           "new_file_path" : "wksp/path"
         }
-      ]
+      ],
+      "recipe_type": "my-recipe"
     }
     
 **Example S3 interface:**
@@ -469,7 +472,8 @@ A strike configuration JSON describes a set of configuration settings that affec
                 "new_workspace": "my-new-workspace",
                 "new_file_path": "/new/file/path"
             }
-        ]
+        ],
+        "recipe_type": "my-recipe"
     }
 
 +-----------------------------------------------------------------------------------------------------------------------------+
@@ -539,4 +543,6 @@ A strike configuration JSON describes a set of configuration settings that affec
 |                            |                |          | additional and dynamically named directories, for the current year,|
 |                            |                |          | month, and day, will be appended to the new_file_path value        |
 |                            |                |          | automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).|
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| recipe_type                | string         | Required | Specifies the recipe name the Strike will kick off when complete.  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

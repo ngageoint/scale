@@ -8,6 +8,7 @@ import re
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from data.filter.json.filter_v6 import DATA_FILTER_SCHEMA
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
@@ -22,7 +23,7 @@ SCHEMA_VERSION = '6'
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',
-    'required': ['workspace', 'monitor', 'files_to_ingest'],
+    'required': ['workspace', 'monitor', 'files_to_ingest', 'recipe_type'],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -48,9 +49,40 @@ STRIKE_CONFIGURATION_SCHEMA = {
             'type': 'array',
             'minItems': 1,
             'items': {'$ref': '#/definitions/file_item'}
-        }
+        },
+        'recipe': {
+            'type': 'object',
+            'description': 'The recipe name and input conditions to kick off when the ingest completes',
+            'required': ['name', 'conditions'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'description': 'The name of the recipe to kick off',
+                },
+                'conditions': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/recipe_condition'
+                    },
+                },
+            },
+        },
     },
     'definitions': {
+        'recipe_condition': {
+            'type': 'object',
+            'description': 'Maps the recipe inputs to specfic conditions',
+            'required': ['input_name', 'filter'],
+            'additionalProperties': False,
+            'properties': {
+                'input_name': {
+                    'type': 'string',
+                    'description': 'The name of the input',
+                },
+                'filter': DATA_FILTER_SCHEMA,
+            },
+        },
         'file_item': {
             'type': 'object',
             'required': ['filename_regex'],

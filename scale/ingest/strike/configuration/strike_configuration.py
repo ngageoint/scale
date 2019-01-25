@@ -12,6 +12,7 @@ from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.monitors import factory
+from recipe.models import RecipeType
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
@@ -65,6 +66,25 @@ class StrikeConfiguration(object):
         """
 
         return self.configuration['workspace']
+        
+    def get_recipe_type(self):
+        """Returns the recipe type for this Strike configuration
+        
+        :returns: The recipe type name
+        :rtype: string
+        """
+        
+        return self.configuration['recipe']['recipe_type']
+    
+    # TODO
+    def get_rule_configuration(self):
+        """Returns the recipe rule configuration
+        
+        :returns: The Recipe rule configuration
+        :rtype:
+        """
+        
+        return None
 
     def load_monitor_configuration(self, monitor):
         """Loads the configuration into the given monitor
@@ -100,6 +120,11 @@ class StrikeConfiguration(object):
         monitor_type = self.configuration['monitor']['type']
         if monitor_type not in factory.get_monitor_types():
             raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
+            
+        recipe_name = self.configuration['recipe']
+        if RecipeType.objects.filter(name=recipe_name).count() == 0:
+            msg = 'Recipe Type %s does not exist'
+            raise InvalidStrikeConfiguration(msg % recipe_name)
 
         monitored_workspace_name = self.configuration['workspace']
         workspace_names = {monitored_workspace_name}

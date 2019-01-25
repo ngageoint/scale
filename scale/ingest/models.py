@@ -76,13 +76,16 @@ class IngestStatus(object):
 class IngestManager(models.Manager):
     """Provides additional methods for handling ingests."""
 
-    def create_ingest(self, file_name, workspace, scan_id=None, strike_id=None):
+    # TODO when replace triggers, make recipe a required field
+    def create_ingest(self, file_name, workspace, recipe=None, scan_id=None, strike_id=None):
         """Creates a new ingest for the given file name. The database save is the caller's responsibility.
 
         :param file_name: The name of the file being ingested
         :type file_name: string
         :param workspace:
         :type workspace: string
+        :param recipe: The name of the recipe to kick off after ingest
+        :type recipe: string
         :param scan_id:
         :type scan_id: int
         :param strike_id:
@@ -97,7 +100,9 @@ class IngestManager(models.Manager):
             ingest.scan_id = scan_id
         if strike_id:
             ingest.strike_id = strike_id
-
+        if recipe:
+            ingest.recipe = recipe
+        
         ingest.file_name = file_name
         ingest.media_type = get_media_type(ingest.file_name)
         ingest.workspace = workspace
@@ -517,6 +522,8 @@ class Ingest(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+    
+    recipe_name = models.CharField(max_length=1000, blank=True)
 
     objects = IngestManager()
 

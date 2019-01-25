@@ -210,6 +210,7 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
         definition = {
             'version': '6',
             'input': {},
+            'input_condition': {},
             'nodes': {}}
 
 
