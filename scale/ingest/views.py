@@ -6,7 +6,9 @@ import logging
 
 import rest_framework.status as status
 from django.http.response import Http404
+from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -174,6 +176,8 @@ class IngestsStatusView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+
+@permission_classes((IsAdminUser, ))
 class ScansProcessView(GenericAPIView):
     """This view is the endpoint for launching a scan execution to ingest"""
     queryset = Scan.objects.all()
@@ -488,6 +492,7 @@ class StrikesView(ListCreateAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+    @permission_classes((IsAdminUser,))
     def create(self, request):
         """Determine api version and call specific method
 
@@ -584,6 +589,7 @@ class StrikeDetailsView(GenericAPIView):
         serializer = self.get_serializer(strike)
         return Response(serializer.data)
 
+    @permission_classes((IsAdminUser,))
     def patch(self, request, strike_id):
         """Determine api version and call specific method
 

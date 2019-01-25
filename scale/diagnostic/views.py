@@ -4,8 +4,10 @@ import logging
 
 from django.http.response import Http404
 import rest_framework.status as status
+from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from data.data.data import Data
@@ -20,6 +22,7 @@ from util.rest import BadParameter
 logger = logging.getLogger(__name__)
 
 
+@permission_classes((IsAdminUser, ))
 class QueueScaleBakeView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Bake jobs."""
     parser_classes = (JSONParser,)
@@ -81,6 +84,7 @@ class QueueScaleBakeView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
+@permission_classes((IsAdminUser, ))
 class QueueScaleCasinoView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Casino recipes."""
     parser_classes = (JSONParser,)
@@ -142,6 +146,7 @@ class QueueScaleCasinoView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
+@permission_classes((IsAdminUser, ))
 class QueueScaleHelloView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Hello jobs."""
     parser_classes = (JSONParser,)
@@ -256,6 +261,7 @@ class QueueScaleCountView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
+@permission_classes((IsAdminUser, ))
 class QueueScaleRouletteView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Roulette jobs."""
     parser_classes = (JSONParser,)
