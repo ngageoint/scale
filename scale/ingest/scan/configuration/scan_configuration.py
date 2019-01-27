@@ -51,6 +51,8 @@ class ScanConfiguration(object):
         
         self.workspace = ''
         
+        self.recipe = {}
+        
         self.config_dict = {}
 
     def get_scanner(self):

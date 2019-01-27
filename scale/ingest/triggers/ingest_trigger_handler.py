@@ -6,6 +6,9 @@ import logging
 from django.db import transaction
 
 from ingest.triggers.configuration.ingest_trigger_rule import IngestTriggerRuleConfiguration
+from ingest.handlers.recipe_handler import RecipeHandler
+from ingest.handlers.recipe_rule import RecipeRule
+from ingest.models import IngestEvent
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
@@ -83,50 +86,48 @@ class IngestTriggerHandler(TriggerRuleHandler):
 
         if not any_rules:
             logger.info('No rules triggered')
-            
+
     @transaction.atomic
-    def kick_off_recipe(self, source_file, when, recipe_name):
-        """Processes the given ingested source file by kicking off its recipe. 
+    def kick_off_recipe_from_ingest(self, strike, source_file, source_recipe_config, when):
+        """Processes the given ingested source file by kicking off its recipe.
         All database changes are made in an atomic transaction.
 
+        :param strike: The strike that triggered the ingest
+        :type strike: :class:`ingest.models.Strike`
         :param source_file: The source file that was ingested
         :type source_file: :class:`source.models.SourceFile`
+        :param soruce_recipe_config:
+        :type: source_recipe_config: dict
         :param when: When the source file was ingested
         :type when: :class:`datetime.datetime`
-        :param recipe_name: The name of recipe to start
-        :type recipe_name: string
         """
-        
-        recipe_type = RecipeType.objects.get(name=recipe_name)
-        recipe_input_interface = recipe_type.get_definition().input_interface
-        
-        # TODO map input to input_name 
-        for file in recipe_input_interface['files']:
-            if file['media_types'] and source_file.media_type in file['media_types':
-                input_name = file['name']
-                break
-        
-        
-        
-        
-        # Get the first node in the recipe
-        
-        # get the nodes condition
-        
+
+        # Create the recipe handler associated with the ingest strike/scan
+        recipe_name = source_recipe_config['name']
+        handler = RecipeHandler(source_recipe_config['name'])
+        for condition in source_recipe_config['conditions']:
+            media_types = condition['media_types'] if 'media_types' in condition else None
+            data_types = condition['data_types'] if 'data_types' in condition else None
+            # media_types = condition['any_data_types'] if 'media_types' in condition else None
+            not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
+            handler.add_rule(RecipeRule(condition['input_name'], media_types, data_types, not_data_types))
+
         # MATCH INPUT TO INPUT NAME
+        input_rule = handler.rule_matches(source_file)
+        if not input_rule:
+            raise Exception('No recipe input data matching source file')
+
         recipe_data = RecipeData({})
-        input_name = None
-        recipe_data.add_file_input(input_name, source_file)
-        # recipe_definition = recipe_object.get_definition().get_definition()
-        
-        if 
-        rule = None
-        
-        event = self._create_recipe_trigger_event(source_file, rule, when)
-        recipe_config = None
-        
+        recipe_data.add_file_input(input_rule.input_name, source_file.id)
+
+        # need to do?
+        event = self._create_ingest_event(strike, source_file, None, when)
+        # recipe_config = None
         # logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-        recipe = Queue.objects.queue_new_recipe_v6(recipe_type, recipeData.get_data(), event, recipe_config=configuration)
+        # recipe_type =
+
+        import pdb; pdb.set_trace()
+        Queue.objects.queue_new_recipe_ingest_v6(RecipeType.objects.get(name=recipe_name), recipe_data._new_data, event)
 
     def _create_ingest_trigger_event(self, source_file, trigger_rule, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and trigger rule
@@ -146,9 +147,11 @@ class IngestTriggerHandler(TriggerRuleHandler):
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
         return TriggerEvent.objects.create_trigger_event(INGEST_TYPE, trigger_rule, description, when)
 
-    def _create_recipe_trigger_event(self, source_file, rule, when):
+    def _create_ingest_event(self, strike, source_file, rule, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and recipe type
-        
+
+        :param strike: The strike that triggered the ingest
+        :type strike: :class:`ingest.models.Strike`
         :param source_file: The source file that was ingested
         :type source_file: :class:`source.models.SourceFile`
         :param rule: The rule that triggered the event
@@ -158,6 +161,6 @@ class IngestTriggerHandler(TriggerRuleHandler):
         :returns: The new trigger event
         :rtype: :class:`trigger.models.TriggerEvent`
         """
-        
+
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
-        return TriggerEvent.objects.create_trigger_event(RECIPE_TYPE, rule, description, when)
+        return IngestEvent.objects.create_strike_ingest_event(strike, description, when)

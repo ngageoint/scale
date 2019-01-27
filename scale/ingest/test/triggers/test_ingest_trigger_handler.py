@@ -8,6 +8,8 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from ingest.models import Strike
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
 from job.models import Job
 from queue.models import Queue
@@ -15,6 +17,7 @@ from storage.models import ScaleFile
 
 
 class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
+    fixtures = ['ingest_job_types.json']
     def setUp(self):
         django.setup()
 
@@ -151,17 +154,20 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
         self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
         self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)
-        
+
     def test_successful_recipe_kickoff(self):
         """Tests successfully producing an ingest that immediately calls a recipe"""
-                
+
         jt1 = job_test_utils.create_seed_job_type()
         jt2 = job_test_utils.create_seed_job_type()
-        
-        
+
+        source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
+                                               media_type='image/png', file_size=10, data_type='image_type',
+                                                    file_path='the_path', workspace=self.workspace)
+
         recipe_type_def = {'version': '6',
-                           'input': {'files': [{'name': 'INPUT_IMAGE', 
-                                                'media_types': ['image/tiff'], 
+                           'input': {'files': [{'name': 'INPUT_IMAGE',
+                                                'media_types': ['image/png'],
                                                 'required': True,
                                                 'multiple': True}],
                                     'json': []},
@@ -177,12 +183,48 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_version': jt2.version,
                                                               'job_type_revision': 1}}}}
 
-        recipe = recipe_test_utils.create_recipe_type_v6(definition=recipe_type_def)
-        
+        recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
+
+        strike_config = {
+            'version': '6',
+            'workspace': self.workspace.name,
+            'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': 'input_file',
+                'data_types': ['image_type'],
+                'new_workspace': self.workspace.name,
+                'new_file_path': 'my/path'
+            }],
+            'recipe': {
+                'name': 'test-recipe',
+                'conditions':[{
+                    'input_name': 'INPUT_IMAGE',
+                    'media_types': ['image/png'],
+                    'data_types': ['image_type'],
+                    'not_data_types': [],
+                }],
+            },
+        }
+
+        config = StrikeConfigurationV6(strike_config).get_configuration()
+        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
+
+        ingest_recipe_config = {
+            'name': recipe.name,
+            'conditions': [{
+               'input_name': 'INPUT_IMAGE',
+               'media_types': ['image/png'],
+               'data_types': ['image_type'],
+               'not_data_types': [],
+            }],
+        }
+
         # Call method to test
-        IngestTriggerHandler().kick_off_recipe(self.source_file, now(), recipe.name)
-        queue_1 = Queue.objects.get(job_type=job_type_2.id)
+        IngestTriggerHandler().kick_off_recipe_from_ingest(strike, source_file, ingest_recipe_config, now())
+        import pdb; pdb.set_trace()
+
+        # Verify first job in the recipe is queued
+        queue_1 = Queue.objects.get(job_type=jt1.id)
         job = Job.objects.get(id=queue_1.job_id)
-        
-        self.assertEqual(job.input['input_data'][0]['name'], 'input_file')
+        self.assertEqual(job.input['input_data'][0]['name'], 'INPUT_IMAGE')
         self.assertEqual(job.input['input_data'][0]['file_id'], self.source_file.id)

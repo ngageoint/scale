@@ -210,9 +210,7 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
         definition = {
             'version': '6',
             'input': {},
-            'input_condition': {},
             'nodes': {}}
-
 
     recipe_type = RecipeType()
     recipe_type.name = name
@@ -527,13 +525,13 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
         process_input = recipe_model.id and recipe_job.process_input
         if job.has_input() or process_input:
             process_input_job_ids.append(job.id)
-            
+
     process_job_inputs(process_input_job_ids)
     update_recipe_metrics([recipe_model.id])
 
 def process_job_inputs(process_input_job_ids):
     """Mimics effect of create_process_job_input_messages for unit testing"""
-    
+
     queued_jobs = []
     for job_id in process_input_job_ids:
         job = Job.objects.get_job_with_interfaces(job_id)
@@ -558,9 +556,9 @@ def process_job_inputs(process_input_job_ids):
         # queue the job
         if job.num_exes == 0:
             queued_jobs.append(QueuedJob(job.id, 0))
-            
+
     queue_jobs(queued_jobs)
-            
+
 def generate_job_input_data_from_recipe(job):
     """Generates the job's input data from its recipe dependencies and validates and sets the input data on the job
 
@@ -592,7 +590,7 @@ def generate_job_input_data_from_recipe(job):
 
 def queue_jobs(queued_jobs, requeue=False, priority=None):
     """Mimics effect of create_queued_jobs_messages for unit testing"""
-    
+
     job_ids = []
     for queued_job in queued_jobs:
         job_ids.append(queued_job.job_id)
@@ -620,7 +618,7 @@ def queue_jobs(queued_jobs, requeue=False, priority=None):
 
 def update_recipe_metrics(recipe_ids=[], job_ids=None):
     """Mimics effects of create_update_recipe_metrics_messages methods for unit testing"""
-    
+
     if job_ids:
         recipe_ids.extend(Recipe.objects.get_recipe_ids_for_jobs(job_ids))
     if recipe_ids:

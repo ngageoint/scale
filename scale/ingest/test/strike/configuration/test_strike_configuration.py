@@ -6,6 +6,7 @@ import django
 from django.test import TestCase
 
 import storage.test.utils as storage_test_utils
+import recipe.test.utils as recipe_test_utils
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
@@ -21,7 +22,6 @@ class TestStrikeConfiguration(TestCase):
         self.workspace = storage_test_utils.create_workspace()
         self.new_workspace = storage_test_utils.create_workspace()
         self.inactive_workspace = storage_test_utils.create_workspace(is_active=False)
-
 
     def test_validate_bad_monitor_type(self):
         """Tests calling StrikeConfiguration.validate() with a bad monitor type"""
@@ -95,7 +95,7 @@ class TestStrikeConfiguration(TestCase):
 
     def test_validate_successful_all(self):
         """Tests calling StrikeConfiguration.validate() successfully with all information"""
-
+        recipe = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
         config = {
             'workspace': self.workspace.name,
             'monitor': {
@@ -108,6 +108,15 @@ class TestStrikeConfiguration(TestCase):
                 'new_file_path': os.path.join('my', 'path'),
                 'new_workspace': self.new_workspace.name,
             }],
+            'recipe': {
+                'name': recipe.name,
+                'conditions': [{
+                    'input_name':'INPUT_IMAGE',
+                    'media_types': ['image/png'],
+                    'data_types': ['type1', 'type2'],
+                    'not_data_types': [],
+                }],
+            },
         }
 
         # No exception is success

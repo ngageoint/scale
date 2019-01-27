@@ -21,7 +21,7 @@ SCHEMA_VERSION = '6'
 
 SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
-    'required': ['workspace', 'scanner', 'files_to_ingest'],
+    'required': ['workspace', 'scanner', 'files_to_ingest', 'recipe'],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -51,8 +51,59 @@ SCAN_CONFIGURATION_SCHEMA = {
         'recursive': {
             'type': 'boolean'
         },
+        'recipe': {
+            'type': 'object',
+            'description': 'The recipe name and input conditions to kick off when the ingest completes',
+            'required': ['name', 'conditions'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'description': 'The name of the recipe to kick off',
+                },
+                'conditions': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/recipe_condition'
+                    },
+                },
+            },
+        },
     },
     'definitions': {
+        'recipe_condition': {
+            'type': 'object',
+            'description': 'Maps the recipe inputs to specfic conditions',
+            'required': ['input_name', 'filter'],
+            'additionalProperties': False,
+            'properties': {
+                'input_name': {
+                    'type': 'string',
+                    'description': 'The name of the input',
+                },
+                'media_types': {
+                    'description': 'Media types to match',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string'
+                    },
+                },
+                'data_types': {
+                    'description': 'Data types to match',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    },
+                },
+                'not_data_types': {
+                    'description': 'Data types to not match',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    },
+                },
+            },
+        },
         'file_item': {
             'type': 'object',
             'required': ['filename_regex'],
@@ -161,6 +212,7 @@ class ScanConfigurationV6(object):
         config.recursive        = self._configuration['recursive']
         config.file_handler     = self._file_handler
         config.workspace        = self._configuration['workspace']
+        config.recipe           = self._configuration['recipe']
 
         return config
         

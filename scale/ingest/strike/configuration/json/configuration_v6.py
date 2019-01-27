@@ -8,9 +8,10 @@ import re
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from data.filter.json.filter_v6 import DATA_FILTER_SCHEMA
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
+from ingest.handlers.recipe_handler import RecipeHandler
+from ingest.handlers.recipe_rule import RecipeRule
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_1_0 import StrikeConfigurationV1
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
@@ -23,7 +24,7 @@ SCHEMA_VERSION = '6'
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',
-    'required': ['workspace', 'monitor', 'files_to_ingest', 'recipe_type'],
+    'required': ['workspace', 'monitor', 'files_to_ingest'],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -80,7 +81,27 @@ STRIKE_CONFIGURATION_SCHEMA = {
                     'type': 'string',
                     'description': 'The name of the input',
                 },
-                'filter': DATA_FILTER_SCHEMA,
+                'media_types': {
+                    'description': 'Media types to match',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string'
+                    },
+                },
+                'data_types': {
+                    'description': 'Data types to match',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    },
+                },
+                'not_data_types': {
+                    'description': 'Data types to not match',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    },
+                },
             },
         },
         'file_item': {
@@ -130,7 +151,7 @@ class StrikeConfigurationV6(object):
         # Convert old versions
         if 'version' in self._configuration and self._configuration['version'] == '1.0':
             self._configuration = self._convert_schema(configuration)
-            
+
         if 'version' in self._configuration and self._configuration['version'] == '2.0':
             self._configuration['version'] = '6'
 
@@ -164,6 +185,16 @@ class StrikeConfigurationV6(object):
             rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
 
+        self._recipe_handler = RecipeHandler()
+        if 'recipe' in self._configuration and 'name' in self._configuration['recipe']:
+            self._recipe_handler.recipe_name =self._configuration['recipe']['name']
+            for condition in self._configuration['recipe']['conditions']:
+                input_name = condition['input_name']
+                media_types = condition['media_types'] if 'media_types' in condition else None
+                data_types = condition['data_types'] if 'data_types' in condition else None
+                not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
+                self._recipe_handler.add_rule(RecipeRule(input_name, media_types, data_types, not_data_types))
+
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
 
@@ -172,7 +203,7 @@ class StrikeConfigurationV6(object):
         """
 
         return self._configuration
-        
+
     def get_configuration(self):
         """Returns the strike configuration represented by this JSON
 
@@ -181,9 +212,10 @@ class StrikeConfigurationV6(object):
         """
 
         config = StrikeConfiguration()
-        
+
         config.configuration    = self._configuration
         config.file_handler     = self._file_handler
+        config.recipe_handler   = self._recipe_handler
 
         return config
 
@@ -239,3 +271,10 @@ class StrikeConfigurationV6(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
+
+        # TODO for v6 when strike recipe config is mandatory
+        # if 'recipe' not in self._configuration:
+        #     self._configuration['recipe'] = {
+        #         'recipe_name': '',
+        #         'conditions': []
+        #     }
