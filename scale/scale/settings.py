@@ -14,6 +14,10 @@ import sys
 
 import dj_database_url
 
+
+def get_env_boolean(variable_name, default=False):
+    return os.getenv(variable_name, 'false' if False else 'true').lower() in ('yes', 'true', 't', '1')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -38,7 +42,7 @@ CONTAINER_PROCESS_OWNER = os.getenv('CONTAINER_PROCESS_OWNER', 'nobody')
 ACCEPTED_RESOURCE_ROLE = os.getenv('ACCEPTED_RESOURCE_ROLE', MESOS_ROLE)
 
 # By default, all API calls require authentication.
-PUBLIC_READ_API = os.getenv('PUBLIC_READ_API', False)
+PUBLIC_READ_API = get_env_boolean('PUBLIC_READ_API')
 
 # Placeholder for service secret that will be overridden in local_settings_docker
 SERVICE_SECRET = None

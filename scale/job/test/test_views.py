@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import copy
 import datetime
 import json
+import os
 import time
 
 import django
@@ -11,6 +12,9 @@ from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
+from rest_framework.test import APIClient
+from rest_framework.settings import api_settings
+from rest_framework.permissions import AllowAny
 
 import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
@@ -26,7 +30,40 @@ from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
 from recipe.models import RecipeType
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
-import util.rest as rest_util
+
+
+class TestGetAuthDisabledJobsView(TestCase):
+
+    api = 'v6'
+
+    def setUp(self):
+        os.environ['PUBLIC_READ_API'] = 'true'
+        django.setup()
+
+        self.client = APIClient()
+
+    def test_successful_on_get(self):
+        """Tests successfully retrieving jobs without authentication."""
+
+        url = '/%s/jobs/' % self.api
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+    def test_unathenticated_on_post(self):
+        """Tests failure when posting to the jobs view without authentication."""
+        url = '/%s/jobs/' % self.api
+
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_success_on_post(self):
+        """Tests failure when posting to the jobs view without authentication."""
+        url = '/%s/jobs/' % self.api
+
+        self.client.login(username='test', password='pass')
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class TestJobsViewV6(TestCase):
