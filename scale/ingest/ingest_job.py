@@ -110,9 +110,7 @@ def _complete_ingest(ingest, status):
         ingest.save()
         if status == 'INGESTED':
             if ingest.recipe_name:
-                IngestTriggerHandler().kick_off_recipe_from_ingest(ingest.strike, ingest.source_file,
-                    Ingest.objects.get_recipe_source_config(ingest.id),
-                    ingest.ingest_ended)
+                IngestTriggerHandler().kick_off_recipe_from_ingest(ingest.get_ingest_source_event(), ingest.source_file, ingest.ingest_ended)
             else:
                 IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 

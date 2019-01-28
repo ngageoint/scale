@@ -74,7 +74,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
         'recipe_condition': {
             'type': 'object',
             'description': 'Maps the recipe inputs to specfic conditions',
-            'required': ['input_name', 'filter'],
+            'required': ['input_name', 'media_types', 'data_types', 'not_data_types'],
             'additionalProperties': False,
             'properties': {
                 'input_name': {
@@ -275,6 +275,6 @@ class StrikeConfigurationV6(object):
         # TODO for v6 when strike recipe config is mandatory
         # if 'recipe' not in self._configuration:
         #     self._configuration['recipe'] = {
-        #         'recipe_name': '',
+        #         'name': '',
         #         'conditions': []
         #     }

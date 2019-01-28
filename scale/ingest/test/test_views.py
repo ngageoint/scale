@@ -19,7 +19,7 @@ from ingest.strike.configuration.json.configuration_v6 import StrikeConfiguratio
 
 
 class TestIngestsViewV5(TestCase):
-    
+
     version = 'v5'
     fixtures = ['ingest_job_types.json']
 
@@ -85,7 +85,7 @@ class TestIngestsViewV5(TestCase):
         self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
 class TestIngestsViewV6(TestCase):
-    
+
     version = 'v6'
     fixtures = ['ingest_job_types.json']
 
@@ -193,7 +193,7 @@ class TestIngestDetailsViewV5(TestCase):
         url = '/%s/ingests/missing_file.txt/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
 class TestIngestDetailsViewV6(TestCase):
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -412,7 +412,7 @@ class TestIngestStatusViewV6(TestCase):
 
 class TestScansViewV5(TestCase):
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -476,7 +476,7 @@ class TestScansViewV5(TestCase):
 
 class TestScansViewV6(TestCase):
     api = 'v6'
-    
+
     def setUp(self):
         django.setup()
 
@@ -720,9 +720,9 @@ class TestScanCreateViewV6(TestCase):
         self.assertDictEqual(result['configuration'], scans[0].configuration)
 
 class TestScanDetailsViewV5(TestCase):
-    
+
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -776,7 +776,7 @@ class TestScanDetailsViewV5(TestCase):
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, 'Title EDIT')
         self.assertEqual(scan.description, 'Description EDIT')
-        
+
     def test_edit_not_found(self):
         """Tests editing non-existent Scan process"""
 
@@ -820,7 +820,7 @@ class TestScanDetailsViewV5(TestCase):
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, self.scan.title)
         self.assertDictEqual(scan.configuration, config)
-        
+
     def test_edit_config_conflict(self):
         """Tests editing the configuration of a Scan process already launched"""
 
@@ -861,9 +861,9 @@ class TestScanDetailsViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestScanDetailsViewV6(TestCase):
-    
+
     api = 'v6'
-    
+
     def setUp(self):
         django.setup()
 
@@ -906,7 +906,7 @@ class TestScanDetailsViewV6(TestCase):
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
-        
+
     def test_edit_not_found(self):
         """Tests editing non-existent Scan process"""
 
@@ -941,7 +941,7 @@ class TestScanDetailsViewV6(TestCase):
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
-        
+
     def test_edit_config_conflict(self):
         """Tests editing the configuration of a Scan process already launched"""
 
@@ -1148,11 +1148,11 @@ class TestScansValidationViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        
+
 class TestScansProcessViewV5(TestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -1172,7 +1172,7 @@ class TestScansProcessViewV5(TestCase):
         url = '/%s/scans/%d/process/' % (self.api, self.scan.id)
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        
+
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
@@ -1190,7 +1190,7 @@ class TestScansProcessViewV5(TestCase):
 
     def test_dry_run_process_conflict(self):
         """Tests error response when calling the Scan process view for a dry run Scan when already processed."""
-        
+
         self.scan.job = job_utils.create_job()
         self.scan.save()
 
@@ -1210,7 +1210,7 @@ class TestScansProcessViewV5(TestCase):
 
     def test_dry_run_process_reprocess(self):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
-        
+
         self.scan.dry_run_job = job_utils.create_job()
         old_job_id = self.scan.dry_run_job.id
 
@@ -1239,7 +1239,7 @@ class TestScansProcessViewV5(TestCase):
 class TestScansProcessViewV6(TestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -1259,7 +1259,7 @@ class TestScansProcessViewV6(TestCase):
         url = '/%s/scans/%d/process/' % (self.api, self.scan.id)
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        
+
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
@@ -1277,7 +1277,7 @@ class TestScansProcessViewV6(TestCase):
 
     def test_dry_run_process_conflict(self):
         """Tests error response when calling the Scan process view for a dry run Scan when already processed."""
-        
+
         self.scan.job = job_utils.create_job()
         self.scan.save()
 
@@ -1297,7 +1297,7 @@ class TestScansProcessViewV6(TestCase):
 
     def test_dry_run_process_reprocess(self):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
-        
+
         self.scan.dry_run_job = job_utils.create_job()
         old_job_id = self.scan.dry_run_job.id
 
@@ -1454,7 +1454,7 @@ class TestStrikesViewV6(TestCase):
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['name'], self.strike2.name)
         self.assertEqual(result['results'][1]['name'], self.strike1.name)
-        
+
 class TestStrikeCreateViewV5(TestCase):
 
     version = 'v5'
@@ -1637,7 +1637,7 @@ class TestStrikeCreateViewV6(TestCase):
         self.assertEqual(result['title'], strikes[0].title)
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
-        
+
 class TestStrikeDetailsViewV5(TestCase):
 
     version = 'v5'
@@ -1839,7 +1839,7 @@ class TestStrikeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        
+
 class TestStrikesValidationViewV5(TestCase):
     """Tests related to the Strike process validation endpoint"""
 
@@ -1874,7 +1874,7 @@ class TestStrikesValidationViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        
+
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_missing_configuration(self):

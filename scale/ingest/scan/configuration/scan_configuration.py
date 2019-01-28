@@ -10,8 +10,11 @@ from jsonschema.exceptions import ValidationError
 
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
+from ingest.handlers.recipe_handler import RecipeHandler
+from ingest.handlers.recipe_rule import RecipeRule
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners import factory
+from recipe.models import RecipeType
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
@@ -40,19 +43,19 @@ class ScanConfiguration(object):
     def __init__(self):
         """Creates a Scan configuration object.
         """
-        
+
         self.scanner_type = ''
-        
+
         self.scanner_config = {}
-        
+
         self.recursive = True
 
         self.file_handler = FileHandler()
-        
+
         self.workspace = ''
-        
-        self.recipe = {}
-        
+
+        self.recipe_handler = RecipeHandler()
+
         self.config_dict = {}
 
     def get_scanner(self):
@@ -91,6 +94,23 @@ class ScanConfiguration(object):
             msg = 'Scan scanner type has been changed from %s to %s. Cannot reload configuration.'
             logger.warning(msg, scanner.scanner_type, self.scanner_type)
 
+    def get_recipe_type(self):
+        """Returns the recipe type for this Strike configuration
+
+        :returns: The recipe type name
+        :rtype: string
+        """
+
+        return self.recipe_handler.recipe_name
+
+    def get_recipe_conditions(self):
+        """Returns the recipe conditions
+
+        :returns: The Recipe rule conditions
+        :rtype: [ingest.handlers.recipe_rule.RecipeRule]
+        """
+        return self.recipe_handler.get_rules()
+
     def validate(self):
         """Validates the Scan configuration
 
@@ -106,6 +126,13 @@ class ScanConfiguration(object):
         scanner_type = self.scanner_type
         if scanner_type not in factory.get_scanner_types():
             raise InvalidScanConfiguration('\'%s\' is an invalid scanner' % scanner_type)
+
+        # TODO not mandatory until v6
+        if 'recipe' in self.config_dict:
+            recipe_name = self.recipe_handler.recipe_name
+            if recipe_name and RecipeType.objects.filter(name=recipe_name).count() == 0:
+                msg = 'Recipe Type %s does not exist'
+                raise InvalidScanConfiguration(msg % recipe_name)
 
         scanned_workspace_name = self.workspace
         workspace_names = {scanned_workspace_name}

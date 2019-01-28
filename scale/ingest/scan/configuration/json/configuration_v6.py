@@ -10,6 +10,8 @@ from jsonschema.exceptions import ValidationError
 
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
+from ingest.handlers.recipe_handler import RecipeHandler
+from ingest.handlers.recipe_rule import RecipeRule
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners import factory
@@ -21,7 +23,7 @@ SCHEMA_VERSION = '6'
 
 SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
-    'required': ['workspace', 'scanner', 'files_to_ingest', 'recipe'],
+    'required': ['workspace', 'scanner', 'files_to_ingest'],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -74,7 +76,7 @@ SCAN_CONFIGURATION_SCHEMA = {
         'recipe_condition': {
             'type': 'object',
             'description': 'Maps the recipe inputs to specfic conditions',
-            'required': ['input_name', 'filter'],
+            'required': ['input_name', 'media_types', 'data_types', 'not_data_types'],
             'additionalProperties': False,
             'properties': {
                 'input_name': {
@@ -198,6 +200,16 @@ class ScanConfigurationV6(object):
             rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
 
+        self._recipe_handler = RecipeHandler()
+        if 'recipe' in self._configuration and 'name' in self._configuration['recipe']:
+            self._recipe_handler.recipe_name =self._configuration['recipe']['name']
+            for condition in self._configuration['recipe']['conditions']:
+                input_name = condition['input_name']
+                media_types = condition['media_types'] if 'media_types' in condition else None
+                data_types = condition['data_types'] if 'data_types' in condition else None
+                not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
+                self._recipe_handler.add_rule(RecipeRule(input_name, media_types, data_types, not_data_types))
+
     def get_configuration(self):
         """Returns the scan configuration represented by this JSON
 
@@ -206,16 +218,17 @@ class ScanConfigurationV6(object):
         """
 
         config = ScanConfiguration()
-        
+
         config.scanner_type     = self._configuration['scanner']['type']
         config.scanner_config   = self._configuration['scanner']
         config.recursive        = self._configuration['recursive']
         config.file_handler     = self._file_handler
         config.workspace        = self._configuration['workspace']
-        config.recipe           = self._configuration['recipe']
+        config.recipe_handler   = self._recipe_handler
+        config.config_dict      = self._configuration
 
         return config
-        
+
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
 
@@ -251,3 +264,10 @@ class ScanConfigurationV6(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
+
+        # TODO for v6 when scan recipe config is mandatory
+        # if 'recipe' not in self._configuration:
+        #     self._configuration['recipe'] = {
+        #         'name': '',
+        #         'conditions': []
+        #     }

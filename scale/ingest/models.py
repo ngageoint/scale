@@ -647,6 +647,18 @@ class Ingest(models.Model):
 
         self.data_type = ','.join(tags)
 
+    def get_ingest_source_event(self):
+        """Returns the event that triggered the ingest
+        strike or scan
+        """
+
+        if self.strike:
+            return self.strike
+        elif self.scan:
+            return self.scan
+        else:
+            logger.info('No source strike or scan for ingest %s' % ingest.id)
+
     class Meta(object):
         """meta information for database"""
         db_table = 'ingest'
