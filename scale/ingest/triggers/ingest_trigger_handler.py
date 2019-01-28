@@ -108,26 +108,21 @@ class IngestTriggerHandler(TriggerRuleHandler):
         for condition in source_recipe_config['conditions']:
             media_types = condition['media_types'] if 'media_types' in condition else None
             data_types = condition['data_types'] if 'data_types' in condition else None
-            # media_types = condition['any_data_types'] if 'media_types' in condition else None
             not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
             handler.add_rule(RecipeRule(condition['input_name'], media_types, data_types, not_data_types))
 
         # MATCH INPUT TO INPUT NAME
         input_rule = handler.rule_matches(source_file)
-        if not input_rule:
-            raise Exception('No recipe input data matching source file')
+        if input_rule:
+            recipe_data = RecipeData({})
+            recipe_data.add_file_input(input_rule.input_name, source_file.id)
 
-        recipe_data = RecipeData({})
-        recipe_data.add_file_input(input_rule.input_name, source_file.id)
-
-        # need to do?
-        event = self._create_ingest_event(strike, source_file, None, when)
-        # recipe_config = None
-        # logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-        # recipe_type =
-
-        import pdb; pdb.set_trace()
-        Queue.objects.queue_new_recipe_ingest_v6(RecipeType.objects.get(name=recipe_name), recipe_data._new_data, event)
+            event = self._create_ingest_event(strike, source_file, None, when)
+            recipe_type = RecipeType.objects.get(name=recipe_name)
+            logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
+            Queue.objects.queue_new_recipe_ingest_v6(recipe_type, recipe_data._new_data, event)
+        else:
+            logger.info('No recipe input matches the source file')
 
     def _create_ingest_trigger_event(self, source_file, trigger_rule, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and trigger rule

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TransactionTestCase
 from django.utils.timezone import now
+from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
@@ -147,6 +148,8 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
         # Call method to test
         IngestTriggerHandler().process_ingested_source_file(self.source_file, now())
 
+        # Since we're using the messaging backend, how do we make sure the first job is queued????
+
         # Check results...ensure first job is queued
         queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
         job_1 = Job.objects.get(id=queue_1.job_id)
@@ -155,7 +158,9 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
         self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)
 
-    def test_successful_recipe_kickoff(self):
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         jt1 = job_test_utils.create_seed_job_type()
@@ -221,10 +226,5 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestTriggerHandler().kick_off_recipe_from_ingest(strike, source_file, ingest_recipe_config, now())
-        import pdb; pdb.set_trace()
 
-        # Verify first job in the recipe is queued
-        queue_1 = Queue.objects.get(job_type=jt1.id)
-        job = Job.objects.get(id=queue_1.job_id)
-        self.assertEqual(job.input['input_data'][0]['name'], 'INPUT_IMAGE')
-        self.assertEqual(job.input['input_data'][0]['file_id'], self.source_file.id)
+        mock_create.assert_called_once()

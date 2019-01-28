@@ -547,7 +547,6 @@ class QueueManager(models.Manager):
         """
 
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
-        import pdb; pdb.set_trace()
         with transaction.atomic():
             recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, ingest_id=event.pk, input_data=recipe_input,
                                                      recipe_config=recipe_config, batch_id=batch_id, superseded_recipe=superseded_recipe)
