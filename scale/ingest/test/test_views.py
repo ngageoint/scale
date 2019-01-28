@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import datetime
 import json
+import os
 
 import django
 from django.test import TestCase, TransactionTestCase
@@ -717,7 +718,7 @@ class TestScanCreateViewV6(TestCase):
         self.assertEqual(len(scans), 1)
         self.assertEqual(result['title'], scans[0].title)
         self.assertEqual(result['description'], scans[0].description)
-        self.assertDictEqual(result['configuration'], scans[0].configuration)
+        self.assertDictEqual(result['configuration'], scans[0].get_v6_configuration_json())
 
 class TestScanDetailsViewV5(TestCase):
 
@@ -1557,6 +1558,7 @@ class TestStrikeCreateViewV6(TestCase):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
+        self.new_workspace = storage_test_utils.create_workspace(name='new')
 
     def test_missing_configuration(self):
         """Tests calling the create Strike view with missing configuration."""
@@ -1632,6 +1634,49 @@ class TestStrikeCreateViewV6(TestCase):
 
         strikes = Strike.objects.filter(name='strike-title')
 
+        result = json.loads(response.content)
+        self.assertEqual(len(strikes), 1)
+        self.assertEqual(result['title'], strikes[0].title)
+        self.assertEqual(result['description'], strikes[0].description)
+        self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
+
+    def test_successful_v6(self):
+        """Tests creating strike with recipe configuration"""
+
+        json_data = {
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'version': '2.0',
+                'workspace': self.workspace.name,
+                'monitor': {
+                    'type': 'dir-watcher',
+                    'transfer_suffix': '_tmp',
+                },
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'data_types': ['one', 'two'],
+                    'new_file_path': os.path.join('my', 'path'),
+                    'new_workspace': self.new_workspace.name,
+                }],
+                'recipe': {
+                    'name': 'test-recipe',
+                    'conditions': [{
+                        'input_name': 'INPUT_FILE',
+                        'media_types': ['text/plain'],
+                        'data_types': ['type1', 'type2'],
+                        'not_data_types': ['type3'],
+                    }],
+                },
+            },
+        }
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        strikes = Strike.objects.filter(name='strike-title')
+        import pdb; pdb.set_trace()
         result = json.loads(response.content)
         self.assertEqual(len(strikes), 1)
         self.assertEqual(result['title'], strikes[0].title)

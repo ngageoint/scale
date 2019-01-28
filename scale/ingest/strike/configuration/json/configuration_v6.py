@@ -53,7 +53,6 @@ STRIKE_CONFIGURATION_SCHEMA = {
         },
         'recipe': {
             'type': 'object',
-            'description': 'The recipe name and input conditions to kick off when the ingest completes',
             'required': ['name', 'conditions'],
             'additionalProperties': False,
             'properties': {
@@ -64,7 +63,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
                 'conditions': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/recipe_condition'
+                        '$ref': '#/definitions/recipe_condition',
                     },
                 },
             },
