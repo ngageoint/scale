@@ -13,7 +13,7 @@ def build_openapi_docs(root_file, parse_dir):
     notes:
     - The given root_file MUST be prepopulated with `info` and `server` chunks
     - Only files ending in .yml or .yaml will be parsed
-    - The following OpenAPI sections will be detected: paths, components, security, tags, externalDocs
+    - The following OpenAPI sections will be detected: paths, components, security, tags, externalDocs, definitions
     - If your root_file is in the parse_dir it will NOT be parsed
 
     inputs:
@@ -29,6 +29,7 @@ def build_openapi_docs(root_file, parse_dir):
         'components': {
             'schemas': {}
         },
+        'definitions': {},
         'security': {},
         'tags': {},
         'externalDocs': {}
