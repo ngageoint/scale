@@ -294,7 +294,7 @@ components:
         - type: object
         - properties:
             recipe_type_rev:
-              $ref: '#/components/schemas/recipe_type_revision'
+              $ref: '#/components/schemas/recipe_type_revision_base'
               description: The recipe type revision that is associated with the batch  
             event:
               $ref: '#/components/schemas/event_details'
