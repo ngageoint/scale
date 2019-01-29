@@ -10,10 +10,6 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from ingest.models import Strike
-from ingest.models import Scan
-from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
-from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
 from job.models import Job
 from queue.models import Queue
@@ -160,91 +156,3 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
         self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
         self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)
-
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_recipe_input_messages')
-    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
-        """Tests successfully producing an ingest that immediately calls a recipe"""
-
-        jt1 = job_test_utils.create_seed_job_type()
-        jt2 = job_test_utils.create_seed_job_type()
-
-        source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
-                                               media_type='image/png', file_size=10, data_type='image_type',
-                                                    file_path='the_path', workspace=self.workspace)
-
-        recipe_type_def = {'version': '6',
-                           'input': {'files': [{'name': 'INPUT_IMAGE',
-                                                'media_types': ['image/png'],
-                                                'required': True,
-                                                'multiple': True}],
-                                    'json': []},
-                           'nodes': {'node_a': {'dependencies': [],
-                                                'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
-                                                'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
-                                                              'job_type_version': jt1.version,
-                                                              'job_type_revision': 1}},
-                                     'node_b': {'dependencies': [{'name': 'node_a'}],
-                                                'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_a',
-                                                                          'output': 'OUTPUT_IMAGE'}},
-                                                'node_type': {'node_type': 'job', 'job_type_name': jt2.name,
-                                                              'job_type_version': jt2.version,
-                                                              'job_type_revision': 1}}}}
-
-        recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
-
-        strike_config = {
-            'version': '6',
-            'workspace': self.workspace.name,
-            'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
-            'files_to_ingest': [{
-                'filename_regex': 'input_file',
-                'data_types': ['image_type'],
-                'new_workspace': self.workspace.name,
-                'new_file_path': 'my/path'
-            }],
-            'recipe': {
-                'name': 'test-recipe',
-                'conditions':[{
-                    'input_name': 'INPUT_IMAGE',
-                    'media_types': ['image/png'],
-                    'data_types': ['image_type'],
-                    'not_data_types': [],
-                }],
-            },
-        }
-
-        config = StrikeConfigurationV6(strike_config).get_configuration()
-        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
-
-        # Call method to test
-        IngestTriggerHandler().kick_off_recipe_from_ingest(strike, source_file, now())
-        mock_create.assert_called_once()
-
-        # Create scan
-        scan_config = {
-            'workspace': self.workspace.name,
-            'scanner': {
-                'type': 'dir'
-            },
-            'files_to_ingest': [{
-                'filename_regex': 'input_file',
-                'data_types': ['image_type'],
-                'new_file_path': os.path.join('my', 'path'),
-                'new_workspace': self.workspace.name,
-            }],
-            'recipe': {
-                'name': 'test-recipe',
-                'conditions':[{
-                    'input_name': 'INPUT_IMAGE',
-                    'media_types': ['image/png'],
-                    'data_types': ['image_type'],
-                    'not_data_types': [],
-                }],
-            },
-        }
-        scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
-        scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
-        # Call method to test
-        IngestTriggerHandler().kick_off_recipe_from_ingest(scan, source_file, now())
-        self.assertEqual(mock_create.call_count, 2)

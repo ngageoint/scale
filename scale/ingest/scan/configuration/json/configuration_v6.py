@@ -97,6 +97,13 @@ SCAN_CONFIGURATION_SCHEMA = {
                         'type': 'string',
                     },
                 },
+                'any_data_types': {
+                   'description': 'Data types file may match',
+                   'type': 'array',
+                   'items': {
+                        'type': 'string',
+                   },
+                },
                 'not_data_types': {
                     'description': 'Data types to not match',
                     'type': 'array',
@@ -206,9 +213,10 @@ class ScanConfigurationV6(object):
             for condition in self._configuration['recipe']['conditions']:
                 input_name = condition['input_name']
                 media_types = condition['media_types'] if 'media_types' in condition else None
+                any_data_types = condition['any_data_types'] if 'any_data_types' in condition else None
                 data_types = condition['data_types'] if 'data_types' in condition else None
                 not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
-                self._recipe_handler.add_rule(RecipeRule(input_name, media_types, data_types, not_data_types))
+                self._recipe_handler.add_rule(RecipeRule(input_name, media_types, data_types, any_data_types, not_data_types))
 
     def get_configuration(self):
         """Returns the scan configuration represented by this JSON

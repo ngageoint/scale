@@ -219,9 +219,19 @@ class TestScanConfiguration(TestCase):
                 'new_file_path': os.path.join('my', 'path'),
                 'new_workspace': self.workspace.name,
             }],
+            'recipe': {
+                'name': 'test-recipe',
+                'conditions': [{
+                    'input_name': 'INPUT_FILE',
+                    'media_types': ['text/plain'],
+                    'data_types': ['one', 'two'],
+                    'any_data_types': ['three','four'],
+                    'not_data_types': ['five'],
+                }],
+            },
         }
         # No exception is success
-        ScanConfigurationV6(config, do_validate=True)
+        configuration = ScanConfigurationV6(config, do_validate=True).get_configuration()
 
     def test_validate_bad_scanner_type_v1(self):
         """Tests calling ScanConfiguration.validate() with a bad scanner type"""
@@ -434,7 +444,8 @@ class TestScanConfiguration(TestCase):
                     'input_name':'INPUT_IMAGE',
                     'media_types': ['image/png'],
                     'data_types': ['type1', 'type2'],
-                    'not_data_types': [],
+                    'any_data_types': ['type3', 'type4'],
+                    'not_data_types': ['type5'],
                 }],
             },
         }

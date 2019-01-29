@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 from ingest.models import Ingest
 from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
+from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from source.models import SourceFile
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.models import ScaleFile
@@ -110,7 +111,8 @@ def _complete_ingest(ingest, status):
         ingest.save()
         if status == 'INGESTED':
             if ingest.recipe_name:
-                IngestTriggerHandler().kick_off_recipe_from_ingest(ingest.get_ingest_source_event(), ingest.source_file, ingest.ingest_ended)
+                IngestRecipeHandler().process_ingested_source_file(ingest.get_ingest_source_event(),
+                    ingest.source_file, ingest.ingest_ended)
             else:
                 IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 

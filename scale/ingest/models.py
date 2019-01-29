@@ -663,10 +663,12 @@ class Ingest(models.Model):
         """meta information for database"""
         db_table = 'ingest'
 
-STRIKE_TYPE = 'STRIKE'
-SCAN_TYPE = 'SCAN'
+
 class IngestEventManager(models.Manager):
     """Manages the IngestEvent model"""
+
+    STRIKE_TYPE = 'STRIKE'
+    SCAN_TYPE = 'SCAN'
 
     def create_strike_ingest_event(self, strike, description, occurred):
         """Creates a new ingest event and returns the event model. The given strike model must have already
@@ -690,7 +692,7 @@ class IngestEventManager(models.Manager):
             raise Exception('Trigger event must have a timestamp')
 
         event = IngestEvent()
-        event.type = STRIKE_TYPE
+        event.type = IngestEventManager.STRIKE_TYPE
         event.strike = strike
         event.description = description
         event.occurred = occurred
@@ -720,7 +722,7 @@ class IngestEventManager(models.Manager):
             raise Exception('Trigger event must have a timestamp')
 
         event = IngestEvent()
-        event.type = SCAN_TYPE
+        event.type = IngestEventManager.SCAN_TYPE
         event.scan = scan
         event.description = description
         event.occurred = occurred

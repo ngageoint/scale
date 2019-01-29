@@ -170,6 +170,6 @@ class ScanConfiguration(object):
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
 
-        for file_dict in self._configuration['files_to_ingest']:
+        for file_dict in self.config_dict['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []

@@ -11,6 +11,7 @@ from rest_framework import status
 
 import job.test.utils as job_utils
 import ingest.test.utils as ingest_test_utils
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from ingest.models import Scan, Strike
@@ -538,6 +539,7 @@ class TestScansViewV6(TestCase):
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['name'], self.scan2.name)
         self.assertEqual(result['results'][1]['name'], self.scan1.name)
+
 class TestScanCreateViewV5(TestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v5'
@@ -704,6 +706,68 @@ class TestScanCreateViewV6(TestCase):
                     'filename_regex': '.*txt',
                     'new_file_path': 'my_path',
                     'new_workspace': 'raw',
+                }],
+            },
+        }
+
+        url = '/%s/scans/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        scans = Scan.objects.filter(name='scan-title')
+
+        result = json.loads(response.content)
+        self.assertEqual(len(scans), 1)
+        self.assertEqual(result['title'], scans[0].title)
+        self.assertEqual(result['description'], scans[0].description)
+        self.assertDictEqual(result['configuration'], scans[0].get_v6_configuration_json())
+
+    def test_successful_v6(self):
+        """Tests calling the create Scan view successfully."""
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        json_data = {
+            'title': 'Scan Title',
+            'description': 'Scan description',
+            'configuration': {
+                'version': '1.0',
+                'workspace': 'raw',
+                'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'new_file_path': 'my_path',
+                    'new_workspace': 'raw',
+                }],
+            },
+            'recipe': {
+                'name': 'test-recipe',
+                'conditions': [{
+                    'input_name': 'INPUT_FILE',
+                    'media_types': ['text/plain'],
+                    'data_types': ['type1'],
+                    'any_data_types': ['type2', 'type3'],
+                    'not_data_types': ['type4'],
                 }],
             },
         }
@@ -1643,6 +1707,28 @@ class TestStrikeCreateViewV6(TestCase):
     def test_successful_v6(self):
         """Tests creating strike with recipe configuration"""
 
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
         json_data = {
             'title': 'Strike Title',
             'description': 'Strike description',
@@ -1664,8 +1750,9 @@ class TestStrikeCreateViewV6(TestCase):
                     'conditions': [{
                         'input_name': 'INPUT_FILE',
                         'media_types': ['text/plain'],
-                        'data_types': ['type1', 'type2'],
-                        'not_data_types': ['type3'],
+                        'data_types': ['type1'],
+                        'any_data_types': ['type2', 'type3'],
+                        'not_data_types': ['type4'],
                     }],
                 },
             },
@@ -1676,7 +1763,6 @@ class TestStrikeCreateViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         strikes = Strike.objects.filter(name='strike-title')
-        import pdb; pdb.set_trace()
         result = json.loads(response.content)
         self.assertEqual(len(strikes), 1)
         self.assertEqual(result['title'], strikes[0].title)

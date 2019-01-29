@@ -5,26 +5,26 @@ class RecipeRule(object):
     """This class represents a rule for handling files processed by Strike and Scan
     """
 
-    def __init__(self, input_name, media_types, data_types, not_data_types):
+    def __init__(self, input_name, media_types, data_types, any_data_types, not_data_types):
         """Constructor
 
         :param input_name: The recipe input this rule matches
         :type input_name: string
         :param media_types: Media Types to check
         :type media_types: [string]
-        :param data_types: The list of data tags to check if files match
+        :param data_types: The list of data tags to check files MUST match
         :type data_types: [string]
-        :param any_data_types: The list of data tags to check if files match
+        :param any_data_types: The list of data tags to check if files MAY match
         :type any_data_types: [string]
-        :param not_data_types: The list of data tags to check if files don't match
+        :param not_data_types: The list of data tags to check if files DON'T match
         :type not_data_types: [string]
         """
 
         self.input_name = input_name
-        self._media_types = media_types if media_types is not None else set()
-        self._data_types = data_types if data_types is not None else set()
-        # self._any_data_types = any_data_types if any_data_types is not None else set()
-        self._not_data_types = not_data_types if not_data_types is not None else set()
+        self._media_types = set(media_types) if media_types is not None else set()
+        self._data_types = set(data_types) if data_types is not None else set()
+        self._any_data_types = set(any_data_types) if any_data_types is not None else set()
+        self._not_data_types = set(not_data_types) if not_data_types is not None else set()
 
     def get_media_types(self):
         """Returns the file media type for this ingest trigger condition
@@ -33,13 +33,13 @@ class RecipeRule(object):
         :rtype: [string]
         """
 
-        return self._media_types
+        return list(self._media_types)
 
     def matches_file(self, source_file):
         """Indicates whether the given file name matches this rule
 
-        :param file_name: The name of the file
-        :type file_name: string
+        :param source_file: The source file
+        :type source_file: :class:`source.models.SourceFile`
         :returns: True if this file name matches the rule, False otherwise
         :rtype: bool
         """
@@ -49,9 +49,8 @@ class RecipeRule(object):
 
         data_type_checks = []
         file_data_types = source_file.get_data_type_tags()
-
-        # if self._any_data_types:
-        #     data_type_checks.append(True in [tag in file_data_types for tag in self._any_data_types])
+        if self._any_data_types:
+            data_type_checks.append(True in [tag in file_data_types for tag in self._any_data_types])
         if self._data_types:
             data_type_checks.append(self._data_types <= file_data_types)
         if self._not_data_types:

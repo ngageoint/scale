@@ -114,7 +114,8 @@ class TestStrikeConfiguration(TestCase):
                     'input_name':'INPUT_IMAGE',
                     'media_types': ['image/png'],
                     'data_types': ['type1', 'type2'],
-                    'not_data_types': [],
+                    'any_data_types': ['type3', 'type4'],
+                    'not_data_types': ['type5'],
                 }],
             },
         }

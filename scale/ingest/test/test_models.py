@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase, TransactionTestCase
 
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
@@ -70,6 +71,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace()
+        self.recipe = recipe_test_utils.create_recipe_type_v6()
 
     def test_successful(self):
         """Tests calling StrikeManager.create_strike() successfully"""
@@ -88,20 +90,29 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         config = StrikeConfigurationV2(config).get_configuration()
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')
-        
+
     def test_successful_v6(self):
         """Tests calling StrikeManager.create_strike successfully with v6 config"""
 
         config = {
             'version': '6',
-            'workspace': self.workspace.name, 
+            'workspace': self.workspace.name,
             'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
                 'filename_regex': 'foo',
                 'data_types': ['test1','test2'],
                 'new_workspace': self.workspace.name,
                 'new_file_path': 'my/path'
-            }]
+            }],
+            'recipe': {
+                'name': self.recipe.name,
+                'conditions': [{
+                    'input_name': 'INPUT_IMAGE',
+                    'media_types': ['image/png'],
+                    'data_types': ['test1', 'test2'],
+                    'not_data_types': ['test3'],
+                }],
+            },
         }
 
         config = StrikeConfigurationV6(config).get_configuration()
