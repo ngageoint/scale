@@ -673,8 +673,8 @@ components:
           type: object
           additionalProperties:
             oneOf:
-            - $ref: './job_type.yml#/components/schemas/host_mount'
-            - $ref: './job_type.yml#/components/schemas/volume_mount'
+            - $ref: '#/components/schemas/host_mount'
+            - $ref: '#/components/schemas/volume_mount'
         priority:
           type: integer
           description: The priority to use for scheduling the job off of the queue.
@@ -683,7 +683,7 @@ components:
         output_workspaces:
           type: array
           items:
-            $ref: './job_type.yml#/components/schemas/output_workspace'
+            $ref: '#/components/schemas/output_workspace'
         settings:
           type: object
           description: A JSON object representing the configuration for each setting

@@ -558,10 +558,10 @@ components:
             $ref: '#/components/schemas/job_execution_details'
           input:
             description: The input data for the job.
-            $ref: './data.yml#/components/schemas/data'
+            $ref: '#/components/schemas/data'
           output:
             description: The output data for the job.
-            $ref: './data.yml#/components/schemas/data'
+            $ref: '#/components/schemas/data'
 
     job_execution_list:
       title: Job Execution List

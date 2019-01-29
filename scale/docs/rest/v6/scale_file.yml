@@ -3,7 +3,7 @@ info:
   title: Scale File Services
   version: v6
 paths:
-  /ingests:
+  /files:
     get:
       tags:
         - Scale File Services
@@ -208,6 +208,14 @@ paths:
 
 components:
   schemas:
+    model_id:
+      title: Model ID
+      properties:
+        id:
+          type: integer
+          description: Unique ID for corresponding model.  
+          example: 123
+
     file_list:
       title: File List
       type: object
@@ -342,8 +350,7 @@ components:
         job:
           $ref: '#/components/schemas/job'
         job_exe:
-          $ref: '#/components/schemas/job_exe'
-          example: 2015-09-10T15:24:53.987Z
+          $ref: '#/components/schemas/model_id'
         job_output:
           type: string
           description: The name of the output from the job related to this file. 

@@ -394,7 +394,7 @@ components:
             that should be polled for object creation notifications that describe new files in the S3 bucket.
           example: my-sqs
         credentials:
-          $ref: './workspace.yml#/components/schemas/credentials'
+          $ref: '#/components/schemas/credentials'
         region_name:
           type: string
           description: The region_name is an optional string that specifies the AWS region where the
@@ -415,7 +415,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: './workspace.yml#/components/schemas/workspace_base'
+          $ref: '#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.
@@ -475,7 +475,7 @@ components:
           description: The central geospatial location of the source file.
           example: POINT(11 -11)
         meta_data:
-          $ref: './scale_file#/components/schemas/metadata'
+          $ref: '#/components/schemas/metadata'
         countries:
           type: array
           items:
@@ -529,7 +529,7 @@ components:
       type: object
       properties:
         strike:
-          $ref: './strike.yml#/components/schemas/strike_base'
+          $ref: '#/components/schemas/strike_base'
         most_recent:
           type: string
           format: date-time
