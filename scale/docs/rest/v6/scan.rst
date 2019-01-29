@@ -17,54 +17,54 @@ Request: GET http://.../v6/scans/
 
 Response: 200 OK
 
- .. code-block:: javascript 
- 
-    { 
-        "count": 3, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 1, 
-                "name": "my-scan-process", 
-                "title": "My Scan Process", 
-                "description": "This is my Scan process for detecting my favorite files!", 
+ .. code-block:: javascript
+
+    {
+        "count": 3,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 1,
+                "name": "my-scan-process",
+                "title": "My Scan Process",
+                "description": "This is my Scan process for detecting my favorite files!",
                 "file_count": 50,
-                "job": { 
-                    "id": 7, 
-                    "job_type": { 
-                        "id": 2, 
-                        "name": "scale-scan", 
+                "job": {
+                    "id": 7,
+                    "job_type": {
+                        "id": 2,
+                        "name": "scale-scan",
                         "version": "1.0.0",
-                        "title": "Scale Scan", 
-                        "description": "Scans a workspace for existing source files to ingest", 
+                        "title": "Scale Scan",
+                        "description": "Scans a workspace for existing source files to ingest",
                         "revision_num": 1,
-                        "icon_code": "f0e7" 
-                    }, 
-                    "job_type_rev": { 
-                        "id": 2 
-                    }, 
+                        "icon_code": "f0e7"
+                    },
+                    "job_type_rev": {
+                        "id": 2
+                    },
                     "status": "RUNNING"
                 },
-                "dry_run_job": { 
-                    "id": 6, 
-                    "job_type": { 
-                        "id": 2, 
-                        "name": "scale-scan", 
+                "dry_run_job": {
+                    "id": 6,
+                    "job_type": {
+                        "id": 2,
+                        "name": "scale-scan",
                         "version": "1.0.0",
-                        "title": "Scale scan", 
-                        "description": "Scans a workspace for existing source files to ingest", 
+                        "title": "Scale scan",
+                        "description": "Scans a workspace for existing source files to ingest",
                         "revision_num": 1,
-                        "icon_code": "f0e7" 
-                    }, 
+                        "icon_code": "f0e7"
+                    },
                     "status": "RUNNING"
                 },
                "created": "2015-03-11T00:00:00Z",
                "last_modified": "2015-03-11T00:00:00Z"
-            }, 
-            ... 
-        ] 
-    } 
+            },
+            ...
+        ]
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Scan List**                                                                                                           |
@@ -142,74 +142,94 @@ v6 Create Scan
 
 Request: POST http://.../v6/scans/
 
- .. code-block:: javascript 
- 
-    { 
-        "title": "My Scan Process", 
-        "description": "This is my Scan process for detecting my favorite files!", 
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "scanner": { 
+ .. code-block:: javascript
+
+    {
+        "title": "My Scan Process",
+        "description": "This is my Scan process for detecting my favorite files!",
+        "configuration": {
+            "workspace": "my-workspace",
+            "scanner": {
                 "type": "dir",
-            }, 
-            "recursive": true, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        } 
-    } 
+            },
+            "recursive": true,
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
+            }],
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+        }
+    }
 
 Response: 201 Created
 Headers:
 Location http://.../v6/scans/105/
 
- .. code-block:: javascript 
- 
-   { 
-       "id": 1, 
-       "name": "my-scan-process", 
-       "title": "My Scan Process", 
-       "description": "This is my Scan process for detecting my favorite files!", 
+ .. code-block:: javascript
+
+   {
+       "id": 1,
+       "name": "my-scan-process",
+       "title": "My Scan Process",
+       "description": "This is my Scan process for detecting my favorite files!",
        "file_count": 50,
-       "job": { 
-           "id": 7, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-scan", 
+       "job": {
+           "id": 7,
+           "job_type": {
+               "id": 2,
+               "name": "scale-scan",
                "version": "1.0.0",
-               "title": "Scale Scan", 
-               "description": "Scans a workspace for existing source files to ingest", 
+               "title": "Scale Scan",
+               "description": "Scans a workspace for existing source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
-       "dry_run_job": { 
-           "id": 6, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-scan", 
+       "dry_run_job": {
+           "id": 6,
+           "job_type": {
+               "id": 2,
+               "name": "scale-scan",
                "version": "1.0.0",
-               "title": "Scale Scan", 
-               "description": "Scans a workspace for existing source files to ingest", 
+               "title": "Scale Scan",
+               "description": "Scans a workspace for existing source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",
-       "configuration": { 
-           "workspace": "my-workspace", 
-           "monitor": { 
+       "configuration": {
+           "workspace": "my-workspace",
+           "monitor": {
                "type": "dir"
-           }, 
-           "recursive": true, 
-           "files_to_ingest": [{ 
-               "filename_regex": ".*txt" 
-           }] 
-       } 
-   } 
+           },
+           "recursive": true,
+           "files_to_ingest": [{
+               "filename_regex": ".*txt"
+           }],
+           "recipe": {
+               "name": "my-recipe",
+               "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+               }]
+           }
+       }
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Create Scan**                                                                                                         |
@@ -254,54 +274,64 @@ Request: GET http://.../v6/scans/{id}/
 
 Response: 200 OK
 
- .. code-block:: javascript 
- 
-   { 
-       "id": 1, 
-       "name": "my-scan-process", 
-       "title": "My Scan Process", 
-       "description": "This is my Scan process for detecting my favorite files!", 
+ .. code-block:: javascript
+
+   {
+       "id": 1,
+       "name": "my-scan-process",
+       "title": "My Scan Process",
+       "description": "This is my Scan process for detecting my favorite files!",
        "file_count": 50,
-       "job": { 
-           "id": 7, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-scan", 
+       "job": {
+           "id": 7,
+           "job_type": {
+               "id": 2,
+               "name": "scale-scan",
                "version": "1.0.0",
-               "title": "Scale Scan", 
-               "description": "Scans a workspace for existing source files to ingest", 
+               "title": "Scale Scan",
+               "description": "Scans a workspace for existing source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
-       "dry_run_job": { 
-           "id": 6, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-scan", 
+       "dry_run_job": {
+           "id": 6,
+           "job_type": {
+               "id": 2,
+               "name": "scale-scan",
                "version": "1.0.0",
-               "title": "Scale Scan", 
-               "description": "Scans a workspace for existing source files to ingest", 
+               "title": "Scale Scan",
+               "description": "Scans a workspace for existing source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",
-       "configuration": { 
-           "workspace": "my-workspace", 
-           "monitor": { 
+       "configuration": {
+           "workspace": "my-workspace",
+           "monitor": {
                "type": "dir"
-           }, 
-           "recursive": true, 
-           "files_to_ingest": [{ 
-               "filename_regex": ".*txt" 
-           }] 
-       } 
-   } 
-   
+           },
+           "recursive": true,
+           "files_to_ingest": [{
+               "filename_regex": ".*txt"
+           }],
+           "recipe": {
+               "name": "my-recipe",
+               "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+               }]
+           }
+       }
+   }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Scan Details**                                                                                                        |
 +=========================================================================================================================+
@@ -352,27 +382,37 @@ v6 Validate Scan
 
 Request: POST http://.../v6/scans/validation/
 
-.. code-block:: javascript 
+.. code-block:: javascript
 
-    { 
-        "title": "My Scan Process", 
-        "description": "This is my Scan process for detecting my favorite files!", 
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
+    {
+        "title": "My Scan Process",
+        "description": "This is my Scan process for detecting my favorite files!",
+        "configuration": {
+            "workspace": "my-workspace",
+            "monitor": {
                 "type": "dir"
             },
             "recursive": true,
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        } 
-    } 
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
+            }],
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+        }
+    }
 
 Response: 200 OK
 
-.. code-block:: javascript 
- 
+.. code-block:: javascript
+
    {
       "is_valid": true,
       "errors": [],
@@ -428,25 +468,35 @@ v6 Edit Scan
 
 Request: PATCH http://.../v6/scans/{id}/
 
-.. code-block:: javascript 
- 
-    { 
-        "title": "My Scan Process", 
-        "description": "This is my Scan process for detecting my favorite files!", 
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir" 
-            }, 
+.. code-block:: javascript
+
+    {
+        "title": "My Scan Process",
+        "description": "This is my Scan process for detecting my favorite files!",
+        "configuration": {
+            "workspace": "my-workspace",
+            "monitor": {
+                "type": "dir"
+            },
             "recursive": true,
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        } 
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
+            }],
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+        }
     }
 
 Response: 204 NO CONTENT
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Scan**                                                                                                           |
 +=========================================================================================================================+
@@ -480,61 +530,71 @@ v6 Process Scan
 
 Request: POST http://.../v6/scans/{id}/process/
 
- .. code-block:: javascript 
- 
-  { 
-    "ingest": true 
-  } 
+ .. code-block:: javascript
+
+  {
+    "ingest": true
+  }
 
 Response: 200 OK
 
- .. code-block:: javascript 
- 
-   { 
-       "id": 1, 
-       "name": "my-scan-process", 
-       "title": "My Scan Process", 
-       "description": "This is my Scan process for detecting my favorite files!", 
+ .. code-block:: javascript
+
+   {
+       "id": 1,
+       "name": "my-scan-process",
+       "title": "My Scan Process",
+       "description": "This is my Scan process for detecting my favorite files!",
        "file_count": 50,
-       "job": { 
-           "id": 7, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-scan", 
+       "job": {
+           "id": 7,
+           "job_type": {
+               "id": 2,
+               "name": "scale-scan",
                "version": "1.0.0",
-               "title": "Scale Scan", 
-               "description": "Scans a workspace for existing source files to ingest", 
+               "title": "Scale Scan",
+               "description": "Scans a workspace for existing source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
-       "dry_run_job": { 
-           "id": 6, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-scan", 
+       "dry_run_job": {
+           "id": 6,
+           "job_type": {
+               "id": 2,
+               "name": "scale-scan",
                "version": "1.0.0",
-               "title": "Scale Scan", 
-               "description": "Scans a workspace for existing source files to ingest", 
+               "title": "Scale Scan",
+               "description": "Scans a workspace for existing source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",
-       "configuration": { 
-           "workspace": "my-workspace", 
-           "monitor": { 
+       "configuration": {
+           "workspace": "my-workspace",
+           "monitor": {
                "type": "dir"
-           }, 
-           "recursive": true, 
-           "files_to_ingest": [{ 
-               "filename_regex": ".*txt" 
-           }] 
-       } 
-   } 
+           },
+           "recursive": true,
+           "files_to_ingest": [{
+               "filename_regex": ".*txt"
+           }],
+           "recipe": {
+               "name": "my-recipe",
+               "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+               }]
+           }
+       }
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Process Scan**                                                                                                        |
@@ -609,7 +669,17 @@ A scan configuration JSON describes a set of configuration settings that affect 
           "new_workspace" : "workspace_name",
           "new_file_path" : "wksp/path"
         }
-      ]
+      ],
+      "recipe": {
+        "name": "my-recipe",
+        "conditions": [{
+            "input_name": "INPUT_FILE",
+            "media_types": ["text/plain"],
+            "data_types": ["type1", "type2"],
+            "any_data_types": ["type3", "type4"],
+            "not_data_types": ["type5"]
+        }]
+      }
     }
 
 +-----------------------------------------------------------------------------------------------------------------------------+
@@ -636,9 +706,9 @@ A scan configuration JSON describes a set of configuration settings that affect 
 |                            |                |          | that appear in the scanned workspace. The array must contain at    |
 |                            |                |          | least one item.                                                    |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .filename_regex            | String         | Required | Regular expression to check against the names of new files in the  |   
+| .filename_regex            | String         | Required | Regular expression to check against the names of new files in the  |
 |                            |                |          | scanned workspace. When a new file appears in the workspace, the   |
-|                            |                |          | file’s name is checked against each expression in order of the     | 
+|                            |                |          | file’s name is checked against each expression in order of the     |
 |                            |                |          | files_to_ingest array. If an expression matches the new file name  |
 |                            |                |          | in the workspace, that file is ingested according to the other     |
 |                            |                |          | fields in the JSON object and all subsequent rules in the list are |
@@ -661,4 +731,23 @@ A scan configuration JSON describes a set of configuration settings that affect 
 |                            |                |          | additional and dynamically named directories, for the current year,|
 |                            |                |          | month, and day, will be appended to the new_file_path value        |
 |                            |                |          | automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).|
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| recipe                     | JSON Object    | Required | Specifies the recipe and inputs the the Scan will attempt to       |
+|                            |                |          | match up to when a file is ingested.                               |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .name                      | String         | Required | The name of the recipe type that should be triggered               |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .conditions                | Array          | Required | The media type and data type conditions each recipe input should   |
+|                            |                |          | meet. Incoming files are checked against these types.              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..input_name               | String         | Required | The name of the recipe input to which the condition maps.          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..media_types              | Array          | Optional | A list of media types the incoming file should match for the input.|
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..data_types               | Array          | Optional | A list of data types the incoming file should match for the input. |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..any_data_types           | Array          | Optional | A list of data types the incoming file could match for the input.  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..not_data_types           | Array          | Optional | A list of data types the incoming file should NOT match for the    |
+|                            |                |          | input.                                                             |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

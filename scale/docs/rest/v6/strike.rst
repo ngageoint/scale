@@ -17,37 +17,37 @@ Request: GET http://.../v6/strikes/
 
 Response: 200 OK
 
- .. code-block:: javascript 
- 
-    { 
-        "count": 3, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 1, 
-                "name": "my-strike-process", 
-                "title": "My Strike Process", 
-                "description": "This is my Strike process for detecting my favorite files!", 
-                "job": { 
-                    "id": 7, 
-                    "job_type": { 
-                        "id": 2, 
-                        "name": "scale-strike", 
+ .. code-block:: javascript
+
+    {
+        "count": 3,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 1,
+                "name": "my-strike-process",
+                "title": "My Strike Process",
+                "description": "This is my Strike process for detecting my favorite files!",
+                "job": {
+                    "id": 7,
+                    "job_type": {
+                        "id": 2,
+                        "name": "scale-strike",
                         "version": "1.0.0",
-                        "title": "Scale Strike", 
-                        "description": "Monitors a directory for incoming source files to ingest", 
+                        "title": "Scale Strike",
+                        "description": "Monitors a directory for incoming source files to ingest",
                         "revision_num": 1,
-                        "icon_code": "f0e7" 
-                    }, 
+                        "icon_code": "f0e7"
+                    },
                     "status": "RUNNING"
                 },
                 "created": "2015-03-11T00:00:00Z",
                 "last_modified": "2015-03-11T00:00:00Z"
-            }, 
-            ... 
-        ] 
-    } 
+            },
+            ...
+        ]
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Strike List**                                                                                                         |
@@ -120,62 +120,80 @@ v6 Create Strike
 
 Request: POST http://.../v6/strikes/
 
- .. code-block:: javascript 
- 
-    { 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
+ .. code-block:: javascript
+
+    {
+        "title": "My Strike Process",
+        "description": "This is my Strike process for detecting my favorite files!",
+        "configuration": {
+            "workspace": "my-workspace",
+            "monitor": {
+                "type": "dir-watcher",
+                "transfer_suffix": "_tmp"
+            },
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
             }],
-            "recipe": 42
-        } 
-    } 
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+        }
+    }
 
 Response: 201 Created
 Headers:
 Location http://.../v6/strikes/105/
 
- .. code-block:: javascript 
- 
-    { 
-        "id": 1, 
-        "name": "my-strike-process", 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
-        "job": { 
-            "id": 7, 
-            "job_type": { 
-                "id": 2, 
-                "name": "scale-strike", 
+ .. code-block:: javascript
+
+    {
+        "id": 1,
+        "name": "my-strike-process",
+        "title": "My Strike Process",
+        "description": "This is my Strike process for detecting my favorite files!",
+        "job": {
+            "id": 7,
+            "job_type": {
+                "id": 2,
+                "name": "scale-strike",
                 "version": "1.0.0",
-                "title": "Scale Strike", 
-                "description": "Monitors a directory for incoming source files to ingest", 
+                "title": "Scale Strike",
+                "description": "Monitors a directory for incoming source files to ingest",
                 "revision_num": 1,
-                "icon_code": "f0e7" 
-            }, 
+                "icon_code": "f0e7"
+            },
             "status": "RUNNING"
-        }, 
+        },
         "created": "2015-03-11T00:00:00Z",
         "last_modified": "2015-03-11T00:00:00Z",
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
+        "configuration": {
+            "workspace": "my-workspace",
+            "monitor": {
+                "type": "dir-watcher",
+                "transfer_suffix": "_tmp"
+            },
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
             }],
-            "recipe": 42
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
         }
-    } 
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Create Strike**                                                                                                       |
@@ -220,40 +238,50 @@ Request: GET http://.../v6/strikes/{id}/
 
 Response: 200 OK
 
- .. code-block:: javascript 
- 
-   { 
-       "id": 1, 
-       "name": "my-strike-process", 
-       "title": "My Strike Process", 
-       "description": "This is my Strike process for detecting my favorite files!", 
-       "job": { 
-           "id": 7, 
-           "job_type": { 
-               "id": 2, 
-               "name": "scale-strike", 
+ .. code-block:: javascript
+
+   {
+       "id": 1,
+       "name": "my-strike-process",
+       "title": "My Strike Process",
+       "description": "This is my Strike process for detecting my favorite files!",
+       "job": {
+           "id": 7,
+           "job_type": {
+               "id": 2,
+               "name": "scale-strike",
                "version": "1.0.0",
-               "title": "Scale Strike", 
-               "description": "Monitors a directory for incoming source files to ingest", 
+               "title": "Scale Strike",
+               "description": "Monitors a directory for incoming source files to ingest",
                "revision_num": 1,
-               "icon_code": "f0e7" 
-           }, 
+               "icon_code": "f0e7"
+           },
            "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",
-       "configuration": { 
-           "workspace": "my-workspace", 
-           "monitor": { 
-               "type": "dir-watcher", 
-               "transfer_suffix": "_tmp" 
-           }, 
-           "files_to_ingest": [{ 
-               "filename_regex": ".*txt" 
-           }] 
-       } 
-   } 
-   
+       "configuration": {
+           "workspace": "my-workspace",
+           "monitor": {
+               "type": "dir-watcher",
+               "transfer_suffix": "_tmp"
+           },
+           "files_to_ingest": [{
+               "filename_regex": ".*txt"
+           }],
+           "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+       }
+   }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Strike Details**                                                                                                      |
 +=========================================================================================================================+
@@ -299,28 +327,38 @@ v6 Validate Strike
 
 Request: POST http://.../v6/strikes/validation/
 
-.. code-block:: javascript 
+.. code-block:: javascript
 
-    { 
-        "name": "my-strike-process", 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        } 
-    } 
+    {
+        "name": "my-strike-process",
+        "title": "My Strike Process",
+        "description": "This is my Strike process for detecting my favorite files!",
+        "configuration": {
+            "workspace": "my-workspace",
+            "monitor": {
+                "type": "dir-watcher",
+                "transfer_suffix": "_tmp"
+            },
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
+            }],
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+        }
+    }
 
 Response: 200 OK
 
-.. code-block:: javascript 
- 
+.. code-block:: javascript
+
    {
       "is_valid": true,
       "errors": [],
@@ -376,25 +414,35 @@ v6 Edit Strike
 
 Request: PATCH http://.../v6/strikes/{id}/
 
-.. code-block:: javascript 
- 
-    { 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        } 
+.. code-block:: javascript
+
+    {
+        "title": "My Strike Process",
+        "description": "This is my Strike process for detecting my favorite files!",
+        "configuration": {
+            "workspace": "my-workspace",
+            "monitor": {
+                "type": "dir-watcher",
+                "transfer_suffix": "_tmp"
+            },
+            "files_to_ingest": [{
+                "filename_regex": ".*txt"
+            }],
+            "recipe": {
+                "name": "my-recipe",
+                "conditions": [{
+                    "input_name": "INPUT_FILE",
+                    "media_types": ["text/plain"],
+                    "data_types": ["type1", "type2"],
+                    "any_data_types": ["type3", "type4"],
+                    "not_data_types": ["type5"]
+                }]
+            }
+        }
     }
 
 Response: 204 NO CONTENT
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Strike**                                                                                                         |
 +=========================================================================================================================+
@@ -444,9 +492,18 @@ A strike configuration JSON describes a set of configuration settings that affec
           "new_file_path" : "wksp/path"
         }
       ],
-      "recipe_type": "my-recipe"
+      "recipe": {
+        "name": "my-recipe",
+        "conditions": [{
+            "input_name": "INPUT_FILE",
+            "media_types": ["text/plain"],
+            "data_types": ["type1", "type2"],
+            "any_data_types": ["type3", "type4"],
+            "not_data_types": ["type5"]
+        }]
+      }
     }
-    
+
 **Example S3 interface:**
 
 .. code-block:: javascript
@@ -473,7 +530,16 @@ A strike configuration JSON describes a set of configuration settings that affec
                 "new_file_path": "/new/file/path"
             }
         ],
-        "recipe_type": "my-recipe"
+        "recipe": {
+            "name": "my-recipe",
+            "conditions": [{
+                "input_name": "INPUT_FILE",
+                "media_types": ["text/plain"],
+                "data_types": ["type1", "type2"],
+                "any_data_types": ["type3", "type4"],
+                "not_data_types": ["type5"]
+            }]
+        }
     }
 
 +-----------------------------------------------------------------------------------------------------------------------------+
@@ -518,9 +584,9 @@ A strike configuration JSON describes a set of configuration settings that affec
 |                            |                |          | that appear in the scanned workspace. The array must contain at    |
 |                            |                |          | least one item.                                                    |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .filename_regex            | String         | Required | Regular expression to check against the names of new files in the  |   
+| .filename_regex            | String         | Required | Regular expression to check against the names of new files in the  |
 |                            |                |          | scanned workspace. When a new file appears in the workspace, the   |
-|                            |                |          | file’s name is checked against each expression in order of the     | 
+|                            |                |          | file’s name is checked against each expression in order of the     |
 |                            |                |          | files_to_ingest array. If an expression matches the new file name  |
 |                            |                |          | in the workspace, that file is ingested according to the other     |
 |                            |                |          | fields in the JSON object and all subsequent rules in the list are |
@@ -544,5 +610,22 @@ A strike configuration JSON describes a set of configuration settings that affec
 |                            |                |          | month, and day, will be appended to the new_file_path value        |
 |                            |                |          | automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).|
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| recipe_type                | string         | Required | Specifies the recipe name the Strike will kick off when complete.  |
+| recipe                     | JSON Object    | Required | Specifies the recipe and inputs the the Strike will attempt to     |
+|                            |                |          | match up to when a file is ingested.                               |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .name                      | String         | Required | The name of the recipe type that should be triggered               |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .conditions                | Array          | Required | The media type and data type conditions each recipe input should   |
+|                            |                |          | meet. Incoming files are checked against these types.              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..input_name               | String         | Required | The name of the recipe input to which the condition maps.          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..media_types              | Array          | Optional | A list of media types the incoming file should match for the input.|
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..data_types               | Array          | Optional | A list of data types the incoming file should match for the input. |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..any_data_types           | Array          | Optional | A list of data types the incoming file could match for the input.  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..not_data_types           | Array          | Optional | A list of data types the incoming file should NOT match for the    |
+|                            |                |          | input.                                                             |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
