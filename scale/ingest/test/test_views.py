@@ -1165,6 +1165,55 @@ class TestScansValidationViewV6(TestCase):
         valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
         self.assertDictEqual(results, valid_results_dict)
 
+    def test_successful_recipe(self):
+        """Tests validating a new Scan process."""
+
+        jt1 = job_utils.create_seed_job_type()
+        recipe_type_def = {'version': '6',
+                           'input': {'files': [{'name': 'INPUT_FILE',
+                                                'media_types': ['text/plain'],
+                                                'required': True,
+                                                'multiple': True}],
+                                    'json': []},
+                           'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
+                                                              'job_type_version': jt1.version,
+                                                              'job_type_revision': 1}}}}
+
+        recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
+
+        json_data = {
+            'title': 'Scan Title',
+            'description': 'Scan description',
+            'configuration': {
+                'version': '1.0',
+                'workspace': self.workspace.name,
+                'scanner': {'type': 'dir'},
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt'
+                }],
+                'recipe': {
+                    'name': recipe.name,
+                    'conditions': [{
+                        'input_name': 'INPUT_FILE',
+                        'media_types': ['text/plain'],
+                        'data_types': ['type1', 'type2'],
+                        'any_data_types': ['type3', 'type4'],
+                        'not_data_types': ['type5'],
+                    }],
+                },
+            },
+        }
+
+        url = '/%s/scans/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
+        self.assertDictEqual(results, valid_results_dict)
+
     def test_missing_configuration(self):
         """Tests validating a new Scan process with missing configuration."""
 
@@ -2097,6 +2146,62 @@ class TestStrikesValidationViewV6(TestCase):
         valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
         self.assertDictEqual(results, valid_results_dict)
 
+    def test_successful_recipe(self):
+        """Tests validating a new Scan process."""
+
+        jt1 = job_utils.create_seed_job_type()
+        recipe_type_def = {'version': '6',
+                           'input': {'files': [{'name': 'INPUT_FILE',
+                                                'media_types': ['text/plain'],
+                                                'required': True,
+                                                'multiple': True}],
+                                    'json': []},
+                           'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
+                                                              'job_type_version': jt1.version,
+                                                              'job_type_revision': 1}}}}
+
+        recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'version': '2.0',
+                'workspace': self.workspace.name,
+                'monitor': {
+                    'type': 'dir-watcher',
+                    'transfer_suffix': '_tmp',
+                },
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'data_types': ['one', 'two'],
+                    'new_file_path': os.path.join('my', 'path'),
+                    'new_workspace': self.workspace.name,
+                }],
+                'recipe': {
+                    'name': recipe.name,
+                    'conditions': [{
+                        'input_name': 'INPUT_FILE',
+                        'media_types': ['text/plain'],
+                        'data_types': ['one'],
+                        'any_data_types': ['two', 'three'],
+                        'not_data_types': ['four'],
+                    }],
+                },
+            },
+        }
+
+        url = '/%s/strikes/validation/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
+        self.assertDictEqual(results, valid_results_dict)
+
     def test_missing_configuration(self):
         """Tests validating a new Strike process with missing configuration."""
 
@@ -2141,6 +2246,9 @@ class TestStrikesValidationViewV6(TestCase):
                     'workspace_path': 'my/path',
                     'workspace_name': 'BAD',
                 }],
+                'recipe': {
+                    'name': 'name',
+                },
             },
         }
 

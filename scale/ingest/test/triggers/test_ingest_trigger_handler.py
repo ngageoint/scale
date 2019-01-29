@@ -17,7 +17,7 @@ from storage.models import ScaleFile
 
 
 class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
-    fixtures = ['ingest_job_types.json']
+
     def setUp(self):
         django.setup()
 
