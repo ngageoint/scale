@@ -151,7 +151,7 @@ class RecipeManager(models.Manager):
         recipe.recipe_type = recipe_type_rev.recipe_type
         recipe.recipe_type_rev = recipe_type_rev
         recipe.event_id = event_id
-        recipe.ingest_id = ingest_id
+        recipe.ingest_event_id = ingest_id
         recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         recipe.recipe_id = recipe_id
         recipe.batch_id = batch_id

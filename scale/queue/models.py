@@ -523,6 +523,7 @@ class QueueManager(models.Manager):
 
         return handler.recipe
 
+    #TODO move this to queue_new_recipe_v6 when TriggerEvents are removed
     def queue_new_recipe_ingest_v6(self, recipe_type, recipe_input, event, recipe_config=None, batch_id=None, superseded_recipe=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the

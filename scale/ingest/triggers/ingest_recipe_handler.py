@@ -22,6 +22,9 @@ logger = logging.getLogger(__name__)
 
 RECIPE_TYPE = 'RECIPE'
 
+# TODO:
+# This was modeled off the IngestTriggerHandler class
+# Do we need to inherit from an "IngestTriggerRule" ?
 class IngestRecipeHandler(object):
     """Handles ingest trigger rules
     """
@@ -62,7 +65,7 @@ class IngestRecipeHandler(object):
             not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
             handler.add_rule(RecipeRule(condition['input_name'], media_types, data_types, any_data_types, not_data_types))
 
-        # MATCH INPUT TO INPUT NAME
+        # Match sourcefile  to proper recipe input
         input_rule = handler.rule_matches(source_file)
         if input_rule:
             recipe_data = RecipeData({})
