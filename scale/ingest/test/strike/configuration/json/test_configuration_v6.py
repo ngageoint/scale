@@ -105,7 +105,6 @@ class TestStrikeConfigurationV6(TestCase):
             }],
             'recipe': {
                 'name': 'recipe',
-                'conditions': []
             },
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
@@ -144,11 +143,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
             'recipe': {
                 'name': 'test-recipe',
-                'conditions': [{
-                    'input_name': 'INPUT_FILE',
-                    'regex': 'input_*.txt',
-                    'media_types': ['text/plain'],
-                }],
+                'version': '1.0.0',
             },
         }
         # No exception is success
@@ -242,11 +237,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
             'recipe': {
                 'name': recipe.name,
-                'conditions': [{
-                    'input_name':'INPUT_IMAGE',
-                    'regex': 'input_*.png',
-                    'media_types': ['image/png'],
-                }],
+                'version': recipe.version
             },
         }
 

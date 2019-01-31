@@ -101,6 +101,11 @@ class RecipeDefinition(object):
 
         self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
+    def get_input_keys(self):
+        """Returns the input keys to this recipe"""
+
+        return self.input_interface.parameters.keys()
+
     def get_job_type_keys(self):
         """Gets the natural keys of the job types contained in this RecipeDefinition
 
@@ -115,7 +120,7 @@ class RecipeDefinition(object):
             if node.node_type == JobNodeDefinition.NODE_TYPE:
                 key = JobTypeKey(name=node.job_type_name, version=node.job_type_version)
                 keys.append(key)
-                        
+
         return set(keys)
 
     def get_job_nodes(self, job_type_name, job_type_version):
@@ -161,7 +166,7 @@ class RecipeDefinition(object):
                     else:
                         node.revision_num = revision_num
                         found = True
-                        
+
         return found
 
     def add_recipe_input_connection(self, node_name, node_input_name, recipe_input_name):
@@ -205,13 +210,13 @@ class RecipeDefinition(object):
         :returns: set of RecipeType names
         :rtype: set[string]
         """
-        
+
         names = []
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
             if node.node_type == RecipeNodeDefinition.NODE_TYPE:
                 names.append(node.recipe_type_name)
-                        
+
         return set(names)
 
     def get_recipe_nodes(self, recipe_type_name):
@@ -254,7 +259,7 @@ class RecipeDefinition(object):
                     else:
                         node.revision_num = revision_num
                         found = True
-                        
+
         return found
 
     def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):

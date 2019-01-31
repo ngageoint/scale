@@ -761,14 +761,8 @@ class TestScanCreateViewV6(TestCase):
                 }],
             },
             'recipe': {
-                'name': 'test-recipe',
-                'conditions': [{
-                    'input_name': 'INPUT_FILE',
-                    'media_types': ['text/plain'],
-                    'data_types': ['type1'],
-                    'any_data_types': ['type2', 'type3'],
-                    'not_data_types': ['type4'],
-                }],
+                'name': recipe_type.name,
+                'version': recipe_type.version,
             },
         }
 
@@ -1195,11 +1189,7 @@ class TestScansValidationViewV6(TestCase):
                 }],
                 'recipe': {
                     'name': recipe.name,
-                    'conditions': [{
-                        'input_name': 'INPUT_FILE',
-                        'regex': 'input_*.txt',
-                        'media_types': ['text/plain'],
-                    }],
+                    'version': recipe.version,
                 },
             },
         }
@@ -1793,12 +1783,8 @@ class TestStrikeCreateViewV6(TestCase):
                     'new_workspace': self.new_workspace.name,
                 }],
                 'recipe': {
-                    'name': 'test-recipe',
-                    'conditions': [{
-                        'input_name': 'INPUT_FILE',
-                        'regex': 'input_*.txt',
-                        'media_types': ['text/plain'],
-                    }],
+                    'name': recipe_type.name,
+                    'version': recipe_type.version,
                 },
             },
         }
@@ -2179,11 +2165,7 @@ class TestStrikesValidationViewV6(TestCase):
                 }],
                 'recipe': {
                     'name': recipe.name,
-                    'conditions': [{
-                        'input_name': 'INPUT_FILE',
-                        'regex': 'input_*.txt',
-                        'media_types': ['text/plain'],
-                    }],
+                    'version': recipe.version
                 },
             },
         }

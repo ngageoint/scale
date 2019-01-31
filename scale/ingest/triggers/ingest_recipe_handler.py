@@ -6,8 +6,6 @@ import logging
 from django.db import transaction
 
 from ingest.triggers.configuration.ingest_trigger_rule import IngestTriggerRuleConfiguration
-from ingest.handlers.recipe_handler import RecipeHandler
-from ingest.handlers.recipe_rule import RecipeRule
 from ingest.models import IngestEvent, Scan, Strike
 from job.configuration.data.job_data import JobData
 from job.models import JobType
@@ -57,24 +55,25 @@ class IngestRecipeHandler(object):
         # Create the recipe handler associated with the ingest strike/scan
         source_recipe_config = source.configuration['recipe']
         recipe_name = source_recipe_config['name']
-        handler = RecipeHandler(source_recipe_config['name'])
-        for condition in source_recipe_config['conditions']:
-            regex = condition['regex'] if 'regex' in condition else None
-            media_types = condition['media_types'] if 'media_types' in condition else None
-            handler.add_rule(RecipeRule(condition['input_name'], regex, media_types))
+        recipe_version = source_recipe_config['version']
 
-        # Match sourcefile  to proper recipe input
-        input_rule = handler.rule_matches(source_file)
-        if input_rule:
+        # Create the recipe handler associated with the ingest strike/scan
+        source_recipe_config = source.configuration['recipe']
+        recipe_name = source_recipe_config['name']
+        recipe_version = source_recipe_config['version']
+
+        recipe_type = RecipeType.objects.get(name=recipe_name)
+        if recipe_type:
+            # Assuming one input per recipe, so pull the first defined input you find
             recipe_data = RecipeData({})
-            recipe_data.add_file_input(input_rule.input_name, source_file.id)
-
+            input_name = recipe_type.get_definition().get_input_keys()[0]
+            recipe_data.add_file_input(input_name, source_file.id)
             event = self._create_ingest_event(source, source_file, when)
-            recipe_type = RecipeType.objects.get(name=recipe_name)
+
             logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
             Queue.objects.queue_new_recipe_ingest_v6(recipe_type, recipe_data._new_data, event)
         else:
-            logger.info('No recipe input matches the source file')
+            logger.info('No recipe type found for %s %s' % (recipe_name, recipe_version))
 
     def _create_ingest_event(self, source, source_file, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and recipe type

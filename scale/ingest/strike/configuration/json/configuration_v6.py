@@ -10,8 +10,6 @@ from jsonschema.exceptions import ValidationError
 
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
-from ingest.handlers.recipe_handler import RecipeHandler
-from ingest.handlers.recipe_rule import RecipeRule
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_1_0 import StrikeConfigurationV1
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
@@ -53,46 +51,22 @@ STRIKE_CONFIGURATION_SCHEMA = {
         },
         'recipe': {
             'type': 'object',
-            'required': ['name', 'conditions'],
+            'description': 'Specifies the natural key of the recipe the Strike will start when a file is ingested.',
+            'required': ['name', 'version'],
             'additionalProperties': False,
             'properties': {
                 'name': {
                     'type': 'string',
-                    'description': 'The name of the recipe to kick off',
+                    'description': 'Specifies the name of the recipe.',
                 },
-                'conditions': {
-                    'type': 'array',
-                    'items': {
-                        '$ref': '#/definitions/recipe_condition',
-                    },
+                'version': {
+                    'type': 'string',
+                    'description': 'Specifies the version of the recipe.'
                 },
             },
         },
     },
     'definitions': {
-        'recipe_condition': {
-            'type': 'object',
-            'description': 'Maps the recipe inputs to specfic conditions',
-            'required': ['input_name', 'regex', 'media_types'],
-            'additionalProperties': False,
-            'properties': {
-                'input_name': {
-                    'type': 'string',
-                    'description': 'The name of the input',
-                },
-                'regex': {
-                    'type': 'string',
-                    'description': 'Regex of the filename to match on',
-                },
-                'media_types': {
-                    'description': 'Media types to match',
-                    'type': 'array',
-                    'items': {
-                        'type': 'string'
-                    },
-                },
-            },
-        },
         'file_item': {
             'type': 'object',
             'required': ['filename_regex'],
@@ -174,15 +148,6 @@ class StrikeConfigurationV6(object):
             rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
 
-        self._recipe_handler = RecipeHandler()
-        if 'recipe' in self._configuration and 'name' in self._configuration['recipe']:
-            self._recipe_handler.recipe_name =self._configuration['recipe']['name']
-            for condition in self._configuration['recipe']['conditions']:
-                input_name = condition['input_name']
-                regex = condition['regex'] if 'regex' in condition else None
-                media_types = condition['media_types'] if 'media_types' in condition else None
-                self._recipe_handler.add_rule(RecipeRule(input_name, regex, media_types))
-
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
 
@@ -203,7 +168,6 @@ class StrikeConfigurationV6(object):
 
         config.configuration    = self._configuration
         config.file_handler     = self._file_handler
-        config.recipe_handler   = self._recipe_handler
 
         return config
 
@@ -264,5 +228,5 @@ class StrikeConfigurationV6(object):
         # if 'recipe' not in self._configuration:
         #     self._configuration['recipe'] = {
         #         'name': '',
-        #         'conditions': []
+        #         'version': ''
         #     }

@@ -221,11 +221,7 @@ class TestScanConfiguration(TestCase):
             }],
             'recipe': {
                 'name': 'test-recipe',
-                'conditions': [{
-                    'input_name': 'INPUT_FILE',
-                    'regex': 'input_*.txt',
-                    'media_types': ['text/plain'],
-                }],
+                'version': '1.0.0',
             },
         }
         # No exception is success
@@ -438,11 +434,7 @@ class TestScanConfiguration(TestCase):
             }],
             'recipe': {
                 'name': recipe.name,
-                'conditions': [{
-                    'input_name':'INPUT_IMAGE',
-                    'regex': 'input_*.txt',
-                    'media_types': ['image/png'],
-                }],
+                'version': recipe.version,
             },
         }
 

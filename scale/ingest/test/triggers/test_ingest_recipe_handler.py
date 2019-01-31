@@ -68,11 +68,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
             }],
             'recipe': {
                 'name': self.recipe.name,
-                'conditions':[{
-                    'input_name': 'INPUT_FILE',
-                    'regex': 'input_file*',
-                    'media_types': ['text/plain'],
-                }],
+                'version': self.recipe.version
             },
         }
         config = StrikeConfigurationV6(strike_config).get_configuration()
@@ -96,11 +92,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
             }],
             'recipe': {
                 'name': self.recipe.name,
-                'conditions':[{
-                    'input_name': 'INPUT_FILE',
-                    'regex': 'input_file*',
-                    'media_types': ['text/plain'],
-                }],
+                'version': self.recipe.version,
             },
         }
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()

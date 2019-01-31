@@ -110,11 +110,7 @@ class TestStrikeConfiguration(TestCase):
             }],
             'recipe': {
                 'name': recipe.name,
-                'conditions': [{
-                    'input_name':'INPUT_IMAGE',
-                    'regex': 'input_*.txt',
-                    'media_types': ['image/png'],
-                }],
+                'version': recipe.version,
             },
         }
 
