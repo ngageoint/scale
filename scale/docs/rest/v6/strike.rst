@@ -138,10 +138,8 @@ Request: POST http://.../v6/strikes/
                 "name": "my-recipe",
                 "conditions": [{
                     "input_name": "INPUT_FILE",
-                    "media_types": ["text/plain"],
-                    "data_types": ["type1", "type2"],
-                    "any_data_types": ["type3", "type4"],
-                    "not_data_types": ["type5"]
+                    "regex": ".*txt"
+                    "media_types": ["text/plain"]
                 }]
             }
         }
@@ -186,10 +184,8 @@ Location http://.../v6/strikes/105/
                 "name": "my-recipe",
                 "conditions": [{
                     "input_name": "INPUT_FILE",
-                    "media_types": ["text/plain"],
-                    "data_types": ["type1", "type2"],
-                    "any_data_types": ["type3", "type4"],
-                    "not_data_types": ["type5"]
+                    "regex": ".*txt",
+                    "media_types": ["text/plain"]
                 }]
             }
         }
@@ -273,10 +269,8 @@ Response: 200 OK
                 "name": "my-recipe",
                 "conditions": [{
                     "input_name": "INPUT_FILE",
-                    "media_types": ["text/plain"],
-                    "data_types": ["type1", "type2"],
-                    "any_data_types": ["type3", "type4"],
-                    "not_data_types": ["type5"]
+                    "regex": ".*txt",
+                    "media_types": ["text/plain"]
                 }]
             }
        }
@@ -534,10 +528,8 @@ A strike configuration JSON describes a set of configuration settings that affec
             "name": "my-recipe",
             "conditions": [{
                 "input_name": "INPUT_FILE",
+                "regex": ".*txt",
                 "media_types": ["text/plain"],
-                "data_types": ["type1", "type2"],
-                "any_data_types": ["type3", "type4"],
-                "not_data_types": ["type5"]
             }]
         }
     }
@@ -620,12 +612,7 @@ A strike configuration JSON describes a set of configuration settings that affec
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | ..input_name               | String         | Required | The name of the recipe input to which the condition maps.          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..regex                    | String         | Optional | Regular expression to check against the name of the file.          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
 | ..media_types              | Array          | Optional | A list of media types the incoming file should match for the input.|
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..data_types               | Array          | Optional | A list of data types the incoming file should match for the input. |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..any_data_types           | Array          | Optional | A list of data types the incoming file could match for the input.  |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..not_data_types           | Array          | Optional | A list of data types the incoming file should NOT match for the    |
-|                            |                |          | input.                                                             |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

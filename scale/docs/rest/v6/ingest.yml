@@ -571,6 +571,10 @@ components:
         input_name:
           type: string
           description: The name of the recipe input to which the condition maps.
+        regex:
+          type: string
+          description: The filename_regex field is an optional string that defines a regular expression to check against
+            the name of the incoming file.
         media_types:
           type: array
           style: simple
