@@ -70,10 +70,8 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                 'name': self.recipe.name,
                 'conditions':[{
                     'input_name': 'INPUT_FILE',
+                    'regex': 'input_file*',
                     'media_types': ['text/plain'],
-                    'data_types': ['type1'],
-                    'any_data_types': ['type2', 'type3'],
-                    'not_data_types': ['type5'],
                 }],
             },
         }
@@ -100,10 +98,8 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                 'name': self.recipe.name,
                 'conditions':[{
                     'input_name': 'INPUT_FILE',
+                    'regex': 'input_file*',
                     'media_types': ['text/plain'],
-                    'data_types': ['type1'],
-                    'any_data_types': ['type2', 'type3'],
-                    'not_data_types': ['type5'],
                 }],
             },
         }

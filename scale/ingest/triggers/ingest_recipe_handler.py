@@ -59,11 +59,9 @@ class IngestRecipeHandler(object):
         recipe_name = source_recipe_config['name']
         handler = RecipeHandler(source_recipe_config['name'])
         for condition in source_recipe_config['conditions']:
+            regex = condition['regex'] if 'regex' in condition else None
             media_types = condition['media_types'] if 'media_types' in condition else None
-            data_types = condition['data_types'] if 'data_types' in condition else None
-            any_data_types = condition['any_data_types'] if 'any_data_types' in condition else None
-            not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
-            handler.add_rule(RecipeRule(condition['input_name'], media_types, data_types, any_data_types, not_data_types))
+            handler.add_rule(RecipeRule(condition['input_name'], regex, media_types))
 
         # Match sourcefile  to proper recipe input
         input_rule = handler.rule_matches(source_file)

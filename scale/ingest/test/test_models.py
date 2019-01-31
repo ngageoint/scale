@@ -108,9 +108,8 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
                 'name': self.recipe.name,
                 'conditions': [{
                     'input_name': 'INPUT_IMAGE',
+                    'regex': 'input_*.txt',
                     'media_types': ['image/png'],
-                    'data_types': ['test1', 'test2'],
-                    'not_data_types': ['test3'],
                 }],
             },
         }

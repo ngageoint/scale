@@ -76,39 +76,22 @@ SCAN_CONFIGURATION_SCHEMA = {
         'recipe_condition': {
             'type': 'object',
             'description': 'Maps the recipe inputs to specfic conditions',
-            'required': ['input_name', 'media_types', 'data_types', 'not_data_types'],
+            'required': ['input_name', 'regex', 'media_types'],
             'additionalProperties': False,
             'properties': {
                 'input_name': {
                     'type': 'string',
                     'description': 'The name of the input',
                 },
+                'regex': {
+                    'description': 'Data types to match',
+                    'type': 'string',
+                },
                 'media_types': {
                     'description': 'Media types to match',
                     'type': 'array',
                     'items': {
                         'type': 'string'
-                    },
-                },
-                'data_types': {
-                    'description': 'Data types to match',
-                    'type': 'array',
-                    'items': {
-                        'type': 'string',
-                    },
-                },
-                'any_data_types': {
-                   'description': 'Data types file may match',
-                   'type': 'array',
-                   'items': {
-                        'type': 'string',
-                   },
-                },
-                'not_data_types': {
-                    'description': 'Data types to not match',
-                    'type': 'array',
-                    'items': {
-                        'type': 'string',
                     },
                 },
             },
@@ -212,11 +195,9 @@ class ScanConfigurationV6(object):
             self._recipe_handler.recipe_name =self._configuration['recipe']['name']
             for condition in self._configuration['recipe']['conditions']:
                 input_name = condition['input_name']
+                regex = condition['regex'] if 'regex' in condition else None
                 media_types = condition['media_types'] if 'media_types' in condition else None
-                any_data_types = condition['any_data_types'] if 'any_data_types' in condition else None
-                data_types = condition['data_types'] if 'data_types' in condition else None
-                not_data_types = condition['not_data_types'] if 'not_data_types' in condition else None
-                self._recipe_handler.add_rule(RecipeRule(input_name, media_types, data_types, any_data_types, not_data_types))
+                self._recipe_handler.add_rule(RecipeRule(input_name, regex, media_types))
 
     def get_configuration(self):
         """Returns the scan configuration represented by this JSON

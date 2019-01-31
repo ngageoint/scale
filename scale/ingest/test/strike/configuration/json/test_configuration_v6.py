@@ -146,9 +146,8 @@ class TestStrikeConfigurationV6(TestCase):
                 'name': 'test-recipe',
                 'conditions': [{
                     'input_name': 'INPUT_FILE',
+                    'regex': 'input_*.txt',
                     'media_types': ['text/plain'],
-                    'data_types': ['type1', 'type2'],
-                    'not_data_types': ['type3'],
                 }],
             },
         }
@@ -245,9 +244,8 @@ class TestStrikeConfigurationV6(TestCase):
                 'name': recipe.name,
                 'conditions': [{
                     'input_name':'INPUT_IMAGE',
+                    'regex': 'input_*.png',
                     'media_types': ['image/png'],
-                    'data_types': ['type1', 'type2'],
-                    'not_data_types': [],
                 }],
             },
         }
