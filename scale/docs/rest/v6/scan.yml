@@ -281,11 +281,10 @@ components:
           properties:
             name:
               type: string
-              description: Specifies the recipe and inputs the the Scan will
-                attempt to match up to when a file is ingested.
+              description: Specifies the name of the recipe the Scan will attempt
+                to start when the file is ingested.
               example: my-recipe
-            conditions:
-              type: array
-              items:
-                $ref: '#/components/schemas/recipe_condition'
-
+            version:
+              type: string
+              description: Specifies the version of the recipe the Scan will
+                attempt to start when the file is ingested.

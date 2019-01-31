@@ -158,11 +158,7 @@ Request: POST http://.../v6/scans/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "conditions": [{
-                    "input_name": "INPUT_FILE",
-                    "regex": ".*txt",
-                    "media_types": ["text/plain"]
-                }]
+                "version": "1.0.0"
             }
         }
     }
@@ -218,11 +214,7 @@ Location http://.../v6/scans/105/
            }],
            "recipe": {
                "name": "my-recipe",
-               "conditions": [{
-                    "input_name": "INPUT_FILE",
-                    "regex": ".*txt",
-                    "media_types": ["text/plain"]
-               }]
+               "version": "1.0.0"
            }
        }
    }
@@ -317,11 +309,7 @@ Response: 200 OK
            }],
            "recipe": {
                "name": "my-recipe",
-               "conditions": [{
-                    "input_name": "INPUT_FILE",
-                    "regex": ".*txt",
-                    "media_types": ["text/plain"]
-               }]
+               "version": "1.0.0"
            }
        }
    }
@@ -392,11 +380,7 @@ Request: POST http://.../v6/scans/validation/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "conditions": [{
-                    "input_name": "INPUT_FILE",
-                    "regex": ".*txt",
-                    "media_types": ["text/plain"]
-                }]
+                "version": "1.0.0"
             }
         }
     }
@@ -476,11 +460,7 @@ Request: PATCH http://.../v6/scans/{id}/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "conditions": [{
-                    "input_name": "INPUT_FILE",
-                    "regex": ".*txt",
-                    "media_types": ["text/plain"]
-                }]
+                "version": "1.0.0"
             }
         }
     }
@@ -575,11 +555,7 @@ Response: 200 OK
            }],
            "recipe": {
                "name": "my-recipe",
-               "conditions": [{
-                    "input_name": "INPUT_FILE",
-                    "regex": ".*txt",
-                    "media_types": ["text/plain"]
-               }]
+               "version": "1.0.0"
            }
        }
    }
@@ -660,11 +636,7 @@ A scan configuration JSON describes a set of configuration settings that affect 
       ],
       "recipe": {
         "name": "my-recipe",
-        "conditions": [{
-            "input_name": "INPUT_FILE",
-            "regex": ".*txt",
-            "media_types": ["text/plain"]
-        }]
+        "version": "1.0.0"
       }
     }
 
@@ -718,17 +690,10 @@ A scan configuration JSON describes a set of configuration settings that affect 
 |                            |                |          | month, and day, will be appended to the new_file_path value        |
 |                            |                |          | automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).|
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| recipe                     | JSON Object    | Required | Specifies the recipe and inputs the the Scan will attempt to       |
-|                            |                |          | match up to when a file is ingested.                               |
+| recipe                     | JSON Object    | Required | Specifies the natural key of the recipe the Strike will start when |
+|                            |                |          | a file is ingested.                                                |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .name                      | String         | Required | The name of the recipe type that should be triggered               |
+| .name                      | String         | Required | Specifies the name of the recipe.                                  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .conditions                | Array          | Required | The media type and data type conditions each recipe input should   |
-|                            |                |          | meet. Incoming files are checked against these types.              |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..input_name               | String         | Required | The name of the recipe input to which the condition maps.          |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..regex                    | String         | Optional | Regular expression to check against the name of the file.          |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..media_types              | Array          | Optional | A list of media types the incoming file should match for the input.|
+| .version                   | String         | Required | Specifies the version of the recipe.                               |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
