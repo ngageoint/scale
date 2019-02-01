@@ -1047,9 +1047,6 @@ class TestScanDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        scan = Scan.objects.get(pk=self.scan.id)
-        self.assertDictEquals(scan.get_v6_configuration_json(), config)
-
     def test_edit_bad_recipe(self):
         """Tests editing a scan configuration with an invalid recipe"""
 
