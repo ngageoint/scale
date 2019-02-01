@@ -407,8 +407,6 @@ components:
         - $ref: '#/components/schemas/recipe'
         - type: object
         - properties:
-            recipe_type_rev:
-              $ref: '#/components/schemas/recipe_type_revision_details'
             event:
               $ref: '#/components/schemas/event_details'
             superseded_recipe:
