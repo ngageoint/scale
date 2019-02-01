@@ -9,6 +9,7 @@ from django.utils.timezone import now
 from mock import patch
 
 from job.test import utils as job_utils
+from recipe.test import utils as recipe_test_utils
 from source.models import SourceFile
 from source.test import utils as source_test_utils
 from storage.brokers.broker import FileMove
@@ -218,12 +219,71 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         job_type.save()
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None)
-        
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, is_recipe=False)
+
         # Ensure there's an event for the parse
         evt = TriggerEvent.objects.first()
         self.assertEqual(evt.description['version'], '1.0')
         self.assertEqual(evt.description['file_name'], 'text.txt')
+
+    # def test_nothing_triggered_from_parse(self):
+    #     """Attempting to test job being part of a recip. Tests are so complicated"""
+    #     workspace = storage_utils.create_workspace()
+
+    #     # setup job
+    #     manifest = {
+    #         'seedVersion': '1.0.0',
+    #         'job': {
+    #             'name': 'test-job',
+    #             'jobVersion': '1.0.0',
+    #             'packageVersion': '1.0.0',
+    #             'title': 'Test Job',
+    #             'description': 'This is a test job',
+    #             'maintainer': {
+    #                 'name': 'John Doe',
+    #                 'email': 'jdoe@example.com'
+    #             },
+    #             'timeout': 10,
+    #             'interface': {
+    #                 'command': '',
+    #                 'inputs': {
+    #                     'files': [{'name': 'INPUT_FILE', 'mediaTypes': ['text/plain']}]
+    #                 },
+    #                 'outputs': {
+    #                     'files': [{'name': 'output_a', 'multiple': True, 'pattern': '*.png'}]
+    #                 }
+    #             }
+    #         }
+    #     }
+    #     job_type = job_utils.create_seed_job_type(manifest=manifest)
+
+    #     # Set up recipe
+    #     definition = {
+    #         'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': False}],
+    #                   'json': []},
+    #         'nodes': {
+    #             'node-a': {'dependencies': [],
+    #                       'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+    #                       'node_type': {'node_type': 'job', 'job_type_name': job_type.name,
+    #                                                           'job_type_version': job_type.version,
+    #                                                           'job_type_revision': job_type.revision_num}}}}
+    #     recipe = recipe_test_utils.create_recipe_type_v6(definition=definition)
+
+    #     job = job_utils.create_job(job_type=job_type, input={'files': {'INPUT_FILE': [self.src_file.id]}}, recipe=recipe)
+    #     job.timeout = job_type.timeout
+    #     job.save()
+
+    #     # job_utils.create_input_file(job=job, input_file=self.src_file)
+    #     job_exe = job_utils.create_running_job_exe(job=job)
+
+    #     # job = job_utils.create_job(job_type=job_type, input={'files': {'INPUT_FILE': [self.src_file.id]}})
+    #     # job.timeout = job_type.timeout
+    #     # job.save()
+    #     # job_exe = job_utils.create_running_job_exe(job=job)
+
+    #     # Call method to test
+    #     SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, False)
+
 
     def test_valid_polygon(self):
         """Tests calling save_parse_results with valid arguments"""
