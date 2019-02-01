@@ -152,7 +152,6 @@ class FileDetailsView(RetrieveAPIView):
         return Response(serializer.data)
 
 
-@permission_classes((IsAdminUser, ))
 class PurgeSourceFileView(APIView):
     """This view is the endpoint for submitting a source file ID to be purged"""
 
@@ -242,7 +241,6 @@ class WorkspacesView(ListCreateAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def create(self, request):
         """Creates a new Workspace and returns it in JSON form
 
@@ -343,7 +341,6 @@ class WorkspaceDetailsView(GenericAPIView):
         serializer = self.get_serializer(workspace)
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def patch(self, request, workspace_id):
         """Edits an existing workspace and returns the updated details
 

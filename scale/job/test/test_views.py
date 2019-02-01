@@ -8,13 +8,12 @@ import os
 import time
 
 import django
+from django.contrib.auth.models import User
 from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
 from rest_framework.test import APIClient
-from rest_framework.settings import api_settings
-from rest_framework.permissions import AllowAny
 
 import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
@@ -32,13 +31,51 @@ from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 
 
-class TestGetAuthDisabledJobsView(TestCase):
+class TestGetAuthDisabledJobsView(TransactionTestCase):
 
     api = 'v6'
 
     def setUp(self):
-        os.environ['PUBLIC_READ_API'] = 'true'
+        #os.environ['PUBLIC_READ_API'] = 'true'
         django.setup()
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '',
+                    'inputs': {
+                        'files': [{'name': 'input_a'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_a', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+
+        job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+
+        self.json_data = {
+            "input": {
+                'version': '6',
+                'files': {'input_a': [source_file.id]},
+                'json': {}
+            },
+            "job_type_id": job_type1.pk
+        }
 
         self.client = APIClient()
 
@@ -50,20 +87,35 @@ class TestGetAuthDisabledJobsView(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-    def test_unathenticated_on_post(self):
-        """Tests failure when posting to the jobs view without authentication."""
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_job_input_messages')
+    def test_unathenticated_on_post(self, mock_create, mock_msg_mgr):
+        """Tests for failure when posting to the jobs view with authentication."""
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.post(url, data=self.json_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED, response.content)
+
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_job_input_messages')
+    def test_success_on_post(self, mock_create, mock_msg_mgr):
+        """Tests success when posting to the jobs view with authentication."""
+
         url = '/%s/jobs/' % self.api
 
-        response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        user = User.objects.create_superuser(username='test', email='test@empty.com', password='password')
 
-    def test_success_on_post(self):
-        """Tests failure when posting to the jobs view without authentication."""
-        url = '/%s/jobs/' % self.api
+        self.client.login(username='test', password='password',)
+        response = self.client.post(url, data=self.json_data, format='json')
+        self.client.logout()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
-        self.client.login(username='test', password='pass')
-        response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
+
+        # Response should be new v6 job detail response
+        self.assertEqual(result['execution'], None)
+        self.assertTrue('/%s/jobs/' % self.api in response['location'])
+        mock_create.assert_called_once()
 
 
 class TestJobsViewV6(TestCase):

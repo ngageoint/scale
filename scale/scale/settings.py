@@ -180,7 +180,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':
-        ('rest_framework.permissions.AllowAny',) if PUBLIC_READ_API else ('rest_framework.permissions.IsAuthenticated',),
+        ('util.rest.ScaleAPIPermissions',),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
     ),

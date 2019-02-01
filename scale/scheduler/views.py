@@ -63,7 +63,6 @@ class SchedulerView(GenericAPIView):
         serializer = self.get_serializer(scheduler)
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def patch(self, request):
         """Modify scheduler info with a subset of fields
 

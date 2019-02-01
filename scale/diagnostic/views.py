@@ -22,7 +22,6 @@ from util.rest import BadParameter
 logger = logging.getLogger(__name__)
 
 
-@permission_classes((IsAdminUser, ))
 class QueueScaleBakeView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Bake jobs."""
     parser_classes = (JSONParser,)
@@ -84,7 +83,6 @@ class QueueScaleBakeView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@permission_classes((IsAdminUser, ))
 class QueueScaleCasinoView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Casino recipes."""
     parser_classes = (JSONParser,)
@@ -146,7 +144,6 @@ class QueueScaleCasinoView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@permission_classes((IsAdminUser, ))
 class QueueScaleHelloView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Hello jobs."""
     parser_classes = (JSONParser,)
@@ -261,7 +258,6 @@ class QueueScaleCountView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@permission_classes((IsAdminUser, ))
 class QueueScaleRouletteView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Roulette jobs."""
     parser_classes = (JSONParser,)

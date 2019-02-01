@@ -100,7 +100,6 @@ class NodeDetailsView(GenericAPIView):
         serializer = self.get_serializer(node)
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def patch(self, request, node_id):
         """Determine api version and call specific method
 
