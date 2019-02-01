@@ -227,7 +227,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertEqual(evt.description['file_name'], 'text.txt')
 
     # def test_nothing_triggered_from_parse(self):
-    #     """Attempting to test job being part of a recip. Tests are so complicated"""
+    #     """Attempting to test job being part of a recipe. Tests are so complicated"""
     #     workspace = storage_utils.create_workspace()
 
     #     # setup job

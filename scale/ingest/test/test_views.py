@@ -759,10 +759,10 @@ class TestScanCreateViewV6(TestCase):
                     'new_file_path': 'my_path',
                     'new_workspace': 'raw',
                 }],
-            },
-            'recipe': {
-                'name': recipe_type.name,
-                'version': recipe_type.version,
+                'recipe': {
+                    'name': recipe_type.name,
+                    'version': recipe_type.version,
+                },
             },
         }
 
@@ -1000,6 +1000,81 @@ class TestScanDetailsViewV6(TestCase):
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_config_v6(self):
+        """Tests successfully editing an existing scan"""
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        config = {
+            'workspace': 'raw',
+            'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_file_path': 'my_path',
+                'new_workspace': 'raw',
+            }],
+            'recipe': {
+                'name': recipe_type.name,
+                'version': recipe_type.version,
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+        url = '/%s/scans/%d/' % (self.api, self.scan.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+        scan = Scan.objects.get(pk=self.scan.id)
+        self.assertDictEquals(scan.get_v6_configuration_json(), config)
+
+    def test_edit_bad_recipe(self):
+        """Tests editing a scan configuration with an invalid recipe"""
+
+        config = {
+            'workspace': 'raw',
+            'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_file_path': 'my_path',
+                'new_workspace': 'raw',
+            }],
+            'recipe': {
+                'name': 'test-recipe',
+                'version': '1.0.0',
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+        url = '/%s/scans/%d/' % (self.api, self.scan.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
 
     def test_edit_config_conflict(self):
         """Tests editing the configuration of a Scan process already launched"""
@@ -1979,6 +2054,61 @@ class TestStrikeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
+    def test_edit_config_v6(self):
+        """Tests attempting to edit a Strike process adding a recipe configuration"""
+        new_workspace = storage_test_utils.create_workspace(name='prods')
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': new_workspace.name,
+            }],
+            'recipe': {
+                'name': recipe_type.name,
+                'version': recipe_type.version,
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+        strike = Strike.objects.get(pk=self.strike.id)
+        self.assertDictEqual(strike.get_v6_configuration_json(), config)
+
     def test_edit_bad_config(self):
         """Tests attempting to edit a Strike process using an invalid configuration"""
 
@@ -2000,6 +2130,34 @@ class TestStrikeDetailsViewV6(TestCase):
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_edit_invalid_recipe(self):
+        """Tests attempting to edit a Strike process with a nonexistant recipe"""
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.workspace.name,
+            }],
+            'recipe': {
+                'name': 'test-recipe',
+                'version': '1.0.0',
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestStrikesValidationViewV5(TestCase):
