@@ -138,7 +138,7 @@ class SourceFileManager(models.GeoManager):
                                              statuses=statuses, scan_ids=scan_ids, strike_ids=strike_ids, order=order)
 
     def get_source_jobs(self, source_file_id, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
-                        job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None, 
+                        job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None,
                         include_superseded=False, order=None):
         """Returns a query for the list of jobs that have used the given source file as input. The returned query
         includes the related job_type, job_type_rev, event, and error fields, except for the job_type.manifest and
@@ -188,7 +188,7 @@ class SourceFileManager(models.GeoManager):
 
     def get_source_products(self, source_file_id, started=None, ended=None, time_field=None, batch_ids=None,
                             job_type_ids=None, job_type_names=None, job_type_categories=None, job_ids=None,
-                            is_operational=None, is_published=None, is_superseded=None, file_name=None, 
+                            is_operational=None, is_published=None, is_superseded=None, file_name=None,
                             job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None, order=None):
         """Returns a query for the list of products produced by the given source file ID. The returned query includes
         the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
@@ -262,7 +262,7 @@ class SourceFileManager(models.GeoManager):
         return ScaleFile.objects.all().select_related('workspace').get(pk=source_id, file_type='SOURCE')
 
     @transaction.atomic
-    def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path):
+    def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path, is_recipe=True):
         """Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
         transaction.
 
@@ -279,6 +279,8 @@ class SourceFileManager(models.GeoManager):
         :param new_workspace_path: New workspace path to move the source file to now that parse data is available. If
             None, the source file should not be moved.
         :type new_workspace_path: str
+        :param is_recipe: Did this parse result come from a job in a recipe? If so, don't trigger
+        :type: boolean
         """
 
         geom = None
@@ -327,9 +329,14 @@ class SourceFileManager(models.GeoManager):
         if new_workspace_path and src_file.workspace.is_move_enabled:
             ScaleFile.objects.move_files([FileMove(src_file, new_workspace_path)])
 
+        # TODO: NEED SOME WAY OF KNOWING IF THIS PARSE IS PART OF A RECIPE OR NOT
+        # IF IT'S NOT, THEN IT'S AN OLD PARSE THAT NEEDS TO TRIGGER A RECIEP
+        # CURRENTLY PASSING THROUGH AN is_recipe FLAG THAT STEMS FROM THE JOB POST_STEPS
+        # THIS IS A TERRIBLE WAY OF DOING IT FOR A TRANSITIONAL PIECE
         try:
             # Check trigger rules for parsed source files
-            ParseTriggerHandler().process_parsed_source_file(src_file)
+            # if not is_recipe:
+                ParseTriggerHandler().process_parsed_source_file(src_file)
         except Exception:
             # Move file back if there was an error
             if new_workspace_path and src_file.workspace.is_move_enabled:

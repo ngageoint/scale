@@ -524,7 +524,8 @@ class JobInterface(object):
                 new_workspace_path = os.path.join(new_workspace_path, filename)
             job_data_parse_results[filename] = (geo_json, data_started, data_ended, data_types, new_workspace_path)
 
-        job_data.save_parse_results(job_data_parse_results)
+        is_recipe = job_exe.recipe is not None
+        job_data.save_parse_results(job_data_parse_results, is_recipe=False)
         return (job_data.store_output_data_files(files_to_store, job_exe), results_manifest)
 
     def perform_pre_steps(self, job_data):
@@ -664,7 +665,7 @@ class JobInterface(object):
 
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
-        
+
         :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
         """
         if self.definition['output_data'] and not exe_configuration.get_output_workspace_names():

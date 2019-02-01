@@ -397,7 +397,7 @@ class JobData(object):
 
         return retrieved_params
 
-    def save_parse_results(self, parse_results):
+    def save_parse_results(self, parse_results, is_recipe=True):
         """Saves the given parse results
 
         :param parse_results: Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
@@ -406,6 +406,8 @@ class JobData(object):
             None)
         :type parse_results: {string: tuple(string, :class:`datetime.datetime`, :class:`datetime.datetime`, [],
             string, string)}
+        :param is_recipe: Flag if the parse results are being saved from a recipe or standalone parse job. TODO REMOVE THIS FLAG WHEN REMOVING TRIGGERS ALTOGETHER
+        :type is_recipe: bool
         """
 
         input_file_ids = []
@@ -422,7 +424,7 @@ class JobData(object):
         data_file_parse_saver = DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER']
         if not data_file_parse_saver:
             raise Exception('No data file parse saver found')
-        data_file_parse_saver.save_parse_results(parse_results, input_file_ids)
+        data_file_parse_saver.save_parse_results(parse_results, input_file_ids, is_recipe=is_recipe)
 
     def setup_job_dir(self, data_files):
         """Sets up the directory structure for a job execution and downloads the given files
