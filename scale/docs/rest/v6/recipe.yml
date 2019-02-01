@@ -291,8 +291,6 @@ components:
         - $ref: '#/components/schemas/recipe_base'
         - type: object
         - properties:
-            recipe_type_rev:
-              $ref: '#/components/schemas/recipe_type_revision_base'
             event:
               $ref: '#/components/schemas/event_base'
             recipe:
