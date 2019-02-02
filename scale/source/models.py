@@ -335,7 +335,7 @@ class SourceFileManager(models.GeoManager):
         # THIS IS A TERRIBLE WAY OF DOING IT FOR A TRANSITIONAL PIECE
         try:
             # Check trigger rules for parsed source files
-            # if not is_recipe:
+            if not is_recipe:
                 ParseTriggerHandler().process_parsed_source_file(src_file)
         except Exception:
             # Move file back if there was an error
