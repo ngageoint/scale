@@ -19,7 +19,7 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: The 202 ACCEPTED response indicates a successful request
+          description: OK - accepted
             
   /diagnostics/recipe/casino/:
     post:
@@ -37,7 +37,7 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: The 202 ACCEPTED response indicates a successful request
+          description: OK - accepted
             
   /diagnostics/job/hello/:
     post:
@@ -55,7 +55,7 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: The 202 ACCEPTED response indicates a successful request
+          description: OK - accepted
             
   /diagnostics/job/roulette/:
     post:
@@ -73,7 +73,7 @@ paths:
               $ref: '#/components/schemas/number'
       responses:
         '202':
-          description: The 202 ACCEPTED response indicates a successful request
+          description: OK - accepted
             
 components:
   schemas:

@@ -48,7 +48,7 @@ paths:
           description: If True, all nodes in the database are returned including those marked inactive. Default is False
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -69,7 +69,7 @@ paths:
           description: id of an existing node
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -95,7 +95,7 @@ paths:
           description: id of an existing node
       responses:
         '204':
-          description: 204 no content
+          description: OK - successfully processed event
 
 components:
   schemas:

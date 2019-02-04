@@ -115,7 +115,7 @@ paths:
                         Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json:
               schema:
@@ -133,7 +133,7 @@ paths:
               $ref: '#/components/schemas/recipe_post'
       responses:
         '201':
-          description: 201 CREATED response
+          description: OK - created
           content:
             application/json:
               schema:
@@ -155,7 +155,7 @@ paths:
           description: id of an existing recipe type
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json:
               schema:
@@ -217,7 +217,7 @@ paths:
           description: Returns files for this recipe input.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json:
               schema:
@@ -245,7 +245,7 @@ paths:
               $ref: '#/components/schemas/reprocess_post'
       responses:
         '202':
-          description: 202 accepted
+          description: OK - accepted
 
 components:
   schemas:

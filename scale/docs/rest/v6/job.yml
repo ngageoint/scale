@@ -129,7 +129,7 @@ paths:
             Duplicate it to filter by multiple values. 
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content: 
             application/json:
               schema: 
@@ -147,8 +147,7 @@ paths:
               $ref: '#/components/schemas/job_post'
       responses:
         '201':
-          description: |-
-            201 CREATED response
+          description: OK - created
           content:
             application/json:
               schema:
@@ -170,7 +169,7 @@ paths:
           description: id of an existing job
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -232,7 +231,7 @@ paths:
           description: Returns files for this job input.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -290,7 +289,7 @@ paths:
               Duplicate it to filter by multiple values.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json:
               schema:
@@ -319,7 +318,7 @@ paths:
           description: execution number of a job execution
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json:
               schema:
@@ -342,7 +341,7 @@ paths:
               $ref: '#/components/schemas/job_cancel_post'
       responses:
         '202':
-          description: 202 ACCEPTED response
+          description: OK - accepted
   
   /jobs/requeue/:
     post:
@@ -361,7 +360,7 @@ paths:
               $ref: '#/components/schemas/job_requeue_post'
       responses:
         '202':
-          description: 202 ACCEPTED response
+          description: OK - accepted
   
   /job-executions/{job_exe_id}/logs/{log_name}:
     get:
@@ -385,7 +384,7 @@ paths:
           description: Name of the log to get (stdout, stderr, or combined)
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json:
               schema:

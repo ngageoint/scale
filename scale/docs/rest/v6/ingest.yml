@@ -67,7 +67,7 @@ paths:
           description: Return only ingests with a specific file name. 
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -88,7 +88,7 @@ paths:
           description: id of an existing node
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -135,7 +135,7 @@ paths:
             Defaults to False (data time).  
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:

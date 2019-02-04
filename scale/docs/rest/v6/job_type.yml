@@ -46,7 +46,7 @@ paths:
           description: if provided, only return names with a least one version that matches is_system
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -65,7 +65,7 @@ paths:
               $ref: '#/components/schemas/job_type_post'
       responses:
         '201':
-          description: The 201 CREATED response indicates a successful event
+          description: OK - created
           headers:
             location:
               schema:
@@ -108,7 +108,7 @@ paths:
           description: if provided, only return names with a least one version that matches is_active
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -136,7 +136,7 @@ paths:
           description: version of an existing job type
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -168,7 +168,7 @@ paths:
           description: version of an existing job type
       responses:
         '204':
-          description: 204 no content
+          description: OK - successfully processed event
 
   /job-types/{name}/{version}/revisions/:
     get:
@@ -203,7 +203,7 @@ paths:
             Defaults to 100, and can be anywhere from 1-1000.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -237,7 +237,7 @@ paths:
           description: revision number of the job type
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -256,9 +256,16 @@ paths:
           application/json: 
             schema:
               $ref: '#/components/schemas/job_type_validation_post'
-      responses:
+      
+      
+
+
+
+
+
+      
         '200':
-          description: The 200 OK response indicates a successful event
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:

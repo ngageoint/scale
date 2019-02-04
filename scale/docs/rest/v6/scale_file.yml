@@ -146,7 +146,7 @@ paths:
             Duplicate it to filter by multiple values.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -168,7 +168,7 @@ paths:
           description: id of an existing scale file
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -199,9 +199,9 @@ paths:
                   example: 123
       responses:
         '204':
-          description: 204 no content - The message was recieved and the purge process has started.
+          description: OK - successfully started purge
         '400':
-          description: 400 bad request - There was an issue with the request, see error details for relevant details.
+          description: Error - There was an issue with the request, see error details for relevant details.
 
 components:
   schemas:

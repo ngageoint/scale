@@ -50,7 +50,7 @@ paths:
                         Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -69,7 +69,7 @@ paths:
               $ref: '#/components/schemas/strike_post'
       responses:
         '201':
-          description: The 201 CREATED response indicates a successful request 
+          description: OK - created
             
   /strikes/{id}/:
     get:
@@ -87,7 +87,7 @@ paths:
           description: id of an existing strike process
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -113,7 +113,7 @@ paths:
               $ref: '#/components/schemas/strike_post'
       responses:
         '204':
-          description: The 204 No content response indicates a successful edit 
+          description: OK - successfully processed event
 
   /strikes/validation/:
     post:
@@ -130,7 +130,7 @@ paths:
               $ref: '#/components/schemas/strike_post'
       responses:
         '200':
-          description: The 200 OK response indicates a valid strike configuration 
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:

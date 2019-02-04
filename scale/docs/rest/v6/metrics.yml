@@ -24,7 +24,7 @@ paths:
             Defaults to 100, and can be anywhere from 1-1000.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -45,7 +45,7 @@ paths:
           description: system name of an existing model
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -108,7 +108,7 @@ paths:
             corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:

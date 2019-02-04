@@ -67,7 +67,7 @@ paths:
             Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -86,7 +86,7 @@ paths:
               $ref: '#/components/schemas/batch_post'
       responses:
         '201':
-          description: The 201 CREATED response indicates a successful event
+          description: OK - created
           headers:
             location:
               schema:
@@ -113,7 +113,7 @@ paths:
           description: id of an existing batch
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -139,7 +139,7 @@ paths:
           description: id of an existing batch
       responses:
         '204':
-          description: 204 no content
+          description: OK - successfully processed event
 
   /batches/comparison/{id}/:
     get:
@@ -157,7 +157,7 @@ paths:
           description: root batch ID of a chain of batches
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
@@ -178,7 +178,7 @@ paths:
               $ref: '#/components/schemas/batch_validation_post'
       responses:
         '200':
-          description: The 200 OK response indicates a successful event
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:

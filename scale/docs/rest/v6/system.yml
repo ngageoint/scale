@@ -12,14 +12,14 @@ paths:
       description: Returns the current status of the scheduler, including information about nodes and running jobs.
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/status'
         '204':
-          description: The 204 NO CONTENT response indicates that the Scale scheduler is
-            currently offline, so there is no status content to provide.
+          description: OK - the Scale scheduler is currently
+            offline, so there is no status content to provide.
   /version:
     get:
       tags:
@@ -29,7 +29,7 @@ paths:
       description: Returns the current version of the scheduler
       responses:
         '200':
-          description: 200 response
+          description: OK - indicates a successful event
           content:
             application/json: 
               schema:
