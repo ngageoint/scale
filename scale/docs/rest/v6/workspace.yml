@@ -80,6 +80,7 @@ paths:
       description: Returns a specific workspace and all its related model information
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -99,6 +100,7 @@ paths:
       description: Edits an existing Workspace with associated configuration. 
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

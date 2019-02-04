@@ -107,7 +107,6 @@ paths:
       parameters:
         - in: path
           required: true
-          required: true
           name: id
           schema:
             type: integer

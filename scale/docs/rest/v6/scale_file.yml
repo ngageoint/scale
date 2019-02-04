@@ -97,12 +97,6 @@ paths:
                         Nested objects require a delimiter (ex: order=source_file__created)
                         Prefix fields with a dash to reverse the sort, (ex: order=-created)"
         - in: query
-          name: job_output
-          schema:
-            type: string
-          description: Return only files for the given job output.
-            Duplicate it to filter by multiple values.
-        - in: query
           name: job_type_id
           schema:
             type: integer
@@ -157,6 +151,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_list'
+
   /files/{id}/:
     get:
       tags:
@@ -178,6 +173,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_details'
+
   /files/purge-source/:
     post:
       tags:
@@ -377,7 +373,7 @@ components:
           example: 2015-09-10T15:24:53.987Z
       required:
       - id
-      
+
     file_details:
       title: File Details
       allOf:
@@ -386,246 +382,241 @@ components:
           properties:      
             meta_data:
               $ref: '#/components/schemas/metadata'
-            
+
     metadata:
       title: Metadata
       type: object
       additionalProperties:
         oneOf:
-        - $ref: '#/definitions/Geometry'
-        - $ref: '#/definitions/Point2D'
-        - $ref: '#/definitions/Point'
-        - $ref: '#/definitions/LineString'
-        - $ref: '#/definitions/Polygon'
-        - $ref: '#/definitions/MultiPoint'
-        - $ref: '#/definitions/LineString'
-        - $ref: '#/definitions/MultiLineString'
-        - $ref: '#/definitions/MultiPolygon'
-        - $ref: '#/definitions/GeometryCollection'
-        - $ref: '#/definitions/Feature'
-        - $ref: '#/definitions/FeatureCollection'
+        - $ref: '#/components/schemas/Geometry'
+        - $ref: '#/components/schemas/Point2D'
+        - $ref: '#/components/schemas/Point'
+        - $ref: '#/components/schemas/LineString'
+        - $ref: '#/components/schemas/Polygon'
+        - $ref: '#/components/schemas/MultiPoint'
+        - $ref: '#/components/schemas/LineString'
+        - $ref: '#/components/schemas/MultiLineString'
+        - $ref: '#/components/schemas/MultiPolygon'
+        - $ref: '#/components/schemas/GeometryCollection'
+        - $ref: '#/components/schemas/Feature'
+        - $ref: '#/components/schemas/FeatureCollection'
         discriminator:
           propertyName: type
           mapping:
-            Geometry: '#/definitions/Geometry'
-            Point2D: '#/definitions/Point2D'
-            Point: '#/definitions/Point'
-            LineString: '#/definitions/LineString'
-            Polygon: '#/definitions/Polygon'
-            MultiPoint: '#/definitions/MultiPoint'
-            MultiLineString: '#/definitions/MultiLineString'
-            MultiPolygon: '#/definitions/MultiPolygon'
-            GeometryCollection: '#/definitions/GeometryCollection'
-            Feature: '#/definitions/Feature'
-            FeatureCollection: '#/definitions/FeatureCollection'
+            Geometry: '#/components/schemas/Geometry'
+            Point2D: '#/components/schemas/Point2D'
+            Point: '#/components/schemas/Point'
+            LineString: '#/components/schemas/LineString'
+            Polygon: '#/components/schemas/Polygon'
+            MultiPoint: '#/components/schemas/MultiPoint'
+            MultiLineString: '#/components/schemas/MultiLineString'
+            MultiPolygon: '#/components/schemas/MultiPolygon'
+            GeometryCollection: '#/components/schemas/GeometryCollection'
+            Feature: '#/components/schemas/Feature'
+            FeatureCollection: '#/components/schemas/FeatureCollection'
 
-definitions:
-  Error:
-    required:
-      - code
-      - message
-    properties:
-      code:
-        type: string
-      message:
-        type: string
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
 
-  Geometry:
-    type: object
-    description: GeoJSon geometry
-    discriminator: type
-    required:
-      - type
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#geometry-objects
-    properties:
-      type:
-        type: string
-        enum:
-        - Point
-        - LineString
-        - Polygon
-        - MultiPoint
-        - MultiLineString
-        - MultiPolygon
-        description: the geometry type
-      bbox:
-        type: array
-        minItems: 4
-        maxItems: 4
-        items:
-          type: number
-  
-  Point2D:
-    type: array
-    maxItems: 2
-    minItems: 2
-    items:
-      type: number
-  
-  Point:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id2
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            $ref: '#/definitions/Point2D'
+    Geometry:
+      type: object
+      description: GeoJSon geometry
+      required:
+        - type
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometry-objects
+      properties:
+        type:
+          type: string
+          enum:
+          - Point
+          - LineString
+          - Polygon
+          - MultiPoint
+          - MultiLineString
+          - MultiPolygon
+          description: the geometry type
+        bbox:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            type: number
 
-  LineString:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id3
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
-              $ref: '#/definitions/Point2D'
+    Point2D:
+      type: array
+      maxItems: 2
+      minItems: 2
+      items:
+        type: number
 
-  Polygon:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id4
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            minItems: 4
-            items:
+    Point:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id2
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              $ref: '#/components/schemas/Point2D'
+
+    LineString:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id3
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
               type: array
               items:
-                $ref: '#/definitions/Point2D'
-      
-  MultiPoint:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id5
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
-              $ref: '#/definitions/Point2D'
-            
-  MultiLineString:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id6
-    allOf:
-      - $ref: "#/definitions/Geometry"   
-      - properties:
-          coordinates:
-            type: array
-            items:
+                $ref: '#/components/schemas/Point2D'
+
+    Polygon:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id4
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              minItems: 4
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point2D'
+
+    MultiPoint:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id5
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
               type: array
               items:
-                $ref: '#/definitions/Point2D'
-      
-  MultiPolygon:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id6
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
+                $ref: '#/components/schemas/Point2D'
+              
+    MultiLineString:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id6
+      allOf:
+        - $ref: "#/components/schemas/Geometry"   
+        - properties:
+            coordinates:
               type: array
               items:
                 type: array
                 items:
-                  $ref: '#/definitions/Point2D'
-      
-  GeometryCollection:
-    type: object
-    description: GeoJSon geometry collection
-    required:
-     - type
-     - geometries
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#geometrycollection
-    properties:
-      type:
-        type: string
-        enum:
-        - GeometryCollection
-        description: 
-      geometries:
-        type: array
-        items:
-          $ref: '#/definitions/Geometry'
+                  $ref: '#/components/schemas/Point2D'
 
-  Feature:
-    type: object
-    description: GeoJSon Feature
-    required:
-     - type
-     - properties
-     - geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#geometrycollection
-    properties:
-      type:
-        type: string
-        enum:
-        - Feature
-        description: 
-      properties:
-        type: object
-        additionalProperties: true
-        nullable: true
-      geometry:  
-        oneOf:
-        - $ref: '#/definitions/Geometry'
-        - $ref: '#/definitions/Point2D'
-        - $ref: '#/definitions/Point'
-        - $ref: '#/definitions/LineString'
-        - $ref: '#/definitions/Polygon'
-        - $ref: '#/definitions/MultiPoint'
-        - $ref: '#/definitions/LineString'
-        - $ref: '#/definitions/MultiLineString'
-        - $ref: '#/definitions/MultiPolygon'
-        - $ref: '#/definitions/GeometryCollection'
-        discriminator:
-          propertyName: type
-          mapping:
-            Geometry: '#/definitions/Geometry'
-            Point2D: '#/definitions/Point2D'
-            Point: '#/definitions/Point'
-            Polygon: '#/definitions/Polygon'
-            MultiPoint: '#/definitions/MultiPoint'
-            LineString: '#/definitions/LineString'
-            MultiLineString: '#/definitions/MultiLineString'
-            MultiPolygon: '#/definitions/MultiPolygon'
-            GeometryCollection: '#/definitions/GeometryCollection'
+    MultiPolygon:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id6
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Point2D'
 
-  FeatureCollection:
-    type: object
-    description: GeoJSon FeatureCollection
-    required:
+    GeometryCollection:
+      type: object
+      description: GeoJSon geometry collection
+      required:
       - type
-      - features
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#geometrycollection
-    properties:
-      type:
-        type: string
-        enum:
-        - FeatureCollection
-        description: 
-      features: 
-        type: array
-        items:
-          $ref: '#/definitions/Feature'
+      - geometries
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometrycollection
+      properties:
+        type:
+          type: string
+          enum:
+          - GeometryCollection
+        geometries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Geometry'
+
+    Feature:
+      type: object
+      description: GeoJSon Feature
+      required:
+      - type
+      - properties
+      - geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometrycollection
+      properties:
+        type:
+          type: string
+          enum:
+          - Feature
+        properties:
+          type: object
+          additionalProperties: true
+          nullable: true
+        geometry:  
+          oneOf:
+          - $ref: '#/components/schemas/Geometry'
+          - $ref: '#/components/schemas/Point2D'
+          - $ref: '#/components/schemas/Point'
+          - $ref: '#/components/schemas/LineString'
+          - $ref: '#/components/schemas/Polygon'
+          - $ref: '#/components/schemas/MultiPoint'
+          - $ref: '#/components/schemas/LineString'
+          - $ref: '#/components/schemas/MultiLineString'
+          - $ref: '#/components/schemas/MultiPolygon'
+          - $ref: '#/components/schemas/GeometryCollection'
+          discriminator:
+            propertyName: type
+            mapping:
+              Geometry: '#/components/schemas/Geometry'
+              Point2D: '#/components/schemas/Point2D'
+              Point: '#/components/schemas/Point'
+              Polygon: '#/components/schemas/Polygon'
+              MultiPoint: '#/components/schemas/MultiPoint'
+              LineString: '#/components/schemas/LineString'
+              MultiLineString: '#/components/schemas/MultiLineString'
+              MultiPolygon: '#/components/schemas/MultiPolygon'
+              GeometryCollection: '#/components/schemas/GeometryCollection'
+
+    FeatureCollection:
+      type: object
+      description: GeoJSon FeatureCollection
+      required:
+        - type
+        - features
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometrycollection
+      properties:
+        type:
+          type: string
+          enum:
+            - FeatureCollection
+        features: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'

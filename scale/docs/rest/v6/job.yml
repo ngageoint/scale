@@ -188,7 +188,7 @@ paths:
           required: true
           name: id
           schema:
-          type: integer
+            type: integer
           description: id of an existing job
         - in: query
           name: page
