@@ -287,146 +287,270 @@ components:
 
     recipe:
       title: Recipe
-      allOf:
-        - $ref: '#/components/schemas/recipe_base'
-        - type: object
-        - properties:
-            event:
-              $ref: '#/components/schemas/event_base'
-            recipe:
-              $ref: '#/components/schemas/recipe_base'
-            batch:
-              $ref: '#/components/schemas/batch_base'
-            is_superseded:
-              type: boolean
-              description: Whether this recipe has been replaced and is now obsolete.
-              example: false
-            superseded_recipe:
-              type: integer
-              description: The previous recipe in the chain that was superseded by this recipe.
-              example: 1
-            input_file_size:
-              type: number
-              description: The amount of disk space in MiB required for input files for this recipe.
-              example: 1.0
-            source_started:
-              type: string
-              format: date-time
-              description: When collection of the source file started.
-              example: 2015-09-10T15:24:53.503Z
-            source_ended:
-              type: string
-              format: date-time
-              description: When collection of the source file ended.
-              example: 2015-09-10T15:24:53.503Z
-            source_sensor_class:
-              type: string
-              description: The class of sensor used to produce the source file.
-              example: classA
-            source_sensor:
-              type: string
-              description: The specific identifier of the sensor used to produce the source file.
-              example: 1
-            source_collection:
-              type: string
-              description: The collection of the source file.
-              example: 12345
-            source_task:
-              type: string
-              description: The task that produced the source file.
-              example: my-task
-            jobs_total:
-              type: integer
-              description: The total count of jobs within this recipe
-              example: 1
-            jobs_pending:
-              type: integer
-              description: The count of PENDING jobs within this recipe
-              example: 1
-            jobs_blocked:
-              type: integer
-              description: The count of BLOCKED jobs within this recipe
-              example: 1
-            jobs_queued:
-              type: integer
-              description: The count of QUEUED jobs within this recipe
-              example: 1
-            jobs_running:
-              type: integer
-              description: The count of RUNNING jobs within this recipe
-              example: 1
-            jobs_failed:
-              type: integer
-              description: The count of FAILED jobs within this recipe
-              example: 1
-            jobs_completed:
-              type: integer
-              description: The count of COMPLETED jobs within this recipe
-              example: 1
-            jobs_canceled:
-              type: integer
-              description: The count of CANCELED jobs within this recipe
-              example: 1
-            sub_recipes_total:
-              type: integer
-              description: The total count of sub-recipes within this recipe
-              example: 1
-            sub_recipes_completed:
-              type: integer
-              description: The count of completed sub-recipes within this recipe
-              example: 1
-            is_completed:
-              type: boolean
-              description: Whether this recipe is completed
-              example: true
-            created:
-              type: string
-              format: date-time
-              description: When the associated database model was initially created.
-              example: 2015-09-10T15:24:53.503Z
-            completed:
-              type: string
-              format: date-time
-              description: When every job and sub-recipe in this was completed successfully.
-                This field will remain null if a job or sub-recipe in the recipe is blocked or failed.
-              example: 2015-09-10T15:24:53.987Z
-            superseded:
-              type: string
-              format: date-time
-              description: When the the recipe became superseded by another recipe.
-              example: 2015-09-10T15:24:53.987Z
-            last_modified:
-              type: string
-              format: date-time
-              description: When the associated database model was last saved.
-              example: 2015-09-10T15:24:53.987Z
-              
+      type: object
+      properties:
+      id:
+        type: integer
+        example: 1
+      recipe_type:
+        $ref: '#/components/schemas/recipe_type_base'
+      event:
+        $ref: '#/components/schemas/event_base'
+      recipe:
+        $ref: '#/components/schemas/recipe_base'
+      batch:
+        $ref: '#/components/schemas/batch_base'
+      recipe_type_rev:
+        $ref: '#/components/schemas/recipe_type_revision_base'
+      is_superseded:
+        type: boolean
+        description: Whether this recipe has been replaced and is now obsolete.
+        example: false
+      superseded_recipe:
+        type: integer
+        description: The previous recipe in the chain that was superseded by this recipe.
+        example: 1
+      input_file_size:
+        type: number
+        description: The amount of disk space in MiB required for input files for this recipe.
+        example: 1.0
+      source_started:
+        type: string
+        format: date-time
+        description: When collection of the source file started.
+        example: 2015-09-10T15:24:53.503Z
+      source_ended:
+        type: string
+        format: date-time
+        description: When collection of the source file ended.
+        example: 2015-09-10T15:24:53.503Z
+      source_sensor_class:
+        type: string
+        description: The class of sensor used to produce the source file.
+        example: classA
+      source_sensor:
+        type: string
+        description: The specific identifier of the sensor used to produce the source file.
+        example: 1
+      source_collection:
+        type: string
+        description: The collection of the source file.
+        example: 12345
+      source_task:
+        type: string
+        description: The task that produced the source file.
+        example: my-task
+      jobs_total:
+        type: integer
+        description: The total count of jobs within this recipe
+        example: 1
+      jobs_pending:
+        type: integer
+        description: The count of PENDING jobs within this recipe
+        example: 1
+      jobs_blocked:
+        type: integer
+        description: The count of BLOCKED jobs within this recipe
+        example: 1
+      jobs_queued:
+        type: integer
+        description: The count of QUEUED jobs within this recipe
+        example: 1
+      jobs_running:
+        type: integer
+        description: The count of RUNNING jobs within this recipe
+        example: 1
+      jobs_failed:
+        type: integer
+        description: The count of FAILED jobs within this recipe
+        example: 1
+      jobs_completed:
+        type: integer
+        description: The count of COMPLETED jobs within this recipe
+        example: 1
+      jobs_canceled:
+        type: integer
+        description: The count of CANCELED jobs within this recipe
+        example: 1
+      sub_recipes_total:
+        type: integer
+        description: The total count of sub-recipes within this recipe
+        example: 1
+      sub_recipes_completed:
+        type: integer
+        description: The count of completed sub-recipes within this recipe
+        example: 1
+      is_completed:
+        type: boolean
+        description: Whether this recipe is completed
+        example: true
+      created:
+        type: string
+        format: date-time
+        description: When the associated database model was initially created.
+        example: 2015-09-10T15:24:53.503Z
+      completed:
+        type: string
+        format: date-time
+        description: When every job and sub-recipe in this was completed successfully.
+          This field will remain null if a job or sub-recipe in the recipe is blocked or failed.
+        example: 2015-09-10T15:24:53.987Z
+      superseded:
+        type: string
+        format: date-time
+        description: When the the recipe became superseded by another recipe.
+        example: 2015-09-10T15:24:53.987Z
+      last_modified:
+        type: string
+        format: date-time
+        description: When the associated database model was last saved.
+        example: 2015-09-10T15:24:53.987Z
+
     recipe_detail:
       title: Recipe Details
-      allOf:
-        - $ref: '#/components/schemas/recipe'
-        - type: object
-        - properties:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        recipe_type:
+          $ref: '#/components/schemas/recipe_type_base'
+        recipe_type_rev:
+          $ref: '#/components/schemas/recipe_type_revision_details'
+        recipe:
+          $ref: '#/components/schemas/recipe_base'
+        batch:
+          $ref: '#/components/schemas/batch_base'
+        is_superseded:
+          type: boolean
+          description: Whether this recipe has been replaced and is now obsolete.
+          example: false
+        event:
+          $ref: '#/components/schemas/event_details'
+        superseded_recipe:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            recipe_type:
+              $ref: '#/components/schemas/recipe_type_base'
+            recipe_type_rev:
+              type: integer
+              example: 1
             event:
-              $ref: '#/components/schemas/event_details'
-            superseded_recipe:
-              $ref: '#/components/schemas/recipe_base'
-            superseded_by_recipe:
-              $ref: '#/components/schemas/recipe_base'
-            input:
-              $ref: '#/components/schemas/data'
-            details:
-              $ref: '#/components/schemas/recipe_instance'
-            job_types:
-              type: array
-              items:
-                $ref: '#/components/schemas/job_type_base'
-              description: List of Job Types in this recipe
-            sub_recipe_types:
-              type: array
-              items:
-                $ref: '#/components/schemas/recipe_type_base'
-              description: List of Sub Recipe Types in this recipe
+              $ref: '#/components/schemas/event_base'
+        superseded_by_recipe:
+          $ref: '#/components/schemas/recipe_base'
+        input:
+          $ref: '#/components/schemas/data'
+        details:
+          $ref: '#/components/schemas/recipe_instance'
+        job_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_base'
+          description: List of Job Types in this recipe
+        sub_recipe_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe_type_base'
+          description: List of Sub Recipe Types in this recipe
+        input_file_size:
+          type: number
+          description: The amount of disk space in MiB required for input files for this recipe.
+          example: 1.0
+        source_started:
+          type: string
+          format: date-time
+          description: When collection of the source file started.
+          example: 2015-09-10T15:24:53.503Z
+        source_ended:
+          type: string
+          format: date-time
+          description: When collection of the source file ended.
+          example: 2015-09-10T15:24:53.503Z
+        source_sensor_class:
+          type: string
+          description: The class of sensor used to produce the source file.
+          example: classA
+        source_sensor:
+          type: string
+          description: The specific identifier of the sensor used to produce the source file.
+          example: 1
+        source_collection:
+          type: string
+          description: The collection of the source file.
+          example: 12345
+        source_task:
+          type: string
+          description: The task that produced the source file.
+          example: my-task
+        jobs_total:
+          type: integer
+          description: The total count of jobs within this recipe
+          example: 1
+        jobs_pending:
+          type: integer
+          description: The count of PENDING jobs within this recipe
+          example: 1
+        jobs_blocked:
+          type: integer
+          description: The count of BLOCKED jobs within this recipe
+          example: 1
+        jobs_queued:
+          type: integer
+          description: The count of QUEUED jobs within this recipe
+          example: 1
+        jobs_running:
+          type: integer
+          description: The count of RUNNING jobs within this recipe
+          example: 1
+        jobs_failed:
+          type: integer
+          description: The count of FAILED jobs within this recipe
+          example: 1
+        jobs_completed:
+          type: integer
+          description: The count of COMPLETED jobs within this recipe
+          example: 1
+        jobs_canceled:
+          type: integer
+          description: The count of CANCELED jobs within this recipe
+          example: 1
+        sub_recipes_total:
+          type: integer
+          description: The total count of sub-recipes within this recipe
+          example: 1
+        sub_recipes_completed:
+          type: integer
+          description: The count of completed sub-recipes within this recipe
+          example: 1
+        is_completed:
+          type: boolean
+          description: Whether this recipe is completed
+          example: true
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        completed:
+          type: string
+          format: date-time
+          description: When every job and sub-recipe in this was completed successfully.
+            This field will remain null if a job or sub-recipe in the recipe is blocked or failed.
+          example: 2015-09-10T15:24:53.987Z
+        superseded:
+          type: string
+          format: date-time
+          description: When the the recipe became superseded by another recipe.
+          example: 2015-09-10T15:24:53.987Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
 
     recipe_post:
       title: Recipe Post

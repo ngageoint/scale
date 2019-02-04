@@ -380,9 +380,9 @@ components:
       - id
       
     file_details:
+      title: File Details
       allOf:
-        - ref: '#/components/schemas/file'
-        - title: File Details
+        - $ref: '#/components/schemas/file'
         - type: object
           properties:      
             meta_data:

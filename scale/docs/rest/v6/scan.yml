@@ -257,9 +257,9 @@ components:
           example: true
           
     scan_details:
+      title: Scan Details
       allOf:
-        - ref: '#/components/schemas/scan_base'
-        - title: Scan Details
+        - $ref: '#/components/schemas/scan_base'
         - type: object
           properties: 
             configuration:

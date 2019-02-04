@@ -412,7 +412,7 @@ components:
     job_type_detail:
       title: Job Type Details
       allOf:
-        - ref: '#/components/schemas/job_type'
+        - $ref: '#/components/schemas/job_type'
         - type: object      
         - properties: 
             manifest:
@@ -547,7 +547,7 @@ components:
     job_type_revision:
       title: Job Type Revision
       allOf:
-        - ref: '#/components/schemas/job_type_revision_base'
+        - $ref: '#/components/schemas/job_type_revision_base'
         - type: object
         - properties:  
             job_type:
