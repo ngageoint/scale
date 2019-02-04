@@ -81,6 +81,7 @@ paths:
       description: Returns a specific ingest and all its related model information
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

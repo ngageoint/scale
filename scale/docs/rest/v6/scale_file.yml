@@ -166,6 +166,7 @@ paths:
       description: Returns a specific file and all its related model information
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -268,7 +269,6 @@ components:
           example: 1234
         data_type:
           type: array
-          style: simple
           items:
             type: string  
           description: A list of string data type "tags" for the file.
@@ -311,7 +311,6 @@ components:
           example: POINT(11 -11)
         countries:
           type: array
-          style: simple
           items:
             type: string  
           description: A list of zero or more strings with the ISO3 country codes for countries

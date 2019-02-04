@@ -62,6 +62,7 @@ paths:
       description: Returns a specific node and all its related model information
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -87,6 +88,7 @@ paths:
               $ref: '#/components/schemas/node_update'
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

@@ -80,6 +80,7 @@ paths:
       description: Returns a specific strike process and all its related model information
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -99,6 +100,7 @@ paths:
       description: Edits an existing Strike process with associated configuration. 
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

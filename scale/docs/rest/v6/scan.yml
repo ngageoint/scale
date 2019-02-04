@@ -84,6 +84,7 @@ paths:
       description: Returns a specific scan process and all its related model information
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -103,6 +104,7 @@ paths:
       description: Edits an existing Scan process with associated configuration. 
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -147,6 +149,7 @@ paths:
       description: Launches an existing Scan with associated configuration    
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

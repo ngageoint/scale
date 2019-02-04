@@ -59,6 +59,7 @@ paths:
       description: Returns detailed information about the error with the specified id
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

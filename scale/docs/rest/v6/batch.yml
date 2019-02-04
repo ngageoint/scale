@@ -106,6 +106,8 @@ paths:
       description: Returns detailed information about the batch with the specified id
       parameters:
         - in: path
+          required: true
+          required: true
           name: id
           schema:
             type: integer
@@ -131,6 +133,7 @@ paths:
               $ref: '#/components/schemas/batch_update'
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
@@ -148,6 +151,7 @@ paths:
       description: Returns the list of batches with the given root batch ID along with their metrics
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer

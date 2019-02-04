@@ -38,6 +38,7 @@ paths:
       description: Returns a specific metrics type and all its related model information including possible filter choices
       parameters:
         - in: path
+          required: true
           name: name
           schema:
             type: string
@@ -58,6 +59,7 @@ paths:
       description: Returns all the plot values for a metrics type based on optional query parameters
       parameters:
         - in: path
+          required: true
           name: name
           schema:
             type: string
