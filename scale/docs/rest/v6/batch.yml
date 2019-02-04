@@ -76,8 +76,8 @@ paths:
       tags:
         - Batch Endpoints
       operationId: _rest_v6_batch_create
-      summary: Job Type Post
-      description: Creates or edits an existing job type
+      summary: Create Batch
+      description: Creates a new batch
       requestBody:
         required: true
         content:

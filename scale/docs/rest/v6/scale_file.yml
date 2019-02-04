@@ -157,7 +157,7 @@ paths:
       tags:
         - Scale File Services
       operationId: _rest_v6_file_details
-      summary: File Details
+      summary: Scale File Details
       description: Returns a specific file and all its related model information
       parameters:
         - in: path

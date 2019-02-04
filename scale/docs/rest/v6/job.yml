@@ -138,6 +138,7 @@ paths:
       tags:
         - Job Services
       operationId: _rest_v6_job_post
+      summary: Job Post
       description: creates a new job and adds it to the queue
       requestBody:
         required: true

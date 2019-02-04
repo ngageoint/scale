@@ -124,6 +124,7 @@ paths:
       tags:
         - Recipe Services
       operationId: _rest_v6_recipe_post
+      summary: Recipe Post
       description: creates a new recipe and adds it to the queue
       requestBody:
         required: true
