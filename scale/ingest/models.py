@@ -76,8 +76,7 @@ class IngestStatus(object):
 class IngestManager(models.Manager):
     """Provides additional methods for handling ingests."""
 
-    # TODO when replace triggers, make recipe a required field
-    def create_ingest(self, file_name, workspace, recipe=None, scan_id=None, strike_id=None):
+    def create_ingest(self, file_name, workspace, scan_id=None, strike_id=None):
         """Creates a new ingest for the given file name. The database save is the caller's responsibility.
 
         :param file_name: The name of the file being ingested
@@ -100,8 +99,6 @@ class IngestManager(models.Manager):
             ingest.scan_id = scan_id
         if strike_id:
             ingest.strike_id = strike_id
-        if recipe:
-            ingest.recipe = recipe
 
         ingest.file_name = file_name
         ingest.media_type = get_media_type(ingest.file_name)
@@ -532,8 +529,6 @@ class Ingest(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    recipe_name = models.CharField(max_length=1000, blank=True)
-
     objects = IngestManager()
 
     def add_data_type_tag(self, tag):
@@ -669,11 +664,39 @@ class IngestEventManager(models.Manager):
 
     STRIKE_TYPE = 'STRIKE'
     SCAN_TYPE = 'SCAN'
+    MANUAL_TYPE = 'MANUAL'
 
-    def create_strike_ingest_event(self, strike, description, occurred):
+    def create_manual_ingest_event(self, ingest_id, description, occurred):
+        """Creates a new ingest event and returns the event model.
+
+        :param ingest_id: The ingest that triggered the strike
+        :type ingest_id:
+        :param description: The JSON description of the event as a dict
+        :type description: dict
+        :param occurred: When the event occurred
+        :type occurred: :class:`datetime.datetime`
+        :returns: The new trigger event
+        :rtype: :class:`ingest.models.IngestEvent`
+        """
+
+        if ingest_id is None:
+             raise Exception('Ingest event must have a valid ingest')
+
+        event = IngestEvent()
+        event.type = IngestEventManager.MANUAL_TYPE
+        event.ingest_id = ingest_id
+        event.description = description
+        event.occurred = occurred
+        event.save()
+
+        return event
+
+    def create_strike_ingest_event(self, ingest_id, strike, description, occurred):
         """Creates a new ingest event and returns the event model. The given strike model must have already
         been saved in the database (it must have an ID). The returned ingest event model will be saved in the database.
 
+        :param ingest_id: The ingest that triggered the strike
+        :type ingest_id:
         :param strike: The scan that triggered the event
         :type strike: :class:`ingest.models.Strike`
         :param description: The JSON description of the event as a dict
@@ -690,9 +713,12 @@ class IngestEventManager(models.Manager):
             raise Exception('Ingest event must have a JSON description')
         if occurred is None:
             raise Exception('Trigger event must have a timestamp')
+        if ingest_id is None:
+             raise Exception('Ingest event must have a valid ingest')
 
         event = IngestEvent()
         event.type = IngestEventManager.STRIKE_TYPE
+        event.ingest_id = ingest_id
         event.strike = strike
         event.description = description
         event.occurred = occurred
@@ -700,10 +726,12 @@ class IngestEventManager(models.Manager):
 
         return event
 
-    def create_scan_ingest_event(self, scan, description, occurred):
+    def create_scan_ingest_event(self, ingest_id, scan, description, occurred):
         """Creates a new ingest event and returns the event model. The given scan model must have already
         been saved in the database (it must have an ID). The returned ingest event model will be saved in the database.
 
+        :param ingest_id: The ingest that triggered the scan
+        :type ingest_id:
         :param scan: The scan that triggered the event
         :type scan: :class:`ingest.models.Scan`
         :param description: The JSON description of the event as a dict
@@ -720,9 +748,12 @@ class IngestEventManager(models.Manager):
             raise Exception('Ingest event must have a JSON description')
         if occurred is None:
             raise Exception('Trigger event must have a timestamp')
+        if ingest_id is None:
+             raise Exception('Ingest event must have a valid ingest')
 
         event = IngestEvent()
         event.type = IngestEventManager.SCAN_TYPE
+        event.ingest_id = ingest_id
         event.scan = scan
         event.description = description
         event.occurred = occurred
@@ -735,6 +766,8 @@ class IngestEvent(models.Model):
 
     :keyword type: The type of ingest that occurred (strike/scan)
     :type type: :class:`django.db.models.CharField`
+    :keyword ingest: The ingest that occurred
+    :type ingest: :class:`django.db.models.ForeignKey`
     :keyword strike: The strike that triggered this event, possibly None (some events are not triggered by rules)
     :type strike: :class:`django.db.models.ForeignKey`
     :keyword scan: The scan that triggered this event, possibly None (some events are not triggered by rules)
@@ -746,6 +779,7 @@ class IngestEvent(models.Model):
     :type occurred: :class:`django.db.models.DateTimeField`
     """
     type = models.CharField(db_index=True, max_length=50)
+    ingest = models.ForeignKey('ingest.Ingest', blank=True, null=True, on_delete=models.PROTECT)
     strike = models.ForeignKey('ingest.Strike', blank=True, null=True, on_delete=models.PROTECT)
     scan = models.ForeignKey('ingest.Scan', blank=True, null=True, on_delete=models.PROTECT)
     description = django.contrib.postgres.fields.JSONField(default=dict)

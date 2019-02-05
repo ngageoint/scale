@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ingest', '0016_ingestevent'),
+        ('ingest', '0015_ingestevent'),
         ('recipe', '0034_recipe_configuration'),
     ]
 

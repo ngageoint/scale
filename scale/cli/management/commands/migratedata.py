@@ -18,6 +18,7 @@ from storage.models import Workspace
 logger = logging.getLogger(__name__)
 
 
+# TODO 1181: Remove usage when remove triggers in v6??
 class Command(BaseCommand):
     """Command that migrates existing data files into scale
     """
@@ -30,6 +31,7 @@ class Command(BaseCommand):
         parser.add_argument("-p", "--workspace-path", action="store", help="Path in the workspace to ingest.")
         parser.add_argument("-l", "--local-path", action="store",
                             help="If specified, use this as the workspace and workspace path instead of using the workspace mount.")
+        parser.add_argument("-r", "--recipe", action="store", default=[], help="Recipe to kick off after ingest complete")
         parser.add_argument("-d", "--data-type", action="append", default=[], help="Data type tag")
         parser.add_argument("-i", "--include", action="append", help="Include glob")
         parser.add_argument("-e", "--exclude", action="append", default=[], help="Exclude glob")
@@ -118,7 +120,10 @@ class Command(BaseCommand):
                     ingest.ingest_ended = timezone.now()
                     ingest.source_file = sf
                     ingest.save()
-                    IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
+                    if options['recipe_type']:
+                        RecipeTriggerHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe_type'])
+                    else:
+                        IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 

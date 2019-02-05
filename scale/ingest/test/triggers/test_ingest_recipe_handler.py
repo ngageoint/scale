@@ -10,6 +10,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+import ingest.test.utils as ingest_test_utils
 from ingest.models import Strike
 from ingest.models import Scan
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
@@ -73,9 +74,10 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         }
         config = StrikeConfigurationV6(strike_config).get_configuration()
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
+        ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
 
         # Call method to test
-        IngestRecipeHandler().process_ingested_source_file(strike, self.source_file, now())
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
         mock_create.assert_called_once()
 
         # Create scan
@@ -97,6 +99,20 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         }
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
         scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
+
         # Call method to test
-        IngestRecipeHandler().process_ingested_source_file(scan, self.source_file, now())
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
         self.assertEqual(mock_create.call_count, 2)
+
+
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful_manual_kickoff(self, mock_create, mock_msg_mgr):
+        """Tests successfully producing an ingest that immediately calls a recipe"""
+
+        ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
+
+        # Call method to test
+        IngestRecipeHandler().process_manual_ingested_source_file(ingest.id, self.source_file, now(), recipe_type.id)
+        mock_create.assert_called_once()
