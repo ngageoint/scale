@@ -136,7 +136,7 @@ Request: POST http://.../v6/strikes/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "version": "1.0.0"
+                "revision_num": 1
             }
         }
     }
@@ -178,7 +178,7 @@ Location http://.../v6/strikes/105/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "version": "1.0.0"
+                "revision_num": 1
             }
         }
     }
@@ -259,7 +259,7 @@ Response: 200 OK
            }],
            "recipe": {
                "name": "my-recipe",
-               "version": "1.0.0"
+               "revision_num": 1
            }
        }
    }
@@ -326,7 +326,7 @@ Request: POST http://.../v6/strikes/validation/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "version": "1.0.0"
+                "revision_num": 1
             }
         }
     }
@@ -406,7 +406,7 @@ Request: PATCH http://.../v6/strikes/{id}/
             }],
             "recipe": {
                 "name": "my-recipe",
-                "version": "1.0.0"
+                "revision_num": 1
             }
         }
     }
@@ -464,7 +464,7 @@ A strike configuration JSON describes a set of configuration settings that affec
       ],
       "recipe": {
           "name": "my-recipe",
-          "version": "1.0.0"
+          "revision_num": 1
       }
     }
 
@@ -496,7 +496,7 @@ A strike configuration JSON describes a set of configuration settings that affec
         ],
         "recipe": {
             "name": "my-recipe",
-            "version": "1.0.0"
+            "revision_num": 1
         }
     }
 
@@ -571,7 +571,9 @@ A strike configuration JSON describes a set of configuration settings that affec
 | recipe                     | JSON Object    | Required | Specifies the natural key of the recipe the Strike will start when |
 |                            |                |          | a file is ingested.                                                |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .name                      | String         | Required | Specifies the name of the recipe.                                  |
+| .name                      | String         | Required | Specifies the name of the recipe the Strike will attempt to start  |
+|                            |                |          | when the file is ingested.                                         |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .version                   | String         | Required | Specifies the version of the recipe.                               |
+| .revision_num              | Integer        | Required | Specifies the revision number of the recipe the Strike will        |
+|                            |                |          | attempt to start when the file is ingested.                        |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

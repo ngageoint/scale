@@ -234,10 +234,11 @@ components:
               description: Specifies the name of the recipe the Scan will attempt
                 to start when the file is ingested.
               example: my-recipe
-            version:
-              type: string
-              description: Specifies the version of the recipe the Scan will
-                attempt to start when the file is ingested.
+            revision_num:
+              type: integer
+              description: Specifies the revision number of the recipe the
+                 Strike will attempt to start when the file is ingested.
+              example: 1
 
     validation:
       title: Validation
