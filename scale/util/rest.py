@@ -25,6 +25,7 @@ class ScaleAPIPermissions(permissions.BasePermission):
     Verifies that method is permitted to be called.
     Evaluation logic is all methods must be authenticated if PUBLIC_API_READ is False
     SAFE_METHODS will be allowed publicly if PUBLIC_API_READ is True
+    POST against validation methods do not require staff user.
     Unsafe methods always require staff user.
     """
 
@@ -32,7 +33,7 @@ class ScaleAPIPermissions(permissions.BasePermission):
         if request.user.is_staff:
             return True
 
-        if request.method in permissions.SAFE_METHODS:
+        if request.method in permissions.SAFE_METHODS or '/validation' in request.path:
             if settings.PUBLIC_READ_API:
                 return True
             elif request.user.is_authenticated:

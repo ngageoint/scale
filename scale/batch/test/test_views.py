@@ -604,7 +604,7 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)

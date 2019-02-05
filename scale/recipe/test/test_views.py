@@ -572,7 +572,7 @@ class TestRecipeTypeRevisionDetailsViewV6(APITransactionTestCase):
         self.assertIsNotNone(result['definition'])
 
 
-class TestRecipeTypesValidationViewV6(TransactionTestCase):
+class TestRecipeTypesValidationViewV6(APITransactionTestCase):
     def test_bad_trigger_type(self):
         """Tests validating a new recipe type with an invalid trigger type."""
         json_data = {
@@ -635,7 +635,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
