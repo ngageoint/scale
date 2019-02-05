@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import datetime
 import uuid
 
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, User
 from django.template.defaultfilters import slugify
 import django.utils.timezone as timezone
 import rest_framework.pagination as pagination
@@ -217,7 +217,14 @@ def get_versioned_urls(apps):
 
         urls.append(url(r'^' + version + '/', include(app_urls, namespace=version)))
     return urls
-    
+
+
+def login_client(client, is_staff=False):
+    """Takes a client object and creates a login session, optionally creating a staff user for unsafe methods"""
+    User.objects.create_user(username='test', password='user', email='test@empty.com', is_staff=is_staff)
+    client.login(username='test', password='user')
+
+
 def parse_string(request, name, default_value=None, required=True, accepted_values=None):
     """Parses a string parameter from the given request.
 

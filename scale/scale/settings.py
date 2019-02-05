@@ -16,7 +16,7 @@ import dj_database_url
 
 
 def get_env_boolean(variable_name, default=False):
-    return os.getenv(variable_name, 'false' if False else 'true').lower() in ('yes', 'true', 't', '1')
+    return os.getenv(variable_name,  str(default)).lower() in ('yes', 'true', 't', '1')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
