@@ -4,16 +4,16 @@ from __future__ import absolute_import
 import copy
 import datetime
 import json
-import os
 import time
 
 import django
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
@@ -27,17 +27,19 @@ from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import Job, JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
 from recipe.models import RecipeType
+from util import rest
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 
 
-class TestGetAuthDisabledJobsView(TransactionTestCase):
+class TestGetAuthDisabledJobsView(APITestCase):
 
     api = 'v6'
 
     def setUp(self):
-        #os.environ['PUBLIC_READ_API'] = 'true'
         django.setup()
+        # Enable Public API for this test class to validate unprotected GET requests
+        settings.PUBLIC_READ_API = True
 
         manifest = {
             'seedVersion': '1.0.0',
@@ -77,8 +79,6 @@ class TestGetAuthDisabledJobsView(TransactionTestCase):
             "job_type_id": job_type1.pk
         }
 
-        self.client = APIClient()
-
     def test_successful_on_get(self):
         """Tests successfully retrieving jobs without authentication."""
 
@@ -103,11 +103,10 @@ class TestGetAuthDisabledJobsView(TransactionTestCase):
 
         url = '/%s/jobs/' % self.api
 
-        user = User.objects.create_superuser(username='test', email='test@empty.com', password='password')
+        User.objects.create_superuser(username='test', email='test@empty.com', password='password')
 
         self.client.login(username='test', password='password',)
         response = self.client.post(url, data=self.json_data, format='json')
-        self.client.logout()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         result = json.loads(response.content)
@@ -118,7 +117,7 @@ class TestGetAuthDisabledJobsView(TransactionTestCase):
         mock_create.assert_called_once()
 
 
-class TestJobsViewV6(TestCase):
+class TestJobsViewV6(APITestCase):
 
     api = 'v6'
 
@@ -423,8 +422,7 @@ class TestJobsViewV6(TestCase):
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 
-class TestJobsPostViewV6(TestCase):
-
+class TestJobsPostViewV6(APITestCase):
     api = "v6"
 
     def setUp(self):
@@ -466,6 +464,8 @@ class TestJobsPostViewV6(TestCase):
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
         self.workspace = storage_test_utils.create_workspace()
         self.source_file = source_test_utils.create_source(workspace=self.workspace)
+
+        rest.login_client(self.client, is_staff=True)
 
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_job_input_messages')
@@ -555,7 +555,7 @@ class TestJobsPostViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestJobDetailsViewV6(TestCase):
+class TestJobDetailsViewV6(APITestCase):
 
     api = 'v6'
 
@@ -611,6 +611,8 @@ class TestJobDetailsViewV6(TestCase):
             self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
         except:
             self.product = None
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
@@ -688,7 +690,8 @@ class TestJobDetailsViewV6(TestCase):
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
 
-class TestJobTypesViewV6(TestCase):
+
+class TestJobTypesViewV6(APITestCase):
 
     api = 'v6'
 
@@ -999,7 +1002,8 @@ class TestJobTypeNamesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
-class TestJobTypesPostViewV6(TestCase):
+
+class TestJobTypesPostViewV6(APITestCase):
 
     api = 'v6'
 
@@ -1033,6 +1037,8 @@ class TestJobTypesPostViewV6(TestCase):
                                                                     is_active=False,
                                                                     is_system=False)
 
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_add_seed_job_type(self):
         """Tests adding a seed image."""
@@ -1396,7 +1402,7 @@ class TestJobTypesPostViewV6(TestCase):
         mock_create.assert_called_with(self.recipe_type1.id, job_type.id)
 
 
-class TestJobTypeDetailsViewV6(TestCase):
+class TestJobTypeDetailsViewV6(APITestCase):
 
     api = 'v6'
 
@@ -1513,12 +1519,15 @@ class TestJobTypeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestJobTypeRevisionsViewV6(TestCase):
+
+class TestJobTypeRevisionsViewV6(APITestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
@@ -1600,13 +1609,15 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
 
 
-class TestJobTypesValidationViewV6(TransactionTestCase):
+class TestJobTypesValidationViewV6(APITransactionTestCase):
     """Tests related to the job-types validation endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.configuration = {
             'version': '6',
@@ -1898,7 +1909,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['name'], 'NONSTANDARD_RESOURCE')
 
-class TestJobTypesPendingView(TestCase):
+class TestJobTypesPendingView(APITestCase):
 
     api = 'v6'
 
@@ -1920,7 +1931,8 @@ class TestJobTypesPendingView(TestCase):
         self.assertEqual(result['results'][0]['count'], 1)
         self.assertIsNotNone(result['results'][0]['longest_pending'])
 
-class TestJobTypesRunningView(TestCase):
+
+class TestJobTypesRunningView(APITestCase):
 
     api = 'v6'
 
@@ -1943,7 +1955,7 @@ class TestJobTypesRunningView(TestCase):
         self.assertIsNotNone(result['results'][0]['longest_running'])
 
 
-class TestJobTypesSystemFailuresView(TestCase):
+class TestJobTypesSystemFailuresView(APITestCase):
 
     api = 'v6'
 
@@ -1966,7 +1978,8 @@ class TestJobTypesSystemFailuresView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['name'], self.job.job_type.name)
         self.assertEqual(result['results'][0]['count'], 1)
 
-class TestJobExecutionsViewV6(TransactionTestCase):
+
+class TestJobExecutionsViewV6(APITransactionTestCase):
 
     api = 'v6'
 
@@ -2041,7 +2054,8 @@ class TestJobExecutionsViewV6(TransactionTestCase):
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 1)
 
-class TestJobExecutionDetailsViewV6(TransactionTestCase):
+
+class TestJobExecutionDetailsViewV6(APITransactionTestCase):
 
     api = 'v6'
 
@@ -2070,7 +2084,8 @@ class TestJobExecutionDetailsViewV6(TransactionTestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-class TestJobExecutionSpecificLogViewV6(TestCase):
+
+class TestJobExecutionSpecificLogViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -2199,7 +2214,8 @@ class TestJobExecutionSpecificLogViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
 
-class TestJobInputFilesViewV6(TestCase):
+
+class TestJobInputFilesViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -2385,7 +2401,8 @@ class TestJobInputFilesViewV6(TestCase):
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
-class TestCancelJobsViewV6(TestCase):
+
+class TestCancelJobsViewV6(APITestCase):
 
     api = 'v6'
 
@@ -2397,6 +2414,8 @@ class TestCancelJobsViewV6(TestCase):
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
         manifest['job']['jobVersion'] = '1.0.1'
         self.job_type2 = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        rest.login_client(self.client, is_staff=True)
 
     @patch('job.views.CommandMessageManager')
     @patch('job.views.create_cancel_jobs_bulk_message')
@@ -2435,7 +2454,7 @@ class TestCancelJobsViewV6(TestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
 
         job_type_ids.append(self.job_type1.id)
         job_type_ids.append(self.job_type2.id)
@@ -2458,10 +2477,11 @@ class TestCancelJobsViewV6(TestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestRequeueJobsViewV6(TestCase):
+
+class TestRequeueJobsViewV6(APITestCase):
 
     api = 'v6'
 
@@ -2473,6 +2493,8 @@ class TestRequeueJobsViewV6(TestCase):
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
         manifest['job']['jobVersion'] = '1.0.1'
         self.job_type2 = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        rest.login_client(self.client, is_staff=True)
 
 
     @patch('job.views.CommandMessageManager')
@@ -2514,7 +2536,7 @@ class TestRequeueJobsViewV6(TestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
 
         job_type_ids.append(self.job_type1.id)
         job_type_ids.append(self.job_type2.id)
@@ -2538,5 +2560,5 @@ class TestRequeueJobsViewV6(TestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

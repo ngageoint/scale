@@ -4,16 +4,44 @@ from __future__ import absolute_import
 import json
 
 import django
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
+from util import rest
 
+
+class TestMetricsViewV6(APITestCase):
+
+    def setUp(self):
+        django.setup()
+
+        rest.login_client(self.client)
+
+    def test_successful(self):
+        """Tests successfully calling the metrics view."""
+
+        url = '/v6/metrics/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertGreaterEqual(len(result['results']), 1)
+        for entry in result['results']:
+            if entry['name'] == 'job-types':
+                self.assertGreaterEqual(len(entry['groups']), 1)
+                self.assertGreaterEqual(len(entry['columns']), 1)
+                self.assertFalse('choices' in entry)
+
+class TestMetricsViewV6(APITestCase):
 class TestMetricsViewV6(TestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the metrics view."""

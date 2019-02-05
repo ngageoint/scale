@@ -18,6 +18,9 @@ import trigger.test.utils as trigger_test_utils
 import source.test.utils as source_test_utils
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
+from rest_framework.test import APITestCase, APITransactionTestCase
+from util import rest
+
 
 class MockCommandMessageManager():
 
@@ -32,13 +35,71 @@ class MockCommandMessageManager():
                 break
             new_commands = []
 
-class TestRecipeTypesViewV6(TransactionTestCase):
+
+class TestRecipeTypesViewV6(APITransactionTestCase):
+    def test_create_bad_trigger_type(self):
+        """Tests creating a new recipe type with an invalid trigger type."""
+        json_data = {
+            'name': 'recipe-type-post-test',
+            'version': '1.0.0',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'input_file',
+                    'type': 'file',
+                    'media_types': ['image/x-hdf5-image'],
+                }],
+                'jobs': [],
+            },
+            'trigger_rule': {
+                'type': 'BAD',
+            }
+        }
+
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_bad_trigger_config(self):
+        """Tests creating a new recipe type with an invalid trigger rule configuration."""
+        json_data = {
+            'name': 'recipe-type-post-test',
+            'version': '1.0.0',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'input_file',
+                    'type': 'file',
+                    'media_types': ['image/x-hdf5-image'],
+                }],
+                'jobs': [],
+            },
+            'trigger_rule': {
+                'type': 'PARSE',
+                'configuration': {
+                    'BAD': '1.0',
+                }
+            }
+        }
+
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestRecipeTypesViewV6(APITransactionTestCase):
     """Tests related to the get recipe-types base endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
@@ -162,13 +223,15 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.assertEqual(result['results'][0]['name'], self.recipe_type2.name)
 
 
-class TestCreateRecipeTypeViewV6(TransactionTestCase):
+class TestCreateRecipeTypeViewV6(APITransactionTestCase):
     """Tests related to the post recipe-types base endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
@@ -261,6 +324,8 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
@@ -403,13 +468,15 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestRecipeTypeRevisionsViewV6(TransactionTestCase):
+class TestRecipeTypeRevisionsViewV6(APITransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
@@ -449,13 +516,15 @@ class TestRecipeTypeRevisionsViewV6(TransactionTestCase):
         self.assertEqual(results['results'][0]['revision_num'], self.recipe_type1.revision_num)
 
 
-class TestRecipeTypeRevisionDetailsViewV6(TransactionTestCase):
+class TestRecipeTypeRevisionDetailsViewV6(APITransactionTestCase):
     """Tests related to the recipe-types details endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
@@ -505,12 +574,69 @@ class TestRecipeTypeRevisionDetailsViewV6(TransactionTestCase):
 
 
 class TestRecipeTypesValidationViewV6(TransactionTestCase):
+    def test_bad_trigger_type(self):
+        """Tests validating a new recipe type with an invalid trigger type."""
+        json_data = {
+            'name': 'recipe-type-post-test',
+            'version': '1.0.0',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'input_file',
+                    'type': 'file',
+                    'media_types': ['image/x-hdf5-image'],
+                }],
+                'jobs': [],
+            },
+            'trigger_rule': {
+                'type': 'BAD',
+            }
+        }
+
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_trigger_config(self):
+        """Tests validating a new recipe type with an invalid trigger rule configuration."""
+        json_data = {
+            'name': 'recipe-type-post-test',
+            'version': '1.0.0',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'input_file',
+                    'type': 'file',
+                    'media_types': ['image/x-hdf5-image'],
+                }],
+                'jobs': [],
+            },
+            'trigger_rule': {
+                'type': 'PARSE',
+                'configuration': {
+                    'BAD': '1.0',
+                }
+            }
+        }
+
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestRecipeTypesValidationViewV6(APITransactionTestCase):
     """Tests related to the recipe-types validation endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()
@@ -699,12 +825,15 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         warnings = [{u'name': u'MISMATCHED_MEDIA_TYPES', u'description': u"Parameter 'INPUT_IMAGE' might not accept [image/tiff]"}]
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
 
+
 class TestRecipesViewV6(TransactionTestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
         self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
@@ -987,12 +1116,14 @@ class TestRecipesViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(results['results'][4]['source_sensor_class'], 'A')
 
-class TestRecipesPostViewV6(TransactionTestCase):
 
+class TestRecipesPostViewV6(APITransactionTestCase):
     api = 'v6'
 
     def setUp(self):
             django.setup()
+
+            rest.login_client(self.client, is_staff=True)
 
             self.workspace = storage_test_utils.create_workspace()
             self.source_file = source_test_utils.create_source(workspace=self.workspace)
@@ -1126,12 +1257,14 @@ class TestRecipesPostViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestRecipeDetailsViewV6(TransactionTestCase):
+class TestRecipeDetailsViewV6(APITransactionTestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
         self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
@@ -1281,12 +1414,15 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-class TestRecipeReprocessViewV6(TransactionTestCase):
+
+class TestRecipeReprocessViewV6(APITransactionTestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
         self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
@@ -1473,11 +1609,13 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestRecipeInputFilesViewV6(TestCase):
+class TestRecipeInputFilesViewV6(APITestCase):
 
     api = 'v6'
 
     def setUp(self):
+
+        rest.login_client(self.client, is_staff=True)
 
         # Create legacy test files
         self.f1_file_name = 'legacy_foo.bar'
@@ -1592,7 +1730,6 @@ class TestRecipeInputFilesViewV6(TestCase):
                                                          source_ended=self.f4_source_ended, recipe=self.recipe1,
                                                          last_modified=self.f4_last_modified,
                                                          recipe_input=self.f4_recipe_input)
-
 
     def test_successful_file(self):
         """Tests successfully calling the recipe input files view"""

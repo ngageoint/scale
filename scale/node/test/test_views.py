@@ -14,11 +14,12 @@ import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 import util.rest as rest_util
 from mesos_api.api import SlaveInfo, HardwareResources
+from rest_framework.test import APITransactionTestCase
 from scheduler.models import Scheduler
+from util import rest
 
 
-
-class TestNodesViewV6(TransactionTestCase):
+class TestNodesViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -58,10 +59,13 @@ class TestNodesViewEmptyV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 0)
 
-class TestNodeDetailsViewV6(TransactionTestCase):
+
+class TestNodeDetailsViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()

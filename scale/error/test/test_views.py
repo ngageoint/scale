@@ -10,13 +10,17 @@ from rest_framework import status
 import error.test.utils as error_test_utils
 import util.rest as rest_util
 from error.models import Error
+from rest_framework.test import APITestCase
+from util import rest
 
-class TestErrorsViewV6(TestCase):
+class TestErrorsViewV6(APITestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         error_test_utils.create_error(category='SYSTEM', is_builtin=True)
@@ -104,16 +108,18 @@ class TestErrorsViewV6(TestCase):
             'description': 'new error #4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestErrorDetailsViewV6(TestCase):
+class TestErrorDetailsViewV6(APITestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         self.error1 = error_test_utils.create_error(category='SYSTEM', is_builtin=True)

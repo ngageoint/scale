@@ -18,13 +18,17 @@ from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.models import RecipeType
+from rest_framework.test import APITestCase, APITransactionTestCase
+from util import rest
 from util.parse import datetime_to_string, duration_to_string
 
 
-class TestBatchesViewV6(TransactionTestCase):
+class TestBatchesViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
@@ -222,12 +226,14 @@ class TestBatchesViewV6(TransactionTestCase):
         self.assertEqual(result['recipes_estimated'], 777)
 
 
-class TestBatchDetailsViewV6(TestCase):
+class TestBatchDetailsViewV6(APITestCase):
 
     fixtures = ['batch_job_types.json']
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_invalid_version(self):
         """Tests calling the v6 batch details view with an invalid version"""
@@ -374,10 +380,12 @@ class TestBatchDetailsViewV6(TestCase):
         self.assertEqual(response.status_code, 405, response.content)
 
 
-class TestBatchesComparisonViewV6(TestCase):
+class TestBatchesComparisonViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_invalid_version(self):
         """Tests calling the v6 batch comparison view with an invalid version"""
@@ -592,10 +600,12 @@ class TestBatchesComparisonViewV6(TestCase):
         self.assertDictEqual(result, expected_result)
 
 
-class TestBatchesValidationViewV6(TransactionTestCase):
+class TestBatchesValidationViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
