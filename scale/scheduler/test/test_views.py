@@ -4,13 +4,9 @@ import datetime
 import json
 
 import django
-from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch
 from rest_framework import status
 
-import util.rest as rest_util
-from mesos_api.api import HardwareResources, MesosError
 from rest_framework.test import APITestCase
 from scheduler.models import Scheduler
 from scheduler.threads.scheduler_status import SchedulerStatusThread

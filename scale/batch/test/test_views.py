@@ -4,7 +4,6 @@ import json
 from datetime import timedelta
 
 import django
-from django.test import TestCase, TransactionTestCase
 from mock import patch
 from rest_framework import status
 

@@ -4,14 +4,13 @@ from __future__ import absolute_import
 import json
 
 import django
-from django.test import TestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
-import util.rest as rest_util
 from error.models import Error
 from rest_framework.test import APITestCase
 from util import rest
+
 
 class TestErrorsViewV6(APITestCase):
 
@@ -108,7 +107,7 @@ class TestErrorsViewV6(APITestCase):
             'description': 'new error #4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
@@ -156,5 +155,5 @@ class TestErrorDetailsViewV6(APITestCase):
         json_data = {
             'title': 'error EDIT',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)

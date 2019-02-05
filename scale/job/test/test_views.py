@@ -9,11 +9,10 @@ import time
 import django
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase, APITransactionTestCase, APIClient
 
 import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
@@ -562,6 +561,8 @@ class TestJobDetailsViewV6(APITestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client, is_staff=True)
+
         self.country = storage_test_utils.create_country()
         self.file = storage_test_utils.create_file(countries=[self.country])
 
@@ -611,8 +612,6 @@ class TestJobDetailsViewV6(APITestCase):
             self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
         except:
             self.product = None
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
@@ -1408,6 +1407,8 @@ class TestJobTypeDetailsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
@@ -2454,7 +2455,7 @@ class TestCancelJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         job_type_ids.append(self.job_type1.id)
         job_type_ids.append(self.job_type2.id)
@@ -2477,7 +2478,7 @@ class TestCancelJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
@@ -2536,7 +2537,7 @@ class TestRequeueJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         job_type_ids.append(self.job_type1.id)
         job_type_ids.append(self.job_type2.id)
@@ -2560,5 +2561,5 @@ class TestRequeueJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

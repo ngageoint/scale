@@ -5,7 +5,6 @@ import datetime
 import django
 import json
 
-from django.test.testcases import TestCase, TransactionTestCase
 import django.utils.timezone as timezone
 from django.utils.timezone import utc
 from mock import patch
