@@ -106,7 +106,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
             }],
             'recipe': {
                 'name': self.recipe.name,
-                'version': self.recipe.version
+                'revision_num': self.recipe.revision_num
             },
         }
 

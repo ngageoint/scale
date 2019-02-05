@@ -54,16 +54,16 @@ SCAN_CONFIGURATION_SCHEMA = {
         'recipe': {
             'type': 'object',
             'description': 'Specifies the natural key of the recipe the Scan will start when a file is ingested.',
-            'required': ['name', 'version'],
+            'required': ['name', 'revision_num'],
             'additionalProperties': False,
             'properties': {
                 'name': {
                     'type': 'string',
                     'description': 'Specifies the name of the recipe.',
                 },
-                'version': {
-                    'type': 'string',
-                    'description': 'Specifies the version of the recipe.'
+                'revision_num': {
+                    'type': 'integer',
+                    'description': 'Specifies the revision number of the recipe.'
                 },
             },
         },
@@ -222,5 +222,5 @@ class ScanConfigurationV6(object):
         # if 'recipe' not in self._configuration:
         #     self._configuration['recipe'] = {
         #         'name': '',
-        #         'version': ''
+        #         'revision_num': ''
         #     }

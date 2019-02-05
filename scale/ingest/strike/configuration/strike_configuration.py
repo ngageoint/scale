@@ -74,7 +74,7 @@ class StrikeConfiguration(object):
         :rtype: (string, string)
         """
         if 'recipe' in self.configuration['recipe']:
-            return (self.configuration['recipe']['name'], self.configuration['recipe']['version'])
+            return (self.configuration['recipe']['name'], self.configuration['recipe']['revision_num'])
 
     def load_monitor_configuration(self, monitor):
         """Loads the configuration into the given monitor
@@ -114,8 +114,8 @@ class StrikeConfiguration(object):
         # TODO not mandatory until v6
         if 'recipe' in self.configuration:
             recipe_name = self.configuration['recipe']['name']
-            recipe_version = self.configuration['recipe']['version']
-            if recipe_name and RecipeType.objects.filter(name=recipe_name, version=recipe_version).count() == 0:
+            revision_num = self.configuration['recipe']['revision_num']
+            if recipe_name and RecipeType.objects.filter(name=recipe_name, revision_num=revision_num).count() == 0:
                 msg = 'Recipe Type %s does not exist'
                 raise InvalidStrikeConfiguration(msg % recipe_name)
 

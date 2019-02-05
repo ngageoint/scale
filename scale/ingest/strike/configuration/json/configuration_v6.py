@@ -52,15 +52,15 @@ STRIKE_CONFIGURATION_SCHEMA = {
         'recipe': {
             'type': 'object',
             'description': 'Specifies the natural key of the recipe the Strike will start when a file is ingested.',
-            'required': ['name', 'version'],
+            'required': ['name', 'revision_num'],
             'additionalProperties': False,
             'properties': {
                 'name': {
                     'type': 'string',
                     'description': 'Specifies the name of the recipe.',
                 },
-                'version': {
-                    'type': 'string',
+                'revision_num': {
+                    'type': 'integer',
                     'description': 'Specifies the version of the recipe.'
                 },
             },

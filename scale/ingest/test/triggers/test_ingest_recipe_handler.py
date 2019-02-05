@@ -69,7 +69,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
             }],
             'recipe': {
                 'name': self.recipe.name,
-                'version': self.recipe.version
+                'revision_num': self.recipe.revision_num
             },
         }
         config = StrikeConfigurationV6(strike_config).get_configuration()
@@ -94,7 +94,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
             }],
             'recipe': {
                 'name': self.recipe.name,
-                'version': self.recipe.version,
+                'revision_num': self.recipe.revision_num,
             },
         }
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()

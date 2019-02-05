@@ -761,7 +761,7 @@ class TestScanCreateViewV6(TestCase):
                 }],
                 'recipe': {
                     'name': recipe_type.name,
-                    'version': recipe_type.version,
+                    'revision_num': recipe_type.revision_num,
                 },
             },
         }
@@ -1036,7 +1036,7 @@ class TestScanDetailsViewV6(TestCase):
             }],
             'recipe': {
                 'name': recipe_type.name,
-                'version': recipe_type.version,
+                'revision_num': recipe_type.revision_num,
             },
         }
 
@@ -1060,7 +1060,7 @@ class TestScanDetailsViewV6(TestCase):
             }],
             'recipe': {
                 'name': 'test-recipe',
-                'version': '1.0.0',
+                'revision_num': '1',
             },
         }
 
@@ -1261,7 +1261,7 @@ class TestScansValidationViewV6(TestCase):
                 }],
                 'recipe': {
                     'name': recipe.name,
-                    'version': recipe.version,
+                    'revision_num': recipe.revision_num,
                 },
             },
         }
@@ -1856,7 +1856,7 @@ class TestStrikeCreateViewV6(TestCase):
                 }],
                 'recipe': {
                     'name': recipe_type.name,
-                    'version': recipe_type.version,
+                    'revision_num': recipe_type.revision_num,
                 },
             },
         }
@@ -2091,7 +2091,7 @@ class TestStrikeDetailsViewV6(TestCase):
             }],
             'recipe': {
                 'name': recipe_type.name,
-                'version': recipe_type.version,
+                'revision_num': recipe_type.revision_num,
             },
         }
 
@@ -2145,7 +2145,7 @@ class TestStrikeDetailsViewV6(TestCase):
             }],
             'recipe': {
                 'name': 'test-recipe',
-                'version': '1.0.0',
+                'revision_num': '1',
             },
         }
 
@@ -2320,7 +2320,7 @@ class TestStrikesValidationViewV6(TestCase):
                 }],
                 'recipe': {
                     'name': recipe.name,
-                    'version': recipe.version
+                    'revision_num': recipe.revision_num
                 },
             },
         }

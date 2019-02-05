@@ -221,7 +221,7 @@ class TestScanConfiguration(TestCase):
             }],
             'recipe': {
                 'name': 'test-recipe',
-                'version': '1.0.0',
+                'revision_num': 1,
             },
         }
         # No exception is success
@@ -434,7 +434,7 @@ class TestScanConfiguration(TestCase):
             }],
             'recipe': {
                 'name': recipe.name,
-                'version': recipe.version,
+                'revision_num': recipe.revision_num,
             },
         }
 

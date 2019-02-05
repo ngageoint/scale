@@ -110,7 +110,7 @@ class TestStrikeConfiguration(TestCase):
             }],
             'recipe': {
                 'name': recipe.name,
-                'version': recipe.version,
+                'revision_num': recipe.revision_num,
             },
         }
 

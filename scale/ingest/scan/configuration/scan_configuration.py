@@ -118,8 +118,8 @@ class ScanConfiguration(object):
         # TODO not mandatory until v6
         if 'recipe' in self.config_dict:
             recipe_name = self.config_dict['recipe']['name']
-            recipe_version = self.config_dict['recipe']['version']
-            if recipe_name and RecipeType.objects.filter(name=recipe_name, version=recipe_version).count() == 0:
+            revision_num = self.config_dict['recipe']['revision_num']
+            if recipe_name and RecipeType.objects.filter(name=recipe_name, revision_num=revision_num).count() == 0:
                 msg = 'Recipe Type %s does not exist'
                 raise InvalidScanConfiguration(msg % recipe_name)
 

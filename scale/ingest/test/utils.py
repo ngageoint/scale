@@ -78,7 +78,7 @@ def create_scan(name=None, title=None, description=None, configuration=None):
     return Scan.objects.create(name=name, title=title, description=description,
                                configuration=configuration)
 
-def create_strike_ingest_event(strike=None, source_file=None, description=None, when=None):
+def create_strike_ingest_event(ingest=None, strike=None, source_file=None, description=None, when=None):
     if not strike:
         strike = create_strike()
     if not source_file:
@@ -88,11 +88,14 @@ def create_strike_ingest_event(strike=None, source_file=None, description=None, 
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
     if not when:
         when = timezone.now()
+    if not ingest:
+        ingest = create_ingest(source_file=source_file)
 
-    return IngestEvent.objects.create_strike_ingest_event(strike, description, when)
+    return IngestEvent.objects.create_strike_ingest_event(ingest.id, strike, description, when)
 
 
-def create_scan_ingest_event(scan=None, source_file=None, description=None, when=None):
+def create_scan_ingest_event(ingest=None, scan=None, source_file=None, description=None, when=None):
+
     if not scan:
         scan = create_scan()
     if not source_file:
@@ -102,5 +105,7 @@ def create_scan_ingest_event(scan=None, source_file=None, description=None, when
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
     if not when:
         when = timezone.now()
+    if not ingest:
+        ingest = create_ingest(source_file=source_file)
 
-    return IngestEvent.objects.create_scan_ingest_event(scan, description, when)
+    return IngestEvent.objects.create_scan_ingest_event(ingest.id, scan, description, when)
