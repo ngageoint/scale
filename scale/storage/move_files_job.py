@@ -6,7 +6,9 @@ import os
 import sys
 
 from error.exceptions import ScaleError, get_error_by_exception
+from messaging.manager import CommandMessageManager
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
+from storage.messages.move_files import create_move_file_message
 from storage.models import ScaleFile
 
 logger = logging.getLogger(__name__)
@@ -27,6 +29,7 @@ def move_files(file_ids, new_workspace=None, new_file_path=None):
     """
     
     try:
+        messages = []
         files = ScaleFile.objects.all()
         files = files.select_related('workspace')
         files = files.defer('workspace__json_config')
@@ -61,19 +64,27 @@ def move_files(file_ids, new_workspace=None, new_file_path=None):
                         file.file_path, new_workspace.name)
                 file_upload = FileUpload(file, path)
                 uploads.append(file_upload)
+                message = create_move_file_message(file_id=file.id)
+                messages.append(message)
     
             ScaleFile.objects.upload_files(new_workspace, uploads)
+            CommandMessageManager().send_messages(messages)
         elif new_file_path:
             moves = []
             for file in files:
                 logger.info('Moving %s to %s in workspace %s', file.file_path, new_file_path,
                             file.workspace.name)
                 moves.append(FileMove(file, new_file_path))
+                message = create_move_file_message(file_id=file.id)
+                messages.append(message)
+                
             ScaleFile.objects.move_files(moves)
         else:
             logger.info('No new workspace or file path. Doing nothing')
     
     
+        CommandMessageManager().send_messages(messages)
+        
         if new_workspace:
             # Copied files to new workspace, so delete file in old workspace (if workspace provides local path to do so)
             old_workspace.delete_files(old_files, update_model=False)
