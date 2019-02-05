@@ -5,7 +5,7 @@ info:
 
 paths:
   /workspace/:
-    list:
+    get:
       tags:
         - Workspace Services
       summary: List Workspaces
