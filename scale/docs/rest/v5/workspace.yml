@@ -1,14 +1,14 @@
 openapi: "3.0.0"
 info:
   title: Workspace Services
-  version: v6
+  version: v5
+
 paths:
-  /workspaces/:
-    get:
+  /workspace/:
+    list:
       tags:
         - Workspace Services
-      operationId: _rest_v6_workspace_list
-      summary: Workspace List
+      summary: List Workspaces
       description: Returns a list of all workspaces
       parameters:
         - in: query
@@ -55,10 +55,10 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/workspace_list'
+
     post:
       tags:
         - Workspace Services
-      operationId: _rest_v6_workspace_create
       summary: Create Workspace
       description: Creates a new Workspace with associated configuration  
       requestBody:
@@ -75,7 +75,6 @@ paths:
     get:
       tags:
         - Workspace Services
-      operationId: _rest_v6_workspace_details
       summary: Workspace Details
       description: Returns a specific workspace and all its related model information
       parameters:
@@ -92,10 +91,10 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/workspace_details'
+
     patch:
       tags:
         - Workspace Services
-      operationId: _rest_v6_workspace_edit
       summary: Edit Workspace
       description: Edits an existing Workspace with associated configuration. 
       parameters:
@@ -119,7 +118,6 @@ paths:
     post:
       tags:
         - Workspace Services
-      operationId: _rest_v6_workspace_validate
       summary: Validate Workspace
       description: Validates a new workspace configuration without actually saving it.  
       requestBody:
@@ -191,12 +189,22 @@ components:
           type: boolean
           description: Whether the workspace is active (false once workspace is archived).
           example: True
+        used_size:
+          type: integer
+          description: The amount of disk space currently being used by the workspace in bytes.
+            This field can be null if the disk space is unknown.
+          example: 102
+        total_size:
+          type: integer
+          description: The total amount of disk space provided by the workspace in bytes. 
+              This field can be null if the disk space is unknown.
+          example: 123
         created:
           type: string
           format: date-time
           description: When the associated database model was initially created.
           example: 2015-09-10T15:24:53.503Z
-        deprecated:
+        archived:
           type: string
           format: date-time
           description: When the associated database model was archived.
@@ -206,36 +214,6 @@ components:
           format: date-time
           description: When the associated database model was last saved.
           example: 2015-09-10T15:24:53.987Z
-          
-    workspace_post:
-      title: Workspace Post
-      type: object
-      properties:
-        name:
-          type: string
-          description: The identifying name of the workspace used for queries.
-            Used for validation of changes to existing workspace
-          example: raw-source
-        title:
-          type: string
-          description: The human readable display name of the workspace.
-            This will be used to generate the name field
-          example: Raw Source
-        description:
-          type: string
-          description: A longer description of the workspace 
-          example: Raw source workspace
-        base_url:
-          type: string
-          description:  The URL prefix used to access all files within the workspace.
-            This field can be null if the workspace is not web-accessible.
-          example: http://host.com/rs
-        is_active:
-          type: boolean
-          description: Whether the workspace is active (false once workspace is archived).
-          example: True
-        configuration:
-          $ref: '#/components/schemas/workspace_config'
 
     workspace_details:
       title: Workspace Details
@@ -243,7 +221,7 @@ components:
         - $ref: '#/components/schemas/workspace_base'
         - type: object
           properties: 
-            configuration:
+            json_config:
               $ref: '#/components/schemas/workspace_config'          
 
     workspace_config:
@@ -364,7 +342,7 @@ components:
           description: The secret_access_key is a generated token that the system can use to prove it
             should be able to make requests on behalf of the associated IAM account without requiring
             the actual password used by that account.
-          example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+          example: wJalrXUzdfv/K7MDENG/bPxRfiCYEXAMPLEKEY
       required:
       - access_key_id
       - secret_access_key
