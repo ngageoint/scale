@@ -14,7 +14,7 @@ from storage.models import ScaleFile
 logger = logging.getLogger(__name__)
 
 
-def create_move_file_message(file_id, new_url):
+def create_move_file_message(file_id):
     """Creates message to move the given file
 
     :param file_id: The id of the file to update

@@ -49,8 +49,6 @@ class Command(BaseCommand):
         logger.info('File IDs: %s', file_ids)
         
         move_files_job.move_files(file_ids=file_ids, new_workspace=new_workspace, new_file_path=uri)
-        
-        #add messages here or in the move files job to update urls in file meta-data
 
         logger.info('Command completed: scale_move_files')
 

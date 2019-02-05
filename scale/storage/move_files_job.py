@@ -57,7 +57,6 @@ def move_files(file_ids, new_workspace=None, new_file_path=None):
             uploads = []
             for file, path in zip(files, local_paths):
                 old_path = file.file_path
-                old_workspace = file.workspace.name if file.workspace else "none"
                 old_files.append(ScaleFile(file_name=file.file_name, file_path=file.file_path))
                 file.file_path = new_file_path if new_file_path else file.file_path
                 logger.info('Copying %s in workspace %s to %s in workspace %s', old_path, file.workspace.name,
@@ -68,7 +67,6 @@ def move_files(file_ids, new_workspace=None, new_file_path=None):
                 messages.append(message)
     
             ScaleFile.objects.upload_files(new_workspace, uploads)
-            CommandMessageManager().send_messages(messages)
         elif new_file_path:
             moves = []
             for file in files:
