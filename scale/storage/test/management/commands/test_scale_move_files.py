@@ -28,8 +28,9 @@ class TestCallScaleMoveFiles(TestCase):
 
         os.environ['FILE_IDS'] = json.dumps([self.file_1.id])
         os.environ['NEW_WORKSPACE'] = json.dumps("BAD_NAME")
+        os.environ['NEW_PATH'] = json.dumps('')
 
-        with self.assertRaises(Workspace.DoesNotExist):
+        with self.assertRaises(SystemExit):
             django.core.management.call_command('scale_move_files')
 
     @patch('storage.management.commands.scale_move_files.move_files_job')
@@ -38,6 +39,7 @@ class TestCallScaleMoveFiles(TestCase):
 
         os.environ['FILE_IDS'] = json.dumps([self.file_1.id])
         os.environ['NEW_WORKSPACE'] = json.dumps(self.workspace.name)
+        os.environ['NEW_PATH'] = json.dumps('')
 
         with self.assertRaises(SystemExit):
             django.core.management.call_command('scale_move_files')
@@ -48,6 +50,7 @@ class TestCallScaleMoveFiles(TestCase):
 
         os.environ['FILE_IDS'] = json.dumps([self.file_1.id])
         os.environ['NEW_PATH'] = json.dumps('/new/path/to/file.txt')
+        os.environ['NEW_WORKSPACE'] = json.dumps('')
 
         with self.assertRaises(SystemExit):
             django.core.management.call_command('scale_move_files')
