@@ -31,7 +31,6 @@ RECIPE_DEFINITION_SCHEMA = {
             'type': 'string',
         },
         'input': INTERFACE_SCHEMA,
-        # 'input_conditon': DATA_FILTER_SCHEMA,
         'nodes': {
             'description': 'Each node in the recipe graph',
             'type': 'object',
@@ -41,19 +40,6 @@ RECIPE_DEFINITION_SCHEMA = {
         },
     },
     'definitions': {
-        # 'input_config': {
-        #     'description': 'Describes conifuration for inputs',
-        #     'type': 'object',
-        #     'required': ['condition', 'data'],
-        #     'additionalProperties': False,
-        #     'properties': {
-        #         'condition': DATA_FILTER_SCHEMA,
-        #         'data': {
-        #             'type': 'object',
-        #             'description': 'Describes '
-        #         }
-        #     },
-        # },
         'dependency': {
             'description': 'A dependency on another recipe node',
             'type': 'object',
