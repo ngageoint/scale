@@ -132,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.media_type">storage.media_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.models">storage.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.move_files_job">storage.move_files_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.serializers">storage.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.urls">storage.urls module</a></li>
@@ -305,6 +306,53 @@
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.messages.move_files">
+<span id="storage-messages-move-files-module"></span><h2>storage.messages.move_files module<a class="headerlink" href="#module-storage.messages.move_files" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that moves files to a different workspace/location</p>
+<dl class="class">
+<dt id="storage.messages.move_files.MoveFile">
+<em class="property">class </em><code class="descclassname">storage.messages.move_files.</code><code class="descname">MoveFile</code><a class="headerlink" href="#storage.messages.move_files.MoveFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that moves a scale_file model</p>
+<dl class="method">
+<dt id="storage.messages.move_files.MoveFile.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.messages.move_files.MoveFile.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="storage.messages.move_files.MoveFile.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.messages.move_files.MoveFile.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.messages.move_files.MoveFile.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.messages.move_files.MoveFile.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.messages.move_files.create_move_file_message">
+<code class="descclassname">storage.messages.move_files.</code><code class="descname">create_move_file_message</code><span class="sig-paren">(</span><em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.messages.move_files.create_move_file_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates message to move the given file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_id</strong> (<em>int</em>) &#8211; The id of the file to update</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The message</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">storage.messages.move_files.MoveFiles</span></code></td>
 </tr>
 </tbody>
 </table>

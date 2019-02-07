@@ -1368,6 +1368,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_file.Command">(class in storage.management.commands.scale_move_file)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_files.Command">(class in storage.management.commands.scale_move_files)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command">(class in storage.management.commands.scale_upload_file)</a>
 </li>
       </ul></li>
@@ -1776,6 +1778,8 @@
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.tasks.create_mesos_task">create_mesos_task() (in module mesos_api.tasks)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.error.html#job.error.error.JobError.create_model">create_model() (job.error.error.JobError method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.move_files.create_move_file_message">create_move_file_message() (in module storage.messages.move_files)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.create_next_task">create_next_task() (scheduler.cleanup.node.NodeCleanup method)</a>
 </li>
@@ -3126,6 +3130,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.DeleteFiles.execute">(storage.messages.delete_files.DeleteFiles method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.move_files.MoveFile.execute">(storage.messages.move_files.MoveFile method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#util.command.execute_command_line">execute_command_line() (in module util.command)</a>
 </li>
@@ -3507,6 +3513,8 @@
         <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile.from_json">(source.messages.purge_source_file.PurgeSourceFile static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.DeleteFiles.from_json">(storage.messages.delete_files.DeleteFiles static method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.move_files.MoveFile.from_json">(storage.messages.move_files.MoveFile static method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.offers.from_mesos_offer">from_mesos_offer() (in module mesos_api.offers)</a>
@@ -5384,6 +5392,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_file.Command.handle">(storage.management.commands.scale_move_file.Command method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_files.Command.handle">(storage.management.commands.scale_move_files.Command method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command.handle">(storage.management.commands.scale_upload_file.Command method)</a>
 </li>
       </ul></li>
@@ -5541,6 +5551,8 @@
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command.help">(storage.management.commands.scale_list_files.Command attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_file.Command.help">(storage.management.commands.scale_move_file.Command attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_files.Command.help">(storage.management.commands.scale_move_files.Command attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command.help">(storage.management.commands.scale_upload_file.Command attribute)</a>
 </li>
@@ -8503,9 +8515,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.mount.MountConfig">MountConfig (class in job.configuration.mount)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.Broker.move_files">move_files() (storage.brokers.broker.Broker method)</a>
+      <li><a href="architecture/django/code_docs/storage.html#storage.move_files_job.move_files">move_files() (in module storage.move_files_job)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.Broker.move_files">(storage.brokers.broker.Broker method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.host_broker.HostBroker.move_files">(storage.brokers.host_broker.HostBroker method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker.move_files">(storage.brokers.nfs_broker.NfsBroker method)</a>
@@ -8517,6 +8531,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.move_files">(storage.models.Workspace method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.move_files.MoveFile">MoveFile (class in storage.messages.move_files)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.types.SeedFiles.multiple">multiple (job.seed.types.SeedFiles attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.middleware.MultipleProxyMiddleware">MultipleProxyMiddleware (class in util.middleware)</a>
@@ -12570,7 +12586,11 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles.setUp">(storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles.setUp">(storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.setUp">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_move_files.TestMoveFiles.setUp">(storage.test.messages.test_move_files.TestMoveFiles method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_delete_files_job.TestDeleteFiles.setUp">(storage.test.test_delete_files_job.TestDeleteFiles method)</a>
 </li>
@@ -12597,6 +12617,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileUpdateUUID.setUp">(storage.test.test_models.TestScaleFileUpdateUUID method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.setUp">(storage.test.test_models.TestWorkspaceManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_move_files_job.TestMoveFiles.setUp">(storage.test.test_move_files_job.TestMoveFiles method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFileDetailsViewV6.setUp">(storage.test.test_views.TestFileDetailsViewV6 method)</a>
 </li>
@@ -13015,6 +13037,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_move_files">storage.management.commands.scale_move_files (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.media_type">storage.media_type (module)</a>
@@ -13022,6 +13046,8 @@
       <li><a href="architecture/django/code_docs/storage.messages.html#module-storage.messages">storage.messages (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.messages.html#module-storage.messages.delete_files">storage.messages.delete_files (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.messages.html#module-storage.messages.move_files">storage.messages.move_files (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations">storage.migrations (module)</a>
 </li>
@@ -13055,6 +13081,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.models">storage.models (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.html#module-storage.move_files_job">storage.move_files_job (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.serializers">storage.serializers (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.settings">storage.settings (module)</a>
@@ -13083,15 +13111,21 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.management.commands.html#module-storage.test.management.commands.test_scale_delete_files">storage.test.management.commands.test_scale_delete_files (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.management.commands.html#module-storage.test.management.commands.test_scale_move_files">storage.test.management.commands.test_scale_move_files (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.test.messages.html#module-storage.test.messages">storage.test.messages (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.messages.html#module-storage.test.messages.test_delete_files">storage.test.messages.test_delete_files (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.messages.html#module-storage.test.messages.test_move_files">storage.test.messages.test_move_files (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#module-storage.test.test_delete_files_job">storage.test.test_delete_files_job (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#module-storage.test.test_geospatial_utils">storage.test.test_geospatial_utils (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#module-storage.test.test_models">storage.test.test_models (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#module-storage.test.test_move_files_job">storage.test.test_move_files_job (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#module-storage.test.test_views">storage.test.test_views (module)</a>
 </li>
@@ -14164,7 +14198,11 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_max_scheduled">test_create_max_scheduled() (job.test.test_views.TestJobTypesViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_create_message">test_create_message() (storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_move_files.TestMoveFiles.test_create_message">(storage.test.messages.test_move_files.TestMoveFiles method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_mismatched_recipe_types">test_create_mismatched_recipe_types() (batch.test.test_views.TestBatchesValidationViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_missing_mount">test_create_missing_mount() (job.test.test_views.TestJobTypesViewV5 method)</a>
@@ -14579,6 +14617,8 @@
         <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute">(source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_move_files.TestMoveFiles.test_execute">(storage.test.messages.test_move_files.TestMoveFiles method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute_ancestor">test_execute_ancestor() (storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
@@ -15764,6 +15804,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_json">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_move_files.TestMoveFiles.test_json">(storage.test.messages.test_move_files.TestMoveFiles method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_json_forced_nodes">test_json_forced_nodes() (recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
 
@@ -16097,6 +16139,12 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_missing_workspace_v6">test_missing_workspace_v6() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_path">test_move_file_new_path() (storage.test.test_move_files_job.TestMoveFiles method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_workspace">test_move_file_new_workspace() (storage.test.test_move_files_job.TestMoveFiles method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_workspace_without_download">test_move_file_new_workspace_without_download() (storage.test.test_move_files_job.TestMoveFiles method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_move_files">test_move_files() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManagerSaveParseResults.test_move_source_file">test_move_source_file() (source.test.test_models.TestSourceFileManagerSaveParseResults method)</a>
@@ -16343,14 +16391,14 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_data">test_parse_data() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_datetime">test_parse_datetime() (util.test.test_parse.TestParse method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_default">test_parse_datetime_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_datetime_invalid">test_parse_datetime_invalid() (util.test.test_parse.TestParse method)</a>
@@ -16782,6 +16830,12 @@
       <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_mapping.TestJobErrorMapping.test_save_models">test_save_models() (job.test.error.test_mapping.TestJobErrorMapping method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles.test_scale_delete_files">test_scale_delete_files() (storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles.test_scale_move_files_bad_workspace">test_scale_move_files_bad_workspace() (storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles.test_scale_move_files_good_workspace">test_scale_move_files_good_workspace() (storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles.test_scale_move_files_no_workspace">test_scale_move_files_no_workspace() (storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_post_steps.TestPostJobSteps.test_scale_post_steps_database_error">test_scale_post_steps_database_error() (job.test.management.commands.test_scale_post_steps.TestPostJobSteps method)</a>
 </li>
@@ -18113,6 +18167,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles">TestCallScaleDeleteFiles (class in storage.test.management.commands.test_scale_delete_files)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_move_files.TestCallScaleMoveFiles">TestCallScaleMoveFiles (class in storage.test.management.commands.test_scale_move_files)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs">TestCancelJobs (class in job.test.messages.test_cancel_jobs)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk">TestCancelJobsBulk (class in job.test.messages.test_cancel_jobs_bulk)</a>
@@ -18453,6 +18509,12 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricsViewV6">TestMetricsViewV6 (class in metrics.test.test_views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_move_files.TestMoveFiles">TestMoveFiles (class in storage.test.messages.test_move_files)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_move_files_job.TestMoveFiles">(class in storage.test.test_move_files_job)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles">TestNfsBrokerDeleteFiles (class in storage.test.brokers.test_nfs_broker)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_nfs_broker.TestNfsBrokerDownloadFiles">TestNfsBrokerDownloadFiles (class in storage.test.brokers.test_nfs_broker)</a>
@@ -19027,6 +19089,8 @@
         <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile.to_json">(source.messages.purge_source_file.PurgeSourceFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.DeleteFiles.to_json">(storage.messages.delete_files.DeleteFiles method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.move_files.MoveFile.to_json">(storage.messages.move_files.MoveFile method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.to_representation">to_representation() (job.serializers.JobDetailsInputSerializer method)</a>

@@ -39,6 +39,14 @@ storage\.test\.test\_models module
     :undoc-members:
     :show-inheritance:
 
+storage\.test\.test\_move\_files\_job module
+--------------------------------------------
+
+.. automodule:: storage.test.test_move_files_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 storage\.test\.test\_views module
 ---------------------------------
 

@@ -12,6 +12,14 @@ storage\.messages\.delete\_files module
     :undoc-members:
     :show-inheritance:
 
+storage\.messages\.move\_files module
+-------------------------------------
+
+.. automodule:: storage.messages.move_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -44,6 +44,14 @@ storage\.management\.commands\.scale\_move\_file module
     :undoc-members:
     :show-inheritance:
 
+storage\.management\.commands\.scale\_move\_files module
+--------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_move_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 storage\.management\.commands\.scale\_upload\_file module
 ---------------------------------------------------------
 

@@ -12,6 +12,14 @@ storage\.test\.management\.commands\.test\_scale\_delete\_files module
     :undoc-members:
     :show-inheritance:
 
+storage\.test\.management\.commands\.test\_scale\_move\_files module
+--------------------------------------------------------------------
+
+.. automodule:: storage.test.management.commands.test_scale_move_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

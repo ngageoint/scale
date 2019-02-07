@@ -132,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.media_type">storage.media_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.models">storage.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.move_files_job">storage.move_files_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.serializers">storage.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.urls">storage.urls module</a></li>
@@ -261,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_list_files">storage.management.commands.scale_list_files module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_move_files">storage.management.commands.scale_move_files module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands">Module contents</a></li>
 </ul>
@@ -273,6 +275,7 @@
 <li class="toctree-l1"><a class="reference internal" href="storage.messages.html">storage.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="storage.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.messages.html#module-storage.messages.delete_files">storage.messages.delete_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.messages.html#module-storage.messages.move_files">storage.messages.move_files module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.messages.html#module-storage.messages">Module contents</a></li>
 </ul>
 </li>
@@ -322,6 +325,7 @@
 <li class="toctree-l5"><a class="reference internal" href="storage.test.management.commands.html">storage.test.management.commands package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="storage.test.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l6"><a class="reference internal" href="storage.test.management.commands.html#module-storage.test.management.commands.test_scale_delete_files">storage.test.management.commands.test_scale_delete_files module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="storage.test.management.commands.html#module-storage.test.management.commands.test_scale_move_files">storage.test.management.commands.test_scale_move_files module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="storage.test.management.commands.html#module-storage.test.management.commands">Module contents</a></li>
 </ul>
 </li>
@@ -333,6 +337,7 @@
 <li class="toctree-l3"><a class="reference internal" href="storage.test.messages.html">storage.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.messages.html#module-storage.test.messages.test_delete_files">storage.test.messages.test_delete_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.messages.html#module-storage.test.messages.test_move_files">storage.test.messages.test_move_files module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.messages.html#module-storage.test.messages">Module contents</a></li>
 </ul>
 </li>
@@ -342,6 +347,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_delete_files_job">storage.test.test_delete_files_job module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_geospatial_utils">storage.test.test_geospatial_utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_models">storage.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_move_files_job">storage.test.test_move_files_job module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_views">storage.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.utils">storage.test.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test">Module contents</a></li>
@@ -1911,7 +1917,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="storage.models.Workspace.delete_files">
-<code class="descname">delete_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>files</em>, <em>update_model=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given files using the workspace&#8217;s broker and saves the ScaleFile model changes in the database.
 If this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be
 mounted at workspace_volume_path or an exception will be raised.</p>
@@ -2386,6 +2392,29 @@ transaction. An argument of None for a field indicates that the field should not
 <dd><p>Alias for field number 2</p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.move_files_job">
+<span id="storage-move-files-job-module"></span><h2>storage.move_files_job module<a class="headerlink" href="#module-storage.move_files_job" title="Permalink to this headline">¶</a></h2>
+<p>Defines the functions necessary to move a file to a different workspace/uri</p>
+<dl class="function">
+<dt id="storage.move_files_job.move_files">
+<code class="descclassname">storage.move_files_job.</code><code class="descname">move_files</code><span class="sig-paren">(</span><em>file_ids</em>, <em>new_workspace=None</em>, <em>new_file_path=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.move_files_job.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the given files to a different workspace/uri</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of ids of ScaleFile objects to move; should all be from the same workspace</li>
+<li><strong>new_workspace</strong> (<cite>storage.models.Workspace</cite>) &#8211; New workspace to move files to</li>
+<li><strong>new_file_path</strong> (<em>string</em>) &#8211; New path for files</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

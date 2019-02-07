@@ -132,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.media_type">storage.media_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.models">storage.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.move_files_job">storage.move_files_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.serializers">storage.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.urls">storage.urls module</a></li>
@@ -251,6 +252,7 @@
 <li class="toctree-l3"><a class="reference internal" href="storage.test.management.commands.html">storage.test.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.management.commands.html#module-storage.test.management.commands.test_scale_delete_files">storage.test.management.commands.test_scale_delete_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.management.commands.html#module-storage.test.management.commands.test_scale_move_files">storage.test.management.commands.test_scale_move_files module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.management.commands.html#module-storage.test.management.commands">Module contents</a></li>
 </ul>
 </li>
@@ -262,6 +264,7 @@
 <li class="toctree-l1"><a class="reference internal" href="storage.test.messages.html">storage.test.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.messages.html#module-storage.test.messages.test_delete_files">storage.test.messages.test_delete_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.messages.html#module-storage.test.messages.test_move_files">storage.test.messages.test_move_files module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.messages.html#module-storage.test.messages">Module contents</a></li>
 </ul>
 </li>
@@ -670,6 +673,38 @@
 <dt id="storage.test.test_models.TestWorkspaceManager.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManager.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling WorkspaceManager.create_workspace() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.test.test_move_files_job">
+<span id="storage-test-test-move-files-job-module"></span><h2>storage.test.test_move_files_job module<a class="headerlink" href="#module-storage.test.test_move_files_job" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.test.test_move_files_job.TestMoveFiles">
+<em class="property">class </em><code class="descclassname">storage.test.test_move_files_job.</code><code class="descname">TestMoveFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_move_files_job.TestMoveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.test_move_files_job.TestMoveFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_move_files_job.TestMoveFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_path">
+<code class="descname">test_move_file_new_path</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests moving a file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_workspace">
+<code class="descname">test_move_file_new_workspace</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests moving a file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_workspace_without_download">
+<code class="descname">test_move_file_new_workspace_without_download</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_move_files_job.TestMoveFiles.test_move_file_new_workspace_without_download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests moving a file</p>
 </dd></dl>
 
 </dd></dl>
@@ -1266,7 +1301,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type=u''</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_class=None</em>, <em>source_sensor=None</em>, <em>source_collection=None</em>, <em>source_task=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data=u''</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type=u''</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_class=None</em>, <em>source_sensor=None</em>, <em>source_collection=None</em>, <em>source_task=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data={}</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
