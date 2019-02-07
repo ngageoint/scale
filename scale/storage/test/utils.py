@@ -37,7 +37,7 @@ def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='te
                 data_type='', file_path=None, workspace=None, is_deleted=False, uuid='', last_modified=None,
                 data_started=None, data_ended=None, source_started=None, source_ended=None, 
                 source_sensor_class=None, source_sensor=None, source_collection=None, source_task=None,
-                geometry=None, center_point=None, meta_data='', countries=None, job_exe=None, job_output=None,
+                geometry=None, center_point=None, meta_data={}, countries=None, job_exe=None, job_output=None,
                 recipe=None, recipe_node=None, batch=None, is_superseded=False, superseded=None):
     """Creates a Scale file model for unit testing
 

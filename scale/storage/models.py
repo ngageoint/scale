@@ -1133,7 +1133,7 @@ class Workspace(models.Model):
 
         return get_workspace_volume_path(self.name)
 
-    def delete_files(self, files):
+    def delete_files(self, files, update_model=True):
         """Deletes the given files using the workspace's broker and saves the ScaleFile model changes in the database.
         If this workspace's broker uses a container volume, the workspace expects this volume file system to already be
         mounted at workspace_volume_path or an exception will be raised.
@@ -1145,7 +1145,7 @@ class Workspace(models.Model):
         """
 
         volume_path = self._get_volume_path()
-        self.get_broker().delete_files(volume_path, files)
+        self.get_broker().delete_files(volume_path, files, update_model)
 
     def download_files(self, file_downloads):
         """Downloads the given files to the given local file system paths using the workspace's broker. If this
