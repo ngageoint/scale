@@ -652,7 +652,21 @@ class Ingest(models.Model):
         elif self.scan:
             return self.scan
         else:
-            logger.info('No source strike or scan for ingest %s' % ingest.id)
+            logger.info('No source strike or scan for ingest %s' % self.id)
+
+    def get_recipe_name(self):
+        """Returns the """
+
+        configuration = None
+        if self.strike:
+            configuration = self.strike.get_v6_configuration_json()
+        elif self.scan:
+            configuration = self.scan.get_v6_configuration_json()
+
+        if 'recipe' in configuration:
+            return configuration['recipe']['name']
+        else:
+            return None
 
     class Meta(object):
         """meta information for database"""
