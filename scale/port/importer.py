@@ -281,28 +281,8 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     except (InvalidDefinition, InvalidRecipeConnection) as ex:
         raise InvalidConfiguration('Recipe type definition invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
+    # trigger rules are ignored in Scale v6, so no need to check them
     # Validate the trigger rule
-    trigger_rule = None
-    if 'trigger_rule' in result and result.get('trigger_rule'):
-        trigger_rule = TriggerRule(**result.get('trigger_rule'))
-    if trigger_rule:
-        trigger_config = trigger_rule.get_configuration()
-        if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
-            logger.exception('Recipe type trigger rule type invalid')
-            raise InvalidConfiguration('Recipe type trigger type invalid: %s -> %s' % (result.get('name'),
-                                                                                       trigger_rule.type))
-        try:
-            warnings.extend(trigger_config.validate_trigger_for_recipe(definition))
-
-            # Create a new rule when the trigger content was provided
-            if recipe_type_dict.get('trigger_rule'):
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule.type)
-                trigger_rule = rule_handler.create_trigger_rule(trigger_rule.configuration, trigger_rule.name,
-                                                                trigger_rule.is_active)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
-            logger.exception('Recipe type trigger rule invalid')
-            raise InvalidConfiguration('Recipe type trigger rule invalid: %s -> %s' % (result.get('name'), unicode(ex)))
-    remove_trigger_rule = 'trigger_rule' in recipe_type_dict and not recipe_type_dict['trigger_rule']
 
     # Edit or create the associated recipe type model
     title = result.get('title')
@@ -313,16 +293,15 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
                 with transaction.atomic():
                     RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=title,
                                                            description=description, definition=definition,
-                                                           trigger_rule=trigger_rule,
-                                                           remove_trigger_rule=remove_trigger_rule)
-            except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                                                           trigger_rule=None, remove_trigger_rule=None)
+            except (InvalidDefinition, InvalidRecipeConnection) as ex:
                 logger.exception('Recipe type edit failed')
                 raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
         else:
             try:
                 RecipeType.objects.create_recipe_type_v5(result.get('name'), result.get('version'), result.get('title'),
-                                                      result.get('description'), definition, trigger_rule)
-            except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                                                      result.get('description'), definition, None)
+            except (InvalidDefinition, InvalidRecipeConnection) as ex:
                 logger.exception('Recipe type create failed')
                 raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
     elif isinstance(definition, RecipeDefinition):
@@ -415,33 +394,12 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type error mapping invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
+    # trigger rules are ignored in Scale v6, so no need to check them
     # Validate the trigger rule
-    trigger_rule = None
-    if 'trigger_rule' in result and result.get('trigger_rule'):
-        trigger_rule = TriggerRule(**result.get('trigger_rule'))
-    if trigger_rule:
-        trigger_config = trigger_rule.get_configuration()
-        if not isinstance(trigger_config, JobTriggerRuleConfiguration):
-            logger.exception('Job type trigger rule type invalid')
-            raise InvalidConfiguration('Job type trigger type invalid: %s -> %s' % (result.get('name'),
-                                                                                    trigger_rule.type))
-
-        try:
-            warnings.extend(trigger_config.validate_trigger_for_job(interface))
-
-            # Create a new rule when the trigger content was provided
-            if job_type_dict.get('trigger_rule'):
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule.type)
-                trigger_rule = rule_handler.create_trigger_rule(trigger_rule.configuration, trigger_rule.name,
-                                                                trigger_rule.is_active)
-        except (InvalidTriggerType, InvalidTriggerRule, InvalidConnection) as ex:
-            logger.exception('Job type trigger rule invalid')
-            raise InvalidConfiguration('Job type trigger rule invalid: %s -> %s' % (result.get('name'), unicode(ex)))
-    remove_trigger_rule = 'trigger_rule' in job_type_dict and not job_type_dict['trigger_rule']
 
     # Extract the fields that should be updated as keyword arguments
     extra_fields = {}
-    base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'configuration'}
+    base_fields = {'name', 'version', 'interface', 'error_mapping', 'configuration'}
     for key in job_type_dict:
         if key not in base_fields:
             if key in JobType.UNEDITABLE_FIELDS:
@@ -458,11 +416,10 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
     # Edit or create the associated job type model
     if job_type:
         try:
-            JobType.objects.edit_job_type_v5(job_type.id, interface=interface, trigger_rule=trigger_rule,
-                                             remove_trigger_rule=remove_trigger_rule,
+            JobType.objects.edit_job_type_v5(job_type.id, interface=interface,
                                              error_mapping=error_mapping,
                                              configuration=configuration, secrets=secrets, **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+        except (InvalidJobField, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration) as ex:
             logger.exception('Job type edit failed')
             raise InvalidConfiguration(
@@ -470,10 +427,10 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
     else:
         try:
             JobType.objects.create_job_type_v5(name=result.get('name'), version=result.get('version'),
-                                               interface=interface, trigger_rule=trigger_rule,
+                                               interface=interface,
                                                error_mapping=error_mapping, configuration=configuration,
                                                secrets=secrets, **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+        except (InvalidJobField, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration) as ex:
             logger.exception('Job type create failed')
             raise InvalidConfiguration('Unable to create new job type: %s -> %s' % (result.get('name'), unicode(ex)))

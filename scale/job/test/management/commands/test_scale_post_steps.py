@@ -14,6 +14,7 @@ from job.configuration.results.results_manifest.results_manifest import ResultsM
 from job.management.commands.scale_post_steps import Command as PostCommand
 from job.models import JobExecutionOutput
 from job.test import utils as job_utils
+from recipe.test import utils as recipe_utils
 from trigger.models import TriggerEvent
 
 
@@ -32,9 +33,11 @@ class TestPostJobSteps(TransactionTestCase):
         interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args, 'input_data': [],
                      'output_data': [{'name': 'arg1', 'type': 'file'}, {'name': 'arg2', 'type': 'file'}]}
 
+        self.recipe_type = recipe_utils.create_recipe_type_v6()
+        self.recipe = recipe_utils.create_recipe(recipe_type=self.recipe_type)
         self.job_type = job_utils.create_job_type(name='Test', version='1.0', interface=interface)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
-        self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
+        self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING', recipe=self.recipe)
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING')
 
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')

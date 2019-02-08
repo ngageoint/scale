@@ -503,3 +503,5 @@ class TestRecipe(TestCase):
 
         # Connect the sub recipe to the condition output
         definition.add_dependency_input_connection('recipe-node', 'INPUT_FILE', 'condition-node', 'cond')
+
+        # what is actually being tested here?? Attempting to test Parse -> condition?
