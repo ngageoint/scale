@@ -1,0 +1,1212 @@
+openapi: "3.0.0"
+info:
+  title: Scale File Services
+  description: These endpoints are deprecated and will not work with v6 API calls.
+    Use the `files/` endpoint with `v6` for comparable data retrieval. 
+  version: v5
+
+paths:
+  /sources/:
+    get:
+      tags:
+        - Scale File Services
+      summary: List Source Files
+      deprecated: true
+      description: Returns a list of all source files
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: time_field
+          schema:
+            type: string
+            enum:
+              - last_modified
+              - data
+            default: last_modified
+          description: Indicates the time field(s) that *started* and *ended* will use for
+            time filtering.
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: is_parsed
+          schema:
+            type: boolean
+          description: Whether this source file was successfully parsed and ingested into the system.
+        - in: query
+          name: file_name
+          schema:
+            type: string
+          description: Return only sources with a given file name.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/source_file_base'
+
+  /sources/{id}/:
+    get:
+      tags:
+        - Scale File Services
+      summary: Source File Details
+      deprecated: true
+      description: Returns the details for a source file
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of an existing source file
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/source_file_base'
+
+  /sources/{id}/ingests/:
+    get:
+      tags:
+        - Scale File Services
+      summary: Source File Ingests
+      deprecated: true
+      description: Returns a list of all ingests related to the source file with the given ID
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of an existing source file
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - TRANSFERRING
+              - TRANSFERRED
+              - DEFERRED
+              - NGESTING
+              - INGESTED
+              - ERRORED
+              - DUPLICATE
+          description: Return only ingests with a status matching this string.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: scan_id
+          schema:
+            type: integer
+          description: Return only ingests created by a given scan process identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: strike_id
+          schema:
+            type: integer
+          description: Return only ingests created by a given strike process identifier.
+            Duplicate it to filter by multiple values.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/ingest_list'
+
+  /sources/{id}/jobs/:
+    get:
+      tags:
+        - Scale File Services
+      summary: Source File Jobs
+      deprecated: true
+      description: Returns a list of all jobs related to the source file with the given ID.
+        Jobs marked as superseded are excluded by default.
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of an existing source file
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - RUNNING
+              - FAILED
+              - COMPLETED
+              - CANCELED
+          description: Return only jobs with a status matching this string.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_id
+          schema:
+            type: integer
+          description: Return only jobs with a given identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Return only jobs with a given job type identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Return only jobs with a given job type name.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_category
+          schema:
+            type: string
+          description: Return only jobs with a given job type category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: error_category
+          schema:
+            type: string
+            enum:
+              - SYSTEM
+              - DATA
+              - ALGORITHM
+          description: Return only jobs that failed due to an error with a given category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: include_superseded
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include superseded job instances. Defaults to false.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_list'
+
+  /sources/{id}/products/:
+    get:
+      tags:
+        - Scale File Services
+      summary: Source File Products
+      deprecated: true
+      description: Returns a list of all products that were produced by the given source file ID
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of an existing source file
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: time_field
+          schema:
+            type: string
+            enum:
+              - last_modified
+              - data
+              - source
+            default: last_modified
+          description: Indicates the time field(s) that *started* and *ended* will use for
+            time filtering.
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - RUNNING
+              - FAILED
+              - COMPLETED
+              - CANCELED
+          description: Return only jobs with a status matching this string.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_output
+          schema:
+            type: string
+          description: Return only products for the given job output.
+        - in: query
+          name: recipe_id
+          schema:
+            type: integer
+          description: Return only products produced by the given recipe identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: recipe_job
+          schema:
+            type: string
+          description: Return only products produced by the given recipe job.
+        - in: query
+          name: recipe_type_id
+          schema:
+            type: integer
+          description: Return only products produced by the given recipe type identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: batch_id
+          schema:
+            type: integer
+          description: Return only products produced by the given batch identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_id
+          schema:
+            type: integer
+          description: Return only jobs with a given identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Return only jobs with a given job type identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Return only jobs with a given job type name.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_category
+          schema:
+            type: string
+          description: Return only jobs with a given job type category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: is_operational
+          schema:
+            type: boolean
+            default: false
+          description: Return only products flagged as operational status versus R&D.
+        - in: query
+          name: is_published
+          schema:
+            type: boolean
+            default: false
+          description: Return only products flagged as currently exposed for publication.
+        - in: query
+          name: file_name
+          schema:
+            type: string
+          description: Return only products with a given file name.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/product_file_list'
+
+  /sources/updates/:
+    get:
+      tags:
+        - Scale File Services
+      summary: Source File Updates
+      deprecated: true
+      description: Returns the source file updates (created, parsed, and deleted sources) that have occurred in the given time range.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: time_field
+          schema:
+            type: string
+            enum:
+              - last_modified
+              - data
+            default: last_modified
+          description: Indicates the time field(s) that *started* and *ended* will use for
+            time filtering.
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: is_parsed
+          schema:
+            type: boolean
+          description: Whether this source file was successfully parsed and ingested into the system.
+        - in: query
+          name: file_name
+          schema:
+            type: string
+          description: Return only sources with a given file name.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/source_file_update_list'
+
+components:
+  schemas:
+    ingest_list:
+      title: Ingest List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_details'
+          description: List of ingest objects
+
+    source_file_base:
+      title: Source File
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        workspace:
+          $ref: '#/components/schemas/workspace_base'
+        file_name:
+          type: string
+          description: The name of the source file.
+          example: my_file.kml
+        media_type:
+          type: string
+          description: The IANA media type of the source file.
+          example: application/vnd.google-earth.kml+xml
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        is_deleted:
+          type: boolean
+          description: Whether the source file has been deleted.
+          example: false
+        uuid:
+          type: string
+          format: uri
+          description: A unique identifier that stays stable across multiple job execution runs.
+          example: c8928d9183fc99122948e7840ec9a0fd
+        url:
+          type: string
+          format: uri
+          description: The absolute URL to use for downloading the file.
+          example: http://host.com/file/path/my_file.kml
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        deleted:
+          type: string
+          format: date-time
+          description: When the source file was deleted.
+          example: null
+        data_started:
+          type: string
+          format: date-time
+          description: The start time of the source data being ingested.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: The ended time of the source data being ingested.
+          example: 2015-09-10T15:24:53.987Z
+        geometry:
+          type: string
+          description: The full geospatial geometry footprint of the source file. (WKT format)
+          example: POLYGON((11 -11,22 -22,33 -33,44 -44))
+        center_point:
+          type: string
+          description: The central geospatial location of the source file.
+          example: POINT(11 -11)
+        meta_data:
+          $ref: '#/components/schemas/metadata'
+        countries:
+          type: array
+          items:
+            type: string  
+          description: A list of zero or more strings with the ISO3 country codes for countries
+            contained in the geographic boundary of this file.
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        is_parsed:
+          type: boolean
+          description: Whether this source was successfully parsed.
+          example: true
+        parsed:
+          type: string
+          format: date-time
+          description: When the source file was originally parsed by Scale.
+          example: 2015-09-10T15:24:53.987Z  
+
+    source_file_update_list:
+      title: Source File Updates
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/source_file_update'
+          description: List of source files
+
+    source_file_update:
+      title: Source File Update
+      allOf:
+        - $ref: '#/components/schemas/source_file_base'
+        - type: object
+        - properties:
+            update:
+              type: object
+              description: Updates made to this file
+              properties:
+                action:
+                  type: string
+                  enum:
+                    - CREATED
+                    - PARSED
+                    - DELETED
+                  description: Action type
+                  example: CREATED  
+                when:
+                  type: string
+                  format: date-time
+                  description: When the action occurred
+                  example: 2015-09-10T15:24:53.987Z  
+
+    metadata:
+      title: Metadata
+      type: object
+      additionalProperties:
+        oneOf:
+        - $ref: '#/components/schemas/Geometry'
+        - $ref: '#/components/schemas/Point2D'
+        - $ref: '#/components/schemas/Point'
+        - $ref: '#/components/schemas/LineString'
+        - $ref: '#/components/schemas/Polygon'
+        - $ref: '#/components/schemas/MultiPoint'
+        - $ref: '#/components/schemas/LineString'
+        - $ref: '#/components/schemas/MultiLineString'
+        - $ref: '#/components/schemas/MultiPolygon'
+        - $ref: '#/components/schemas/GeometryCollection'
+        - $ref: '#/components/schemas/Feature'
+        - $ref: '#/components/schemas/FeatureCollection'
+        discriminator:
+          propertyName: type
+          mapping:
+            Geometry: '#/components/schemas/Geometry'
+            Point2D: '#/components/schemas/Point2D'
+            Point: '#/components/schemas/Point'
+            LineString: '#/components/schemas/LineString'
+            Polygon: '#/components/schemas/Polygon'
+            MultiPoint: '#/components/schemas/MultiPoint'
+            MultiLineString: '#/components/schemas/MultiLineString'
+            MultiPolygon: '#/components/schemas/MultiPolygon'
+            GeometryCollection: '#/components/schemas/GeometryCollection'
+            Feature: '#/components/schemas/Feature'
+            FeatureCollection: '#/components/schemas/FeatureCollection'
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    Geometry:
+      type: object
+      description: GeoJSon geometry
+      required:
+        - type
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometry-objects
+      properties:
+        type:
+          type: string
+          enum:
+          - Point
+          - LineString
+          - Polygon
+          - MultiPoint
+          - MultiLineString
+          - MultiPolygon
+          description: the geometry type
+        bbox:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            type: number
+
+    Point2D:
+      type: array
+      maxItems: 2
+      minItems: 2
+      items:
+        type: number
+
+    Point:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id2
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              $ref: '#/components/schemas/Point2D'
+
+    LineString:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id3
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              items:
+                $ref: '#/components/schemas/Point2D'
+
+    Polygon:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id4
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              minItems: 4
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point2D'
+
+    MultiPoint:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id5
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              items:
+                $ref: '#/components/schemas/Point2D'
+              
+    MultiLineString:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id6
+      allOf:
+        - $ref: "#/components/schemas/Geometry"   
+        - properties:
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point2D'
+
+    MultiPolygon:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id6
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Point2D'
+
+    GeometryCollection:
+      type: object
+      description: GeoJSon geometry collection
+      required:
+      - type
+      - geometries
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometrycollection
+      properties:
+        type:
+          type: string
+          enum:
+          - GeometryCollection
+        geometries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Geometry'
+
+    Feature:
+      type: object
+      description: GeoJSon Feature
+      required:
+      - type
+      - properties
+      - geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometrycollection
+      properties:
+        type:
+          type: string
+          enum:
+          - Feature
+        properties:
+          type: object
+          additionalProperties: true
+          nullable: true
+        geometry:  
+          oneOf:
+          - $ref: '#/components/schemas/Geometry'
+          - $ref: '#/components/schemas/Point2D'
+          - $ref: '#/components/schemas/Point'
+          - $ref: '#/components/schemas/LineString'
+          - $ref: '#/components/schemas/Polygon'
+          - $ref: '#/components/schemas/MultiPoint'
+          - $ref: '#/components/schemas/LineString'
+          - $ref: '#/components/schemas/MultiLineString'
+          - $ref: '#/components/schemas/MultiPolygon'
+          - $ref: '#/components/schemas/GeometryCollection'
+          discriminator:
+            propertyName: type
+            mapping:
+              Geometry: '#/components/schemas/Geometry'
+              Point2D: '#/components/schemas/Point2D'
+              Point: '#/components/schemas/Point'
+              Polygon: '#/components/schemas/Polygon'
+              MultiPoint: '#/components/schemas/MultiPoint'
+              LineString: '#/components/schemas/LineString'
+              MultiLineString: '#/components/schemas/MultiLineString'
+              MultiPolygon: '#/components/schemas/MultiPolygon'
+              GeometryCollection: '#/components/schemas/GeometryCollection'
+
+    FeatureCollection:
+      type: object
+      description: GeoJSon FeatureCollection
+      required:
+        - type
+        - features
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometrycollection
+      properties:
+        type:
+          type: string
+          enum:
+            - FeatureCollection
+        features: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'
+
+    ingest_details:
+      title: Ingest Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        file_name:
+          type: string
+          description: The name of the file being ingested.  
+          example: file_name.txt
+        scan:
+          $ref: '#/components/schemas/scan_base'
+        strike:
+          $ref: '#/components/schemas/strike_base_ingest'
+        status:
+          type: string
+          description: "The current status of the ingest.
+            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]"
+          example: INGESTED
+        bytes_transferred:
+          type: integer
+          description: The total number of bytes transferred so far.
+          example: 1234
+        transfer_started:
+          type: string
+          format: date-time
+          description: When the transfer was started.
+          example: 2015-09-10T14:48:08.920Z
+        transfer_ended:
+          type: string
+          format: date-time
+          description: When the transfer ended.
+          example: 2015-09-10T14:48:08.956Z
+        media_type:
+          type: string
+          description: The IANA media type of the file. 
+          example: text/plain
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        file_path:
+          type: string
+          description: The relative path of the file in the workspace.
+          example: the/current/path/file_name.txt
+        workspace:
+          $ref: '#/components/schemas/workspace_base'
+        new_file_path:
+          type: string
+          description: The relative path for where the file should be moved as part of ingesting.
+          example: the/new/path/file_name.txt
+        new_workspace:
+          $ref: '#/components/schemas/workspace_base'
+        job:
+          $ref: '#/components/schemas/job'
+        ingest_started:
+          type: string
+          format: date-time
+          description: When the ingest was started.
+          example: 2015-09-10T15:24:53.503Z
+        ingest_ended:
+          type: string
+          format: date-time
+          description: When the ingest ended.
+          example: 2015-09-10T15:24:53.987Z
+        source_file:
+          $ref: '#/components/schemas/source_file'
+        data_started:
+          type: string
+          format: date-time
+          description: The start time of the source data being ingested.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: The end time of the source data being ingested.
+          example: 2015-09-10T15:24:53.987Z
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+
+    scan_base:
+      title: Scan
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Scan process used for queries.  
+          example: my-scan-process
+        title:
+          type: string
+          description: The human readable display name of the Scan process.  
+          example: My Scan Process
+        description:
+          type: string
+          description: A longer description of the Scan process. 
+          example: This is my Scan process for detecting my favorite files!
+        job:
+          $ref: '#/components/schemas/model_id'
+        dry_run_job:
+          $ref: '#/components/schemas/model_id'
+
+    strike_base_ingest:
+      title: Ingest Strike Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Strike process used for queries.  
+          example: my-strike-process
+        title:
+          type: string
+          description: The human readable display name of the Strike process.  
+          example: My Strike Process
+        description:
+          type: string
+          description: A longer description of the Strike process. 
+          example: This is my Strike process for detecting my favorite files!
+        job:
+          $ref: '#/components/schemas/model_id'
+
+    product_file_list:
+      title: Product File List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/product_file'
+          description: List of product files
+
+    product_file:
+      title: Product File
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        workspace:
+          $ref: '#/components/schemas/workspace_base'
+        file_name:
+          type: string
+          description: The name of the source file.
+          example: my_file.kml
+        media_type:
+          type: string
+          description: The IANA media type of the product file.
+          example: application/vnd.google-earth.kml+xml
+        file_type:
+          type: string
+          description: The file type of the product
+          example: PRODUCT
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        is_deleted:
+          type: boolean
+          description: Whether the source file has been deleted.
+          example: True
+        uuid:
+          type: string
+          format: uri
+          description: A unique identifier that stays stable across multiple job execution runs.
+          example: c8928d9183fc99122948e7840ec9a0fd
+        url:
+          type: string
+          format: uri
+          description: The absolute URL to use for downloading the file.
+          example: http://host.com/file/path/my_file.kml
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        deleted:
+          type: string
+          format: date-time
+          description: When the source file was deleted.
+          example: 2015-09-10T15:24:53.987Z
+        data_started:
+          type: string
+          format: date-time
+          description: The start time of the source data being ingested.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: The ended time of the source data being ingested.
+          example: 2015-09-10T15:24:53.987Z
+        geometry:
+          type: string
+          description: The full geospatial geometry footprint of the source file. (WKT format)
+          example: POLYGON((11 -11,22 -22,33 -33,44 -44))
+        center_point:
+          type: string
+          description: The central geospatial location of the source file.
+          example: POINT(11 -11)
+        countries:
+          type: array
+          items:
+            type: string  
+          description: A list of zero or more strings with the ISO3 country codes for countries
+            contained in the geographic boundary of this file.
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        source_started:
+          type: string
+          format: date-time
+          description: When collection of the underlying source file started. 
+          example: 2015-09-10T15:24:53.987Z
+        source_ended:
+          type: string
+          format: date-time
+          description: When collection of the underlying source file ended. 
+          example: 2015-09-10T15:24:53.987Z
+        job:
+          $ref: '#/components/schemas/model_id'
+        job_exe:
+          $ref: '#/components/schemas/model_id'
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        recipe:
+          $ref: '#/components/schemas/model_id'
+        recipe_type:
+          $ref: '#/components/schemas/recipe_type_base'
+        batch:
+          $ref: '#/components/schemas/model_id'
+        is_superseded:
+          type: boolean
+          description: Whether this file has been replaced and is now obsolete.
+          example: True
+        superseded:
+          type: string
+          format: date-time
+          description: When the file became superseded by another file.
+          example: 2015-09-10T15:24:53.987Z
+        is_operational:
+          type: boolean
+          description: Whether this file is R&D or Production
+          example: True
+        is_published:
+          type: boolean
+          description: Whether this file has been published
+          example: True
+        has_been_published:
+          type: boolean
+          description: Whether this file has been ever been published
+          example: True
+        published:
+          type: string
+          format: date-time
+          description: When the file was published
+          example: 2015-09-10T15:24:53.987Z
+        unpublished:
+          type: string
+          format: date-time
+          description: When the file was unpublished
+          example: 2015-09-10T15:24:53.987Z
