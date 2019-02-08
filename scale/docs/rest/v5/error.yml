@@ -1,0 +1,243 @@
+openapi: "3.0.0"
+info:
+  title: Error Services
+  version: v5
+paths:
+  /errors/:
+    get:
+      tags:
+        - Error Services
+      summary: Error List
+      description: Returns a list of all errors
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+            Duplicate it to multi-sort, (ex: order=host_name&order=created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_list'
+
+    post:
+      tags:
+        - Error Services
+      summary: Create Error
+      description: Creates a new error
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: The identifying name of the error used for queries.
+          example: some_error
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: The human readable display name of the error.
+          example: Some Error
+        - in: query
+          name: description
+          schema:
+            type: string
+          description: A longer description of the error.
+          example: This is a data error.
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum:
+              - ALGORITHM
+              - DATA
+          description: The category of the error.
+          example: DATA
+      responses:
+        '201':
+          description: OK - indicates error was created
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_details'
+
+  /errors/{id}/:
+    get:
+      tags:
+        - Error Services
+      summary: Error Details
+      description: Get the details of an errro by ID 
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: integer
+          description: The ID of the error to be edited.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_details'
+
+    patch:
+      tags:
+        - Error Services
+      summary: Edit Error
+      description: Creates a new error
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: integer
+          description: The ID of the error to be edited.
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: The human readable display name of the error.
+          example: Some Error
+        - in: query
+          name: description
+          schema:
+            type: string
+          description: A longer description of the error.
+          example: This is a data error.
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum:
+              - ALGORITHM
+              - DATA
+          description: The category of the error.
+          example: DATA
+      responses:
+        '200':
+          description: OK - indicates error was edited
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_details'
+
+  /ingests/errors/{id}/:
+    get:
+      tags:
+        - Error Services
+      operationId: _rest_v6_error_details
+      summary: Error Details
+      description: Returns detailed information about the error with the specified id
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: id of an existing error
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_details'
+
+components:
+  schemas:
+    error_list:
+      title: Error List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/error_details'
+          description: List of Error objects
+
+    error_base:
+      title: Error Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-error
+        title:
+          type: string
+          example: My Error
+        description:
+          type: string
+          example: My Error Description 
+        category:
+          type: string
+          example: SYSTEM 
+        is_builtin:
+          type: boolean
+          description: Whether the error was loaded during the installation process.
+          example: true
+
+    error_details:
+      title: Error Details
+      allOf:
+        - $ref: '#/components/schemas/error_base'
+        - type: object
+        - properties:
+            created:
+              type: string
+              format: date-time
+              description: When the associated database model was initially created.
+              example: 2015-09-10T15:24:53.503Z
+            last_modified:
+              type: string
+              format: date-time
+              description: When the associated database model was last saved.
+              example: 2015-09-10T15:24:53.987Z
