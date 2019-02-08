@@ -36,7 +36,7 @@ paths:
         '204':
           description: OK - successfully processed event
         '400':
-          description: Error - an issue with the privded update fields
+          description: Error - an issue with the provided update fields
         '404':
           description: Error - the scheduler does not exist
             
