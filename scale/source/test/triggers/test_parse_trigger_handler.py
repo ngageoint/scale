@@ -123,60 +123,60 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
                                                                   trigger_rule=self.trigger_rule)
 
 
-    def test_successful_job_creation(self):
-        """Tests successfully processing a parse that triggers job creation."""
+    # def test_successful_job_creation(self):
+    #     """Tests successfully processing a parse that triggers job creation."""
 
-        # Set up data
-        configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain',
-                'data_types': ['type1', 'type2'],
-            },
-            'data': {
-                'input_data_name': self.input_name,
-                'workspace_name': self.workspace.name
-            },
-        }
-        rule_model = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
-        self.job_type_1.trigger_rule = rule_model
-        self.job_type_1.save()
+    #     # Set up data
+    #     configuration = {
+    #         'version': '1.0',
+    #         'condition': {
+    #             'media_type': 'text/plain',
+    #             'data_types': ['type1', 'type2'],
+    #         },
+    #         'data': {
+    #             'input_data_name': self.input_name,
+    #             'workspace_name': self.workspace.name
+    #         },
+    #     }
+    #     rule_model = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
+    #     self.job_type_1.trigger_rule = rule_model
+    #     self.job_type_1.save()
 
-        # Call method to test
-        ParseTriggerHandler().process_parsed_source_file(self.source_file)
+    #     # Call method to test
+    #     ParseTriggerHandler().process_parsed_source_file(self.source_file)
 
-        # Check results
-        queue_1 = Queue.objects.get(job_type=self.job_type_1.id)
-        job_1 = Job.objects.get(pk=queue_1.job_id)
-        self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
-        self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
+    #     # Check results
+    #     queue_1 = Queue.objects.get(job_type=self.job_type_1.id)
+    #     job_1 = Job.objects.get(pk=queue_1.job_id)
+    #     self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
+    #     self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
 
-    def test_successful_recipe_creation(self):
-        """Tests successfully processing a parse that triggers recipe creation."""
+    # def test_successful_recipe_creation(self):
+    #     """Tests successfully processing a parse that triggers recipe creation."""
 
-        # Set up data
-        configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain',
-            },
-            'data': {
-                'input_data_name': self.input_name,
-                'workspace_name': self.workspace.name
-            },
-        }
+    #     # Set up data
+    #     configuration = {
+    #         'version': '1.0',
+    #         'condition': {
+    #             'media_type': 'text/plain',
+    #         },
+    #         'data': {
+    #             'input_data_name': self.input_name,
+    #             'workspace_name': self.workspace.name
+    #         },
+    #     }
 
-        rule_model = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
-        self.recipe_type_1.trigger_rule = rule_model
-        self.recipe_type_1.save()
+    #     rule_model = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
+    #     self.recipe_type_1.trigger_rule = rule_model
+    #     self.recipe_type_1.save()
 
-        # Call method to test
-        ParseTriggerHandler().process_parsed_source_file(self.source_file)
+    #     # Call method to test
+    #     ParseTriggerHandler().process_parsed_source_file(self.source_file)
 
-        # Check results...ensure first job is queued
-        queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
-        job_1 = Job.objects.get(pk=queue_1.job_id)
-        self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
-        self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
-        self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
-        self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)
+    #     # Check results...ensure first job is queued
+    #     queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
+    #     job_1 = Job.objects.get(pk=queue_1.job_id)
+    #     self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
+    #     self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
+    #     self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
+    #     self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)

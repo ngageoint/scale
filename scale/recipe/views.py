@@ -13,7 +13,6 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-import trigger.handler as trigger_handler
 import util.rest as rest_util
 
 from data.data.exceptions import InvalidData
@@ -39,7 +38,6 @@ from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSeriali
                                 RecipeTypeRevisionSerializerV6, RecipeTypeRevisionDetailsSerializerV6)
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
-from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from trigger.models import TriggerEvent
 from util.rest import BadParameter, title_to_name
 
@@ -124,14 +122,14 @@ class RecipeTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if self.request.version == 'v6':
             return self._create_v6(request)
         elif self.request.version == 'v5':
             return self._create_v5(request)
 
         raise Http404
-        
+
     def _create_v5(self, request):
         """Creates a new recipe type and returns a link to the detail URL
 
@@ -146,21 +144,8 @@ class RecipeTypesView(ListCreateAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition')
 
+        # trigger rules are ignored in Scale v6, so no need to check them
         # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for new recipe type: %s', name)
-                raise BadParameter(unicode(ex))
 
         try:
             with transaction.atomic():
@@ -168,15 +153,13 @@ class RecipeTypesView(ListCreateAPIView):
                 logger.info(definition_dict)
                 recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
+                # trigger rules are ignored in Scale v6, so no need to check them
                 # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name, is_active)
 
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, description, recipe_def,
-                                                                    trigger_rule)
-        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                                                                    None)
+        except (OldInvalidDefinition, InvalidRecipeConnection) as ex:
             logger.exception('Unable to create new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -208,7 +191,7 @@ class RecipeTypesView(ListCreateAPIView):
             with transaction.atomic():
                 # Validate the recipe definition
                 logger.info(definition_dict)
-                recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition() 
+                recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
 
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, description, recipe_def)
@@ -302,28 +285,15 @@ class RecipeTypeIDDetailsView(GenericAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
 
+        # trigger rules are ignored in Scale v6, so no need to check them
         # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
+        # Attempt to look up the trigger handler for the type
 
         # Fetch the current recipe type model
         try:
-            recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for recipe type: %i', recipe_type_id)
-                raise BadParameter(unicode(ex))
 
         try:
             with transaction.atomic():
@@ -332,21 +302,13 @@ class RecipeTypeIDDetailsView(GenericAPIView):
                 if definition_dict:
                     recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
+                # trigger rules are ignored in Scale v6, so no need to check/create them
                 # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
-                                                                    recipe_type.name, is_active)
-
-                # Update the active state separately if that is only given trigger field
-                if not trigger_rule and recipe_type.trigger_rule and 'is_active' in trigger_rule_dict:
-                    recipe_type.trigger_rule.is_active = is_active
-                    recipe_type.trigger_rule.save()
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, trigger_rule,
-                                                    remove_trigger_rule)
-        except (OldInvalidDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule,
+                RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, None,
+                                                    None)
+        except (OldInvalidDefinition, InvalidDefinition,
                 InvalidRecipeConnection) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
             raise BadParameter(unicode(ex))
@@ -427,7 +389,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
@@ -574,36 +536,15 @@ class RecipeTypesValidationView(APIView):
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition')
 
+        # trigger rules are ignored in Scale v6, so no need to check them
         # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for recipe validation: %s', name)
-                raise BadParameter(unicode(ex))
-
-        # Attempt to look up the trigger rule configuration
-        trigger_config = None
-        if rule_handler and 'configuration' in trigger_rule_dict:
-            try:
-                trigger_config = rule_handler.create_configuration(trigger_rule_dict['configuration'])
-            except InvalidTriggerRule as ex:
-                logger.exception('Invalid trigger rule configuration for recipe validation: %s', name)
-                raise BadParameter(unicode(ex))
 
         # Validate the recipe definition
         try:
             recipe_def = RecipeDefinitionSunset.create(definition_dict)
             warnings = RecipeType.objects.validate_recipe_type_v5(name, title, version, description, recipe_def,
-                                                               trigger_config)
-        except (OldInvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
+                                                               None)
+        except (OldInvalidDefinition, InvalidRecipeConnection) as ex:
             logger.exception('Unable to validate new recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -737,7 +678,7 @@ class RecipesView(ListAPIView):
         recipe_data = rest_util.parse_dict(request, 'input', {})
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
-        
+
         try:
             recipeData = DataV6(recipe_data, do_validate=True)
         except InvalidData as ex:
@@ -748,7 +689,7 @@ class RecipesView(ListAPIView):
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
-            
+
         if configuration_dict:
             try:
                 configuration = RecipeConfigurationV6(configuration_dict, do_validate=True).get_configuration()
@@ -756,12 +697,12 @@ class RecipesView(ListAPIView):
                 message = 'Recipe configuration invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
-                
+
         try:
             recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(), recipe_config=configuration)
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
-            
+
         serializer = RecipeSerializerV6(recipe)
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
@@ -840,7 +781,7 @@ class RecipeDetailsView(RetrieveAPIView):
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
     queryset = RecipeInputFile.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 

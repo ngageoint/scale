@@ -14,7 +14,7 @@ from recipe.configuration.definition.recipe_definition import LegacyRecipeDefini
 from storage.test import utils as storage_utils
 from trigger.configuration.exceptions import InvalidTriggerRule
 
-
+# TODO 1181: Remove when remove triggers in v6
 class TestIngestTriggerRuleConfigurationInit(TestCase):
     def setUp(self):
         django.setup()

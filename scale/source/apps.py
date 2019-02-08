@@ -15,7 +15,7 @@ class SourceConfig(AppConfig):
         """
         Override this method in subclasses to run code when Django starts.
         """
-
+        # TODO 1181: Remove usage when remove triggers in v6
         from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER
         from source.configuration.source_data_file import SourceDataFileParseSaver
         from source.triggers.parse_trigger_handler import ParseTriggerHandler
