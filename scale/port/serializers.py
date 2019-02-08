@@ -65,6 +65,7 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     interface = serializers.JSONField(required=False)
     configuration = serializers.JSONField(required=False)
     error_mapping = serializers.JSONField(allow_null=True, required=False)
+    # TODO 1181: Remove usage when remove triggers in v6
     trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:

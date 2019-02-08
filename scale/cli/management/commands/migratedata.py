@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from ingest.serializers import IngestDetailsSerializerV5
 from ingest.models import Ingest
-from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
+from ingest.triggers.recipe_trigger_handler import RecipeTriggerHandler
 from source.models import SourceFile
 from storage.media_type import get_media_type
 from storage.models import Workspace
@@ -122,8 +122,6 @@ class Command(BaseCommand):
                     ingest.save()
                     if options['recipe_type']:
                         RecipeTriggerHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe_type'])
-                    else:
-                        IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 

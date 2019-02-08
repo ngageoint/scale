@@ -144,7 +144,8 @@ class TriggerRuleManager(models.Manager):
 
         return self.get(name=name)
 
-
+# TODO 1181: Modify usage when remove triggers in v6
+# Scale Clock utilizes trigger rules
 class TriggerRule(models.Model):
     """Represents a rule that, when triggered, creates a trigger event
 

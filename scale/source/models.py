@@ -333,15 +333,15 @@ class SourceFileManager(models.GeoManager):
         # IF IT'S NOT, THEN IT'S AN OLD PARSE THAT NEEDS TO TRIGGER A RECIEP
         # CURRENTLY PASSING THROUGH AN is_recipe FLAG THAT STEMS FROM THE JOB POST_STEPS
         # THIS IS A TERRIBLE WAY OF DOING IT FOR A TRANSITIONAL PIECE
-        try:
-            # Check trigger rules for parsed source files
-            if not is_recipe:
-                ParseTriggerHandler().process_parsed_source_file(src_file)
-        except Exception:
-            # Move file back if there was an error
-            if new_workspace_path and src_file.workspace.is_move_enabled:
-                ScaleFile.objects.move_files([FileMove(src_file, old_workspace_path)])
-            raise
+        # try:
+        #     # Check trigger rules for parsed source files
+        #     if not is_recipe:
+        #         ParseTriggerHandler().process_parsed_source_file(src_file)
+        # except Exception:
+        #     # Move file back if there was an error
+        #     if new_workspace_path and src_file.workspace.is_move_enabled:
+        #         ScaleFile.objects.move_files([FileMove(src_file, old_workspace_path)])
+        #     raise
 
 
 class SourceFile(ScaleFile):

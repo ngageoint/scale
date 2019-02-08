@@ -16,6 +16,8 @@ from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfigur
 from storage.models import Workspace
 from trigger.configuration.exceptions import InvalidTriggerRule
 
+# TODO 1181: Remove usage when remove triggers in v6
+
 logger = logging.getLogger(__name__)
 
 SCHEMA_VERSION = '1.1'
