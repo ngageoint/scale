@@ -422,7 +422,7 @@ class QueueManager(models.Manager):
         try:
             job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
             with transaction.atomic():
-                job = Job.objects.create_job_v6(job_type_rev, event.id, data, job_config=job_configuration)
+                job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data, job_config=job_configuration)
                 job.save()
                 CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
         except InvalidData as ex:

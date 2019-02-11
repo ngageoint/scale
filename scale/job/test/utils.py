@@ -298,7 +298,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     root_recipe_id = recipe.root_superseded_recipe_id if recipe else None
 
     job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
-    job = Job.objects.create_job_v6(job_type_rev, event.id, superseded_job=superseded_job, recipe_id=recipe_id,
+    job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, superseded_job=superseded_job, recipe_id=recipe_id,
                                     root_recipe_id=root_recipe_id)
     job.priority = priority
     job.input = input

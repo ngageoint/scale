@@ -80,6 +80,7 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
             message.recipe_id = recipe.id
             message.root_recipe_id = recipe.root_superseded_recipe_id
             message.event_id = recipe.event_id
+            message.ingest_event_id = recipe.ingest_event
             message.superseded_recipe_id = recipe.superseded_recipe_id
             message.batch_id = recipe.batch_id
             message.recipe_config = recipe.configuration
@@ -90,6 +91,7 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
             message.recipe_id = recipe.id
             message.root_recipe_id = recipe.root_superseded_recipe_id
             message.event_id = recipe.event_id
+            message.ingest_event_id = recipe.ingest_event
             message.superseded_recipe_id = recipe.superseded_recipe_id
             message.batch_id = recipe.batch_id
             message.recipe_config = recipe.configuration
@@ -112,6 +114,7 @@ class CreateJobs(CommandMessage):
 
         # Fields applicable to all message types
         self.event_id = None
+        self.ingest_event_id = None
 
         # The message type for how to create the jobs
         self.create_jobs_type = None
@@ -251,7 +254,7 @@ class CreateJobs(CommandMessage):
                                                             self.job_type_rev_num)
 
         try:
-            job = Job.objects.create_job_v6(job_type_rev, self.event_id, input_data=self.input_data)
+            job = Job.objects.create_job_v6(job_type_rev, event_id=self.event_id, input_data=self.input_data)
             job.save()
         except InvalidData:
             msg = 'Job of type (%s, %s, %d) was given invalid input data. Message will not re-run.'
@@ -311,7 +314,7 @@ class CreateJobs(CommandMessage):
                 config = revision.job_type.get_job_configuration()
                 config.merge_recipe_config(self.recipe_config)
             superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
-            job = Job.objects.create_job_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
+            job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id, root_recipe_id=self.root_recipe_id,
                                             recipe_id=self.recipe_id, batch_id=self.batch_id,
                                             superseded_job=superseded_job, job_config=config)
             recipe_jobs[node_name] = job

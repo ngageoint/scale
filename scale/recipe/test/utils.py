@@ -507,7 +507,7 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
         tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
         revision = revs_by_tuple[tup]
         superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
-        job = Job.objects.create_job_v6(revision, recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
+        job = Job.objects.create_job_v6(revision, event_id=recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
                                         recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
                                         superseded_job=superseded_job)
         recipe_jobs_map[node_name] = job
