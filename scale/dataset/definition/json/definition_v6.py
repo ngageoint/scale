@@ -18,24 +18,28 @@ DATASET_DEFINITION_SCHEMA = {
             'description': 'The version of the dataset definition schema',
             'type': 'string',
         },
-        'parameters': {
-            'description': 'Each parameter of the dataset',
+        'global_parameters': {
+            'description': 'Each global parameter of the dataset. The names should be unique and not collide with any regular parameter names.',
             'type': 'array',
             'items': {
                 'type': 'object',
-                'description': 'A dataset parameter',
-                'required': ['name', 'param_type'],
+                'description': 'A global dataset parameter',
+                'required': ['name', 'input'],
                 'additionalProperties': False,
                 'properties': {
                     'name': {
                         'description': 'The name of the parameter',
                         'type': 'string',
                     },
-                    'param_type': {
-                        'description': 'The type of parameter',
-                        'enum': ['global', 'member'],
-                    },
+                    'input': INTERFACE_SCHEMA,
                 },
+            },
+        },
+        'parameters': {
+            'description': 'Name of the parameters of the dataset. A dataset will have n members of each parameter. The names should be unique and not collide with any global parameter names.',
+            'type': 'array',
+            'items': {
+                    'type': 'string',
             },
         },
     },
@@ -69,6 +73,7 @@ def convert_definition_to_v6_json(definition):
 
     def_dict = {
         'version': SCHEMA_VERSION,
+        'global_parameters': definition['global_parameters'],
         'parameters': definition['parameters']
     }
 
@@ -113,6 +118,8 @@ class DataSetDefinitionV6(object):
             self._definition['version'] = SCHEMA_VERSION
 
         self._populate_default_values()
+        
+        self._check_for_name_collisions()
 
         try:
             if do_validate:
@@ -138,6 +145,21 @@ class DataSetDefinitionV6(object):
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values
         """
+
+    def _check_for_name_collisions(self):
+        """Ensures all global and regular parameter names are unique, and throws a
+        :class:`data.dataset.exceptions.InvalidDataSetDefinition` if they are not unique.
+        """
+
+        names = []
+
+        names.extend(self._definition['parameters'])
+        
+        names += [global_param['name'] for global_param in self._definition['global_parameters']
+
+        if len(names) != len(set(names)):
+            raise InvalidDataSetDefinition('NAME_COLLISION_ERROR','Parameter names must be unique.' )
+                                                
 
 class DataSetMemberDefinitionV6(object):
     """
