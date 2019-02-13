@@ -37,7 +37,7 @@ another.
             }
          },
          "node_b": {
-            "dependencies": [{"name": "node_a"}],
+            "dependencies": [{"name": "node_a", "acceptance": True}],
             "input": {
                "input_1": {"type": "recipe", "input": "foo"},
                "input_2": {"type": "dependency", "node": "node_a", "output": "output_1"}
@@ -73,8 +73,9 @@ another.
 | nodes                      | JSON object    | Required | All of the nodes within the recipe stored by node name             |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | dependencies               | Array          | Required | The list of dependencies for this recipe node. Each JSON object in |
-|                            |                |          | the list has a single string field called *name* giving the node   |
-|                            |                |          | name of the dependency.                                            |
+|                            |                |          | the list has a string field called *name* giving the node name of  |
+|                            |                |          | the dependency and an optional boolean called *acceptance* defining|
+|                            |                |          | the named node must be accepted or unaccepted to run this node.    |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | input                      | JSON object    | Required | An object describing the connections to the input parameters of    |
 |                            |                |          | the node, where each key is the input name and each value is an    |
