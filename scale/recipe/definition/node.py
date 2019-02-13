@@ -30,6 +30,7 @@ class NodeDefinition(object):
         self.connections = {}  # {Input name: InputConnection}
         self.children = {}  # {Name: Node}
         self.allows_child_creation = True  # Indicates whether children of this node can be created immediately
+        self.parental_acceptance = {} # Flags used to define whether this node should created based on parents' acceptance states
 
     def add_connection(self, connection):
         """Adds a connection that connects a parameter to one of this node's inputs
@@ -50,14 +51,17 @@ class NodeDefinition(object):
             msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
             raise InvalidDefinition('NODE_INTERFACE', msg)
 
-    def add_dependency(self, node):
+    def add_dependency(self, node, acceptance=True):
         """Adds a dependency that this node has on the given node
 
         :param node: The dependency node to add
-        :type node: :class:`recipe.definition.node.NodeDefinition`
+        :type node: :class:`recipe.definition.node.NodeDefinition`.
+        :param acceptance: Whether this node should run when the parent is accepted or when it is not accepted
+        :type acceptance: bool
         """
 
         self.parents[node.name] = node
+        self.parental_acceptance[node.name] = acceptance
         node.children[self.name] = self
 
     def generate_input_data(self, recipe_input_data, node_outputs):

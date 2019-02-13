@@ -36,13 +36,15 @@ class RecipeDefinition(object):
 
         self._add_node(ConditionNodeDefinition(name, input_interface, data_filter))
 
-    def add_dependency(self, parent_name, child_name):
+    def add_dependency(self, parent_name, child_name, acceptance):
         """Adds a dependency that one node has upon another node
 
         :param parent_name: The name of the parent node
         :type parent_name: string
         :param child_name: The name of the child node
         :type child_name: string
+        :param acceptance: Whether the child node should run when the parent is accepted or when it is not accepted
+        :type acceptance: bool
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If either node is unknown
         """
@@ -54,7 +56,7 @@ class RecipeDefinition(object):
 
         child_node = self.graph[child_name]
         parent_node = self.graph[parent_name]
-        child_node.add_dependency(parent_node)
+        child_node.add_dependency(parent_node, acceptance)
 
         self._topological_order = None  # Invalidate cache
 
