@@ -146,10 +146,12 @@ class RecipeSerializerV5(RecipeBaseSerializerV5):
 class RecipeSerializerV6(RecipeBaseSerializerV6):
     """Converts recipe model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
+    from ingest.ingest_event_serializers import IngestEventBaseSerializerV6
     from trigger.serializers import TriggerEventBaseSerializerV6
 
     recipe_type_rev = RecipeTypeRevisionBaseSerializerV6()
     event = TriggerEventBaseSerializerV6()
+    ingest_event = IngestEventBaseSerializerV6()
     batch = BatchBaseSerializerV6()
     recipe = RecipeBaseSerializerV6()
 
@@ -243,10 +245,12 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
 class RecipeDetailsSerializerV6(RecipeSerializerV6):
     """Converts related recipe model fields to REST output."""
     from trigger.serializers import TriggerEventDetailsSerializerV6
+    from ingest.ingest_event_serializers import IngestEventDetailsSerializerV6
     from job.job_type_serializers import JobTypeBaseSerializerV6
 
     recipe_type_rev = RecipeTypeRevisionDetailsSerializerV6()
     event = TriggerEventDetailsSerializerV6()
+    ingest_event = IngestEventDetailsSerializerV6()
 
     superseded_recipe = RecipeBaseSerializerV6()
     superseded_by_recipe = RecipeBaseSerializerV6()
