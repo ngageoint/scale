@@ -1,0 +1,1279 @@
+openapi: "3.0.0"
+info:
+  title: Job Services
+  version: v5
+
+paths:
+  /jobs/:
+    get:
+      tags:
+        - Job Services
+      summary: Jobs List
+      description: Returns a list of all jobs. Jobs marked as superseded are excluded by default. 
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - RUNNING
+              - FAILED
+              - COMPLETED
+              - CANCELED
+          description: Return only jobs with a status matching this string.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_id
+          schema:
+            type: integer
+          description: Return only jobs with a given identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Return only jobs with a given job type identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Return only jobs with a given job type name.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_category
+          schema:
+            type: string
+          description: Return only jobs with a given job type category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: error_category
+          schema:
+            type: string
+            enum:
+              - SYSTEM
+              - DATA
+              - ALGORITHM
+          description: Return only jobs that failed due to an error with a given category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: batch_id
+          schema:
+            type: integer
+          description: Return only jobs associated with the given batch identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: include_superseded
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include superseded job instances. Defaults to false.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_list'
+
+  /jobs/{id}/:
+    get:
+      tags:
+        - Job Services
+      summary: Job Details
+      description: Returns a specific job and all its related model information including executions, recipes, and products.
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: The ID of the job to request
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_details'
+
+    patch:
+      tags:
+        - Job Services
+      summary: Edit Job
+      description: Update the details of a job.
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: The ID of the job to edit
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum:
+              - CANCELED
+          description: The new status for the job. The only status change currently allowed is CANCELED.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+        '400':
+          description: Error - Unexpected fields were specified. An error message lists them. Or no fields or invalid values were specified.
+        '404':
+          description: Error - The specified job or associated job executions (if applicable) were not found in the database.
+        '500':
+          description: Error - A miscellaneous (and rare) server error or database timing error occurred. Repeating the request may result in success.
+            The exact error reason will appear in the response content.
+
+  /jobs/updates/:
+    get:
+      tags:
+        - Job Services
+      summary: Job Updates
+      description: Returns a list of jobs with associated input files that changed status in the given time range. Jobs marked as
+        superseded are excluded by default.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+            Duplicate it to multi-sort, (ex: order=host_name&order=created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - RUNNING
+              - FAILED
+              - COMPLETED
+              - CANCELED
+          description: Return only jobs with a status matching this string.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Return only jobs with a given job type identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Return only jobs with a given job type name.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_category
+          schema:
+            type: string
+          description: Return only jobs with a given job type category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: include_superseded
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include superseded job instances. Defaults to false.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_update_list'
+
+  /jobs/executions/:
+    get:
+      tags:
+        - Job Services
+      summary: Jobs Executions
+      description: Returns a list of all jobs with their latest execution. Jobs marked as superseded are excluded by default.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page of the results to return.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            default: 100
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - RUNNING
+              - FAILED
+              - COMPLETED
+              - CANCELED
+          description: Return only jobs with a status matching this string.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results.
+            Duplicate it to multi-sort, (ex: order=host_name&order=created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Return only jobs with a given job type identifier.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Return only jobs with a given job type name.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: job_type_category
+          schema:
+            type: string
+          description: Return only jobs with a given job type category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: error_category
+          schema:
+            type: string
+            enum:
+              - SYSTEM
+              - DATA
+              - ALGORITHM
+          description: Return only jobs that failed due to an error with a given category.
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: include_superseded
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include superseded job instances. Defaults to false.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_with_exe_list'
+
+  /jobs/{id}/input_files/:
+    get:
+      tags:
+        - Job Services
+      summary: Job Input Files
+      description: Returns detailed information about input files associated with a given Job ID.
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: The ID of the job to request
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: time_field
+          schema:
+            type: string
+            enum:
+              - last_modified
+              - data
+              - source
+            default: last_modified
+          description: Indicates the time field(s) that *started* and *ended* will use for
+            time filtering.
+        - in: query
+          name: file_name
+          schema:
+            type: string
+          description: Return only sources with a given file name.
+        - in: query
+          name: job_input
+          schema:
+            type: string
+          description: Returns files for this job input.
+      responses:
+        '200':
+          description: OK - indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scale_file_base_list'
+
+  /jobs/cancel/:
+    post:
+      tags:
+        - Job Services
+      summary: Cancel Jobs
+      description: Cancels the jobs that fit the given filter criteria. The canceling will be done asynchronously, so the response will
+        just indicate that the cancel request has been accepted.
+      parameters:
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - RUNNING
+              - FAILED
+              - COMPLETED
+              - CANCELED
+          description: Cancel only jobs with this status
+        - in: query
+          name: error_categories
+          schema:
+            type: array
+            items:
+              type: string
+            enum:
+              - SYSTEM
+              - DATA
+              - ALGORITHM
+          description: Cancel only jobs that failed with these error categories
+        - in: query
+          name: error_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Cancel only jobs that failed with these errors
+        - in: query
+          name: job_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Cancel only jobs with these IDs
+        - in: query
+          name: job_type_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Cancel only jobs with these job types
+      responses:
+        '202':
+          description: OK - accepted
+
+  /jobs/requeue/:
+    post:
+      tags:
+        - Job Services
+      summary: Requeue Jobs
+      description: Requeues the FAILED/CANCELED jobs that fit the given filter criteria. The re-queuing will be done asynchronously, so
+        the response will just indicate that the re-queue request has been accepted.
+      parameters:
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - FAILED
+              - CANCELED
+          description: Requeue only jobs with this status
+        - in: query
+          name: error_categories
+          schema:
+            type: array
+            items:
+              type: string
+            enum:
+              - SYSTEM
+              - DATA
+              - ALGORITHM
+          description: Requeue only jobs that failed with these error categories
+        - in: query
+          name: error_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Requeue only jobs that failed with these errors
+        - in: query
+          name: job_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Requeue only jobs with these IDs
+        - in: query
+          name: job_type_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Requeue only jobs with these job types
+        - in: query
+          name: priorty
+          schema:
+            type: integer
+          description: Change the priority of matching jobs when adding them to the queue.
+            Defaults to jobs current priority, lower number is higher priority.
+      responses:
+        '202':
+          description: OK - accepted
+
+components:
+  schemas:
+    model_id:
+      title: Model ID
+      properties:
+        id:
+          type: integer
+          description: Unique ID for corresponding model.  
+          example: 123
+
+    job_base:
+      title: Job Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model.
+          example: 1
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        job_type_rev:
+          $ref: '#/components/schemas/model_id'
+        event:
+          $ref: '#/components/schemas/model_id'
+        node:
+          $ref: '#/components/schemas/model_id'
+        error:
+          $ref: '#/components/schemas/model_id'
+        status:
+          type: string
+          description: The status of the job
+          example: COMPLETED
+        priority:
+          type: integer
+          description: The priority of the job where the lower the number the 
+            higher the priorty.
+          example: 100
+        num_exes:
+          type: integer
+          description: The number of executions this job has had.
+          example: 2
+
+    job_list:
+      title: Job List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_object'
+          description: List of job objects
+
+    job_object:
+      title: Job Object
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model.
+          example: 1
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        job_type_rev:
+          $ref: '#/components/schemas/job_type_rev_base'
+        event:
+          $ref: '#/components/schemas/trigger_event_base'
+        node:
+          $ref: '#/components/schemas/node_base'
+        error:
+          $ref: '#/components/schemas/error_base'
+        status:
+          type: string
+          description: The status of the job
+          example: COMPLETED
+        priority:
+          type: integer
+          description: The priority of the job where the lower the number the 
+            higher the priorty.
+          example: 100
+        num_exes:
+          type: integer
+          description: The number of executions this job has had.
+          example: 1
+        timeout:
+          type: integer
+          description: The maximum amount of time this job can run before being killed (in seconds).
+          example: 600
+        max_tries:
+          type: integer
+          description: The maximum number of times to attempt this job when failed (minimum one).
+          example: 3
+        cpus_required:
+          type: number
+          description: The number of CPUs needed for a job of this type.
+          example: 4.0
+        mem_required:
+          type: number
+          description: The amount of RAM in MiB needed for a job of this type.
+          example: 128.0
+        disk_in_required:
+          type: number
+          description: The amount of disk space in MiB required for input files for this job.
+          example: 100.0
+        disk_out_required:
+          type: number
+          description: The amount of disk space in MiB required for output files for this job.
+          example: 100.0
+        is_superseded:
+          type: boolean
+          description: Whether this job has been replaced and is now obsolete.
+          example: 2
+        root_superseded_job:
+          $ref: '#/components/schemas/model_id'
+        superseded_job:
+          $ref: '#/components/schemas/model_id'
+        superseded_by_job:
+          $ref: '#/components/schemas/model_id'
+        delete_superseded:
+          type: boolean
+          description: The number of executions this job has had.
+          example: 2
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 1970-01-01T00:00:00Z
+        queued:
+          type: string
+          format: date-time
+          description: When the job was added to the queue to be run when resources are available.
+          example: 1970-01-01T00:00:00Z
+        started:
+          type: string
+          format: date-time
+          description: When the job started running.
+          example: 1970-01-01T00:00:00Z
+        ended:
+          type: string
+          format: date-time
+          description: When the job stopped running, which could be due to success or failure.
+          example: 1970-01-01T00:00:00Z
+        last_status_change:
+          type: string
+          format: date-time
+          description: When the status of the job was last changed. 
+          example: 1970-01-01T00:00:00Z
+        superseded:
+          type: string
+          format: date-time
+          description: When the the job became superseded by another job. 
+          example: 1970-01-01T00:00:00Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 1970-01-01T00:00:00Z
+
+    job_details:
+      title: Job Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model.
+          example: 1
+        job_type:
+          $ref: '#/components/schemas/job_type'
+        job_type_rev:
+          $ref: '#/components/schemas/job_type_rev'
+        event:
+          $ref: '#/components/schemas/trigger_event_base'
+        node:
+          $ref: '#/components/schemas/node_base'
+        error:
+          $ref: '#/components/schemas/error'
+        status:
+          type: string
+          description: The status of the job
+          example: COMPLETED
+        priority:
+          type: integer
+          description: The priority of the job where the lower the number the 
+            higher the priorty.
+          example: 100
+        num_exes:
+          type: integer
+          description: The number of executions this job has had.
+          example: 1
+        timeout:
+          type: integer
+          description: The maximum amount of time this job can run before being killed (in seconds).
+          example: 600
+        max_tries:
+          type: integer
+          description: The maximum number of times to attempt this job when failed (minimum one).
+          example: 3
+        cpus_required:
+          type: number
+          description: The number of CPUs needed for a job of this type.
+          example: 4.0
+        mem_required:
+          type: number
+          description: The amount of RAM in MiB needed for a job of this type.
+          example: 128.0
+        disk_in_required:
+          type: number
+          description: The amount of disk space in MiB required for input files for this job.
+          example: 100.0
+        disk_out_required:
+          type: number
+          description: The amount of disk space in MiB required for output files for this job.
+          example: 100.0
+        is_superseded:
+          type: boolean
+          description: Whether this job has been replaced and is now obsolete.
+          example: 2
+        root_superseded_job:
+          $ref: '#/components/schemas/job_base'
+        superseded_job:
+          $ref: '#/components/schemas/job_base'
+        superseded_by_job:
+          $ref: '#/components/schemas/job_base'
+        delete_superseded:
+          type: boolean
+          description: The number of executions this job has had.
+          example: 2
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 1970-01-01T00:00:00Z
+        queued:
+          type: string
+          format: date-time
+          description: When the job was added to the queue to be run when resources are available.
+          example: 1970-01-01T00:00:00Z
+        started:
+          type: string
+          format: date-time
+          description: When the job started running.
+          example: 1970-01-01T00:00:00Z
+        ended:
+          type: string
+          format: date-time
+          description: When the job stopped running, which could be due to success or failure.
+          example: 1970-01-01T00:00:00Z
+        last_status_change:
+          type: string
+          format: date-time
+          description: When the status of the job was last changed. 
+          example: 1970-01-01T00:00:00Z
+        superseded:
+          type: string
+          format: date-time
+          description: When the the job became superseded by another job. 
+          example: 1970-01-01T00:00:00Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 1970-01-01T00:00:00Z
+        data:
+          type: object
+          description: An interface description for all the job input and output files.
+          properties:
+            version: 
+              type: string
+              example: 1.1
+            output_data:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the file
+                    example: output-file
+                  workspace_id:
+                    type: integer
+                    description: The Workspace ID
+                    example: 2
+            input_data:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the file
+                    example: input-file
+                  file_id:
+                    type: integer
+                    description: The Scale File ID
+                    example: 2
+        results:
+          type: object
+          description: An interface description for all the job results meta-data.
+          properties:
+            version: 
+              type: string
+              example: 1.0
+            output_data:
+              type: array
+              description: Array of all output products
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the file
+                    example: output-file
+                  file_id:
+                    type: integer
+                    description: The Scale File ID
+                    example: 1234
+        recipes:
+          type: array
+          description: A list of all recipes associated with the job.
+          items:
+            $ref: '#/components/schemas/recipe_base'
+        job_exes:
+          type: array
+          description: A list of all job executions associated with the job.
+          items:
+            $ref: '#/components/schemas/job_exe_base'
+        inputs:
+          type: array
+          description: A list of job interface inputs merged with their respective job data values.
+          items:
+            $ref: '#/components/schemas/input'
+        outputs:
+          type: array
+          description: A list of job interface outputs merged with their respective job result values.
+          items:
+            $ref: '#/components/schemas/output'
+
+    input:
+      title: Input
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the input as defined by the job type interface.
+          example: input_file
+        type:
+          type: string
+          description: The type of the input as defined by the job type interface.
+          example: file
+        value:
+          allOf:
+            - type: object
+            - description: The actual value of the input, which can vary depending on the type. Simple property inputs will include primitive values, whereas the file or files type will include a full JSON representation of a Scale file object.
+            - $ref: '#/components/schemas/scale_file_base'
+
+    output:
+      title: Output
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the output as defined by the job type interface.
+          example: input_file
+        type:
+          type: string
+          description: The type of the output as defined by the job type interface.
+          example: file
+        value:
+          allOf:
+          - type: object
+          - description: The actual value of the output, which can vary depending on the type. A file or files type will include a full JSON representation of a Product file object.
+          - $ref: '#/components/schemas/product_file_base'
+
+    job_exe_base:
+      title: Job Execution Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model.
+          example: 1
+        status:
+          type: string
+          description: The status of the job execution.
+          enum:
+            - QUEUED
+            - RUNNING
+            - FAILED
+            - COMPLETED
+            - CANCELED
+          example: COMPLETED
+        command_arguments:
+          type: string
+          description: The argument string to execute on the command line for this job execution.
+            This field is populated when the job execution is scheduled to run on a node
+            and is updated when any needed pre-job steps are run.
+          example: ''
+        timeout:
+          type: integer
+          description: The maximum amount of time this job can run before being killed (in seconds).
+          example: 300
+        pre_started:
+          type: string
+          format: date-time
+          description: When the pre-job steps were started on a node.
+          example: 1970-01-01T00:00:00Z
+        pre_completed:
+          type: string
+          format: date-time
+          description: When the pre-job steps were completed on a node.
+          example: 1970-01-01T00:00:00Z
+        pre_exit_code:
+          type: integer
+          description: The exit code of the pre-steps job process for this job execution.
+          example: 0
+        job_started:
+          type: string
+          format: date-time
+          description: When the actual job started running on a node.
+          example: 1970-01-01T00:00:00Z
+        job_completed:
+          type: string
+          format: date-time
+          description: When the actual job completed running on a node. 
+          example: 1970-01-01T00:00:00Z
+        job_exit_code:
+          type: integer
+          description: The exit code of the main job process for this job execution.
+          example: 0
+        post_started:
+          type: string
+          format: date-time
+          description: When the post-job steps were started on a node.
+          example: 1970-01-01T00:00:00Z
+        post_completed:
+          type: string
+          format: date-time
+          description: When the post-job steps were completed on a node.
+          example: 1970-01-01T00:00:00Z
+        post_exit_code:
+          type: integer
+          description: The exit code of the post-steps job process for this job execution.
+          example: 0
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 1970-01-01T00:00:00Z
+        queued:
+          type: string
+          format: date-time
+          description: When the job was added to the queue for this run and went to QUEUED status.
+          example: 1970-01-01T00:00:00Z
+        started:
+          type: string
+          format: date-time
+          description: When the job was scheduled and went to RUNNING status.
+          example: 1970-01-01T00:00:00Z
+        ended:
+          type: string
+          format: date-time
+          description: When the job execution ended. (FAILED, COMPLETED, or CANCELED)
+          example: 1970-01-01T00:00:00Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 1970-01-01T00:00:00Z
+        job:
+          $ref: '#/components/schemas/model_id'
+        node:
+          $ref: '#/components/schemas/model_id'
+        error:
+          $ref: '#/components/schemas/model_id'
+
+    job_update_list:
+      title: Job Update List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_update'
+          description: List of updated jobs
+
+    job_update:
+      title: Job Update
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model.
+          example: 1
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        job_type_rev:
+          $ref: '#/components/schemas/job_type_rev_base'
+        event:
+          $ref: '#/components/schemas/trigger_event_base'
+        node:
+          $ref: '#/components/schemas/node_base'
+        error:
+          $ref: '#/components/schemas/error_base'
+        status:
+          type: string
+          description: The status of the job
+          example: COMPLETED
+        priority:
+          type: integer
+          description: The priority of the job where the lower the number the 
+            higher the priorty.
+          example: 100
+        num_exes:
+          type: integer
+          description: The number of executions this job has had.
+          example: 1
+        timeout:
+          type: integer
+          description: The maximum amount of time this job can run before being killed (in seconds).
+          example: 600
+        max_tries:
+          type: integer
+          description: The maximum number of times to attempt this job when failed (minimum one).
+          example: 3
+        cpus_required:
+          type: number
+          description: The number of CPUs needed for a job of this type.
+          example: 4.0
+        mem_required:
+          type: number
+          description: The amount of RAM in MiB needed for a job of this type.
+          example: 128.0
+        disk_in_required:
+          type: number
+          description: The amount of disk space in MiB required for input files for this job.
+          example: 100.0
+        disk_out_required:
+          type: number
+          description: The amount of disk space in MiB required for output files for this job.
+          example: 100.0
+        is_superseded:
+          type: boolean
+          description: Whether this job has been replaced and is now obsolete.
+          example: 2
+        root_superseded_job:
+          $ref: '#/components/schemas/model_id'
+        superseded_job:
+          $ref: '#/components/schemas/model_id'
+        superseded_by_job:
+          $ref: '#/components/schemas/model_id'
+        delete_superseded:
+          type: boolean
+          description: The number of executions this job has had.
+          example: 2
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 1970-01-01T00:00:00Z
+        queued:
+          type: string
+          format: date-time
+          description: When the job was added to the queue to be run when resources are available.
+          example: 1970-01-01T00:00:00Z
+        started:
+          type: string
+          format: date-time
+          description: When the job started running.
+          example: 1970-01-01T00:00:00Z
+        ended:
+          type: string
+          format: date-time
+          description: When the job stopped running, which could be due to success or failure.
+          example: 1970-01-01T00:00:00Z
+        last_status_change:
+          type: string
+          format: date-time
+          description: When the status of the job was last changed. 
+          example: 1970-01-01T00:00:00Z
+        superseded:
+          type: string
+          format: date-time
+          description: When the the job became superseded by another job. 
+          example: 1970-01-01T00:00:00Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 1970-01-01T00:00:00Z
+        input_files:
+          type: array
+          description: A list of files that the job used as input.
+          items: 
+            $ref: '#/components/schemas/scale_file_base'
+
+    job_with_exe_list:
+      title: Job with Execution
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_with_exe'
+          description: List of jobs
+
+    job_with_exe:
+      title: Job with Execution
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model.
+          example: 1
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        job_type_rev:
+          $ref: '#/components/schemas/job_type_rev_base'
+        event:
+          $ref: '#/components/schemas/trigger_event_base'
+        node:
+          $ref: '#/components/schemas/node_base'
+        error:
+          $ref: '#/components/schemas/error_base'
+        status:
+          type: string
+          description: The status of the job
+          example: COMPLETED
+        priority:
+          type: integer
+          description: The priority of the job where the lower the number the 
+            higher the priorty.
+          example: 100
+        num_exes:
+          type: integer
+          description: The number of executions this job has had.
+          example: 1
+        timeout:
+          type: integer
+          description: The maximum amount of time this job can run before being killed (in seconds).
+          example: 600
+        max_tries:
+          type: integer
+          description: The maximum number of times to attempt this job when failed (minimum one).
+          example: 3
+        cpus_required:
+          type: number
+          description: The number of CPUs needed for a job of this type.
+          example: 4.0
+        mem_required:
+          type: number
+          description: The amount of RAM in MiB needed for a job of this type.
+          example: 128.0
+        disk_in_required:
+          type: number
+          description: The amount of disk space in MiB required for input files for this job.
+          example: 100.0
+        disk_out_required:
+          type: number
+          description: The amount of disk space in MiB required for output files for this job.
+          example: 100.0
+        is_superseded:
+          type: boolean
+          description: Whether this job has been replaced and is now obsolete.
+          example: 2
+        root_superseded_job:
+          $ref: '#/components/schemas/model_id'
+        superseded_job:
+          $ref: '#/components/schemas/model_id'
+        superseded_by_job:
+          $ref: '#/components/schemas/model_id'
+        delete_superseded:
+          type: boolean
+          description: The number of executions this job has had.
+          example: 2
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 1970-01-01T00:00:00Z
+        queued:
+          type: string
+          format: date-time
+          description: When the job was added to the queue to be run when resources are available.
+          example: 1970-01-01T00:00:00Z
+        started:
+          type: string
+          format: date-time
+          description: When the job started running.
+          example: 1970-01-01T00:00:00Z
+        ended:
+          type: string
+          format: date-time
+          description: When the job stopped running, which could be due to success or failure.
+          example: 1970-01-01T00:00:00Z
+        last_status_change:
+          type: string
+          format: date-time
+          description: When the status of the job was last changed. 
+          example: 1970-01-01T00:00:00Z
+        superseded:
+          type: string
+          format: date-time
+          description: When the the job became superseded by another job. 
+          example: 1970-01-01T00:00:00Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 1970-01-01T00:00:00Z
+        latest_job_exe:
+          type: array
+          description: The most recent execution of the job.
+          items: 
+            $ref: '#/components/schemas/job_exe_base'
