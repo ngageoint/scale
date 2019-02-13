@@ -76,7 +76,7 @@ class NodeDiff(object):
 
         self._calculate_reprocess_new_node()
 
-    def add_dependency(self, node_diff, acceptance):
+    def add_dependency(self, node_diff, acceptance=True):
         """Adds a dependency that this node diff has on the given node diff
 
         :param node_diff: The dependency node diff to add

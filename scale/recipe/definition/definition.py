@@ -36,7 +36,7 @@ class RecipeDefinition(object):
 
         self._add_node(ConditionNodeDefinition(name, input_interface, data_filter))
 
-    def add_dependency(self, parent_name, child_name, acceptance):
+    def add_dependency(self, parent_name, child_name, acceptance=True):
         """Adds a dependency that one node has upon another node
 
         :param parent_name: The name of the parent node
