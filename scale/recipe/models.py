@@ -1891,7 +1891,15 @@ class RecipeTypeManager(models.Manager):
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
 
         # Add associated job type information
-        recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
+        # v6 definition doesn't have a get_job_types() method.
+        # Check definition version - if it's v6, call the get_details_v6 method
+        if RecipeDefinitionSunset.is_seed_dict(recipe_type.get_recipe_definition()):
+            job_types = []
+            for job in recipe_type.get_recipe_definition().get_job_type_keys():
+                job_types.append(JobType.objects.get_by_natural_key(name=job.name, version=job.version))
+            recipe_type.job_types = set(job_types)
+        else:
+            recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
         return recipe_type
 
     def get_details_v6(self, name):
