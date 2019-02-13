@@ -73,8 +73,53 @@ components:
             $ref: '#/components/schemas/scale_file'
           description: List of Scale files
 
+    scale_file_base_list:
+      title: Scale File List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/scale_file_base'
+          description: List of Scale files
+
     scale_file:
-      title: Product File
+      title: Scale File
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/scale_file_base'
+          properties:
+            source_started:
+              type: string
+              format: date-time
+              description: When collection of the underlying source file started. 
+              example: 2015-09-10T15:24:53.987Z
+            source_ended:
+              type: string
+              format: date-time
+              description: When collection of the underlying source file ended. 
+              example: 2015-09-10T15:24:53.987Z
+            file_path:
+              type: string
+              description: The path to the file.
+              example: '/path/to/file.kml'
+
+    scale_file_base:
+      title: Scale File Base
       type: object
       properties:
         id:
@@ -89,12 +134,8 @@ components:
           example: my_file.kml
         media_type:
           type: string
-          description: The IANA media type of the product file.
+          description: The IANA media type of the source file.
           example: application/vnd.google-earth.kml+xml
-        file_type:
-          type: string
-          description: The file type of the product
-          example: PRODUCT
         file_size:
           type: integer
           description: The size of the file in bytes.  
@@ -107,7 +148,7 @@ components:
         is_deleted:
           type: boolean
           description: Whether the source file has been deleted.
-          example: True
+          example: false
         uuid:
           type: string
           format: uri
@@ -127,7 +168,7 @@ components:
           type: string
           format: date-time
           description: When the source file was deleted.
-          example: 2015-09-10T15:24:53.987Z
+          example: null
         data_started:
           type: string
           format: date-time
@@ -146,6 +187,8 @@ components:
           type: string
           description: The central geospatial location of the source file.
           example: POINT(11 -11)
+        meta_data:
+          $ref: '#/components/schemas/metadata'
         countries:
           type: array
           items:
@@ -157,17 +200,3 @@ components:
           format: date-time
           description: When the associated database model was last saved.
           example: 2015-09-10T15:24:53.987Z
-        source_started:
-          type: string
-          format: date-time
-          description: When collection of the underlying source file started. 
-          example: 2015-09-10T15:24:53.987Z
-        source_ended:
-          type: string
-          format: date-time
-          description: When collection of the underlying source file ended. 
-          example: 2015-09-10T15:24:53.987Z
-        file_path:
-          type: string
-          description: The path to the file.
-          example: '/path/to/file.kml'
