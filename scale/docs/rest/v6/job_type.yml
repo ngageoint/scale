@@ -256,14 +256,7 @@ paths:
           application/json: 
             schema:
               $ref: '#/components/schemas/job_type_validation_post'
-      
-      
-
-
-
-
-
-      
+      responses:
         '200':
           description: OK - indicates a successful event
           content:
