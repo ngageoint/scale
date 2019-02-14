@@ -18,14 +18,14 @@ class SourceConfig(AppConfig):
         # TODO 1181: Remove usage when remove triggers in v6
         from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER
         from source.configuration.source_data_file import SourceDataFileParseSaver
-        from source.triggers.parse_trigger_handler import ParseTriggerHandler
-        from trigger.handler import register_trigger_rule_handler
+        # from source.triggers.parse_trigger_handler import ParseTriggerHandler
+        # from trigger.handler import register_trigger_rule_handler
 
         # Register source file parse saver
-        DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER'] = SourceDataFileParseSaver()
+        # DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER'] = SourceDataFileParseSaver()
 
         # Register parse trigger rule handler
-        register_trigger_rule_handler(ParseTriggerHandler())
+        # register_trigger_rule_handler(ParseTriggerHandler())
 
         # Register source message types
         from messaging.messages.factory import add_message_type
