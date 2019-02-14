@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="v6 Scheduler Services" href="scheduler.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -368,7 +379,11 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
         <span class="p">},</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
-        <span class="p">}]</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -406,7 +421,11 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
         <span class="p">},</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
-        <span class="p">}]</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -504,7 +523,11 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
         <span class="p">},</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
-        <span class="p">}]</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -593,7 +616,11 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
         <span class="p">},</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
-        <span class="p">}]</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -694,7 +721,11 @@ with <em>name</em> and <em>description</em> string fields.</td>
         <span class="p">},</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
-        <span class="p">}]</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -766,7 +797,11 @@ with <em>name</em> and <em>description</em> string fields.</td>
       <span class="s2">&quot;new_workspace&quot;</span> <span class="o">:</span> <span class="s2">&quot;workspace_name&quot;</span><span class="p">,</span>
       <span class="s2">&quot;new_file_path&quot;</span> <span class="o">:</span> <span class="s2">&quot;wksp/path&quot;</span>
     <span class="p">}</span>
-  <span class="p">]</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -792,7 +827,11 @@ with <em>name</em> and <em>description</em> string fields.</td>
             <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
             <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/new/file/path&quot;</span>
         <span class="p">}</span>
-    <span class="p">]</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -915,6 +954,24 @@ additional and dynamically named directories, for the current year,
 month, and day, will be appended to the new_file_path value
 automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).</td>
 </tr>
+<tr class="row-even"><td>recipe</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>Specifies the natural key of the recipe the Strike will start when
+a file is ingested.</td>
+</tr>
+<tr class="row-odd"><td>.name</td>
+<td>String</td>
+<td>Required</td>
+<td>Specifies the name of the recipe the Strike will attempt to start
+when the file is ingested.</td>
+</tr>
+<tr class="row-even"><td>.revision_num</td>
+<td>Integer</td>
+<td>Required</td>
+<td>Specifies the revision number of the recipe the Strike will
+attempt to start when the file is ingested.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -931,7 +988,7 @@ automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).</td>
         <a href="system.html" class="btn btn-neutral float-right" title="v6 System Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.html" class="btn btn-neutral" title="v6 Scheduler Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.html" class="btn btn-neutral float-left" title="v6 Scheduler Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -957,35 +1014,16 @@ automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).</td>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

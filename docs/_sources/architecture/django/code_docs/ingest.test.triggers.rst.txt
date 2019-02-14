@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+ingest\.test\.triggers\.test\_ingest\_recipe\_handler module
+------------------------------------------------------------
+
+.. automodule:: ingest.test.triggers.test_ingest_recipe_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ingest\.test\.triggers\.test\_ingest\_trigger\_condition module
 ---------------------------------------------------------------
 

@@ -404,6 +404,14 @@ job\.migrations\.0050\_job\_configuration module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0051\_auto\_20190211\_1500 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0051_auto_20190211_1500
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

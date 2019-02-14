@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="ingest.strike.monitors package" href="ingest.strike.monitors.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -113,6 +124,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_event_serializers">ingest.ingest_event_serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -282,6 +294,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_recipe_handler">ingest.test.triggers.test_ingest_recipe_handler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition">ingest.test.triggers.test_ingest_trigger_condition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler">ingest.test.triggers.test_ingest_trigger_handler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers">Module contents</a></li>
@@ -775,6 +788,12 @@
 <dd><p>Tests calling the create Scan view successfully.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanCreateViewV6.test_successful_v6">
+<code class="descname">test_successful_v6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateViewV6.test_successful_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Scan view successfully.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -856,6 +875,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsViewV6.test_edit_bad_recipe">
+<code class="descname">test_edit_bad_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsViewV6.test_edit_bad_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing a scan configuration with an invalid recipe</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.test.test_views.TestScanDetailsViewV6.test_edit_config">
 <code class="descname">test_edit_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsViewV6.test_edit_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the configuration of a Scan process</p>
@@ -865,6 +890,12 @@
 <dt id="ingest.test.test_views.TestScanDetailsViewV6.test_edit_config_conflict">
 <code class="descname">test_edit_config_conflict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsViewV6.test_edit_config_conflict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the configuration of a Scan process already launched</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsViewV6.test_edit_config_v6">
+<code class="descname">test_edit_config_v6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsViewV6.test_edit_config_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully editing an existing scan</p>
 </dd></dl>
 
 <dl class="method">
@@ -1099,6 +1130,12 @@
 <dd><p>Tests validating a new Scan process.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansValidationViewV6.test_successful_recipe">
+<code class="descname">test_successful_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationViewV6.test_successful_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Scan process.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1264,6 +1301,12 @@
 <dd><p>Tests calling the create Strike view successfully.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeCreateViewV6.test_successful_v6">
+<code class="descname">test_successful_v6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateViewV6.test_successful_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating strike with recipe configuration</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ingest.test.test_views.TestStrikeCreateViewV6.version">
 <code class="descname">version</code><em class="property"> = u'v6'</em><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateViewV6.version" title="Permalink to this definition">¶</a></dt>
@@ -1346,6 +1389,18 @@
 <dt id="ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_config">
 <code class="descname">test_edit_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the configuration of a Strike process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_config_v6">
+<code class="descname">test_edit_config_v6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_config_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a Strike process adding a recipe configuration</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_invalid_recipe">
+<code class="descname">test_edit_invalid_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_invalid_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a Strike process with a nonexistant recipe</p>
 </dd></dl>
 
 <dl class="method">
@@ -1446,6 +1501,12 @@
 <dt id="ingest.test.test_views.TestStrikesValidationViewV6.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new Strike process.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationViewV6.test_successful_recipe">
+<code class="descname">test_successful_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationViewV6.test_successful_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Scan process.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1560,8 +1621,18 @@
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="ingest.test.utils.create_scan_ingest_event">
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_scan_ingest_event</code><span class="sig-paren">(</span><em>ingest=None</em>, <em>scan=None</em>, <em>source_file=None</em>, <em>description=None</em>, <em>when=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_scan_ingest_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="ingest.test.utils.create_strike">
 <code class="descclassname">ingest.test.utils.</code><code class="descname">create_strike</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em>, <em>job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_strike" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ingest.test.utils.create_strike_ingest_event">
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_strike_ingest_event</code><span class="sig-paren">(</span><em>ingest=None</em>, <em>strike=None</em>, <em>source_file=None</em>, <em>description=None</em>, <em>when=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_strike_ingest_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -1581,7 +1652,7 @@
         <a href="ingest.test.scan.html" class="btn btn-neutral float-right" title="ingest.test.scan package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.strike.monitors.html" class="btn btn-neutral" title="ingest.strike.monitors package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.strike.monitors.html" class="btn btn-neutral float-left" title="ingest.strike.monitors package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1607,35 +1678,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

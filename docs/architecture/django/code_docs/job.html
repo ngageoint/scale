@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="ingest.triggers.configuration package" href="ingest.triggers.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -461,6 +472,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0048_auto_20180913_1632">job.migrations.0048_auto_20180913_1632 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0049_auto_20180927_1531">job.migrations.0049_auto_20180927_1531 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0050_job_configuration">job.migrations.0050_job_configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0051_auto_20190211_1500">job.migrations.0051_auto_20190211_1500 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1099,6 +1111,7 @@ model before updating its status or superseding it.</p>
 <li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of this job</li>
 <li><strong>job_type_rev</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The revision of the job type when this job was created</li>
 <li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this job</li>
+<li><strong>ingest_event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The ingest event that triggered the creation of this job</li>
 <li><strong>root_recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The root recipe that contains this job</li>
 <li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The original recipe that created this job</li>
 <li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The batch that contains this job</li>
@@ -1710,6 +1723,26 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.Job.id">
 <code class="descname">id</code><a class="headerlink" href="#job.models.Job.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.ingest_event">
+<code class="descname">ingest_event</code><a class="headerlink" href="#job.models.Job.ingest_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.ingest_event_id">
+<code class="descname">ingest_event_id</code><a class="headerlink" href="#job.models.Job.ingest_event_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -3800,7 +3833,7 @@ job is superseding. The returned job model will have not yet been saved in the d
 
 <dl class="method">
 <dt id="job.models.JobManager.create_job_v6">
-<code class="descname">create_job_v6</code><span class="sig-paren">(</span><em>job_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>job_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_job_v6</code><span class="sig-paren">(</span><em>job_type_rev</em>, <em>event_id=None</em>, <em>ingest_event_id=None</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>job_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given job type revision and returns the (unsaved) job model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3809,6 +3842,7 @@ job is superseding. The returned job model will have not yet been saved in the d
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>job_type_rev</strong> (<a class="reference internal" href="#job.models.JobTypeRevision" title="job.models.JobTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeRevision</span></code></a>) &#8211; The job type revision (with populated job_type model) of the job to create</li>
 <li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID that triggered the creation of this job</li>
+<li><strong>ingest_event_id</strong> (<em>int</em>) &#8211; The ingest event that triggered the creation of this job</li>
 <li><strong>input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The job&#8217;s input data (optional)</li>
 <li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this job</li>
 <li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this job</li>
@@ -7047,6 +7081,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="job.serializers.JobSerializerV6.IngestEventSerializerV6">
+<em class="property">class </em><code class="descname">IngestEventSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobSerializerV6.IngestEventSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ingest.html#ingest.ingest_event_serializers.IngestEventBaseSerializerV6" title="ingest.ingest_event_serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.ingest_event_serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="job.serializers.JobSerializerV6.RecipeBaseSerializerV6">
 <em class="property">class </em><code class="descname">RecipeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobSerializerV6.RecipeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -8336,7 +8377,7 @@ object the first time, the query is executed.</p>
         <a href="job.configuration.html" class="btn btn-neutral float-right" title="job.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.triggers.configuration.html" class="btn btn-neutral" title="ingest.triggers.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.triggers.configuration.html" class="btn btn-neutral float-left" title="ingest.triggers.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -8362,35 +8403,16 @@ object the first time, the query is executed.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

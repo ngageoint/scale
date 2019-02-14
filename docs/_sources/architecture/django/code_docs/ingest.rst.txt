@@ -25,6 +25,14 @@ ingest\.apps module
     :undoc-members:
     :show-inheritance:
 
+ingest\.ingest\_event\_serializers module
+-----------------------------------------
+
+.. automodule:: ingest.ingest_event_serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ingest\.ingest\_job module
 --------------------------
 

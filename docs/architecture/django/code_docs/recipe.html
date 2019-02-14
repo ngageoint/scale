@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="queue.test.messages package" href="queue.test.messages.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -370,6 +381,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0032_recipe_type_link_tables">recipe.migrations.0032_recipe_type_link_tables module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0033_auto_20181102_0307">recipe.migrations.0033_auto_20181102_0307 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0034_recipe_configuration">recipe.migrations.0034_recipe_configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0035_auto_20190126_2340">recipe.migrations.0035_auto_20190126_2340 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -687,6 +699,7 @@ recipe model before adding new jobs to it or superseding it.</p>
 <li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of this recipe</li>
 <li><strong>recipe_type_rev</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The revision of the recipe type when this recipe was created</li>
 <li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this recipe</li>
+<li><strong>ingest_event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The ingest event that triggered the creation of this recipe</li>
 <li><strong>root_recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The root recipe that contains this recipe</li>
 <li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The original recipe that created this recipe</li>
 <li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The batch that contains this recipe</li>
@@ -994,6 +1007,26 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="recipe.models.Recipe.id">
 <code class="descname">id</code><a class="headerlink" href="#recipe.models.Recipe.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.ingest_event">
+<code class="descname">ingest_event</code><a class="headerlink" href="#recipe.models.Recipe.ingest_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.ingest_event_id">
+<code class="descname">ingest_event_id</code><a class="headerlink" href="#recipe.models.Recipe.ingest_event_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1995,7 +2028,7 @@ actually be replaced by the new recipe definition.</li>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.create_recipe_v6">
-<code class="descname">create_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em>, <em>copy_superseded_input=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type_rev</em>, <em>event_id=None</em>, <em>ingest_id=None</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em>, <em>copy_superseded_input=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2004,6 +2037,7 @@ actually be replaced by the new recipe definition.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>recipe_type_rev</strong> (<a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></code></a>) &#8211; The recipe type revision (with populated recipe_type model) of the recipe to create</li>
 <li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID that triggered the creation of this recipe</li>
+<li><strong>ingest_id</strong> (<em>int</em>) &#8211; The ingest event ID that triggered the creation of this recipe</li>
 <li><strong>input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The recipe&#8217;s input data, possibly None</li>
 <li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this sub-recipe, possibly None</li>
 <li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this sub-recipe, possibly None</li>
@@ -3481,7 +3515,7 @@ when trigger_rule is None</li>
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.edit_recipe_type_v6">
 <code class="descname">edit_recipe_type_v6</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>title</em>, <em>description</em>, <em>definition</em>, <em>auto_update</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.edit_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic 
+<dd><p>Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
 transaction. An argument of None for a field indicates that the field should not change.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -4338,6 +4372,13 @@ made in an atomic transaction.</p>
 <dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeSerializerV6" title="recipe.serializers.RecipeSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeSerializerV6</span></code></a></p>
 <p>Converts related recipe model fields to REST output.</p>
 <dl class="class">
+<dt id="recipe.serializers.RecipeDetailsSerializerV6.IngestEventDetailsSerializerV6">
+<em class="property">class </em><code class="descname">IngestEventDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializerV6.IngestEventDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ingest.html#ingest.ingest_event_serializers.IngestEventBaseSerializerV6" title="ingest.ingest_event_serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.ingest_event_serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.serializers.RecipeDetailsSerializerV6.JobTypeBaseSerializerV6">
 <em class="property">class </em><code class="descname">JobTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializerV6.JobTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -4449,6 +4490,13 @@ made in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.IngestEventSerializerV6">
+<em class="property">class </em><code class="descname">IngestEventSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.IngestEventSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ingest.html#ingest.ingest_event_serializers.IngestEventBaseSerializerV6" title="ingest.ingest_event_serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.ingest_event_serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.RecipeBaseSerializerV6">
 <em class="property">class </em><code class="descname">RecipeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.RecipeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -4490,6 +4538,13 @@ made in an atomic transaction.</p>
 <em class="property">class </em><code class="descname">BatchBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeSerializerV6.BatchBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Base serializer for batches</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.serializers.RecipeSerializerV6.IngestEventBaseSerializerV6">
+<em class="property">class </em><code class="descname">IngestEventBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeSerializerV6.IngestEventBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
@@ -5318,7 +5373,7 @@ made in an atomic transaction.</p>
         <a href="recipe.configuration.html" class="btn btn-neutral float-right" title="recipe.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="queue.test.messages.html" class="btn btn-neutral" title="queue.test.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="queue.test.messages.html" class="btn btn-neutral float-left" title="queue.test.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -5344,35 +5399,16 @@ made in an atomic transaction.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

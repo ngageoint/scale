@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="error.test package" href="error.test.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -113,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.apps">ingest.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.ingest_event_serializers">ingest.ingest_event_serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.serializers">ingest.serializers module</a></li>
@@ -257,6 +269,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0012_scan_file_count">ingest.migrations.0012_scan_file_count module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0013_auto_20170406_1517">ingest.migrations.0013_auto_20170406_1517 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0014_auto_20170412_1225">ingest.migrations.0014_auto_20170412_1225 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0015_ingestevent">ingest.migrations.0015_ingestevent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -392,6 +405,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_recipe_handler">ingest.test.triggers.test_ingest_recipe_handler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition">ingest.test.triggers.test_ingest_trigger_condition module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler">ingest.test.triggers.test_ingest_trigger_handler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers">Module contents</a></li>
@@ -420,6 +434,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_recipe_handler">ingest.triggers.ingest_recipe_handler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_condition">ingest.triggers.ingest_trigger_condition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler">ingest.triggers.ingest_trigger_handler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers">Module contents</a></li>
@@ -460,6 +475,31 @@
 <code class="descname">verbose_name</code><em class="property"> = u'Ingest'</em><a class="headerlink" href="#ingest.apps.IngestConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.ingest_event_serializers">
+<span id="ingest-ingest-event-serializers-module"></span><h2>ingest.ingest_event_serializers module<a class="headerlink" href="#module-ingest.ingest_event_serializers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the serializers for ingests</p>
+<dl class="class">
+<dt id="ingest.ingest_event_serializers.IngestEventBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.ingest_event_serializers.</code><code class="descname">IngestEventBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.ingest_event_serializers.IngestEventBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.ingest_event_serializers.IngestEventDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.ingest_event_serializers.</code><code class="descname">IngestEventDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.ingest_event_serializers.IngestEventDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.ingest_event_serializers.IngestEventBaseSerializerV6" title="ingest.ingest_event_serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.ingest_event_serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.ingest_event_serializers.IngestEventSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.ingest_event_serializers.</code><code class="descname">IngestEventSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.ingest_event_serializers.IngestEventSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.ingest_event_serializers.IngestEventBaseSerializerV6" title="ingest.ingest_event_serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.ingest_event_serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
 </dd></dl>
 
 </div>
@@ -648,6 +688,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.models.Ingest.get_ingest_source_event">
+<code class="descname">get_ingest_source_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_ingest_source_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the event that triggered the ingest
+strike or scan</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.models.Ingest.get_next_by_created">
 <code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -666,6 +713,12 @@ object the first time, the query is executed.</p>
 <dt id="ingest.models.Ingest.get_previous_by_last_modified">
 <code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_recipe_name">
+<code class="descname">get_recipe_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_recipe_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.get_status_display">
@@ -691,6 +744,21 @@ object the first time, the query is executed.</p>
 <code class="descname">ingest_started</code><a class="headerlink" href="#ingest.models.Ingest.ingest_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.ingestevent_set">
+<code class="descname">ingestevent_set</code><a class="headerlink" href="#ingest.models.Ingest.ingestevent_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="method">
@@ -924,6 +992,276 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="ingest.models.IngestEvent">
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">IngestEvent</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents an ingest event that triggered a recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The type of ingest that occurred (strike/scan)</li>
+<li><strong>ingest</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The ingest that occurred</li>
+<li><strong>strike</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The strike that triggered this event, possibly None (some events are not triggered by rules)</li>
+<li><strong>scan</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The scan that triggered this event, possibly None (some events are not triggered by rules)</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description of the event. This will contain fields specific to the type of the trigger
+that occurred.</li>
+<li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the event occurred</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="ingest.models.IngestEvent.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#ingest.models.IngestEvent.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ingest.models.IngestEvent.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.IngestEvent.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.description">
+<code class="descname">description</code><a class="headerlink" href="#ingest.models.IngestEvent.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestEvent.get_next_by_occurred">
+<code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestEvent.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestEvent.get_previous_by_occurred">
+<code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestEvent.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.id">
+<code class="descname">id</code><a class="headerlink" href="#ingest.models.IngestEvent.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.ingest">
+<code class="descname">ingest</code><a class="headerlink" href="#ingest.models.IngestEvent.ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.ingest_id">
+<code class="descname">ingest_id</code><a class="headerlink" href="#ingest.models.IngestEvent.ingest_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.job_set">
+<code class="descname">job_set</code><a class="headerlink" href="#ingest.models.IngestEvent.job_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.objects">
+<code class="descname">objects</code><em class="property"> = &lt;ingest.models.IngestEventManager object&gt;</em><a class="headerlink" href="#ingest.models.IngestEvent.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.occurred">
+<code class="descname">occurred</code><a class="headerlink" href="#ingest.models.IngestEvent.occurred" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.recipe_set">
+<code class="descname">recipe_set</code><a class="headerlink" href="#ingest.models.IngestEvent.recipe_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.scan">
+<code class="descname">scan</code><a class="headerlink" href="#ingest.models.IngestEvent.scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.scan_id">
+<code class="descname">scan_id</code><a class="headerlink" href="#ingest.models.IngestEvent.scan_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.strike">
+<code class="descname">strike</code><a class="headerlink" href="#ingest.models.IngestEvent.strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.strike_id">
+<code class="descname">strike_id</code><a class="headerlink" href="#ingest.models.IngestEvent.strike_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEvent.type">
+<code class="descname">type</code><a class="headerlink" href="#ingest.models.IngestEvent.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.IngestEventManager">
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">IngestEventManager</code><a class="headerlink" href="#ingest.models.IngestEventManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Manages the IngestEvent model</p>
+<dl class="attribute">
+<dt id="ingest.models.IngestEventManager.MANUAL_TYPE">
+<code class="descname">MANUAL_TYPE</code><em class="property"> = u'MANUAL'</em><a class="headerlink" href="#ingest.models.IngestEventManager.MANUAL_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEventManager.SCAN_TYPE">
+<code class="descname">SCAN_TYPE</code><em class="property"> = u'SCAN'</em><a class="headerlink" href="#ingest.models.IngestEventManager.SCAN_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.IngestEventManager.STRIKE_TYPE">
+<code class="descname">STRIKE_TYPE</code><em class="property"> = u'STRIKE'</em><a class="headerlink" href="#ingest.models.IngestEventManager.STRIKE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestEventManager.create_manual_ingest_event">
+<code class="descname">create_manual_ingest_event</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>description</em>, <em>occurred</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestEventManager.create_manual_ingest_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new ingest event and returns the event model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ingest_id</strong> &#8211; The ingest that triggered the strike</li>
+<li><strong>description</strong> (<em>dict</em>) &#8211; The JSON description of the event as a dict</li>
+<li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the event occurred</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new trigger event</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.IngestEvent" title="ingest.models.IngestEvent"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestEvent</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestEventManager.create_scan_ingest_event">
+<code class="descname">create_scan_ingest_event</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>scan</em>, <em>description</em>, <em>occurred</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestEventManager.create_scan_ingest_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new ingest event and returns the event model. The given scan model must have already
+been saved in the database (it must have an ID). The returned ingest event model will be saved in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ingest_id</strong> &#8211; The ingest that triggered the scan</li>
+<li><strong>scan</strong> (<a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a>) &#8211; The scan that triggered the event</li>
+<li><strong>description</strong> (<em>dict</em>) &#8211; The JSON description of the event as a dict</li>
+<li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the event occurred</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new trigger event</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.IngestEvent" title="ingest.models.IngestEvent"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestEvent</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestEventManager.create_strike_ingest_event">
+<code class="descname">create_strike_ingest_event</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>strike</em>, <em>description</em>, <em>occurred</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestEventManager.create_strike_ingest_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new ingest event and returns the event model. The given strike model must have already
+been saved in the database (it must have an ID). The returned ingest event model will be saved in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ingest_id</strong> &#8211; The ingest that triggered the strike</li>
+<li><strong>strike</strong> (<a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a>) &#8211; The scan that triggered the event</li>
+<li><strong>description</strong> (<em>dict</em>) &#8211; The JSON description of the event as a dict</li>
+<li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the event occurred</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new trigger event</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.IngestEvent" title="ingest.models.IngestEvent"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestEvent</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ingest.models.IngestManager">
 <em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">IngestManager</code><a class="headerlink" href="#ingest.models.IngestManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
@@ -939,6 +1277,7 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>file_name</strong> (<em>string</em>) &#8211; The name of the file being ingested</li>
 <li><strong>workspace</strong> (<em>string</em>) &#8211; </li>
+<li><strong>recipe</strong> (<em>string</em>) &#8211; The name of the recipe to kick off after ingest</li>
 <li><strong>scan_id</strong> (<em>int</em>) &#8211; </li>
 <li><strong>strike_id</strong> (<em>int</em>) &#8211; </li>
 </ul>
@@ -1071,6 +1410,12 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestManager.get_recipe_source_config">
+<code class="descname">get_recipe_source_config</code><span class="sig-paren">(</span><em>ingest_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_recipe_source_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the strike/scan recipe configuration for the given ingest id</p>
 </dd></dl>
 
 <dl class="method">
@@ -1318,6 +1663,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="ingest.models.Scan.ingestevent_set">
+<code class="descname">ingestevent_set</code><a class="headerlink" href="#ingest.models.Scan.ingestevent_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="ingest.models.Scan.job">
 <code class="descname">job</code><a class="headerlink" href="#ingest.models.Scan.job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
@@ -1373,7 +1733,7 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="ingest.models.ScanManager.create_scan">
 <code class="descname">create_scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.create_scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new Scan process with the given configuration and returns 
+<dd><p>Creates a new Scan process with the given configuration and returns
 the new Scan model. All changes to the database will occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1702,6 +2062,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="ingest.models.Strike.ingestevent_set">
+<code class="descname">ingestevent_set</code><a class="headerlink" href="#ingest.models.Strike.ingestevent_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="ingest.models.Strike.job">
 <code class="descname">job</code><a class="headerlink" href="#ingest.models.Strike.job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
@@ -1953,6 +2328,27 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializerV6" title="ingest.serializers.IngestSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializerV6</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestEventBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestEventBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestEventBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestEventDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestEventDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestEventDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestEventBaseSerializerV6" title="ingest.serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestEventSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestEventSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestEventSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestEventBaseSerializerV6" title="ingest.serializers.IngestEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestEventBaseSerializerV6</span></code></a></p>
+<p>Converts ingest event model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
@@ -2818,7 +3214,7 @@ transaction. An argument of None for a field indicates that the field should not
         <a href="ingest.handlers.html" class="btn btn-neutral float-right" title="ingest.handlers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="error.test.html" class="btn btn-neutral" title="error.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="error.test.html" class="btn btn-neutral float-left" title="error.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -2844,35 +3240,16 @@ transaction. An argument of None for a field indicates that the field should not
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

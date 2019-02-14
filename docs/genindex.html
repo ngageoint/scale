@@ -20,22 +20,34 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
     <link href="_static/style.css" rel="stylesheet" type="text/css">
-
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -43,11 +55,10 @@
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -1601,8 +1612,6 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.create">create() (batch.views.BatchesView method)</a>
@@ -1635,6 +1644,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesView.create">(storage.views.WorkspacesView method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch">create_batch() (in module batch.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch_job">create_batch_job() (in module batch.test.utils)</a>
@@ -1775,6 +1786,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.error.html#job.error.mapping.create_legacy_error_mapping">create_legacy_error_mapping() (in module job.error.mapping)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager.create_manual_ingest_event">create_manual_ingest_event() (ingest.models.IngestEventManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.tasks.create_mesos_task">create_mesos_task() (in module mesos_api.tasks)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.error.html#job.error.error.JobError.create_model">create_model() (job.error.error.JobError method)</a>
@@ -1897,6 +1910,12 @@
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.create_scan">(ingest.models.ScanManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.utils.create_scan_ingest_event">create_scan_ingest_event() (in module ingest.test.utils)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager.create_scan_ingest_event">(ingest.models.IngestEventManager method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.utils.create_seed_job_type">create_seed_job_type() (in module job.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.offers.create_simple_offer">create_simple_offer() (in module mesos_api.offers)</a>
@@ -1909,6 +1928,12 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.create_strike">(ingest.models.StrikeManager method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.utils.create_strike_ingest_event">create_strike_ingest_event() (in module ingest.test.utils)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager.create_strike_ingest_event">(ingest.models.IngestEventManager method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message">create_sub_update_recipe_definition_message() (in module recipe.messages.update_recipe_definition)</a>
@@ -2308,6 +2333,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0014_auto_20170412_1225.Migration.dependencies">(ingest.migrations.0014_auto_20170412_1225.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0015_ingestevent.Migration.dependencies">(ingest.migrations.0015_ingestevent.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0001_initial.Migration.dependencies">(job.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0002_jobexecution_job_metrics.Migration.dependencies">(job.migrations.0002_jobexecution_job_metrics.Migration attribute)</a>
@@ -2407,6 +2434,8 @@
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0049_auto_20180927_1531.Migration.dependencies">(job.migrations.0049_auto_20180927_1531.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_job_configuration.Migration.dependencies">(job.migrations.0050_job_configuration.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0051_auto_20190211_1500.Migration.dependencies">(job.migrations.0051_auto_20190211_1500.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -2560,6 +2589,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0034_recipe_configuration.Migration.dependencies">(recipe.migrations.0034_recipe_configuration.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0035_auto_20190126_2340.Migration.dependencies">(recipe.migrations.0035_auto_20190126_2340.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration.dependencies">(scheduler.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0002_auto_20151007_1352.Migration.dependencies">(scheduler.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -2669,6 +2700,8 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/error.html#error.models.Error.description">(error.models.Error attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.description">(ingest.models.IngestEvent attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.description">(ingest.models.Scan attribute)</a>
 </li>
@@ -3372,6 +3405,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.fixtures">(ingest.test.test_views.TestStrikesViewV6 attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile.fixtures">(ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator.fixtures">(job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#job.test.execution.configuration.test_configurators.TestScheduledExecutionConfigurator.fixtures">(job.test.execution.configuration.test_configurators.TestScheduledExecutionConfigurator attribute)</a>
@@ -4047,6 +4082,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingest_job_type">get_ingest_job_type() (ingest.models.IngestManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.get_ingest_source_event">get_ingest_source_event() (ingest.models.Ingest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests">get_ingests() (ingest.models.IngestManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests_by_scan">get_ingests_by_scan() (ingest.models.IngestManager method)</a>
@@ -4126,6 +4163,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_input_json">get_input_json() (job.seed.manifest.SeedManifest method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.get_input_keys">get_input_keys() (recipe.definition.definition.RecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_input_workspace_names">get_input_workspace_names() (job.execution.configuration.json.exe_config.ExecutionConfiguration method)</a>
 </li>
@@ -4525,9 +4564,11 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.JobLoad.get_next_by_measured">get_next_by_measured() (queue.models.JobLoad method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_next_by_occurred">get_next_by_occurred() (metrics.models.MetricsError method)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.get_next_by_occurred">get_next_by_occurred() (ingest.models.IngestEvent method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_next_by_occurred">(metrics.models.MetricsError method)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.get_next_by_occurred">(metrics.models.MetricsIngest method)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.get_next_by_occurred">(metrics.models.MetricsJobType method)</a>
@@ -4773,9 +4814,11 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.JobLoad.get_previous_by_measured">get_previous_by_measured() (queue.models.JobLoad method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_previous_by_occurred">get_previous_by_occurred() (metrics.models.MetricsError method)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.get_previous_by_occurred">get_previous_by_occurred() (ingest.models.IngestEvent method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_previous_by_occurred">(metrics.models.MetricsError method)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.get_previous_by_occurred">(metrics.models.MetricsIngest method)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.get_previous_by_occurred">(metrics.models.MetricsJobType method)</a>
@@ -4819,6 +4862,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEndManager.get_recent_job_exe_end_metrics">get_recent_job_exe_end_metrics() (job.models.JobExecutionEndManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_recipe">get_recipe() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_recipe">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.get_recipe_data">get_recipe_data() (recipe.models.Recipe method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.get_recipe_definition">get_recipe_definition() (recipe.models.Recipe method)</a>
@@ -4851,6 +4900,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeNodeManager.get_recipe_jobs">get_recipe_jobs() (recipe.models.RecipeNodeManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.get_recipe_name">get_recipe_name() (ingest.models.Ingest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeNodeManager.get_recipe_node_outputs">get_recipe_node_outputs() (recipe.models.RecipeNodeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.get_recipe_nodes">get_recipe_nodes() (recipe.definition.definition.RecipeDefinition method)</a>
@@ -4859,6 +4910,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeNodeManager.get_recipe_nodes">(recipe.models.RecipeNodeManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_recipe_source_config">get_recipe_source_config() (ingest.models.IngestManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeJobLinkManager.get_recipe_type_ids">get_recipe_type_ids() (recipe.models.RecipeTypeJobLinkManager method)</a>
 
       <ul>
@@ -5600,6 +5653,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.id">(ingest.models.Ingest attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.id">(ingest.models.IngestEvent attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.id">(ingest.models.Scan attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.id">(ingest.models.Strike attribute)</a>
@@ -5695,8 +5750,12 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest">Ingest (class in ingest.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#module-ingest">ingest (module)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.ingest">ingest (ingest.models.IngestEvent attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#module-ingest">(module)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.apps">ingest.apps (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.DoesNotExist">Ingest.DoesNotExist</a>
@@ -5706,6 +5765,8 @@
       <li><a href="architecture/django/code_docs/ingest.handlers.html#module-ingest.handlers.file_handler">ingest.handlers.file_handler (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.handlers.html#module-ingest.handlers.file_rule">ingest.handlers.file_rule (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#module-ingest.ingest_event_serializers">ingest.ingest_event_serializers (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.ingest_job">ingest.ingest_job (module)</a>
 </li>
@@ -5748,6 +5809,8 @@
       <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0013_auto_20170406_1517">ingest.migrations.0013_auto_20170406_1517 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0014_auto_20170412_1225">ingest.migrations.0014_auto_20170412_1225 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0015_ingestevent">ingest.migrations.0015_ingestevent (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.models">ingest.models (module)</a>
 </li>
@@ -5855,6 +5918,8 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration.test_ingest_trigger_rule">ingest.test.triggers.configuration.test_ingest_trigger_rule (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_recipe_handler">ingest.test.triggers.test_ingest_recipe_handler (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition">ingest.test.triggers.test_ingest_trigger_condition (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler">ingest.test.triggers.test_ingest_trigger_handler (module)</a>
@@ -5869,6 +5934,8 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#module-ingest.triggers.configuration.ingest_trigger_rule_1_0">ingest.triggers.configuration.ingest_trigger_rule_1_0 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers.ingest_recipe_handler">ingest.triggers.ingest_recipe_handler (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers.ingest_trigger_condition">ingest.triggers.ingest_trigger_condition (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler">ingest.triggers.ingest_trigger_handler (module)</a>
@@ -5878,6 +5945,20 @@
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.views">ingest.views (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.ingest_ended">ingest_ended (ingest.models.Ingest attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.ingest_event">ingest_event (job.models.Job attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.ingest_event">(recipe.models.Recipe attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.ingest_event_id">ingest_event_id (job.models.Job attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.ingest_event_id">(recipe.models.Recipe attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.ingest_id">ingest_id (ingest.models.IngestEvent attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.ingest_set">ingest_set (ingest.models.Scan attribute)</a>
 
@@ -5909,15 +5990,51 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestDetailsSerializerV5">IngestDetailsSerializerV5 (class in ingest.serializers)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestDetailsSerializerV6">IngestDetailsSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView">IngestDetailsView (class in ingest.views)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingested_count">ingested_count (metrics.models.MetricsIngest attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent">IngestEvent (class in ingest.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.DoesNotExist">IngestEvent.DoesNotExist</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.MultipleObjectsReturned">IngestEvent.MultipleObjectsReturned</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.ingestevent_set">ingestevent_set (ingest.models.Ingest attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.ingestevent_set">(ingest.models.Scan attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.ingestevent_set">(ingest.models.Strike attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.ingest_event_serializers.IngestEventBaseSerializerV6">IngestEventBaseSerializerV6 (class in ingest.ingest_event_serializers)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestEventBaseSerializerV6">(class in ingest.serializers)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.ingest_event_serializers.IngestEventDetailsSerializerV6">IngestEventDetailsSerializerV6 (class in ingest.ingest_event_serializers)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestEventDetailsSerializerV6">(class in ingest.serializers)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager">IngestEventManager (class in ingest.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.ingest_event_serializers.IngestEventSerializerV6">IngestEventSerializerV6 (class in ingest.ingest_event_serializers)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestEventSerializerV6">(class in ingest.serializers)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager">IngestManager (class in ingest.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.triggers.html#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler">IngestRecipeHandler (class in ingest.triggers.ingest_recipe_handler)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestSerializerV5">IngestSerializerV5 (class in ingest.serializers)</a>
 </li>
@@ -6603,6 +6720,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0050_job_configuration">job.migrations.0050_job_configuration (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0051_auto_20190211_1500">job.migrations.0051_auto_20190211_1500 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.MultipleObjectsReturned">Job.MultipleObjectsReturned</a>
@@ -6823,10 +6942,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_job_interface">job_get_job_interface() (in module queue.migrations.0015_auto_20170731_1527)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_resources">job_get_resources() (in module queue.migrations.0015_auto_20170731_1527)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchJob.job_id">job_id (batch.models.BatchJob attribute)</a>
 
       <ul>
@@ -6870,6 +6989,8 @@
       <li><a href="architecture/django/code_docs/error.html#error.models.Error.job_set">job_set (error.models.Error attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.job_set">(ingest.models.IngestEvent attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.job_set">(job.models.JobType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.job_set">(job.models.JobTypeRevision attribute)</a>
@@ -7272,6 +7393,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.BatchBaseSerializerV6">JobSerializerV6.BatchBaseSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.ErrorBaseSerializerV6">JobSerializerV6.ErrorBaseSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.IngestEventSerializerV6">JobSerializerV6.IngestEventSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.RecipeBaseSerializerV6">JobSerializerV6.RecipeBaseSerializerV6 (class in job.serializers)</a>
 </li>
@@ -7761,6 +7884,8 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.manifest">(job.models.JobTypeRevision attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager.MANUAL_TYPE">MANUAL_TYPE (ingest.models.IngestEventManager attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.mark_creation_done">mark_creation_done() (batch.models.BatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler.match_file_name">match_file_name() (ingest.handlers.file_handler.FileHandler method)</a>
@@ -8108,6 +8233,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0014_auto_20170412_1225.Migration">(class in ingest.migrations.0014_auto_20170412_1225)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0015_ingestevent.Migration">(class in ingest.migrations.0015_ingestevent)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0001_initial.Migration">(class in job.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0002_jobexecution_job_metrics.Migration">(class in job.migrations.0002_jobexecution_job_metrics)</a>
@@ -8207,6 +8334,8 @@
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0049_auto_20180927_1531.Migration">(class in job.migrations.0049_auto_20180927_1531)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_job_configuration.Migration">(class in job.migrations.0050_job_configuration)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0051_auto_20190211_1500.Migration">(class in job.migrations.0051_auto_20190211_1500)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
@@ -8359,6 +8488,8 @@
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0033_auto_20181102_0307.Migration">(class in recipe.migrations.0033_auto_20181102_0307)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0034_recipe_configuration.Migration">(class in recipe.migrations.0034_recipe_configuration)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0035_auto_20190126_2340.Migration">(class in recipe.migrations.0035_auto_20190126_2340)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration">(class in scheduler.migrations.0001_initial)</a>
 </li>
@@ -8866,6 +8997,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.objects">(ingest.models.Ingest attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.objects">(ingest.models.IngestEvent attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.objects">(ingest.models.Scan attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.objects">(ingest.models.Strike attribute)</a>
@@ -8937,9 +9070,11 @@
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.objects">(trigger.models.TriggerRule attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.occurred">occurred (metrics.models.MetricsError attribute)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.occurred">occurred (ingest.models.IngestEvent attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.occurred">(metrics.models.MetricsError attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.occurred">(metrics.models.MetricsIngest attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.occurred">(metrics.models.MetricsJobType attribute)</a>
@@ -9011,6 +9146,8 @@
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0013_auto_20170406_1517.Migration.operations">(ingest.migrations.0013_auto_20170406_1517.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0014_auto_20170412_1225.Migration.operations">(ingest.migrations.0014_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0015_ingestevent.Migration.operations">(ingest.migrations.0015_ingestevent.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0001_initial.Migration.operations">(job.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -9111,6 +9248,8 @@
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0049_auto_20180927_1531.Migration.operations">(job.migrations.0049_auto_20180927_1531.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0050_job_configuration.Migration.operations">(job.migrations.0050_job_configuration.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0051_auto_20190211_1500.Migration.operations">(job.migrations.0051_auto_20190211_1500.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -9263,6 +9402,8 @@
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0033_auto_20181102_0307.Migration.operations">(recipe.migrations.0033_auto_20181102_0307.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0034_recipe_configuration.Migration.operations">(recipe.migrations.0034_recipe_configuration.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0035_auto_20190126_2340.Migration.operations">(recipe.migrations.0035_auto_20190126_2340.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration.operations">(scheduler.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -9773,8 +9914,12 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#util.middleware.ExceptionLoggingMiddleware.process_exception">process_exception() (util.middleware.ExceptionLoggingMiddleware method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.triggers.html#ingest.triggers.ingest_trigger_handler.IngestTriggerHandler.process_ingested_source_file">process_ingested_source_file() (ingest.triggers.ingest_trigger_handler.IngestTriggerHandler method)</a>
+      <li><a href="architecture/django/code_docs/ingest.triggers.html#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file">process_ingested_source_file() (ingest.triggers.ingest_recipe_handler.IngestRecipeHandler method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.triggers.html#ingest.triggers.ingest_trigger_handler.IngestTriggerHandler.process_ingested_source_file">(ingest.triggers.ingest_trigger_handler.IngestTriggerHandler method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.create_jobs.RecipeJob.process_input">process_input (job.messages.create_jobs.RecipeJob attribute)</a>
 
       <ul>
@@ -9788,6 +9933,8 @@
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.utils.process_job_inputs">process_job_inputs() (in module recipe.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.process_job_output">process_job_output() (job.models.JobManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.triggers.html#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file">process_manual_ingested_source_file() (ingest.triggers.ingest_recipe_handler.IngestRecipeHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.triggers.html#source.triggers.parse_trigger_handler.ParseTriggerHandler.process_parsed_source_file">process_parsed_source_file() (source.triggers.parse_trigger_handler.ParseTriggerHandler method)</a>
 </li>
@@ -10225,6 +10372,8 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe_for_user_v6">queue_new_recipe_for_user_v6() (queue.models.QueueManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe_ingest_v6">queue_new_recipe_ingest_v6() (queue.models.QueueManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.queue_new_recipe_v6">queue_new_recipe_v6() (queue.models.QueueManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.queue_roulette_jobs">queue_roulette_jobs() (diagnostic.views.QueueScaleRouletteView method)</a>
@@ -10571,6 +10720,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.migrations.html#module-recipe.migrations.0034_recipe_configuration">recipe.migrations.0034_recipe_configuration (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.migrations.html#module-recipe.migrations.0035_auto_20190126_2340">recipe.migrations.0035_auto_20190126_2340 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#module-recipe.models">recipe.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.MultipleObjectsReturned">Recipe.MultipleObjectsReturned</a>
@@ -10705,9 +10856,11 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_node">recipe_node (storage.models.ScaleFile attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.recipe_set">recipe_set (recipe.models.RecipeType attribute)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.recipe_set">recipe_set (ingest.models.IngestEvent attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.recipe_set">(recipe.models.RecipeType attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevision.recipe_set">(recipe.models.RecipeTypeRevision attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.recipe_set">(trigger.models.TriggerEvent attribute)</a>
@@ -10771,10 +10924,10 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeCondition.MultipleObjectsReturned">RecipeCondition.MultipleObjectsReturned</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeConditionManager">RecipeConditionManager (class in recipe.models)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.apps.RecipeConfig">RecipeConfig (class in recipe.apps)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.html#recipe.configuration.configuration.RecipeConfiguration">RecipeConfiguration (class in recipe.configuration.configuration)</a>
@@ -10802,6 +10955,8 @@
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer">RecipeDetailsInputSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializerV6">RecipeDetailsSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializerV6.IngestEventDetailsSerializerV6">RecipeDetailsSerializerV6.IngestEventDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializerV6.JobTypeBaseSerializerV6">RecipeDetailsSerializerV6.JobTypeBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
@@ -10871,6 +11026,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.ErrorBaseSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.ErrorBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.IngestEventSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.IngestEventSerializerV6 (class in recipe.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.RecipeBaseSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.RecipeBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.TriggerEventSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.TriggerEventSerializerV6 (class in recipe.serializers)</a>
@@ -10922,6 +11079,8 @@
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV6">RecipeSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV6.BatchBaseSerializerV6">RecipeSerializerV6.BatchBaseSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV6.IngestEventBaseSerializerV6">RecipeSerializerV6.IngestEventBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV6.TriggerEventBaseSerializerV6">RecipeSerializerV6.TriggerEventBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
@@ -11362,12 +11521,22 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan">Scan (class in ingest.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.scan">scan (ingest.models.Ingest attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.scan">(ingest.models.IngestEvent attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.DoesNotExist">Scan.DoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.MultipleObjectsReturned">Scan.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.scan_id">scan_id (ingest.models.Ingest attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.scan_id">(ingest.models.IngestEvent attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager.SCAN_TYPE">SCAN_TYPE (ingest.models.IngestEventManager attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.ScanBaseSerializer">ScanBaseSerializer (class in ingest.serializers)</a>
 </li>
@@ -12009,6 +12178,8 @@
         <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.setUp">(ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.setUp">(ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile.setUp">(ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.setUp">(ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
 </li>
@@ -13158,6 +13329,8 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.strike">strike (ingest.models.Ingest attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.strike">(ingest.models.IngestEvent attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.strike">(metrics.models.MetricsIngest attribute)</a>
 </li>
       </ul></li>
@@ -13168,10 +13341,14 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.strike_id">strike_id (ingest.models.Ingest attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.strike_id">(ingest.models.IngestEvent attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.strike_id">(metrics.models.MetricsIngest attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.strike_set">strike_set (job.models.Job attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEventManager.STRIKE_TYPE">STRIKE_TYPE (ingest.models.IngestEventManager attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeBaseSerializer">StrikeBaseSerializer (class in ingest.serializers)</a>
 </li>
@@ -13663,8 +13840,12 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_param">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_recipe">test_bad_recipe() (recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_bad_recipe">test_bad_recipe() (ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_bad_recipe">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewRecipeView.test_bad_recipe_id">test_bad_recipe_id() (queue.test.test_views.TestQueueNewRecipeView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_config">test_bad_trigger_config() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
@@ -13698,6 +13879,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bad_version_v1">test_bad_version_v1() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bad_version_v6">test_bad_version_v6() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_bad_workspace">test_bad_workspace() (ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate method)</a>
 
@@ -13988,6 +14171,8 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_special_formats_should_have_dollar_sign">test_command_string_special_formats_should_have_dollar_sign() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_complex_command">test_complex_command() (job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.instance.html#recipe.test.instance.test_recipe.TestRecipe.test_condition_hit">test_condition_hit() (recipe.test.instance.test_recipe.TestRecipe method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanCreateViewV5.test_configuration_bad_type">test_configuration_bad_type() (ingest.test.test_views.TestScanCreateViewV5 method)</a>
 
@@ -14373,6 +14558,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_bad_interface">test_edit_bad_interface() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsViewV6.test_edit_bad_recipe">test_edit_bad_recipe() (ingest.test.test_views.TestScanDetailsViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_bad_trigger">test_edit_bad_trigger() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
@@ -14397,6 +14584,12 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsViewV6.test_edit_config_conflict">(ingest.test.test_views.TestScanDetailsViewV6 method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsViewV6.test_edit_config_v6">test_edit_config_v6() (ingest.test.test_views.TestScanDetailsViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_config_v6">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_configuration">test_edit_configuration() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
@@ -14440,6 +14633,8 @@
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_invalid_batch">test_edit_invalid_batch() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_invalid_configuration">test_edit_invalid_configuration() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_invalid_recipe">test_edit_invalid_recipe() (ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_invalid_version">test_edit_invalid_version() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
 </li>
@@ -17413,6 +17608,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_id">test_successful_id() (recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_ingest">test_successful_ingest() (queue.test.test_models.TestQueueManagerQueueNewRecipe method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.test_successful_job_creation">test_successful_job_creation() (ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile method)</a>
 
       <ul>
@@ -17426,6 +17623,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeRevisionsViewV6.test_successful_list">test_successful_list() (job.test.test_views.TestJobTypeRevisionsViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile.test_successful_manual_kickoff">test_successful_manual_kickoff() (ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_successful_new">test_successful_new() (recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
@@ -17457,12 +17656,20 @@
         <li><a href="architecture/django/code_docs/recipe.test.configuration.data.html#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_property">(recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansValidationViewV6.test_successful_recipe">test_successful_recipe() (ingest.test.test_views.TestScansValidationViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.test_successful_recipe">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.test_successful_recipe_creation">test_successful_recipe_creation() (ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/source.test.triggers.html#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_recipe_creation">(source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile.test_successful_recipe_kickoff">test_successful_recipe_kickoff() (ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile method)</a>
+</li>
       <li><a href="architecture/django/code_docs/product.test.configuration.html#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful_recipe_path">test_successful_recipe_path() (product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_recipe_type_id">test_successful_recipe_type_id() (recipe.test.test_views.TestRecipesViewV6 method)</a>
@@ -17512,7 +17719,13 @@
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5.test_successful_v5">test_successful_v5() (recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful_v6">test_successful_v6() (ingest.test.test_models.TestStrikeManagerCreateStrikeProcess method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanCreateViewV6.test_successful_v6">(ingest.test.test_views.TestScanCreateViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.test_successful_v6">(ingest.test.test_views.TestStrikeCreateViewV6 method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.test_successful_v6data">test_successful_v6data() (recipe.test.test_views.TestRecipesPostViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.html#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_successful_validation">test_successful_validation() (job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2 method)</a>
@@ -18298,6 +18511,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestIngestGetDataTypeTags">TestIngestGetDataTypeTags (class in ingest.test.test_models)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_app.TestIngestJobType">TestIngestJobType (class in ingest.test.test_app)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_recipe_handler.TestIngestRecipeHandlerProcessIngestedSourceFile">TestIngestRecipeHandlerProcessIngestedSourceFile (class in ingest.test.triggers.test_ingest_recipe_handler)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestStatusViewV5">TestIngestStatusViewV5 (class in ingest.test.test_views)</a>
 </li>
@@ -19231,9 +19446,11 @@
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerRuleSerializer">TriggerRuleSerializer (class in trigger.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.seed.html#job.seed.types.SeedJson.type">type (job.seed.types.SeedJson attribute)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.type">type (ingest.models.IngestEvent attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.seed.html#job.seed.types.SeedJson.type">(job.seed.types.SeedJson attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.type">(trigger.models.TriggerEvent attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.type">(trigger.models.TriggerRule attribute)</a>
@@ -20029,35 +20246,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

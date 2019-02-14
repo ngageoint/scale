@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="ingest.management.commands package" href="ingest.management.commands.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -113,6 +124,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_event_serializers">ingest.ingest_event_serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -496,6 +508,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-ingest.migrations.0015_ingestevent">
+<span id="ingest-migrations-0015-ingestevent-module"></span><h2>ingest.migrations.0015_ingestevent module<a class="headerlink" href="#module-ingest.migrations.0015_ingestevent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0015_ingestevent.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0015_ingestevent.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0015_ingestevent.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0015_ingestevent.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0014_auto_20170412_1225')]</em><a class="headerlink" href="#ingest.migrations.0015_ingestevent.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0015_ingestevent.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'type', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.contrib.postgres.fields.jsonb.JSONField&gt;), (u'occurred', &lt;django.db.models.fields.DateTimeField&gt;), (u'ingest', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'scan', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'strike', &lt;django.db.models.fields.related.ForeignKey&gt;)], options={u'db_table': u'ingest_event'}, name=u'IngestEvent'&gt;]</em><a class="headerlink" href="#ingest.migrations.0015_ingestevent.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-ingest.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -512,7 +543,7 @@
         <a href="ingest.scan.html" class="btn btn-neutral float-right" title="ingest.scan package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.management.commands.html" class="btn btn-neutral" title="ingest.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.management.commands.html" class="btn btn-neutral float-left" title="ingest.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -538,35 +569,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

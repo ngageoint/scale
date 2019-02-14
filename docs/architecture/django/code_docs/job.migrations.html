@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="job.messages package" href="job.messages.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -1201,6 +1212,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.migrations.0051_auto_20190211_1500">
+<span id="job-migrations-0051-auto-20190211-1500-module"></span><h2>job.migrations.0051_auto_20190211_1500 module<a class="headerlink" href="#module-job.migrations.0051_auto_20190211_1500" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0051_auto_20190211_1500.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0051_auto_20190211_1500.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0051_auto_20190211_1500.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0051_auto_20190211_1500.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0015_ingestevent'), (u'job', u'0050_job_configuration')]</em><a class="headerlink" href="#job.migrations.0051_auto_20190211_1500.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0051_auto_20190211_1500.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'ingest_event', model_name=u'job'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'event', model_name=u'job'&gt;]</em><a class="headerlink" href="#job.migrations.0051_auto_20190211_1500.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -1217,7 +1247,7 @@
         <a href="job.seed.html" class="btn btn-neutral float-right" title="job.seed package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.messages.html" class="btn btn-neutral" title="job.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job.messages.html" class="btn btn-neutral float-left" title="job.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1243,35 +1273,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

@@ -292,6 +292,14 @@ recipe\.migrations\.0034\_recipe\_configuration module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0035\_auto\_20190126\_2340 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0035_auto_20190126_2340
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

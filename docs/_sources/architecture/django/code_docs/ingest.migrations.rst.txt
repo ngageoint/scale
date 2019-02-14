@@ -116,6 +116,14 @@ ingest\.migrations\.0014\_auto\_20170412\_1225 module
     :undoc-members:
     :show-inheritance:
 
+ingest\.migrations\.0015\_ingestevent module
+--------------------------------------------
+
+.. automodule:: ingest.migrations.0015_ingestevent
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

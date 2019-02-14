@@ -19,13 +19,29 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.8.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -34,21 +50,16 @@
     <link rel="prev" title="ingest.test.triggers.configuration package" href="ingest.test.triggers.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -113,6 +124,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_event_serializers">ingest.ingest_event_serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -234,6 +246,58 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-ingest.triggers.ingest_recipe_handler">
+<span id="ingest-triggers-ingest-recipe-handler-module"></span><h2>ingest.triggers.ingest_recipe_handler module<a class="headerlink" href="#module-ingest.triggers.ingest_recipe_handler" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that handles ingest trigger rules</p>
+<dl class="class">
+<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler">
+<em class="property">class </em><code class="descclassname">ingest.triggers.ingest_recipe_handler.</code><code class="descname">IngestRecipeHandler</code><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Handles ingest trigger rules</p>
+<dl class="method">
+<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file">
+<code class="descname">process_ingested_source_file</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the given ingested source file by kicking off its recipe.
+All database changes are made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>source</strong> &#8211; The strike that triggered the ingest</li>
+<li><strong>source_file</strong> (<a class="reference internal" href="source.html#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>) &#8211; The source file that was ingested</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the source file was ingested</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file">
+<code class="descname">process_manual_ingested_source_file</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a manual ingest where a strike or scan is not involved. All database
+changes are made in an atomic transaction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ingest_id</strong> &#8211; </li>
+<li><strong>source_file</strong> (<a class="reference internal" href="source.html#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>) &#8211; The source file that was ingested</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the source file was ingested</li>
+<li><strong>recipe_type_id</strong> &#8211; id of the Recipe type to kick off</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-ingest.triggers.ingest_trigger_condition">
 <span id="ingest-triggers-ingest-trigger-condition-module"></span><h2>ingest.triggers.ingest_trigger_condition module<a class="headerlink" href="#module-ingest.triggers.ingest_trigger_condition" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that represents an ingest trigger rule condition</p>
@@ -348,7 +412,7 @@ corresponding jobs and recipes for any triggered rules. All database changes are
         <a href="ingest.triggers.configuration.html" class="btn btn-neutral float-right" title="ingest.triggers.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.test.triggers.configuration.html" class="btn btn-neutral" title="ingest.test.triggers.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.test.triggers.configuration.html" class="btn btn-neutral float-left" title="ingest.test.triggers.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -374,35 +438,16 @@ corresponding jobs and recipes for any triggered rules. All database changes are
   
 
 
-  
-
-    
-    
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'5.8.0-snapshot',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
