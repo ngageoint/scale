@@ -8,6 +8,7 @@ from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
 from mock import patch
 
+import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
 import product.test.utils as product_test_utils
 import queue.test.utils as queue_test_utils
@@ -357,7 +358,7 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
 
 class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
-    fixtures = ['basic_system_job_types.json']
+    fixtures = ['basic_system_job_types.json', 'ingest_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -453,7 +454,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         source_file = source_test_utils.create_source(workspace=workspace)
         event = trigger_test_utils.create_trigger_event()
         recipetype1 = recipe_test_utils.create_recipe_type_v6()
- 
+
         data_dict = {
             'version': '1.0',
             'input_data': [{
@@ -468,6 +469,44 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         data = JobDataV6(data_dict)
 
         created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event)
+
+    @patch('queue.models.CommandMessageManager')
+    def test_successful_ingest(self, mock_msg_mgr):
+        workspace = storage_test_utils.create_workspace()
+        strike_source_file = source_test_utils.create_source(workspace=workspace)
+        strike_event = ingest_test_utils.create_strike_ingest_event(source_file=strike_source_file)
+        scan_source_file = source_test_utils.create_source(workspace=workspace)
+        scan_event = ingest_test_utils.create_scan_ingest_event(source_file=scan_source_file)
+
+        recipetype1 = recipe_test_utils.create_recipe_type_v6()
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_IMAGE',
+                'file_id': strike_source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobDataV6(data_dict)
+
+        created_strike_recipe = Queue.objects.queue_new_recipe_ingest_v6(recipetype1, data._new_data, strike_event)
+
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_IMAGE',
+                'file_id': scan_source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobDataV6(data_dict)
+        created_scan_recipe = Queue.objects.queue_new_recipe_ingest_v6(recipetype1, data._new_data, scan_event)
 
     def test_successful_legacy(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""

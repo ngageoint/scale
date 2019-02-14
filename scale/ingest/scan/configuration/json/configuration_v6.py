@@ -51,6 +51,22 @@ SCAN_CONFIGURATION_SCHEMA = {
         'recursive': {
             'type': 'boolean'
         },
+        'recipe': {
+            'type': 'object',
+            'description': 'Specifies the natural key of the recipe the Scan will start when a file is ingested.',
+            'required': ['name', 'revision_num'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'description': 'Specifies the name of the recipe.',
+                },
+                'revision_num': {
+                    'type': 'integer',
+                    'description': 'Specifies the revision number of the recipe.'
+                },
+            },
+        },
     },
     'definitions': {
         'file_item': {
@@ -147,6 +163,7 @@ class ScanConfigurationV6(object):
             rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
 
+
     def get_configuration(self):
         """Returns the scan configuration represented by this JSON
 
@@ -155,15 +172,16 @@ class ScanConfigurationV6(object):
         """
 
         config = ScanConfiguration()
-        
+
         config.scanner_type     = self._configuration['scanner']['type']
         config.scanner_config   = self._configuration['scanner']
         config.recursive        = self._configuration['recursive']
         config.file_handler     = self._file_handler
         config.workspace        = self._configuration['workspace']
+        config.config_dict      = self._configuration
 
         return config
-        
+
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
 
@@ -199,3 +217,10 @@ class ScanConfigurationV6(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
+
+        # TODO for v6 when scan recipe config is mandatory
+        # if 'recipe' not in self._configuration:
+        #     self._configuration['recipe'] = {
+        #         'name': '',
+        #         'revision_num': ''
+        #     }

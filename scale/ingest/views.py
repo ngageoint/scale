@@ -555,7 +555,7 @@ class ScansDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(scan)
         return Response(serializer.data)
-        
+
     def _patch_v6(self, request, scan_id):
         """Edits an existing Scan process and returns the updated details
 
@@ -891,7 +891,7 @@ class StrikeDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(strike)
         return Response(serializer.data)
-        
+
     def patch_impl_v6(self, request, strike_id):
         """Edits an existing Strike process and returns the updated details
 
@@ -906,7 +906,7 @@ class StrikeDetailsView(GenericAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration', required=False)
-        
+
         config = None
         try:
             if configuration:
@@ -970,7 +970,7 @@ class StrikesValidationView(APIView):
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
-        
+
     def post_impl_v6(self, request):
         """Validates a new Strike process and returns any warnings discovered
 

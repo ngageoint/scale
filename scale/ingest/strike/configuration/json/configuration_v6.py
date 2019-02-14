@@ -48,7 +48,23 @@ STRIKE_CONFIGURATION_SCHEMA = {
             'type': 'array',
             'minItems': 1,
             'items': {'$ref': '#/definitions/file_item'}
-        }
+        },
+        'recipe': {
+            'type': 'object',
+            'description': 'Specifies the natural key of the recipe the Strike will start when a file is ingested.',
+            'required': ['name', 'revision_num'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'description': 'Specifies the name of the recipe.',
+                },
+                'revision_num': {
+                    'type': 'integer',
+                    'description': 'Specifies the version of the recipe.'
+                },
+            },
+        },
     },
     'definitions': {
         'file_item': {
@@ -98,7 +114,7 @@ class StrikeConfigurationV6(object):
         # Convert old versions
         if 'version' in self._configuration and self._configuration['version'] == '1.0':
             self._configuration = self._convert_schema(configuration)
-            
+
         if 'version' in self._configuration and self._configuration['version'] == '2.0':
             self._configuration['version'] = '6'
 
@@ -140,7 +156,7 @@ class StrikeConfigurationV6(object):
         """
 
         return self._configuration
-        
+
     def get_configuration(self):
         """Returns the strike configuration represented by this JSON
 
@@ -149,7 +165,7 @@ class StrikeConfigurationV6(object):
         """
 
         config = StrikeConfiguration()
-        
+
         config.configuration    = self._configuration
         config.file_handler     = self._file_handler
 
@@ -207,3 +223,10 @@ class StrikeConfigurationV6(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
+
+        # TODO for v6 when strike recipe config is mandatory
+        # if 'recipe' not in self._configuration:
+        #     self._configuration['recipe'] = {
+        #         'name': '',
+        #         'version': ''
+        #     }

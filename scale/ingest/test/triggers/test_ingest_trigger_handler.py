@@ -1,8 +1,10 @@
 from __future__ import unicode_literals
 
 import django
+import os
 from django.test import TransactionTestCase
 from django.utils.timezone import now
+from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
@@ -15,6 +17,7 @@ from storage.models import ScaleFile
 
 
 class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
+
     def setUp(self):
         django.setup()
 
@@ -143,6 +146,8 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestTriggerHandler().process_ingested_source_file(self.source_file, now())
+
+        # Since we're using the messaging backend, how do we make sure the first job is queued????
 
         # Check results...ensure first job is queued
         queue_1 = Queue.objects.get(job_type=self.job_type_2.id)

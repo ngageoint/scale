@@ -117,7 +117,7 @@ class RecipeManager(models.Manager):
 
         return recipe
 
-    def create_recipe_v6(self, recipe_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None,
+    def create_recipe_v6(self, recipe_type_rev, event_id=None, ingest_id=None, input_data=None, root_recipe_id=None, recipe_id=None,
                          recipe_config=None, batch_id=None, superseded_recipe=None, copy_superseded_input=False):
         """Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model
 
@@ -125,6 +125,8 @@ class RecipeManager(models.Manager):
         :type recipe_type_rev: :class:`recipe.models.RecipeTypeRevision`
         :param event_id: The event ID that triggered the creation of this recipe
         :type event_id: int
+        :param ingest_id: The ingest event ID that triggered the creation of this recipe
+        :type ingest_id: int
         :param input_data: The recipe's input data, possibly None
         :type input_data: :class:`data.data.data.Data`
         :param root_recipe_id: The ID of the root recipe that contains this sub-recipe, possibly None
@@ -149,10 +151,11 @@ class RecipeManager(models.Manager):
         recipe.recipe_type = recipe_type_rev.recipe_type
         recipe.recipe_type_rev = recipe_type_rev
         recipe.event_id = event_id
+        recipe.ingest_event_id = ingest_id
         recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         recipe.recipe_id = recipe_id
         recipe.batch_id = batch_id
-        
+
         if recipe_config:
             recipe.configuration = convert_config_to_v6_json(recipe_config).get_dict()
 
@@ -591,7 +594,7 @@ class RecipeManager(models.Manager):
         if type_names:
             recipes = recipes.filter(recipe_type__name__in=type_names)
 
-        # Apply batch filtering 
+        # Apply batch filtering
         if batch_ids:
             recipes = recipes.filter(batch_id__in=batch_ids)
 
@@ -680,7 +683,7 @@ class RecipeManager(models.Manager):
         if type_names:
             recipes = recipes.filter(recipe_type__name__in=type_names)
 
-        # Apply batch filtering 
+        # Apply batch filtering
         if batch_ids:
             recipes = recipes.filter(batch_id__in=batch_ids)
 
@@ -933,6 +936,8 @@ class Recipe(models.Model):
     :type recipe_type_rev: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this recipe
     :type event: :class:`django.db.models.ForeignKey`
+    :keyword ingest_event: The ingest event that triggered the creation of this recipe
+    :type ingest_event: :class:`django.db.models.ForeignKey`
     :keyword root_recipe: The root recipe that contains this recipe
     :type root_recipe: :class:`django.db.models.ForeignKey`
     :keyword recipe: The original recipe that created this recipe
@@ -1006,7 +1011,9 @@ class Recipe(models.Model):
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
-    event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    # TODO remove when triggers are removed for v6
+    event = models.ForeignKey('trigger.TriggerEvent', blank=True, null=True, on_delete=models.PROTECT)
+    ingest_event = models.ForeignKey('ingest.IngestEvent', blank=True, null=True, on_delete=models.PROTECT)
     root_recipe = models.ForeignKey('recipe.Recipe', related_name='sub_recipes_for_root', blank=True, null=True,
                                     on_delete=models.PROTECT)
     recipe = models.ForeignKey('recipe.Recipe', related_name='sub_recipes', blank=True, null=True,
@@ -1276,7 +1283,7 @@ class RecipeInputFileManager(models.Manager):
         files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
                                                file_name=file_name)
 
-        files = files.filter(recipeinputfile__recipe=recipe_id).order_by('last_modified')                          
+        files = files.filter(recipeinputfile__recipe=recipe_id).order_by('last_modified')
 
         if recipe_input:
             files = files.filter(recipeinputfile__recipe_input=recipe_input)
@@ -1293,7 +1300,7 @@ class RecipeInputFileManager(models.Manager):
 
             files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
                                                     file_name=file_name)
-                                                    
+
             files = files.filter(id__in=recipe_input_file_ids).order_by('last_modified')
 
         return files
@@ -1656,7 +1663,7 @@ class RecipeTypeManager(models.Manager):
 
         # Create first revision of the recipe type
         RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
-        
+
         RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
         RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
@@ -1698,7 +1705,7 @@ class RecipeTypeManager(models.Manager):
 
         # Create first revision of the recipe type
         RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
-        
+
         RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
         RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
@@ -1736,7 +1743,7 @@ class RecipeTypeManager(models.Manager):
         """
 
         from recipe.configuration.definition.exceptions import InvalidDefinition
-        
+
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
 
@@ -1781,8 +1788,8 @@ class RecipeTypeManager(models.Manager):
             RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
     def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update):
-        """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic 
-        transaction. An argument of None for a field indicates that the field should not change. 
+        """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
 
         :param recipe_type_id: The unique identifier of the recipe type to edit
         :type recipe_type_id: int
@@ -1801,7 +1808,7 @@ class RecipeTypeManager(models.Manager):
 
         from recipe.definition.exceptions import InvalidDefinition
         from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message
-        
+
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
 
@@ -1884,7 +1891,16 @@ class RecipeTypeManager(models.Manager):
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
 
         # Add associated job type information
-        recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
+        if RecipeDefinitionSunset.is_seed_dict(recipe_type.definition):
+            # possible to have a v6 definition through a v5 call. Need to get the
+            # job types differently since the v6 RecipeDefinition doesn't have a
+            # get_job_types method
+            job_types = []
+            for job in recipe_type.get_recipe_definition().get_job_type_keys():
+                job_types.append(JobType.objects.get_by_natural_key(name=job.name, version=job.version))
+            recipe_type.job_types = set(job_types)
+        else:
+            recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
         return recipe_type
 
     def get_details_v6(self, name):
@@ -2483,25 +2499,25 @@ class RecipeTypeRevision(models.Model):
 class RecipeTypeSubLinkManager(models.Manager):
     """Provides additional methods for handling recipe type sub links
     """
-    
+
     def create_recipe_type_sub_links_from_definition(self, recipe_type):
         """Goes through a recipe type definition, gets all the recipe types it contains and creates the appropriate links
 
         :param recipe_type: New/updated recipe type
         :type recipe_type: :class:`recipe.models.RecipeType`
-        
+
         :raises :class:`recipe.models.RecipeType.DoesNotExist`: If it contains a sub recipe type that does not exist
         """
 
         # Delete any previous links for the given recipe
         RecipeTypeSubLink.objects.filter(recipe_type_id=recipe_type.id).delete()
-        
+
         definition = recipe_type.get_definition()
-        
+
         sub_type_names = definition.get_recipe_type_names()
-        
+
         sub_type_ids = RecipeType.objects.all().filter(name__in=sub_type_names).values_list('pk', flat=True)
-        
+
         if len(sub_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(sub_type_ids)
             self.create_recipe_type_sub_links(recipe_type_ids, sub_type_ids)
@@ -2525,7 +2541,7 @@ class RecipeTypeSubLinkManager(models.Manager):
         for id, sub in zip(recipe_type_ids, sub_recipe_type_ids):
             link = RecipeTypeSubLink(recipe_type_id=id, sub_recipe_type_id=sub)
             link.save()
-        
+
     @transaction.atomic
     def create_recipe_type_sub_link(self, recipe_type_id, sub_recipe_type_id):
         """Creates the appropriate link for the given recipe and job type. All database changes are
@@ -2536,10 +2552,10 @@ class RecipeTypeSubLinkManager(models.Manager):
         :param sub_recipe_type_id: sub recipe type ID.
         :type sub_recipe_type_id: int
         """
-            
+
         # Delete any previous links for the given recipe
         RecipeTypeSubLink.objects.filter(recipe_type_id=recipe_type_id).delete()
-        
+
         link = RecipeTypeSubLink(recipe_type_id=recipe_type_id, sub_recipe_type_id=sub_recipe_type_id)
         link.save()
 
@@ -2595,21 +2611,21 @@ class RecipeTypeJobLinkManager(models.Manager):
 
         :param recipe_type: New/updated recipe type
         :type recipe_type: :class:`recipe.models.RecipeType`
-        
+
         :raises :class:`recipe.models.JobType.DoesNotExist`: If it contains a job type that does not exist
         """
 
         # Delete any previous links for the given recipe
         RecipeTypeJobLink.objects.filter(recipe_type_id=recipe_type.id).delete()
-        
+
         definition = recipe_type.get_definition()
-        
+
         job_type_ids = JobType.objects.get_recipe_job_type_ids(definition)
 
         if len(job_type_ids) > 0:
             recipe_type_ids = [recipe_type.id] * len(job_type_ids)
             self.create_recipe_type_job_links(recipe_type_ids, job_type_ids)
-        
+
 
     @transaction.atomic
     def create_recipe_type_job_links(self, recipe_type_ids, job_type_ids):
@@ -2630,7 +2646,7 @@ class RecipeTypeJobLinkManager(models.Manager):
         for id, job in zip(recipe_type_ids, job_type_ids):
             link = RecipeTypeJobLink(recipe_type_id=id, job_type_id=job)
             link.save()
-        
+
     @transaction.atomic
     def create_recipe_type_job_link(self, recipe_type_id, job_type_id):
         """Creates the appropriate link for the given recipe and job type. All database changes are
@@ -2641,10 +2657,10 @@ class RecipeTypeJobLinkManager(models.Manager):
         :param job_type_id: job type ID.
         :type job_type_id: int
         """
-            
+
         # Delete any previous links for the given recipe
         RecipeTypeJobLink.objects.filter(recipe_type_id=recipe_type_id).delete()
-        
+
         link = RecipeTypeJobLink(recipe_type_id=recipe_type_id, job_type_id=job_type_id)
         link.save()
 

@@ -11,6 +11,7 @@ from job.job_type_serializers import JobTypeSerializerV5
 from job.job_type_serializers import JobTypeRevisionBaseSerializer
 from job.job_type_serializers import JobTypeRevisionSerializerV5, JobTypeRevisionSerializerV6
 from job.job_type_serializers import JobTypeRevisionDetailsSerializerV6
+
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
 
@@ -28,6 +29,7 @@ class SeedJsonSerializer(serializers.Serializer):
 
 class JobBaseSerializerV5(ModelIdSerializer):
     """Converts job model fields to REST output."""
+
     job_type = JobTypeBaseSerializerV5()
     job_type_rev = ModelIdSerializer()
     event = ModelIdSerializer()
@@ -82,11 +84,13 @@ class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
     from error.serializers import ErrorBaseSerializerV6
+    from ingest.ingest_event_serializers import IngestEventSerializerV6
     from recipe.serializers import RecipeBaseSerializerV6
     from trigger.serializers import TriggerEventSerializerV6
 
     job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventSerializerV6()
+    ingest_event = IngestEventSerializerV6()
     recipe = RecipeBaseSerializerV6()
     batch = BatchBaseSerializerV6()
     is_superseded = serializers.BooleanField()
@@ -125,6 +129,7 @@ class JobRevisionSerializerV5(JobSerializerV5):
 
 class JobRevisionSerializerV6(JobSerializerV6):
     """Converts job model fields to REST output."""
+
     job_type_rev = JobTypeRevisionSerializerV6()
 
 # TODO: remove this function when REST API v5 is removed
@@ -202,7 +207,7 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
 
     TODO: Deprecated in v6
     """
-    
+
     def to_representation(self, obj):
         result = super(JobDetailsOutputSerializer, self).to_representation(obj)
 

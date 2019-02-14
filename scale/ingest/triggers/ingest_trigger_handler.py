@@ -18,8 +18,9 @@ from trigger.models import TriggerEvent
 logger = logging.getLogger(__name__)
 
 INGEST_TYPE = 'INGEST'
+RECIPE_TYPE = 'RECIPE'
 
-
+# TODO 1181: Remove usage when remove triggers in v6
 class IngestTriggerHandler(TriggerRuleHandler):
     """Handles ingest trigger rules
     """

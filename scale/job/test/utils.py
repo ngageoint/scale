@@ -298,7 +298,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     root_recipe_id = recipe.root_superseded_recipe_id if recipe else None
 
     job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
-    job = Job.objects.create_job_v6(job_type_rev, event.id, superseded_job=superseded_job, recipe_id=recipe_id,
+    job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, superseded_job=superseded_job, recipe_id=recipe_id,
                                     root_recipe_id=root_recipe_id)
     job.priority = priority
     job.input = input
@@ -355,6 +355,8 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     if not started:
         started = when + datetime.timedelta(seconds=1)
     job_exe.started = started
+    if job.recipe_id:
+        job_exe.recipe = job.recipe
     job_exe.save()
 
     if status in ['COMPLETED', 'FAILED', 'CANCELED']:
@@ -492,19 +494,19 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
-def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None, 
+def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None,
                             is_paused=None, max_scheduled=None, configuration_dict=None):
     """Updates a job type, including creating a new revision for unit testing
     """
-    
+
     manifest = SeedManifest(manifest_dict, do_validate=True)
-        
+
     configuration = None
     if configuration_dict:
         configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
 
-    JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image, 
-                         icon_code=icon_code, is_active=is_active, is_paused=is_paused, 
+    JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image,
+                         icon_code=icon_code, is_active=is_active, is_paused=is_paused,
                          max_scheduled=max_scheduled, configuration=configuration)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,

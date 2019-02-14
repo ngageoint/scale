@@ -6,7 +6,7 @@ import django.utils.timezone as timezone
 import job.test.utils as job_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
-from ingest.models import Ingest, Scan, Strike
+from ingest.models import Ingest, IngestEvent, Scan, Strike
 
 NAME_COUNTER = 1
 
@@ -49,7 +49,7 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
     if not configuration:
         workspace = storage_test_utils.create_workspace()
         configuration = {'version': '2.0', 'workspace': workspace.name, 'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
-                         'files_to_ingest': [{'filename_regex': '.*txt', 'new_workspace': workspace.name, 
+                         'files_to_ingest': [{'filename_regex': '.*txt', 'new_workspace': workspace.name,
                                               'data_types': [], 'new_file_path': 'wksp/path'}]}
     if not job:
         job_type = Strike.objects.get_strike_job_type()
@@ -77,3 +77,35 @@ def create_scan(name=None, title=None, description=None, configuration=None):
 
     return Scan.objects.create(name=name, title=title, description=description,
                                configuration=configuration)
+
+def create_strike_ingest_event(ingest=None, strike=None, source_file=None, description=None, when=None):
+    if not strike:
+        strike = create_strike()
+    if not source_file:
+        workspace = storage_test_utils.create_workspace()
+        source_test_utils.create_source(workspace=workspace)
+    if not description:
+        description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
+    if not when:
+        when = timezone.now()
+    if not ingest:
+        ingest = create_ingest(source_file=source_file)
+
+    return IngestEvent.objects.create_strike_ingest_event(ingest.id, strike, description, when)
+
+
+def create_scan_ingest_event(ingest=None, scan=None, source_file=None, description=None, when=None):
+
+    if not scan:
+        scan = create_scan()
+    if not source_file:
+        workspace = storage_test_utils.create_workspace()
+        source_test_utils.create_source(workspace=workspace)
+    if not description:
+        description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
+    if not when:
+        when = timezone.now()
+    if not ingest:
+        ingest = create_ingest(source_file=source_file)
+
+    return IngestEvent.objects.create_scan_ingest_event(ingest.id, scan, description, when)

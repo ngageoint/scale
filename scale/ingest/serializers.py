@@ -29,7 +29,7 @@ class ScanSerializerV5(ScanBaseSerializer):
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-    
+
 class ScanSerializerV6(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
     from job.serializers import JobBaseSerializerV6
@@ -46,7 +46,7 @@ class ScanDetailsSerializerV5(ScanSerializerV5):
     """Converts scan model fields to REST output"""
 
     configuration = serializers.JSONField(source='get_v1_configuration_json')
-    
+
 class ScanDetailsSerializerV6(ScanSerializerV6):
     """Converts scan model fields to REST output"""
 
@@ -71,7 +71,7 @@ class StrikeSerializerV5(StrikeBaseSerializer):
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-    
+
 class StrikeSerializerV6(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
     from job.serializers import JobBaseSerializerV6
@@ -86,7 +86,7 @@ class StrikeDetailsSerializerV5(StrikeSerializerV5):
     """Converts strike model fields to REST output"""
 
     configuration = serializers.JSONField(source='get_v5_strike_configuration_as_dict')
-    
+
 class StrikeDetailsSerializerV6(StrikeSerializerV6):
     """Converts strike model fields to REST output"""
 
@@ -162,7 +162,7 @@ class IngestDetailsSerializerV5(IngestSerializerV5):
 
     job = ModelIdSerializer()
     source_file = SourceFileSerializer()
-    
+
 class IngestDetailsSerializerV6(IngestSerializerV6):
     """Converts ingest model fields to REST output"""
 
@@ -192,7 +192,7 @@ class IngestStatusSerializerV5(serializers.Serializer):
     files = serializers.IntegerField()
     size = serializers.IntegerField()
     values = IngestStatusValuesSerializer(many=True)
-    
+
 class IngestStatusSerializerV6(serializers.Serializer):
     """Converts ingest model fields to REST output"""
 
@@ -201,3 +201,16 @@ class IngestStatusSerializerV6(serializers.Serializer):
     files = serializers.IntegerField()
     size = serializers.IntegerField()
     values = IngestStatusValuesSerializer(many=True)
+
+class IngestEventBaseSerializerV6(ModelIdSerializer):
+    """Converts ingest event model fields to REST output"""
+    type = serializers.CharField()
+    occurred = serializers.DateTimeField()
+
+class IngestEventSerializerV6(IngestEventBaseSerializerV6):
+    """Converts ingest event model fields to REST output"""
+
+
+class IngestEventDetailsSerializerV6(IngestEventBaseSerializerV6):
+    """Converts ingest event model fields to REST output"""
+    description = serializers.JSONField(default=dict)

@@ -5,6 +5,7 @@ import os
 import django
 from django.test import TestCase
 
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
@@ -33,7 +34,7 @@ class TestScanConfiguration(TestCase):
                 'filename_regex': '.*txt'
             }],
         }, do_validate=True)
-        
+
     def test_bare_min_v6(self):
         """Tests calling ScanConfigurationV6 constructor with bare minimum JSON"""
 
@@ -62,8 +63,8 @@ class TestScanConfiguration(TestCase):
             }],
         }
         self.assertRaises(InvalidScanConfiguration, ScanConfigurationV1, config, True)
-        
-    def test_bad_version_v1(self):
+
+    def test_bad_version_v6(self):
         """Tests calling ScanConfigurationV6 constructor with bad version number."""
 
         config = {
@@ -103,7 +104,7 @@ class TestScanConfiguration(TestCase):
             }],
         }
         self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
-        
+
     def test_missing_scanner_v1(self):
         """Tests calling ScanConfigurationV1 constructor with missing scanner"""
 
@@ -125,7 +126,7 @@ class TestScanConfiguration(TestCase):
             }],
         }
         self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
-        
+
     def test_blank_filename_regex_v1(self):
         """Tests calling ScanConfigurationV1 constructor with blank filename_regex"""
 
@@ -153,7 +154,7 @@ class TestScanConfiguration(TestCase):
             }],
         }
         self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
-        
+
     def test_absolute_workspace_path_v1(self):
         """Tests calling ScanConfigurationV1 constructor with absolute new_file_path."""
 
@@ -185,7 +186,7 @@ class TestScanConfiguration(TestCase):
             }],
         }
         self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
-        
+
     def test_successful_all_v1(self):
         """Tests calling ScanConfigurationV1 constructor successfully with all information"""
 
@@ -218,10 +219,14 @@ class TestScanConfiguration(TestCase):
                 'new_file_path': os.path.join('my', 'path'),
                 'new_workspace': self.workspace.name,
             }],
+            'recipe': {
+                'name': 'test-recipe',
+                'revision_num': 1,
+            },
         }
         # No exception is success
-        ScanConfigurationV6(config, do_validate=True)
-        
+        configuration = ScanConfigurationV6(config, do_validate=True).get_configuration()
+
     def test_validate_bad_scanner_type_v1(self):
         """Tests calling ScanConfiguration.validate() with a bad scanner type"""
 
@@ -253,7 +258,7 @@ class TestScanConfiguration(TestCase):
 
         config = ScanConfigurationV6(config).get_configuration()
         self.assertRaises(InvalidScanConfiguration, config.validate)
-        
+
     def test_validate_mismatched_scanner_type_v1(self):
         """Tests calling ScanConfiguration.validate() with a scanner type that does not match the broker type"""
 
@@ -270,7 +275,7 @@ class TestScanConfiguration(TestCase):
 
         config = ScanConfigurationV1(config).get_configuration()
         self.assertRaises(InvalidScanConfiguration, config.validate)
-        
+
     def test_validate_mismatched_scanner_type_v6(self):
         """Tests calling ScanConfiguration.validate() with a scanner type that does not match the broker type"""
 
@@ -321,7 +326,7 @@ class TestScanConfiguration(TestCase):
 
         config = ScanConfigurationV6(config).get_configuration()
         self.assertRaises(InvalidScanConfiguration, config.validate)
-        
+
     def test_validate_workspace_not_active_v1(self):
         """Tests calling ScanConfiguration.validate() with a new workspace that is not active"""
 
@@ -338,7 +343,7 @@ class TestScanConfiguration(TestCase):
 
         config = ScanConfigurationV1(config).get_configuration()
         self.assertRaises(InvalidScanConfiguration, config.validate)
-        
+
     def test_validate_workspace_not_active_v6(self):
         """Tests calling ScanConfiguration.validate() with a new workspace that is not active"""
 
@@ -355,7 +360,7 @@ class TestScanConfiguration(TestCase):
 
         config = ScanConfigurationV6(config).get_configuration()
         self.assertRaises(InvalidScanConfiguration, config.validate)
-        
+
     def test_validate_recursive_invalid_type_v1(self):
         """Tests calling ScanConfiguration.validate() with recursive set to invalid type"""
 
@@ -414,7 +419,7 @@ class TestScanConfiguration(TestCase):
 
     def test_validate_successful_all_v6(self):
         """Tests calling ScanConfiguration.validate() successfully with all information"""
-
+        recipe = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
         config = {
             'workspace': self.workspace.name,
             'scanner': {
@@ -427,6 +432,10 @@ class TestScanConfiguration(TestCase):
                 'new_file_path': os.path.join('my', 'path'),
                 'new_workspace': self.new_workspace.name,
             }],
+            'recipe': {
+                'name': recipe.name,
+                'revision_num': recipe.revision_num,
+            },
         }
 
         # No exception is success

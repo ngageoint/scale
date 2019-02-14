@@ -21,7 +21,7 @@ class AbstractDataFileParseSaver(object):
 
     __metaclass__ = ABCMeta
 
-    def save_parse_results(self, parse_results, input_file_ids):
+    def save_parse_results(self, parse_results, input_file_ids, is_recipe=True):
         """Saves the given parse results
 
         :param parse_results: Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
@@ -32,6 +32,7 @@ class AbstractDataFileParseSaver(object):
             str, str)
         :param input_file_ids: List of IDs for all input files
         :type input_file_ids: list of long
+        :param is_recipe: Flag if the parse is coming from
         """
 
         raise NotImplementedError()

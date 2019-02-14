@@ -62,12 +62,12 @@ paths:
           name: file_name
           schema:
             type: string
-          description: Return only ingests with a specific file name. 
+          description: Return only ingests with a specific file name.
       responses:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/ingest_list'
   /ingests/{id}/:
@@ -85,7 +85,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/ingest_details'
   /ingests/status/:
@@ -125,12 +125,12 @@ paths:
           description: Whether to group counts by ingest time or data time.
             Ingest time is when the strike process registered the file.
             Data time is the time when the data was collected by a sensor.
-            Defaults to False (data time).  
+            Defaults to False (data time).
       responses:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/ingest_status_list'
 
@@ -142,7 +142,7 @@ components:
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -165,11 +165,11 @@ components:
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         file_name:
           type: string
-          description: The name of the file being ingested.  
+          description: The name of the file being ingested.
           example: file_name.txt
         scan:
           $ref: '#/components/schemas/scan'
@@ -196,17 +196,17 @@ components:
           example: 2015-09-10T14:48:08.956Z
         media_type:
           type: string
-          description: The IANA media type of the file. 
+          description: The IANA media type of the file.
           example: text/plain
         file_size:
           type: integer
-          description: The size of the file in bytes.  
+          description: The size of the file in bytes.
           example: 1234
         data_type:
           type: array
           style: simple
           items:
-            type: string  
+            type: string
           description: A list of string data type "tags" for the file.
         file_path:
           type: string
@@ -254,30 +254,30 @@ components:
           format: date-time
           description: When the associated database model was last saved.
           example: 2015-09-10T15:24:53.987Z
-          
+
     scan:
       title: Scan Details
       type: object
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         name:
           type: string
-          description: The identifying name of the Scan process used for queries.  
+          description: The identifying name of the Scan process used for queries.
           example: my-scan-process
         title:
           type: string
-          description: The human readable display name of the Scan process.  
+          description: The human readable display name of the Scan process.
           example: My Scan Process
         description:
           type: string
-          description: A longer description of the Scan process. 
+          description: A longer description of the Scan process.
           example: This is my Scan process for detecting my favorite files!
         file_count:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         job:
           $ref: '#/components/schemas/job'
@@ -314,7 +314,7 @@ components:
           example: _tmp
       required:
       - type
-      
+
     ingest_file:
       title: File Ingest Rule
       type: object
@@ -331,7 +331,7 @@ components:
           type: array
           style: simple
           items:
-            type: string  
+            type: string
           description: The data_types field is an optional list of strings. Any file that matches the corresponding file
             name regular expression will have these data type strings “tagged” with the file. If not provided, data_types
             defaults to an empty array.
@@ -400,14 +400,14 @@ components:
       required:
       - type
       - sqs_name
-      
+
     source_file:
       title: Source File
       type: object
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         workspace:
           $ref: './workspace.yml#/components/schemas/workspace_base'
@@ -421,13 +421,13 @@ components:
           example: application/vnd.google-earth.kml+xml
         file_size:
           type: integer
-          description: The size of the file in bytes.  
+          description: The size of the file in bytes.
           example: 1234
         data_type:
           type: array
           style: simple
           items:
-            type: string  
+            type: string
           description: A list of string data type "tags" for the file.
         is_deleted:
           type: boolean
@@ -476,7 +476,7 @@ components:
           type: array
           style: simple
           items:
-            type: string  
+            type: string
           description: A list of zero or more strings with the ISO3 country codes for countries
             contained in the geographic boundary of this file.
         last_modified:
@@ -503,7 +503,7 @@ components:
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -531,15 +531,15 @@ components:
           type: string
           format: date-time
           description: The date/time when the strike process last completed an ingest.
-          example: 2015-09-10T15:24:53.987Z  
+          example: 2015-09-10T15:24:53.987Z
         files:
           type: integer
           description: The total number files ingested by the strike process.
-          example: 1234          
+          example: 1234
         size:
           type: integer
           description: The total size of files ingested by the strike process in bytes.
-          example: 1234          
+          example: 1234
         values:
           type: array
           items:
@@ -554,12 +554,12 @@ components:
           type: string
           format: date-time
           description: The date/time when the strike process last completed an ingest.
-          example: 2015-09-10T15:24:53.987Z  
+          example: 2015-09-10T15:24:53.987Z
         files:
           type: integer
           description: The number of files ingested by the strike process within the time slot.
-          example: 10          
+          example: 10
         size:
           type: integer
           description: The size of files ingested by the strike process in bytes within the time slot.
-          example: 123456789     
+          example: 123456789

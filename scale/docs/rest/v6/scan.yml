@@ -50,27 +50,27 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/scan_list'
     post:
       operationId: _rest_v6_scan_create
       summary: Create Scan
-      description: Creates a new Scan process and places it onto the queue.  
+      description: Creates a new Scan process and places it onto the queue.
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/scan_post'
       responses:
         '201':
-          description: The 201 CREATED response indicates a successful request 
+          description: The 201 CREATED response indicates a successful request
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/scan_details'
-                
+
   /scans/{id}/:
     get:
       operationId: _rest_v6_scan_details
@@ -86,13 +86,13 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/scan_details'
     patch:
       operationId: _rest_v6_scan_edit
       summary: Edit Scan
-      description: Edits an existing Scan process with associated configuration. 
+      description: Edits an existing Scan process with associated configuration.
       parameters:
         - in: path
           name: id
@@ -102,37 +102,37 @@ paths:
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/scan_post'
       responses:
         '204':
-          description: The 204 No content response indicates a successful edit 
+          description: The 204 No content response indicates a successful edit
 
   /scans/validation/:
     post:
       operationId: _rest_v6_scan_validate
       summary: Validate Scan
-      description: Validates a new Scan process configuration without actually saving it.  
+      description: Validates a new Scan process configuration without actually saving it.
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/scan_process'
       responses:
         '200':
-          description: The 200 OK response indicates a valid scan configuration 
+          description: The 200 OK response indicates a valid scan configuration
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/validation'
-            
+
   /scans/{id}/process/:
     patch:
       operationId: _rest_v6_scan_process
       summary: Process Scan
-      description: Launches an existing Scan with associated configuration    
+      description: Launches an existing Scan with associated configuration
       parameters:
         - in: path
           name: id
@@ -142,14 +142,14 @@ paths:
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               $ref: '#/components/schemas/scan_process'
       responses:
         '201':
-          description: The 201 CREATED response indicates a successful request  
+          description: The 201 CREATED response indicates a successful request
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/scan_details'
 
@@ -161,7 +161,7 @@ components:
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -178,26 +178,26 @@ components:
           items:
             $ref: '#/components/schemas/scan_base'
           description: List of scan process objects
-          
+
     scan_base:
       title: Scan Base
       type: object
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         name:
           type: string
-          description: The identifying name of the Scan process used for queries.  
+          description: The identifying name of the Scan process used for queries.
           example: my-scan-process
         title:
           type: string
-          description: The human readable display name of the Scan process.  
+          description: The human readable display name of the Scan process.
           example: My Scan Process
         description:
           type: string
-          description: A longer description of the Scan process. 
+          description: A longer description of the Scan process.
           example: This is my Scan process for detecting my favorite files!
         file_count:
           type: integer
@@ -217,7 +217,7 @@ components:
           format: date-time
           description: When the associated database model was last saved.
           example: 2015-09-10T15:24:53.987Z
-          
+
     scan_post:
       title: Scan Post
       type: object
@@ -229,11 +229,11 @@ components:
           example: My Scan Process
         description:
           type: string
-          description: A longer description of the Scan process. 
+          description: A longer description of the Scan process.
           example: This is my Scan process for detecting my favorite files!
         configuration:
           $ref: '#/components/schemas/scan_config'
-          
+
     scan_process:
       title: Scan Process
       type: object
@@ -243,16 +243,16 @@ components:
           description: Whether a dry run or ingest triggering scan should be run.
             Defaults to false when unset.
           example: true
-          
+
     scan_details:
       allOf:
         - ref: '#/components/schemas/scan_base'
         - title: Scan Details
         - type: object
-          properties: 
+          properties:
             configuration:
               $ref: '#/components/schemas/scan_config'
-          
+
     scan_config:
       title: Scan Configuration
       type: object
@@ -276,3 +276,16 @@ components:
           items:
             $ref: '#/components/schemas/ingest_file'
           description: List of ingest objects
+        recipe:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Specifies the name of the recipe the Scan will attempt
+                to start when the file is ingested.
+              example: my-recipe
+            revision_num:
+              type: integer
+              description: Specifies the revision number of the recipe the Scan
+                 will attempt to start when the file is ingested.
+              example: 1

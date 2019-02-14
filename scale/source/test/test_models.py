@@ -9,6 +9,7 @@ from django.utils.timezone import now
 from mock import patch
 
 from job.test import utils as job_utils
+from recipe.test import utils as recipe_test_utils
 from source.models import SourceFile
 from source.test import utils as source_test_utils
 from storage.brokers.broker import FileMove
@@ -218,8 +219,8 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         job_type.save()
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None)
-        
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, is_recipe=False)
+
         # Ensure there's an event for the parse
         evt = TriggerEvent.objects.first()
         self.assertEqual(evt.description['version'], '1.0')

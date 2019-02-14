@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import datetime
 import json
+import os
 
 import django
 from django.test import TestCase, TransactionTestCase
@@ -10,6 +11,7 @@ from rest_framework import status
 
 import job.test.utils as job_utils
 import ingest.test.utils as ingest_test_utils
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from ingest.models import Scan, Strike
@@ -19,7 +21,7 @@ from ingest.strike.configuration.json.configuration_v6 import StrikeConfiguratio
 
 
 class TestIngestsViewV5(TestCase):
-    
+
     version = 'v5'
     fixtures = ['ingest_job_types.json']
 
@@ -85,7 +87,7 @@ class TestIngestsViewV5(TestCase):
         self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
 class TestIngestsViewV6(TestCase):
-    
+
     version = 'v6'
     fixtures = ['ingest_job_types.json']
 
@@ -193,7 +195,7 @@ class TestIngestDetailsViewV5(TestCase):
         url = '/%s/ingests/missing_file.txt/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
 class TestIngestDetailsViewV6(TestCase):
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -412,7 +414,7 @@ class TestIngestStatusViewV6(TestCase):
 
 class TestScansViewV5(TestCase):
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -476,7 +478,7 @@ class TestScansViewV5(TestCase):
 
 class TestScansViewV6(TestCase):
     api = 'v6'
-    
+
     def setUp(self):
         django.setup()
 
@@ -537,6 +539,7 @@ class TestScansViewV6(TestCase):
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['name'], self.scan2.name)
         self.assertEqual(result['results'][1]['name'], self.scan1.name)
+
 class TestScanCreateViewV5(TestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v5'
@@ -717,12 +720,68 @@ class TestScanCreateViewV6(TestCase):
         self.assertEqual(len(scans), 1)
         self.assertEqual(result['title'], scans[0].title)
         self.assertEqual(result['description'], scans[0].description)
-        self.assertDictEqual(result['configuration'], scans[0].configuration)
+        self.assertDictEqual(result['configuration'], scans[0].get_v6_configuration_json())
+
+    def test_successful_v6(self):
+        """Tests calling the create Scan view successfully."""
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        json_data = {
+            'title': 'Scan Title',
+            'description': 'Scan description',
+            'configuration': {
+                'version': '1.0',
+                'workspace': 'raw',
+                'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'new_file_path': 'my_path',
+                    'new_workspace': 'raw',
+                }],
+                'recipe': {
+                    'name': recipe_type.name,
+                    'revision_num': recipe_type.revision_num,
+                },
+            },
+        }
+
+        url = '/%s/scans/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        scans = Scan.objects.filter(name='scan-title')
+
+        result = json.loads(response.content)
+        self.assertEqual(len(scans), 1)
+        self.assertEqual(result['title'], scans[0].title)
+        self.assertEqual(result['description'], scans[0].description)
+        self.assertDictEqual(result['configuration'], scans[0].get_v6_configuration_json())
 
 class TestScanDetailsViewV5(TestCase):
-    
+
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -776,7 +835,7 @@ class TestScanDetailsViewV5(TestCase):
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, 'Title EDIT')
         self.assertEqual(scan.description, 'Description EDIT')
-        
+
     def test_edit_not_found(self):
         """Tests editing non-existent Scan process"""
 
@@ -820,7 +879,7 @@ class TestScanDetailsViewV5(TestCase):
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, self.scan.title)
         self.assertDictEqual(scan.configuration, config)
-        
+
     def test_edit_config_conflict(self):
         """Tests editing the configuration of a Scan process already launched"""
 
@@ -861,9 +920,9 @@ class TestScanDetailsViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestScanDetailsViewV6(TestCase):
-    
+
     api = 'v6'
-    
+
     def setUp(self):
         django.setup()
 
@@ -906,7 +965,7 @@ class TestScanDetailsViewV6(TestCase):
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
-        
+
     def test_edit_not_found(self):
         """Tests editing non-existent Scan process"""
 
@@ -941,7 +1000,79 @@ class TestScanDetailsViewV6(TestCase):
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
-        
+
+    def test_edit_config_v6(self):
+        """Tests successfully editing an existing scan"""
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        config = {
+            'workspace': 'raw',
+            'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_file_path': 'my_path',
+                'new_workspace': 'raw',
+            }],
+            'recipe': {
+                'name': recipe_type.name,
+                'revision_num': recipe_type.revision_num,
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+        url = '/%s/scans/%d/' % (self.api, self.scan.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_bad_recipe(self):
+        """Tests editing a scan configuration with an invalid recipe"""
+
+        config = {
+            'workspace': 'raw',
+            'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_file_path': 'my_path',
+                'new_workspace': 'raw',
+            }],
+            'recipe': {
+                'name': 'test-recipe',
+                'revision_num': '1',
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+        url = '/%s/scans/%d/' % (self.api, self.scan.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
     def test_edit_config_conflict(self):
         """Tests editing the configuration of a Scan process already launched"""
 
@@ -1100,6 +1231,49 @@ class TestScansValidationViewV6(TestCase):
         valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
         self.assertDictEqual(results, valid_results_dict)
 
+    def test_successful_recipe(self):
+        """Tests validating a new Scan process."""
+
+        jt1 = job_utils.create_seed_job_type()
+        recipe_type_def = {'version': '6',
+                           'input': {'files': [{'name': 'INPUT_FILE',
+                                                'media_types': ['text/plain'],
+                                                'required': True,
+                                                'multiple': True}],
+                                    'json': []},
+                           'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
+                                                              'job_type_version': jt1.version,
+                                                              'job_type_revision': 1}}}}
+
+        recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
+
+        json_data = {
+            'title': 'Scan Title',
+            'description': 'Scan description',
+            'configuration': {
+                'version': '1.0',
+                'workspace': self.workspace.name,
+                'scanner': {'type': 'dir'},
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt'
+                }],
+                'recipe': {
+                    'name': recipe.name,
+                    'revision_num': recipe.revision_num,
+                },
+            },
+        }
+
+        url = '/%s/scans/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
+        self.assertDictEqual(results, valid_results_dict)
+
     def test_missing_configuration(self):
         """Tests validating a new Scan process with missing configuration."""
 
@@ -1148,11 +1322,11 @@ class TestScansValidationViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        
+
 class TestScansProcessViewV5(TestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -1172,7 +1346,7 @@ class TestScansProcessViewV5(TestCase):
         url = '/%s/scans/%d/process/' % (self.api, self.scan.id)
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        
+
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
@@ -1190,7 +1364,7 @@ class TestScansProcessViewV5(TestCase):
 
     def test_dry_run_process_conflict(self):
         """Tests error response when calling the Scan process view for a dry run Scan when already processed."""
-        
+
         self.scan.job = job_utils.create_job()
         self.scan.save()
 
@@ -1210,7 +1384,7 @@ class TestScansProcessViewV5(TestCase):
 
     def test_dry_run_process_reprocess(self):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
-        
+
         self.scan.dry_run_job = job_utils.create_job()
         old_job_id = self.scan.dry_run_job.id
 
@@ -1239,7 +1413,7 @@ class TestScansProcessViewV5(TestCase):
 class TestScansProcessViewV6(TestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v5'
-    
+
     def setUp(self):
         django.setup()
 
@@ -1259,7 +1433,7 @@ class TestScansProcessViewV6(TestCase):
         url = '/%s/scans/%d/process/' % (self.api, self.scan.id)
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        
+
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
@@ -1277,7 +1451,7 @@ class TestScansProcessViewV6(TestCase):
 
     def test_dry_run_process_conflict(self):
         """Tests error response when calling the Scan process view for a dry run Scan when already processed."""
-        
+
         self.scan.job = job_utils.create_job()
         self.scan.save()
 
@@ -1297,7 +1471,7 @@ class TestScansProcessViewV6(TestCase):
 
     def test_dry_run_process_reprocess(self):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
-        
+
         self.scan.dry_run_job = job_utils.create_job()
         old_job_id = self.scan.dry_run_job.id
 
@@ -1454,7 +1628,7 @@ class TestStrikesViewV6(TestCase):
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['name'], self.strike2.name)
         self.assertEqual(result['results'][1]['name'], self.strike1.name)
-        
+
 class TestStrikeCreateViewV5(TestCase):
 
     version = 'v5'
@@ -1557,6 +1731,7 @@ class TestStrikeCreateViewV6(TestCase):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
+        self.new_workspace = storage_test_utils.create_workspace(name='new')
 
     def test_missing_configuration(self):
         """Tests calling the create Strike view with missing configuration."""
@@ -1637,7 +1812,66 @@ class TestStrikeCreateViewV6(TestCase):
         self.assertEqual(result['title'], strikes[0].title)
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
-        
+
+    def test_successful_v6(self):
+        """Tests creating strike with recipe configuration"""
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        json_data = {
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'version': '2.0',
+                'workspace': self.workspace.name,
+                'monitor': {
+                    'type': 'dir-watcher',
+                    'transfer_suffix': '_tmp',
+                },
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'data_types': ['one', 'two'],
+                    'new_file_path': os.path.join('my', 'path'),
+                    'new_workspace': self.new_workspace.name,
+                }],
+                'recipe': {
+                    'name': recipe_type.name,
+                    'revision_num': recipe_type.revision_num,
+                },
+            },
+        }
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        strikes = Strike.objects.filter(name='strike-title')
+        result = json.loads(response.content)
+        self.assertEqual(len(strikes), 1)
+        self.assertEqual(result['title'], strikes[0].title)
+        self.assertEqual(result['description'], strikes[0].description)
+        self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
+
 class TestStrikeDetailsViewV5(TestCase):
 
     version = 'v5'
@@ -1817,6 +2051,61 @@ class TestStrikeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
+    def test_edit_config_v6(self):
+        """Tests attempting to edit a Strike process adding a recipe configuration"""
+        new_workspace = storage_test_utils.create_workspace(name='prods')
+
+        definition = {
+            'input': {
+                'files': [{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}],
+                'json': [],
+            },
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}
+                    },
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': 'job-type-1',
+                        'job_type_version': '1.0',
+                        'job_type_revision': 1,
+                    },
+                },
+            },
+        }
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=definition)
+
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': new_workspace.name,
+            }],
+            'recipe': {
+                'name': recipe_type.name,
+                'revision_num': recipe_type.revision_num,
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+        strike = Strike.objects.get(pk=self.strike.id)
+        self.assertDictEqual(strike.get_v6_configuration_json(), config)
+
     def test_edit_bad_config(self):
         """Tests attempting to edit a Strike process using an invalid configuration"""
 
@@ -1839,7 +2128,35 @@ class TestStrikeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        
+
+    def test_edit_invalid_recipe(self):
+        """Tests attempting to edit a Strike process with a nonexistant recipe"""
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.workspace.name,
+            }],
+            'recipe': {
+                'name': 'test-recipe',
+                'revision_num': '1',
+            },
+        }
+
+        json_data = {
+            'configuration': config
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
 class TestStrikesValidationViewV5(TestCase):
     """Tests related to the Strike process validation endpoint"""
 
@@ -1874,7 +2191,7 @@ class TestStrikesValidationViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        
+
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_missing_configuration(self):
@@ -1966,6 +2283,56 @@ class TestStrikesValidationViewV6(TestCase):
         valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
         self.assertDictEqual(results, valid_results_dict)
 
+    def test_successful_recipe(self):
+        """Tests validating a new Scan process."""
+
+        jt1 = job_utils.create_seed_job_type()
+        recipe_type_def = {'version': '6',
+                           'input': {'files': [{'name': 'INPUT_FILE',
+                                                'media_types': ['text/plain'],
+                                                'required': True,
+                                                'multiple': True}],
+                                    'json': []},
+                           'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
+                                                              'job_type_version': jt1.version,
+                                                              'job_type_revision': 1}}}}
+
+        recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'version': '2.0',
+                'workspace': self.workspace.name,
+                'monitor': {
+                    'type': 'dir-watcher',
+                    'transfer_suffix': '_tmp',
+                },
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'data_types': ['one', 'two'],
+                    'new_file_path': os.path.join('my', 'path'),
+                    'new_workspace': self.workspace.name,
+                }],
+                'recipe': {
+                    'name': recipe.name,
+                    'revision_num': recipe.revision_num
+                },
+            },
+        }
+
+        url = '/%s/strikes/validation/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
+        self.assertDictEqual(results, valid_results_dict)
+
     def test_missing_configuration(self):
         """Tests validating a new Strike process with missing configuration."""
 
@@ -2010,6 +2377,9 @@ class TestStrikesValidationViewV6(TestCase):
                     'workspace_path': 'my/path',
                     'workspace_name': 'BAD',
                 }],
+                'recipe': {
+                    'name': 'name',
+                },
             },
         }
 

@@ -12,6 +12,7 @@ from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners import factory
+from recipe.models import RecipeType
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
@@ -40,17 +41,17 @@ class ScanConfiguration(object):
     def __init__(self):
         """Creates a Scan configuration object.
         """
-        
+
         self.scanner_type = ''
-        
+
         self.scanner_config = {}
-        
+
         self.recursive = True
 
         self.file_handler = FileHandler()
-        
+
         self.workspace = ''
-        
+
         self.config_dict = {}
 
     def get_scanner(self):
@@ -89,6 +90,15 @@ class ScanConfiguration(object):
             msg = 'Scan scanner type has been changed from %s to %s. Cannot reload configuration.'
             logger.warning(msg, scanner.scanner_type, self.scanner_type)
 
+    def get_recipe(self):
+        """Returns the recipe type for this Scan configuration
+
+        :returns: The recipe type name and version
+        :rtype: (string, string)
+        """
+        if 'recipe' in self.config_dict['recipe']:
+            return (self.config_dict['recipe']['name'], self.config_dict['recipe']['version'])
+
     def validate(self):
         """Validates the Scan configuration
 
@@ -104,6 +114,14 @@ class ScanConfiguration(object):
         scanner_type = self.scanner_type
         if scanner_type not in factory.get_scanner_types():
             raise InvalidScanConfiguration('\'%s\' is an invalid scanner' % scanner_type)
+
+        # TODO not mandatory until v6
+        if 'recipe' in self.config_dict:
+            recipe_name = self.config_dict['recipe']['name']
+            revision_num = self.config_dict['recipe']['revision_num']
+            if recipe_name and RecipeType.objects.filter(name=recipe_name, revision_num=revision_num).count() == 0:
+                msg = 'Recipe Type %s does not exist'
+                raise InvalidScanConfiguration(msg % recipe_name)
 
         scanned_workspace_name = self.workspace
         workspace_names = {scanned_workspace_name}
@@ -141,6 +159,6 @@ class ScanConfiguration(object):
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
 
-        for file_dict in self._configuration['files_to_ingest']:
+        for file_dict in self.config_dict['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []

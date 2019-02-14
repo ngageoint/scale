@@ -223,7 +223,7 @@ class TestQueueNewJobView(TransactionTestCase):
 
         json_data = {
         }
-        
+
         url = 'v6/queue/new-job/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
