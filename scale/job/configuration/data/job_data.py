@@ -397,7 +397,7 @@ class JobData(object):
 
         return retrieved_params
 
-    def save_parse_results(self, parse_results, is_recipe=True):
+    def save_parse_results(self, parse_results):
         """Saves the given parse results
 
         :param parse_results: Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
@@ -406,8 +406,6 @@ class JobData(object):
             None)
         :type parse_results: {string: tuple(string, :class:`datetime.datetime`, :class:`datetime.datetime`, [],
             string, string)}
-        :param is_recipe: Flag if the parse results are being saved from a recipe or standalone parse job. TODO REMOVE THIS FLAG WHEN REMOVING TRIGGERS ALTOGETHER
-        :type is_recipe: bool
         """
 
         input_file_ids = []
