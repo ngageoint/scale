@@ -6,10 +6,11 @@ import logging
 import rest_framework.serializers as serializers
 
 from job.models import Job
-# from job.job_type_serializers import JobTypeBaseSerializerV5, JobTypeBaseSerializerV6
-# from job.job_type_serializers import JobTypeSerializerV5
-# from job.job_type_serializers import JobTypeRevisionBaseSerializer
-# from job.job_type_serializers import JobTypeRevisionSerializerV5, JobTypeRevisionSerializerV6
+from job.job_type_serializers import JobTypeBaseSerializerV5, JobTypeBaseSerializerV6
+from job.job_type_serializers import JobTypeSerializerV5
+from job.job_type_serializers import JobTypeRevisionBaseSerializer
+from job.job_type_serializers import JobTypeRevisionSerializerV5, JobTypeRevisionSerializerV6
+from job.job_type_serializers import JobTypeRevisionDetailsSerializerV6
 
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
@@ -28,7 +29,6 @@ class SeedJsonSerializer(serializers.Serializer):
 
 class JobBaseSerializerV5(ModelIdSerializer):
     """Converts job model fields to REST output."""
-    from job.job_type_serializers import JobTypeBaseSerializerV5
 
     job_type = JobTypeBaseSerializerV5()
     job_type_rev = ModelIdSerializer()
@@ -43,7 +43,6 @@ class JobBaseSerializerV5(ModelIdSerializer):
 
 class JobBaseSerializerV6(ModelIdSerializer):
     """Converts job model fields to REST output."""
-    from job.job_type_serializers import JobTypeBaseSerializerV6
     job_type = JobTypeBaseSerializerV6()
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
 
@@ -52,7 +51,6 @@ class JobBaseSerializerV6(ModelIdSerializer):
 class JobSerializerV5(JobBaseSerializerV5):
     """Converts job model fields to REST output."""
     from error.serializers import ErrorBaseSerializerV5
-    from job.job_type_serializers import JobTypeRevisionBaseSerializer
     from trigger.serializers import TriggerEventBaseSerializerV5
 
     job_type_rev = JobTypeRevisionBaseSerializer()
@@ -86,7 +84,6 @@ class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
     from error.serializers import ErrorBaseSerializerV6
-    from job.job_type_serializers import JobTypeRevisionBaseSerializer
     from ingest.ingest_event_serializers import IngestEventSerializerV6
     from recipe.serializers import RecipeBaseSerializerV6
     from trigger.serializers import TriggerEventSerializerV6
@@ -128,12 +125,10 @@ class JobSerializerV6(JobBaseSerializerV6):
 
 class JobRevisionSerializerV5(JobSerializerV5):
     """Converts job model fields to REST output."""
-    from job.job_type_serializers import JobTypeRevisionSerializerV5
     job_type_rev = JobTypeRevisionSerializerV5()
 
 class JobRevisionSerializerV6(JobSerializerV6):
     """Converts job model fields to REST output."""
-    from job.job_type_serializers import JobTypeRevisionSerializerV6
 
     job_type_rev = JobTypeRevisionSerializerV6()
 
@@ -233,8 +228,6 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
 class JobDetailsSerializerV5(JobSerializerV5):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializerV5
-    from job.job_type_serializers import JobTypeRevisionSerializerV5
-    from job.job_type_serializers import JobTypeSerializerV5
     from trigger.serializers import TriggerEventDetailsSerializerV5
     from recipe.serializers import RecipeSerializerV5
 
@@ -281,7 +274,6 @@ class JobExecutionSerializerV5(JobExecutionBaseSerializerV5):
 
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     """Converts job execution model fields to REST output"""
-    from job.job_type_serializers import JobTypeBaseSerializerV6
 
     from error.serializers import ErrorBaseSerializerV6
     from node.serializers import NodeBaseSerializer
@@ -317,7 +309,6 @@ class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
 
 class JobDetailsSerializerV6(JobSerializerV6):
     """Converts job model and related fields to REST output."""
-    from job.job_type_serializers import JobTypeRevisionDetailsSerializerV6
 
     job_type_rev = JobTypeRevisionDetailsSerializerV6()
 
