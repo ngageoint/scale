@@ -142,7 +142,7 @@ class RecipeDiff(object):
             self.graph[deleted_node_diff.name] = deleted_node_diff
             for parent_name in deleted_node.parents.keys():
                 parent_diff = self.graph[parent_name]
-                deleted_node_diff.add_dependency(parent_diff, node.parental_acceptance[parent_name])
+                deleted_node_diff.add_dependency(parent_diff, deleted_node.parental_acceptance[parent_name])
 
     def _compare_input_interfaces(self, prev_recipe_definition, recipe_definition):
         """Compares the input interfaces betweeen the recipe definitions
