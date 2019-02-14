@@ -402,7 +402,7 @@ class TestJobInterfacePostSteps(TestCase):
         job_interface.perform_post_steps(job_exe, job_data, fake_stdout)
         job_data.save_parse_results.assert_called_with({
             '/some/path/foo.txt': (geo_json, '2015-01-01T00:00:00Z', None, [], None),
-        }, True)
+        })
 
     @patch('os.path.isfile')
     @patch('os.path.exists')

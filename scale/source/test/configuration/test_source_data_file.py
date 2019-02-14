@@ -49,8 +49,8 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
 
         SourceDataFileParseSaver().save_parse_results(parse_results, file_ids)
 
-        calls = [call(self.source_file_1.id, geo_json, started, None, [], None, is_recipe=True),
-                 call(self.source_file_2.id, None,    None,    ended, [], None, is_recipe=True)]
+        calls = [call(self.source_file_1.id, geo_json, started, None, [], None),
+                 call(self.source_file_2.id, None,    None,    ended, [], None)]
 
         self.assertEqual(mock_save.call_count, 2)
         mock_save.assert_has_calls(calls, any_order=True)
