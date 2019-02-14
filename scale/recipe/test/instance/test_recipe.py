@@ -109,6 +109,7 @@ class TestRecipe(TestCase):
         definition.add_job_node('F', job_type.name, job_type.version, job_type.revision_num)
         definition.add_recipe_node('G', sub_recipe_type.name, sub_recipe_type.revision_num)
         definition.add_recipe_node('H', sub_recipe_type.name, sub_recipe_type.revision_num)
+        definition.add_job_node('I', job_type.name, job_type.version, job_type.revision_num)
         definition.add_dependency('A', 'D')
         definition.add_dependency('A', 'E')
         definition.add_dependency('B', 'E')
@@ -117,6 +118,7 @@ class TestRecipe(TestCase):
         definition.add_dependency('D', 'G')
         definition.add_dependency('E', 'G')
         definition.add_dependency('E', 'H')
+        definition.add_dependency('D', 'I', False) # node to create for 'else' portion of condition 'D'
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
@@ -135,7 +137,7 @@ class TestRecipe(TestCase):
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         nodes_to_create = recipe_instance.get_nodes_to_create()
-        self.assertSetEqual(set(nodes_to_create.keys()), {'C', 'E', 'H'})
+        self.assertSetEqual(set(nodes_to_create.keys()), {'C', 'E', 'H', 'I'})
 
     def test_get_nodes_to_process_input(self):
         """Tests calling Recipe.get_nodes_to_process_input()"""
