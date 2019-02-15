@@ -442,6 +442,9 @@ components:
           name:
             type: string
             description: the name of the recipe node that is a dependency
+          acceptance:
+            type: boolean
+            description: whether the dependency must be accepted or not for this node to run
       dependency_connection:
         title: Dependency Connection
         type: object

@@ -72,17 +72,21 @@ class NodeDiff(object):
         self.changes = []  # [Change]
         self.parents = {}  # {Node name: NodeDiff}
         self.children = {}  # {Node name: NodeDiff}
+        self.parental_acceptance = {}
 
         self._calculate_reprocess_new_node()
 
-    def add_dependency(self, node_diff):
+    def add_dependency(self, node_diff, acceptance=True):
         """Adds a dependency that this node diff has on the given node diff
 
         :param node_diff: The dependency node diff to add
         :type node_diff: :class:`recipe.diff.node.NodeDiff`
+        :param acceptance: Whether this node should run when the parent is accepted or when it is not accepted
+        :type acceptance: bool
         """
 
         self.parents[node_diff.name] = node_diff
+        self.parental_acceptance[node_diff.name] = acceptance
         node_diff.children[self.name] = self
 
     def compare_to_previous(self, prev_node):
@@ -224,6 +228,11 @@ class NodeDiff(object):
         for prev_parent_name in prev_node.parents.keys():
             if prev_parent_name not in parent_names:
                 self.changes.append(Change('PARENT_REMOVED', 'Previous parent node %s removed' % prev_parent_name))
+                
+        same_names = set(prev_parent_names) & set(parent_names)
+        for name in same_names:
+            if prev_node.parental_acceptance[name] != self.parental_acceptance[name]:
+                self.changes.append(Change('PARENT_ACCEPTANCE_CHANGED', 'Approval for parent node %s changed' % name))
 
     @abstractmethod
     def _compare_node_type(self, prev_node):

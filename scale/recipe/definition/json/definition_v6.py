@@ -50,6 +50,10 @@ RECIPE_DEFINITION_SCHEMA = {
                     'description': 'The name of the recipe node',
                     'type': 'string',
                 },
+                'acceptance': {
+                    'description': 'Whether this node should run when the parent node is accepted or when it is not accepted (such as when the parent is an if/else condition node). Defaults to true.',
+                    'type': 'boolean',
+                },
             },
         },
         'dependency_connection': {
@@ -208,7 +212,10 @@ def convert_node_to_v6_json(node):
     :rtype: dict
     """
 
-    dependencies = [{'name': name} for name in node.parents.keys()]
+    dependencies = []
+    for name in node.parents.keys():
+        acceptance = node.parental_acceptance[name] if name in node.parental_acceptance else True
+        dependencies.append({'name': name, 'acceptance': acceptance})
 
     input_dict = {}
     for connection in node.connections.values():
@@ -294,7 +301,8 @@ class RecipeDefinitionV6(object):
         # Now add dependencies and connections
         for node_name, node_dict in self._definition['nodes'].items():
             for dependency_dict in node_dict['dependencies']:
-                definition.add_dependency(dependency_dict['name'], node_name)
+                acceptance = dependency_dict['acceptance'] if ('acceptance' in dependency_dict) else True
+                definition.add_dependency(dependency_dict['name'], node_name, acceptance)
             for conn_name, conn_dict in node_dict['input'].items():
                 if conn_dict['type'] == 'recipe':
                     definition.add_recipe_input_connection(node_name, conn_name, conn_dict['input'])

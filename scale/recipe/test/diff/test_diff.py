@@ -192,7 +192,7 @@ class TestRecipeDiff(TestCase):
         definition_2.add_dependency('C', 'D')
         definition_2.add_dependency('D', 'F')
         definition_2.add_dependency('A', 'G')
-        definition_2.add_dependency('G', 'H')
+        definition_2.add_dependency('G', 'H', False) # Change to fire when condition is False, not True
         definition_2.add_recipe_input_connection('A', 'input_1', 'file_param_1')
         definition_2.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_2')
         definition_2.add_dependency_input_connection('D', 'd_input_1', 'C', 'c_output_1')
@@ -242,8 +242,9 @@ class TestRecipeDiff(TestCase):
         node_h = diff.graph['H']
         self.assertEqual(node_h.status, NodeDiff.CHANGED)
         self.assertTrue(node_h.reprocess_new_node)
-        self.assertEqual(len(node_h.changes), 1)
+        self.assertEqual(len(node_h.changes), 2)
         self.assertEqual(node_h.changes[0].name, 'PARENT_CHANGED')
+        self.assertEqual(node_h.changes[1].name, 'PARENT_ACCEPTANCE_CHANGED')
         # Check nodes to copy, supersede, and unpublish
         self.assertSetEqual(set(diff.get_nodes_to_copy().keys()), {'A'})
         self.assertSetEqual(set(diff.get_nodes_to_supersede().keys()), {'B', 'C', 'D', 'E', 'G', 'H'})

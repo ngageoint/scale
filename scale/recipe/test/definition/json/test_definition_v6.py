@@ -122,6 +122,18 @@ class TestRecipeDefinitionV6(TestCase):
                         'recipe_type_name': 'recipe-type-1',
                         'recipe_type_revision': 5
                     }
+                },
+                'node_e': {
+                    'dependencies': [{'name': 'node_c', 'acceptance': False}],
+                    'input': {
+                        'input_a': {'type': 'recipe', 'input': 'bar'},
+                        'input_b': {'type': 'dependency', 'node': 'node_c', 'output': 'output_a'}
+                    },
+                    'node_type': {
+                        'node_type': 'recipe',
+                        'recipe_type_name': 'recipe-type-2',
+                        'recipe_type_revision': 1
+                    }
                 }
             }
         }
@@ -129,7 +141,7 @@ class TestRecipeDefinitionV6(TestCase):
         json = RecipeDefinitionV6(definition=json_dict, do_validate=True)
         definition = json.get_definition()
         self.assertSetEqual(set(definition.input_interface.parameters.keys()), {'foo', 'bar'})
-        self.assertSetEqual(set(definition.graph.keys()), {'node_a', 'node_b', 'node_c', 'node_d'})
+        self.assertSetEqual(set(definition.graph.keys()), {'node_a', 'node_b', 'node_c', 'node_d', 'node_e'})
 
     def test_init_validation(self):
         """Tests the validation done in __init__"""
