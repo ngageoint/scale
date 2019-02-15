@@ -239,7 +239,7 @@ another.</p>
          <span class="p">}</span>
       <span class="p">},</span>
       <span class="s2">&quot;node_b&quot;</span><span class="o">:</span> <span class="p">{</span>
-         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">,</span> <span class="s2">&quot;acceptance&quot;</span><span class="o">:</span> <span class="nx">True</span><span class="p">}],</span>
          <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;input_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">},</span>
             <span class="s2">&quot;input_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dependency&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="s2">&quot;output_1&quot;</span><span class="p">}</span>
@@ -294,8 +294,9 @@ See <a class="reference internal" href="data.html#rest-v6-data-interface"><span 
 <td>Array</td>
 <td>Required</td>
 <td>The list of dependencies for this recipe node. Each JSON object in
-the list has a single string field called <em>name</em> giving the node
-name of the dependency.</td>
+the list has a string field called <em>name</em> giving the node name of
+the dependency and an optional boolean called <em>acceptance</em> defining
+the named node must be accepted or unaccepted to run this node.</td>
 </tr>
 <tr class="row-odd"><td>input</td>
 <td>JSON object</td>

@@ -265,6 +265,22 @@
 <dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
 <p>Represents a condition within a recipe</p>
 <dl class="method">
+<dt id="recipe.instance.node.ConditionNodeInstance.is_accepted">
+<code class="descname">is_accepted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance.is_accepted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node is accepted.  Used for evaluating condition nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the condition for this node is accepted, false otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.instance.node.ConditionNodeInstance.is_completed">
 <code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance.is_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_completed" title="recipe.instance.node.NodeInstance.is_completed"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_completed()</span></code></a></p>
@@ -347,13 +363,17 @@
 <p>Represents a node within a recipe</p>
 <dl class="method">
 <dt id="recipe.instance.node.NodeInstance.add_dependency">
-<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.add_dependency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node</em>, <em>acceptance=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.add_dependency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a dependency that this node has on the given node</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a>) &#8211; The dependency node to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> (<a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a>) &#8211; The dependency node to add</li>
+<li><strong>acceptance</strong> (<em>bool</em>) &#8211; Whether this node should run when the parent is accepted or when it is not accepted</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -372,6 +392,22 @@
 <li><strong>blocked_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of IDs for jobs that should be set to BLOCKED</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.is_accepted">
+<code class="descname">is_accepted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.is_accepted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node is accepted.  Used for evaluating condition nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node is accepted, false otherwise. Will always return true except for condition nodes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
