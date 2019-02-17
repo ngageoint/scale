@@ -1,35 +1,47 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from rest_framework.generics import get_object_or_404
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_403_FORBIDDEN
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import permissions
+from rest_framework import generics, mixins, permissions
 from django.contrib.auth.models import User
 from accounts.serializers import UserAccountSerializer
 
 
-class GetUsers(APIView):
+class UserList(generics.ListCreateAPIView):
     """
     View to list all users in the system.
 
     * Only admin users are able to access this view.
     """
     permission_classes = (permissions.IsAdminUser,)
+    queryset = User.objects.all()
+    serializer_class = UserAccountSerializer
 
-    def get(self, request, username, format=None):
-        """
-        Return a specific user.
-        """
 
-        return Response(User.objects.get_by_natural_key(username))
+class IsOwnerOrAdmin(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object to edit it.
+    """
 
-    def list(self, request, format=None):
-        """
-        Return a list of all users.
-        """
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
 
-        usernames = [user.username for user in User.objects.all()]
-        return Response(usernames)
+        # Don't allow non-staff user to upgrade themselves
+        if request.data.get('is_staff', False):
+            return False
+
+        # Write permissions are only allowed to the owner of the user.
+        return request.user.username == obj.username
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsOwnerOrAdmin,)
+    queryset = User.objects.all()
+    serializer_class = UserAccountSerializer
 
 
 class GetUser(APIView):
