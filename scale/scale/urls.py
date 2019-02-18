@@ -1,8 +1,9 @@
 """Combines all of the URLs for the Scale RESTful services"""
 
-from django.conf.urls import include, url
-
 import util.rest as rest_util
+
+from django.conf.urls import include, url
+from rest_framework.authtoken.views import obtain_auth_token
 
 # Enable the admin applications
 from django.contrib import admin
@@ -31,6 +32,7 @@ unversioned_urls = [
     # Map all the paths required by the admin applications
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', obtain_auth_token, name='api-token-auth'),
 ]
 
 # Add unversioned_urls to URL regex pattern matcher
