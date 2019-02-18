@@ -275,10 +275,13 @@ class JobTypesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # Require docker image value
+        # Optional icon code value
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
 
-        # Require docker image value
+        # Optional is published value
+        is_published = rest_util.parse_string(request, 'is_published', required=False)
+
+        # Optional max scheduled value
         max_scheduled = rest_util.parse_int(request, 'max_scheduled', required=False)
 
         # Require docker image value
@@ -311,7 +314,8 @@ class JobTypesView(ListCreateAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Check for invalid fields
-        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest', 'auto_update'}
+        fields = {'icon_code', 'is+published', 'max_scheduled', 'docker_image', 'configuration', 'manifest',
+                  'auto_update'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
@@ -324,6 +328,7 @@ class JobTypesView(ListCreateAPIView):
             try:
                 # Create the job type
                 job_type = JobType.objects.create_job_type_v6(icon_code=icon_code,
+                                                              is_published=is_published,
                                                               max_scheduled=max_scheduled,
                                                               docker_image=docker_image,
                                                               manifest=manifest,
@@ -346,7 +351,7 @@ class JobTypesView(ListCreateAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
-                                                 configuration=configuration,
+                                                 is_published=is_published, configuration=configuration,
                                                  auto_update=auto_update)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', existing_job_type.id)
@@ -677,6 +682,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
+        is_published = rest_util.parse_string(request, 'is_published', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
         max_scheduled = rest_util.parse_int(request, 'max_scheduled', required=False)
@@ -696,7 +702,7 @@ class JobTypeDetailsView(GenericAPIView):
             raise Http404
 
         # Check for invalid fields
-        fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
+        fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
@@ -704,7 +710,7 @@ class JobTypeDetailsView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Edit the job type
-                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None,
+                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None, is_published=is_published,
                                                  docker_image=None, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
                                                  configuration=configuration, auto_update=auto_update)
