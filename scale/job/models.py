@@ -2664,7 +2664,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,
-                           configuration=None):
+                           configuration=None, is_published=None):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
@@ -2678,6 +2678,8 @@ class JobTypeManager(models.Manager):
         :type max_scheduled: integer
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param is_published: Whether this job type has outputs that are published.
+        :type is_published: bool
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
@@ -2706,6 +2708,8 @@ class JobTypeManager(models.Manager):
 
         if icon_code:
             job_type.icon_code = icon_code
+        if is_published:
+            job_type.is_published = is_published
         if max_scheduled:
             job_type.max_scheduled = max_scheduled
         job_type.save()
@@ -2798,7 +2802,7 @@ class JobTypeManager(models.Manager):
 
         # Check for backdoor editing of seed job types
         if job_type.is_seed_job_type():
-            v6_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
+            v6_fields = {'icon_code', 'is_active', 'is_paused', 'is_published'. 'max_scheduled', 'configuration'}
             for field_name in kwargs:
                 if field_name not in v6_fields:
                     raise InvalidJobField('Invalid field: %s \n Only the following fields are editable for seed job types: %s ' % (field_name, v6_fields))
@@ -2863,7 +2867,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None,
-                         is_paused=None, max_scheduled=None, configuration=None, auto_update=None):
+                         is_paused=None, is_published=None, max_scheduled=None, configuration=None, auto_update=None):
         """Edits the given job type and saves the changes in the database.
         All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change.
@@ -2880,6 +2884,8 @@ class JobTypeManager(models.Manager):
         :type is_active: bool
         :param is_paused: Whether this job type is paused and should not have jobs scheduled or not
         :type is_paused: bool
+        :param is_published: Whether this job type has outputs that are published.
+        :type is_published: bool
         :param max_scheduled: Maximum  number of jobs of this type that may be scheduled to run at the same time.
         :type max_scheduled: integer
         :param configuration: The configuration for running a job of this type, possibly None
@@ -2928,6 +2934,8 @@ class JobTypeManager(models.Manager):
         if is_paused and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
             job_type.is_paused = is_paused
+        if is_published:
+            job_type.is_published = is_published
         if max_scheduled:
             job_type.max_scheduled = max_scheduled
 
@@ -3524,6 +3532,8 @@ class JobType(models.Model):
     :keyword is_paused: Whether the job type is paused (while paused no jobs of this type will be scheduled off of the
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
+    :param is_published: Whether this job type has outputs that are published.
+        :type is_published: :class:`django.db.models.BooleanField`
 
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`
@@ -3600,7 +3610,8 @@ class JobType(models.Model):
     """
 
     BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
-                   'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code')
+                   'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'is_published',
+                   'icon_code')
 
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'deprecated', 'paused', 'last_modified')
@@ -3620,6 +3631,7 @@ class JobType(models.Model):
     is_long_running = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False)
 
     max_scheduled = models.IntegerField(blank=True, null=True)
     max_tries = models.IntegerField(default=3)
