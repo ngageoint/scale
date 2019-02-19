@@ -84,8 +84,9 @@ at the same location for this broker to work properly.
 
 **Permissions**
 
-The Scale Docker containers run with a UID and GID of 7498. To ensure that permissions are appropriately handled within
-Docker, make sure that your host's local directory is owned by a user/group with UID/GID of 7498/7498.
+The Scale Docker containers run with a UID and GID of 99, corresponding to the CentOS nobody user and group. To ensure
+that permissions are appropriately handled within Docker, make sure that your host's local directory is owned by a 
+user/group with UID/GID of 99/99.
 
 **Security**
 
