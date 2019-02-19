@@ -2044,6 +2044,7 @@ class TestJobTypesViewV6(TestCase):
             self.assertEqual(entry['title'], expected.title)
             self.assertEqual(entry['description'], expected.description)
             self.assertEqual(entry['icon_code'], expected.icon_code)
+            self.assertEqual(entry['is_published'], expected.is_published)
             self.assertEqual(entry['is_active'], expected.is_active)
             self.assertEqual(entry['is_paused'], expected.is_paused)
             self.assertEqual(entry['is_system'], expected.is_system)
@@ -2173,6 +2174,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
             'manifest': manifest,
             'configuration': self.configuration
@@ -2206,6 +2208,7 @@ class TestJobTypesPostViewV6(TestCase):
 
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': False,
             'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
             'manifest': manifest
         }
@@ -2222,6 +2225,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['title'], job_type.title)
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 1)
+        self.assertEqual(results['is_published'], json_data['is_published'])
 
     def test_add_seed_version_job_type(self):
         """Tests adding a new version of a seed image."""
@@ -2232,6 +2236,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': 'my-job-1.1.0-seed:1.0.0',
             'manifest': manifest,
@@ -2249,9 +2254,10 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
         self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['is_published'], json_data['is_published'])
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
-        
+
     def test_edit_seed_job_type(self):
         """Tests editing an existing seed job type."""
         
@@ -2261,6 +2267,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': 'my-job-1.0.0-seed:1.0.1',
             'manifest': manifest,
@@ -2287,6 +2294,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': 'my-job-1.0.0-seed:1.0.2',
             'manifest': manifest,
@@ -2315,6 +2323,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': '%s-%s-seed:1.0.0' % (name, version),
             'manifest': manifest,
@@ -2361,6 +2370,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': False,
             'max_scheduled': 1,
             'docker_image': 'my-job-1.0.0-seed:1.0.0',
             'manifest': manifest,
@@ -2400,6 +2410,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': 'my-job-no-mount-1.0.0-seed:1.0.0',
             'manifest': manifest,
@@ -2428,6 +2439,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': 'my-job-no-setting-1.0.0-seed:1.0.0',
             'manifest': manifest,
@@ -2469,6 +2481,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 'BAD',
             'docker_image': '',
             'manifest': manifest,
@@ -2489,6 +2502,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'max_scheduled': 1,
             'docker_image': 'my-job-1.0.0-seed:1.0.1',
             'manifest': manifest,
@@ -2507,6 +2521,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
         self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['is_published'], job_type.is_published)
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 2)
         self.assertIsNotNone(results['configuration']['mounts'])
@@ -3227,6 +3242,7 @@ class TestJobTypeDetailsViewV6(TestCase):
         url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
         json_data = {
             'icon_code': 'BEEF',
+            'is_published': True,
             'is_active': False,
             'is_paused': True,
             'max_scheduled': 9
@@ -3381,6 +3397,7 @@ class TestJobTypesValidationViewV5(TransactionTestCase):
             'name': 'job-type-test',
             'version': '1.0.0',
             'title': 'Job Type Test',
+            'is_published': True,
             'description': 'This is a test.',
             'interface': {
                 'version': '1.0',
