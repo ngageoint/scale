@@ -92,6 +92,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .icon_code               | String            | A font-awesome icon code for the latest version of this job type.        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .versions                | Array             | List of versions of this job type.                                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .latest_version          | String            | The latest version of this job type.                                     |
@@ -122,6 +124,7 @@ Response: 200 OK
                 "title": "My Job", 
                 "description": "A simple job type", 
                 "icon_code": "f013", 
+                "is_published": true, 
                 "is_active": true, 
                 "is_paused": false, 
                 "is_system": false, 
@@ -181,6 +184,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .icon_code               | String            | A font-awesome icon code to use when representing this job type version. |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_active               | Boolean           | Whether this job type is active or deprecated.                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_paused               | Boolean           | Whether the job type is paused (while paused no jobs of this type will   |
@@ -223,7 +228,8 @@ Response: 200 OK
 		"version": "1.0.0" 
 		"title": "My Job", 
 		"description": "A simple job type", 
-		"icon_code": "f013", 
+		"icon_code": "f013",
+    "is_published", true, 
 		"is_active": true, 
 		"is_paused": false, 
 		"is_system": false, 
@@ -265,6 +271,8 @@ Response: 200 OK
 | description              | String            | A longer description of this version of the job type.                    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | icon_code                | String            | A font-awesome icon code to use when representing this job type version. |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| is_published             | Boolean           | Whether this job type publishes its output.                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | is_active                | Boolean           | Whether this job type is active or deprecated.                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -320,7 +328,8 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
-            "icon_code": "012F"
+            "icon_code": "012F",
+            "is_published": true
           },
           "revision_num": 1,
           "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -612,6 +621,8 @@ Location http://.../v6/job-types/test/1.0.0/
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
++-------------------------+---------------- --+------- --+----------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
@@ -837,6 +848,7 @@ Request: PATCH http://.../v6/job-types/test/1.0.0/
  
     {
       "icon_code": "012F",
+      "is_published": true,
       "is_active": true,
       "is_paused": false,
       "max_scheduled": 1,
@@ -873,6 +885,8 @@ Response: 204 No Content
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_active               | Boolean           | Optional | Whether this job type is active or deprecated.                 |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+

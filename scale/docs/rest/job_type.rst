@@ -95,6 +95,8 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .icon_code               | String            | A font-awesome icon code to use when representing this job type.         |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .uses_docker             | Boolean           | Whether the job type uses Docker.                                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
@@ -158,6 +160,7 @@ These services provide access to information about job types.
 |                "is_operational": true,                                                                                  |
 |                "is_paused": false,                                                                                      |
 |                "icon_code": "f013",                                                                                     |
+|                "is_published": true,                                                                                    |
 |                "uses_docker": false,                                                                                    |
 |                "docker_privileged": false,                                                                              |
 |                "docker_image": null,                                                                                    |
@@ -219,6 +222,8 @@ These services provide access to information about job types.
 |                         |                   |          | type will be scheduled off of the queue).                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | docker_image            | String            | Optional | The Docker image containing the code to run for this job.      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -282,6 +287,7 @@ These services provide access to information about job types.
 |        "is_operational": true,                                                                                          |
 |        "is_paused": false,                                                                                              |
 |        "icon_code": "f1c5",                                                                                             |
+|        "is_published": true,                                                                                            |
 |        "docker_privileged": false,                                                                                      |
 |        "docker_image": null,                                                                                            |
 |        "priority": 1,                                                                                                   |
@@ -391,6 +397,7 @@ These services provide access to information about job types.
 |        "is_operational": true,                                                                                          |
 |        "is_paused": false,                                                                                              |
 |        "icon_code": "f1c5",                                                                                             |
+|        "is_published": true,                                                                                            |
 |        "uses_docker": true,                                                                                             |
 |        "docker_privileged": false,                                                                                      |
 |        "docker_image": null,                                                                                            |
@@ -456,6 +463,8 @@ These services provide access to information about job types.
 |                         |                   |          | type will be scheduled off of the queue).                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
++-------------------------+---------------- --+----------+---------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | docker_image            | String            | Optional | The Docker image containing the code to run for this job.      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -519,6 +528,7 @@ These services provide access to information about job types.
 |        "is_operational": true,                                                                                          |
 |        "is_paused": false,                                                                                              |
 |        "icon_code": "f1c5",                                                                                             |
+|        "is_published": true,                                                                                            |
 |        "docker_privileged": false,                                                                                      |
 |        "docker_image": null,                                                                                            |
 |        "priority": 1,                                                                                                   |
@@ -672,6 +682,8 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | icon_code                | String            | A font-awesome icon code to use when representing this job type.         |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| is_published             | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | uses_docker              | Boolean           | Whether the job type uses Docker.                                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
@@ -779,6 +791,7 @@ These services provide access to information about job types.
 |        "is_operational": true,                                                                                          |
 |        "is_paused": false,                                                                                              |
 |        "icon_code": "f013",                                                                                             |
+|        "is_published": true,                                                                                            |
 |        "uses_docker": false,                                                                                            |
 |        "docker_privileged": false,                                                                                      |
 |        "docker_image": null,                                                                                            |
@@ -884,6 +897,8 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | docker_image            | String            | Optional | The Docker image containing the code to run for this job.      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | priority                | Integer           | Optional | The priority of the job type (lower number is higher priority).|
@@ -944,6 +959,7 @@ These services provide access to information about job types.
 |        "is_operational": true,                                                                                          |
 |        "is_paused": false,                                                                                              |
 |        "icon_code": "f1c5",                                                                                             |
+|        "is_published": true,                                                                                            |
 |        "docker_privileged": false,                                                                                      |
 |        "docker_image": null,                                                                                            |
 |        "priority": 1,                                                                                                   |
@@ -1044,6 +1060,7 @@ These services provide access to information about job types.
 |        "is_operational": true,                                                                                          |
 |        "is_paused": false,                                                                                              |
 |        "icon_code": "f1c5",                                                                                             |
+|        "is_published": true,                                                                                            |
 |        "uses_docker": true,                                                                                             |
 |        "docker_privileged": false,                                                                                      |
 |        "docker_image": null,                                                                                            |
@@ -1152,6 +1169,7 @@ These services provide access to information about job types.
 |                "is_active": true,                                                                                       |
 |                "is_operational": true,                                                                                  |
 |                "is_paused": false,                                                                                      |
+|                "is_published": true,                                                                                    |
 |                "icon_code": "f013"                                                                                      |
 |            },                                                                                                           |
 |            "job_counts": [                                                                                              |
@@ -1252,6 +1270,7 @@ These services provide access to information about job types.
 |                    "is_active": true,                                                                                   |
 |                    "is_operational": true,                                                                              |
 |                    "is_paused": false,                                                                                  |
+|                    "is_published": true,                                                                                |
 |                    "icon_code": "f013"                                                                                  |
 |                },                                                                                                       |
 |                "count": 1,                                                                                              |
@@ -1316,6 +1335,7 @@ These services provide access to information about job types.
 |                    "is_active": true,                                                                                   |
 |                    "is_operational": true,                                                                              |
 |                    "is_paused": false,                                                                                  |
+|                    "is_published": true,                                                                                |
 |                    "icon_code": "f013"                                                                                  |
 |                },                                                                                                       |
 |                "count": 1,                                                                                              |
@@ -1385,6 +1405,7 @@ These services provide access to information about job types.
 |                    "is_active": true,                                                                                   |
 |                    "is_operational": true,                                                                              |
 |                    "is_paused": false,                                                                                  |
+|                    "is_published": true,                                                                               |
 |                    "icon_code": "f013"                                                                                  |
 |                },                                                                                                       |
 |               "error": {                                                                                                |
