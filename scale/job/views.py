@@ -314,7 +314,7 @@ class JobTypesView(ListCreateAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Check for invalid fields
-        fields = {'icon_code', 'is+published', 'max_scheduled', 'docker_image', 'configuration', 'manifest',
+        fields = {'icon_code', 'is_published', 'max_scheduled', 'docker_image', 'configuration', 'manifest',
                   'auto_update'}
         for key, value in request.data.iteritems():
             if key not in fields:
