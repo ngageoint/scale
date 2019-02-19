@@ -2802,7 +2802,7 @@ class JobTypeManager(models.Manager):
 
         # Check for backdoor editing of seed job types
         if job_type.is_seed_job_type():
-            v6_fields = {'icon_code', 'is_active', 'is_paused', 'is_published'. 'max_scheduled', 'configuration'}
+            v6_fields = {'icon_code', 'is_active', 'is_paused', 'is_published', 'max_scheduled', 'configuration'}
             for field_name in kwargs:
                 if field_name not in v6_fields:
                     raise InvalidJobField('Invalid field: %s \n Only the following fields are editable for seed job types: %s ' % (field_name, v6_fields))
