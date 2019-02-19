@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from rest_framework.generics import get_object_or_404
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_403_FORBIDDEN
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, mixins, permissions
+from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from accounts.serializers import UserAccountSerializer
 
@@ -17,7 +15,7 @@ class UserList(generics.ListCreateAPIView):
     * Only admin users are able to access this view.
     """
     permission_classes = (permissions.IsAdminUser,)
-    queryset = User.objects.all()
+    queryset = User.objects.order_by('id')
     serializer_class = UserAccountSerializer
 
 
