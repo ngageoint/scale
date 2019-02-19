@@ -66,6 +66,8 @@ METRICS_DIR = None
 LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
 
+LOGIN_REDIRECT_URL = '/v6/accounts/profile'
+
 # Base URL of elasticsearch nodes
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 # Placeholder for elasticsearch version. Supplied in production by local_settings_docker.py
@@ -153,7 +155,6 @@ INSTALLED_APPS = (
     'util',
     'vault'
 )
-
 
 MIDDLEWARE = [
     'util.middleware.MultipleProxyMiddleware',
@@ -362,27 +363,6 @@ LOG_HANDLERS = {
         'stream': sys.stdout,
         'filters':['debug_info_only']
     },
-    'file-debug': {
-        'level': 'DEBUG',
-        'class': 'logging.handlers.TimedRotatingFileHandler',
-        'formatter': 'standard',
-        'filename': os.path.join(LOG_DIR, '%s_debug.log' % LOG_NAME),
-        'when': 'midnight'
-    },
-    'file-info': {
-        'level': 'INFO',
-        'class': 'logging.handlers.TimedRotatingFileHandler',
-        'formatter': 'standard',
-        'filename': os.path.join(LOG_DIR, '%s_info.log' % LOG_NAME),
-        'when': 'midnight'
-    },
-    'file-error': {
-        'level': 'ERROR',
-        'class': 'logging.handlers.TimedRotatingFileHandler',
-        'formatter': 'standard',
-        'filename': os.path.join(LOG_DIR, '%s_errors.log' % LOG_NAME),
-        'when': 'midnight'
-    },
     'log-db': {
         'level': 'WARNING',
         'class': 'error.handlers.DatabaseLogHandler',
@@ -447,30 +427,6 @@ LOG_CONSOLE_CRITICAL = {
         '': {
             'handlers': ['console-stderr'],
             'level': 'CRITICAL',
-        },
-    },
-}
-LOG_CONSOLE_FILE_DEBUG = {
-    'version': 1,
-    'formatters': LOG_FORMATTERS,
-    'filters': LOG_FILTERS,
-    'handlers': LOG_HANDLERS,
-    'loggers': {
-        '': {
-            'handlers': ['console', 'console-stderr', 'file-debug', 'file-info', 'file-error'],
-            'level': 'DEBUG',
-        },
-    },
-}
-LOG_CONSOLE_FILE_INFO = {
-    'version': 1,
-    'formatters': LOG_FORMATTERS,
-    'filters': LOG_FILTERS,
-    'handlers': LOG_HANDLERS,
-    'loggers': {
-        '': {
-            'handlers': ['console', 'console-stderr', 'file-info', 'file-error'],
-            'level': 'INFO',
         },
     },
 }

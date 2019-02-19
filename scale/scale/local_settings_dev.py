@@ -9,12 +9,12 @@ from settings import *
 DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
-# Set CSRF cookie to work over HTTP for development. Production deploys WILL NOT work without HTTPS fronting.
-CSRF_COOKIE_SECURE = False
-
 # Set the external URL context here
 FORCE_SCRIPT_NAME = '/'
 USE_X_FORWARDED_HOST = True
+
+# Disable this for local testing over HTTP
+SESSION_COOKIE_SECURE = False
 
 STATIC_ROOT = 'static/'
 STATIC_URL = '/scale/static/'
