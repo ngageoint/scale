@@ -100,7 +100,7 @@ def _create_docker_task(task):
     mesos_task = _create_base_task(task)
     mesos_task['command']['shell'] = False
     mesos_task['command']['arguments'] = [x for x in task.command_arguments.split(" ")]
-    mesos_task['command']['user'] = settings.CONTAINER_PROCESS_UID
+    mesos_task['command']['user'] = settings.CONTAINER_PROCESS_OWNER
 
     mesos_task['container'] = {
         'type': CONTAINER_TYPE_DOCKER,
