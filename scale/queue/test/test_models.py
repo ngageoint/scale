@@ -682,10 +682,12 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
 
-        # check queue status; we should have 4 job types with one job in the queue for each type
+        # check queue status
         status = Queue.objects.get_queue_status()
         sum = 0
         for s in status:
-            self.assertEqual(s.count, 1)
             sum += s.count
-        self.assertEqual(sum, 4)
+        self.assertEqual(sum, 5)
+
+        canceled = Queue.objects.filter(is_canceled=True)
+        self.assertEqual(len(canceled), 1)
