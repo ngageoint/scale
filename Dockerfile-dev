@@ -74,7 +74,7 @@ WORKDIR /opt/scale
 
 # setup ownership and permissions. create some needed directories
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
- && chown -R nobody:nobody /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
+ && chown -R nobody:nobody /opt/scale /var/log/scale /var/lib/scale-metrics /scale /var/run/httpd \
  && chmod 777 /scale/output_data \
  && chmod a+x entryPoint.sh
  
