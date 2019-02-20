@@ -231,7 +231,7 @@ below for reference.
 | ACCEPTED_RESOURCE_ROLE      | MESOS_ROLE                      | Resource role to accept in offers          |
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
-| CONTAINER_PROCESS_UID       | '99'                            | User ID used to launch Docker tasks as     |
+| CONTAINER_PROCESS_OWNER     | 'nobody'                        | System user used to launch Docker tasks    |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
 | DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
