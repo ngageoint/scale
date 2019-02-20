@@ -650,8 +650,6 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
         status = Queue.objects.get_queue_status()
-        print len(status)
-        print status[0].job_type.name
         self.assertEqual(status[0].count, 1)
 
         Queue.objects.requeue_jobs(self.job_ids, self.new_priority)
@@ -684,13 +682,10 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
 
-        # standalone queued job should be cancelled and not included in the count
-        # We might have to switch from cancelling these queued jobs to removing them as
-        # canceling them does not remove them from the queue and if we're requeueing due
-        # to resource mismatching these jobs will never get removed by the scheduler.
+        # check queue status; we should have 4 job types with one job in the queue for each type
         status = Queue.objects.get_queue_status()
         sum = 0
         for s in status:
-            print 'job: %s, count: %d' % (s.job_type.name, s.count)
+            self.assertEqual(s.count, 1)
             sum += s.count
         self.assertEqual(sum, 4)
