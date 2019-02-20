@@ -55,7 +55,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && rm -f /etc/httpd/conf.d/*.conf \
  && rm -rf /usr/share/httpd \
  && rm -rf /usr/share/{anaconda,backgrounds,kde4,plymouth,wallpapers}/* \
- && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
+ && sed -i 's^User apache^User nobody^g' /etc/httpd/conf/httpd.conf \
  # Patch access logs to show originating IP instead of reverse proxy.
  && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
  && sed -ri \
