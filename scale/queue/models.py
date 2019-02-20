@@ -349,7 +349,7 @@ class QueueManager(models.Manager):
             queue.queued = when_queued
             queues.append(queue)
 
-        Queue.objects.filter(job__in=job_ids).update(is_canceled=True)
+        self.cancel_queued_jobs(job_ids)
 
         if queues:
             self.bulk_create(queues)
