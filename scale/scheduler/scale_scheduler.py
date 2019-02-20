@@ -252,7 +252,7 @@ class ScaleScheduler(object):
                     else:
                         skipped_roles.add(resource.role)
 
-            logger.info("Number of resources: %i" % len(resource_list))
+            logger.debug("Number of resources: %i" % len(resource_list))
 
             # Only register agent, if offers are being received
             if len(resource_list) > 0:
