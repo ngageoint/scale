@@ -274,6 +274,9 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_published:
+          type: boolean
+          example: true
         versions:
           type: array
           style: simple
@@ -302,6 +305,9 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_published:
+          type: boolean
+          example: true
     job_type_versions:
       title: Job Type Versions
       type: object
@@ -347,6 +353,9 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_published:
+          type: boolean
+          example: true
         is_active:
           type: boolean
           example: true
@@ -563,7 +572,10 @@ components:
       properties:
         icon_code:
           type: string
-          example: f186 
+          example: f186
+        is_published:
+          type: boolean
+          example: true
         is_active:
           type: boolean
           example: true
@@ -583,6 +595,9 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_published:
+          type: boolean
+          example: true
         max_scheduled:
           type: integer
           example: 1
