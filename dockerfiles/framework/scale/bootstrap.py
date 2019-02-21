@@ -61,8 +61,8 @@ def run(client):
         blocking_apps.append(rabbitmq_app_name)
 
     # Determine if db should be deployed.
-    db_url = os.getenv('DATABASE_URL')
-    if not db_url:
+    db_url = os.getenv('DATABASE_URL', '')
+    if not len(db_url):
         deploy_database(client, db_app_name)
         db_url = "postgis://scale:scale@%s.marathon.l4lb.thisdcos.directory:5432/scale" % subdomain_gen(db_app_name)
         print("DATABASE_URL=%s" % db_url)

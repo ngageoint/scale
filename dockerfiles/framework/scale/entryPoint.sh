@@ -50,10 +50,7 @@ then
     if [[ "${DATABASE_URL}x" == "x" ]]
     then
         export DATABASE_URL=`cat bootstrap.log | grep DATABASE_URL | cut -d '=' -f2`
-        export PG_PASS=`cat bootstrap.log | grep PG_PASS | cut -d '=' -f2`
     fi
-    echo "${PG_PASS}" >> ~/.pgpass
-    chmod 0600 ~/.pgpass
 
     if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
     then
@@ -76,8 +73,7 @@ then
     check_messaging
 
     # Initialize schema and initial data
-    # psql command or'ed with true so that pre-existing postgis won't cause script to terminate
-    /usr/bin/psql -U scale -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;" || true
+    python manage.py load_postgis
     python manage.py migrate
     python manage.py load_all_data
     # Load country boundary data
