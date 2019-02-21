@@ -37,61 +37,52 @@ def dcos_login():
 
 
 def run(client):
-    es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS')
-    es_lb = os.getenv('SCALE_ELASTICSEARCH_LB', 'true')
-    es_ver = os.getenv('SCALE_ELASTICSEARCH_VERSION', '2.4')
-
-    # if SCALE_ELASTICSEARCH_URLS is not set, assume we are running within DCOS and attempt to query Elastic scheduler
-    # Also default es_lb to false in this case
-    if not es_urls or not len(es_urls.strip()):
-        es_urls = get_elasticsearch_urls()
-        es_lb = 'false'
-
-    print("ELASTICSEARCH_URLS=" + es_urls)
-    print("ELASTICSEARCH_LB=" + es_lb)
-    print("ELASTICSEARCH_VERSION=" + es_ver)
+    elasticsearch_app_name = '%s-elasticsearch' % FRAMEWORK_NAME
     rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
     log_app_name = '%s-logstash' % FRAMEWORK_NAME
     db_app_name = '%s-db' % FRAMEWORK_NAME
+
+    blocking_apps = []
+
+    # Determine if elasticsearch should be deployed. If SCALE_ELASTICSEARCH_URLS is unset we need to deploy it
+    es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS', '')
+    es_ver = os.getenv('SCALE_ELASTICSEARCH_VERSION', '2.4')
+    if not len(es_urls):
+        deploy_elasticsearch(client, elasticsearch_app_name)
+        es_urls = "http://%s.marathon.l4lb.thisdcos.directory:9200" % subdomain_gen(elasticsearch_app_name)
+        print("ELASTICSEARCH_URLS=%s" % (es_urls))
+        blocking_apps.append(elasticsearch_app_name)
 
     # Determine if rabbitmq should be deployed. If SCALE_BROKER_URL is unset we need to deploy it
     broker_url = os.getenv('SCALE_BROKER_URL', '')
     if not len(broker_url):
         deploy_rabbitmq(client, rabbitmq_app_name)
+        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(rabbitmq_app_name)
+        print("BROKER_URL=%s" % broker_url)
+        blocking_apps.append(rabbitmq_app_name)
 
     # Determine if db should be deployed.
     db_host = os.getenv('SCALE_DB_HOST', '')
     db_port = os.getenv('SCALE_DB_PORT', '')
     if not len(db_host):
         deploy_database(client, db_app_name)
-
-    blocking_apps = []
-
-    # Determine if Logstash should be deployed.
-    if not len(SCALE_LOGGING_ADDRESS):
-        deploy_logstash(client, log_app_name, es_urls, es_lb)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
-        blocking_apps.append(log_app_name)
-
-    # Determine if RabbitMQ should be deployed.
-    if not len(broker_url):
-        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(rabbitmq_app_name)
-        print("BROKER_URL=%s" % broker_url)
-        blocking_apps.append(rabbitmq_app_name)
-
-    # Determine if Postgres should be deployed.
-    if not len(db_host):
         db_port = '5432'
         db_host = "%s.marathon.l4lb.thisdcos.directory" % subdomain_gen(db_app_name)
         print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
         blocking_apps.append(db_app_name)
 
+    # Determine if Logstash should be deployed.
+    if not len(SCALE_LOGGING_ADDRESS):
+        deploy_logstash(client, log_app_name, es_urls)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
+        blocking_apps.append(log_app_name)
+
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver)
+        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url, es_ver)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), webserver_port))
 
     # Wait for all needed apps to be healthy
@@ -217,7 +208,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver):
+def deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url, es_ver):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -263,7 +254,6 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
         'SCALE_WEBSERVER_CPU': str(cpu),
         'SCALE_WEBSERVER_MEMORY': str(memory),
         'SCALE_ELASTICSEARCH_URLS': es_urls,
-        'SCALE_ELASTICSEARCH_LB': es_lb,
         'SCALE_ELASTICSEARCH_VERSION': es_ver,
         'SECRETS_SSL_WARNINGS': str(secrets_ssl_warn),
         'SECRETS_TOKEN': str(secrets_token),
@@ -315,7 +305,7 @@ def get_elasticsearch_urls():
 
 
 def deploy_rabbitmq(client, app_name):
-    # Check if scale-db is already running
+    # Check if rabbitmq is already running
     if not check_app_exists(client, app_name):
         # Load marathon template file
         marathon = initialize_app_template('rabbitmq',
@@ -325,8 +315,19 @@ def deploy_rabbitmq(client, app_name):
         deploy_marathon_app(client, marathon)
 
 
-def deploy_logstash(client, app_name, es_urls, es_lb):
-    # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
+def deploy_elasticsearch(client, app_name):
+    # Check if elasticsearch is already running
+    if not check_app_exists(client, app_name):
+        # Load marathon template file
+        marathon = initialize_app_template('elasticsearch',
+                                           app_name,
+                                           os.getenv('ELASTICSEARCH_DOCKER_IMAGE'))
+
+        deploy_marathon_app(client, marathon)
+
+
+def deploy_logstash(client, app_name, es_urls):
+    # attempt to delete an old instance..if it doesn't exists it will error, but we don't care, so we ignore it
     delete_marathon_app(client, app_name)
 
     #default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-logstash:tag
@@ -341,7 +342,6 @@ def deploy_logstash(client, app_name, es_urls, es_lb):
         'LOGSTASH_DOCKER_IMAGE', logstash_docker_img_default))
 
     arbitrary_env = {
-        'ELASTICSEARCH_LB': es_lb,
         'ELASTICSEARCH_URLS': es_urls,
     }
     # For all environment variable that are set add to marathon json.
@@ -349,8 +349,6 @@ def deploy_logstash(client, app_name, es_urls, es_lb):
         marathon['env'][env] = arbitrary_env[env]
 
     env_map = {
-
-        'LOGSTASH_WATCHDOG_SLEEP_TIME': 'SLEEP_TIME',
         'LOGSTASH_TEMPLATE_URI': 'TEMPLATE_URI',
         'LOGSTASH_DEBUG': 'LOGSTASH_DEBUG'
     }
