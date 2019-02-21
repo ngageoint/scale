@@ -5,7 +5,6 @@ from django.test import TestCase, TransactionTestCase
 
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.models import Ingest, Strike
 from storage.exceptions import InvalidDataTypeTag
@@ -77,24 +76,6 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
 
         self.workspace = storage_test_utils.create_workspace()
         self.recipe = recipe_test_utils.create_recipe_type_v6()
-
-    def test_successful(self):
-        """Tests calling StrikeManager.create_strike() successfully"""
-
-        config = {
-            'version': '1.0',
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': 'foo',
-                'workspace_path': 'my/path',
-                'workspace_name': self.workspace.name,
-            }]
-        }
-
-        config = StrikeConfigurationV2(config).get_configuration()
-        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
-        self.assertEqual(strike.job.status, 'QUEUED')
 
     def test_successful_v6(self):
         """Tests calling StrikeManager.create_strike successfully with v6 config"""
