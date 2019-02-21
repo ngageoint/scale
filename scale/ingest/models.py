@@ -17,7 +17,6 @@ from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.configuration.data.job_data import JobData
@@ -1040,15 +1039,6 @@ class Scan(models.Model):
 
         return ScanConfigurationV6(self.configuration).get_configuration()
 
-    def get_v1_configuration_json(self):
-        """Returns the scan configuration in v1 of the JSON schema
-
-        :returns: The scan configuration in v1 of the JSON schema
-        :rtype: dict
-        """
-
-        return self.configuration
-
     def get_v6_configuration_json(self):
         """Returns the scan configuration in v6 of the JSON schema
 
@@ -1262,15 +1252,6 @@ class Strike(models.Model):
         """
 
         return StrikeConfigurationV6(self.configuration).get_configuration()
-
-    def get_v5_strike_configuration_as_dict(self):
-        """Returns the v5 configuration for this Strike process as a dict
-
-        :returns: The configuration for this Strike process
-        :rtype: dict
-        """
-
-        return StrikeConfigurationV2(self.configuration).get_configuration().get_dict()
 
     def get_v6_configuration_json(self):
         """Returns the batch configuration in v6 of the JSON schema
