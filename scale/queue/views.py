@@ -10,15 +10,7 @@ from rest_framework.response import Response
 
 import util.rest as rest_util
 from queue.models import JobLoad, Queue
-<<<<<<< HEAD
-from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, QueueStatusSerializerV6, RequeueJobSerializer
-from recipe.configuration.data.exceptions import InvalidRecipeData
-from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.models import Recipe, RecipeType
-from recipe.serializers import RecipeDetailsSerializerV6, OldRecipeDetailsSerializer
-=======
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer
->>>>>>> :fire: removed deprecated views
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +59,7 @@ class QueueStatusView(ListAPIView):
             return QueueStatusSerializerV6
         else:
             return QueueStatusSerializer
-            
+
     def list(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
 

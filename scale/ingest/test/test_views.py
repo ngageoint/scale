@@ -17,6 +17,7 @@ import util.rest as rest_util
 from ingest.models import Scan, Strike
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 
+
 class TestIngestsViewV6(TestCase):
 
     version = 'v6'
