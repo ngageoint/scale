@@ -9,7 +9,6 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from ingest.handlers.file_handler import FileHandler
-from ingest.handlers.file_rule import FileRule
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners import factory
 from recipe.models import RecipeType
