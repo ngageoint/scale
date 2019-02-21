@@ -9,7 +9,6 @@ import requests
 
 
 ES_URLS = os.getenv('ELASTICSEARCH_URLS').split(',')
-SLEEP_TIME = float(os.getenv('SLEEP_TIME', 30))
 TEMPLATE_URI = os.getenv('TEMPLATE_URI', None)
 
 CONF_FILE = '/opt/logstash/logstash.conf'
@@ -50,8 +49,4 @@ if __name__ == '__main__':
     else:
         print('No valid Elasticsearch endpoints detected. Shutting down...')
         sys.exit()
-
-    # Supervisor will SIGKILL us if container stops, so we can sleep wait forever
-    while True:
-        time.sleep(SLEEP_TIME)
 
