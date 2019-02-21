@@ -412,6 +412,14 @@ job\.migrations\.0051\_auto\_20190211\_1500 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0052\_jobtype\_is\_published module
+----------------------------------------------------
+
+.. automodule:: job.migrations.0052_jobtype_is_published
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
