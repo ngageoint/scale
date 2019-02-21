@@ -33,26 +33,15 @@ LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
 LOGGING_HEALTH_ADDRESS = os.environ.get('SCALE_LOGGING_HEALTH_ADDRESS', LOGGING_HEALTH_ADDRESS)
 ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS', ELASTICSEARCH_URLS)
 ELASTICSEARCH_VERSION = os.environ.get('SCALE_ELASTICSEARCH_VERSION', "2.4")
-ELASTICSEARCH_LB = os.environ.get('SCALE_ELASTICSEARCH_LB', 'true').lower() in ['true', '1', 't']
 if ELASTICSEARCH_URLS:
-    if ELASTICSEARCH_LB:
-        ELASTICSEARCH = elasticsearch.Elasticsearch(
-            ELASTICSEARCH_URLS.split(','),
-            # disable all sniffing
-            sniff_on_start=False,
-            # refresh nodes after a node fails to respond
-            sniff_on_connection_fail=False
-        )
-    else:
-        ELASTICSEARCH = elasticsearch.Elasticsearch(
-            ELASTICSEARCH_URLS.split(','),
-            # sniff before doing anything
-            sniff_on_start=True,
-            # refresh nodes after a node fails to respond
-            sniff_on_connection_fail=True,
-            # and also every 60 seconds
-            sniffer_timeout=60
-        )
+    ELASTICSEARCH = elasticsearch.Elasticsearch(
+        ELASTICSEARCH_URLS.split(','),
+        # disable all sniffing
+        sniff_on_start=False,
+        # refresh nodes after a node fails to respond
+        sniff_on_connection_fail=False
+    )
+
 
 # Broker URL for connection to messaging backend. Bootstrap must populate.
 BROKER_URL = os.environ.get('SCALE_BROKER_URL', BROKER_URL)
