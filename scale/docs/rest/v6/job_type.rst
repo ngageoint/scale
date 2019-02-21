@@ -223,25 +223,25 @@ Response: 200 OK
  .. code-block:: javascript  
  
     { 
-		"id": 3, 
-		"name": "my-job", 
-		"version": "1.0.0" 
-		"title": "My Job", 
-		"description": "A simple job type", 
-		"icon_code": "f013",
+    "id": 3, 
+    "name": "my-job", 
+    "version": "1.0.0" 
+    "title": "My Job", 
+    "description": "A simple job type", 
+    "icon_code": "f013",
     "is_published", true, 
-		"is_active": true, 
-		"is_paused": false, 
-		"is_system": false, 
-		"max_scheduled": 1, 
-		"revision_num": 1, 
-		"docker_image": "my-job-1.0.0-seed:1.0.0", 
-		"manifest": { ... }, 
-		"configuration": { ... },
-		"created": "2015-03-11T00:00:00Z", 
-		"deprecated": null, 
-		"paused": null, 
-		"last_modified": "2015-03-11T00:00:00Z" 
+    "is_active": true, 
+    "is_paused": false, 
+    "is_system": false, 
+    "max_scheduled": 1, 
+    "revision_num": 1, 
+    "docker_image": "my-job-1.0.0-seed:1.0.0", 
+    "manifest": { ... }, 
+    "configuration": { ... },
+    "created": "2015-03-11T00:00:00Z", 
+    "deprecated": null, 
+    "paused": null, 
+    "last_modified": "2015-03-11T00:00:00Z" 
     } 
     
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -589,24 +589,25 @@ Location http://.../v6/job-types/test/1.0.0/
  .. code-block:: javascript  
  
     { 
-		"id": 3, 
-		"name": "test", 
-		"version": "1.0.0" 
-		"title": "Job to demonstrate job type APIs", 
-		"description": "Reads input file and spit out specified number of bytes as output", 
-		"icon_code": "f1c5", 
-		"is_active": true, 
-		"is_paused": false, 
-		"is_system": false, 
-		"max_scheduled": 1, 
-		"revision_num": 1, 
-		"docker_image": "test-1.0.0-seed:1.0.0", 
-		"manifest": { ... }, 
-		"configuration": { ... },
-		"created": "2015-03-11T00:00:00Z", 
-		"deprecated": null, 
-		"paused": null, 
-		"last_modified": "2015-03-11T00:00:00Z" 
+    "id": 3, 
+    "name": "test", 
+    "version": "1.0.0" 
+    "title": "Job to demonstrate job type APIs", 
+    "description": "Reads input file and spit out specified number of bytes as output", 
+    "icon_code": "f1c5",
+    "is_published": true,
+    "is_active": true, 
+    "is_paused": false, 
+    "is_system": false, 
+    "max_scheduled": 1, 
+    "revision_num": 1, 
+    "docker_image": "test-1.0.0-seed:1.0.0", 
+    "manifest": { ... }, 
+    "configuration": { ... },
+    "created": "2015-03-11T00:00:00Z", 
+    "deprecated": null, 
+    "paused": null, 
+    "last_modified": "2015-03-11T00:00:00Z" 
     } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
