@@ -26,6 +26,7 @@ from job.seed.manifest import SeedManifest
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
+from node.resources.gpu_manager import GPUManager
 from scheduler.vault.manager import secrets_mgr
 from storage.container import get_workspace_volume_path
 from storage.models import Workspace, ScaleFile
@@ -318,15 +319,15 @@ class ScheduledExecutionConfigurator(object):
                 if resource.name == "gpus" and int(resource.value) > 0:
                     logger.info("found task with gpu > 0")
                     logger.info("gpu amount is %s", resource.value)
-                    gpu_list = ""
-                    for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
-                        logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", job_exe.node_id, job_exe.id, job_exe.job_id, "job_exe.job_exe_id")
-                        if gpustatus == job_exe.job_id:
-                            gpu_list += str(gpunum) + ","
+                    gpu_list = GPUManager.get_nvidia_docker_label(job_exe.node_id, job_exe.job_id)
+                    # for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
+                    #     logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", job_exe.node_id, job_exe.id, job_exe.job_id, "job_exe.job_exe_id")
+                    #     if gpustatus == job_exe.job_id:
+                    #         gpu_list += str(gpunum) + ","
 
-                    # for i in range(0,int(resource.value)):
-                        # gpu_list += str(i) + ","                    
-                    logger.info("final gpu string is %s", gpu_list.strip(','))
+                    # # for i in range(0,int(resource.value)):
+                    #     # gpu_list += str(i) + ","                    
+                    # logger.info("final gpu string is %s", gpu_list.strip(','))
                     nvidia_docker_label = DockerParameter('env','NVIDIA_VISIBLE_DEVICES={}'.format(gpu_list.strip(',')))
 
 
