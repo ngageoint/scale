@@ -1,7 +1,6 @@
 """Defines the classes that handle processing job and execution configuration"""
 from __future__ import absolute_import, unicode_literals
 
-import json
 import logging
 import math
 
@@ -9,7 +8,6 @@ from django.conf import settings
 
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
-from data.data.value import FileValue, JsonValue
 from job.execution.configuration.docker_param import DockerParameter
 from job.execution.configuration.input_file import InputFile
 from job.configuration.interface.job_interface import JobInterface
@@ -28,7 +26,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
 from scheduler.vault.manager import secrets_mgr
 from storage.container import get_workspace_volume_path
-from storage.models import Workspace, ScaleFile
+from storage.models import Workspace
 from util.environment import normalize_env_var_name
 from util.command import environment_expansion
 
@@ -248,8 +246,10 @@ class ScheduledExecutionConfigurator(object):
 
         self._workspaces = workspaces
 
-        self._system_settings = {'SCALE_BROKER_URL': settings.BROKER_URL,
-                                 'DATABASE_URL': settings.DATABASE_URL}
+        db = settings.DATABASES['default']
+        self._system_settings = {'SCALE_BROKER_URL': settings.BROKER_URL, 'SCALE_DB_NAME': db['NAME'],
+                                 'SCALE_DB_USER': db['USER'], 'SCALE_DB_PASS': db['PASSWORD'],
+                                 'SCALE_DB_HOST': db['HOST'], 'SCALE_DB_PORT': db['PORT']}
         if settings.QUEUE_NAME:
             self._system_settings['SCALE_QUEUE_NAME'] = settings.QUEUE_NAME
         self._system_settings_hidden = {key: '*****' for key in self._system_settings.keys()}
@@ -310,25 +310,21 @@ class ScheduledExecutionConfigurator(object):
             nvidia_docker_label = None
             # second
             #nvidia_docker_label = DockerParameter('label', '0')
-
             for resource in config.get_resources(task_type).resources:
-                env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
-                env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
-                logger.info("about to check for GPUs in this task")
-                if resource.name == "gpus" and int(resource.value) > 0:
+                if resource.name == "gpus" and resource.value > 0:
                     logger.info("found task with gpu > 0")
                     logger.info("gpu amount is %s", resource.value)
                     gpu_list = ""
                     for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
-                        logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", job_exe.node_id, job_exe.id, job_exe.job_id, "job_exe.job_exe_id")
                         if gpustatus == job_exe.job_id:
-                            gpu_list += str(gpunum) + ","
+                            gpu_list += gpunum + ","
 
                     # for i in range(0,int(resource.value)):
                         # gpu_list += str(i) + ","                    
                     logger.info("final gpu string is %s", gpu_list.strip(','))
                     nvidia_docker_label = DockerParameter('env','NVIDIA_VISIBLE_DEVICES={}'.format(gpu_list.strip(',')))
-
+                env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
+                env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
 
             # Configure env vars for Scale meta-data
             env_vars['SCALE_JOB_ID'] = unicode(job_exe.job_id)
@@ -337,7 +333,7 @@ class ScheduledExecutionConfigurator(object):
                 env_vars['SCALE_RECIPE_ID'] = unicode(job_exe.recipe_id)
             if job_exe.batch_id:
                 env_vars['SCALE_BATCH_ID'] = unicode(job_exe.batch_id)
-          
+
             # Configure workspace volumes
             workspace_volumes = {}
             for task_workspace in config.get_workspaces(task_type):
@@ -359,29 +355,7 @@ class ScheduledExecutionConfigurator(object):
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
                                         driver_opts=driver_opts)
                     workspace_volumes[task_workspace.name] = volume
-            
-            
-            # Configure the input_metadata env variable
-            input_metadata = {}
-            if 'input_files' in config._configuration:
-                input_metadata['JOB'] = {}
-                input_data = job_exe.job.get_input_data()
-                for i in input_data.values.keys():
-                    if type(input_data.values[i]) is JsonValue:
-                        input_metadata['JOB'][i] = input_data.values[i].value
-                    elif type(input_data.values[i]) is FileValue:
-                        input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
-            if job_exe.recipe_id and job_exe.recipe.has_input():
-                input_metadata['RECIPE'] = {}
-                input_data = job_exe.recipe.get_input_data() 
-                for i in input_data.values.keys():
-                    if type(input_data.values[i]) is JsonValue:
-                        input_metadata['RECIPE'][i] = input_data.values[i].value
-                    elif type(input_data.values[i]) is FileValue:
-                        input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
-            if input_metadata:
-                env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
-            
+
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
         # Labels for metric grouping
@@ -390,7 +364,6 @@ class ScheduledExecutionConfigurator(object):
         job_type_name_label = DockerParameter('label', 'scale-job-type-name={}'.format(job_type.name))
         job_type_version_label = DockerParameter('label', 'scale-job-type-version={}'.format(job_type.version))
         main_label = DockerParameter('label', 'scale-task-type=main')
-        logger.info("about to check nvidia docker label")
         if nvidia_docker_label:
             logger.info("this means nvidia_docker_label exists!!")
             config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
@@ -407,7 +380,7 @@ class ScheduledExecutionConfigurator(object):
                                                      job_execution_id_label, pre_label])
             config.add_to_task('post', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
                                                   job_execution_id_label, post_label])
-
+        #identify GPU 
         # Configure tasks for logging
         if settings.LOGGING_ADDRESS is not None:
             log_driver = DockerParameter('log-driver', 'syslog')

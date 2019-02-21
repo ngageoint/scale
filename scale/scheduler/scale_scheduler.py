@@ -230,7 +230,6 @@ class ScaleScheduler(object):
         """
 
         started = now()
-
         agents = {}
         resource_offers = []
         total_resources = NodeResources()
@@ -351,8 +350,14 @@ class ScaleScheduler(object):
             try:
                 job_exe = job_exe_mgr.handle_task_update(task_update)
                 if job_exe and job_exe.is_finished():
+                    logger.info("job_exe with job id %s and node id %s is finished", job_exe.job_id, job_exe.node_id)
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
+                    for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
+                        logger.info("now in loop checking for GPUs to free. looking at GPU %s with status %s. trying to match to job id %s",gpunum, gpustatus, job_exe.job_id)
+                        if str(gpustatus) == str(job_exe.job_id):
+                            NodeResources.usedGPUs[job_exe.node_id][gpunum] = "available"
+                            logger.info("job %s is finished, GPU %s set to avilable",job_exe.job_id,gpunum)
             except Exception:
                 cluster_id = JobExecution.parse_cluster_id(task_id)
                 logger.exception('Error handling status update for job execution: %s', cluster_id)

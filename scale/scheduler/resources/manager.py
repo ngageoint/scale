@@ -189,7 +189,7 @@ class ResourceManager(object):
         with self._new_offers_lock:
             new_offers = self._new_offers
             self._new_offers = {}
-
+        # check status here
         # Group tasks and new offers by agent ID
         agent_offers = {}  # {Agent ID: [ResourceOffer]}
         agent_tasks = {}  # {Agent ID: [Tasks]}
