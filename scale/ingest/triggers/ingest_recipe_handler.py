@@ -18,9 +18,7 @@ logger = logging.getLogger(__name__)
 
 RECIPE_TYPE = 'RECIPE'
 
-# TODO:
-# This was modeled off the IngestTriggerHandler class
-# Do we need to inherit from an "IngestTriggerRule" ?
+
 class IngestRecipeHandler(object):
     """Handles ingest trigger rules
     """
@@ -37,14 +35,14 @@ class IngestRecipeHandler(object):
         changes are made in an atomic transaction
 
         :param ingest_id:
-        :type ingest_id: ??
+        :type ingest_id: int
 
         :param source_file: The source file that was ingested
         :type source_file: :class:`source.models.SourceFile`
         :param when: When the source file was ingested
         :type when: :class:`datetime.datetime`
         :param recipe_type_id: id of the Recipe type to kick off
-        :type recipe_type_id: ??
+        :type recipe_type_id: int
         """
 
         recipe_type = RecipeType.objects.get(id=recipe_type_id)
