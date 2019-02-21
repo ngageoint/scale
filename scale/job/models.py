@@ -822,7 +822,8 @@ class JobManager(models.Manager):
         if change_started:
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended, error=error, last_modified=modified)
         else:
-            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error, last_modified=modified)
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
+                                               last_modified=modified)
 
 
 class Job(models.Model):
@@ -2006,7 +2007,6 @@ class JobTypeManager(models.Manager):
     """Provides additional methods for handling job types
     """
 
-
     @transaction.atomic
     def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,
                            configuration=None, is_published=None):
@@ -2337,7 +2337,6 @@ class JobTypeManager(models.Manager):
 
         return job_types
 
-
     def get_details_v6(self, name, version):
         """Returns the job type for the given name and version with all detail fields included.
 
@@ -2533,7 +2532,6 @@ class JobTypeManager(models.Manager):
         secrets_handler = SecretsHandler()
         secrets_handler.set_job_type_secrets(secrets_key, secrets)
 
-
     def validate_job_type_v6(self, manifest_dict, configuration_dict=None):
         """Validates a new job type prior to attempting a save
 
@@ -2613,10 +2611,6 @@ class JobType(models.Model):
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
     :type version_array: list
-    :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
-    :type title: :class:`django.db.models.CharField`
-    :keyword description: An optional description of the job type. Deprecated - remove with v5.
-    :type description: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -2696,9 +2690,6 @@ class JobType(models.Model):
     deprecated = models.DateTimeField(blank=True, null=True)
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-
-    # deprecated - remove trigger_rule when remove triggers
-    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     objects = JobTypeManager()
 
