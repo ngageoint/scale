@@ -22,7 +22,7 @@ from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
-from scheduler.manager import scheduler_mgr
+from scheduler.manager import scheduler_mgr, SchedulerWarning
 from scheduler.node.manager import node_mgr
 from scheduler.resources.agent import ResourceSet
 from scheduler.resources.manager import resource_mgr
@@ -46,6 +46,10 @@ TASK_SHORTAGE_WAIT_COUNT = 10
 
 logger = logging.getLogger(__name__)
 
+
+# Warnings
+INVALID_RESOURCES = SchedulerWarning(name='INVALID_RESOURCES', title='Invalid Resources for %s',
+                                     description='Cluster does not have one or more of the following resources: %s.')
 
 class SchedulingManager(object):
     """This class manages all scheduling. This class is NOT thread-safe and should only be used within the scheduling
@@ -480,6 +484,14 @@ class SchedulingManager(object):
         # Could not schedule job execution, reserve a node to run this execution if possible
         if best_reservation_node:
             del nodes[best_reservation_node.node_id]
+
+        # No nodes could reserve this
+        if best_reservation_score is None:
+            name = INVALID_RESOURCES.name + job_exe._queue.job_type.name
+            title = INVALID_RESOURCES.title % job_exe._queue.job_type.name
+            resource_names = [r.name for r in job_type_resources]
+            description = INVALID_RESOURCES.description % resource_names
+            scheduler_mgr._warning_active(SchedulerWarning(name=name, title=title, description=None), description)
 
         return False
 
