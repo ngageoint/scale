@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 from job.tasks.health_task import HealthTask
 from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
+from util.active_warnings import ActiveError, ActiveWarning
 from util.parse import datetime_to_string
 
 CLEANUP_WARN_THRESHOLD = datetime.timedelta(hours=3)
@@ -19,39 +20,6 @@ NodeError = namedtuple('NodeError', ['name', 'title', 'description', 'daemon_bad
 NodeWarning = namedtuple('NodeWarning', ['name', 'title', 'description'])
 
 WARNING_NAME_COUNTER = 1
-
-
-class ActiveError(object):
-    """This class represents an active error for a node."""
-
-    def __init__(self, error):
-        """Constructor
-
-        :param error: The node error
-        :type error: :class:`scheduler.node.conditions.NodeError`
-        """
-
-        self.error = error
-        self.started = None
-        self.last_updated = None
-
-
-class ActiveWarning(object):
-    """This class represents an active warning for a node."""
-
-    def __init__(self, warning, description=None):
-        """Constructor
-
-        :param warning: The node warning
-        :type warning: :class:`scheduler.node.conditions.NodeWarning`
-        :param description: A specific description that overrides the general description
-        :type description: string
-        """
-
-        self.warning = warning
-        self.description = description
-        self.started = None
-        self.last_updated = None
 
 
 class NodeConditions(object):
