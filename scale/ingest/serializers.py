@@ -17,18 +17,6 @@ class ScanBaseSerializer(ModelIdSerializer):
     job = ModelIdSerializer()
     dry_run_job = ModelIdSerializer()
 
-class ScanSerializerV5(ScanBaseSerializer):
-    """Converts scan model fields to REST output"""
-    from job.serializers import JobBaseSerializerV6
-
-    job = JobBaseSerializerV6()
-    dry_run_job = JobBaseSerializerV6()
-
-    file_count = serializers.IntegerField()
-
-    created = serializers.DateTimeField()
-    last_modified = serializers.DateTimeField()
-
 class ScanSerializerV6(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
     from job.serializers import JobBaseSerializerV6
@@ -54,15 +42,6 @@ class StrikeBaseSerializer(ModelIdSerializer):
     description = serializers.CharField()
     job = ModelIdSerializer()
 
-
-class StrikeSerializerV5(StrikeBaseSerializer):
-    """Converts strike model fields to REST output"""
-    from job.serializers import JobBaseSerializerV6
-
-    job = JobBaseSerializerV6()
-
-    created = serializers.DateTimeField()
-    last_modified = serializers.DateTimeField()
 
 class StrikeSerializerV6(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
@@ -110,8 +89,6 @@ class IngestBaseSerializer(ModelIdSerializer):
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-
-
 
 class IngestSerializerV6(IngestBaseSerializer):
     """Converts ingest model fields to REST output"""
