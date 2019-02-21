@@ -2614,10 +2614,6 @@ class JobType(models.Model):
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
     :type version_array: list
-    :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
-    :type title: :class:`django.db.models.CharField`
-    :keyword description: An optional description of the job type. Deprecated - remove with v5.
-    :type description: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
