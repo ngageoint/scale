@@ -33,7 +33,7 @@ class SchedulerManager(object):
         """Constructor
         """
 
-        self._active_warnings = []
+        self._active_warnings = {}  # {Warning name: ActiveWarning}
 
         self.config = SchedulerConfiguration()
         self.framework_id = None

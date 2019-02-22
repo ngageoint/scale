@@ -133,6 +133,15 @@ class ResourceManager(object):
         status_dict['num_offers'] = num_offers
         status_dict['resources'] = resources_dict
 
+    def get_max_available_resources(self):
+            """Gets the maximum available resources on any agent
+            """
+
+            max_resources = {}
+            for agent in self._agent_resources:
+                agent_total = agent.get_total()
+                for
+                
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline
 
