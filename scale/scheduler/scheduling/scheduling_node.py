@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from job.execution.tasks.exe_task import JobExecutionTask
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Gpus
+from node.resources.gpu_manager import GPUManager
 
 import logging
 
@@ -55,21 +56,22 @@ class SchedulingNode(object):
         #logger.info("this node %s has %s GPUs", self.node_id, resource_set.offered_resources.gpus)
         #logger.info("this is the _INIT_ method of a scheduling node. I am about to check GPUs i should have %s gpus. my id is %s", resource_set.offered_resources.gpus, self.node_id)
         if int(resource_set.offered_resources.gpus) > 0:
-            logger.info("this node has atleast %s gpu", resource_set.offered_resources.gpus)
-            if not self.node_id in NodeResources.usedGPUs:
-                logger.info("node %s did not find itsself in the gpu dic", self.node_id)
-                NodeResources.usedGPUs[self.node_id] = {}
-                for i in range(0,int(resource_set.offered_resources.gpus)):
-                    NodeResources.usedGPUs[self.node_id][i]= "available"
-                    logger.info("added gpu %s to node %s",i,self.node_id)
-            elif resource_set.offered_resources.gpus > len(NodeResources.usedGPUs[self.node_id]) : # a new GPU has been offered...
-                logger.info("it seems we missed some GPUs... currently have %s accounted for but was offered %s",len(NodeResources.usedGPUs[self.node_id]),resource_set.offered_resources.gpus)
-                for i in range(int(len(NodeResources.usedGPUs[self.node_id])),int(resource_set.offered_resources.gpus)):
-                    NodeResources.usedGPUs[self.node_id][i]= "available"
-                    logger.info("added gpu %s to %s",i,self.node_id)
-            else:
-                for GPU, KEY in NodeResources.usedGPUs[self.node_id].iteritems():
-                    logger.info("the gpu %s has status %s", GPU, KEY)
+            GPUManager.DefineNodeGPUs(self.node_id, int(resource_set.offered_resources.gpus))
+            # logger.info("this node has atleast %s gpu", resource_set.offered_resources.gpus)
+            # if not self.node_id in NodeResources.usedGPUs:
+            #     logger.info("node %s did not find itsself in the gpu dic", self.node_id)
+            #     NodeResources.usedGPUs[self.node_id] = {}
+            #     for i in range(0,int(resource_set.offered_resources.gpus)):
+            #         NodeResources.usedGPUs[self.node_id][i]= "available"
+            #         logger.info("added gpu %s to node %s",i,self.node_id)
+            # elif resource_set.offered_resources.gpus > len(NodeResources.usedGPUs[self.node_id]) : # a new GPU has been offered...
+            #     logger.info("it seems we missed some GPUs... currently have %s accounted for but was offered %s",len(NodeResources.usedGPUs[self.node_id]),resource_set.offered_resources.gpus)
+            #     for i in range(int(len(NodeResources.usedGPUs[self.node_id])),int(resource_set.offered_resources.gpus)):
+            #         NodeResources.usedGPUs[self.node_id][i]= "available"
+            #         logger.info("added gpu %s to %s",i,self.node_id)
+            # else:
+            #     for GPU, KEY in NodeResources.usedGPUs[self.node_id].iteritems():
+            #         logger.info("the gpu %s has status %s", GPU, KEY)
 
 
     def accept_job_exe_next_task(self, job_exe, waiting_tasks):
@@ -142,18 +144,19 @@ class SchedulingNode(object):
 
             #logger.info("about to check for gpu resources, there should be %s gpus", resources.gpus)
             if resources.gpus > 0:
-                logger.info("gpus greater than 0")
-                logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", "job_exe.node_id" , job_exe.id, "job_exe.job_id", "s")
-                assignedGPUCount = 0
-                # look for unassigned GPUs
-                for gpunum, gpustatus in NodeResources.usedGPUs[self.node_id].iteritems():
-                    logger.info("entered loop looking for gpus to set")
-                    if assignedGPUCount == int(resources.gpus):
-                        break # assigned everything we need, exit loop
-                    elif gpustatus == "available":
-                        NodeResources.usedGPUs[self.node_id][gpunum] = "reserved"
-                        assignedGPUCount += 1
-                        logger.info("Set %s to reserved", gpunum)
+                GPUManager.reserve_gpus_for_job(self.node_id, int(resources.gpus))
+                # logger.info("gpus greater than 0")
+                # logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", "job_exe.node_id" , job_exe.id, "job_exe.job_id", "s")
+                # assignedGPUCount = 0
+                # # look for unassigned GPUs
+                # for gpunum, gpustatus in NodeResources.usedGPUs[self.node_id].iteritems():
+                #     logger.info("entered loop looking for gpus to set")
+                #     if assignedGPUCount == int(resources.gpus):
+                #         break # assigned everything we need, exit loop
+                #     elif gpustatus == "available":
+                #         NodeResources.usedGPUs[self.node_id][gpunum] = "reserved"
+                #         assignedGPUCount += 1
+                #         logger.info("Set %s to reserved", gpunum)
 
 
                 # for i in range(0,int(self.agent_id)): # wrongo
@@ -164,9 +167,9 @@ class SchedulingNode(object):
                 #         pass
 
 
-                if assignedGPUCount != int(resources.gpus):
-                    logger.info("not enough available GPUs for job %s. needed %s, but only had %s",job_exe.id, resources.gpus, assignedGPUCount)
-                    return False
+                # if assignedGPUCount != int(resources.gpus):
+                #     logger.info("not enough available GPUs for job %s. needed %s, but only had %s",job_exe.id, resources.gpus, assignedGPUCount)
+                #     return False
 
             
             return True
@@ -273,11 +276,11 @@ class SchedulingNode(object):
             logger.info("IM DEALLOCATING RESOURCES!!!")
             resources.add(new_job_exe.required_resources)
             # need a GPU check here so were not doing this for every job
-            for gpunum, gpustatus in NodeResources.usedGPUs[self.node_id].iteritems():
-                logger.info("im checking for GPUs in use using id %s", new_job_exe.id)
-                if gpustatus == new_job_exe.id:
-                    logger.info("i found one!!!!")
-                    gpustatus = 'available'
+            # for gpunum, gpustatus in NodeResources.usedGPUs[self.node_id].iteritems():
+            #     logger.info("im checking for GPUs in use using id %s", new_job_exe.id)
+            #     if gpustatus == new_job_exe.id:
+            #         logger.info("i found one!!!!")
+            #         gpustatus = 'available'
             
 
         self._allocated_queued_job_exes = []
