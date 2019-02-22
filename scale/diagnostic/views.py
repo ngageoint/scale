@@ -42,23 +42,10 @@ class QueueScaleBakeView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_bake_jobs(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -116,23 +103,10 @@ class QueueScaleCasinoView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_casino_recipes(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -190,23 +164,10 @@ class QueueScaleHelloView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_hello_jobs(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -319,23 +280,10 @@ class QueueScaleRouletteView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_roulette_jobs(request)
 
     def post_v6(self, request):
         """Handles v6 post request
