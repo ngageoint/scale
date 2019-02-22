@@ -9,7 +9,6 @@ from django.db import models, transaction
 
 from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
-from job.configuration.data.job_data import JobData as JobData_1_0
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
@@ -318,9 +317,7 @@ class QueueManager(models.Manager):
             job_ids.append(job.id)
             config = configurator.configure_queued_job(job)
 
-            manifest = None
-            if JobInterfaceSunset.is_seed_dict(job.job_type.manifest):
-                manifest = SeedManifest(job.job_type.manifest)
+            manifest = :SeedManifest(job.job_type.manifest)
 
             if priority:
                 queued_priority = priority
@@ -355,55 +352,6 @@ class QueueManager(models.Manager):
             self.bulk_create(queues)
 
         return queued_job_ids
-
-    # TODO: remove once REST API v5 is removed
-    @transaction.atomic
-    def handle_job_cancellation(self, job_id, when):
-        """Handles the cancellation of a job. All database changes occur in an atomic transaction.
-
-        :param job_id: The ID of the job to be canceled
-        :type job_id: int
-        :param when: When the job was canceled
-        :type when: :class:`datetime.datetime`
-        """
-
-        from recipe.messages.update_recipe import create_update_recipe_messages_from_node
-
-        Job.objects.update_jobs_to_canceled_old([job_id], when)
-        self.cancel_queued_jobs([job_id])
-
-        # Create and send messages to update dependent jobs so that they are BLOCKED
-        job = Job.objects.get(id=job_id)
-        if job.root_recipe_id:
-            msgs = create_update_recipe_messages_from_node([job.root_recipe_id])
-            CommandMessageManager().send_messages(msgs)
-
-    @transaction.atomic
-    def queue_new_job(self, job_type, data, event):
-        """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
-        job_exe, and queue models are saved in the database in an atomic transaction.
-
-        :param job_type: The type of the new job to create and queue
-        :type job_type: :class:`job.models.JobType`
-        :param data: The job data to run on
-        :type data: :class:`job.configuration.data.job_data.JobData`
-        :param event: The event that triggered the creation of this job
-        :type event: :class:`trigger.models.TriggerEvent`
-        :returns: The new queued job
-        :rtype: :class:`job.models.Job`
-
-        :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
-        """
-
-        job = Job.objects.create_job_old(job_type, event.id)
-        job.save()
-
-        # No lock needed for this job since it doesn't exist outside this transaction yet
-        Job.objects.populate_job_data_v5(job, data)
-        self.queue_jobs([job])
-        job = Job.objects.get(id=job.id)
-
-        return job
 
     def queue_new_job_v6(self, job_type, data, event, job_configuration=None):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
@@ -462,70 +410,6 @@ class QueueManager(models.Manager):
 
         job_id = self.queue_new_job_v6(job_type, job_data, event, job_configuration=job_configuration).id
         return job_id
-
-    def queue_new_job_for_user(self, job_type, data):
-        """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
-        the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
-        job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
-        invalid, a :class:`job.configuration.data.exceptions.InvalidData` will be thrown.
-
-        :param job_type: The type of the new job to create and queue
-        :type job_type: :class:`job.models.JobType`
-        :param data: JSON description defining the job data to run on
-        :type data: dict
-        :returns: The ID of the new job
-        :rtype: int
-        """
-
-        description = {'user': 'Anonymous'}
-        event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
-
-        # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if 'version' in data and '6' == data['version']:
-            job_data = JobData(data)
-        else:
-            job_data = JobData_1_0(data)
-
-        job_id = self.queue_new_job(job_type, job_data, event).id
-        return job_id
-
-    @transaction.atomic
-    def queue_new_recipe(self, recipe_type, data, event, batch_id=None, priority=None):
-        """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
-        new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
-        caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
-        All database changes occur in an atomic transaction.
-
-        :param recipe_type: The type of the new recipe to create
-        :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: The recipe data to run on, should be None if superseded_recipe is provided
-        :type data: :class:`recipe.data.recipe_data.RecipeData`
-        :param event: The event that triggered the creation of this recipe
-        :type event: :class:`trigger.models.TriggerEvent`
-        :param batch_id: The ID of the batch that contains this recipe
-        :type batch_id: int
-        :param priority: An optional argument to reset the priority of associated jobs before they are queued
-        :type priority: int
-        :returns: The new recipe
-        :rtype: :class:`recipe.models.Recipe`
-
-        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
-        """
-
-        handler = Recipe.objects.create_recipe_old(recipe_type, data, event, batch_id, None, None, None, priority)
-        jobs_to_queue = []
-        for job_tuple in handler.get_existing_jobs_to_queue():
-            job = job_tuple[0]
-            job_data = job_tuple[1]
-            try:
-                Job.objects.populate_job_data_v5(job, job_data)
-            except InvalidData as ex:
-                raise Exception('Scale created invalid job data: %s' % str(ex))
-            jobs_to_queue.append(job)
-        if jobs_to_queue:
-            self.queue_jobs(jobs_to_queue)
-
-        return handler.recipe
 
     def queue_new_recipe_v6(self, recipe_type, recipe_input, event, ingest_event=None, recipe_config=None, batch_id=None, superseded_recipe=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
@@ -610,33 +494,6 @@ class QueueManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         return self.queue_new_recipe(recipe_type, data, event)
-
-    # TODO: remove this when REST API v5 is removed
-    @transaction.atomic
-    def requeue_jobs(self, job_ids, priority=None):
-        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
-        superseded will be ignored. All database changes will occur within an atomic transaction.
-
-        :param job_ids: The IDs of the jobs to re-queue
-        :type job_ids: [int]
-        :param priority: An optional argument to reset the jobs' priority before they are queued
-        :type priority: int
-        """
-
-        from queue.messages.queued_jobs import QueuedJob
-        from queue.messages.requeue_jobs import create_requeue_jobs_messages
-
-        queued_jobs = []
-        for job in Job.objects.filter(id__in=job_ids):
-            queued_jobs.append(QueuedJob(job.id, job.num_exes))
-        # Execute all messages to perform requeue
-        messages = create_requeue_jobs_messages(queued_jobs, priority=priority)
-        while messages:
-            msg = messages.pop(0)
-            result = msg.execute()
-            if not result:
-                raise Exception('Requeue failed on message type \'%s\'' % msg.type)
-            messages.extend(msg.new_messages)
 
 
 class Queue(models.Model):

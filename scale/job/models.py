@@ -16,23 +16,18 @@ import django.utils.html
 from django.conf import settings
 from django.db import connection, models, transaction
 from django.db.models import F, Q
-from django.utils import dateparse, timezone
+from django.utils import timezone
 
 import util.parse
-from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.interface import Interface
-from data.interface.parameter import FileParameter, JsonParameter
+from data.interface.parameter import FileParameter
 from error.models import Error
-from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.configuration import JobConfiguration
-from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
-from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
-from job.deprecation import JobInterfaceSunset, JobDataSunset
-from job.exceptions import InvalidJobField, NonSeedJobType
+from job.exceptions import InvalidJobField
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
@@ -45,7 +40,6 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
 from util import rest as rest_utils
-from util.exceptions import RollbackTransaction
 from util.validation import ValidationWarning
 from vault.secrets_handler import SecretsHandler
 
@@ -599,23 +593,7 @@ class JobManager(models.Manager):
         """
 
         input_data.validate(job.job_type_rev.get_input_interface())
-
-        if JobInterfaceSunset.is_seed_dict(job.job_type_rev.manifest):
-            # Normal code path for Seed job
-            input_dict = convert_data_to_v6_json(input_data).get_dict()
-        else:
-            # TODO: remove legacy code path when legacy job types are removed
-            v1_dict = convert_data_to_v1_json(input_data).get_dict()
-            sunset_job_data = JobDataSunset.create(job.job_type_rev.manifest, v1_dict)
-            if job.recipe:
-                sunset_interface = JobInterfaceSunset.create(job.job_type_rev.manifest, do_validate=False)
-
-                # Add workspace for file outputs if needed
-                if sunset_interface.get_file_output_names():
-                    if 'workspace_id' in job.recipe.input:
-                        workspace_id = job.recipe.input['workspace_id']
-                        sunset_interface.add_workspace_to_data(sunset_job_data, workspace_id)
-            input_dict = sunset_job_data.get_dict()
+        input_dict = convert_data_to_v6_json(input_data).get_dict()
 
         self.filter(id=job.id).update(input=input_dict)
 
@@ -1127,16 +1105,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.data.job_data.JobData` or :class:`job.data.job_data.JobData`
         """
 
-        # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if self.input and 'version' in self.input and '6' == self.input['version']:
-            job_data = JobData(self.input)
-        else:
-            # Handle self.input being none on Seed type jobs
-            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.manifest):
-                job_data = JobData(self.input)
-            else:
-                job_data = JobData_1_0(self.input)
-        return job_data
+        return JobData(self.input)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -1155,16 +1124,7 @@ class Job(models.Model):
                 :class:`job.seed.results.job_results.JobResults`
         """
 
-        # TODO: Remove old JobResults in v6 when we transition to only Seed job types
-        if self.output and 'version' in self.output and '6' == self.output['version']:
-            job_results = JobResults(self.output)
-        else:
-            # Handle self.output being none on Seed type jobs
-            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.manifest):
-                job_results = JobResults(self.output)
-            else:
-                job_results = JobResults_1_0(self.output)
-        return job_results
+        return JobResults(self.output)
 
     def get_output_data(self):
         """Returns the output data for this job
@@ -1862,12 +1822,7 @@ class JobExecutionOutput(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
-        # TODO: Remove old JobResults in v6 when we transition to only Seed job types
-        if self.output and 'version' in self.output and '2.0' == self.output['version']:
-            job_results = JobResults(self.output)
-        else:
-            job_results = JobResults_1_0(self.output)
-        return job_results
+        return JobResults(self.output)
 
     class Meta(object):
         """Meta information for the database"""
@@ -2100,102 +2055,6 @@ class JobTypeManager(models.Manager):
         JobTypeTag.objects.update_job_type_tags(job_type, manifest)
 
         return job_type
-
-    @transaction.atomic
-    def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                         error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
-        """Edits the given job type and saves the changes in the database. The caller must provide the related
-        trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
-        indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
-        no change to the trigger rule (False) and removing the trigger rule (True) when trigger_rule is None.
-
-        :param job_type_id: The unique identifier of the job type to edit
-        :type job_type_id: int
-        :param interface: The interface for running a job of this type, possibly None
-        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
-        :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
-        :type trigger_rule: :class:`trigger.models.TriggerRule`
-        :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
-            when trigger_rule is None
-        :type remove_trigger_rule: bool
-        :param error_mapping: Mapping for translating an exit code to an error type
-        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
-        :param custom_resources: Custom resources required by this job type
-        :type custom_resources: :class:`node.resources.json.resources.Resources`
-        :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
-        :param secrets: Secret settings required by this job type
-        :type secrets: dict
-
-        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
-        type interface is invalid
-        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface change
-        invalidates any existing recipe type definitions
-        """
-
-        for field_name in kwargs:
-            if field_name in JobType.UNEDITABLE_FIELDS:
-                raise Exception('%s is not an editable field' % field_name)
-        self._validate_job_type_fields(**kwargs)
-
-        # Acquire model lock for job type
-        job_type = JobType.objects.select_for_update().get(pk=job_type_id)
-        if job_type.is_system:
-            if len(kwargs) > 1 or 'is_paused' not in kwargs:
-                raise InvalidJobField('You can only modify the is_paused field for a System Job')
-
-        # Check for backdoor editing of seed job types
-        if job_type.is_seed_job_type():
-            v6_fields = {'icon_code', 'is_active', 'is_paused', 'is_published', 'max_scheduled', 'configuration'}
-            for field_name in kwargs:
-                if field_name not in v6_fields:
-                    raise InvalidJobField('Invalid field: %s \n Only the following fields are editable for seed job types: %s ' % (field_name, v6_fields))
-            if interface or error_mapping or custom_resources or secrets:
-                raise InvalidJobField('Only the following fields are editable for seed job types: %s ' % v6_fields)
-
-        recipe_types = []
-        if interface:
-            # Lock all recipe types so they can be validated after changing job type interface
-            from recipe.models import RecipeType
-            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
-
-        if interface:
-            # New job interface, validate all existing recipes
-            job_type.manifest = interface.get_dict()
-            job_type.revision_num += 1
-            job_type.save()
-            for recipe_type in recipe_types:
-                recipe_type.get_recipe_definition().validate_job_interfaces()
-
-        # New job configuration
-        if configuration:
-            configuration.validate(job_type.manifest)
-            job_type.configuration = configuration.get_dict()
-
-        if error_mapping:
-            error_mapping.validate_legacy()
-            job_type.error_mapping = error_mapping.error_dict
-
-        if custom_resources:
-            job_type.custom_resources = custom_resources.get_dict()
-
-        if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
-            job_type.deprecated = None if kwargs['is_active'] else timezone.now()
-        if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
-            job_type.paused = timezone.now() if kwargs['is_paused'] else None
-        for field_name in kwargs:
-            setattr(job_type, field_name, kwargs[field_name])
-        job_type.unmet_resources = None #assume edit is fixing resources; reset unmet_resources
-        job_type.save()
-
-        # Save any secrets to Vault
-        if secrets:
-            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
-
-        if interface:
-            # Create new revision of the job type for new interface
-            JobTypeRevision.objects.create_job_type_revision(job_type)
 
     @transaction.atomic
     def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None,
@@ -2528,11 +2387,6 @@ class JobTypeManager(models.Manager):
         # Attempt to get the job type
         job_type = JobType.objects.all().get(name=name, version=version)
 
-        # V6 does not support non seed job types
-        if not job_type.is_seed_job_type():
-            raise NonSeedJobType('Job type %s version %s is not a Seed image. Please update your image or use the legacy v5 interface' % (name, version))
-
-
         # Scrub configuration for secrets
         if job_type.configuration:
             configuration = job_type.get_job_configuration()
@@ -2808,7 +2662,7 @@ class JobType(models.Model):
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
     :param is_published: Whether this job type has outputs that are published.
-        :type is_published: :class:`django.db.models.BooleanField`
+    :type is_published: :class:`django.db.models.BooleanField`
 
     :keyword unmet_resources: List of resource names that currently don't exist or aren't sufficient in the cluster
     :type unmet_resources: :class:`django.db.models.CharField`
@@ -2820,8 +2674,6 @@ class JobType(models.Model):
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
     :type icon_code: string of a FontAwesome icon code
 
-    :keyword revision_num: The current revision number of the interface, starts at one. Deprecated - remove with v5.
-    :type revision_num: :class:`django.db.models.IntegerField`
     :keyword docker_image: The Docker image containing the code to run for this job (if uses_docker is True)
     :type docker_image: :class:`django.db.models.CharField`
     :keyword manifest: JSON description defining the manifest for running a job of this type (previously interface).
@@ -2838,72 +2690,25 @@ class JobType(models.Model):
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
 
-    :keyword category: An optional overall category of the job type. Deprecated - remove with v5.
-    :type category: :class:`django.db.models.CharField`
-    :keyword author_name: The name of the person or organization that created the associated algorithm. Deprecated -
-        remove with v5.
-    :type author_name: :class:`django.db.models.CharField`
-    :keyword author_url: The address to a home page about the author or associated algorithm. Deprecated - removed in
-        v6.
-    :type author_url: :class:`django.db.models.TextField`
     :keyword is_operational: Whether this job type is operational (True) or is still in a research & development (R&D)
         phase (False)
     :type is_operational: :class:`django.db.models.BooleanField`
-    :keyword uses_docker: Whether the job type uses Docker. Deprecated - remove with v5.
-    :type uses_docker: :class:`django.db.models.BooleanField`
-    :keyword docker_privileged: Whether the job type uses Docker in privileged mode. Deprecated - remove with v5.
-    :type docker_privileged: :class:`django.db.models.BooleanField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker. See the mesos
-        prototype file for further information. Deprecated - remove with v5.
-    :type docker_params: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword error_mapping: Mapping for translating an exit code to an error type. Deprecated - remove with v5.
-    :type error_mapping: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword trigger_rule: The rule to trigger new jobs of this type
-    :type trigger_rule: :class:`django.db.models.ForeignKey`
-    :keyword priority: The priority of the job type (lower number is higher priority)
-    :type priority: :class:`django.db.models.IntegerField`
-    :keyword timeout: The maximum amount of time to allow a job of this type to run before being killed (in seconds)
-    :type timeout: :class:`django.db.models.IntegerField`
-    :keyword cpus_required: The number of CPUs required for a job of this type. Deprecated - remove with v5.
-    :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type. Deprecated - removed
-        in v6.
-    :type mem_const_required: :class:`django.db.models.FloatField`
-    :keyword mem_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine additional
-        RAM in MiB required for a job of this type. Deprecated - remove with v5.
-    :type mem_mult_required: :class:`django.db.models.FloatField`
-    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type.
-        Deprecated - remove with v5.
-    :type shared_mem_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
-        products) for a job of this type. Deprecated - remove with v5.
-    :type disk_out_const_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine
-        additional disk space in MiB required for job output (temp work and products) for a job of this type.
-        Deprecated - remove with v5.
-    :type disk_out_mult_required: :class:`django.db.models.FloatField`
-    :keyword custom_resources: JSON describing the custom resources required for jobs of this type. Deprecated -
-        remove with v5.
-    :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
     """
 
-    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
-                   'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'is_published',
+    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'is_published',
                    'icon_code')
 
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'deprecated', 'paused', 'last_modified')
 
-    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'error_mapping', 'custom_resources',
-                      'configuration')
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+                      'configuration', )
 
-    UNEDITABLE_FIELDS_V6 = ('is_system', 'revision_num', 'created', 'deprecated', 'last_modified')
+    UNEDITABLE_FIELDS_V6 = ('version_array', 'is_system', 'created', 'deprecated', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
-    title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2916,7 +2721,6 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
-    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
@@ -2927,25 +2731,6 @@ class JobType(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = JobTypeManager()
-
-    def convert_custom_resources(self):
-        """Takes the raw custom_resources dict and performs the Scale version conversion on it so that the REST API
-        always returns the latest version of the JSON schema
-
-        :returns: The custom resources dict converted to the latest version of the JSON schema
-        :rtype: dict
-        """
-
-        return self.get_custom_resources().get_dict()
-
-    def get_custom_resources(self):
-        """Returns the custom resources required for jobs of this type
-
-        :returns: The custom resources
-        :rtype: :class:`node.resources.json.resources.Resources`
-        """
-
-        return Resources(self.custom_resources)
 
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
@@ -2964,11 +2749,7 @@ class JobType(models.Model):
         """
 
         interface = self.get_job_interface()
-
-        version = self.version
-        # TODO: Make this the only code path when legacy job types are removed
-        if isinstance(interface, SeedManifest):
-            version = interface.get_job_version()
+        version = interface.get_job_version()
 
         return version
 
@@ -3047,11 +2828,6 @@ class JobType(models.Model):
         :rtype: :class:`job.error.mapping.JobErrorMapping`
         """
 
-        # TODO: remove when legacy job types go away
-        if not JobInterfaceSunset.is_seed_dict(self.manifest):
-            from job.error.mapping import create_legacy_error_mapping
-            return create_legacy_error_mapping(self.error_mapping)
-
         return SeedManifest(self.manifest).get_error_mapping()
 
     def get_job_configuration(self):
@@ -3096,15 +2872,6 @@ class JobType(models.Model):
 
         return '-'.join([self.name, self.version]).replace('.', '_')
 
-    def get_v2_configuration_json(self):
-        """Returns the job configuration in v2 of the JSON schema
-
-        :returns: The job configuration in v2 of the JSON schema
-        :rtype: dict
-        """
-
-        return rest_utils.strip_schema_version(convert_config_to_v2_json(self.get_job_configuration()).get_dict())
-
     def get_v6_configuration_json(self):
         """Returns the job configuration in v6 of the JSON schema
 
@@ -3113,17 +2880,6 @@ class JobType(models.Model):
         """
 
         return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
-
-    def is_seed_job_type(self):
-        """Checks if the JobType object is a Seed job type (True) or legacy job type (False)
-
-        :returns: Whether this job type is legacy or Seed
-        :rtype: bool
-        """
-
-        if JobInterfaceSunset.is_seed_dict(self.manifest):
-            return True
-        return False
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the
