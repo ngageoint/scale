@@ -2665,8 +2665,6 @@ class JobType(models.Model):
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
-    title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2679,7 +2677,6 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
-    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
@@ -2688,6 +2685,9 @@ class JobType(models.Model):
     deprecated = models.DateTimeField(blank=True, null=True)
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    # deprecated - remove trigger_rule when remove triggers
+    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     objects = JobTypeManager()
 
