@@ -8,7 +8,7 @@ import sys
 from django.core.management.base import BaseCommand
 
 from error.exceptions import ScaleError, get_error_by_exception
-from job.deprecation import JobDataSunset
+from job.data.job_data import JobData
 from job.models import JobExecution
 from util.retry import retry_database_query
 
@@ -48,7 +48,7 @@ class Command(BaseCommand):
             job_interface.validate_workspace_for_outputs(exe_config)
 
             job_data = job_exe.job.get_job_data()
-            job_data = JobDataSunset.create(job_interface, job_data.get_dict())
+            job_data = JobData.create(job_interface, job_data.get_dict())
             logger.info('Setting up input files...')
             
             job_interface.perform_pre_steps(job_data)
