@@ -20,10 +20,9 @@ SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 
 
 def dcos_login():
-    # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS EE clusters.
-    servers = os.getenv('MARATHON_SERVERS', 'https://marathon.mesos/marathon,'
-                                            'http://marathon.mesos:8080,https://marathon.mesos:8443,'
-                                            'http://marathon.mesos,https://marathon.mesos').split(',')
+    # Defaults servers for both DCOS 1.10+ CE and EE.
+    servers = os.getenv('MARATHON_SERVERS',
+                        'https://marathon.mesos:8443,http://marathon.mesos:8080').split(',')
 
     if SERVICE_SECRET:
         print('Attempting token auth to Marathon...')
@@ -232,9 +231,6 @@ def deploy_webserver(client, app_name, es_urls, db_url, broker_url, es_ver):
     env_map = {
         'SCALE_ALLOWED_HOSTS': 'SCALE_ALLOWED_HOSTS',
         'SCALE_SECRET_KEY': 'SCALE_SECRET_KEY',
-        'SCALE_DB_NAME': 'SCALE_DB_NAME',
-        'SCALE_DB_PASS': 'SCALE_DB_PASS',
-        'SCALE_DB_USER': 'SCALE_DB_USER',
         'SCALE_QUEUE_NAME': 'SCALE_QUEUE_NAME'
     }
     apply_set_envs(marathon, env_map)
@@ -282,11 +278,7 @@ def deploy_database(client, app_name):
             marathon['container']['volumes'] = [
                 {"containerPath": "/var/lib/pgsql/data", "hostPath": DB_HOST_VOL, "mode": "RW"}]
 
-        env_map = {
-            'SCALE_DB_NAME': 'POSTGRES_DB',
-            'SCALE_DB_USER': 'POSTGRES_USER',
-            'SCALE_DB_PASS': 'POSTGRES_PASSWORD'
-        }
+        env_map = {}
         apply_set_envs(marathon, env_map)
 
         deploy_marathon_app(client, marathon)
