@@ -101,14 +101,14 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
 
 class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     """Converts job type model fields to REST output for legacy job types."""
-    from error.serializers import ErrorSerializerV5
+    from trigger.serializers import TriggerRuleDetailsSerializer
 
     interface = serializers.JSONField(default=dict, source='manifest')
 
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
     error_mapping = serializers.JSONField(default=dict)
-    errors = ErrorSerializerV5(many=True)
+    trigger_rule = TriggerRuleDetailsSerializer()
 
     job_counts_6h = JobTypeStatusCountsSerializer(many=True)
     job_counts_12h = JobTypeStatusCountsSerializer(many=True)
@@ -144,10 +144,8 @@ class JobTypeRunningStatusSerializer(serializers.Serializer):
 
 class JobTypeFailedStatusSerializer(serializers.Serializer):
     """Converts job type failed status model and extra statistic fields to REST output."""
-    from error.serializers import ErrorSerializerV5
 
     job_type = JobTypeBaseSerializerV5()
-    error = ErrorSerializerV5()
     count = serializers.IntegerField()
     first_error = serializers.DateTimeField()
     last_error = serializers.DateTimeField()
