@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 CACHED_BUILTIN_ERROR_NAMES = {}  # {Error Name: Error ID}
 CACHED_JOB_ERROR_NAMES = {}  # {Job Type Name: {Error Name: Error ID}}
-# TODO: remove caching of legacy job error names when legacy-style job types are removed
-CACHED_LEGACY_JOB_ERROR_NAMES = {}  # {Error Name: Error ID}
 CACHED_ERRORS = {}  # {Error ID: Error model}
 
 
@@ -60,14 +58,6 @@ def get_job_error(job_type_name, error_name):
     :rtype: :class:`error.models.Error`
     """
 
-    if job_type_name is None:
-        # Legacy style job type
-        if error_name not in CACHED_LEGACY_JOB_ERROR_NAMES:
-            error = Error.objects.get(job_type_name__isnull=True, name=error_name)
-            _cache_error(error)
-        error_id = CACHED_LEGACY_JOB_ERROR_NAMES[error_name]
-        return CACHED_ERRORS[error_id]
-
     if job_type_name not in CACHED_JOB_ERROR_NAMES or error_name not in CACHED_JOB_ERROR_NAMES[job_type_name]:
         error = Error.objects.get(job_type_name=job_type_name, name=error_name)
         _cache_error(error)
@@ -92,7 +82,6 @@ def reset_error_cache():
 
     CACHED_BUILTIN_ERROR_NAMES.clear()
     CACHED_JOB_ERROR_NAMES.clear()
-    CACHED_LEGACY_JOB_ERROR_NAMES.clear()
     CACHED_ERRORS.clear()
 
     Error.objects.cache_builtin_errors()
@@ -108,15 +97,11 @@ def _cache_error(error):
     CACHED_ERRORS[error.id] = error
     if error.is_builtin:
         CACHED_BUILTIN_ERROR_NAMES[error.name] = error.id
-        # TODO: this is a hack for legacy jobs that use builtin Scale errors, remove this after legacy jobs are removed
-        CACHED_LEGACY_JOB_ERROR_NAMES[error.name] = error.id
     else:
-        if error.job_type_name is None:
-            CACHED_LEGACY_JOB_ERROR_NAMES[error.name] = error.id
-        else:
-            if error.job_type_name not in CACHED_JOB_ERROR_NAMES:
-                CACHED_JOB_ERROR_NAMES[error.job_type_name] = {}
-            CACHED_JOB_ERROR_NAMES[error.job_type_name][error.name] = error.id
+
+        if error.job_type_name not in CACHED_JOB_ERROR_NAMES:
+            CACHED_JOB_ERROR_NAMES[error.job_type_name] = {}
+        CACHED_JOB_ERROR_NAMES[error.job_type_name][error.name] = error.id
 
 
 class ErrorManager(models.Manager):
