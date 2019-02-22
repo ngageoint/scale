@@ -29,6 +29,7 @@ class JobBaseSerializerV6(ModelIdSerializer):
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
 
 
+
 class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
@@ -94,6 +95,7 @@ class JobExecutionBaseSerializerV6(ModelIdSerializer):
     job_type = ModelIdSerializer()
 
 
+
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     """Converts job execution model fields to REST output"""
     from error.serializers import ErrorBaseSerializerV6
@@ -106,6 +108,7 @@ class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
 
     timeout = serializers.IntegerField()
     input_file_size = serializers.FloatField()
+
 
 class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
