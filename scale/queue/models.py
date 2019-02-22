@@ -10,6 +10,7 @@ from django.db import models, transaction
 from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
+
 from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
 from job.models import JobExecution, JobTypeRevision
