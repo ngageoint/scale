@@ -40,7 +40,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
 from util import rest as rest_utils
-
+from util.validation import ValidationWarning
 from vault.secrets_handler import SecretsHandler
 
 
@@ -2655,23 +2655,18 @@ class JobType(models.Model):
     :type paused: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-
-
     :keyword trigger_rule: The rule to trigger new jobs of this type - Deprecated remove when remove triggers
     :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
 
-    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'manifest', 'configuration', 'icon_code',
-        'is_active', 'is_paused', 'is_published')
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+                      'configuration', )
 
-    UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
-        'last_modified', 'paused', 'revision_num')
+    UNEDITABLE_FIELDS_V6 = ('version_array', 'is_system', 'created', 'deprecated', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
-    title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2684,7 +2679,6 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
-    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)

@@ -402,40 +402,7 @@ class QueueManager(models.Manager):
         job_id = self.queue_new_job_v6(job_type, job_data, event, job_configuration=job_configuration).id
         return job_id
 
-    #TODO move this to queue_new_recipe_v6 when TriggerEvents are removed
-    def queue_new_recipe_ingest_v6(self, recipe_type, recipe_input, event, recipe_config=None, batch_id=None, superseded_recipe=None):
-        """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
-        new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
-        caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
-        All database changes occur in an atomic transaction.
-
-        :param recipe_type: The type of the new recipe to create
-        :type recipe_type: :class:`recipe.models.RecipeType`
-        :param recipe_input: The recipe data to run on, should be None if superseded_recipe is provided
-        :type recipe_input: :class:`data.data.data.data`
-        :param event: The ingest event that triggered the creation of this recipe
-        :type event: :class:`ingest.models.IngestEvent`
-        :param recipe_config: config of the recipe
-        :param batch_id: The ID of the batch that contains this recipe
-        :type batch_id: int
-        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
-        :type superseded_recipe: :class:`recipe.models.Recipe`
-        :returns: New recipe type
-        :rtype: :class:`recipe.models.Recipe`
-
-        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
-        """
-
-        recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
-        with transaction.atomic():
-            recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, ingest_id=event.pk, input_data=recipe_input,
-                                                     recipe_config=recipe_config, batch_id=batch_id, superseded_recipe=superseded_recipe)
-            recipe.save()
-            CommandMessageManager().send_messages(create_process_recipe_input_messages([recipe.pk]))
-
-        return recipe
-
-    def queue_new_recipe_v6(self, recipe_type, recipe_input, event, recipe_config=None, batch_id=None, superseded_recipe=None):
+    def queue_new_recipe_v6(self, recipe_type, recipe_input, event, ingest_event=None, recipe_config=None, batch_id=None, superseded_recipe=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
         caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
