@@ -5,6 +5,7 @@ LABEL com.ngageoint.scale.job-type="{\"name\":\"pca\",\"version\":\"1.0.0\",\"ti
 
 ADD pca.*wiz /wizards/
 ADD runOpticks.sh ./
-RUN useradd --uid 7498 scale; chown scale /wizards/pca.* runOpticks.sh
-USER scale
+RUN chown nobody:nobody /wizards/pca.* runOpticks.sh
+USER nobody
+
 ENTRYPOINT ["./runOpticks.sh"]

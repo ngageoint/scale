@@ -28,6 +28,10 @@ MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 # By default, use the '*' role, meaning all resources are unreserved offers are received
 MESOS_ROLE = os.getenv('MESOS_ROLE', '*')
 
+# Used to set the user that Mesos tasks are launched by Docker. This should NEVER be set to root
+# and must be a user name NOT a Linux UID. Mesos chokes on UIDs.
+CONTAINER_PROCESS_OWNER = os.getenv('CONTAINER_PROCESS_OWNER', 'nobody')
+
 # By default, the accepted resources match reservations to the MESOS_ROLE
 ACCEPTED_RESOURCE_ROLE = os.getenv('ACCEPTED_RESOURCE_ROLE', MESOS_ROLE)
 

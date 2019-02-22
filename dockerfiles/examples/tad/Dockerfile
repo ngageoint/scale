@@ -12,6 +12,6 @@ WORKDIR /wizards/
 ADD centroid.py /wizards/
 ADD tad.*wiz /wizards/
 ADD runOpticks.sh /wizards/
-RUN useradd --uid 7498 scale; chown scale /wizards/*
-USER scale
+RUN chown nobody /wizards/*
+USER nobody
 ENTRYPOINT ["./runOpticks.sh"]
