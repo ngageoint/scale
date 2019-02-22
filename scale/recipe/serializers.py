@@ -131,6 +131,7 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
+
 class RecipeJobsSerializerV6(serializers.Serializer):
     """Converts recipe model fields to REST output."""
     from job.serializers import JobSerializerV6
@@ -139,6 +140,7 @@ class RecipeJobsSerializerV6(serializers.Serializer):
     job_name = serializers.CharField(source='node_name')
     is_original = serializers.BooleanField()
     recipe = ModelIdSerializer()
+
 
 class RecipeJobsDetailsSerializerV6(RecipeJobsSerializerV6):
     """Converts related recipe model fields to REST output."""
