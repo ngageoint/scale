@@ -24,7 +24,7 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
-from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6, 
+from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV6)
 from job.job_type_serializers import (JobTypeSerializerV6, JobTypeRevisionSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
@@ -233,7 +233,7 @@ class JobTypeDetailsView(GenericAPIView):
         except NonSeedJobType as ex:
             logger.exception('Attempting to use v6 interface for non seed image with name=%s, version=%s', name, version)
             raise BadParameter(unicode(ex))
-            
+
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
@@ -562,7 +562,7 @@ class JobsView(ListAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
-            job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(), 
+            job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(),
                                                              job_configuration=configuration)
         except InvalidData as err:
             logger.exception('Invalid job data.')
@@ -651,7 +651,7 @@ class RequeueJobsView(GenericAPIView):
         job_status = rest_util.parse_string(request, 'status', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
         priority = rest_util.parse_int(request, 'priority', required=False)
-        
+
         job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_ids', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
@@ -747,7 +747,7 @@ class JobExecutionsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         statuses = rest_util.parse_string_list(request, 'status', required=False)
         node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
         error_ids = rest_util.parse_int_list(request, 'error_id', required=False)
