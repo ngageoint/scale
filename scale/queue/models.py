@@ -11,7 +11,6 @@ from job.execution.configuration.configurators import QueuedExecutionConfigurato
 from job.configuration.data.exceptions import InvalidData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.data.job_data import JobData
-from job.deprecation import JobInterfaceSunset
 from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
 from job.models import JobExecution, JobTypeRevision
@@ -317,7 +316,7 @@ class QueueManager(models.Manager):
             job_ids.append(job.id)
             config = configurator.configure_queued_job(job)
 
-            manifest = :SeedManifest(job.job_type.manifest)
+            manifest = SeedManifest(job.job_type.manifest)
 
             if priority:
                 queued_priority = priority
@@ -572,7 +571,7 @@ class Queue(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
         """
 
-        return JobInterfaceSunset.create(self.interface, do_validate=False)
+        return SeedManifest(self.interface, do_validate=False)
 
     def get_resources(self):
         """Returns the resources required by this queued job
