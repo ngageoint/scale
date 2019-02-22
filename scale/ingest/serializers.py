@@ -20,10 +20,10 @@ class ScanBaseSerializer(ModelIdSerializer):
 
 class ScanSerializerV5(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
-    from job.serializers import JobBaseSerializerV5
+    from job.serializers import JobBaseSerializerV6
 
-    job = JobBaseSerializerV5()
-    dry_run_job = JobBaseSerializerV5()
+    job = JobBaseSerializerV6()
+    dry_run_job = JobBaseSerializerV6()
 
     file_count = serializers.IntegerField()
 
@@ -65,9 +65,9 @@ class StrikeBaseSerializer(ModelIdSerializer):
 
 class StrikeSerializerV5(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
-    from job.serializers import JobBaseSerializerV5
+    from job.serializers import JobBaseSerializerV6
 
-    job = JobBaseSerializerV5()
+    job = JobBaseSerializerV6()
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
