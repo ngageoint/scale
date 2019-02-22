@@ -51,13 +51,11 @@ class JobBaseSerializerV6(ModelIdSerializer):
 # TODO: remove this function when REST API v5 is removed
 class JobSerializerV5(JobBaseSerializerV5):
     """Converts job model fields to REST output."""
-    from error.serializers import ErrorBaseSerializerV5
     from trigger.serializers import TriggerEventBaseSerializerV5
 
     job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventBaseSerializerV5()
     node = NodeBaseSerializer()
-    error = ErrorBaseSerializerV5()
 
     timeout = serializers.IntegerField()
     max_tries = serializers.IntegerField()
@@ -242,14 +240,12 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
 # TODO: remove this function when REST API v5 is removed
 class JobDetailsSerializerV5(JobSerializerV5):
     """Converts job model and related fields to REST output."""
-    from error.serializers import ErrorSerializerV5
     from trigger.serializers import TriggerEventDetailsSerializerV5
     from recipe.serializers import RecipeSerializerV5
 
     job_type = JobTypeSerializerV5()
     job_type_rev = JobTypeRevisionSerializerV5()
     event = TriggerEventDetailsSerializerV5()
-    error = ErrorSerializerV5()
 
     data = serializers.JSONField(default=dict, source='input')
     results = serializers.JSONField(default=dict, source='output')
@@ -279,12 +275,10 @@ class JobUpdateSerializerV5(JobSerializerV5):
 class JobExecutionSerializerV5(JobExecutionBaseSerializerV5):
     """Converts job execution model fields to REST output"""
 
-    from error.serializers import ErrorBaseSerializerV5
     from node.serializers import NodeBaseSerializer
 
     job = JobBaseSerializerV5()
     node = NodeBaseSerializer()
-    error = ErrorBaseSerializerV5(source='jobexecutionend.error')
 
 
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
@@ -306,12 +300,10 @@ class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
 class JobExecutionDetailsSerializerV5(JobExecutionSerializerV5):
     """Converts job execution model fields to REST output"""
 
-    from error.serializers import ErrorSerializerV5
     from node.serializers import NodeSerializer
 
     job = JobSerializerV5()
     node = NodeSerializer()
-    error = ErrorSerializerV5(source='jobexecutionend.error')
 
 
 class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
