@@ -23,18 +23,12 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
-<<<<<<< HEAD
 from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV6)
-from job.job_type_serializers import (JobTypeListSerializerV6, JobTypeSerializerV6, JobTypeRevisionSerializerV6,
-=======
-from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
-                             JobExecutionDetailsSerializerV6)
-from job.job_type_serializers import (JobTypeSerializerV6, JobTypeRevisionSerializerV6,
->>>>>>> :fire: removed deprecated views
+from job.job_type_serializers import (JobTypeSerializerV6, JobTypeListSerializerV6, JobTypeRevisionSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
-                                      JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
-                                      JobTypeFailedStatusSerializer, JobTypeStatusSerializer)
+                                      JobTypePendingStatusSerializerV6, JobTypeRunningStatusSerializerV6,
+                                      JobTypeFailedStatusSerializerV6, JobTypeStatusSerializerV6)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.json.resources import Resources
@@ -52,11 +46,7 @@ logger = logging.getLogger(__name__)
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
-<<<<<<< HEAD
     serializer_class = JobTypeListSerializerV6
-=======
-    serializer_class = JobTypeSerializerV6
->>>>>>> :fire: removed deprecated views
 
     def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
@@ -81,10 +71,6 @@ class JobTypesView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
-<<<<<<< HEAD
-
-=======
->>>>>>> :fire: removed deprecated views
         """Creates or edits a Seed job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -194,11 +180,6 @@ class JobTypesView(ListCreateAPIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> :fire: removed deprecated views
 class JobTypeVersionsView(ListAPIView):
     """This view is the endpoint for retrieving versions of a job type."""
     queryset = JobType.objects.all()
@@ -425,102 +406,10 @@ class JobTypesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-<<<<<<< HEAD
         # Validate the seed manifest and job configuration
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
 
-<<<<<<< HEAD
-        raise Http404()
-
-    def _post_v5(self, request):
-        """Validates a new job type and returns any warnings discovered
-
-        :param request: the HTTP POST request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        name = rest_util.parse_string(request, 'name', required=False)
-        version = rest_util.parse_string(request, 'version', required=False)
-
-        # Validate the job interface
-        # TODO: Remove all reference to interface in models and views come v6 API
-        interface_dict = manifest_dict = rest_util.parse_dict(request, 'manifest', required=False)
-        if not interface_dict:
-            interface_dict = rest_util.parse_dict(request, 'interface')
-
-        interface = None
-
-        try:
-            if interface_dict:
-                interface = JobInterfaceSunset.create(interface_dict)
-        except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type interface invalid: %s' % unicode(ex))
-
-        # Pull down top-level fields from Seed Interface
-        if manifest_dict:
-            if not name:
-                name = interface.get_name()
-
-            if not version:
-                version = interface.get_job_version()
-
-        # Validate the job configuration
-        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
-        configuration = None
-        try:
-            configuration = JobConfigurationV2(configuration_dict)
-        except InvalidJobConfiguration as ex:
-            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
-
-        # Validate the error mapping
-        error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
-        error_mapping = None
-        try:
-            if error_dict:
-                error_mapping = create_legacy_error_mapping(error_dict)
-                error_mapping.validate_legacy()
-        except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
-
-        # Validate the custom resources
-        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
-        try:
-            if resources_dict:
-                Resources(resources_dict)
-        except InvalidResources as ex:
-            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
-
-        # Validate the job type
-        try:
-            warnings = JobType.objects.validate_job_type_v5(name=name, version=version, interface=interface,
-                                                            error_mapping=error_mapping, configuration=configuration)
-        except (InvalidInterfaceDefinition, InvalidDefinition) as ex:
-            logger.exception('Unable to validate new job type: %s', name)
-            raise BadParameter(unicode(ex))
-
-        results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results})
-
-    def _post_v6(self, request):
-        """Validates a new job type and returns any warnings discovered
-
-        :param request: the HTTP POST request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-=======
->>>>>>> :fire: removed deprecated views
-        # Validate the seed manifest and job configuration
-        manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
-        configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
-
-=======
->>>>>>> :fire: removed deprecated views
         # Validate the job type
         validation = JobType.objects.validate_job_type_v6(manifest_dict=manifest_dict,
                                                           configuration_dict=configuration_dict)
@@ -629,7 +518,6 @@ class JobTypesSystemFailuresView(ListAPIView):
 class JobTypesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall job type status information."""
     queryset = JobType.objects.all()
-<<<<<<< HEAD
     #serializer_class = JobTypeStatusSerializer
 
     # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
@@ -640,9 +528,6 @@ class JobTypesStatusView(ListAPIView):
             return JobTypeStatusSerializerV6
         else:
             return JobTypeStatusSerializer
-=======
-    serializer_class = JobTypeStatusSerializer
->>>>>>> :fire: removed deprecated views
 
     def list(self, request):
         """Retrieves the list of all job types with status and returns it in JSON form
@@ -656,14 +541,7 @@ class JobTypesStatusView(ListAPIView):
         # Get a list of all job type status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
-<<<<<<< HEAD
-
         job_type_statuses = JobType.objects.get_status(started=started, ended=ended)
-=======
-        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
-
-        job_type_statuses = JobType.objects.get_status(started=started, ended=ended, is_operational=is_operational)
->>>>>>> :fire: removed deprecated views
 
         page = self.paginate_queryset(job_type_statuses)
         serializer = self.get_serializer(page, many=True)
@@ -788,54 +666,7 @@ class CancelJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-        if request.version == 'v6':
-            return self._post_v6(request)
-        elif request.version == 'v5':
-            return self._post_v5(request)
-
-        raise Http404()
-
-    def _post_v5(self, request):
-        """Submit command message to cancel jobs that fit the given filter criteria
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :returns: the HTTP response to send back to the user
-        """
-
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-
-        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
-        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
-        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
-        job_status = rest_util.parse_string(request, 'status', required=False)
-        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
-
-        # Create and send message
-        msg = create_cancel_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
-                                              error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                              status=job_status)
-        CommandMessageManager().send_messages([msg])
-
-        return Response(status=status.HTTP_202_ACCEPTED)
-
-    def _post_v6(self, request):
-        """Submit command message to cancel jobs that fit the given filter criteria
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :returns: the HTTP response to send back to the user
-        """
-=======
->>>>>>> :fire: removed deprecated views
-
-=======
->>>>>>> :fire: removed deprecated views
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -983,80 +814,7 @@ class JobExecutionsView(ListAPIView):
     queryset = JobExecution.objects.all()
     serializer_class = JobExecutionSerializerV6
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
-    # serializer_class = JobExecutionSerializer
-    def get_serializer_class(self):
-        """Returns the appropriate serializer based off the requests version of the REST API. """
-
-        if self.request.version == 'v6':
-            return JobExecutionSerializerV6
-        else:
-            return JobExecutionSerializerV5
-
-    def list(self, request, job_id=None):
-        """Gets job executions and their associated job_type id, name, and version
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_id: The ID for the job.
-        :type job_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        if request.version == 'v5':
-            return self.list_v5(request, job_id)
-        elif request.version == 'v6':
-            # TODO: remove this check when REST API v5 is removed
-            if not job_id:
-                raise Http404
-            return self.list_v6(request, job_id)
-        else:
-            raise Http404
-
-    # TODO: remove when REST API v5 is removed
-    def list_v5(self, request, job_id):
-        """Gets job executions and their associated job_type id, name, and version
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-
-        job_statuses = rest_util.parse_string_list(request, 'status', required=False)
-        job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
-        job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
-        job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
-
-        node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
-
-        order = rest_util.parse_string_list(request, 'order', required=False)
-
-        job_exes = None
-        if not job_id:
-            job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids,
-                                             job_type_names, job_type_categories, node_ids, order)
-        else:
-            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended,
-                                                         statuses=job_statuses, node_ids=node_ids)
-
-        page = self.paginate_queryset(job_exes)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
-
-    def list_v6(self, request, job_id):
-=======
     def list(self, request, job_id):
->>>>>>> :fire: removed deprecated views
-=======
-    def list(self, request, job_id):
->>>>>>> :fire: removed deprecated views
         """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request

@@ -41,6 +41,7 @@ class ProductFileSerializer(ProductFileBaseSerializer):
     recipe_type = RecipeTypeBaseSerializerV6()
 
 
+
 class ProductFileDetailsSerializer(ProductFileSerializer):
     """Converts product file model fields to REST output"""
     pass
