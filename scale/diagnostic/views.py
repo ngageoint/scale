@@ -218,9 +218,7 @@ class QueueScaleCountView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            raise NotImplemented
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
