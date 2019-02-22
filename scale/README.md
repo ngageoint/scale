@@ -234,23 +234,19 @@ below for reference.
 | CONTAINER_PROCESS_OWNER     | 'nobody'                        | System user used to launch Docker tasks    |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
 | DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
+| ELASTICSEARCH_DOCKER_IMAGE  | 'elasticsearch:2.4-alpine'      | Docker image for Elasticsearch             |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
-| LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
+| LOGSTASH_DOCKER_IMAGE       | 'geoint/scale-logstash'         | Docker image for logstash                  |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
-| SCALE_DB_URL                | use link to `db` or 'localhost' | database host name                         |
-| SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
-| SCALE_DB_PASS               | 'scale'                         | database login password                    |
-| SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
-| SCALE_DB_USER               | 'scale'                         | database login name                        |
+| DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
 | SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
-| SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
 | SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |

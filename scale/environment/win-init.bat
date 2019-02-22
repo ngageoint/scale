@@ -23,17 +23,7 @@ REM Set default connection string for database
 echo BROKER_URL = 'amqp://guest:guest@localhost:%SCALE_MESSAGE_PORT%//' >> scale\local_settings.py
 echo POSTGIS_TEMPLATE = 'template_postgis' >> scale\local_settings.py
 echo. >> scale\local_settings.py
-echo DATABASES = { >> scale\local_settings.py
-echo     'default': { >> scale\local_settings.py
-echo         'ENGINE': 'django.contrib.gis.db.backends.postgis', >> scale\local_settings.py
-echo         'NAME': 'scale', >> scale\local_settings.py
-echo         'USER': 'scale', >> scale\local_settings.py
-echo         'PASSWORD': 'scale', >> scale\local_settings.py
-echo         'HOST': 'localhost', >> scale\local_settings.py
-echo         'PORT': '%SCALE_DB_PORT%', >> scale\local_settings.py
-echo         'TEST': {'NAME': 'test_scale'}, >> scale\local_settings.py
-echo     }, >> scale\local_settings.py
-echo } >> scale\local_settings.py
+echo DATABASES = {'default': dj_database_url.config(default='postgis://scale:scale@localhost:%SCALE_DB_PORT%/scale')} >> scale\local_settings.py
 
 REM Initialize virtual environment
 virtualenv environment\scale

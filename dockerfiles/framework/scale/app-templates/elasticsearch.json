@@ -1,0 +1,39 @@
+{
+    "id": "scale-template-elasticsearch",
+    "cpus": 1,
+    "mem": 512,
+    "disk": 0,
+    "instances": 1,
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "elasticsearch:2-alpine",
+            "forcePullImage": false,
+            "privileged": false,
+            "portMappings": [
+                {
+                    "containerPort": 9200,
+                    "hostPort": 0,
+                    "labels": {
+                        "VIP_0": "/scale-template-elasticsearch:9200"
+                    },
+                    "protocol": "tcp"
+                }
+            ],
+            "network": "BRIDGE"
+        }
+    },
+    "healthChecks": [
+        {
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 60,
+            "maxConsecutiveFailures": 3,
+            "portIndex": 0,
+            "timeoutSeconds": 20,
+            "delaySeconds": 15,
+            "protocol": "MESOS_HTTP",
+            "ipProtocol": "IPv4"
+        }
+    ],
+    "uris": []
+}

@@ -12,6 +12,8 @@ import os
 import scale
 import sys
 
+import dj_database_url
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -61,6 +63,8 @@ ELASTICSEARCH_URLS = None
 ELASTICSEARCH = None
 # placeholder for elasticsearch version. needed to properly form ES log query.
 ELASTICSERACH_VERSION = None
+
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 # Broker URL for connection to messaging backend
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
@@ -185,11 +189,9 @@ WSGI_APPLICATION = 'scale.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(default='sqlite://%s' % os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
 # Internationalization

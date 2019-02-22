@@ -31,17 +31,7 @@ POSTGIS_TEMPLATE = 'template1'
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
 # Example settings for using PostgreSQL database with PostGIS.
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'scale',
-        'USER': 'USER_NAME',
-        'PASSWORD': 'USER_PASSWORD',
-        'HOST': 'DATABASE_HOST',
-        'PORT': '5432',
-        'TEST': {'NAME': 'test_scale_USER_NAME'},
-    },
-}
+DATABASES = {'default': dj_database_url.config(default='postgis://user:pass@localhost:5432/scale')}
 
 # Logging configuration
 LOGGING = LOG_CONSOLE_FILE_DEBUG

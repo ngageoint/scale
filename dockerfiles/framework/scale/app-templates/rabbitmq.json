@@ -28,7 +28,8 @@
                 }
             ],
             "network": "BRIDGE"
-        }
+        },
+        "type": "DOCKER"
     },
     "healthChecks": [
         {
