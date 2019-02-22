@@ -2071,7 +2071,6 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-
     def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None,
                          is_paused=None, is_published=None, max_scheduled=None, configuration=None, auto_update=None):
         """Edits the given job type and saves the changes in the database.
@@ -2671,8 +2670,6 @@ class JobType(models.Model):
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
-    title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2685,7 +2682,6 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
-    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
