@@ -386,6 +386,7 @@ class JobTypeRevisionDetailsView(GenericAPIView):
             job_type_rev = JobTypeRevision.objects.get_details_v6(name, version, revision_num)
         except JobType.DoesNotExist:
             raise Http404
+
         except JobTypeRevision.DoesNotExist:
             raise Http404
 
