@@ -23,9 +23,15 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
+<<<<<<< HEAD
 from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV6)
 from job.job_type_serializers import (JobTypeListSerializerV6, JobTypeSerializerV6, JobTypeRevisionSerializerV6,
+=======
+from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
+                             JobExecutionDetailsSerializerV6)
+from job.job_type_serializers import (JobTypeSerializerV6, JobTypeRevisionSerializerV6,
+>>>>>>> :fire: removed deprecated views
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
                                       JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
                                       JobTypeFailedStatusSerializer, JobTypeStatusSerializer)
@@ -46,7 +52,11 @@ logger = logging.getLogger(__name__)
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
+<<<<<<< HEAD
     serializer_class = JobTypeListSerializerV6
+=======
+    serializer_class = JobTypeSerializerV6
+>>>>>>> :fire: removed deprecated views
 
     def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
@@ -71,7 +81,10 @@ class JobTypesView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
+<<<<<<< HEAD
 
+=======
+>>>>>>> :fire: removed deprecated views
         """Creates or edits a Seed job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -182,7 +195,10 @@ class JobTypesView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> :fire: removed deprecated views
 class JobTypeVersionsView(ListAPIView):
     """This view is the endpoint for retrieving versions of a job type."""
     queryset = JobType.objects.all()
@@ -409,6 +425,7 @@ class JobTypesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
+<<<<<<< HEAD
         # Validate the seed manifest and job configuration
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
@@ -496,6 +513,8 @@ class JobTypesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
+=======
+>>>>>>> :fire: removed deprecated views
         # Validate the seed manifest and job configuration
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
@@ -610,6 +629,7 @@ class JobTypesSystemFailuresView(ListAPIView):
 class JobTypesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall job type status information."""
     queryset = JobType.objects.all()
+<<<<<<< HEAD
     #serializer_class = JobTypeStatusSerializer
 
     # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
@@ -620,6 +640,9 @@ class JobTypesStatusView(ListAPIView):
             return JobTypeStatusSerializerV6
         else:
             return JobTypeStatusSerializer
+=======
+    serializer_class = JobTypeStatusSerializer
+>>>>>>> :fire: removed deprecated views
 
     def list(self, request):
         """Retrieves the list of all job types with status and returns it in JSON form
@@ -633,8 +656,14 @@ class JobTypesStatusView(ListAPIView):
         # Get a list of all job type status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
+<<<<<<< HEAD
 
         job_type_statuses = JobType.objects.get_status(started=started, ended=ended)
+=======
+        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
+
+        job_type_statuses = JobType.objects.get_status(started=started, ended=ended, is_operational=is_operational)
+>>>>>>> :fire: removed deprecated views
 
         page = self.paginate_queryset(job_type_statuses)
         serializer = self.get_serializer(page, many=True)
@@ -761,6 +790,7 @@ class CancelJobsView(GenericAPIView):
         """
 <<<<<<< HEAD
 
+<<<<<<< HEAD
         if request.version == 'v6':
             return self._post_v6(request)
         elif request.version == 'v5':
@@ -804,6 +834,8 @@ class CancelJobsView(GenericAPIView):
 =======
 >>>>>>> :fire: removed deprecated views
 
+=======
+>>>>>>> :fire: removed deprecated views
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -952,6 +984,7 @@ class JobExecutionsView(ListAPIView):
     serializer_class = JobExecutionSerializerV6
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
     # serializer_class = JobExecutionSerializer
     def get_serializer_class(self):
@@ -1018,6 +1051,9 @@ class JobExecutionsView(ListAPIView):
         return self.get_paginated_response(serializer.data)
 
     def list_v6(self, request, job_id):
+=======
+    def list(self, request, job_id):
+>>>>>>> :fire: removed deprecated views
 =======
     def list(self, request, job_id):
 >>>>>>> :fire: removed deprecated views
