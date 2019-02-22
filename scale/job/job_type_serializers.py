@@ -54,6 +54,7 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
 
 
 
+
 class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
     manifest = serializers.JSONField(default=dict)
