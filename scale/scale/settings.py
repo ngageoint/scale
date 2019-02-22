@@ -60,6 +60,8 @@ ELASTICSEARCH = None
 # placeholder for elasticsearch version. needed to properly form ES log query.
 ELASTICSERACH_VERSION = None
 
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 # Broker URL for connection to messaging backend
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 QUEUE_NAME = 'scale-command-messages'
