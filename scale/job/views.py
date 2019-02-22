@@ -808,7 +808,7 @@ class JobExecutionsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if rrequest.version == 'v6':
+        if request.version == 'v6':
             return self.list_v6(request, job_id)
         else:
             raise Http404

@@ -536,9 +536,10 @@ class TestBatchManager(TransactionTestCase):
         recipe = Recipe.objects.create_recipe_v6(self.recipe_type_rev_v6, self.event.id, input_data=self.input_data)
         recipe.save()
 
-        definition = {
+        definition_json = {
             'all_jobs': True,
         }
+        definition = BatchDefinition(definition_json)
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type_v6, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
