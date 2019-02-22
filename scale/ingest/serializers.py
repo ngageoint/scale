@@ -90,24 +90,6 @@ class IngestBaseSerializer(ModelIdSerializer):
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
-
-<<<<<<< HEAD
-class IngestSerializerV5(IngestBaseSerializer):
-    """Converts ingest model fields to REST output"""
-
-    scan = ScanBaseSerializer()
-    strike = StrikeBaseSerializer()
-    data_type = serializers.ListField(child=serializers.CharField(), source='data_type_tags')
-    data_type_tags = None
-
-    workspace = WorkspaceSerializerV5()
-    new_workspace = WorkspaceSerializerV5()
-
-    job = ModelIdSerializer()
-    source_file = SourceFileBaseSerializer()
-
-=======
->>>>>>> :fire: Removing v5 ingest APIs
 class IngestSerializerV6(IngestBaseSerializer):
     """Converts ingest model fields to REST output"""
 
