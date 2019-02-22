@@ -30,23 +30,10 @@ class MetricsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.list_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.list_v6(request)
 
         raise Http404()
-
-    def list_v5(self, request):
-        """Gets v5 metrics types
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.list_impl(request)
 
     def list_v6(self, request):
         """Gets v6 metrics types
@@ -87,23 +74,10 @@ class MetricDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.retrieve_v5(request, name)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.retrieve_v6(request, name)
 
         raise Http404()
-
-    def retrieve_v5(self, request, name):
-        """Gets v5 metrics type details in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.retrieve_impl(request, name)
 
     def retrieve_v6(self, request, name):
         """Gets v6 metrics type details in JSON form
@@ -148,23 +122,10 @@ class MetricPlotView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.list_v5(request, name)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.list_v6(request, name)
 
         raise Http404()
-
-    def list_v5(self, request, name):
-        """Gets v5 plot values for metrics in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.list_impl(request, name)
 
     def list_v6(self, request, name):
         """Gets v6 plot values for metrics in JSON form
