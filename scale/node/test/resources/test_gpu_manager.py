@@ -33,18 +33,17 @@ class test_GPUManager(TestCase):
         
     def test_reserve_gpu(self):
         node_id = 4
-        job_id = 10
         gpu_count = 2
         required_gpus = 2
         GPUManager.DefineNodeGPUs(node_id,gpu_count)
-        self.assertTrue(GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus))
+        self.assertTrue(GPUManager.reserve_gpus_for_job(node_id, required_gpus))
         
         job_id = 11
-        self.assertFalse(GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus))
+        self.assertFalse(GPUManager.reserve_gpus_for_job(node_id, required_gpus))
         
         gpu_count = 4
         GPUManager.DefineNodeGPUs(node_id,gpu_count)
-        self.assertTrue(GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus))
+        self.assertTrue(GPUManager.reserve_gpus_for_job(node_id, required_gpus))
         
     def test_assign_gpus(self):
         node_id = 5
@@ -52,15 +51,15 @@ class test_GPUManager(TestCase):
         gpu_count = 2
         required_gpus = 2
         GPUManager.DefineNodeGPUs(node_id,gpu_count)
-        GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus)
+        GPUManager.reserve_gpus_for_job(node_id, required_gpus)
         self.assertTrue(GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus))
         
         job_id = 11
-        self.assertFalse(GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus)) # shouldnt have enough GPUs
+        self.assertFalse(GPUManager.reserve_gpus_for_job(node_id, required_gpus)) # shouldnt have enough GPUs
         
         gpu_count = 4
         GPUManager.DefineNodeGPUs(node_id,gpu_count)
-        GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus)
+        GPUManager.reserve_gpus_for_job(node_id, required_gpus)
         self.assertTrue(GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus))
     
     def test_get_nvidia_label(self):
@@ -69,7 +68,7 @@ class test_GPUManager(TestCase):
         gpu_count = 2
         required_gpus = 2
         GPUManager.DefineNodeGPUs(node_id,gpu_count)
-        GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus)
+        GPUManager.reserve_gpus_for_job(node_id, required_gpus)
         GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus)
         nvidia_label = GPUManager.get_nvidia_docker_label(node_id, job_id)
         self.assertEqual(nvidia_label, "0,1")
@@ -77,9 +76,26 @@ class test_GPUManager(TestCase):
         gpu_count = 4
         job_id = 11
         GPUManager.DefineNodeGPUs(node_id, gpu_count)
-        GPUManager.reserve_gpus_for_job(node_id, job_id, required_gpus)
+        GPUManager.reserve_gpus_for_job(node_id, required_gpus)
         GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus)
         nvidia_label = GPUManager.get_nvidia_docker_label(node_id, job_id)
         self.assertEqual(nvidia_label, "2,3")
         
-    
+    def test_release_gpu(self):
+        node_id = 7
+        job_id = 10
+        gpu_count = 2
+        required_gpus = 2
+        GPUManager.DefineNodeGPUs(node_id,gpu_count)
+        GPUManager.reserve_gpus_for_job(node_id, required_gpus)
+        self.assertTrue(GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus))
+        
+        job_id = 11
+
+        self.assertFalse(GPUManager.reserve_gpus_for_job(node_id, required_gpus)) # shouldnt have enough GPUs
+        
+        GPUManager.releaseGPUs(node_id, 10)
+        self.assertTrue(GPUManager.reserve_gpus_for_job(node_id, required_gpus)) #gpus should be avail again
+        self.assertTrue(GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus)) #gpus should be avail again
+        nvidia_label = GPUManager.get_nvidia_docker_label(node_id, job_id)
+        self.assertEqual(nvidia_label, "0,1")

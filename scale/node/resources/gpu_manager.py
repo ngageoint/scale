@@ -30,7 +30,7 @@ class GPUManager(object):
             return False #TODO revert assigned GPUs, try again?
         
     @classmethod
-    def reserve_gpus_for_job(cls,node_id, job_id, required_gpu_count):
+    def reserve_gpus_for_job(cls,node_id, required_gpu_count):
         
         assignedGPUCount = 0
         reserveComplete = False
@@ -87,11 +87,12 @@ class GPUManager(object):
     @classmethod
     def releaseGPUs(cls, node_id, job_id):
         
-         for gpunum, gpustatus in cls.__GPUs[node_id].iteritems():
-             logger.info("now in loop checking for GPUs to free. looking at GPU %s with status %s. trying to match to job id %s",gpunum, gpustatus, job_id)
-             if str(gpustatus) == str(job_id):
-                cls.__GPUs[node_id][gpunum] = "available"
-                logger.info("job %s is finished, GPU %s set to avilable",job_id,gpunum)
+        if node_id in cls.__GPUs:
+            for gpunum, gpustatus in cls.__GPUs[node_id].iteritems():
+                logger.info("now in loop checking for GPUs to free. looking at GPU %s with status %s. trying to match to job id %s",gpunum, gpustatus, job_id)
+                if str(gpustatus) == str(job_id):
+                    cls.__GPUs[node_id][gpunum] = "available"
+                    logger.info("job %s is finished, GPU %s set to avilable",job_id,gpunum)
 
     @classmethod
     def get_gpu_count_for_node(cls, node_id):

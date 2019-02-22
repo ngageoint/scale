@@ -9,7 +9,6 @@ from node.resources.resource import Cpus, Disk, Mem, Gpus
 class NodeResources(object):
     """This class encapsulates a set of node resources
     """
-    usedGPUs = {}
     def __init__(self, resources=None):
         """Constructor
 
