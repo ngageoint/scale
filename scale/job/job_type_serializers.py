@@ -54,6 +54,7 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
     category = serializers.CharField()
 
 
+
 class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
     manifest = serializers.JSONField(default=dict)
@@ -83,8 +84,7 @@ class JobTypeRunningStatusSerializer(serializers.Serializer):
 class JobTypeFailedStatusSerializer(serializers.Serializer):
     """Converts job type failed status model and extra statistic fields to REST output."""
 
-    job_type = JobTypeBaseSerializerV6()
-    error = ErrorSerializerV5()
+    job_type = JobTypeBaseSerializerV5()
     count = serializers.IntegerField()
     first_error = serializers.DateTimeField()
     last_error = serializers.DateTimeField()
