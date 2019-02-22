@@ -312,8 +312,10 @@ class QueueManager(models.Manager):
 
         # Bulk create queue models
         queues = []
+        job_ids = []
         configurator = QueuedExecutionConfigurator(input_files)
         for job in queued_jobs:
+            job_ids.append(job.id)
             config = configurator.configure_queued_job(job)
 
             manifest = None
@@ -346,6 +348,8 @@ class QueueManager(models.Manager):
             queue.resources = job.get_resources().get_json().get_dict()
             queue.queued = when_queued
             queues.append(queue)
+
+        self.cancel_queued_jobs(job_ids)
 
         if queues:
             self.bulk_create(queues)

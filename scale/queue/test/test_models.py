@@ -545,6 +545,9 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
 
         data_dict = convert_data_to_v6_json(Data()).get_dict()
         self.new_priority = 200
+        self.standalone_queued_job = job_test_utils.create_job(status='QUEUED', input=data_dict, num_exes=3,
+                                                               priority=100)
+        Queue.objects.queue_jobs([self.standalone_queued_job], requeue=True)
         self.standalone_failed_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=3,
                                                                priority=100)
         self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=1)
@@ -553,7 +556,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED', input=data_dict,)
         Job.objects.supersede_jobs_old([self.standalone_superseded_job], now())
 
-        # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
+        # Create recipe for re-queueing a job that should now be PENDING (and its dependencies)
         job_type_a_1 = job_test_utils.create_job_type()
         job_type_a_2 = job_test_utils.create_job_type()
         definition_a = {
@@ -589,7 +592,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
 
-        # Create recipe for re-queing a job that should now be BLOCKED (and its dependencies)
+        # Create recipe for re-queueing a job that should now be BLOCKED (and its dependencies)
         job_type_b_1 = job_test_utils.create_job_type()
         job_type_b_2 = job_test_utils.create_job_type()
         job_type_b_3 = job_test_utils.create_job_type()
@@ -640,10 +643,14 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
 
         # Job IDs to re-queue
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
-                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id]
+                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id,
+                        self.standalone_queued_job.id]
 
     def test_successful(self):
         """Tests calling QueueManager.requeue_jobs() successfully"""
+
+        status = Queue.objects.get_queue_status()
+        self.assertEqual(status[0].count, 1)
 
         Queue.objects.requeue_jobs(self.job_ids, self.new_priority)
 
@@ -674,3 +681,13 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.assertEqual(job_b_2.status, 'BLOCKED')
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
+
+        # check queue status
+        status = Queue.objects.get_queue_status()
+        sum = 0
+        for s in status:
+            sum += s.count
+        self.assertEqual(sum, 5)
+
+        canceled = Queue.objects.filter(is_canceled=True)
+        self.assertEqual(len(canceled), 1)
