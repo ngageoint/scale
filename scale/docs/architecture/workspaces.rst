@@ -85,7 +85,7 @@ at the same location for this broker to work properly.
 **Permissions**
 
 The Scale Docker containers run as the nobody user. On CentOS, this user has a UID of 99, but it possible that this is 
-changed or different for you distribution. For this reason, we strongly recommend use of CentOS as the underlying host
+changed or different for your distribution. For this reason, we strongly recommend use of CentOS as the underlying host
 operating system. All directories that are offered via a Host broker, must allow access by nobody user.
 
 **Security**
