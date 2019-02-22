@@ -219,6 +219,15 @@ class AgentResources(object):
             shortage_resources.round_values()
         self._shortage_resources = shortage_resources
 
+    def get_total(self):
+        """Gets the total resources for the agent
+        
+        :returns: The total resources for an agent
+        :rtype: dict
+        """
+
+        return self._total_resources
+
     def set_total(self, total_resources):
         """Sets the total resources for the agent
 
