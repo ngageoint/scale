@@ -53,6 +53,7 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
     most_recent = serializers.DateTimeField()
     category = serializers.CharField()
 
+
 class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
     manifest = serializers.JSONField(default=dict)

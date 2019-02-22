@@ -20,6 +20,7 @@ from recipe.diff.forced_nodes import ForcedNodes
 from recipe.models import RecipeType
 from util.parse import datetime_to_string, duration_to_string
 
+
 class TestBatchesViewV6(TransactionTestCase):
 
     def setUp(self):
@@ -589,6 +590,7 @@ class TestBatchesComparisonViewV6(TestCase):
 
         result = json.loads(response.content)
         self.assertDictEqual(result, expected_result)
+
 
 class TestBatchesValidationViewV6(TransactionTestCase):
 
