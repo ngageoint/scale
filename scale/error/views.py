@@ -54,7 +54,7 @@ class ErrorsView(GenericAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        errors = Error.objects.get_errors(started=started, ended=ended, order=order, is_builtin=is_builtin, 
+        errors = Error.objects.get_errors(started=started, ended=ended, order=order, is_builtin=is_builtin,
                                           job_type_name=job_type_name, name=name, category=category)
 
         page = self.paginate_queryset(errors)
