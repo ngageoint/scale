@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import rest_framework.fields as fields
 import rest_framework.serializers as serializers
 
-from batch.serializers import BatchBaseSerializerV5, BatchBaseSerializerV6
+from batch.serializers import BatchBaseSerializerV6
 from recipe.serializers import RecipeTypeBaseSerializerV5, RecipeTypeBaseSerializerV6
 from storage.serializers import ScaleFileSerializerV5
 from util.rest import ModelIdSerializer
@@ -48,7 +48,6 @@ class ProductFileSerializerV5(ProductFileBaseSerializer):
     from job.job_type_serializers import JobTypeBaseSerializerV5
 
     job_type = JobTypeBaseSerializerV5()
-    batch = BatchBaseSerializerV5()
     recipe_type = RecipeTypeBaseSerializerV5()
 
 
