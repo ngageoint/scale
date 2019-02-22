@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 import util.rest as rest_util
 from ingest.models import Ingest
-from ingest.serializers import IngestSerializerV5, IngestSerializerV6
+from ingest.serializers import IngestSerializerV6
 from job.models import Job
 from job.serializers import JobSerializerV5
 from product.models import ProductFile
@@ -105,12 +105,10 @@ class SourceIngestsView(ListAPIView):
 
         if self.request.version == 'v6':
             return IngestSerializerV6
-        elif self.request.version == 'v5':
-            return IngestSerializerV5
 
     def list(self, request, source_id=None):
         """Determine api version and call specific method
-        
+
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param source_id: The id of the source
@@ -118,7 +116,7 @@ class SourceIngestsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v5':
             return self.list_impl(request, source_id)
 
@@ -162,10 +160,10 @@ class SourceJobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all jobs related to a source file."""
     queryset = Job.objects.all()
     serializer_class = JobSerializerV5
-    
+
     def list(self, request, source_id=None):
         """Determine api version and call specific method
-        
+
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param source_id: The id of the source
@@ -173,12 +171,12 @@ class SourceJobsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v5':
             return self.list_impl(request, source_id)
 
         raise Http404()
-        
+
     def list_impl(self, request, source_id=None):
         """Retrieves the jobs for a given source file ID and returns them in JSON form
 
@@ -235,7 +233,7 @@ class SourceProductsView(ListAPIView):
 
     def list(self, request, source_id=None):
         """Determine api version and call specific method
-        
+
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param source_id: The id of the source
@@ -243,12 +241,12 @@ class SourceProductsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v5':
             return self.list_impl(request, source_id)
 
         raise Http404()
-        
+
     def list_impl(self, request, source_id=None):
         """Retrieves the products for a given source file ID and returns them in JSON form
 
@@ -286,8 +284,8 @@ class SourceProductsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        products = SourceFile.objects.get_source_products(source_id, started=started, ended=ended, 
-                                                          time_field=time_field, batch_ids=batch_ids, 
+        products = SourceFile.objects.get_source_products(source_id, started=started, ended=ended,
+                                                          time_field=time_field, batch_ids=batch_ids,
                                                           job_type_ids=job_type_ids, job_type_names=job_type_names,
                                                           job_type_categories=job_type_categories, job_ids=job_ids,
                                                           is_operational=is_operational, is_published=is_published,
@@ -307,7 +305,7 @@ class SourceUpdatesView(ListAPIView):
 
     def list(self, request):
         """Determine api version and call specific method
-        
+
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
