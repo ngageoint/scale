@@ -334,7 +334,6 @@ class BatchManager(models.Manager):
 
         self.filter(id=batch_id).update(is_superseded=True, superseded=when, last_modified=now())
 
-
     def update_batch_metrics(self, batch_ids):
         """Updates the metrics for the batches with the given IDs
 
