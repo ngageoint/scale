@@ -360,8 +360,9 @@ class SchedulingManager(object):
                 scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
 
             if invalid_resources or insufficient_resources:
+                invalid_resources.extend(insufficient_resources)
                 jt = job_type_mgr.get_job_type(job_exe.job_type_id)
-                jt.invalid_resource = True
+                jt.unsupported_resources = invalid_resources
                 jt.save()
             
             
