@@ -134,13 +134,24 @@ class ResourceManager(object):
         status_dict['resources'] = resources_dict
 
     def get_max_available_resources(self):
-            """Gets the maximum available resources on any agent
-            """
+        """Gets the maximum available resources across all agents
 
-            max_resources = {}
-            for agent in self._agent_resources:
-                agent_total = agent.get_total()
-                for
+        :returns: A copy of these resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        max_resources = NodeResources()
+        for agent in self._agent_resources:
+            agent_total = agent.get_total()
+            for resource in agent_total.resources:
+                if resource.name in max_resources.resources:
+                    x = max_resources.resources[resource.name].value
+                    y = resource.value
+                    max_resources.resources[resource.name].value = max(x, y)
+                else:
+                    max_resources.resources[resource.name] = resource.copy()
+
+        return max_resources
                 
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline

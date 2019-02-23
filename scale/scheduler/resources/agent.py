@@ -223,7 +223,7 @@ class AgentResources(object):
         """Gets the total resources for the agent
         
         :returns: The total resources for an agent
-        :rtype: dict
+        :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
         return self._total_resources

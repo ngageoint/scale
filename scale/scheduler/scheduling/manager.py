@@ -50,6 +50,8 @@ logger = logging.getLogger(__name__)
 # Warnings
 INVALID_RESOURCES = SchedulerWarning(name='INVALID_RESOURCES', title='Invalid Resources for %s',
                                      description='Cluster does not have one or more of the following resources: %s.')
+INSUFFICIENT_RESOURCES = SchedulerWarning(name='INSUFFICIENT_RESOURCES', title='Insufficient Resources for %s',
+                                     description='No node has enough of this resource for the job type: %s.')
 WAITING_SYSTEM_TASKS = SchedulerWarning(name='WAITING_SYSTEM_TASKS', title='Waiting System Tasks',
                                      description='No new jobs scheduled due to waiting system tasks')
 UNKNOWN_JOB_TYPE = SchedulerWarning(name='UNKNOWN_JOB_TYPE', title='Unknown Job Type',
@@ -333,20 +335,34 @@ class SchedulingManager(object):
             if not nodes:
                 break
 
-            unmet_resources = []
+            invalid_resources = []
+            insufficient_resources = []
+            max_cluster_resources = resource_mgr.get_max_available_resources()
             # get resource names offered and compare to job type resources
             for resource in job_exe.required_resources:
-                if resource.name not in cluster_resources:
+                if resource.name not in max_cluster_resources:
                     # resource does not exist in cluster
-                    unmet_resources.append(resource.name)
-                    scheduler_mgr.warning_active(INVALID_RESOURCES)
-                    jt = job_type_mgr.get_job_type(job_exe.job_type_id)
-                    jt.invalid_resource = True
-                    jt.save()
-                elif resource.value > cluster_resources[resources.name]:
+                    invalid_resources.append(resource.name)
+                elif resource.value > max_cluster_resources[resource.name]:
                     # resource exceeds the max available from any node
-                    unmet_resources.append(resource.name)
-                    scheduler_mgr.warning_active(INVALID_RESOURCES)
+                    insufficient_resources.append(resource.name)
+
+            if invalid_resources:
+                name = INVALID_RESOURCES.name + queue.job_type.name
+                title = INVALID_RESOURCES.title % queue.job_type.name
+                description = INVALID_RESOURCES.description % invalid_resources
+                scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
+
+            if insufficient_resources:
+                name = INSUFFICIENT_RESOURCES.name + queue.job_type.name
+                title = INSUFFICIENT_RESOURCES.title % queue.job_type.name
+                description = INSUFFICIENT_RESOURCES.description % insufficient_resources
+                scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
+
+            if invalid_resources or insufficient_resources:
+                jt = job_type_mgr.get_job_type(job_exe.job_type_id)
+                jt.invalid_resource = True
+                jt.save()
             
             
             # Make sure execution's job type and workspaces have been synced to the scheduler
