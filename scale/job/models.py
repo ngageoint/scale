@@ -3632,6 +3632,7 @@ class JobType(models.Model):
     is_active = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
+    unmet_resources = models.CharField(blank=True, max_length=250, null=True)
 
     max_scheduled = models.IntegerField(blank=True, null=True)
     max_tries = models.IntegerField(default=3)
