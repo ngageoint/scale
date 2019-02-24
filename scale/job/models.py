@@ -3620,7 +3620,7 @@ class JobType(models.Model):
     is_long_running = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
-    unsupported_resources = models.CharField(blank=True, max_length=250, null=True)
+    unmet_resources = models.CharField(blank=True, max_length=250, null=True)
 
     max_scheduled = models.IntegerField(blank=True, null=True)
     max_tries = models.IntegerField(default=3)

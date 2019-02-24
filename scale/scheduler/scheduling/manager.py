@@ -362,7 +362,7 @@ class SchedulingManager(object):
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
                 jt = job_type_mgr.get_job_type(job_exe.job_type_id)
-                jt.unsupported_resources = invalid_resources
+                jt.unmet_resources = ','.join(invalid_resources)
                 jt.save()
             
             
