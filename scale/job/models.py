@@ -822,8 +822,7 @@ class JobManager(models.Manager):
         if change_started:
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended, error=error, last_modified=modified)
         else:
-            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
-                                               last_modified=modified)
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error, last_modified=modified)
 
 
 class Job(models.Model):
@@ -1576,7 +1575,7 @@ class JobExecution(models.Model):
         if self.status == 'QUEUED':
             return None, timezone.now()
 
-        if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERISON.startswith('2.'):
+        if settings.ELASTICSEARCH_VERSION == "2.4":
             extension = ".raw"
         else:
             extension = ".keyword"
@@ -2611,6 +2610,10 @@ class JobType(models.Model):
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
     :type version_array: list
+    :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
+    :type title: :class:`django.db.models.CharField`
+    :keyword description: An optional description of the job type. Deprecated - remove with v5.
+    :type description: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -2626,7 +2629,7 @@ class JobType(models.Model):
     :type is_published: :class:`django.db.models.BooleanField`
 
     :keyword unmet_resources: List of resource names that currently don't exist or aren't sufficient in the cluster
-    :type unmet_resources: :class:`django.db.models.CharField`
+    :type un: :class:`django.db.models.CharField`
 
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`
@@ -2653,6 +2656,7 @@ class JobType(models.Model):
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
 
+
     :keyword trigger_rule: The rule to trigger new jobs of this type - Deprecated remove when remove triggers
     :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
@@ -2666,6 +2670,8 @@ class JobType(models.Model):
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2678,6 +2684,7 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
+    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
@@ -2696,8 +2703,7 @@ class JobType(models.Model):
         """Returns the interface for running jobs of this type
 
         :returns: The job interface for this type
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or
-                :class:`job.seed.manifest.SeedManifest`
+        :rtype: :class:`job.seed.manifest.SeedManifest`
         """
 
         return SeedManifest(self.manifest)
