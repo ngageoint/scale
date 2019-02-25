@@ -27,7 +27,7 @@ class TestDatabaseUpdater(TestCase):
         """Tests running the database update to remove job execution duplicates"""
 
         # Create jobs with duplicate job executions
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=2)
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3)
         job_3 = job_test_utils.create_job(job_type=job_type, num_exes=2)
@@ -106,11 +106,11 @@ class TestDatabaseUpdater(TestCase):
         recipe_2 = Recipe.objects.get(id=recipe_2.id)
         self.assertTrue(recipe_2.is_completed)
 
+    # TODO: fix when batches work with v6
     def test_update_batch_fields(self):
         """Tests running the database update to populate new batch fields in job and recipe models"""
 
-        definition = {"priority": 303}
-        batch_1 = batch_test_utils.create_batch_old(definition=definition)
+        batch_1 = batch_test_utils.create_batch()
         batch_1.recipe_type_rev_id = 1
         batch_1.configuration = {}
         batch_1.save()
@@ -151,7 +151,7 @@ class TestDatabaseUpdater(TestCase):
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=1).update(created=time_rev_1)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=2).update(created=time_rev_2)
         RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_3.id, revision_num=3).update(created=time_rev_3)
-        batch_3 = batch_test_utils.create_batch_old(recipe_type=recipe_type_3)
+        batch_3 = batch_test_utils.create_batch(recipe_type=recipe_type_3)
         batch_3.recipe_type_rev_id = 1
         batch_3.created = time_batch
         batch_3.save()
@@ -167,7 +167,6 @@ class TestDatabaseUpdater(TestCase):
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         self.assertEqual(batch_1.recipe_type_rev_id, recipe_type_rev.id)
         self.assertEqual(batch_1.root_batch_id, batch_1.id)
-        self.assertEqual(batch_1.get_configuration().priority, 303)
         job_1 = Job.objects.get(id=job_1.id)
         self.assertEqual(job_1.batch_id, batch_1.id)
         job_2 = Job.objects.get(id=job_2.id)
