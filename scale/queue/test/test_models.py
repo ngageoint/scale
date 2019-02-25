@@ -151,6 +151,7 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
     def setUp(self):
         django.setup()
 
+
     @patch('queue.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.queue_new_job_v6() successfully with a Seed job type"""
