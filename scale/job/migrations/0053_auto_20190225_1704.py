@@ -78,6 +78,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RemoveField(
             model_name='jobtype',
+
             name='shared_mem_required',
         ),
         migrations.RemoveField(
