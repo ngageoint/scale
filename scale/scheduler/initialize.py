@@ -31,4 +31,4 @@ def initialize_system():
         logger.info('Queuing Scale Clock job')
         with transaction.atomic():
             init_event = TriggerEvent.objects.create_trigger_event('SCALE_INIT', None, {}, now())
-            Queue.objects.queue_new_job(clock_job_type, JobData(), init_event)
+            Queue.objects.queue_new_job_v6(clock_job_type, JobData(), init_event)
