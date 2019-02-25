@@ -47,7 +47,7 @@ class TestJobLoadManager(TestCase):
     def test_calculate_status(self):
         """Tests calculating job load filtering by status."""
 
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type, status='PENDING')
         job_test_utils.create_job(job_type=job_type, status='BLOCKED')
         job_test_utils.create_job(job_type=job_type, status='QUEUED')
@@ -70,14 +70,14 @@ class TestJobLoadManager(TestCase):
     def test_calculate_job_type(self):
         """Tests calculating job load grouping by job type."""
 
-        job_type1 = job_test_utils.create_job_type()
+        job_type1 = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type1, status='PENDING')
 
-        job_type2 = job_test_utils.create_job_type()
+        job_type2 = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type2, status='QUEUED')
         job_test_utils.create_job(job_type=job_type2, status='QUEUED')
 
-        job_type3 = job_test_utils.create_job_type()
+        job_type3 = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type3, status='RUNNING')
         job_test_utils.create_job(job_type=job_type3, status='RUNNING')
         job_test_utils.create_job(job_type=job_type3, status='RUNNING')
@@ -150,116 +150,6 @@ class TestQueueManager(TransactionTestCase):
                 self.assertEqual(queue.id, queue_1.id)
 
 
-class TestQueueManagerHandleJobCancellation(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-    def test_successful_with_pending_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a pending job."""
-
-        # Create the job
-        job = job_test_utils.create_job(status='PENDING')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_successful_with_blocked_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job."""
-
-        # Create the job
-        job = job_test_utils.create_job(status='BLOCKED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_successful_with_queued_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a queued job."""
-
-        # Queue the job
-        job = job_test_utils.create_job(input=JobData().get_dict(), num_exes=0, status='PENDING')
-        Queue.objects.queue_jobs([job])
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled and queue model is marked canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-        self.assertTrue(Queue.objects.get(job_id=job.id).is_canceled)
-
-    def test_successful_with_running_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a running job."""
-
-        # Create the running job
-        job = job_test_utils.create_job(status='RUNNING')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_successful_with_failed_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a failed job."""
-
-        # Create the failed job
-        job = job_test_utils.create_job(status='FAILED')
-        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
-        time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, exe_num=2, status='FAILED')
-        time.sleep(0.001)
-        job_exe_3 = job_test_utils.create_job_exe(job=job, status='FAILED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_exception_with_completed_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() with a completed job."""
-
-        # Create the completed job
-        job = job_test_utils.create_job(status='COMPLETED')
-        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
-        time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, exe_num=2, status='COMPLETED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is still completed
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'COMPLETED')
-
-    def test_exception_with_canceled_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() with a canceled job."""
-
-        # Create the canceled job
-        job = job_test_utils.create_job(status='CANCELED')
-        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
-        time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, exe_num=2, status='CANCELED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is still canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-
 class TestQueueManagerQueueNewJob(TransactionTestCase):
 
     def setUp(self):
@@ -287,7 +177,7 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
                 'media_type': 'image/png',
             }]
         }
-        job_type = job_test_utils.create_job_type(interface=interface)
+        job_type = job_test_utils.create_seed_job_type(interface=interface)
 
         data_dict = {
             'version': '1.0',
@@ -302,7 +192,7 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
         }
         data = JobData(data_dict)
 
-        job = Queue.objects.queue_new_job(job_type, data, event)
+        job = Queue.objects.queue_new_job_v6(job_type, data, event)
         self.assertEqual(job.status, 'QUEUED')
 
     @patch('queue.models.CommandMessageManager')
@@ -382,7 +272,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
                 'media_type': 'image/png',
             }]
         }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        self.job_type_1 = job_test_utils.create_seed_job_type()
 
         interface_2 = {
             'version': '1.0',
@@ -398,7 +288,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
                 'type': 'file',
             }]
         }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        self.job_type_2 = job_test_utils.create_seed_job_type()
 
         definition = {
             'version': '1.0',
@@ -551,11 +441,11 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
                                                                  priority=100)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED', input=data_dict,)
-        Job.objects.supersede_jobs_old([self.standalone_superseded_job], now())
+        Job.objects.supersede_jobs([self.standalone_superseded_job], now())
 
         # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
-        job_type_a_1 = job_test_utils.create_job_type()
-        job_type_a_2 = job_test_utils.create_job_type()
+        job_type_a_1 = job_test_utils.create_seed_job_type()
+        job_type_a_2 = job_test_utils.create_seed_job_type()
         definition_a = {
             'version': '1.0',
             'input_data': [],
@@ -590,9 +480,9 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
 
         # Create recipe for re-queing a job that should now be BLOCKED (and its dependencies)
-        job_type_b_1 = job_test_utils.create_job_type()
-        job_type_b_2 = job_test_utils.create_job_type()
-        job_type_b_3 = job_test_utils.create_job_type()
+        job_type_b_1 = job_test_utils.create_seed_job_type()
+        job_type_b_2 = job_test_utils.create_seed_job_type()
+        job_type_b_3 = job_test_utils.create_seed_job_type()
         definition_b = {
             'version': '1.0',
             'input_data': [],

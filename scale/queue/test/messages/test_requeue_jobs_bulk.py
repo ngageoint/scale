@@ -27,7 +27,7 @@ class TestRequeueJobsBulk(TestCase):
         data = JobData()
         batch = batch_test_utils.create_batch()
         recipe = recipe_test_utils.create_recipe()
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', error=sys_err,
                                           input=data.get_dict())
         job_1.batch_id = batch.id
@@ -74,7 +74,7 @@ class TestRequeueJobsBulk(TestCase):
         sys_err = error_test_utils.create_error(category='SYSTEM')
 
         data = JobData()
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', error=sys_err,
                                           input=data.get_dict())
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', error=sys_err,
@@ -137,7 +137,7 @@ class TestRequeueJobsBulk(TestCase):
         """Tests calling RequeueJobsBulk.execute() successfully to requeue canceled jobs"""
 
         data = JobData()
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='CANCELED', input=data.get_dict())
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='CANCELED')
 
