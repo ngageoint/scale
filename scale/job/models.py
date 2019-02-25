@@ -820,11 +820,9 @@ class JobManager(models.Manager):
 
         # Update job models in database with single query
         if change_started:
-            self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended,
-                                               error=error, last_modified=modified)
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended, error=error, last_modified=modified)
         else:
-            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
-                                               last_modified=modified)
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error, last_modified=modified)
 
 
 class Job(models.Model):
@@ -1114,7 +1112,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterfaceSunset.create(self.job_type_rev.manifest)
+        return SeedManifest(self.job_type_rev.manifest)
 
     def get_job_results(self):
         """Returns the results for this job
@@ -2653,6 +2651,10 @@ class JobType(models.Model):
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
     :type version_array: list
+    :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
+    :type title: :class:`django.db.models.CharField`
+    :keyword description: An optional description of the job type. Deprecated - remove with v5.
+    :type description: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -2698,20 +2700,17 @@ class JobType(models.Model):
     :type is_operational: :class:`django.db.models.BooleanField`
     """
 
-    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'is_published',
-                   'icon_code')
+    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'manifest', 'configuration', 'icon_code',
+        'is_active', 'is_operational', 'is_paused', 'is_published')
 
-    UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
-                         'created', 'deprecated', 'paused', 'last_modified')
-
-    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
-                      'configuration', )
-
-    UNEDITABLE_FIELDS_V6 = ('version_array', 'is_system', 'created', 'deprecated', 'last_modified')
+    UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
+        'last_modified', 'paused')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2743,8 +2742,8 @@ class JobType(models.Model):
                 :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterfaceSunset.create(self.manifest)
-
+        return SeedManifest(self.manifest)
+    # TODO: remove this??? Check it out later - Mike
     def get_job_version(self):
         """Gets the Job version either from field or manifest
         :return: the version
@@ -2927,9 +2926,15 @@ class JobTypeRevisionManager(models.Manager):
 
         new_rev = JobTypeRevision()
         new_rev.job_type = job_type
-        new_rev.revision_num = job_type.revision_num
         new_rev.manifest = job_type.manifest
         new_rev.docker_image = job_type.docker_image
+
+        revision_num = self.get_latest_job_revision_num(job_type)
+        if revision_num:
+            new_rev.revision_num += revision_num
+        else:
+            new_rev.revision_num = 1
+
         new_rev.save()
 
     def get_by_natural_key(self, job_type, revision_num):
@@ -2944,6 +2949,20 @@ class JobTypeRevisionManager(models.Manager):
         """
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
+
+    def get_latest_job_revision_num(self, job_type):
+        """Returns the most recent revision number for a given Job Type
+
+        :returns: The latest revision number
+        :rtype: int
+        """
+
+        try:
+            job_type_rev = self.get(job_type=job_type).order_by('-id')[0]
+        except JobTypeRevision.DoesNotExist:
+            return None
+
+        return job_type_rev.revision_num
 
     def get_revision(self, job_type_name, job_type_version, revision_num):
         """Returns the revision (with populated job_type model) for the given job type and revision number
@@ -3083,7 +3102,7 @@ class JobTypeRevision(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or `job.seed.manifest.SeedManifest`
         """
 
-        return JobInterfaceSunset.create(self.manifest)
+        return SeedManifest(self.manifest)
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision
