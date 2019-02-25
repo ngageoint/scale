@@ -37,7 +37,7 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 DATABASES = {'default': dj_database_url.config(default='postgis://user:pass@localhost:5432/scale')}
 
 # Logging configuration
-LOGGING = LOG_CONSOLE_FILE_DEBUG
+LOGGING = LOG_CONSOLE_DEBUG
 
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
