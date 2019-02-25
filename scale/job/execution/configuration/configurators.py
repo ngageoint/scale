@@ -377,9 +377,7 @@ class ScheduledExecutionConfigurator(object):
         job_type_name_label = DockerParameter('label', 'scale-job-type-name={}'.format(job_type.name))
         job_type_version_label = DockerParameter('label', 'scale-job-type-version={}'.format(job_type.version))
         main_label = DockerParameter('label', 'scale-task-type=main')
-        logger.info("about to check nvidia docker label")
         if nvidia_docker_label:
-            logger.debug("GPU job detected. applying nvidia_docker variable %s", nvidia_docker_label)
             config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
                                                     job_execution_id_label, main_label, nvidia_docker_label])
         else:
