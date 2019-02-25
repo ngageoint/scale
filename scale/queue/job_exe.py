@@ -66,7 +66,7 @@ class QueuedJobExecution(object):
 
         logger.info("my scheduled node id is %s", job_exe.node_id)
         if self.required_resources.gpus > 0:
-            GPUManager.reserve_gpus_for_job(job_exe.node_id, self.required_resources.gpus)
+            GPUManager.assign_gpus_for_job(job_exe.node_id,job_exe.job_id, self.required_resources.gpus)
             #TODO what if there arent enough GPUs?
             
         # if job_exe.node_id in NodeResources.usedGPUs:

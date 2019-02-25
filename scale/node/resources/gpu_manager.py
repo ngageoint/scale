@@ -13,11 +13,7 @@ class GPUManager(object):
         assignmentComplete = False
         for gpunum, gpustatus in cls.__GPUs[node_id].iteritems():
             logger.info("entered loop looking for gpus to set, expecting to set %s GPUs", int(required_gpu_count))
-            # if assignedGPUCount == int(required_gpu_count):
-            #         assignmentComplete = True   
-            #         break # assigned everything we need, exit loop
             if gpustatus == "reserved":
-                #gpustatus = job_exe.job_id
                 cls.__GPUs[node_id][gpunum] = job_id
                 logger.info("assigned %s to %s", gpunum, job_id)
                 assignedGPUCount += 1
