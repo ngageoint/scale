@@ -231,6 +231,7 @@ class ScaleScheduler(object):
         """
 
         started = now()
+
         agents = {}
         resource_offers = []
         total_resources = NodeResources()

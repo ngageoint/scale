@@ -98,6 +98,7 @@ class SchedulingNode(object):
 
         if not self.is_ready_for_new_job:
             return False
+
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
 
