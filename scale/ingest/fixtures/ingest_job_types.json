@@ -7,33 +7,48 @@
 			"version": "1.0",
 			"title": "Scale Ingest",
 			"description": "Ingests a source file into a workspace",
-            "category": "system",
 			"is_system": true,
 			"is_long_running": false,
 			"is_active": true,
 			"is_paused": false,
-			"uses_docker": true,
-			"docker_privileged": false,
 			"docker_image": "scale",
 			"manifest": {
-			     "version": "1.4",
-                 "command": "",
-			     "command_arguments": "scale_ingest ${-i :ingest_id}",
-			     "input_data": [ { "name": "ingest_id", "type": "property" },
-                                 { "name": "workspace", "type": "property" },
-                                 { "name": "new_workspace", "type": "property", "required": false } ]
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-ingest",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Ingest",
+			         "description": "Ingests a source file into a workspace",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 3600,
+    		         "interface": {
+                         "command": "scale_ingest ${-i :ingest_id}",
+                         "inputs": {
+                             "json": [
+                                 { "name": "ingest_id", "type": "integer", "required": true},
+                                 { "name": "workspace", "type": "string", "required": true},
+                                 { "name": "new_workspace", "type": "string", "required": false }
+                             ]
+                         }
+    		         },
+    		         "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 0.5},
+                            {"name": "disk", "value": 5120.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
 			},
-			"revision_num": 3,
-            "error_mapping": {},
-			"priority": 10,
+			"configuration": {
+			    "priority": 10
+			},
             "max_scheduled": 50,
-			"timeout": 3600,
 			"max_tries": 3,
-			"cpus_required": 0.5,
-			"mem_const_required": 5120.0,
-            "shared_mem_required": 0.0,
-			"disk_out_const_required": 0.0,
-			"disk_out_mult_required": 0.0,
 			"created": "2015-03-11T00:00:00.0Z",
 			"last_modified": "2017-08-03T00:00:00.0Z",
 			"icon_code": "f0f5"
@@ -46,12 +61,36 @@
             "job_type": ["scale-ingest", "1.0"],
             "revision_num": 1,
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "${scale_ingest -i :Ingest ID} ${-m :Mount}",
-                 "input_data": [ { "name": "Ingest ID", "type": "property" },
-                                 { "name": "Mount", "type": "property" } ]
-            },
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-ingest",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Ingest",
+			         "description": "Ingests a source file into a workspace",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 3600,
+    		         "interface": {
+                         "command": "${scale_ingest -i :Ingest ID} ${-m :Mount}",
+                         "inputs": {
+                             "json": [
+                                 { "name": "Ingest ID", "type": "integer", "required": true},
+                                 { "name": "Mount", "type": "string", "required": true}
+                             ]
+                         }
+    		         },
+    		         "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 0.5},
+                            {"name": "disk", "value": 5120.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
+			},
             "created": "2015-11-06T00:00:00.0Z"
         }
     },
@@ -62,10 +101,34 @@
             "job_type": ["scale-ingest", "1.0"],
             "revision_num": 2,
             "manifest": {
-			     "version": "1.0",
-                 "command": "",
-			     "command_arguments": "scale_ingest ${-i :Ingest ID}",
-			     "input_data": [ { "name": "Ingest ID", "type": "property" } ]
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-ingest",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Ingest",
+			         "description": "Ingests a source file into a workspace",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 3600,
+    		         "interface": {
+                         "command": "scale_ingest ${-i :Ingest ID}",
+                         "inputs": {
+                             "json": [
+                                 { "name": "Ingest ID", "type": "integer", "required": true}
+                             ]
+                         }
+    		         },
+    		         "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 0.5},
+                            {"name": "disk", "value": 5120.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
 			},
             "created": "2016-07-12T00:00:00.0Z"
         }
@@ -77,12 +140,36 @@
             "job_type": ["scale-ingest", "1.0"],
             "revision_num": 3,
             "manifest": {
-			     "version": "1.4",
-                 "command": "",
-			     "command_arguments": "scale_ingest ${-i :ingest_id}",
-			     "input_data": [ { "name": "ingest_id", "type": "property" },
-                                 { "name": "workspace", "type": "property" },
-                                 { "name": "new_workspace", "type": "property", "required": false } ]
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-ingest",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Ingest",
+			         "description": "Ingests a source file into a workspace",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 3600,
+    		         "interface": {
+                         "command": "scale_ingest ${-i :ingest_id}",
+                         "inputs": {
+                             "json": [
+                                 { "name": "ingest_id", "type": "integer", "required": true},
+                                 { "name": "workspace", "type": "string", "required": true},
+                                 { "name": "new_workspace", "type": "string", "required": false}
+                             ]
+                         }
+    		         },
+    		         "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 0.5},
+                            {"name": "disk", "value": 5120.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
 			},
             "created": "2017-08-03T00:00:00.0Z"
         }
@@ -95,30 +182,45 @@
             "version": "1.0",
             "title": "Scale Strike",
             "description": "Monitors a directory for incoming source files to ingest",
-            "category": "system",
             "is_system": true,
             "is_long_running": true,
             "is_active": true,
             "is_paused": false,
-            "uses_docker": true,
-            "docker_privileged": false,
             "docker_image": "scale",
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_strike ${-i :Strike ID}",
-                 "input_data": [ { "name": "Strike ID", "type": "property" } ]
-            },
-            "revision_num": 1,
-            "error_mapping": {},
-            "priority": 5,
-            "timeout": 0,
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-strike",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Strike",
+                     "description": "Monitors a directory for incoming source files to ingest",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 0,
+    		         "interface": {
+                         "command": "scale_strike ${-i :Strike ID}",
+                         "inputs": {
+                             "json": [
+                                 { "name": "Strike ID", "type": "integer", "required": true}
+                             ]
+                         }
+    		         },
+    		         "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 1.0},
+                            {"name": "disk", "value": 1024.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
+			},
+			"configuration": {
+                "priority": 5
+			},
             "max_tries": 0,
-            "cpus_required": 1.0,
-            "mem_const_required": 1024.0,
-            "shared_mem_required": 0.0,
-            "disk_out_const_required": 0.0,
-            "disk_out_mult_required": 0.0,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z",
             "icon_code": "f0e7"
@@ -131,15 +233,39 @@
             "job_type": ["scale-strike", "1.0"],
             "revision_num": 1,
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_strike ${-i :Strike ID}",
-                 "input_data": [ { "name": "Strike ID", "type": "property" } ]
-            },
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-strike",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Strike",
+                     "description": "Monitors a directory for incoming source files to ingest",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 0,
+    		         "interface": {
+                         "command": "scale_strike ${-i :Strike ID}",
+                         "inputs": {
+                             "json": [
+                                 { "name": "Strike ID", "type": "integer", "required": true}
+                             ]
+                         }
+    		         },
+    		         "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 1.0},
+                            {"name": "disk", "value": 1024.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
+			},
             "created": "2015-11-06T00:00:00.0Z"
         }
     },
-		{
+	{
         "model": "job.JobType",
         "pk": null,
         "fields": {
@@ -147,31 +273,47 @@
             "version": "1.0",
             "title": "Scale Scan",
             "description": "Scans a workspace for existing files to ingest",
-            "category": "system",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
             "is_paused": false,
-            "uses_docker": true,
-            "docker_privileged": false,
             "docker_image": "scale",
             "manifest": {
-                 "version": "1.2",
-                 "command": "",
-                 "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
-                 "input_data": [ { "name": "Scan ID", "type": "property" },
-                                 { "name": "Dry Run", "type": "property" } ]
-            },
-            "revision_num": 1,
-            "error_mapping": {},
-            "priority": 5,
-            "timeout": 0,
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-scan",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Scan",
+                     "description": "Scans a workspace for existing files to ingest",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 0,
+    		         "interface": {
+                         "command": "",
+                         "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+                         "inputs": {
+                            "json": [
+                                {"name": "Scan ID", "type": "integer", "required": true},
+                                {"name": "Dry Run", "type": "boolean", "required": true}
+                            ]
+                         }
+    		         },
+                     "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 1.0},
+                            {"name": "disk", "value": 1024.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
+			},
+			"configuration": {
+                "priority": 5
+			},
             "max_tries": 0,
-            "cpus_required": 1.0,
-            "mem_const_required": 1024.0,
-            "shared_mem_required": 0.0,
-            "disk_out_const_required": 0.0,
-            "disk_out_mult_required": 0.0,
             "created": "2017-02-07T00:00:00.0Z",
             "last_modified": "2017-02-07T00:00:00.0Z",
             "icon_code": "f02a"
@@ -184,12 +326,37 @@
             "job_type": ["scale-scan", "1.0"],
             "revision_num": 1,
             "manifest": {
-                 "version": "1.2",
-                 "command": "",
-                 "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
-                 "input_data": [ { "name": "Scan ID", "type": "property" },
-                                 { "name": "Dry Run", "type": "property" } ]
-            },
+			     "seedVersion": "1.0.0",
+			     "job": {
+			         "name": "scale-scan",
+			         "jobVersion": "1.0",
+			         "packageVersion": "1.0",
+			         "title": "Scale Scan",
+                     "description": "Scans a workspace for existing files to ingest",
+			         "maintainer": {
+			             "name": "Scale D. Velepor",
+			             "email": "jdoe@example.com"
+			         },
+    		         "timeout": 0,
+    		         "interface": {
+                         "command": "",
+                         "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+                         "inputs": {
+                            "json": [
+                                {"name": "Scan ID", "type": "integer", "required": true},
+                                {"name": "Dry Run", "type": "boolean", "required": true}
+                            ]
+                         }
+    		         },
+                     "resources": {
+                         "scalar": [
+                            {"name": "cpus", "value": 1.0},
+                            {"name": "disk", "value": 1024.0},
+                            {"name": "mem", "value": 0.0}
+                        ]
+                     }
+			     }
+			},
             "created": "2017-02-07T00:00:00.0Z"
         }
     }
