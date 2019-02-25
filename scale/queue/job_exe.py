@@ -1,12 +1,10 @@
 """Defines the class that represents queued job executions being considered for scheduling"""
 from __future__ import unicode_literals
 
-import logging
 from job.models import JobExecution
 from node.resources.node_resources import NodeResources
 from node.resources.gpu_manager import GPUManager
 
-logger = logging.getLogger(__name__)
 
 class QueuedJobExecution(object):
     """This class represents a queued job execution that is being considered for scheduling"""
@@ -64,22 +62,8 @@ class QueuedJobExecution(object):
 
         job_exe.set_cluster_id(framework_id, self._queue.job_id, self._queue.exe_num)
 
-        logger.info("my scheduled node id is %s", job_exe.node_id)
         if self.required_resources.gpus > 0:
             GPUManager.assign_gpus_for_job(job_exe.node_id,job_exe.job_id, self.required_resources.gpus)
-            #TODO what if there arent enough GPUs?
-            
-        # if job_exe.node_id in NodeResources.usedGPUs:
-        #     assignedGPUCount = 0
-        #     for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
-        #         logger.info("entered loop looking for gpus to set, expecting to set %s GPUs", int(self.required_resources.gpus))
-        #         if assignedGPUCount == int(self.required_resources.gpus):
-        #                 break # assigned everything we need, exit loop
-        #         if gpustatus == "reserved":
-        #             #gpustatus = job_exe.job_id
-        #             NodeResources.usedGPUs[job_exe.node_id][gpunum] = job_exe.job_id
-        #             logger.info("assigned %s to %s", gpunum, job_exe.job_id)
-        #             assignedGPUCount += 1
 
         return job_exe
 

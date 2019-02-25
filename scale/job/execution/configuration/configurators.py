@@ -309,27 +309,13 @@ class ScheduledExecutionConfigurator(object):
             # Configure env vars describing allocated task resources
             env_vars = {}
             nvidia_docker_label = None
-            # second
-            #nvidia_docker_label = DockerParameter('label', '0')
 
             for resource in config.get_resources(task_type).resources:
                 env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
                 env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
-                logger.info("about to check for GPUs in this task")
                 if resource.name == "gpus" and int(resource.value) > 0:
-                    logger.info("found task with gpu > 0")
-                    logger.info("gpu amount is %s", resource.value)
                     gpu_list = GPUManager.get_nvidia_docker_label(job_exe.node_id, job_exe.job_id)
-                    # for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
-                    #     logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", job_exe.node_id, job_exe.id, job_exe.job_id, "job_exe.job_exe_id")
-                    #     if gpustatus == job_exe.job_id:
-                    #         gpu_list += str(gpunum) + ","
-
-                    # # for i in range(0,int(resource.value)):
-                    #     # gpu_list += str(i) + ","                    
-                    # logger.info("final gpu string is %s", gpu_list.strip(','))
                     nvidia_docker_label = DockerParameter('env','NVIDIA_VISIBLE_DEVICES={}'.format(gpu_list.strip(',')))
-
 
             # Configure env vars for Scale meta-data
             env_vars['SCALE_JOB_ID'] = unicode(job_exe.job_id)
@@ -393,11 +379,10 @@ class ScheduledExecutionConfigurator(object):
         main_label = DockerParameter('label', 'scale-task-type=main')
         logger.info("about to check nvidia docker label")
         if nvidia_docker_label:
-            logger.info("this means nvidia_docker_label exists!!")
+            logger.debug("GPU job detected. applying nvidia_docker variable %s", nvidia_docker_label)
             config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
                                                     job_execution_id_label, main_label, nvidia_docker_label])
         else:
-            logger.info("this means nvidia_docker_label DOESENT exist!!")
             config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
                                                     job_execution_id_label, main_label])
 

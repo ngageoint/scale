@@ -354,13 +354,9 @@ class ScaleScheduler(object):
                     logger.info("job_exe with job id %s and node id %s is finished", job_exe.job_id, job_exe.node_id)
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
-                    #TODO is GPU job check avail. here?
-                    GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
-                    # for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
-                    #     logger.info("now in loop checking for GPUs to free. looking at GPU %s with status %s. trying to match to job id %s",gpunum, gpustatus, job_exe.job_id)
-                    #     if str(gpustatus) == str(job_exe.job_id):
-                    #         NodeResources.usedGPUs[job_exe.node_id][gpunum] = "available"
-                    #         logger.info("job %s is finished, GPU %s set to avilable",job_exe.job_id,gpunum)
+                    if job_exe.resources.gpus > 0:
+                        GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
+
             except Exception:
                 cluster_id = JobExecution.parse_cluster_id(task_id)
                 logger.exception('Error handling status update for job execution: %s', cluster_id)

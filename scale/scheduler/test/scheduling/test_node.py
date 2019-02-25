@@ -213,7 +213,6 @@ class TestSchedulingNode(TestCase):
         accepted = scheduling_node.accept_new_job_exe(job_exe)
         self.assertTrue(accepted)
         self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 1)
-        # Verify that our greedy GPU allocation logic is working
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0), Gpus(1.0)])))
         self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0), Gpus(3.0)])))
         self.assertEqual(job_exe._scheduled_node_id, node.id)

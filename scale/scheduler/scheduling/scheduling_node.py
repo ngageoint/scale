@@ -53,25 +53,8 @@ class SchedulingNode(object):
         self._remaining_resources.add(self._offered_resources)
         self._task_resources = resource_set.task_resources
         self._watermark_resources = resource_set.watermark_resources
-        #logger.info("this node %s has %s GPUs", self.node_id, resource_set.offered_resources.gpus)
-        #logger.info("this is the _INIT_ method of a scheduling node. I am about to check GPUs i should have %s gpus. my id is %s", resource_set.offered_resources.gpus, self.node_id)
         if int(resource_set.offered_resources.gpus) > 0:
             GPUManager.define_node_gpus(self.node_id, int(resource_set.offered_resources.gpus))
-            # logger.info("this node has atleast %s gpu", resource_set.offered_resources.gpus)
-            # if not self.node_id in NodeResources.usedGPUs:
-            #     logger.info("node %s did not find itsself in the gpu dic", self.node_id)
-            #     NodeResources.usedGPUs[self.node_id] = {}
-            #     for i in range(0,int(resource_set.offered_resources.gpus)):
-            #         NodeResources.usedGPUs[self.node_id][i]= "available"
-            #         logger.info("added gpu %s to node %s",i,self.node_id)
-            # elif resource_set.offered_resources.gpus > len(NodeResources.usedGPUs[self.node_id]) : # a new GPU has been offered...
-            #     logger.info("it seems we missed some GPUs... currently have %s accounted for but was offered %s",len(NodeResources.usedGPUs[self.node_id]),resource_set.offered_resources.gpus)
-            #     for i in range(int(len(NodeResources.usedGPUs[self.node_id])),int(resource_set.offered_resources.gpus)):
-            #         NodeResources.usedGPUs[self.node_id][i]= "available"
-            #         logger.info("added gpu %s to %s",i,self.node_id)
-            # else:
-            #     for GPU, KEY in NodeResources.usedGPUs[self.node_id].iteritems():
-            #         logger.info("the gpu %s has status %s", GPU, KEY)
 
 
     def accept_job_exe_next_task(self, job_exe, waiting_tasks):
@@ -116,7 +99,6 @@ class SchedulingNode(object):
         if not self.is_ready_for_new_job:
             return False
         resources = job_exe.required_resources
-        logger.info("about to check if remaining resources are suffecient")
         if self._remaining_resources.is_sufficient_to_meet(resources):
 
             self._allocated_queued_job_exes.append(job_exe)
@@ -230,20 +212,10 @@ class SchedulingNode(object):
         for new_job_exe in self._allocated_queued_job_exes:
             logger.info("IM DEALLOCATING RESOURCES!!!")
             resources.add(new_job_exe.required_resources)
-            # need a GPU check here so were not doing this for every job
-            # for gpunum, gpustatus in NodeResources.usedGPUs[self.node_id].iteritems():
-            #     logger.info("im checking for GPUs in use using id %s", new_job_exe.id)
-            #     if gpustatus == new_job_exe.id:
-            #         logger.info("i found one!!!!")
-            #         gpustatus = 'available'
-            
 
         self._allocated_queued_job_exes = []
         self.allocated_resources.subtract(resources)
         self._remaining_resources.add(resources)
-
-        # undo GPUs here????? 
-        
 
     def score_job_exe_for_reservation(self, job_exe, job_type_resources):
         """Returns an integer score (lower is better) indicating how well this node is a fit for reserving (temporarily
