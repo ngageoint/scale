@@ -128,6 +128,7 @@ Response: 200 OK
                 "max_scheduled": 1, 
                 "revision_num": 1, 
                 "docker_image": "my-job-1.0.0-seed:1.0.0", 
+                "unmet_resources": null,
                 "created": "2015-03-11T00:00:00Z", 
                 "deprecated": null, 
                 "paused": null, 
@@ -195,6 +196,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .unmet_resources         | String            | Resources required by this job type that are not present.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .deprecated              | ISO-8601 Datetime | When the job type was last deprecated (archived).                        |
@@ -230,6 +233,7 @@ Response: 200 OK
 		"max_scheduled": 1, 
 		"revision_num": 1, 
 		"docker_image": "my-job-1.0.0-seed:1.0.0", 
+		"unmet_resources": null,
 		"manifest": { ... }, 
 		"configuration": { ... },
 		"created": "2015-03-11T00:00:00Z", 
@@ -279,6 +283,8 @@ Response: 200 OK
 | revision_num             | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| unmet_resources          | String            | Resources required by this job type that are not present.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | manifest                 | String            | Seed manifest describing Job, interface and requirements.                |
 |                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
@@ -592,6 +598,7 @@ Location http://.../v6/job-types/test/1.0.0/
 		"max_scheduled": 1, 
 		"revision_num": 1, 
 		"docker_image": "test-1.0.0-seed:1.0.0", 
+		"unmet_resources": null,
 		"manifest": { ... }, 
 		"configuration": { ... },
 		"created": "2015-03-11T00:00:00Z", 
