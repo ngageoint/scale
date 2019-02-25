@@ -97,8 +97,8 @@ class JobLoadManager(models.Manager):
             # Save an empty record as a place holder
             JobLoad(measured=measured, pending_count=0, queued_count=0, running_count=0, total_count=0).save()
 
-    def get_job_loads(self, started=None, ended=None, job_type_ids=None, job_type_names=None, job_type_categories=None,
-                      job_type_priorities=None, order=None):
+    def get_job_loads(self, started=None, ended=None, job_type_ids=None, job_type_names=None,job_type_priorities=None,
+                      order=None):
         """Returns a list of job loads within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -109,8 +109,6 @@ class JobLoadManager(models.Manager):
         :type job_type_ids: list[int]
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: list[str]
-        :param job_type_categories: Query jobs of the type associated with the category.
-        :type job_type_categories: list[str]
         :param job_type_priorities: Query jobs of the type associated with the priority.
         :type job_type_priorities: list[int]
         :param order: A list of fields to control the sort order.
@@ -133,10 +131,8 @@ class JobLoadManager(models.Manager):
             job_loads = job_loads.filter(job_type_id__in=job_type_ids)
         if job_type_names:
             job_loads = job_loads.filter(job_type__name__in=job_type_names)
-        if job_type_categories:
-            job_loads = job_loads.filter(job_type__category__in=job_type_categories)
         if job_type_priorities:
-            job_loads = job_loads.filter(job_type__priority__in=job_type_priorities)
+            job_loads = job_loads.filter(job_type__configuration__priority__in=job_type_priorities)
 
         # Apply sorting
         if order:
@@ -373,7 +369,8 @@ class QueueManager(models.Manager):
         try:
             job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
             with transaction.atomic():
-                job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data, job_config=job_configuration)
+                job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data,
+                                                job_config=job_configuration)
                 job.save()
                 CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
         except InvalidData as ex:

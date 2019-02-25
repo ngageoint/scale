@@ -19,7 +19,7 @@ class TestRequeueJobs(TestCase):
         """Tests coverting a RequeueJobs message to and from JSON"""
 
         data = JobData()
-        job_type = job_test_utils.create_job_type(max_tries=3)
+        job_type = job_test_utils.create_seed_job_type(max_tries=3)
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict())
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict())
         job_ids = [job_1.id, job_2.id]
@@ -53,7 +53,7 @@ class TestRequeueJobs(TestCase):
         """Tests calling RequeueJobs.execute() successfully"""
 
         data = JobData()
-        job_type = job_test_utils.create_job_type(max_tries=3)
+        job_type = job_test_utils.create_seed_job_type(max_tries=3)
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict())
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict())
         job_3 = job_test_utils.create_job(job_type=job_type, num_exes=1, status='COMPLETED', input=data.get_dict())
