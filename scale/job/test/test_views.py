@@ -93,7 +93,7 @@ class TestGetAuthDisabledJobsView(APITestCase):
 
         url = '/%s/jobs/' % self.api
         response = self.client.post(url, data=self.json_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_job_input_messages')
