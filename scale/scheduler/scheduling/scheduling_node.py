@@ -56,7 +56,7 @@ class SchedulingNode(object):
         #logger.info("this node %s has %s GPUs", self.node_id, resource_set.offered_resources.gpus)
         #logger.info("this is the _INIT_ method of a scheduling node. I am about to check GPUs i should have %s gpus. my id is %s", resource_set.offered_resources.gpus, self.node_id)
         if int(resource_set.offered_resources.gpus) > 0:
-            GPUManager.DefineNodeGPUs(self.node_id, int(resource_set.offered_resources.gpus))
+            GPUManager.define_node_gpus(self.node_id, int(resource_set.offered_resources.gpus))
             # logger.info("this node has atleast %s gpu", resource_set.offered_resources.gpus)
             # if not self.node_id in NodeResources.usedGPUs:
             #     logger.info("node %s did not find itsself in the gpu dic", self.node_id)
@@ -118,60 +118,15 @@ class SchedulingNode(object):
         resources = job_exe.required_resources
         logger.info("about to check if remaining resources are suffecient")
         if self._remaining_resources.is_sufficient_to_meet(resources):
-            # If the job execution requires GPUs, we are going to consume ALL of the available GPU node resources
-            # TODO: Once we are capable of proper GPU isolation with UCR we can remove this logic
-            # if resources.gpus > 0:
-            #     # If other GPU tasks are present, cowardly abandon attempt to schedule
-            #     # We are doing this to avoid any contention for un-isolated GPU cores
-            #     if self._task_resources.gpus > 0:
-            #         return False
-
-            #     original_gpus = resources.gpus
-            #     resources.increase_up_to(NodeResources([Gpus(self._remaining_resources.gpus)]))
-            #     logger.info('GPU resource required by Job Execution. '
-            #                 'Greedy resource logic scaling up from %i to %s GPUs.' %
-            #                 (original_gpus, resources.gpus))
-            # access gpu tracker
-            # flag gpu as occupied with job id
-            # first
-
-           
 
             self._allocated_queued_job_exes.append(job_exe)
             self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
             job_exe.scheduled(self.agent_id, self.node_id, resources)
 
-            #logger.info("about to check for gpu resources, there should be %s gpus", resources.gpus)
             if resources.gpus > 0:
                 GPUManager.reserve_gpus_for_job(self.node_id, int(resources.gpus))
-                # logger.info("gpus greater than 0")
-                # logger.info("attempting to match gpu to job id. node id is %s and job_exe.id is %s and job_exe.job_id is %s and job_exe.job_exe_id is %s", "job_exe.node_id" , job_exe.id, "job_exe.job_id", "s")
-                # assignedGPUCount = 0
-                # # look for unassigned GPUs
-                # for gpunum, gpustatus in NodeResources.usedGPUs[self.node_id].iteritems():
-                #     logger.info("entered loop looking for gpus to set")
-                #     if assignedGPUCount == int(resources.gpus):
-                #         break # assigned everything we need, exit loop
-                #     elif gpustatus == "available":
-                #         NodeResources.usedGPUs[self.node_id][gpunum] = "reserved"
-                #         assignedGPUCount += 1
-                #         logger.info("Set %s to reserved", gpunum)
 
-
-                # for i in range(0,int(self.agent_id)): # wrongo
-                #     if NodeResources.usedGPUs[self.agent_id][i] == 'available':
-                #         NodeResources.usedGPUs[self.agent_id][i] = job_exe.job_id
-                #         assignedGPUCount += 1
-                #     else:
-                #         pass
-
-
-                # if assignedGPUCount != int(resources.gpus):
-                #     logger.info("not enough available GPUs for job %s. needed %s, but only had %s",job_exe.id, resources.gpus, assignedGPUCount)
-                #     return False
-
-            
             return True
 
         return False

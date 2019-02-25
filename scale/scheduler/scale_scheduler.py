@@ -355,7 +355,7 @@ class ScaleScheduler(object):
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
                     #TODO is GPU job check avail. here?
-                    GPUManager.releaseGPUs(job_exe.node_id, job_exe.job_id)
+                    GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
                     # for gpunum, gpustatus in NodeResources.usedGPUs[job_exe.node_id].iteritems():
                     #     logger.info("now in loop checking for GPUs to free. looking at GPU %s with status %s. trying to match to job id %s",gpunum, gpustatus, job_exe.job_id)
                     #     if str(gpustatus) == str(job_exe.job_id):

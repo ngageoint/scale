@@ -12,6 +12,7 @@ from job.execution.job_exe import RunningJobExecution
 from job.tasks.health_task import HealthTask
 from job.tasks.pull_task import PullTask
 from node.resources.node_resources import NodeResources
+from node.resources.gpu_manager import GPUManager
 from node.resources.resource import Cpus, Disk, Mem, Gpus
 from queue.job_exe import QueuedJobExecution
 from scheduler.resources.agent import ResourceSet
@@ -23,7 +24,7 @@ class TestSchedulingNode(TestCase):
 
     def setUp(self):
         django.setup()
-
+        GPUManager.reset_gpu_dict()
         self.agent_id = 'agent_1'
 
     def test_accept_job_exe_next_task(self):
@@ -213,8 +214,8 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(accepted)
         self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 1)
         # Verify that our greedy GPU allocation logic is working
-        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0), Gpus(4.0)])))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
+        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0), Gpus(1.0)])))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0), Gpus(3.0)])))
         self.assertEqual(job_exe._scheduled_node_id, node.id)
 
     def test_accept_new_job_exe_gpu_partial_node_other_task(self):
@@ -227,14 +228,14 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources([Cpus(10.0), Mem(50.0), Gpus(4.0)])
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0), Gpus(1.0)])
         task_resources = NodeResources([Gpus(1.0)])
-        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0), Gpus(4.0)])
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0), Gpus(1.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
         queue_model = queue_test_utils.create_queue(cpus_required=1.0, mem_required=10.0, disk_in_required=0.0,
-                                                    disk_out_required=0.0, disk_total_required=0.0, gpus_required=1)
+                                                    disk_out_required=0.0, disk_total_required=0.0, gpus_required=2)
         job_exe = QueuedJobExecution(queue_model)
 
         accepted = scheduling_node.accept_new_job_exe(job_exe)
