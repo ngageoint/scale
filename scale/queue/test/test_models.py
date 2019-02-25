@@ -23,16 +23,8 @@ from job.configuration.data.job_data import JobData
 from job.data.job_data import JobData as JobDataV6
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
-<<<<<<< HEAD
-from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode
-from data.data.json.data_v6 import DataV6
-=======
-from recipe.definition.definition import RecipeDefinition
-from recipe.models import Recipe
->>>>>>> :fire: :fire: :fire: More v5 removal
 
 
 class TestJobLoadManager(TestCase):
@@ -257,38 +249,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         self.job_type_2 = job_test_utils.create_seed_job_type(interface=interface_2)
 
-        old_definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test_Input_1',
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': self.job_type_2.name,
-                    'version': self.job_type_2.version,
-                },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': 'Test_Output_1',
-                        'input': 'Test_Input_2',
-                    }]
-                }]
-            }]
-        }
         definition = {
             'version': '6',
             'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
