@@ -108,6 +108,7 @@ class JobLoadManager(models.Manager):
         :type job_type_ids: list[int]
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: list[str]
+
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of job loads that match the time range.
