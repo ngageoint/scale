@@ -208,9 +208,6 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-#def create_seed_job()
-
-
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None, job_config=None,
                superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, recipe=None, save=True):
@@ -221,7 +218,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     """
 
     if not job_type:
-        job_type = create_job_type()
+        job_type = create_seed_job_type()
     if not event:
         event = trigger_test_utils.create_trigger_event()
     if not last_status_change:
@@ -261,7 +258,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     return job
 
 
-def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=None, input_file_size=10.0, queued=None,
+def create_job_exe(job_type=None, job=None, exe_num=None, node=None, input_file_size=10.0, queued=None,
                    started=None, status='RUNNING', error=None, ended=None, output=None, task_results=None):
     """Creates a job_exe model for unit testing, may also create job_exe_end and job_exe_output models depending on
     status
@@ -285,9 +282,6 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     if not node:
         node = node_utils.create_node()
     job_exe.node = node
-    if not timeout:
-        timeout = job.timeout
-    job_exe.timeout = timeout
     job_exe.input_file_size = input_file_size
     job_exe.resources = job.get_resources().get_json().get_dict()
     job_exe.configuration = ExecutionConfiguration().get_dict()
@@ -337,9 +331,8 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
 
     return job_exe
 
-
-def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None,
-                         is_active=True, is_operational=True, configuration=None, docker_image='fake'):
+def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None, is_active=True,
+                         configuration=None, docker_image='fake'):
     if not manifest:
         global JOB_TYPE_NAME_COUNTER
         name = 'test-job-type-%i' % JOB_TYPE_NAME_COUNTER
@@ -413,15 +406,14 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
         configuration = JobConfigurationV6(config=configuration).get_dict()
 
     job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
-                                      manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
-                                      max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
-                                      is_operational=is_operational,
-                                      configuration=configuration, docker_image=docker_image)
+                                      manifest=manifest, max_tries=max_tries, max_scheduled=max_scheduled,
+                                      is_active=is_active, configuration=configuration, docker_image=docker_image)
     version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
     job_type.version_array = version_array
     job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
+
 
 def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None,
                      is_published=None, is_paused=None, max_scheduled=None, configuration_dict=None):
@@ -437,6 +429,7 @@ def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=
     JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image,
                          icon_code=icon_code, is_active=is_active, is_paused=is_paused,
                          is_published=is_published, max_scheduled=max_scheduled, configuration=configuration)
+
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
