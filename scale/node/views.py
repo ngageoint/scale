@@ -31,9 +31,7 @@ class NodesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.list_impl(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.list_impl(request)
 
         raise Http404()
@@ -76,9 +74,7 @@ class NodeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.get_impl(request, node_id)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.get_impl(request, node_id)
 
         raise Http404()
@@ -111,45 +107,10 @@ class NodeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.patch_v5(request, node_id)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.patch_v6(request, node_id)
 
         raise Http404()
-
-    def patch_v5(self, request, node_id):
-        """Modify node info with a subset of fields
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param node_id: The ID for the node.
-        :type node_id: str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
-        if len(extra) > 0:
-            return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
-
-        if not len(request.data):
-            return Response('No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            Node.objects.get(id=node_id)
-        except Node.DoesNotExist:
-            raise Http404
-
-        Node.objects.update_node(dict(request.data), node_id=node_id)
-
-        try:
-            node = Node.objects.get_details(node_id)
-        except Node.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(node)
-        return Response(serializer.data)
 
     def patch_v6(self, request, node_id):
         """Modify node info with a subset of fields
@@ -161,7 +122,7 @@ class NodeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
