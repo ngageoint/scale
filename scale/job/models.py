@@ -2670,6 +2670,8 @@ class JobType(models.Model):
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2870,7 +2872,6 @@ class JobTypeRevisionManager(models.Manager):
 
         new_rev = JobTypeRevision()
         new_rev.job_type = job_type
-        new_rev.revision_num = job_type.revision_num
         new_rev.manifest = job_type.manifest
         new_rev.docker_image = job_type.docker_image
 
@@ -2894,6 +2895,20 @@ class JobTypeRevisionManager(models.Manager):
         """
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
+
+    def get_latest_job_revision_num(self, job_type):
+        """Returns the most recent revision number for a given Job Type
+
+        :returns: The latest revision number
+        :rtype: int
+        """
+
+        try:
+            job_type_rev = self.get(job_type=job_type).order_by('-id')[0]
+        except JobTypeRevision.DoesNotExist:
+            return None
+
+        return job_type_rev.revision_num
 
     def get_revision(self, job_type_name, job_type_version, revision_num):
         """Returns the revision (with populated job_type model) for the given job type and revision number
