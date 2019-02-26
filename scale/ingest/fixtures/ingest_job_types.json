@@ -288,7 +288,11 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
+<<<<<<< HEAD
                          "command": "scale_scan -i ${SCAN_ID} -d ${DRY_RUN}",
+=======
+                         "command": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+>>>>>>> :fire: Removing ingest v5 APIs; fixed the scale system job seed declarations
                          "inputs": {
                             "json": [
                                 {"name": "Scan_ID", "type": "integer", "required": true},
@@ -335,7 +339,11 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
+<<<<<<< HEAD
                          "command": "scale_scan -i ${SCAN_ID} -d ${DRY_RUN}",
+=======
+                         "command": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+>>>>>>> :fire: Removing ingest v5 APIs; fixed the scale system job seed declarations
                          "inputs": {
                             "json": [
                                 {"name": "Scan_ID", "type": "integer", "required": true},
