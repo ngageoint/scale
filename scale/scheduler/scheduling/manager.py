@@ -364,6 +364,7 @@ class SchedulingManager(object):
                 jt = job_type_mgr.get_job_type(job_exe.job_type_id)
                 jt.unmet_resources = ','.join(invalid_resources)
                 jt.save()
+                continue
             
             
             # Make sure execution's job type and workspaces have been synced to the scheduler
