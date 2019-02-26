@@ -141,15 +141,17 @@ class ResourceManager(object):
         """
 
         max_resources = NodeResources()
-        for agent in self._agent_resources:
+        for agent in self._agent_resources.values():
             agent_total = agent.get_total()
+            if not agent_total:
+                continue
             for resource in agent_total.resources:
-                if resource.name in max_resources.resources:
-                    x = max_resources.resources[resource.name].value
+                if resource.name in max_resources._resources:
+                    x = max_resources._resources[resource.name].value
                     y = resource.value
-                    max_resources.resources[resource.name].value = max(x, y)
+                    max_resources._resources[resource.name].value = max(x, y)
                 else:
-                    max_resources.resources[resource.name] = resource.copy()
+                    max_resources._resources[resource.name] = resource.copy()
 
         return max_resources
                 
@@ -252,6 +254,18 @@ class ResourceManager(object):
                     agent_resources.set_shortage(agent_shortages[agent_resources.agent_id])
                 else:
                     agent_resources.set_shortage()
+
+    def set_agent_totals(self, agent_totals):
+        """Sets total resources on agents. Useful for testing.
+
+        :param agent_shortages: Dict where resource total is stored by agent ID
+        :type agent_shortages: dict
+        """
+
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                if agent_resources.agent_id in agent_totals:
+                    agent_resources.set_total(agent_totals[agent_resources.agent_id])
 
     def sync_with_mesos(self, host_address):
         """Syncs with Mesos to retrieve the resource totals needed by any agents
