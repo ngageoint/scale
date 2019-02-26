@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scale.local_settings")
 
 from django.core.wsgi import get_wsgi_application
@@ -21,9 +22,13 @@ def application(environ, start_response):
     # configure the API to use the direct access context. Otherwise it assumes reverse proxy
     # behind DCOS Admin Router (Nginx)
     behind_haproxy = environ.get('HTTP_X_HAPROXY')
+
+    script_name = '/service/%s/api' % framework_name
+
     if behind_haproxy:
-        environ['SCRIPT_NAME'] = '/api'
-    else:
-        environ['SCRIPT_NAME'] = '/service/%s/api' % framework_name
+        script_name = '/api'
+
+    print('SCRIPT_NAME set to %s' % (script_name,))
+    environ['SCRIPT_NAME'] = script_name
 
     return _application(environ, start_response)
