@@ -75,7 +75,6 @@ then
     check_messaging
 
     # Initialize schema and initial data
-    python manage.py load_postgis
     python manage.py migrate
     python manage.py load_all_data
     # Load country boundary data
