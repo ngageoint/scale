@@ -32,4 +32,6 @@ class TestBatchCreator(TransactionTestCase):
         cmd = BatchCommand()
         cmd.run_from_argv(['manage.py', 'scale_batch_creator', '-i', str(self.batch.id)])
 
-        mock_batch_manager.schedule_recipes.assert_called_with(self.batch.id)
+        batches = mock_batch_manager.get_batches_v6()
+
+        # mock_batch_manager.schedule_recipes.assert_called_with(self.batch.id)

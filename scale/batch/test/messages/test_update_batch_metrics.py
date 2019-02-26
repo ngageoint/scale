@@ -78,72 +78,95 @@ class TestUpdateBatchMetrics(TestCase):
     def test_execute(self):
         """Tests calling UpdateBatchMetrics.execute() successfully"""
 
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         definition = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'a',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'a': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-            }, {
-                'name': 'b',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+                'b': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-            }, {
-                'name': 'c',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+                'c': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'b', 'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{
-                    'name': 'b',
-                }],
-            }, {
-                'name': 'd',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+                'd': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'b', 'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{
-                    'name': 'b',
-                }],
-            }, {
-                'name': 'e',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+                'e': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'd', 'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{
-                    'name': 'd',
-                }],
-            }, {
-                'name': 'f',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+                'f': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-            }, {
-                'name': 'g',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
+                'g': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'f', 'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{
-                    'name': 'f',
-                }],
-            }, {
-                'name': 'h',
-                'job_type': {
-                    'name': job_type.name,
-                    'version': job_type.version,
-                },
-            }]
+                'h': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
         }
+
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
         batch = batch_test_utils.create_batch(recipe_type=recipe_type)
 
