@@ -37,7 +37,8 @@ class GPUManager(object):
         if not assignment_complete: # this is bad, scale somehow assigned resources that dont exist. in attempt to recover, we make the GPUs available again. this should cause the job to fail and let scale keep trucking along.
             logger.warn("not enough reserved GPUs were found. node_id:%s job_id:%s required GPU count: %s", node_id, job_id, required_gpu_count)
             for gpunum, gpustatus in cls.__GPUs[node_id].iteritems():
-                cls.__GPUs[node_id][gpunum] = "available"
+                if gpustatus == "reserved":
+                    cls.__GPUs[node_id][gpunum] = "available"
         return assignment_complete
 
     @classmethod
