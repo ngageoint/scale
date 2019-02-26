@@ -99,3 +99,15 @@ class test_GPUManager(TestCase):
         self.assertTrue(GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus)) #gpus should be avail again
         nvidia_label = GPUManager.get_nvidia_docker_label(node_id, job_id)
         self.assertEqual(nvidia_label, "0,1")
+        
+    def test_calls_where_node_has_no_gpus(self):
+        node_id = 7
+        job_id = 10
+        gpu_count = 2
+        required_gpus = 2
+        GPUManager.define_node_gpus(node_id,gpu_count)
+        node_id = 8
+        self.assertFalse(GPUManager.reserve_gpus_for_job(node_id, required_gpus))
+        self.assertFalse(GPUManager.assign_gpus_for_job(node_id, job_id, required_gpus))
+        nvidia_label = GPUManager.get_nvidia_docker_label(node_id, job_id)
+        self.assertEqual(nvidia_label, "")

@@ -5,6 +5,9 @@ from job.models import JobExecution
 from node.resources.node_resources import NodeResources
 from node.resources.gpu_manager import GPUManager
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 class QueuedJobExecution(object):
     """This class represents a queued job execution that is being considered for scheduling"""
@@ -63,7 +66,8 @@ class QueuedJobExecution(object):
         job_exe.set_cluster_id(framework_id, self._queue.job_id, self._queue.exe_num)
 
         if self.required_resources.gpus > 0:
-            GPUManager.assign_gpus_for_job(job_exe.node_id,job_exe.job_id, self.required_resources.gpus)
+            if not GPUManager.assign_gpus_for_job(job_exe.node_id,job_exe.job_id, self.required_resources.gpus):
+                logger.error("Job %s was unable to assign %s reserved GPUs on node %s. Note: this is not supposed to be able to happen. something has gone horribly wrong.", job_exe.job_id, self.required_resources.gpus, job_exe.node_id)
 
         return job_exe
 

@@ -8,6 +8,7 @@ from node.resources.resource import Gpus
 from node.resources.gpu_manager import GPUManager
 
 import logging
+import math
 
 logger = logging.getLogger(__name__)
 
@@ -102,13 +103,15 @@ class SchedulingNode(object):
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
 
+            if resources.gpus > 0:
+                resources.increase_up_to(NodeResources([Gpus(math.ceil(resources.gpus))]))  # gpus only deal in whole numbers
+                if not GPUManager.reserve_gpus_for_job(self.node_id, int(resources.gpus)):
+                    return False
+                    
             self._allocated_queued_job_exes.append(job_exe)
             self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
             job_exe.scheduled(self.agent_id, self.node_id, resources)
-
-            if resources.gpus > 0:
-                GPUManager.reserve_gpus_for_job(self.node_id, int(resources.gpus))
 
             return True
 
@@ -211,7 +214,6 @@ class SchedulingNode(object):
 
         resources = NodeResources()
         for new_job_exe in self._allocated_queued_job_exes:
-            logger.info("IM DEALLOCATING RESOURCES!!!")
             resources.add(new_job_exe.required_resources)
 
         self._allocated_queued_job_exes = []
