@@ -16,13 +16,8 @@
 			     "seedVersion": "1.0.0",
 			     "job": {
 			         "name": "scale-ingest",
-<<<<<<< HEAD
 			         "jobVersion": "1.0.0",
 			         "packageVersion": "1.0.0",
-=======
-			         "jobVersion": "1.0",
-			         "packageVersion": "1.0",
->>>>>>> :seedling: Seedifiying the system jobs
 			         "title": "Scale Ingest",
 			         "description": "Ingests a source file into a workspace",
 			         "maintainer": {
