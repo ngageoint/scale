@@ -21,34 +21,57 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.input_name = 'Test Input'
-        self.output_name = 'Test Output'
+        self.input_name = 'Test_Input'
+        self.output_name = 'Test_Output'
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name,
-                'type': 'file',
-            }],
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '0.1.0',
+                'packageVersion': '0.1.0',
+                'title': 'Test Job',
+                'description': 'Test Job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 30,
+                'interface': {
+                    'command': 'my_cmd args',
+                    'inputs': {
+                        'files': [{'name': self.input_name, 'mediaTypes': ['text/plain'], 'required': True}]
+                    }
+                }
+            }
         }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest)
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name,
-                'type': 'file',
-            }],
-            'output_data': [{
-                'name': self.output_name,
-                'type': 'file',
-            }],
+        manifest_2 = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job-2',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job 2',
+                'description': 'Test Job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 30,
+                'interface': {
+                    'command': 'my_cmd args',
+                    'inputs': {
+                        'files': [{'name': self.input_name, 'mediaTypes': ['text/plain'], 'required': True}]
+                    },
+                    'outputs': {
+                        'files': [{'name': self.output_name, 'pattern': '*_.txt', 'mediaType': 'text/plain'}]
+                    },
+                }
+            }
         }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
 
         # create a recipe that runs both jobs
         definition_1 = {
@@ -83,7 +106,34 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
                 }],
             }],
         }
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v5(definition=definition_1)
+        definition_1 = {
+            'version': '6',
+            'input': {'files': [{'name': self.input_name, 'media_types': ['text/plain'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_a': {
+                    'dependencies': [],
+                    'input': {self.input_name: {'type': 'recipe', 'input': self.input_name}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                },
+                'job_b': {
+                    'dependencies': [],
+                    'input': {self.input_name: {'type': 'dependency', 'node': 'job_a', 'output': self.output_name}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
+        }
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6(definition=definition_1)
 
         self.file_name = 'my_file.txt'
         self.data_type = 'test_file_type'

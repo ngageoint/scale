@@ -9,7 +9,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from ingest.models import Ingest
-from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
+from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from source.models import SourceFile
 from storage.media_type import get_media_type
 from storage.models import Workspace
@@ -30,7 +30,7 @@ class Command(BaseCommand):
         parser.add_argument("-p", "--workspace-path", action="store", help="Path in the workspace to ingest.")
         parser.add_argument("-l", "--local-path", action="store",
                             help="If specified, use this as the workspace and workspace path instead of using the workspace mount.")
-        parser.add_argument("-r", "--recipe", action="store", default=[], help="Recipe to kick off after ingest complete")
+        parser.add_argument("-r", "--recipe", action="store", default=[], help="Recipe id to kick off after ingest complete")
         parser.add_argument("-d", "--data-type", action="append", default=[], help="Data type tag")
         parser.add_argument("-i", "--include", action="append", help="Include glob")
         parser.add_argument("-e", "--exclude", action="append", default=[], help="Exclude glob")
@@ -119,10 +119,8 @@ class Command(BaseCommand):
                     ingest.ingest_ended = timezone.now()
                     ingest.source_file = sf
                     ingest.save()
-                    if options['recipe_type']:
-                        RecipeTriggerHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe_type'])
-                    else:
-                        IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
+                    if options['recipe']:
+                        IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe'])
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 
