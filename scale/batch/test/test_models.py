@@ -87,7 +87,7 @@ class TestBatchManager(TransactionTestCase):
                         'node_type': 'job',
                         'job_type_name': self.seed_job_type.name,
                         'job_type_version': self.seed_job_type.version,
-                        'job_type_revision': self.seed_job_type.revision_num,
+                        'job_type_revision': 1,
                     }
                 }
             }

@@ -382,7 +382,7 @@ class BatchManager(models.Manager):
             batch = Batch()
             batch.recipe_type = recipe_type
             batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
-            batch.definition = definition.get_dict() #convert_definition_to_v6(definition).get_dict()
+            batch.definition = convert_definition_to_v6(definition).get_dict()
             batch.configuration = convert_configuration_to_v6(configuration).get_dict()
 
             if definition.root_batch_id is not None:
