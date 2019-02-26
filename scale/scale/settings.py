@@ -115,7 +115,6 @@ INSTALLED_APPS = (
     'messaging',
     'metrics',
     'node',
-    'port',
     'product',
     'queue',
     'recipe',
