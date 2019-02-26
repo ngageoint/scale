@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.http.response import Http404
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
+from rest_framework import permissions
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAdminUser
@@ -144,6 +145,7 @@ class StatusView(GenericAPIView):
 
 class VersionView(GenericAPIView):
     """This view is the endpoint for viewing version/build information"""
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
         """Gets various version/build information
