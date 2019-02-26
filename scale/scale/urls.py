@@ -17,7 +17,6 @@ REST_API_APPS = [
     'job',
     'metrics',
     'node',
-    'port',
     'product',
     'queue',
     'recipe',
