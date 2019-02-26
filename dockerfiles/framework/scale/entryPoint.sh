@@ -79,6 +79,9 @@ then
     # bunzip2 command or'ed with true so that link errors won't cause script to terminate
     bunzip2 country_data.json.bz2 || true
     python manage.py loaddata country_data.json
+
+    # Create superuser for Scale DB
+    python manage.py scale_superuser
 fi
 
 # If ENABLE_WEBSERVER is set, we are running the container in web server mode.
