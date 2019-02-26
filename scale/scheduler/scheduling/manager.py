@@ -339,8 +339,8 @@ class SchedulingManager(object):
             insufficient_resources = []
             max_cluster_resources = resource_mgr.get_max_available_resources()
             # get resource names offered and compare to job type resources
-            for resource in job_exe.required_resources:
-                if resource.name not in max_cluster_resources:
+            for resource in job_exe.required_resources.resources:
+                if resource.name not in max_cluster_resources.resources:
                     # resource does not exist in cluster
                     invalid_resources.append(resource.name)
                 elif resource.value > max_cluster_resources[resource.name]:
@@ -361,7 +361,7 @@ class SchedulingManager(object):
 
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
-                jt = job_type_mgr.get_job_type(job_exe.job_type_id)
+                jt = job_type_mgr.get_job_type(queue.job_type.id)
                 jt.unmet_resources = ','.join(invalid_resources)
                 jt.save()
                 continue
