@@ -250,9 +250,25 @@ class TestBatchDetailsViewV6(TestCase):
     def test_successful(self):
         """Tests successfully calling the v6 batch details view"""
 
-        job_type = job_test_utils.create_job_type()
-        recipe_definition_dict = {'jobs': [{'name': 'job_a', 'job_type': {'name': job_type.name,
-                                                                          'version': job_type.version}}]}
+        job_type = job_test_utils.create_seed_job_type()
+
+        recipe_definition_dict = {
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
+        }
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_definition_dict)
         configuration = BatchConfiguration()
         configuration.priority = 100
@@ -390,45 +406,66 @@ class TestBatchesComparisonViewV6(TestCase):
     def test_successful(self, mock_msg_mgr):
         """Tests successfully calling the v6 batch comparison view"""
 
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
-        job_type_3 = job_test_utils.create_job_type()
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
+        job_type_3 = job_test_utils.create_seed_job_type()
 
         rt_definition_1 = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'job_a',
-                'job_type': {
-                    'name': job_type_1.name,
-                    'version': job_type_1.version,
-                }
-            }, {
-                'name': 'job_b',
-                'job_type': {
-                    'name': job_type_2.name,
-                    'version': job_type_2.version,
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_1.name,
+                        'job_type_version': job_type_1.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{'name': 'job_a'}]
-            }],
+                'job_b': {
+                    'dependencies': [{'name': 'job_a'}],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'job_a',
+                    'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_2.name,
+                        'job_type_version': job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
         }
+
         rt_definition_2 = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'job_c',
-                'job_type': {
-                    'name': job_type_3.name,
-                    'version': job_type_3.version,
-                }
-            }, {
-                'name': 'job_b',
-                'job_type': {
-                    'name': job_type_2.name,
-                    'version': job_type_2.version,
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_c': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_3.name,
+                        'job_type_version': job_type_3.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{'name': 'job_c'}]
-            }],
+                'job_b': {
+                    'dependencies': [{'name': 'job_c'}],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'job_c',
+                    'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_2.name,
+                        'job_type_version': job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
         }
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=rt_definition_1)
 
