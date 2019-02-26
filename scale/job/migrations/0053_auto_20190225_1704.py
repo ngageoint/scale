@@ -78,19 +78,11 @@ class Migration(migrations.Migration):
         ),
         migrations.RemoveField(
             model_name='jobtype',
-            name='revision_num',
-        ),
-        migrations.RemoveField(
-            model_name='jobtype',
             name='shared_mem_required',
         ),
         migrations.RemoveField(
             model_name='jobtype',
             name='timeout',
-        ),
-        migrations.RemoveField(
-            model_name='jobtype',
-            name='trigger_rule',
         ),
         migrations.RemoveField(
             model_name='jobtype',
