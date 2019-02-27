@@ -339,11 +339,13 @@ class SchedulingManager(object):
             insufficient_resources = []
             max_cluster_resources = resource_mgr.get_max_available_resources()
             # get resource names offered and compare to job type resources
+            print '1'
+            print max_cluster_resources._resources
             for resource in job_exe.required_resources.resources:
-                if resource.name not in max_cluster_resources.resources:
+                if resource.name not in max_cluster_resources._resources:
                     # resource does not exist in cluster
                     invalid_resources.append(resource.name)
-                elif resource.value > max_cluster_resources[resource.name]:
+                elif resource.value > max_cluster_resources._resources[resource.name]:
                     # resource exceeds the max available from any node
                     insufficient_resources.append(resource.name)
 
@@ -359,6 +361,9 @@ class SchedulingManager(object):
                 description = INSUFFICIENT_RESOURCES.description % insufficient_resources
                 scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
 
+            print '1'
+            print invalid_resources
+            print insufficient_resources
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
                 jt = job_type_mgr.get_job_type(queue.job_type.id)
@@ -366,7 +371,8 @@ class SchedulingManager(object):
                 jt.save()
                 continue
             
-            
+            print job_exe.required_resources._resources
+            #import pdb; pdb.set_trace()
             # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id
             if job_type_id not in job_types:
@@ -528,7 +534,10 @@ class SchedulingManager(object):
         if best_reservation_score is None:
             name = INVALID_RESOURCES.name + job_exe._queue.job_type.name
             title = INVALID_RESOURCES.title % job_exe._queue.job_type.name
-            resource_names = [r.name for r in job_type_resources]
+            print '2'
+            print job_exe.required_resources.resources
+            resource_names = [r.name for r in job_exe.required_resources.resources]
+            print resource_names
             description = INVALID_RESOURCES.description % resource_names
             scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
 

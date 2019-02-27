@@ -72,6 +72,7 @@ class TestSchedulingManager(TestCase):
         self.agent_totals = {}
         self.agent_totals[self.agent_1.agent_id] = NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)])
         self.agent_totals[self.agent_2.agent_id] = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
+        #resource_mgr.set_agent_totals(self.agent_totals)
         job_type_mgr.sync_with_database()
 
     def test_successful_schedule(self):
@@ -81,8 +82,6 @@ class TestSchedulingManager(TestCase):
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
                                 NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
-        resource_mgr.refresh_agent_resources([],now())
-        resource_mgr.set_agent_totals(self.agent_totals)
         scheduling_manager = SchedulingManager()
 
         num_tasks = scheduling_manager.perform_scheduling(self._client, now())
@@ -196,8 +195,6 @@ class TestSchedulingManager(TestCase):
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
                                 NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
-        resource_mgr.refresh_agent_resources([],now())
-        resource_mgr.set_agent_totals(self.agent_totals)
         self.queue_1.job_type.is_paused = True
         self.queue_1.job_type.save()
         job_type_mgr.sync_with_database()

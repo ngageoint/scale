@@ -256,16 +256,17 @@ class ResourceManager(object):
                     agent_resources.set_shortage()
 
     def set_agent_totals(self, agent_totals):
-        """Sets total resources on agents. Useful for testing.
+        """Sets total resources on agents. Used only for testing.
 
         :param agent_shortages: Dict where resource total is stored by agent ID
         :type agent_shortages: dict
         """
 
         with self._agent_resources_lock:
-            for agent_resources in self._agent_resources.values():
-                if agent_resources.agent_id in agent_totals:
-                    agent_resources.set_total(agent_totals[agent_resources.agent_id])
+            for total in agent_totals:
+                if total not in self._agent_resources:
+                    self._agent_resources[total] = AgentResources(total)
+                self._agent_resources[total].set_total(agent_totals[total])
 
     def sync_with_mesos(self, host_address):
         """Syncs with Mesos to retrieve the resource totals needed by any agents
