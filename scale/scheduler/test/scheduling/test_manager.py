@@ -72,7 +72,7 @@ class TestSchedulingManager(TestCase):
         self.agent_totals = {}
         self.agent_totals[self.agent_1.agent_id] = NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)])
         self.agent_totals[self.agent_2.agent_id] = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
-        #resource_mgr.set_agent_totals(self.agent_totals)
+        resource_mgr.set_agent_totals(self.agent_totals)
         job_type_mgr.sync_with_database()
 
     def test_successful_schedule(self):
