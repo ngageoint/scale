@@ -75,7 +75,7 @@
                             "name": "filesystem-io",
                             "title": "Filesystem I/O",
                             "description": "Filesystem I/O Error",
-                            "type": "job"
+                            "category": "job"
                         }
                     ]
                 }

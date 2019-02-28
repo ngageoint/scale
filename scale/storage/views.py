@@ -22,9 +22,8 @@ from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurati
 from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 from storage.models import PurgeResults, ScaleFile, Workspace
-from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6, ScaleFileDetailsSerializerV6
-from storage.serializers import (WorkspaceDetailsSerializerV5, WorkspaceSerializerV5, WorkspaceDetailsSerializerV6,
-                                 WorkspaceSerializerV6)
+from storage.serializers import ScaleFileSerializerV6, ScaleFileDetailsSerializerV6
+from storage.serializers import (WorkspaceDetailsSerializerV6, WorkspaceSerializerV6)
 from trigger.models import TriggerEvent
 
 
@@ -34,14 +33,12 @@ logger = logging.getLogger(__name__)
 class FilesView(ListAPIView):
     """This view is the endpoint for retrieving source/product files"""
     queryset = ScaleFile.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API"""
-    
+
         if self.request.version == 'v6':
             return ScaleFileSerializerV6
-        elif self.request.version == 'v5':
-            return ScaleFileSerializerV5
 
     def list(self, request):
         """Retrieves the batches and returns them in JSON form
@@ -54,33 +51,8 @@ class FilesView(ListAPIView):
 
         if request.version == 'v6':
             return self._list_v6(request)
-        elif request.version == 'v5':
-            return self._list_v5(request)
 
         raise Http404()
-
-    def _list_v5(self, request):
-        """Retrieves a list of files based of filters and returns it in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-        time_field = rest_util.parse_string(request, 'time_field', required=False,
-                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
-        file_name = rest_util.parse_string(request, 'file_name', required=False)
-
-        files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
-                                                  file_name=file_name)
-
-        page = self.paginate_queryset(files)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
 
     def _list_v6(self, request):
         """Retrieves a list of files based on filters and returns it in JSON form
@@ -190,7 +162,7 @@ class PurgeSourceFileView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v5':
+        if self.request.version != 'v6':
             content = 'This endpoint is supported with REST API v6+'
             return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
@@ -230,8 +202,6 @@ class WorkspacesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return WorkspaceSerializerV6
-        elif self.request.version == 'v5':
-            return WorkspaceSerializerV5
 
     def list(self, request):
         """Retrieves the list of all workspaces and returns it in JSON form
@@ -244,32 +214,8 @@ class WorkspacesView(ListCreateAPIView):
 
         if request.version == 'v6':
             return self._list_v6(request)
-        elif request.version == 'v5':
-            return self._list_v5(request)
 
         raise Http404()
-
-    def _list_v5(self, request):
-        """Retrieves the list of all workspaces and returns it in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-
-        names = rest_util.parse_string_list(request, 'name', required=False)
-        order = rest_util.parse_string_list(request, 'order', ['name'])
-
-        workspaces = Workspace.objects.get_workspaces(started, ended, names, order)
-
-        page = self.paginate_queryset(workspaces)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
 
     def _list_v6(self, request):
         """Retrieves the list of all workspaces and returns it in JSON form
@@ -304,51 +250,8 @@ class WorkspacesView(ListCreateAPIView):
 
         if request.version == 'v6':
             return self._create_v6(request)
-        elif request.version == 'v5':
-            return self._create_v5(request)
 
         raise Http404()
-
-    def _create_v5(self, request):
-        """Creates a new Workspace and returns it in JSON form
-
-        :param request: the HTTP POST request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        name = rest_util.parse_string(request, 'name')
-        title = rest_util.parse_string(request, 'title', required=False)
-        description = rest_util.parse_string(request, 'description', required=False)
-        json_config = rest_util.parse_dict(request, 'json_config')
-        base_url = rest_util.parse_string(request, 'base_url', required=False)
-        is_active = rest_util.parse_bool(request, 'is_active', default_value=True, required=False)
-
-        configuration = None
-        if json_config:
-            try:
-                configuration = WorkspaceConfigurationV1(json_config, do_validate=True).get_configuration()
-            except InvalidWorkspaceConfiguration as ex:
-                message = 'Workspace configuration invalid'
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
-      
-        try:
-            workspace = Workspace.objects.create_workspace(name, title, description, configuration, base_url, is_active)
-        except InvalidWorkspaceConfiguration as ex:
-            logger.exception('Unable to create new workspace: %s', name)
-            raise BadParameter(unicode(ex))
-
-        # Fetch the full workspace with details
-        try:
-            workspace = Workspace.objects.get_details(workspace.id)
-        except Workspace.DoesNotExist:
-            raise Http404
-
-        serializer = WorkspaceDetailsSerializerV5(workspace)
-        workspace_url = reverse('workspace_details_view', args=[workspace.id], request=request)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=workspace_url))
 
     def _create_v6(self, request):
         """Creates a new Workspace and returns it in JSON form
@@ -400,8 +303,6 @@ class WorkspaceDetailsView(GenericAPIView):
 
         if self.request.version == 'v6':
             return WorkspaceDetailsSerializerV6
-        elif self.request.version == 'v5':
-            return WorkspaceDetailsSerializerV5
 
     def get(self, request, workspace_id):
         """Retrieves the details for a workspace and return them in JSON form
@@ -416,29 +317,8 @@ class WorkspaceDetailsView(GenericAPIView):
 
         if request.version == 'v6':
             return self._get_v6(request, workspace_id)
-        elif request.version == 'v5':
-            return self._get_v5(request, workspace_id)
 
         raise Http404()
-
-
-    def _get_v5(self, request, workspace_id):
-        """Retrieves the details for a workspace and return them in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param workspace_id: The id of the workspace
-        :type workspace_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-        try:
-            workspace = Workspace.objects.get_details(workspace_id)
-        except Workspace.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(workspace)
-        return Response(serializer.data)
 
     def _get_v6(self, request, workspace_id):
         """Retrieves the details for a workspace and return them in JSON form
@@ -472,49 +352,8 @@ class WorkspaceDetailsView(GenericAPIView):
 
         if request.version == 'v6':
             return self._patch_v6(request, workspace_id)
-        elif request.version == 'v5':
-            return self._patch_v5(request, workspace_id)
 
         raise Http404()
-
-    def _patch_v5(self, request, workspace_id):
-        """Edits an existing workspace and returns the updated details
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param workspace_id: The ID for the workspace.
-        :type workspace_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        title = rest_util.parse_string(request, 'title', required=False)
-        description = rest_util.parse_string(request, 'description', required=False)
-        json_config = rest_util.parse_dict(request, 'json_config', required=False)
-        base_url = rest_util.parse_string(request, 'base_url', required=False)
-        is_active = rest_util.parse_string(request, 'is_active', required=False)
-
-        configuration = None
-        if json_config:
-            try:
-                configuration = WorkspaceConfigurationV1(json_config, do_validate=True).get_configuration()
-            except InvalidWorkspaceConfiguration as ex:
-                message = 'Workspace configuration invalid'
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
-
-        try:
-            Workspace.objects.edit_workspace(workspace_id, title, description, configuration, base_url, is_active)
-
-            workspace = Workspace.objects.get_details(workspace_id)
-        except Workspace.DoesNotExist:
-            raise Http404
-        except InvalidWorkspaceConfiguration as ex:
-            logger.exception('Unable to edit workspace: %s', workspace_id)
-            raise BadParameter(unicode(ex))
-
-        serializer = self.get_serializer(workspace)
-        return Response(serializer.data)
 
     def _patch_v6(self, request, workspace_id):
         """Edits an existing workspace and returns the updated details
@@ -568,37 +407,8 @@ class WorkspacesValidationView(APIView):
 
         if request.version == 'v6':
             return self._post_v6(request)
-        elif request.version == 'v5':
-            return self._post_v5(request)
 
         raise Http404()
-
-    def _post_v5(self, request):
-        """Validates a new workspace and returns any warnings discovered
-
-        :param request: the HTTP POST request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        name = rest_util.parse_string(request, 'name')
-        json_config = rest_util.parse_dict(request, 'json_config')
-
-        rest_util.parse_string(request, 'title', required=False)
-        rest_util.parse_string(request, 'description', required=False)
-        rest_util.parse_string(request, 'base_url', required=False)
-        rest_util.parse_string(request, 'is_active', required=False)
-
-        # Validate the workspace configuration
-        try:
-            warnings = Workspace.objects.validate_workspace_v5(name, json_config)
-        except InvalidWorkspaceConfiguration as ex:
-            logger.exception('Unable to validate new workspace: %s', name)
-            raise BadParameter(unicode(ex))
-
-        results = [{'id': w.name, 'details': w.description} for w in warnings]
-        return Response({'warnings': results})
 
     def _post_v6(self, request):
         """Validates a new workspace and returns any warnings discovered
@@ -624,7 +434,7 @@ class WorkspacesValidationView(APIView):
         validation = Workspace.objects.validate_workspace_v6(name=name, configuration=configuration)
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
-          
+
         if not resp_dict['is_valid']:
             return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)
