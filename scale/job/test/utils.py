@@ -493,7 +493,6 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
-
 def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None,
                      is_published=None, is_paused=None, max_scheduled=None, configuration_dict=None):
     """Updates a job type, including creating a new revision for unit testing
