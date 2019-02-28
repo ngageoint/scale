@@ -63,7 +63,6 @@ class WorkspaceDetailsSerializerV6(WorkspaceSerializerV6):
     """Converts workspace model fields to REST output"""
     configuration = serializers.JSONField(source='get_v6_configuration_json')
 
-
 class ScaleFileBaseSerializerV6(ModelIdSerializer):
     """Converts Scale file model fields to REST output"""
 
