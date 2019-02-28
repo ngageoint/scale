@@ -44,9 +44,8 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
         self.workspace_1 = Workspace.objects.create(name='Test workspace 1')
         self.workspace_2 = Workspace.objects.create(name='Test workspace 2', is_active=False)
 
-        interface = {'version': '1.0', 'command': 'my command', 'command_arguments': 'command arguments'}
-
-        job_type = job_utils.create_job_type(name='Type 1', version='1.0', interface=interface)
+        manifest = job_utils.create_seed_manifest(name='Type-1')
+        job_type = job_utils.create_seed_job_type(manifest=manifest)
 
         event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=job_type, event=event, status='RUNNING', last_status_change=now())
