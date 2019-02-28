@@ -235,7 +235,7 @@ class AgentResources(object):
         :type total_resources: :class:`node.resources.node_resources.NodeResources`
         """
 
-        self._total_resources = total_resources
+        self._total_resources = total_resources.copy()
 
     def _update_resources(self, tasks=None):
         """Updates the agent's resources from its current offers and tasks
