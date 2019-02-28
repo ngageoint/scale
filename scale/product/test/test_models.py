@@ -442,6 +442,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.job_exe.job.save()
         self.job_exe_no = job_test_utils.create_job_exe()
 
+
         self.local_path_1 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt')
         self.local_path_2 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/2/file.json')
         self.local_path_3 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/3/file.h5')
@@ -496,6 +497,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(products[1].source_task, 'my-task-2')
 
         self.assertNotEqual(products[0].uuid, products[1].uuid)
+
 
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
