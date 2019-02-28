@@ -20,7 +20,6 @@ import util.rest as rest_util
 from source.messages.purge_source_file import PurgeSourceFile
 from storage.models import PurgeResults, Workspace
 
-
 class TestFilesViewV6(TestCase):
     api = 'v6'
 

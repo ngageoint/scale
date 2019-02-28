@@ -961,7 +961,6 @@ class WorkspaceManager(models.Manager):
             workspaces = workspaces.order_by('last_modified')
         return workspaces
 
-
     def validate_workspace_v6(self, name, configuration):
         """Validates a new workspace prior to attempting a save
 
