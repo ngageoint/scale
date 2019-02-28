@@ -361,8 +361,6 @@ class SchedulingManager(object):
 
 
             if invalid_resources or insufficient_resources:
-                print invalid_resources
-                print insufficient_resources
                 invalid_resources.extend(insufficient_resources)
                 jt = job_type_mgr.get_job_type(queue.job_type.id)
                 jt.unmet_resources = ','.join(invalid_resources)
