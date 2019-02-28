@@ -487,12 +487,12 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                                       manifest=manifest, max_tries=max_tries, max_scheduled=max_scheduled,
                                       is_active=is_active, configuration=configuration, docker_image=docker_image,
                                       is_system=is_system)
+
     version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
     job_type.version_array = version_array
     job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
-
 
 def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None,
                      is_published=None, is_paused=None, max_scheduled=None, configuration_dict=None):
@@ -508,8 +508,6 @@ def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=
     JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image,
                          icon_code=icon_code, is_active=is_active, is_paused=is_paused,
                          is_published=is_published, max_scheduled=max_scheduled, configuration=configuration)
-
-
 
 def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=None, timeout=None, input_file_size=10.0,
                            queued=None, started=None, resources=None, priority=None, num_exes=1):
