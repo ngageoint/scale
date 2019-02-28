@@ -182,8 +182,8 @@ class ProductFileManager(models.GeoManager):
     """
 
     def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                        job_type_categories=None, job_ids=None, is_operational=None, is_published=None, 
-                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, 
+                        job_ids=None, is_operational=None, is_published=None,
+                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None,
                         recipe_job=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
@@ -233,8 +233,8 @@ class ProductFileManager(models.GeoManager):
         products = products.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                   'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                   'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                  'job_type__manifest', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
+                                  'job_type__manifest', 'job_type__configuration',
+                                  'recipe__input', 'recipe_type__definition',
                                   'batch__definition')
         products = products.prefetch_related('countries')
 
@@ -258,8 +258,6 @@ class ProductFileManager(models.GeoManager):
             products = products.filter(job_type_id__in=job_type_ids)
         if job_type_names:
             products = products.filter(job_type__name__in=job_type_names)
-        if job_type_categories:
-            products = products.filter(job_type__category__in=job_type_categories)
         if job_ids:
             products = products.filter(job_id__in=job_type_ids)
         if is_operational is not None:
@@ -290,7 +288,7 @@ class ProductFileManager(models.GeoManager):
         return products
 
     def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                     job_type_categories=None, job_ids=None, is_operational=None, is_published=None,
+                     job_ids=None, is_operational=None, is_published=None,
                      file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
                      batch_ids=None, order=None):
         """Returns a list of product files within the given time range.
@@ -305,8 +303,6 @@ class ProductFileManager(models.GeoManager):
         :type job_type_ids: list[int]
         :param job_type_names: Query product files produced by jobs with the given type name.
         :type job_type_names: list[str]
-        :param job_type_categories: Query product files produced by jobs with the given type category.
-        :type job_type_categories: list[str]
         :keyword job_ids: Query product files produced by a given job id
         :type job_ids: list[int]
         :param is_operational: Query product files flagged as operational or R&D only.
@@ -332,13 +328,13 @@ class ProductFileManager(models.GeoManager):
         """
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
-                                    job_type_names=job_type_names, job_type_categories=job_type_categories,
+                                    job_type_names=job_type_names,
                                     job_ids=job_ids, is_operational=is_operational, is_published=is_published,
                                     is_superseded=False, file_name=file_name, job_output=job_output,
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
 
-    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
+    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None,
                             file_name=None, order=None):
         """Returns a query for the list of sources that produced the given product file ID.
 
@@ -562,7 +558,7 @@ class ProductFileManager(models.GeoManager):
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
-            product.is_operational = input_products_operational and job_exe.job.job_type.is_operational
+            product.is_operational = input_products_operational #and job_exe.job.job_type.is_operational
             file_name = os.path.basename(entry.local_path)
             file_size = os.path.getsize(entry.local_path)
             product.set_basic_fields(file_name, file_size, entry.media_type)
