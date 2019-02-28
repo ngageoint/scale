@@ -513,6 +513,7 @@ class ProductFileManager(models.GeoManager):
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
+
             file_name = os.path.basename(entry.local_path)
             file_size = os.path.getsize(entry.local_path)
             product.set_basic_fields(file_name, file_size, entry.media_type)

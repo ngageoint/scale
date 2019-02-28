@@ -6,7 +6,6 @@ import rest_framework.serializers as serializers
 
 from batch.serializers import BatchBaseSerializerV6
 from recipe.serializers import RecipeTypeBaseSerializerV6
-from storage.serializers import ScaleFileSerializerV5
 from util.rest import ModelIdSerializer
 
 
