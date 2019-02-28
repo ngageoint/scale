@@ -80,14 +80,13 @@ class TestSchedulingManager(TestCase):
                                 NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
         scheduling_manager = SchedulingManager()
-        num_tasks = 0
-        with patch('scheduler.scheduling.manager.resource_mgr.get_max_available_resources') as mock_get_max:
-            mock_get_max.return_value = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
-            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+
         self.assertEqual(num_tasks, 2)  # Schedule smaller queued job executions
         # Ensure job execution models are created and queue models are deleted
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_large.job_id).count(), 0)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 0)
 
     def test_increased_resources(self):
@@ -98,10 +97,8 @@ class TestSchedulingManager(TestCase):
                                 NodeResources([Cpus(225.0), Mem(22048.0), Disk(22048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
         scheduling_manager = SchedulingManager()
-        num_tasks = 0
-        with patch('scheduler.scheduling.manager.resource_mgr.get_max_available_resources') as mock_get_max:
-            mock_get_max.return_value = NodeResources([Cpus(225.0), Mem(22048.0), Disk(22048.0)])
-            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+
         self.assertEqual(num_tasks, 3)  # Schedule all queued job executions
         # Ensure job execution models are created and queue models are deleted
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
@@ -121,10 +118,7 @@ class TestSchedulingManager(TestCase):
         resource_mgr.add_new_offers([offer])
 
         scheduling_manager = SchedulingManager()
-        num_tasks = 0
-        with patch('scheduler.scheduling.manager.resource_mgr.get_max_available_resources') as mock_get_max:
-            mock_get_max.return_value = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
-            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
 
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
         # Check that created tasks have the correct agent ID
@@ -222,9 +216,7 @@ class TestSchedulingManager(TestCase):
         job_type_mgr.sync_with_database()
 
         scheduling_manager = SchedulingManager()
-        with patch('scheduler.scheduling.manager.resource_mgr.get_max_available_resources') as mock_get_max:
-            mock_get_max.return_value = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
-            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
 
         self.assertEqual(num_tasks, 1)  # Schedule queued job execution that is not paused
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
@@ -256,10 +248,7 @@ class TestSchedulingManager(TestCase):
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()
-        num_tasks = 0
-        with patch('scheduler.scheduling.manager.resource_mgr.get_max_available_resources') as mock_get_max:
-            mock_get_max.return_value = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
-            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more
 
     def test_canceled_queue_model(self):
@@ -273,10 +262,8 @@ class TestSchedulingManager(TestCase):
         self.queue_1.save()
 
         scheduling_manager = SchedulingManager()
-        num_tasks = 0
-        with patch('scheduler.scheduling.manager.resource_mgr.get_max_available_resources') as mock_get_max:
-            mock_get_max.return_value = NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])
-            num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+
         self.assertEqual(num_tasks, 1)  # Scheduled non-canceled queued job execution
         # queue_1 should be canceled, queue_2 should be running, queue should be empty now
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
@@ -314,15 +301,14 @@ class TestSchedulingManager(TestCase):
     def test_max_resources(self):
         """Tests successfully calculating the max resources in a cluster"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
                                 NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
-        resource_mgr.add_new_offers([offer_1, offer_2])
-
-        agent_totals = {}
-        agent_totals[self.agent_1.agent_id] = NodeResources([Cpus(2.0), Mem(2048.0), Disk(1024.0)])
-        agent_totals[self.agent_2.agent_id] = NodeResources([Cpus(25.0), Mem(1024.0), Disk(2048.0)])
-        resource_mgr.set_agent_totals(agent_totals)
+        offer_3 = ResourceOffer('offer_3', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(225.0), Mem(1024.0), Disk(22048.0)]), now()) 
+        resource_mgr.add_new_offers([offer_1, offer_2, offer_3])
+        
+        resource_mgr.refresh_agent_resources([], now())
 
         max = resource_mgr.get_max_available_resources()
-        self.assertTrue(max.is_equal(NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])))
+        self.assertTrue(max.is_equal(NodeResources([Cpus(250.0), Mem(22048.0), Disk(24096.0)])))
