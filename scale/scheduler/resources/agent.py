@@ -219,14 +219,14 @@ class AgentResources(object):
             shortage_resources.round_values()
         self._shortage_resources = shortage_resources
 
-    def get_total(self):
-        """Gets the total resources for the agent
+    def get_max_resources(self):
+        """Gets the maximum resources for the agent
         
-        :returns: The total resources for an agent
+        :returns: The maximum resources for an agent
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        return self._total_resources
+        return self._total_resources if self._total_resources else self._watermark_resources
 
     def set_total(self, total_resources):
         """Sets the total resources for the agent
