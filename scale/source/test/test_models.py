@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import datetime
 import os
 
+import copy
 import django
 from django.test import TestCase
 from django.utils.timezone import now
@@ -213,8 +214,15 @@ class TestSourceFileManagerSaveParseResults(TestCase):
                          'condition': {'media_type': 'text/plain', 'data_types': ['type']},
                          'data': {'input_data_name': 'my_input', 'workspace_name': workspace.name}}
         rule_model = trigger_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
-        interface = {'version': '1.0', 'command': '', 'command_arguments': '', 'input_data': [{'name': 'my_input', 'type': 'file'}]}
-        job_type = job_utils.create_job_type(interface=interface)
+        # interface = {'version': '1.0', 'command': '', 'command_arguments': '', 'input_data': [{'name': 'my_input', 'type': 'file'}]}
+        manifest = copy.deepcopy(job_utils.COMPLETE_MANIFEST)
+        manifest['job']['interface']['inputs'] = {
+            'files': [{
+              'name': 'my_input'
+            }]
+        }
+        job_type = job_utils.create_seed_job_type(manifest=manifest)
+        # job_type = job_utils.create_job_type(interface=interface)
         job_type.trigger_rule = rule_model
         job_type.save()
 

@@ -1,8 +1,10 @@
 from __future__ import unicode_literals
 
+import copy
 import django
 from django.test import TestCase
 from django.utils.timezone import now
+from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
@@ -19,8 +21,8 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
     def setUp(self):
         django.setup()
 
-        self.input_name = 'Test Input'
-        self.output_name = 'Test Output'
+        self.input_name = 'Test_Input'
+        self.output_name = 'Test_Output'
         self.workspace = storage_test_utils.create_workspace()
 
         # This job trigger should not match due to a different media type
@@ -36,31 +38,32 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         }
         job_trigger_rule = trigger_test_utils.create_trigger_rule(configuration=job_trigger_config)
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['interface']['inputs'] = {
+            'files': [{
                 'name': self.input_name,
-                'type': 'file',
-            }],
+                'mediaTypes': ['text/plain']
+            }]
         }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1, trigger_rule=job_trigger_rule)
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest)
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
+
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-2'
+        manifest['job']['interface']['inputs'] = {
+            'files': [{
                 'name': self.input_name,
-                'type': 'file',
-            }],
-            'output_data': [{
-                'name': self.output_name,
-                'type': 'file',
+                'mediaTypes': ['text/plain']
             }],
         }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2, trigger_rule=job_trigger_rule)
+        manifest['job']['interface']['outputs'] = {
+            'files': [{
+                'name': self.output_name,
+                'mediaType': ['text/plain'],
+                'pattern': '*_.txt'
+            }]
+        }
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest)
 
         # create a recipe that runs both jobs
         definition_1 = {
@@ -95,6 +98,34 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
                 }],
             }],
         }
+        recipe_def = {
+            'version': '6',
+            'input': {'files':[{'name': self.input_name, 'media_types': ['text/plain'],
+                                'required': True, 'multiple': False}],
+                     'json':[]},
+            'nodes': {
+                'job-a': {
+                    'dependencies':[],
+                    'input': {self.input_name: {'type': 'recipe', 'input': self.input_name}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                },
+                'job-b': {
+                    'dependencies':[{'name': 'job-a'}],
+                    'input': {self.input_name: {'type': 'dependency', 'node': 'job-a', 'output': self.output_name}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
+        }
 
         self.when_parsed = now()
         self.file_name = 'my_file.txt'
@@ -119,8 +150,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
             },
         }
         self.trigger_rule = trigger_test_utils.create_trigger_rule(configuration=recipe_trigger_config)
-        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v5(definition=definition_1,
-                                                                  trigger_rule=self.trigger_rule)
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6(definition=definition_1)
 
 
     def test_successful_job_creation(self):
@@ -148,10 +178,12 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         # Check results
         queue_1 = Queue.objects.get(job_type=self.job_type_1.id)
         job_1 = Job.objects.get(pk=queue_1.job_id)
-        self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
-        self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
+        self.assertEqual(job_1.input['files'].keys()[0], self.input_name)
+        self.assertEqual(job_1.input['files'][self.input_name][0], self.source_file.id)
 
-    def test_successful_recipe_creation(self):
+    @patch('queue.models.CommandMessageManager')
+    @patch('queue.models.create_process_recipe_input_messages')
+    def test_successful_recipe_creation(self, mock_create, mock_msg_mgr):
         """Tests successfully processing a parse that triggers recipe creation."""
 
         # Set up data
@@ -173,10 +205,5 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         # Call method to test
         ParseTriggerHandler().process_parsed_source_file(self.source_file)
 
-        # Check results...ensure first job is queued
-        queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
-        job_1 = Job.objects.get(pk=queue_1.job_id)
-        self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
-        self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
-        self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
-        self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)
+        # ensure a create_recipe command message is created
+        mock_create.assert_called_once()
