@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import datetime
 import os
 
+import copy
 import django
 from django.test import TestCase
 from django.utils.timezone import now
@@ -203,6 +204,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertDictEqual(src_file.meta_data, {'prop_a': 'A', 'prop_b': 'B'})
         self.assertIsNotNone(src_file.geometry)
         self.assertIsNotNone(src_file.center_point)
+
 
     def test_valid_polygon(self):
         """Tests calling save_parse_results with valid arguments"""
