@@ -310,3 +310,19 @@ class TestSchedulingManager(TestCase):
 
         num_tasks = scheduling_manager.perform_scheduling(self._client, now())
         self.assertEqual(num_tasks, 3)  # Schedule database update task and 2 message handler tasks
+
+    def test_max_resources(self):
+        """Tests successfully calculating the max resources in a cluster"""
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+
+        agent_totals = {}
+        agent_totals[self.agent_1.agent_id] = NodeResources([Cpus(2.0), Mem(2048.0), Disk(1024.0)])
+        agent_totals[self.agent_2.agent_id] = NodeResources([Cpus(25.0), Mem(1024.0), Disk(2048.0)])
+        resource_mgr.set_agent_totals(agent_totals)
+
+        max = resource_mgr.get_max_available_resources()
+        self.assertTrue(max.is_equal(NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)])))
