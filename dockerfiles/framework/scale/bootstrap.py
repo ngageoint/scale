@@ -22,7 +22,7 @@ SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 def dcos_login():
     # Defaults servers for both DCOS 1.10+ CE and EE.
     servers = os.getenv('MARATHON_SERVERS',
-                        'https://marathon.mesos:8443,http://marathon.mesos:8080').split(',')
+                        'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
 
     if SERVICE_SECRET:
         print('Attempting token auth to Marathon...')
