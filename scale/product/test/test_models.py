@@ -473,6 +473,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(products[0].url, products[0].meta_data['url'])
         self.assertEqual(products[0].meta_data.get('package_version'), '1.0.0')
         self.assertIsNotNone(products[0].uuid)
+
         self.assertEqual(products[0].source_sensor_class, 'classA')
         self.assertEqual(products[0].source_sensor, '1')
         self.assertEqual(products[0].source_collection, '12345')
@@ -488,6 +489,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(products[1].url, products[1].meta_data['url'])
         self.assertEqual(products[1].meta_data.get('package_version'), '1.0.0')
         self.assertIsNotNone(products[1].uuid)
+
         self.assertEqual(products[1].source_sensor_class, 'classB')
         self.assertEqual(products[1].source_sensor, '2')
         self.assertEqual(products[1].source_collection, '12346')
