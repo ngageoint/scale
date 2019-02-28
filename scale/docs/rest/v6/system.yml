@@ -81,6 +81,11 @@ components:
           $ref: "#/components/schemas/mesos"
         state:
           $ref: "#/components/schemas/state"
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/warning'
+          description: List of scheduler warning objects, with a title, description, and when the warning began and was last updated 
     metrics:
       title: Metrics
       type: object
