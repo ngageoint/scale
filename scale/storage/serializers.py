@@ -47,26 +47,6 @@ class WorkspaceBaseSerializer(ModelIdSerializer):
     """Converts workspace model fields to REST output"""
     name = serializers.CharField()
 
-
-class WorkspaceSerializerV5(WorkspaceBaseSerializer):
-    """Converts workspace model fields to REST output"""
-    title = serializers.CharField()
-    description = serializers.CharField()
-    base_url = serializers.URLField()
-    is_active = serializers.BooleanField()
-
-    used_size = serializers.IntegerField(source='zero_size')
-    total_size = serializers.IntegerField(source='zero_size')
-
-    created = serializers.DateTimeField()
-    archived = serializers.DateTimeField(source='deprecated')
-    last_modified = serializers.DateTimeField()
-
-
-class WorkspaceDetailsSerializerV5(WorkspaceSerializerV5):
-    """Converts workspace model fields to REST output"""
-    json_config = serializers.JSONField(default=dict)
-
 class WorkspaceSerializerV6(WorkspaceBaseSerializer):
     """Converts workspace model fields to REST output"""
     title = serializers.CharField()
@@ -83,45 +63,13 @@ class WorkspaceDetailsSerializerV6(WorkspaceSerializerV6):
     """Converts workspace model fields to REST output"""
     configuration = serializers.JSONField(source='get_v6_configuration_json')
 
-class ScaleFileBaseSerializerV5(ModelIdSerializer):
-    """Converts Scale file model fields to REST output"""
-    workspace = WorkspaceBaseSerializer()
 
-    file_name = serializers.CharField()
-    media_type = serializers.CharField()
-    file_type = serializers.CharField()
-    file_size = serializers.IntegerField()  # TODO: BigIntegerField?
-    data_type = serializers.ListField(child=serializers.CharField(), source='data_type_tags')
-    is_deleted = serializers.BooleanField()
-    uuid = serializers.CharField()
-    url = serializers.URLField()
-
-    created = serializers.DateTimeField()
-    deleted = serializers.DateTimeField()
-    data_started = serializers.DateTimeField()
-    data_ended = serializers.DateTimeField()
-    source_started = serializers.DateTimeField()
-    source_ended = serializers.DateTimeField()
-
-    last_modified = serializers.DateTimeField()
-    
 class ScaleFileBaseSerializerV6(ModelIdSerializer):
     """Converts Scale file model fields to REST output"""
 
     file_name = serializers.CharField()
 
 
-class ScaleFileSerializerV5(ScaleFileBaseSerializerV5):
-    """Converts Scale file model fields to REST output"""
-
-    file_path = serializers.CharField()
-
-    # TODO: update to use GeoJson instead of WKT
-    geometry = WktField()
-    center_point = WktField()
-    meta_data = serializers.JSONField(default=dict)
-    countries = serializers.StringRelatedField(many=True, read_only=True)
-    
 class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     """Converts Scale file model fields to REST output"""
     from batch.serializers import BatchBaseSerializerV6
@@ -169,5 +117,5 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
 
 class ScaleFileDetailsSerializerV6(ScaleFileSerializerV6):
     """Converts file model fields to REST output"""
-    
+
     meta_data = serializers.JSONField(default=dict)
