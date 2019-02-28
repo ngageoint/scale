@@ -19,11 +19,7 @@ class ErrorsView(GenericAPIView):
     """This view is the endpoint for retrieving the list of all errors and creating a new error."""
     queryset = Error.objects.all()
 
-    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
-    def get_serializer_class(self):
-        """Returns the appropriate serializer based off the requests version of the REST API. """
-
-        return ErrorSerializerV6
+    serializer_class = ErrorSerializerV6
 
     def get(self, request):
         """Retrieves the list of all errors and returns it in JSON form
@@ -62,7 +58,7 @@ class ErrorsView(GenericAPIView):
                                           job_type_name=job_type_name, name=name, category=category)
 
         page = self.paginate_queryset(errors)
-        serializer = self.get_serializer(page, many=True)
+        serializer = self.serializer_class(page, many=True)
         return self.get_paginated_response(serializer.data)
 
     def post(self, request):
@@ -84,10 +80,7 @@ class ErrorDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of an error."""
     queryset = Error.objects.all()
 
-    def get_serializer_class(self):
-        """Returns the appropriate serializer based off the requests version of the REST API. """
-
-        return ErrorDetailsSerializerV6
+    serializer_class = ErrorDetailsSerializerV6
 
     def get(self, request, error_id):
         """Retrieves the details for an error and return them in JSON form
@@ -121,7 +114,7 @@ class ErrorDetailsView(GenericAPIView):
         except Error.DoesNotExist:
             raise Http404
 
-        serializer = self.get_serializer(error)
+        serializer = self.serializer_class(error)
         return Response(serializer.data)
 
     def patch(self, request, error_id):
