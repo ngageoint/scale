@@ -2855,6 +2855,7 @@ class JobTypeManager(models.Manager):
             job_type.paused = timezone.now() if kwargs['is_paused'] else None
         for field_name in kwargs:
             setattr(job_type, field_name, kwargs[field_name])
+        job_type.unmet_resources = None #assume edit is fixing resources; reset unmet_resources
         job_type.save()
 
         # Save any secrets to Vault
@@ -2913,6 +2914,7 @@ class JobTypeManager(models.Manager):
             error_mapping.save_models()
 
             job_type.populate_from_manifest(manifest)
+            job_type.unmet_resources = None #assume edit is fixing resources; reset unmet_resources
             job_type.save()
             JobTypeTag.objects.update_job_type_tags(job_type, manifest)
         else:
