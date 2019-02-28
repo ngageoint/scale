@@ -488,14 +488,11 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                                       is_active=is_active, configuration=configuration, docker_image=docker_image,
                                       is_system=is_system)
 
-
-
     version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
     job_type.version_array = version_array
     job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
-
 
 def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None,
                      is_published=None, is_paused=None, max_scheduled=None, configuration_dict=None):

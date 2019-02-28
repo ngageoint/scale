@@ -205,6 +205,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNotNone(src_file.geometry)
         self.assertIsNotNone(src_file.center_point)
 
+
     def test_valid_polygon(self):
         """Tests calling save_parse_results with valid arguments"""
 
