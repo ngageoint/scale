@@ -181,7 +181,7 @@ class SourceFileManager(models.GeoManager):
 
     def get_source_products(self, source_file_id, started=None, ended=None, time_field=None, batch_ids=None,
                             job_type_ids=None, job_type_names=None, job_ids=None,
-                            is_operational=None, is_published=None, is_superseded=None, file_name=None,
+                            is_published=None, is_superseded=None, file_name=None,
                             job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None, order=None):
         """Returns a query for the list of products produced by the given source file ID. The returned query includes
         the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
@@ -203,8 +203,6 @@ class SourceFileManager(models.GeoManager):
         :type job_type_names: list[str]
         :param job_ids: Query product files produced by jobs with the given identifiers.
         :type job_ids: list[int]
-        :param is_operational: Query product files flagged as operational or R&D only.
-        :type is_operational: bool
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query product files that have/have not been superseded.
@@ -228,8 +226,7 @@ class SourceFileManager(models.GeoManager):
         from product.models import ProductFile
         products = ProductFile.objects.filter_products(started=started, ended=ended, time_field=time_field,
                                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                                       job_ids=job_ids,
-                                                       is_operational=is_operational, is_published=is_published,
+                                                       job_ids=job_ids, is_published=is_published,
                                                        is_superseded=None, file_name=file_name, job_output=job_output,
                                                        recipe_ids=recipe_ids, recipe_job=recipe_job,
                                                        recipe_type_ids=recipe_type_ids, order=order)

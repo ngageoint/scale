@@ -11,7 +11,6 @@ from util.rest import ModelIdSerializer
 
 class ProductFileBaseSerializer(ScaleFileSerializerV6):
     """Converts product file model fields to REST output"""
-    is_operational = serializers.BooleanField()
     is_published = serializers.BooleanField()
     has_been_published = serializers.BooleanField()
     is_superseded = serializers.BooleanField()
