@@ -92,9 +92,6 @@ DCOS_SERVICE_ACCOUNT = None
 # Flag for raising SSL warnings associated with secrets transactions.
 SECRETS_SSL_WARNINGS = True
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 INSECURE_DEFAULT_KEY = 'this-key-is-insecure-and-should-never-be-used-in-production'
 
@@ -114,7 +111,6 @@ DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -255,7 +251,7 @@ USE_TZ = True
 #############################
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 # Redirect after directly hitting login endpoint
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/v6/accounts/profile/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 DEFAULT_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
@@ -282,37 +278,28 @@ SOCIAL_AUTH_GEOAXIS_SCOPE = map(str.strip, OAUTH_GEOAXIS_SCOPES.split(','))
 
 # GeoAxisOAuth2 will cause all login attempt to fail if
 # SOCIAL_AUTH_GEOAXIS_HOST is None
+GEOAXIS_ENABLED = False
 if SOCIAL_AUTH_GEOAXIS_KEY and len(SOCIAL_AUTH_GEOAXIS_KEY) > 0:
+    GEOAXIS_ENABLED = True
     AUTHENTICATION_BACKENDS += (
         'django_geoaxis.backends.geoaxis.GeoAxisOAuth2',
     )
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static/'
 
-# Additional locations of static files
-
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
-
-# List of finder classes that know how to find static files in
-# various locations.
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Logging configuration
-
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
