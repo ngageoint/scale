@@ -618,9 +618,6 @@ class ScaleFile(models.Model):
     :type source_collection: :class:`django.db.models.CharField`
     :keyword source_task: The task that produced the source file.
     :type source_task: :class:`django.db.models.CharField`
-    :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
-        is still in a research & development (R&D) phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
     :keyword has_been_published: Whether this product has ever been published. A product becomes published when its job
         execution completes successfully. A product that has been published will appear in the API call to retrieve
         product updates.
@@ -691,7 +688,6 @@ class ScaleFile(models.Model):
     recipe_node = models.CharField(null=True, blank=True, max_length=250)
     recipe_type = models.ForeignKey('recipe.RecipeType', blank=True, null=True, on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
-    is_operational = models.BooleanField(default=True)
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
     is_superseded = models.BooleanField(default=False)
