@@ -181,10 +181,10 @@ class ProductFileManager(models.GeoManager):
     """Provides additional methods for handling product files
     """
 
-    def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                        job_ids=None, is_operational=None, is_published=None,
-                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None,
-                        recipe_job=None, batch_ids=None, order=None):
+    def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None,
+                        job_type_names=None, job_ids=None, is_published=None,
+                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None,
+                        recipe_type_ids=None, recipe_job=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
@@ -203,8 +203,6 @@ class ProductFileManager(models.GeoManager):
         :type job_type_categories: list[str]
         :keyword job_ids: Query product files produced by a given job id
         :type job_ids: list[int]
-        :param is_operational: Query product files flagged as operational or R&D only.
-        :type is_operational: bool
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query product files that have/have not been superseded.
@@ -260,8 +258,6 @@ class ProductFileManager(models.GeoManager):
             products = products.filter(job_type__name__in=job_type_names)
         if job_ids:
             products = products.filter(job_id__in=job_type_ids)
-        if is_operational is not None:
-            products = products.filter(job_type__is_operational=is_operational)
         if is_published is not None:
             products = products.filter(is_published=is_published)
         if is_superseded is not None:
@@ -287,9 +283,9 @@ class ProductFileManager(models.GeoManager):
 
         return products
 
-    def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                     job_ids=None, is_operational=None, is_published=None,
-                     file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
+    def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None,
+                     job_type_names=None, job_ids=None, is_published=None, file_name=None,
+                     job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
                      batch_ids=None, order=None):
         """Returns a list of product files within the given time range.
 
@@ -305,8 +301,6 @@ class ProductFileManager(models.GeoManager):
         :type job_type_names: list[str]
         :keyword job_ids: Query product files produced by a given job id
         :type job_ids: list[int]
-        :param is_operational: Query product files flagged as operational or R&D only.
-        :type is_operational: bool
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param file_name: Query product files with the given file name.
@@ -328,8 +322,7 @@ class ProductFileManager(models.GeoManager):
         """
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
-                                    job_type_names=job_type_names,
-                                    job_ids=job_ids, is_operational=is_operational, is_published=is_published,
+                                    job_type_names=job_type_names, job_ids=job_ids, is_published=is_published,
                                     is_superseded=False, file_name=file_name, job_output=job_output,
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
@@ -532,7 +525,6 @@ class ProductFileManager(models.GeoManager):
 
         # Determine if any input files are non-operational products
         input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
-        input_products_operational = all([f.is_operational for f in input_products])
 
         source_started = job_exe.job.source_started
         source_ended = job_exe.job.source_ended
@@ -558,7 +550,6 @@ class ProductFileManager(models.GeoManager):
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
-            product.is_operational = input_products_operational #and job_exe.job.job_type.is_operational
             file_name = os.path.basename(entry.local_path)
             file_size = os.path.getsize(entry.local_path)
             product.set_basic_fields(file_name, file_size, entry.media_type)

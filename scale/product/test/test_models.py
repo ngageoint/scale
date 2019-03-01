@@ -441,12 +441,6 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.job_exe.job.source_task = 'my-task'
         self.job_exe.job.save()
         self.job_exe_no = job_test_utils.create_job_exe()
-        # TODO: Figure out if scalfile.is_operational should still be a thing
-        # with transaction.atomic():
-        #     self.job_exe_no.job.is_operational = False
-        #     self.job_exe_no.job.job_type.is_operational = False
-        #     self.job_exe_no.job.save()
-        #     self.job_exe_no.job.job_type.save()
 
         self.local_path_1 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt')
         self.local_path_2 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/2/file.json')
@@ -479,8 +473,6 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(products[0].url, products[0].meta_data['url'])
         self.assertEqual(products[0].meta_data.get('package_version'), '1.0.0')
         self.assertIsNotNone(products[0].uuid)
-        # TODO: Figure out if scalfile.is_operational should still be a thing
-        # self.assertTrue(products[0].is_operational)
         self.assertEqual(products[0].source_sensor_class, 'classA')
         self.assertEqual(products[0].source_sensor, '1')
         self.assertEqual(products[0].source_collection, '12345')
@@ -496,25 +488,12 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(products[1].url, products[1].meta_data['url'])
         self.assertEqual(products[1].meta_data.get('package_version'), '1.0.0')
         self.assertIsNotNone(products[1].uuid)
-        # TODO: Figure out if scalfile.is_operational should still be a thing
-        # self.assertTrue(products[1].is_operational)
         self.assertEqual(products[1].source_sensor_class, 'classB')
         self.assertEqual(products[1].source_sensor, '2')
         self.assertEqual(products[1].source_collection, '12346')
         self.assertEqual(products[1].source_task, 'my-task-2')
 
         self.assertNotEqual(products[0].uuid, products[1].uuid)
-
-    # TODO: Figure out if scalfile.is_operational should still be a thing
-    # @patch('storage.models.os.path.getsize', lambda path: 100)
-    # def test_non_operational_product(self):
-    #     """Tests calling ProductFileManager.upload_files() with a non-operational input file"""
-    #     products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
-    #                                                   self.workspace)
-    #     products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
-    #                                                 self.job_exe, self.workspace)
-    #     self.assertFalse(products[0].is_operational)
-    #     self.assertFalse(products[1].is_operational)
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_geo_metadata(self):
