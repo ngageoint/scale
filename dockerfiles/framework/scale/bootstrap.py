@@ -230,7 +230,10 @@ def deploy_webserver(client, app_name, es_url, db_url, broker_url):
     env_map = {
         'SCALE_ALLOWED_HOSTS': 'SCALE_ALLOWED_HOSTS',
         'SCALE_SECRET_KEY': 'SCALE_SECRET_KEY',
-        'SCALE_QUEUE_NAME': 'SCALE_QUEUE_NAME'
+        'SCALE_QUEUE_NAME': 'SCALE_QUEUE_NAME',
+        'GEOAXIS_HOST': 'GEOAXIS_HOST',
+        'GEOAXIS_KEY': 'GEOAXIS_KEY',
+        'GEOAXIS_SECRET': 'GEOAXIS_SECRET'
     }
     apply_set_envs(marathon, env_map)
 

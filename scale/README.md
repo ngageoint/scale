@@ -238,6 +238,9 @@ below for reference.
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
 | FLUENTD_DOCKER_IMAGE        | 'geoint/scale-fluentd'          | Docker image for fluentd                   |
+| GEOAXIS_HOST                | 'geoaxis.gxaccess.com'          | Host address for GEOAxIS endpoints         |
+| GEOAXIS_KEY                 | None                            | GEOAxIS OAuth API Key                      |
+| GEOAXIS_SECRET              | None                            | GEOAxIS OAuth API Secret                   |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |

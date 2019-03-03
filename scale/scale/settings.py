@@ -266,14 +266,14 @@ DEFAULT_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details'
 )
 
-SOCIAL_AUTH_GEOAXIS_KEY = os.getenv('OAUTH_GEOAXIS_KEY')
-SOCIAL_AUTH_GEOAXIS_SECRET = os.getenv('OAUTH_GEOAXIS_SECRET')
-SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('OAUTH_GEOAXIS_HOST', 'geoaxis.gxaccess.com')
+SOCIAL_AUTH_GEOAXIS_KEY = os.getenv('GEOAXIS_KEY')
+SOCIAL_AUTH_GEOAXIS_SECRET = os.getenv('GEOAXIS_SECRET')
+SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('GEOAXIS_HOST', 'geoaxis.gxaccess.com')
 OAUTH_GEOAXIS_USER_FIELDS = os.getenv(
-    'OAUTH_GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name')
+    'GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name')
 SOCIAL_AUTH_GEOAXIS_USER_FIELDS = map(
     str.strip, OAUTH_GEOAXIS_USER_FIELDS.split(','))
-OAUTH_GEOAXIS_SCOPES = os.getenv('OAUTH_GEOAXIS_SCOPES', 'UserProfile.me')
+OAUTH_GEOAXIS_SCOPES = os.getenv('GEOAXIS_SCOPES', 'UserProfile.me')
 SOCIAL_AUTH_GEOAXIS_SCOPE = map(str.strip, OAUTH_GEOAXIS_SCOPES.split(','))
 
 # GeoAxisOAuth2 will cause all login attempt to fail if
