@@ -81,7 +81,12 @@ then
     python manage.py loaddata country_data.json
 
     # Create superuser for Scale DB
-    python manage.py scale_superuser
+    if [[ "${ADMIN_PASSWORD}x" == "x" ]]
+    then
+        python manage.py scale_superuser -f -p "${ADMIN_PASSWORD}"
+    else
+        python manage.py scale_superuser
+    fi
 fi
 
 # If ENABLE_WEBSERVER is set, we are running the container in web server mode.
