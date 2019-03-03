@@ -229,6 +229,7 @@ below for reference.
 | Env Var                     | Default Value                   | Meaning                                    |
 | --------------------------- | ------------------------------- | -------------------------------------------|
 | ACCEPTED_RESOURCE_ROLE      | MESOS_ROLE                      | Resource role to accept in offers          |
+| ADMIN_PASSWORD              | None                            | Custom password for admin user             |
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
 | CONTAINER_PROCESS_OWNER     | 'nobody'                        | System user used to launch Docker tasks    |
