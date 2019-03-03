@@ -66,8 +66,6 @@ METRICS_DIR = None
 LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
 
-LOGIN_REDIRECT_URL = '/v6/accounts/profile'
-
 # Base URL of elasticsearch nodes
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 # Placeholder for elasticsearch version. Supplied in production by local_settings_docker.py
@@ -245,6 +243,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOGIN_REDIRECT_URL = '/'
 
 #############################
 # GEOAxIS specific settings #
