@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
+import os
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
@@ -41,4 +43,10 @@ class Command(BaseCommand):
                                                  password=new_password)
 
         if user:
-            print('Superuser admin password set: %s' % (new_password,))
+            if settings.MESOS_SANDBOX:
+                with open(os.path.join(settings.MESOS_SANDBOX, 'admin-pass.txt'), 'w') as pass_file:
+                    pass_file.write(new_password)
+            else:
+                print('Superuser admin password set: %s' % (new_password,))
+
+

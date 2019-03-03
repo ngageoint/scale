@@ -95,6 +95,9 @@ INSECURE_DEFAULT_KEY = 'this-key-is-insecure-and-should-never-be-used-in-product
 
 SECRET_KEY = INSECURE_DEFAULT_KEY
 
+# Used to write the superuser password
+MESOS_SANDBOX = os.getenv('MESOS_SANDBOX')
+
 # Security settings for production
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
