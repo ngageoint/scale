@@ -15,6 +15,9 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', None)
 USE_X_FORWARDED_HOST = True
 
+# Ensure backend uses HTTPS for auth callbacks
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
 ALLOWED_HOSTS = ['*']
 override_hosts = os.environ.get('SCALE_ALLOWED_HOSTS')
 if override_hosts:

@@ -28,7 +28,6 @@ def application(environ, start_response):
     if behind_haproxy:
         script_name = '/api'
 
-    print('SCRIPT_NAME set to %s' % (script_name,))
     environ['SCRIPT_NAME'] = script_name
 
     return _application(environ, start_response)

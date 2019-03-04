@@ -36,7 +36,7 @@ unversioned_urls = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
-    url(r'^auth/', include('social_django.urls', namespace='social')),
+    url(r'^social-auth/', include('social_django.urls', namespace='social')),
     url(r'^login/$', auth_views.login,
         {'template_name': 'accounts/login.html', 'extra_context':{'GEOAXIS_ENABLED': settings.GEOAXIS_ENABLED}},
         name='login'),
