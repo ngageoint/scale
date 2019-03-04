@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+util\.active\_warnings module
+-----------------------------
+
+.. automodule:: util.active_warnings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.apps module
 -----------------
 

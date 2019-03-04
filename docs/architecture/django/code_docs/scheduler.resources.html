@@ -298,6 +298,22 @@ requested.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.resources.agent.AgentResources.get_max_resources">
+<code class="descname">get_max_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.AgentResources.get_max_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the maximum resources for the agent</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The maximum resources for an agent</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.resources.agent.AgentResources.has_total_resources">
 <code class="descname">has_total_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.AgentResources.has_total_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this agent knows its total resources or not</p>
@@ -460,6 +476,22 @@ results.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.resources.manager.ResourceManager.get_max_available_resources">
+<code class="descname">get_max_available_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.get_max_available_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the maximum available resources across all agents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of these resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
 </tr>
 </tbody>
 </table>

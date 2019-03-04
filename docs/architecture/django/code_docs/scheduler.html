@@ -642,6 +642,38 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="scheduler.manager.SchedulerManager.warning_active">
+<code class="descname">warning_active</code><span class="sig-paren">(</span><em>warning</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerManager.warning_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that the given warning is now active</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>warning</strong> (<a class="reference internal" href="scheduler.node.html#scheduler.node.conditions.NodeWarning" title="scheduler.node.conditions.NodeWarning"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.conditions.NodeWarning</span></code></a>) &#8211; The node warning</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; An optional specific description for the warning</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.manager.SchedulerManager.warning_inactive">
+<code class="descname">warning_inactive</code><span class="sig-paren">(</span><em>warning</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerManager.warning_inactive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that the given warning is now inactive</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>warning</strong> (<a class="reference internal" href="scheduler.node.html#scheduler.node.conditions.NodeWarning" title="scheduler.node.conditions.NodeWarning"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.conditions.NodeWarning</span></code></a>) &#8211; The node warning</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -663,6 +695,30 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 <dl class="attribute">
 <dt id="scheduler.manager.SchedulerState.title">
 <code class="descname">title</code><a class="headerlink" href="#scheduler.manager.SchedulerState.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.manager.SchedulerWarning">
+<em class="property">class </em><code class="descclassname">scheduler.manager.</code><code class="descname">SchedulerWarning</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerWarning.description">
+<code class="descname">description</code><a class="headerlink" href="#scheduler.manager.SchedulerWarning.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerWarning.name">
+<code class="descname">name</code><a class="headerlink" href="#scheduler.manager.SchedulerWarning.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerWarning.title">
+<code class="descname">title</code><a class="headerlink" href="#scheduler.manager.SchedulerWarning.title" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 

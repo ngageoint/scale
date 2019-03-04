@@ -218,9 +218,9 @@
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.lock.DebugLock.acquire">acquire() (util.lock.DebugLock method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveError">ActiveError (class in scheduler.node.conditions)</a>
+      <li><a href="architecture/django/code_docs/util.html#util.active_warnings.ActiveError">ActiveError (class in util.active_warnings)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveWarning">ActiveWarning (class in scheduler.node.conditions)</a>
+      <li><a href="architecture/django/code_docs/util.html#util.active_warnings.ActiveWarning">ActiveWarning (class in util.active_warnings)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.add">add() (node.resources.node_resources.NodeResources method)</a>
 </li>
@@ -2439,6 +2439,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0052_jobtype_is_published.Migration.dependencies">(job.migrations.0052_jobtype_is_published.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0053_jobtype_unmet_resources.Migration.dependencies">(job.migrations.0053_jobtype_unmet_resources.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.dependencies">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -2722,6 +2724,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.description">(recipe.models.RecipeType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerState.description">(scheduler.manager.SchedulerState attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerWarning.description">(scheduler.manager.SchedulerWarning attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.description">(scheduler.node.conditions.NodeError attribute)</a>
 </li>
@@ -4381,6 +4385,10 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_matched_files">get_matched_files() (batch.models.BatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_matched_recipes">get_matched_recipes() (batch.models.BatchManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.get_max_available_resources">get_max_available_resources() (scheduler.resources.manager.ResourceManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.get_max_resources">get_max_resources() (scheduler.resources.agent.AgentResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerCondition.get_media_type">get_media_type() (batch.definition.json.old.batch_definition.BatchTriggerCondition method)</a>
 
@@ -6736,6 +6744,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0052_jobtype_is_published">job.migrations.0052_jobtype_is_published (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0053_jobtype_unmet_resources">job.migrations.0053_jobtype_unmet_resources (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.MultipleObjectsReturned">Job.MultipleObjectsReturned</a>
@@ -8353,6 +8363,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0052_jobtype_is_published.Migration">(class in job.migrations.0052_jobtype_is_published)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0053_jobtype_unmet_resources.Migration">(class in job.migrations.0053_jobtype_unmet_resources)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration">(class in metrics.migrations.0002_auto_20151007_1352)</a>
@@ -8748,6 +8760,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.name">(recipe.models.RecipeType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.apps.SchedulerConfig.name">(scheduler.apps.SchedulerConfig attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerWarning.name">(scheduler.manager.SchedulerWarning attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.name">(scheduler.node.conditions.NodeError attribute)</a>
 </li>
@@ -9268,6 +9282,8 @@
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0051_auto_20190211_1500.Migration.operations">(job.migrations.0051_auto_20190211_1500.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0052_jobtype_is_published.Migration.operations">(job.migrations.0052_jobtype_is_published.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0053_jobtype_unmet_resources.Migration.operations">(job.migrations.0053_jobtype_unmet_resources.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -11839,6 +11855,8 @@
       <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.scheduler_status.SchedulerStatusThread">SchedulerStatusThread (class in scheduler.threads.scheduler_status)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView">SchedulerView (class in scheduler.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerWarning">SchedulerWarning (class in scheduler.manager)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.manager.SchedulingManager">SchedulingManager (class in scheduler.scheduling.manager)</a>
 </li>
@@ -15430,6 +15448,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerMoveFiles.test_inactive_workspace">(storage.test.test_models.TestScaleFileManagerMoveFiles method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_increased_resources">test_increased_resources() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessViewV5.test_ingest_after_dry_run">test_ingest_after_dry_run() (ingest.test.test_views.TestScansProcessViewV5 method)</a>
 
       <ul>
@@ -16135,6 +16155,8 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_version_1_1">test_manifest_version_1_1() (job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestJobLoadView.test_max_duration">test_max_duration() (queue.test.test_views.TestJobLoadView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_max_resources">test_max_resources() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_incorrect">test_media_type_incorrect() (ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
 
@@ -19219,6 +19241,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerState.title">(scheduler.manager.SchedulerState attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerWarning.title">(scheduler.manager.SchedulerWarning attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.title">(scheduler.node.conditions.NodeError attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeWarning.title">(scheduler.node.conditions.NodeWarning attribute)</a>
@@ -19518,6 +19542,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.update.TaskStatusUpdate.UNKNOWN">UNKNOWN (job.tasks.update.TaskStatusUpdate attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.unmet_resources">unmet_resources (job.models.JobType attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.unpublish_products">unpublish_products() (product.models.ProductFileManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.unpublish_products_old">unpublish_products_old() (product.models.ProductFileManager method)</a>
@@ -19649,6 +19675,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#module-util">util (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/util.html#module-util.active_warnings">util.active_warnings (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#module-util.apps">util.apps (module)</a>
 </li>
@@ -20149,6 +20177,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.cluster_utils.wait_for_leader">wait_for_leader() (in module scheduler.cluster_utils)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerManager.warning_active">warning_active() (scheduler.manager.SchedulerManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerManager.warning_inactive">warning_inactive() (scheduler.manager.SchedulerManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.warnings">warnings (batch.models.BatchValidation attribute)</a>
 

@@ -420,6 +420,14 @@ job\.migrations\.0052\_jobtype\_is\_published module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0053\_jobtype\_unmet\_resources module
+-------------------------------------------------------
+
+.. automodule:: job.migrations.0053_jobtype_unmet_resources
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

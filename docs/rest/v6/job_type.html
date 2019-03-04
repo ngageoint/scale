@@ -382,6 +382,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
             <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unmet_resources&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -510,19 +511,23 @@ same time. May be null.</td>
 <td colspan="2">String</td>
 <td colspan="2">The Docker image containing the code to run for this job.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.created</td>
+<tr class="row-even"><td colspan="2">.unmet_resources</td>
+<td colspan="2">String</td>
+<td colspan="2">Resources required by this job type that are not present.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.created</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.deprecated</td>
+<tr class="row-even"><td colspan="2">.deprecated</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job type was last deprecated (archived).</td>
 </tr>
-<tr class="row-even"><td colspan="2">.paused</td>
+<tr class="row-odd"><td colspan="2">.paused</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job type was last paused.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.last_modified</td>
+<tr class="row-even"><td colspan="2">.last_modified</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
@@ -549,6 +554,7 @@ same time. May be null.</td>
 <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+<span class="s2">&quot;unmet_resources&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
 <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
 <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
 <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
@@ -642,29 +648,33 @@ same time. May be null.</td>
 <td>String</td>
 <td>The Docker image containing the code to run for this job.</td>
 </tr>
-<tr class="row-odd"><td>manifest</td>
+<tr class="row-odd"><td>unmet_resources</td>
+<td>String</td>
+<td>Resources required by this job type that are not present.</td>
+</tr>
+<tr class="row-even"><td>manifest</td>
 <td>String</td>
 <td>Seed manifest describing Job, interface and requirements.
 (See <a class="reference internal" href="../../architecture/jobs/seed.html#architecture-seed-manifest-spec"><span class="std std-ref">Seed Manifest Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td>configuration</td>
+<tr class="row-odd"><td>configuration</td>
 <td>JSON Object</td>
 <td>JSON description of the configuration for running the job
 (See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>deprecated</td>
+<tr class="row-odd"><td>deprecated</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job type was last deprecated (archived).</td>
 </tr>
-<tr class="row-odd"><td>paused</td>
+<tr class="row-even"><td>paused</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job type was last paused.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
@@ -1023,6 +1033,7 @@ Location <a class="reference external" href="http://.../v6/job-types/test/1.0.0/
 <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;test-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+<span class="s2">&quot;unmet_resources&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
 <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
 <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
 <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
