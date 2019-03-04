@@ -251,7 +251,7 @@ class QueueScaleCountView(GenericAPIView):
         # TODO: in the future, send command message to do this asynchronously
         job_type = JobType.objects.get(name='scale-count', version='1.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
