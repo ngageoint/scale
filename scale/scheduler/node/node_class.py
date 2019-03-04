@@ -503,10 +503,10 @@ class Node(object):
             self._state = self.DEPRECATED
         elif not self._is_online:
             self._state = self.OFFLINE
-        elif self._is_scheduler_paused:
-            self._state = self.SCHEDULER_STOPPED
         elif self._is_paused:
             self._state = self.PAUSED
+        elif self._is_scheduler_paused:
+            self._state = self.SCHEDULER_STOPPED
         elif self._conditions.has_active_errors():
             self._state = self.DEGRADED
         elif not self._is_initial_cleanup_completed:

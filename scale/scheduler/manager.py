@@ -1,6 +1,7 @@
 """Defines the class that manages high-level scheduler configuration and metrics"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 import threading
 from collections import namedtuple
@@ -9,9 +10,14 @@ from django.utils.timezone import now
 
 from scheduler.configuration import SchedulerConfiguration
 from scheduler.models import Scheduler
+from util.active_warnings import ActiveError, ActiveWarning
+from util.parse import datetime_to_string
+
+CLEANUP_WARN_THRESHOLD = datetime.timedelta(hours=3)
 
 logger = logging.getLogger(__name__)
 SchedulerState = namedtuple('SchedulerState', ['state', 'title', 'description'])
+SchedulerWarning = namedtuple('SchedulerWarning', ['name', 'title', 'description'])
 
 
 class SchedulerManager(object):
@@ -26,6 +32,8 @@ class SchedulerManager(object):
     def __init__(self):
         """Constructor
         """
+
+        self._active_warnings = {}  # {Warning name: ActiveWarning}
 
         self.config = SchedulerConfiguration()
         self.framework_id = None
@@ -87,6 +95,46 @@ class SchedulerManager(object):
             if was_job_finished:
                 self._job_fin_count += 1
 
+    def warning_active(self, warning, description=None):
+        """Indicates that the given warning is now active
+
+        :param warning: The node warning
+        :type warning: :class:`scheduler.node.conditions.NodeWarning`
+        :param description: An optional specific description for the warning
+        :type description: string
+        """
+
+        when = now()
+        if warning.name in self._active_warnings:
+            active_warning = self._active_warnings[warning.name]
+        else:
+            active_warning = ActiveWarning(warning, description)
+            active_warning.started = when
+            self._active_warnings[warning.name] = active_warning
+        active_warning.description = description
+        active_warning.last_updated = when
+
+    def warning_inactive(self, warning):
+        """Indicates that the given warning is now inactive
+
+        :param warning: The node warning
+        :type warning: :class:`scheduler.node.conditions.NodeWarning`
+        """
+
+        if warning.name in self._active_warnings:
+            del self._active_warnings[warning.name]
+
+    def _warning_inactive_old(self):
+        """Inactivates all old warnings
+        """
+
+        warnings_to_delete = []
+        for name in self._active_warnings:
+            if now() - self._active_warnings[name].last_updated >= CLEANUP_WARN_THRESHOLD:
+                warnings_to_delete.append(name)
+        for name in warnings_to_delete:
+            del self._active_warnings[name]
+
     def generate_status_json(self, status_dict):
         """Generates the portion of the status JSON that describes the scheduler settings and metrics
 
@@ -128,9 +176,18 @@ class SchedulerManager(object):
                         'tasks_finished_per_sec': task_fin_per_sec, 'jobs_finished_per_sec': job_fin_per_sec,
                         'jobs_launched_per_sec': job_launch_per_sec, 'tasks_launched_per_sec': task_launch_per_sec,
                         'offers_launched_per_sec': offer_launch_per_sec}
+
+        self._warning_inactive_old()
+        warning_list = []
+        for active_warning in self._active_warnings.values():
+            warning = {'name': active_warning.warning.name, 'title': active_warning.warning.title,
+                       'description': active_warning.description, 'started': datetime_to_string(active_warning.started),
+                       'last_updated': datetime_to_string(active_warning.last_updated)}
+            warning_list.append(warning)
+
         state_dict = {'name': state.state, 'title': state.title, 'description': state.description}
         status_dict['scheduler'] = {'hostname': self.hostname, 'mesos': mesos_dict, 'metrics': metrics_dict,
-                                    'state': state_dict}
+                                    'state': state_dict, 'warnings': warning_list}
 
     def sync_with_database(self):
         """Syncs with the database to retrieve an updated scheduler model

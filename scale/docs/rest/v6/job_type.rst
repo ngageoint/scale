@@ -124,14 +124,15 @@ Response: 200 OK
                 "title": "My Job", 
                 "description": "A simple job type", 
                 "icon_code": "f013", 
-                "is_published": true, 
-                "is_active": true, 
+                "is_published": true,
+                "is_active": true,
                 "is_paused": false, 
                 "is_system": false, 
                 "max_scheduled": 1, 
                 "revision_num": 1, 
                 "docker_image": "my-job-1.0.0-seed:1.0.0", 
-                "created": "2015-03-11T00:00:00Z", 
+                "unmet_resources": null,
+                "created": "2015-03-11T00:00:00Z",
                 "deprecated": null, 
                 "paused": null, 
                 "last_modified": "2015-03-11T00:00:00Z" 
@@ -200,6 +201,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .unmet_resources         | String            | Resources required by this job type that are not present.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .deprecated              | ISO-8601 Datetime | When the job type was last deprecated (archived).                        |
@@ -223,25 +226,26 @@ Response: 200 OK
  .. code-block:: javascript  
  
     { 
-    "id": 3, 
-    "name": "my-job", 
-    "version": "1.0.0" 
-    "title": "My Job", 
-    "description": "A simple job type", 
+    "id": 3,
+    "name": "my-job",
+    "version": "1.0.0"
+    "title": "My Job",
+    "description": "A simple job type",
     "icon_code": "f013",
-    "is_published", true, 
-    "is_active": true, 
-    "is_paused": false, 
-    "is_system": false, 
-    "max_scheduled": 1, 
-    "revision_num": 1, 
-    "docker_image": "my-job-1.0.0-seed:1.0.0", 
-    "manifest": { ... }, 
+    "is_published", true,
+    "is_active": true,
+    "is_paused": false,
+    "is_system": false,
+    "max_scheduled": 1,
+    "revision_num": 1,
+    "docker_image": "my-job-1.0.0-seed:1.0.0",
+    "unmet_resources": null,
+    "manifest": { ... },
     "configuration": { ... },
-    "created": "2015-03-11T00:00:00Z", 
-    "deprecated": null, 
-    "paused": null, 
-    "last_modified": "2015-03-11T00:00:00Z" 
+    "created": "2015-03-11T00:00:00Z",
+    "deprecated": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
     } 
     
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -287,6 +291,8 @@ Response: 200 OK
 | revision_num             | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| unmet_resources          | String            | Resources required by this job type that are not present.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | manifest                 | String            | Seed manifest describing Job, interface and requirements.                |
 |                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
@@ -589,25 +595,26 @@ Location http://.../v6/job-types/test/1.0.0/
  .. code-block:: javascript  
  
     { 
-    "id": 3, 
-    "name": "test", 
-    "version": "1.0.0" 
-    "title": "Job to demonstrate job type APIs", 
-    "description": "Reads input file and spit out specified number of bytes as output", 
+    "id": 3,
+    "name": "test",
+    "version": "1.0.0"
+    "title": "Job to demonstrate job type APIs",
+    "description": "Reads input file and spit out specified number of bytes as output",
     "icon_code": "f1c5",
     "is_published": true,
-    "is_active": true, 
-    "is_paused": false, 
-    "is_system": false, 
-    "max_scheduled": 1, 
-    "revision_num": 1, 
-    "docker_image": "test-1.0.0-seed:1.0.0", 
-    "manifest": { ... }, 
+    "is_active": true,
+    "is_paused": false,
+    "is_system": false,
+    "max_scheduled": 1,
+    "revision_num": 1,
+    "docker_image": "test-1.0.0-seed:1.0.0",
+    "unmet_resources": null,
+    "manifest": { ... },
     "configuration": { ... },
-    "created": "2015-03-11T00:00:00Z", 
-    "deprecated": null, 
-    "paused": null, 
-    "last_modified": "2015-03-11T00:00:00Z" 
+    "created": "2015-03-11T00:00:00Z",
+    "deprecated": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
     } 
 
 +-------------------------------------------------------------------------------------------------------------------------+

@@ -2855,6 +2855,7 @@ class JobTypeManager(models.Manager):
             job_type.paused = timezone.now() if kwargs['is_paused'] else None
         for field_name in kwargs:
             setattr(job_type, field_name, kwargs[field_name])
+        job_type.unmet_resources = None #assume edit is fixing resources; reset unmet_resources
         job_type.save()
 
         # Save any secrets to Vault
@@ -2913,6 +2914,7 @@ class JobTypeManager(models.Manager):
             error_mapping.save_models()
 
             job_type.populate_from_manifest(manifest)
+            job_type.unmet_resources = None #assume edit is fixing resources; reset unmet_resources
             job_type.save()
             JobTypeTag.objects.update_job_type_tags(job_type, manifest)
         else:
@@ -3535,6 +3537,9 @@ class JobType(models.Model):
     :param is_published: Whether this job type has outputs that are published.
         :type is_published: :class:`django.db.models.BooleanField`
 
+    :keyword unmet_resources: List of resource names that currently don't exist or aren't sufficient in the cluster
+    :type unmet_resources: :class:`django.db.models.CharField`
+
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`
     :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
@@ -3632,6 +3637,7 @@ class JobType(models.Model):
     is_active = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
+    unmet_resources = models.CharField(blank=True, max_length=250, null=True)
 
     max_scheduled = models.IntegerField(blank=True, null=True)
     max_tries = models.IntegerField(default=3)

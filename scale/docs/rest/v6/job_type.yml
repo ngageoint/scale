@@ -374,6 +374,9 @@ components:
         docker_image:
           type: string
           example: "my-job-1.0.0-seed:1.0.0"
+        unmet_resources
+          type: string
+          example: "cpu"
         created:
           type: string
           format: date-time
