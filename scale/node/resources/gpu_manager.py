@@ -100,7 +100,7 @@ class GPUManager(object):
         logger.debug("this node has at least %s gpu(s)", gpu_count)
         
         if not node_id in cls.__GPUs: # is this node already in the dict?
-            logger.info("node %s did not find itsself in the gpu dic", node_id)
+            logger.info("node %s did not find its self in the gpu dictionary", node_id)
             cls.__GPUs[node_id] = {}
             for i in range(0, int(gpu_count)):
                 cls.__GPUs[node_id][i] = "available"
