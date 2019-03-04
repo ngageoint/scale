@@ -68,7 +68,7 @@ class JobTypesView(ListCreateAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobTypeListSerializerV6
+            return JobTypeSerializerV6
         else:
             return JobTypeSerializerV5
 
@@ -375,6 +375,51 @@ class JobTypesView(ListCreateAPIView):
         serializer = JobTypeDetailsSerializerV6(job_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+
+class JobTypeNamesView(ListCreateAPIView):
+    """This view is the endpoint for retrieving the list of all job types."""
+    queryset = JobType.objects.all()
+
+    serializer_class = JobTypeListSerializerV6
+
+    def list(self, request):
+        """Retrieves the list of all job types and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.list_v6(request)
+        elif self.request.version == 'v7':
+            return self.list_v6(request)
+        else:
+            return Http404
+
+    def list_v6(self, request):
+        """Retrieves the list of all job type names and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        keywords = rest_util.parse_string_list(request, 'keyword', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
+        is_system = rest_util.parse_bool(request, 'is_system', required=False)
+        ids = rest_util.parse_int_list(request, 'id', required=False)
+        order = ['name']
+
+        job_types = JobType.objects.get_job_type_names_v6(keywords=keywords, ids=ids, is_active=is_active,
+                                                     is_system=is_system, order=order)
+
+        page = self.paginate_queryset(job_types)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 # TODO: Remove when REST API v5 is removed

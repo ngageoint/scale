@@ -3024,6 +3024,49 @@ class JobTypeManager(models.Manager):
         return job_types
 
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
+        """Returns a list of all job types
+
+        :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
+        :type keywords: list
+        :param ids: Query job types with a version matching the given ids
+        :type keyword: list
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
+        :param is_system: Query job types that are system job types.
+        :type is_operational: bool
+        :param order: A list of fields to control the sort order.
+        :type order: list
+        :returns: The list of latest version of job types that match the given parameters.
+        :rtype: list
+        """
+
+        # Execute a sub-query that returns distinct job type names that match the provided filter arguments
+        job_types = self.all()
+        if keywords:
+            key_query = Q()
+            for keyword in keywords:
+                key_query |= Q(name__icontains=keyword)
+                key_query |= Q(title__icontains=keyword)
+                key_query |= Q(description__icontains=keyword)
+                key_query |= Q(jobtypetag__tag__icontains=keyword)
+            job_types = job_types.filter(key_query)
+        if ids:
+            job_types = job_types.filter(id__in=ids)
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
+        if is_system is not None:
+            job_types = job_types.filter(is_system=is_system)
+        
+        # Apply sorting
+        if order:
+            job_types = job_types.order_by(*order)
+        else:
+            job_types = job_types.order_by('last_modified')
+
+        return job_types
+
+
+    def get_job_type_names_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
         :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
