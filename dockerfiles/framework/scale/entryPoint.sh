@@ -80,8 +80,8 @@ then
     bunzip2 country_data.json.bz2 || true
     python manage.py loaddata country_data.json
 
-    # Create superuser for Scale DB
-    if [[ "${ADMIN_PASSWORD}x" == "x" ]]
+    # Create superuser for Scale
+    if [[ "${ADMIN_PASSWORD}x" != "x" ]]
     then
         python manage.py scale_superuser -f -p "${ADMIN_PASSWORD}"
     else
