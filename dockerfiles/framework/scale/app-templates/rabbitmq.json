@@ -1,45 +1,45 @@
 {
-    "id": "scale-template-rabbitmq",
-    "cpus": 1,
-    "mem": 512,
-    "disk": 0,
-    "instances": 1,
-    "container": {
-        "docker": {
-            "image": "rabbitmq:3.6-management",
-            "forcePullImage": true,
-            "privileged": false,
-            "portMappings": [
-                {
-                    "containerPort": 5672,
-                    "hostPort": 5672,
-                    "protocol": "tcp",
-                    "labels": {
-                        "VIP_0": "/scale-template-rabbitmq:5672"
-                    }
-                },
-                {
-                    "containerPort": 15672,
-                    "protocol": "tcp",
-                    "servicePort": 0,
-                    "labels": {
-                        "VIP_1": "/scale-template-rabbitmq:15672"
-                    }
-                }
-            ],
-            "network": "BRIDGE"
-        },
-        "type": "DOCKER"
-    },
-    "healthChecks": [
+  "id": "scale-template-rabbitmq",
+  "cpus": 1,
+  "mem": 512,
+  "disk": 0,
+  "instances": 1,
+  "container": {
+    "docker": {
+      "image": "rabbitmq:3.6-management",
+      "forcePullImage": true,
+      "privileged": false,
+      "portMappings": [
         {
-            "protocol": "MESOS_TCP",
-            "gracePeriodSeconds": 300,
-            "intervalSeconds": 30,
-            "portIndex": 0,
-            "timeoutSeconds": 15,
-            "maxConsecutiveFailures": 3
+          "containerPort": 5672,
+          "hostPort": 5672,
+          "protocol": "tcp",
+          "labels": {
+            "VIP_0": "/scale-template-rabbitmq:5672"
+          }
+        },
+        {
+          "containerPort": 15672,
+          "protocol": "tcp",
+          "servicePort": 0,
+          "labels": {
+            "VIP_1": "/scale-template-rabbitmq:15672"
+          }
         }
-    ],
-    "uris": []
+      ],
+      "network": "BRIDGE"
+    },
+    "type": "DOCKER"
+  },
+  "healthChecks": [
+    {
+      "protocol": "MESOS_TCP",
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 30,
+      "portIndex": 0,
+      "timeoutSeconds": 15,
+      "maxConsecutiveFailures": 3
+    }
+  ],
+  "uris": []
 }
