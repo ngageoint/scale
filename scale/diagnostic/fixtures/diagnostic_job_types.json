@@ -4,7 +4,7 @@
         "pk": null,
         "fields": {
             "name": "scale-hello",
-            "version": "1.0",
+            "version": "1.0.0",
             "title": "Scale Hello",
             "description": "Prints out a simple hello message. This job type can be useful for testing Scale's job throughput.",
             "is_system": true,
@@ -31,8 +31,8 @@
                     "resources": {
                         "scalar": [
                             {"name": "cpus", "value": 0.1},
-                            {"name": "mem", "value": 64.0},
-                            {"name": "sharedMem", "value": 0}
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
                         ]
                     }
                  }
@@ -50,7 +50,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-hello", "1.0"],
+            "job_type": ["scale-hello", "1.0.0"],
             "revision_num": 1,
             "manifest": {
                 "seedVersion": "1.0.0",
@@ -71,8 +71,8 @@
                     "resources": {
                         "scalar": [
                             {"name": "cpus", "value": 0.1},
-                            {"name": "mem", "value": 64.0},
-                            {"name": "sharedMem", "value": 0}
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
                         ]
                     }
                  }
@@ -85,7 +85,7 @@
         "pk": null,
         "fields": {
             "name": "scale-bake",
-            "version": "1.0",
+            "version": "1.0.0",
             "title": "Scale Bake",
             "description": "This test job sleeps for 15 minutes.",
             "is_system": true,
@@ -112,8 +112,8 @@
                     "resources": {
                         "scalar": [
                             {"name": "cpus", "value": 0.1},
-                            {"name": "mem", "value": 64.0},
-                            {"name": "sharedMem", "value": 0}
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
                         ]
                     }
                  }
@@ -131,7 +131,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-bake", "1.0"],
+            "job_type": ["scale-bake", "1.0.0"],
             "revision_num": 1,
             "manifest": {
                 "seedVersion": "1.0.0",
@@ -152,8 +152,8 @@
                     "resources": {
                         "scalar": [
                             {"name": "cpus", "value": 0.1},
-                            {"name": "mem", "value": 64.0},
-                            {"name": "sharedMem", "value": 0}
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
                         ]
                     }
                  }
@@ -166,7 +166,7 @@
         "pk": null,
         "fields": {
             "name": "scale-roulette",
-            "version": "1.0",
+            "version": "1.0.0",
             "title": "Scale Roulette",
             "description": "This test job randomly succeeds or fails.",
             "is_system": true,
@@ -193,8 +193,8 @@
                     "resources": {
                         "scalar": [
                             {"name": "cpus", "value": 0.1},
-                            {"name": "mem", "value": 64.0},
-                            {"name": "sharedMem", "value": 0}
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
                         ]
                     }
                  }
@@ -212,7 +212,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-roulette", "1.0"],
+            "job_type": ["scale-roulette", "1.0.0"],
             "revision_num": 1,
             "manifest": {
                 "seedVersion": "1.0.0",
@@ -233,8 +233,8 @@
                     "resources": {
                         "scalar": [
                             {"name": "cpus", "value": 0.1},
-                            {"name": "mem", "value": 64.0},
-                            {"name": "sharedMem", "value": 0}
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
                         ]
                     }
                  }

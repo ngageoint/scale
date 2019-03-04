@@ -8,6 +8,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
+from data.data.data import Data
 from job.models import JobType
 from queue.models import Queue
 from queue.serializers import QueueStatusSerializer
@@ -65,9 +66,9 @@ class QueueScaleBakeView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-bake', version='1.0')
+        job_type = JobType.objects.get(name='scale-bake', version='1.0.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -120,7 +121,7 @@ class QueueScaleCasinoView(GenericAPIView):
         # TODO: in the future, send command message to do this asynchronously
         recipe_type = RecipeType.objects.get(name='scale-casino', version='1.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData())
+            Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -171,9 +172,9 @@ class QueueScaleHelloView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-hello', version='1.0')
+        job_type = JobType.objects.get(name='scale-hello', version='1.0.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -224,8 +225,8 @@ class QueueScaleRouletteView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-roulette', version='1.0')
+        job_type = JobType.objects.get(name='scale-roulette', version='1.0.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
