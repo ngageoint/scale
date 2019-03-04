@@ -132,5 +132,4 @@ class TestQueueScaleRouletteView(TransactionTestCase):
 
         url = rest_util.get_url('/diagnostics/job/roulette/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
