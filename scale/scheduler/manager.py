@@ -13,7 +13,7 @@ from scheduler.models import Scheduler
 from util.active_warnings import ActiveError, ActiveWarning
 from util.parse import datetime_to_string
 
-CLEANUP_WARN_THRESHOLD = datetime.timedelta(hours=3)
+CLEANUP_WARN_THRESHOLD = datetime.timedelta(hours=1)
 
 logger = logging.getLogger(__name__)
 SchedulerState = namedtuple('SchedulerState', ['state', 'title', 'description'])
@@ -94,6 +94,17 @@ class SchedulerManager(object):
                 self._task_fin_count += 1
             if was_job_finished:
                 self._job_fin_count += 1
+
+    def is_warning_active(self, warning, description=None):
+        """Indicates that the given warning is now active
+
+        :param warning: The node warning
+        :type warning: :class:`scheduler.node.conditions.NodeWarning`
+        :param description: An optional specific description for the warning
+        :type description: string
+        """
+
+        return warning.name in self._active_warnings
 
     def warning_active(self, warning, description=None):
         """Indicates that the given warning is now active
