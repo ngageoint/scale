@@ -1919,7 +1919,7 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(len(result['results']), 6)
         for entry in result['results']:
             expected = None
             if entry['name'] == self.job_type1.name:
@@ -1929,17 +1929,27 @@ class TestJobTypesViewV6(TestCase):
             elif entry['name'] == self.job_type3.name:
                 expected = self.job_type3
             elif entry['name'] == self.job_type6.name:
-                expected = self.job_type6
+                if entry['version'] == self.job_type4.version:
+                    expected = self.job_type4
+                elif entry['version'] == self.job_type5.version:
+                    expected = self.job_type5
+                elif entry['version'] == self.job_type6.version:
+                    expected = self.job_type6
+                else:
+                    self.assertTrue(False, 'unexpected job type!')
             else:
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)
             self.assertEqual(entry['title'], expected.title)
             self.assertEqual(entry['description'], expected.description)
-            if entry['name'] == 'job-type-for-view-test':
-                self.assertItemsEqual(entry['versions'], ["1.0.0", "1.2.0", "1.10.0"])
-            else:
-                self.assertItemsEqual(entry['versions'], ["1.0.0"])
-            self.assertEqual(entry['latest_version'], expected.version)
+            self.assertEqual(entry['icon_code'], expected.icon_code)
+            self.assertEqual(entry['is_published'], expected.is_published)
+            self.assertEqual(entry['is_active'], expected.is_active)
+            self.assertEqual(entry['is_paused'], expected.is_paused)
+            self.assertEqual(entry['is_system'], expected.is_system)
+            self.assertEqual(entry['max_scheduled'], expected.max_scheduled)
+            self.assertEqual(entry['revision_num'], expected.revision_num)
+            self.assertEqual(entry['docker_image'], expected.docker_image)
 
     def test_keyword(self):
         """Tests successfully calling the job types view filtered by keyword."""
@@ -1956,20 +1966,19 @@ class TestJobTypesViewV6(TestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(len(result['results']), 6)
 
         url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type-for-view-test')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
+        self.assertEqual(len(result['results']), 3)
         
         url = '/%s/job-types/?keyword=%s&keyword=%s' % (self.api, 'job-type-for-view-test', self.job_type1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 4)
         
     def test_id(self):
         """Tests successfully calling the job types view filtered by id."""
@@ -1991,7 +2000,7 @@ class TestJobTypesViewV6(TestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(len(result['results']), 2)
 
     def test_is_active(self):
         """Tests successfully calling the job types view filtered by inactive state."""
@@ -2011,7 +2020,7 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(len(result['results']), 5)
         
         url = '/%s/job-types/?is_system=true' % self.api
         response = self.client.generic('GET', url)
@@ -2062,6 +2071,132 @@ class TestJobTypesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
+class TestJobTypeNamesViewV6(TestCase):
+    
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.error = error_test_utils.create_error()
+        self.job_type1 = job_test_utils.create_job_type(version="1.0.0", priority=2, mem=1.0, max_scheduled=1)
+        self.job_type2 = job_test_utils.create_job_type(version="1.0.0", priority=1, mem=2.0, is_system=True)
+        self.job_type3 = job_test_utils.create_job_type(version="1.0.0", priority=1, mem=2.0, is_active=False)
+        self.job_type4 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.0.0", is_active=False)
+        self.job_type5 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.2.0", is_active=True)
+        self.job_type6 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.10.0", is_active=True)
+
+    def test_successful(self):
+        """Tests successfully calling the get all job types view."""
+
+        url = '/%s/job-type-names/' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        for entry in result['results']:
+            expected = None
+            if entry['name'] == self.job_type1.name:
+                expected = self.job_type1
+            elif entry['name'] == self.job_type2.name:
+                expected = self.job_type2
+            elif entry['name'] == self.job_type3.name:
+                expected = self.job_type3
+            elif entry['name'] == self.job_type6.name:
+                expected = self.job_type6
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.title)
+            self.assertEqual(entry['description'], expected.description)
+            if entry['name'] == 'job-type-for-view-test':
+                self.assertItemsEqual(entry['versions'], ["1.0.0", "1.2.0", "1.10.0"])
+            else:
+                self.assertItemsEqual(entry['versions'], ["1.0.0"])
+            self.assertEqual(entry['latest_version'], expected.version)
+
+    def test_keyword(self):
+        """Tests successfully calling the job types view filtered by keyword."""
+
+        url = '/%s/job-type-names/?keyword=%s' % (self.api, self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.job_type1.name)
+
+        url = '/%s/job-type-names/?keyword=%s' % (self.api, 'job-type')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+
+        url = '/%s/job-type-names/?keyword=%s' % (self.api, 'job-type-for-view-test')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
+        
+        url = '/%s/job-type-names/?keyword=%s&keyword=%s' % (self.api, 'job-type-for-view-test', self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        
+    def test_id(self):
+        """Tests successfully calling the job types view filtered by id."""
+
+        url = '/%s/job-type-names/?id=%d' % (self.api, self.job_type1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.job_type1.name)
+
+        url = '/%s/job-type-names/?id=%d&id=%d' % (self.api, self.job_type1.id, self.job_type2.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+        url = '/%s/job-type-names/?id=%d&id=%d' % (self.api, self.job_type4.id, self.job_type5.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+    def test_is_active(self):
+        """Tests successfully calling the job types view filtered by inactive state."""
+
+        url = '/%s/job-type-names/?is_active=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        
+    def test_is_system(self):
+        """Tests successfully calling the job types view filtered by system status."""
+
+        url = '/%s/job-type-names/?is_system=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        
+        url = '/%s/job-type-names/?is_system=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        
+        
 class TestJobTypesPostViewV6(TestCase):
     
     api = 'v6'

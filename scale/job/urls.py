@@ -8,6 +8,7 @@ import job.views as views
 urlpatterns = [
     # Job type views
     url(r'^job-types/$', views.JobTypesView.as_view(), name='job_types_view'),
+    url(r'^job-type-names/$', views.JobTypeNamesView.as_view(), name='job_type_names_view'),
     # TODO: Remove JobTypeIDDetailsView url entry when V5 API is removed
     url(r'^job-types/(?P<job_type_id>\d+)/$', views.JobTypeIDDetailsView.as_view(), name='job_type_id_details_view'),
     url(r'^job-types/validation/$', views.JobTypesValidationView.as_view(), name='job_types_validation_view'),

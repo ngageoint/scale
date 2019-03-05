@@ -9,14 +9,14 @@ These services allow for the management of job types within Scale.
 
 The services will be replaced as the new v6 job type services are created:
 
-.. _rest_v6_job_type_list:
+.. _rest_v6_job_type_name_list:
 
 v6 Job Type Names
 -----------------
 
-**Example GET /v6/job-types/ API call**
+**Example GET /v6/job-type-names/ API call**
 
-Request: GET http://.../v6/job-types/
+Request: GET http://.../v6/job-type-names/
 
 Response: 200 OK
 
@@ -97,6 +97,128 @@ Response: 200 OK
 | .versions                | Array             | List of versions of this job type.                                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .latest_version          | String            | The latest version of this job type.                                     |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+
+.. _rest_v6_job_type_list:
+
+v6 Job Type List
+----------------
+
+**Example GET /v6/job-types/ API call**
+
+Request: GET http://.../v6/job-types/
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+ 
+    { 
+        "count": 2, 
+        "next": null, 
+        "previous": null, 
+        "results": [ 
+            { 
+                "id": 3, 
+                "name": "my-job",
+                "version": "1.0.0" 
+                "title": "My Job", 
+                "description": "A simple job type", 
+                "icon_code": "f013", 
+                "is_published": true, 
+                "is_active": true, 
+                "is_paused": false, 
+                "is_system": false, 
+                "max_scheduled": 1, 
+                "revision_num": 1, 
+                "docker_image": "my-job-1.0.0-seed:1.0.0", 
+                "created": "2015-03-11T00:00:00Z", 
+                "deprecated": null, 
+                "paused": null, 
+                "last_modified": "2015-03-11T00:00:00Z" 
+            }, 
+            ... 
+        ] 
+    } 
+    
++-------------------------------------------------------------------------------------------------------------------------+
+| **Retrieve Job Types**                                                                                                  |
++=========================================================================================================================+
+| Returns a list of job types                                                                                             |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/                                                                                                  |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
+|                    |                   |          | Duplicate to search for multiple keywords.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| id                 | Integer           | Optional | Return only job types with a matching id.                           |
+|                    |                   |          | Duplicate to search for multiple ids.                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Return only job types that match the is_active flag.                |
+|                    |                   |          | Defaults to all job types.                                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_system          | Boolean           | Optional | Return only job types that are system (True) or user (False).       |
+|                    |                   |          | Defaults to all job types.                                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| order              | String            | Optional | One or more fields to use when ordering the results.                |
+|                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
+|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------------+----------------------------------------------------------------------------------------------+
+| **Status**               | 200 OK                                                                                       |
++--------------------------+----------------------------------------------------------------------------------------------+
+| **Content Type**         | *application/json*                                                                           |
++--------------------------+----------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| count                    | Integer           | The total number of results that match the query parameters.             |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| next                     | URL               | A URL to the next page of results.                                       |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| previous                 | URL               | A URL to the previous page of results.                                   |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| results                  | Array             | List of result JSON objects that match the query parameters.             |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .name                    | String            | The name of the job type.                                                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .version                 | String            | The version number for this version of the job type.                     |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .title                   | String            | The human readable display name for this version of the job type.        |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .description             | String            | A longer description of this version of the job type.                    |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .icon_code               | String            | A font-awesome icon code to use when representing this job type version. |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_active               | Boolean           | Whether this job type is active or deprecated.                           |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_paused               | Boolean           | Whether the job type is paused (while paused no jobs of this type will   |
+|                          |                   | be scheduled off of the queue).                                          |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_system               | Boolean           | Whether this is a system type.                                           |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .max_scheduled           | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
+|                          |                   | same time. May be null.                                                  |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .revision_num            | Integer           | The number of versions of this job type.                                 |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .docker_image            | String            | The Docker image containing the code to run for this job.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .deprecated              | ISO-8601 Datetime | When the job type was last deprecated (archived).                        |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .paused                  | ISO-8601 Datetime | When the job type was last paused.                                       |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .last_modified           | ISO-8601 Datetime | When the associated database model was last saved.                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 
 .. _rest_v6_job_type_versions:
