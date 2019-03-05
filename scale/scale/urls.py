@@ -7,7 +7,6 @@ from django.contrib.auth import views as auth_views
 from rest_framework.authtoken import views
 
 
-
 # Enable the admin applications
 from django.contrib import admin
 admin.autodiscover()
