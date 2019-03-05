@@ -49,6 +49,7 @@ from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util import rest as rest_utils
 from util.exceptions import RollbackTransaction
+from util.validation import ValidationWarning
 from vault.secrets_handler import SecretsHandler
 
 
@@ -3527,6 +3528,12 @@ class JobTypeManager(models.Manager):
         if config and manifest:
             try:
                 warnings.extend(config.validate(manifest))
+                resources = manifest.get_scalar_resources()
+                for r in resources:
+                    name = r['name'].lower()
+                    if name not in ['cpus', 'mem', 'disk', 'gpus', 'sharedmem']:
+                        msg = '\'%s\' is not a standard resouce. This job type might not be schedulable.'
+                        warnings.append(ValidationWarning('NONSTANDARD_RESOURCE', msg % r['name']))
             except InvalidJobConfiguration as ex:
                 is_valid = False
                 errors.append(ex.error)
