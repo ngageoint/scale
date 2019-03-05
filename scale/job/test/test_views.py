@@ -869,8 +869,7 @@ class TestJobTypesViewV6(APITestCase):
         self.assertEqual(len(result['results']), 1)
 
 
-class TestJobTypeNamesViewV6(TestCase):
-
+class TestJobTypeNamesViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
