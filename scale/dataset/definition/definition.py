@@ -24,14 +24,15 @@ class DataSetDefinition(object):
         self._definition = definition
         self.param_names = set()
         self.parameters = {}
-        self.global_parameters = {}
-
         if 'parameters' in self._definition:
-            for param in self._definition['parameters']:
-                # param = self._definition['parameters'][param_name]
-                self.add_parameter(Parameter(param['name'], param['param_type']))
-            for param in self._definition['parameters']:
-                self.add_global_parameter(Parameter(param['name'], param['param_type']))
+            self.parameters = InterfaceV6(definition['parameters']).get_interface()
+            self.param_names = self.parameters.parameters.keys()
+        self.global_parameters = {}
+        if 'global_parameters' in self._definition:
+            self.global_parameters = InterfaceV6(definition['global_parameters']).get_interface()
+            keys = self.global_parameters.parameters.keys()
+            if keys in
+
 
     def get_dict(self):
         """Returns the internal dictionary that represents this datasets definition

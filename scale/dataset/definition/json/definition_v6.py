@@ -61,7 +61,9 @@ def convert_definition_to_v6_json(definition):
     def_dict = {
         'version': SCHEMA_VERSION,
         'global_parameters': definition['global_parameters'],
-        'parameters': definition['parameters']
+        'global_data': definition['global_data'],
+        'parameters': definition['parameters'],
+        'data': definition['data']
     }
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
