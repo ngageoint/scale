@@ -336,6 +336,14 @@ class SchedulingManager(object):
             if not nodes:
                 break
 
+            jt = job_type_mgr.get_job_type(queue.job_type.id)
+            name = INVALID_RESOURCES.name + jt.name
+            title = INVALID_RESOURCES.title % jt.name
+            warning = SchedulerWarning(name=name, title=title, description=None)
+            if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
+                # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
+                continue
+            
             invalid_resources = []
             insufficient_resources = []
             # get resource names offered and compare to job type resources
@@ -348,24 +356,23 @@ class SchedulingManager(object):
                     insufficient_resources.append(resource.name)
 
             if invalid_resources:
-                name = INVALID_RESOURCES.name + queue.job_type.name
-                title = INVALID_RESOURCES.title % queue.job_type.name
                 description = INVALID_RESOURCES.description % invalid_resources
-                scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
+                scheduler_mgr.warning_active(warning, description)
 
             if insufficient_resources:
-                name = INSUFFICIENT_RESOURCES.name + queue.job_type.name
-                title = INSUFFICIENT_RESOURCES.title % queue.job_type.name
                 description = INSUFFICIENT_RESOURCES.description % insufficient_resources
-                scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
+                scheduler_mgr.warning_active(warning, description)
 
 
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
-                jt = job_type_mgr.get_job_type(queue.job_type.id)
                 jt.unmet_resources = ','.join(invalid_resources)
                 jt.save()
                 continue
+            else:
+                # reset unmet_resources flag
+                jt.unmet_resources = None
+                jt.save()
             
             # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id

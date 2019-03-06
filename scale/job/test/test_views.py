@@ -4292,6 +4292,24 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(len(results['errors']), 1)
         self.assertEqual(results['errors'][0]['name'], 'MISSING_WORKSPACE')
 
+    def test_nonstandard_resource(self):
+        """Tests validating a new job type with a nonstandard resource."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['resources']['scalar'].append({'name': 'chocolate', 'value': 1.0 })
+        config = copy.deepcopy(self.configuration)
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'NONSTANDARD_RESOURCE')
 
 class TestJobTypesStatusView(TestCase):
 
