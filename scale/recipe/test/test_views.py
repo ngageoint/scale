@@ -21,7 +21,6 @@ from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
-
 class TestRecipeTypesViewV6(TransactionTestCase):
     """Tests related to the get recipe-types base endpoint"""
 
@@ -308,10 +307,6 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
             self.assertTrue(entry['id'], [self.recipe_type1.id])
 
         self.assertIn('deprecated', result)
-<<<<<<< HEAD
-=======
-        self.assertNotIn('trigger_rule', result)
->>>>>>> :fire: :fire: :fire: More v5 removal
 
         versionless = copy.deepcopy(self.main_definition)
         del versionless['version']

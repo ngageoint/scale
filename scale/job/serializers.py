@@ -28,7 +28,6 @@ class JobBaseSerializerV6(ModelIdSerializer):
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
 
 
-
 class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
@@ -92,7 +91,6 @@ class JobExecutionBaseSerializerV6(ModelIdSerializer):
     node = ModelIdSerializer()
     error = ModelIdSerializer(source='jobexecutionend.error')
     job_type = ModelIdSerializer()
-
 
 
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):

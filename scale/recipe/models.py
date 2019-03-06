@@ -1166,7 +1166,6 @@ class RecipeTypeManager(models.Manager):
     """Provides additional methods for handling recipe types
     """
 
-
     def create_recipe_type_v6(self, name, title, description, definition):
         """Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.
 
@@ -1208,7 +1207,6 @@ class RecipeTypeManager(models.Manager):
         RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
         return recipe_type
-
 
     def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update):
         """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
@@ -1332,7 +1330,6 @@ class RecipeTypeManager(models.Manager):
         else:
             recipe_types = recipe_types.order_by('last_modified')
         return recipe_types
-
 
     def validate_recipe_type_v6(self, name, definition_dict):
         """Validates a recipe type prior to attempting a save

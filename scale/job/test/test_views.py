@@ -28,6 +28,7 @@ from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 import util.rest as rest_util
 
+
 class TestJobsViewV6(TestCase):
 
     api = 'v6'
@@ -1163,6 +1164,7 @@ class TestJobTypesPostViewV6(TestCase):
             response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name=name).first()
 
@@ -1198,7 +1200,10 @@ class TestJobTypesPostViewV6(TestCase):
             'configuration': config
         }
 
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         job_type = JobType.objects.filter(name='my-job-no-mount').first()
@@ -1241,6 +1246,13 @@ class TestJobTypesPostViewV6(TestCase):
         """Tests creating a seed job type with missing fields."""
 
         url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-setting'
+        manifest['job']['interface']['settings'] = []
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether settings in config but not manifest should be removed
+        config['settings'] = {}
+
         json_data = {
             'manifest': {
                 'seedVersion': '1.0.0',
@@ -1251,7 +1263,7 @@ class TestJobTypesPostViewV6(TestCase):
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
     def test_create_seed_bad_param(self):
         """Tests creating a job type with invalid type fields."""
@@ -1341,6 +1353,7 @@ class TestJobTypeDetailsViewV6(TestCase):
         }
 
         self.workspace = storage_test_utils.create_workspace()
+
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
@@ -1351,7 +1364,6 @@ class TestJobTypeDetailsViewV6(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
 
     def test_successful(self):
         """Tests successfully calling the get job type details view."""
@@ -1957,6 +1969,7 @@ class TestJobExecutionsViewV6(TransactionTestCase):
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 1)
 
+
 class TestJobExecutionDetailsViewV6(TransactionTestCase):
 
     api = 'v6'
@@ -1985,8 +1998,6 @@ class TestJobExecutionDetailsViewV6(TransactionTestCase):
         url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, 999999999)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
-
 
 class TestJobExecutionSpecificLogViewV6(TestCase):
     api = 'v6'
@@ -2116,8 +2127,6 @@ class TestJobExecutionSpecificLogViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
-
-
 
 class TestJobInputFilesViewV6(TestCase):
     api = 'v6'
@@ -2305,8 +2314,6 @@ class TestJobInputFilesViewV6(TestCase):
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
-
-
 class TestCancelJobsViewV6(TestCase):
 
     api = 'v6'
@@ -2382,8 +2389,6 @@ class TestCancelJobsViewV6(TestCase):
         url = '/%s/jobs/cancel/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-
 
 class TestRequeueJobsViewV6(TestCase):
 

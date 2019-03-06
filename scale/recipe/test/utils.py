@@ -61,6 +61,7 @@ RECIPE_DEFINITION = {'version': '6',
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
 
+
 def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,
                           is_system=None):
     """Creates a recipe type for unit testing

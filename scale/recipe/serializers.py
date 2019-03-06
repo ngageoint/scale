@@ -2,7 +2,6 @@ import rest_framework.serializers as serializers
 
 from util.rest import ModelIdSerializer
 
-
 # Serializers for v6 REST API
 class RecipeTypeBaseSerializerV6(ModelIdSerializer):
     """Base serializer for recipe types"""
@@ -45,8 +44,6 @@ class RecipeTypeRevisionDetailsSerializerV6(RecipeTypeRevisionSerializerV6):
     recipe_type = RecipeTypeListSerializerV6()
     definition = serializers.JSONField(source='get_v6_definition_json')
 
-
-
 class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     """Converts recipe type model fields to REST output."""
     is_active = serializers.BooleanField()
@@ -58,6 +55,7 @@ class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
+
 
 class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
     """Converts recipe type model fields to REST output."""
