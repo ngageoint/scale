@@ -339,7 +339,7 @@ class SchedulingManager(object):
             jt = job_type_mgr.get_job_type(queue.job_type.id)
             name = INVALID_RESOURCES.name + jt.name
             title = INVALID_RESOURCES.title % jt.name
-            warning = SchedulerWarning(name=name, title=title)
+            warning = SchedulerWarning(name=name, title=title, description=None)
             if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
                 # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
                 continue

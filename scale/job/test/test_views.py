@@ -4295,9 +4295,8 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
     def test_nonstandard_resource(self):
         """Tests validating a new job type with a nonstandard resource."""
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest['resources']['scalar'].append({'name': 'chocolate', 'value': 1.0 })
+        manifest['job']['resources']['scalar'].append({'name': 'chocolate', 'value': 1.0 })
         config = copy.deepcopy(self.configuration)
-        config['output_workspaces'] = {}
         json_data = {
             'manifest': manifest,
             'configuration': config
