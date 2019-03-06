@@ -34,36 +34,15 @@ class TestCreateRecipes(TestCase):
         file_1 = storage_test_utils.create_file()
         file_2 = storage_test_utils.create_file()
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        inputs = [{'name': 'Test_Input_1', 'mediaTypes': ['text/plain']}]
+        outputs = [{'name': 'Test_Output_1', 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        inputs = [{'name': 'Test_Input_2', 'mediaTypes':  ['image/png', 'image/tiff']}]
+        outputs = [{'name': 'Test_Output_2', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
 
         recipe_interface = Interface()
         recipe_interface.add_parameter(FileParameter('Recipe Input', ['text/plain']))
@@ -142,36 +121,15 @@ class TestCreateRecipes(TestCase):
         file_1 = storage_test_utils.create_file()
         file_2 = storage_test_utils.create_file()
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        inputs = [{'name': 'Test_Input_1', 'mediaTypes': ['text/plain']}]
+        outputs = [{'name': 'Test_Output_1', 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        inputs = [{'name': 'Test_Input_2', 'mediaTypes':  ['image/png', 'image/tiff']}]
+        outputs = [{'name': 'Test_Output_2', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
 
         recipe_interface = Interface()
         recipe_interface.add_parameter(FileParameter('Recipe Input', ['text/plain']))
@@ -817,36 +775,15 @@ class TestCreateRecipes(TestCase):
         file_1 = storage_test_utils.create_file()
         file_2 = storage_test_utils.create_file()
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        inputs = [{'name': 'Test_Input_1', 'mediaTypes': ['text/plain']}]
+        outputs = [{'name': 'Test_Output_1', 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        inputs = [{'name': 'Test_Input_2', 'mediaTypes':  ['image/png', 'image/tiff']}]
+        outputs = [{'name': 'Test_Output_2', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
 
         recipe_interface = Interface()
         recipe_interface.add_parameter(FileParameter('Recipe Input', ['text/plain']))

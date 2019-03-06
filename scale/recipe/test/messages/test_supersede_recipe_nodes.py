@@ -22,10 +22,10 @@ class TestSupersedeRecipeNodes(TestCase):
         # Create 2 recipes with 2 jobs and 3 sub-recipes each
         job_type_1 = job_test_utils.create_seed_job_type()
         job_type_2 = job_test_utils.create_seed_job_type()
-        sub_recipe_type_1 = recipe_test_utils.create_recipe_type_v5()
-        sub_recipe_type_2 = recipe_test_utils.create_recipe_type_v5()
-        sub_recipe_type_3 = recipe_test_utils.create_recipe_type_v5()
-        recipe_type = recipe_test_utils.create_recipe_type_v5()
+        sub_recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
+        sub_recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
+        sub_recipe_type_3 = recipe_test_utils.create_recipe_type_v6()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
 
         recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         job_1_1 = job_test_utils.create_job(job_type=job_type_1, save=False)
@@ -145,7 +145,7 @@ class TestSupersedeRecipeNodes(TestCase):
         # Create 2 recipes with 4 jobs and 4 sub-recipes each
         # The sub-recipes will themselves have 2 jobs and 2 sub-recipes each
         job_type = job_test_utils.create_seed_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type_v5()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
 
         recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         job_1_a = job_test_utils.create_job(job_type=job_type, save=False)
@@ -451,7 +451,7 @@ class TestSupersedeRecipeNodes(TestCase):
         # Create 2 recipes with 4 jobs and 4 sub-recipes each
         # The sub-recipes will themselves have 2 jobs and 2 sub-recipes each
         job_type = job_test_utils.create_seed_job_type()
-        recipe_type = recipe_test_utils.create_recipe_type_v5()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
 
         recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         job_1_a = job_test_utils.create_job(job_type=job_type, save=False)

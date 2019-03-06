@@ -35,7 +35,7 @@ class TestMetricDetailsViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        job_test_utils.create_job_type()
+        job_test_utils.create_seed_job_type()
 
     def test_successful(self):
         """Tests successfully calling the metric details view."""
@@ -55,14 +55,14 @@ class TestMetricPlotViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=self.job_type1, completed_count=8, failed_count=2, total_count=10)
 
-        self.job_type2 = job_test_utils.create_job_type()
+        self.job_type2 = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=self.job_type2, job_time_sum=220, job_time_min=20, job_time_max=200,
                                            job_time_avg=110)
 
-        self.job_type3 = job_test_utils.create_job_type()
+        self.job_type3 = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=self.job_type3, job_time_sum=1100, job_time_min=100,
                                            job_time_max=1000, job_time_avg=550)
 

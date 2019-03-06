@@ -17,8 +17,8 @@ class TestDailyMetricsProcessor(TransactionTestCase):
 
     def setUp(self):
         django.setup()
-
-        self.job_type = job_test_utils.create_job_type(name='scale-daily-metrics')
+        manifest = job_test_utils.create_seed_manifest(name='scale-daily-metrics')
+        self.job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         self.processor = DailyMetricsProcessor()
 
     @patch('metrics.daily_metrics.Queue')

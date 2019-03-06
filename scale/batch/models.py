@@ -14,7 +14,6 @@ from batch.configuration.json.configuration_v6 import convert_configuration_to_v
 from batch.definition.exceptions import InvalidDefinition
 from batch.definition.json.definition_v6 import convert_definition_to_v6, BatchDefinitionV6
 from batch.exceptions import BatchError
-from job.configuration.data.job_data import JobData
 from job.models import JobType
 from messaging.manager import CommandMessageManager
 from queue.models import Queue

@@ -19,7 +19,7 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         django.setup()
 
         self.count = 1
-        self.job_type = job_test_utils.create_job_type()
+        self.job_type = job_test_utils.create_seed_job_type()
         self.job = job_test_utils.create_job(job_type=self.job_type)
         self.job_exe = job_test_utils.create_job_exe(status='COMPLETED', job=self.job)
         self.wp1 = storage_test_utils.create_workspace()

@@ -864,7 +864,7 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type:
                 return task_dict
-        return None
+        return {}
 
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values

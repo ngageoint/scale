@@ -33,7 +33,6 @@ class Command(BaseCommand):
 
         job_id = int(os.environ.get('SCALE_JOB_ID'))
         exe_num = int(os.environ.get('SCALE_EXE_NUM'))
-
         logger.info('Command starting: scale_pre_steps - Job ID: %d, Execution Number: %d', job_id, exe_num)
         try:
             job_exe = self._get_job_exe(job_id, exe_num)
@@ -48,11 +47,11 @@ class Command(BaseCommand):
             job_interface.validate_workspace_for_outputs(exe_config)
 
             job_data = job_exe.job.get_job_data()
-            job_data = JobData.create(job_interface, job_data.get_dict())
+            job_data = JobData(job_data.get_dict())
             logger.info('Setting up input files...')
-            
+
             job_interface.perform_pre_steps(job_data)
-            
+
             logger.info('Ready to execute job: %s', exe_config.get_args('main'))
         except ScaleError as err:
             err.log()
@@ -65,6 +64,7 @@ class Command(BaseCommand):
                 exit_code = err.exit_code
             else:
                 logger.exception('Error performing pre-job steps')
+
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_pre_steps')
