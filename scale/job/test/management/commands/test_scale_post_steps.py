@@ -32,6 +32,7 @@ class TestPostJobSteps(TransactionTestCase):
         self.recipe = recipe_utils.create_recipe(recipe_type=self.recipe_type)
         cmd = 'command'
         cmd_args = 'args'
+
         outputs = [{'name': 'arg1', 'pattern': '*_.txt'}, {'name': 'arg2', 'pattern': '*_.txt'}]
         manifest = job_utils.create_seed_manifest(command='command args', outputs_files=outputs)
 

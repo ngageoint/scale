@@ -19,7 +19,6 @@ import source.test.utils as source_test_utils
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
-
 class TestRecipeTypesViewV6(TransactionTestCase):
     """Tests related to the get recipe-types base endpoint"""
 

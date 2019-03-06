@@ -62,6 +62,7 @@ class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
+
 class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
     """Converts recipe type model fields to REST output."""
     from job.job_type_serializers import JobTypeDetailsSerializerV6

@@ -229,7 +229,6 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         invalid_def.add_dependency('node_b', 'node_a')
         self.assertRaises(InvalidDefinition, RecipeType.objects.create_recipe_type_v6, name, title, desc, invalid_def)
 
-
 class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
 
     def setUp(self):

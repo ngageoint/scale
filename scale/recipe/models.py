@@ -1198,10 +1198,6 @@ class RecipeTypeManager(models.Manager):
     """Provides additional methods for handling recipe types
     """
 
-<<<<<<< HEAD
-=======
-
->>>>>>> :fire: :fire: :fire: More v5 removal
     def create_recipe_type_v6(self, name, title, description, definition):
         """Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.
 
@@ -1366,7 +1362,6 @@ class RecipeTypeManager(models.Manager):
         else:
             recipe_types = recipe_types.order_by('last_modified')
         return recipe_types
-
 
     def validate_recipe_type_v6(self, name, definition_dict):
         """Validates a recipe type prior to attempting a save

@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeSerializerV6
+    serializer_class = JobTypeListSerializerV6
 
     def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
