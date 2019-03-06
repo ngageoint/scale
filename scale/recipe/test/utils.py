@@ -105,6 +105,7 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
     if is_system is not None:
         recipe_type.is_system = is_system
 
+
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)

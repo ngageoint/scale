@@ -151,7 +151,6 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-
     @patch('queue.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.queue_new_job_v6() successfully with a Seed job type"""
@@ -250,6 +249,32 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         self.job_type_2 = job_test_utils.create_seed_job_type(interface=interface_2)
 
+        definition = {
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
+                },
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
+        }
         definition = {
             'version': '6',
             'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},

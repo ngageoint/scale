@@ -106,6 +106,7 @@ class RecipeTypesView(ListCreateAPIView):
 
         raise Http404
 
+
     def _create_v6(self, request):
         """Creates a new recipe type and returns a link to the detail URL
 
@@ -141,6 +142,7 @@ class RecipeTypesView(ListCreateAPIView):
         url = reverse('recipe_type_details_view', args=[recipe_type.name], request=request)
         serializer = RecipeTypeDetailsSerializerV6(recipe_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
 
 class RecipeTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of a recipe type"""
@@ -338,6 +340,7 @@ class RecipeTypesValidationView(APIView):
             return self._post_v6(request)
 
         raise Http404
+
 
     def _post_v6(self, request):
         """Validates a new recipe type and returns any warnings discovered

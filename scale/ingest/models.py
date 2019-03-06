@@ -322,7 +322,7 @@ class IngestManager(models.Manager):
                 raise Exception('One of scan_id or strike_id must be set')
 
             data = Data()
-            data.add_value(JsonValue('ingest_id', ingest_id))
+            data.add_value(JsonValue('Ingest_ID', ingest_id))
             data.add_value(JsonValue('workspace', ingest.workspace.name))
             if ingest.new_workspace:
                 data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))

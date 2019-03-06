@@ -287,8 +287,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         ingest = ingest_test_utils.create_ingest(workspace=workspace_1, new_workspace=workspace_2)
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         ingest_rev_2 = JobTypeRevision.objects.get(job_type=ingest_job_type, revision_num=2)
-        # data = JobData()
-        # data.add_property_input('ingest_id', str(ingest.id))
+        data = JobData()
+        data.add_property_input('Ingest_ID', str(ingest.id))
         ingest.job.job_type_rev = ingest_rev_2  # Job has old revision (2nd) of ingest job type
         ingest.job.input = {'json': {'ingest_id': str(ingest.id)}}
         ingest.job.status = 'QUEUED'

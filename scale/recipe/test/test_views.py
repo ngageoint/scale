@@ -236,8 +236,10 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
             'definition': sub_definition
         }
 
+
         url = '/%s/recipe-types/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestRecipeTypeDetailsViewV6(TransactionTestCase):
@@ -1550,7 +1552,6 @@ class TestRecipeInputFilesViewV6(TestCase):
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
 
-
         # Create RecipeInputFile entry files
         self.f3_file_name = 'foo.bar'
         self.f3_last_modified = datetime.datetime(2016, 1, 11, tzinfo=utc)
@@ -1613,7 +1614,6 @@ class TestRecipeInputFilesViewV6(TestCase):
             self.assertIn('batch', result)
             self.assertFalse(result['is_superseded'])
             self.assertIn('superseded', result)
-
 
     def test_filter_recipe_input(self):
         """Tests successfully calling the recipe input files view with recipe_input string filtering"""

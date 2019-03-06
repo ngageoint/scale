@@ -108,7 +108,6 @@ class JobLoadManager(models.Manager):
         :type job_type_ids: list[int]
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: list[str]
-
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of job loads that match the time range.
@@ -362,6 +361,7 @@ class QueueManager(models.Manager):
         """
 
         try:
+            # TODO: this needs to be fixed (get_job_type_rev)
             job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
             with transaction.atomic():
                 job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data,

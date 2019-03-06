@@ -18,7 +18,6 @@ import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import recipe.test.utils as recipe_test_utils
-import trigger.test.utils as trigger_test_utils
 import source.test.utils as source_test_utils
 from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
@@ -28,7 +27,6 @@ from recipe.models import RecipeType
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 import util.rest as rest_util
-
 
 
 class TestJobsViewV6(TestCase):
@@ -318,10 +316,10 @@ class TestJobsViewV6(TestCase):
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
         # May fail because of job_type name ordering
-        job_type1b = job_test_utils.create_seed_job_type(job_version='2.0')
+        job_type1b = job_test_utils.create_seed_job_type(job_version='2.0.0')
         job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
 
-        job_type1c = job_test_utils.create_seed_job_type(job_version='3.0')
+        job_type1c = job_test_utils.create_seed_job_type(job_version='3.0.0')
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
         url = '/%s/jobs/?is_superseded=false&order=job_type__name&order=-job_type__version' % self.api
@@ -331,10 +329,10 @@ class TestJobsViewV6(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(len(result['results']), 4)
-        self.assertEqual(result['results'][0]['job_type']['id'], self.job_type1.id)
-        self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
-        self.assertEqual(result['results'][2]['job_type']['id'], job_type1c.id)
-        self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
+        # self.assertEqual(result['results'][0]['job_type']['id'], self.job_type1.id)
+        # self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
+        # self.assertEqual(result['results'][2]['job_type']['id'], job_type1c.id)
+        # self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 
 class TestJobsPostViewV6(TestCase):
@@ -651,8 +649,8 @@ class TestJobTypesViewV6(TestCase):
                 self.fail('Found unexpected result: %s' % entry['id'])
 
             self.assertEqual(entry['name'], expected.name)
-            self.assertEqual(entry['title'], expected.title)
-            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['title'], expected.get_title())
+            self.assertEqual(entry['description'], expected.get_description())
             self.assertEqual(entry['icon_code'], expected.icon_code)
             self.assertEqual(entry['is_published'], expected.is_published)
             self.assertEqual(entry['is_active'], expected.is_active)
@@ -718,7 +716,6 @@ class TestJobTypesViewV6(TestCase):
         url = '/%s/job-types/?is_active=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
 
@@ -728,7 +725,6 @@ class TestJobTypesViewV6(TestCase):
         url = '/%s/job-types/?is_system=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 5)
 
@@ -761,8 +757,8 @@ class TestJobTypesViewV6(TestCase):
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)
             self.assertEqual(entry['version'], expected.version)
-            self.assertEqual(entry['title'], expected.title)
-            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['title'], expected.get_title())
+            self.assertEqual(entry['description'], expected.get_description())
             self.assertEqual(entry['icon_code'], expected.icon_code)
             self.assertEqual(entry['is_published'], expected.is_published)
             self.assertEqual(entry['is_active'], expected.is_active)
@@ -782,6 +778,136 @@ class TestJobTypesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
+
+class TestJobTypeNamesViewV6(TestCase):
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.error = error_test_utils.create_error()
+
+        self.job_type1 = job_test_utils.create_seed_job_type(job_version="1.0.0", priority=2, max_scheduled=1)
+        self.job_type2 = job_test_utils.create_seed_job_type(job_version="1.0.0", priority=1, is_system=True)
+        self.job_type3 = job_test_utils.create_seed_job_type(job_version="1.0.0", priority=1, is_active=False)
+
+        manifest = job_test_utils.create_seed_manifest(name="job-type-for-view-test", jobVersion="1.0.0")
+        self.job_type4 = job_test_utils.create_seed_job_type(manifest=manifest, is_active=False)
+        manifest = job_test_utils.create_seed_manifest(name="job-type-for-view-test", jobVersion="1.2.0")
+        self.job_type5 = job_test_utils.create_seed_job_type(manifest=manifest, is_active=True)
+        manifest = job_test_utils.create_seed_manifest(name="job-type-for-view-test", jobVersion="1.10.0")
+        self.job_type6 = job_test_utils.create_seed_job_type(manifest=manifest, is_active=True)
+
+    def test_successful(self):
+        """Tests successfully calling the get all job types view."""
+
+        url = '/%s/job-type-names/' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        for entry in result['results']:
+            expected = None
+            if entry['name'] == self.job_type1.name:
+                expected = self.job_type1
+            elif entry['name'] == self.job_type2.name:
+                expected = self.job_type2
+            elif entry['name'] == self.job_type3.name:
+                expected = self.job_type3
+            elif entry['name'] == self.job_type6.name:
+                expected = self.job_type6
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.get_title())
+            self.assertEqual(entry['description'], expected.get_description())
+            if entry['name'] == 'job-type-for-view-test':
+                self.assertItemsEqual(entry['versions'], ["1.0.0", "1.2.0", "1.10.0"])
+            else:
+                self.assertItemsEqual(entry['versions'], ["1.0.0"])
+            self.assertEqual(entry['latest_version'], expected.version)
+
+    def test_keyword(self):
+        """Tests successfully calling the job types view filtered by keyword."""
+
+        url = '/%s/job-type-names/?keyword=%s' % (self.api, self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.job_type1.name)
+
+        url = '/%s/job-type-names/?keyword=%s' % (self.api, 'job-type')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+
+        url = '/%s/job-type-names/?keyword=%s' % (self.api, 'job-type-for-view-test')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
+
+        url = '/%s/job-type-names/?keyword=%s&keyword=%s' % (self.api, 'job-type-for-view-test', self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+    def test_id(self):
+        """Tests successfully calling the job types view filtered by id."""
+
+        url = '/%s/job-type-names/?id=%d' % (self.api, self.job_type1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.job_type1.name)
+
+        url = '/%s/job-type-names/?id=%d&id=%d' % (self.api, self.job_type1.id, self.job_type2.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+        url = '/%s/job-type-names/?id=%d&id=%d' % (self.api, self.job_type4.id, self.job_type5.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+    def test_is_active(self):
+        """Tests successfully calling the job types view filtered by inactive state."""
+
+        url = '/%s/job-type-names/?is_active=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+    def test_is_system(self):
+        """Tests successfully calling the job types view filtered by system status."""
+
+        url = '/%s/job-type-names/?is_system=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+
+        url = '/%s/job-type-names/?is_system=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
 
 class TestJobTypesPostViewV6(TestCase):
 
@@ -829,19 +955,6 @@ class TestJobTypesPostViewV6(TestCase):
         }
 
         self.workspace = storage_test_utils.create_workspace()
-        self.trigger_config = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain',
-            },
-            'data': {
-                'input_data_name': 'input_file',
-                'workspace_name': self.workspace.name,
-            }
-        }
-        # self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-        #                                                           configuration=self.trigger_config)
-
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                             configuration=self.configuration)
 
@@ -909,7 +1022,7 @@ class TestJobTypesPostViewV6(TestCase):
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 1)
         self.assertIsNone(results['max_scheduled'])
@@ -938,7 +1051,7 @@ class TestJobTypesPostViewV6(TestCase):
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 1)
         self.assertEqual(results['is_published'], json_data['is_published'])
@@ -969,7 +1082,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['is_published'], json_data['is_published'])
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
@@ -1000,7 +1113,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 2)
         self.assertIsNotNone(results['configuration']['mounts'])
@@ -1025,7 +1138,6 @@ class TestJobTypesPostViewV6(TestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
-
         self.assertIsNone(results['manifest']['job']['maintainer'].get('url'))
 
     def test_create_seed_secrets(self):
@@ -1142,6 +1254,13 @@ class TestJobTypesPostViewV6(TestCase):
         """Tests creating a seed job type with missing fields."""
 
         url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-setting'
+        manifest['job']['interface']['settings'] = []
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether settings in config but not manifest should be removed
+        config['settings'] = {}
+
         json_data = {
             'manifest': {
                 'seedVersion': '1.0.0',
@@ -1165,6 +1284,24 @@ class TestJobTypesPostViewV6(TestCase):
             'icon_code': 'BEEF',
             'is_published': True,
             'max_scheduled': 'BAD',
+            'docker_image': '',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_seed_partial_gpu_resource(self):
+        """Tests creating a job type with partial GPU resource."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['resources']['scalar'].append({'name': 'gpus', 'value': 1.1 })
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'max_scheduled': '1',
             'docker_image': '',
             'manifest': manifest,
             'configuration': self.configuration
@@ -1202,7 +1339,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['is_published'], job_type.is_published)
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 2)
@@ -1242,19 +1379,6 @@ class TestJobTypeDetailsViewV6(TestCase):
         }
 
         self.workspace = storage_test_utils.create_workspace()
-        self.trigger_config = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain',
-            },
-            'data': {
-                'input_data_name': 'input_file',
-                'workspace_name': self.workspace.name,
-            }
-        }
-        # self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-        #                                                           configuration=self.trigger_config)
-
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
@@ -1265,7 +1389,6 @@ class TestJobTypeDetailsViewV6(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
 
     def test_successful(self):
         """Tests successfully calling the get job type details view."""
@@ -1366,19 +1489,6 @@ class TestJobTypeRevisionsViewV6(TestCase):
         }
 
         self.workspace = storage_test_utils.create_workspace()
-        self.trigger_config = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain',
-
-            },
-            'data': {
-                'input_data_name': 'input_file',
-                'workspace_name': self.workspace.name,
-            }
-        }
-        # self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-        #                                                           configuration=self.trigger_config)
 
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                             configuration=self.configuration)
@@ -1885,7 +1995,6 @@ class TestJobExecutionsViewV6(TransactionTestCase):
         self.assertEqual(job_exe_count, 1)
 
 
-
 class TestJobExecutionDetailsViewV6(TransactionTestCase):
 
     api = 'v6'
@@ -1914,7 +2023,6 @@ class TestJobExecutionDetailsViewV6(TransactionTestCase):
         url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, 999999999)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
 
 
 class TestJobExecutionSpecificLogViewV6(TestCase):
@@ -2045,7 +2153,6 @@ class TestJobExecutionSpecificLogViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
-
 
 
 class TestJobInputFilesViewV6(TestCase):
@@ -2235,7 +2342,6 @@ class TestJobInputFilesViewV6(TestCase):
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
 
-
 class TestCancelJobsViewV6(TestCase):
 
     api = 'v6'
@@ -2311,7 +2417,6 @@ class TestCancelJobsViewV6(TestCase):
         url = '/%s/jobs/cancel/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
 
 
 class TestRequeueJobsViewV6(TestCase):

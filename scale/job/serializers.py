@@ -12,7 +12,6 @@ from job.job_type_serializers import (JobTypeBaseSerializerV6, JobTypeRevisionBa
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -27,8 +26,6 @@ class JobBaseSerializerV6(ModelIdSerializer):
     """Converts job model fields to REST output."""
     job_type = JobTypeBaseSerializerV6()
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
-
-
 
 class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
@@ -93,8 +90,6 @@ class JobExecutionBaseSerializerV6(ModelIdSerializer):
     node = ModelIdSerializer()
     error = ModelIdSerializer(source='jobexecutionend.error')
     job_type = ModelIdSerializer()
-
-
 
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     """Converts job execution model fields to REST output"""
