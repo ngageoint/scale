@@ -613,6 +613,24 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="scheduler.manager.SchedulerManager.is_warning_active">
+<code class="descname">is_warning_active</code><span class="sig-paren">(</span><em>warning</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerManager.is_warning_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that the given warning is now active</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>warning</strong> (<a class="reference internal" href="scheduler.node.html#scheduler.node.conditions.NodeWarning" title="scheduler.node.conditions.NodeWarning"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.conditions.NodeWarning</span></code></a>) &#8211; The node warning</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; An optional specific description for the warning</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="scheduler.manager.SchedulerManager.paused_desc">
 <code class="descname">paused_desc</code><em class="property"> = u'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'</em><a class="headerlink" href="#scheduler.manager.SchedulerManager.paused_desc" title="Permalink to this definition">¶</a></dt>
