@@ -6,7 +6,6 @@ import logging
 from django.db import transaction
 
 from ingest.models import IngestEvent, Scan, Strike
-from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from recipe.seed.recipe_data import RecipeData

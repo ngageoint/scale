@@ -150,87 +150,53 @@ class TestUpdateRecipes(TestCase):
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_blocked', job=self.job_2_blocked)
 
         # Create recipe for testing the setting of input for a starting job in a recipe (no parents)
-        input_name_1 = 'Test Input 1'
-        output_name_1 = 'Test Output 1'
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': input_name_1,
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': output_name_1,
-                'type': 'files',
-                'media_type': 'image/png',
-            }],
-        }
-        job_type_3 = job_test_utils.create_job_type(interface=interface_1)
+        input_name_1 = 'Test_Input_1'
+        output_name_1 = 'Test_Output_1'
+
+        inputs = [{'name': input_name_1,'mediaTypes': ['text/plain']}]
+        outputs = [{'name': output_name_1, 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, outputs_files=outputs)
+        job_type_3 = job_test_utils.create_seed_job_type(manifest=manifest_1)
         job_3 = job_test_utils.create_job(job_type=job_type_3, status='PENDING', num_exes=0)
 
-        input_name_2 = 'Test Input 2'
-        output_name_2 = 'Test Output 2'
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': input_name_2,
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': output_name_2,
-                'type': 'file',
-            }],
-        }
-        job_type_4 = job_test_utils.create_job_type(interface=interface_2)
+        input_name_2 = 'Test_Input_2'
+        output_name_2 = 'Test_Output_2'
+        inputs = [{'name': input_name_2,'mediaTypes': ['image/png', 'image/tiff']}]
+        outputs = [{'name': output_name_2, 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, outputs_files=outputs)
+        job_type_4 = job_test_utils.create_seed_job_type(manifest=manifest_2)
         job_4 = job_test_utils.create_job(job_type=job_type_4, status='PENDING', num_exes=0)
         workspace = storage_test_utils.create_workspace()
         file_1 = storage_test_utils.create_file(workspace=workspace, media_type='text/plain')
 
         definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': job_type_3.name,
-                    'version': job_type_3.version,
+            'version': '6',
+            'input': {'files':[{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': {input_name_1: {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_3.name,
+                        'job_type_version': job_type_3.version,
+                        'job_type_revision': job_type_3.revision_num,
+                    }
                 },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': input_name_1,
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': job_type_4.name,
-                    'version': job_type_4.version,
-                },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': output_name_1,
-                        'input': input_name_2,
-                    }],
-                }],
-            }],
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': {input_name_2: {'type': 'dependency', 'node': 'job-1', 'output': output_name_1}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_4.name,
+                        'job_type_version': job_type_4.version,
+                        'job_type_revision': job_type_4.revision_num,
+                    }
+                }
+            }
         }
-        data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': file_1.id,
-            }],
-            'workspace_id': workspace.id,
-        }
+        data = {'version': '6', 'files': {'Recipe_Input': [file_1.id]}}
+
         self.recipe_type_3 = recipe_test_utils.create_recipe_type_v6(definition=definition)
         self.recipe_3 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, input=data)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 1', job=job_3)

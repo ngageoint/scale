@@ -226,7 +226,7 @@ class TestSchedulingManager(TestCase):
     def test_job_type_limit(self):
         """Tests calling perform_scheduling() with a job type limit"""
         Queue.objects.all().delete()
-        job_type_with_limit = job_test_utils.create_job_type()
+        job_type_with_limit = job_test_utils.create_seed_job_type()
         job_type_with_limit.max_scheduled = 4
         job_type_with_limit.save()
         running_job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_1.agent_id,

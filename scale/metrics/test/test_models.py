@@ -403,7 +403,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_stats(self):
         """Tests calculating individual statistics for a metrics entry."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         task_results_dict = {'version': '1.0',
                              'tasks': [{'task_id': '1', 'type': 'pre', 'was_launched': True,
@@ -519,7 +519,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_stats_partial(self):
         """Tests individual statistics are null when information is unavailable."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
@@ -571,7 +571,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_negative_times(self):
         """Tests calculating times when machine clocks are out of sync."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job, status=job.status,
@@ -599,7 +599,7 @@ class TestMetricsJobType(TestCase):
 
     def test_get_metrics_type_choices(self):
         """Tests getting the metrics type with choices."""
-        job_test_utils.create_job_type()
+        job_test_utils.create_seed_job_type()
         metrics_type = MetricsJobType.objects.get_metrics_type(include_choices=True)
 
         self.assertEqual(metrics_type.name, 'job-types')
@@ -615,7 +615,7 @@ class TestMetricsJobType(TestCase):
 
     def test_get_plot_data_filtered(self):
         """Tests getting the metrics plot data with filters."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 1), completed_count=1)
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 20), completed_count=1)
         metrics_test_utils.create_job_type(occurred=datetime.date(2015, 1, 1), completed_count=1)

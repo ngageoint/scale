@@ -33,18 +33,18 @@ class TestRecipeInstanceV6(TestCase):
     def test_convert_recipe_to_v6_json(self):
         """Tests calling convert_recipe_to_v6_json() successfully"""
 
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
-        job_type_3 = job_test_utils.create_job_type()
-        job_type_4 = job_test_utils.create_job_type()
-        recipe_type_1 = recipe_test_utils.create_recipe_type_v5()
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
+        job_type_3 = job_test_utils.create_seed_job_type()
+        job_type_4 = job_test_utils.create_seed_job_type()
+        recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
 
         interface = Interface()
         interface.add_parameter(FileParameter('file_param_1', ['image/gif']))
         interface.add_parameter(JsonParameter('json_param_1', 'object'))
         df1 = DataFilter(filter_list=[{'name': 'file_param_1', 'type': 'media-type', 'condition': '==', 'values': ['image/gif']},
                                       {'name': 'json_param_1', 'type': 'object', 'condition': 'superset of', 'values': [{}]}],
-                        all=False) 
+                        all=False)
 
         definition = RecipeDefinition(interface)
         definition.add_job_node('A', job_type_1.name, job_type_1.version, job_type_1.revision_num)

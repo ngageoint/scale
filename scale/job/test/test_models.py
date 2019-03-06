@@ -27,148 +27,39 @@ from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobT
 from node.resources.json.resources import Resources
 
 
+# TODO: Remove before release, just for reference (v5, v6)
+# {
+#     'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
+#     'inputs': {
+#         'files': [{'name': 'INPUT_IMAGE', 'mediaTypes': ['image/png'], 'required': True}]
+#     },
+#     'outputs': {
+#         'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png'}]
+#     },
+#     'mounts': [
+#       {
+#         'name': 'MOUNT_PATH',
+#         'path': '/the/container/path',
+#         'mode': 'ro'
+#       }
+#     ],
+#     'settings': [
+#       {
+#         'name': 'VERSION',
+#         'secret': False
+#       },
+#       {
+#         'name': 'DB_HOST',
+#         'secret': False
+#       },
+#       {
+#         'name': 'DB_PASS',
+#       'secret': True
+#       }
+#     ]
+# }
+
 class TestJobManager(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-    def test_get_details(self):
-        """Tests calling JobManager.get_details() with extra data inputs that should be ignored"""
-
-        workspace_1 = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace_1)
-        file_2 = storage_test_utils.create_file(workspace=workspace_1)
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }]}
-        job_type = job_test_utils.create_job_type(interface=interface)
-        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
-        orig_data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Input 1',
-                'file_id': file_1.id
-            }, {
-                'name': 'Input 2',
-                'file_id': file_2.id
-            }, {
-                'name': 'Input 3',
-                'value': 'hello'
-            }]}
-        data = copy.deepcopy(orig_data)
-        job_data = JobData(data)
-        Job.objects.populate_job_data_v5(job, job_data)
-        # populate_job_data() strips out extra inputs, so force them back in
-        job.data = orig_data
-        job.save()
-
-        # No exception means success
-        Job.objects.get_details(job.id)
-
-    def test_populate_job_data(self):
-        """Tests calling JobManager.populate_job_data()"""
-
-        workspace_1 = storage_test_utils.create_workspace()
-        workspace_2 = storage_test_utils.create_workspace()
-        workspace_3 = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace_1, file_size=10485760.0)
-        file_2 = storage_test_utils.create_file(workspace=workspace_2, file_size=104857600.0)
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }, {
-                'name': 'Input 2',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        job_type = job_test_utils.create_job_type(interface=interface)
-        job = job_test_utils.create_job(job_type=job_type, status='PENDING', input_file_size=None)
-        data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Input 1',
-                'file_id': file_1.id
-            }, {
-                'name': 'Input 2',
-                'file_id': file_2.id
-            }],
-            'output_data': [{
-                'name': 'Output 1',
-                'workspace_id': workspace_3.id
-            }]}
-        job_data = JobData(data)
-
-        Job.objects.populate_job_data_v5(job, job_data)
-
-        job = Job.objects.get(id=job.id)
-
-        # Make sure input file size is calculated and set
-        self.assertEqual(job.input_file_size, 110)  # Convert from file bytes to MiB to get 110 value
-        # Make sure job input file models are created
-        job_input_files = JobInputFile.objects.filter(job_id=job.id)
-        self.assertEqual(len(job_input_files), 2)
-        for job_input_file in job_input_files:
-            if job_input_file.job_input == 'Input 1':
-                self.assertEqual(job_input_file.input_file_id, file_1.id)
-            elif job_input_file.job_input == 'Input 2':
-                self.assertEqual(job_input_file.input_file_id, file_2.id)
-            else:
-                self.fail('Invalid input name: %s' % job_input_file.job_input)
-
-    def test_populate_job_data_extra_inputs(self):
-        """Tests calling JobManager.populate_job_data() with extra inputs"""
-
-        workspace_1 = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace_1)
-        file_2 = storage_test_utils.create_file(workspace=workspace_1)
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }]}
-        job_type = job_test_utils.create_job_type(interface=interface)
-        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
-        data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Input 1',
-                'file_id': file_1.id
-            }, {
-                'name': 'Input 2',
-                'file_id': file_2.id
-            }, {
-                'name': 'Input 3',
-                'value': 'hello'
-            }]}
-        job_data = JobData(data)
-
-        Job.objects.populate_job_data_v5(job, job_data)
-
-        # Check that only Input 1 remains in the job_data
-        job = Job.objects.get(id=job.id)
-        data_dict = job.get_job_data().get_dict()
-        self.assertEqual(len(data_dict['input_data']), 1)
-        self.assertEqual(data_dict['input_data'][0]['name'], 'Input 1')
 
     def test_process_job_input(self):
         """Tests calling JobManager.process_job_input()"""
@@ -208,24 +99,22 @@ class TestJobManager(TransactionTestCase):
                                                  source_sensor_class=s_class, source_sensor=s_sensor,
                                                  source_collection=collection, source_task=task)
         interface = {
-            'version': '1.0',
             'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }, {
-                'name': 'Input 2',
-                'type': 'files',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        job_type = job_test_utils.create_job_type(interface=interface)
+            'inputs': {
+                'files': [{
+                    'name': 'Input 1',
+                    'mediaTypes': ['text/plain'],
+                }, {
+                    'name': 'Input 2',
+                    'mediaTypes': ['text/plain'],
+                }]
+            },
+            'outputs': {
+                'files': [{
+                    'name': 'Output 1',
+                    'mediaType': 'image/png',
+            }]}}
+        job_type = job_test_utils.create_seed_job_type(interface=interface)
 
         data_1 = {
             'version': '1.0',
@@ -367,7 +256,7 @@ class TestJobManager(TransactionTestCase):
         """Tests that JobManager.update_jobs_to_queued() does not queue superseded jobs"""
 
         job = job_test_utils.create_job(status='FAILED')
-        Job.objects.supersede_jobs_old([job], timezone.now())
+        Job.objects.supersede_jobs([job.id], timezone.now())
 
         job_ids = Job.objects.update_jobs_to_queued([job], timezone.now())
         job = Job.objects.get(pk=job.id)
@@ -382,18 +271,16 @@ class TestJobManager(TransactionTestCase):
         old_job = job_test_utils.create_job()
 
         event = trigger_test_utils.create_trigger_event()
-        new_job = Job.objects.create_job_old(old_job.job_type, event.id, superseded_job=old_job,
-                                             delete_superseded=False)
+        new_job = Job.objects.create_job_v6(old_job.job_type_rev, event.id, superseded_job=old_job)
         new_job.save()
         when = timezone.now()
-        Job.objects.supersede_jobs_old([old_job], when)
+        Job.objects.supersede_jobs([old_job.id], when)
 
         new_job = Job.objects.get(pk=new_job.id)
         self.assertEqual(new_job.status, 'PENDING')
         self.assertFalse(new_job.is_superseded)
         self.assertEqual(new_job.root_superseded_job_id, old_job.id)
         self.assertEqual(new_job.superseded_job_id, old_job.id)
-        self.assertFalse(new_job.delete_superseded)
         self.assertIsNone(new_job.superseded)
         old_job = Job.objects.get(pk=old_job.id)
         self.assertTrue(old_job.is_superseded)
@@ -475,16 +362,6 @@ class TestJob(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_is_ready_to_requeue(self):
-        """Tests checking the job status for requeue eligibility."""
-        self.assertFalse(Job(status='PENDING').is_ready_to_requeue)
-        self.assertFalse(Job(status='BLOCKED').is_ready_to_requeue)
-        self.assertFalse(Job(status='QUEUED').is_ready_to_requeue)
-        self.assertFalse(Job(status='RUNNING').is_ready_to_requeue)
-        self.assertTrue(Job(status='FAILED').is_ready_to_requeue)
-        self.assertFalse(Job(status='COMPLETED').is_ready_to_requeue)
-        self.assertTrue(Job(status='CANCELED').is_ready_to_requeue)
-
     def test_get_seed_job_results(self):
         """Test retrieving job results from a Seed job type"""
         job_type = job_test_utils.create_seed_job_type()
@@ -498,61 +375,6 @@ class TestJob(TestCase):
         job = job_test_utils.create_job(job_type, input=input)
 
         self.assertIsInstance(job.get_job_results(), SeedJobResults)
-
-
-class TestJobExecutionManager(TransactionTestCase):
-    """Tests for the job execution model manager"""
-
-    fixtures = ['ingest_job_types.json']
-
-    def setUp(self):
-        django.setup()
-
-        self.job_type_1 = job_test_utils.create_job_type()
-        self.job_type_2 = job_test_utils.create_job_type()
-
-        self.job_1a = job_test_utils.create_job(job_type=self.job_type_1)
-        job_test_utils.create_job_exe(job=self.job_1a, status='FAILED')
-        time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_1a, status='FAILED')
-        time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_1a, status='COMPLETED')
-        time.sleep(.01)
-        self.last_run_1a = job_test_utils.create_job_exe(job=self.job_1a, status='RUNNING')
-
-        self.job_1b = job_test_utils.create_job(job_type=self.job_type_1, status='FAILED')
-        self.last_run_1b = job_test_utils.create_job_exe(job=self.job_1b, status='FAILED')
-
-        self.job_2a = job_test_utils.create_job(job_type=self.job_type_2)
-        job_test_utils.create_job_exe(job=self.job_2a, status='FAILED')
-        time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_2a, status='FAILED')
-        time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_2a, status='COMPLETED')
-        time.sleep(.01)
-        self.last_run_2a = job_test_utils.create_job_exe(job=self.job_2a, status='RUNNING')
-
-        self.job_2b = job_test_utils.create_job(job_type=self.job_type_2)
-        self.last_run_2b = job_test_utils.create_job_exe(job=self.job_2b, status='COMPLETED')
-
-    def test_get_latest(self):
-        job_query = Job.objects.all()
-        expected_result = {
-            self.job_1a.id: self.last_run_1a,
-            self.job_1b.id: self.last_run_1b,
-            self.job_2a.id: self.last_run_2a,
-            self.job_2b.id: self.last_run_2b,
-        }
-        latest_job_exes = JobExecution.objects.get_latest(job_query)
-        self.assertDictEqual(latest_job_exes, expected_result, 'latest job executions do not match expected results')
-
-    def test_get_latest_job_exes_with_a_filter(self):
-        job_query = Job.objects.filter(status='FAILED')
-        expected_result = {
-            self.job_1b.id: self.last_run_1b,
-        }
-        latest_job_exes = JobExecution.objects.get_latest(job_query)
-        self.assertDictEqual(latest_job_exes, expected_result, 'latest job executions do not match expected results')
 
 
 class TestJobType(TransactionTestCase):
@@ -691,97 +513,32 @@ class TestJobType(TransactionTestCase):
             }
         """
 
-        self.seed_job_type = job_test_utils.create_job_type(interface=json.loads(seed_interface_str))
-        self.legacy_job_type = job_test_utils.create_job_type()
-        self.legacy_job_type.cpus_required = 5.0
-        self.legacy_job_type.mem_const_required = 6.0
-        self.legacy_job_type.mem_mult_required = 7.0
-        self.legacy_job_type.shared_mem_required = 8.0
-        self.legacy_job_type.disk_out_const_required = 9.0
-        self.legacy_job_type.disk_out_mult_required = 10.0
+        self.seed_job_type = job_test_utils.create_seed_job_type(manifest=json.loads(seed_interface_str))
 
-    def test_get_legacy_cpu_resource_from_legacy_interface(self):
-        job_type = self.legacy_job_type
-        value = job_type.get_cpus_required()
 
-        self.assertEqual(job_type.cpus_required, value)
 
-    def test_get_legacy_mem_resource_from_legacy_interface(self):
-        job_type = self.legacy_job_type
-        value = job_type.get_mem_const_required()
-
-        self.assertEqual(job_type.mem_const_required, value)
-
-    def test_get_legacy_mem_resource_multiplier_from_legacy_interface(self):
-        job_type = self.legacy_job_type
-        value = job_type.get_mem_mult_required()
-
-        self.assertEqual(job_type.mem_mult_required, value)
-
-    def test_get_legacy_sharedmem_resource_from_legacy_interface(self):
-        job_type = self.legacy_job_type
-        value = job_type.get_shared_mem_required()
-
-        self.assertEqual(job_type.shared_mem_required, value)
-
-    def test_get_legacy_disk_resource_from_legacy_interface(self):
-        job_type = self.legacy_job_type
-        value = job_type.get_disk_out_const_required()
-
-        self.assertEqual(job_type.disk_out_const_required, value)
-
-    def test_get_legacy_disk_resource_multiplier_from_legacy_interface(self):
-        job_type = self.legacy_job_type
-        value = job_type.get_disk_out_mult_required()
-
-        self.assertEqual(job_type.disk_out_mult_required, value)
-
-    def test_get_legacy_cpu_resource_from_seed_interface(self):
+    def test_get_seed_cpu_resource_from_seed_interface(self):
         job_type = self.seed_job_type
-        value = job_type.get_cpus_required()
-        self.assertEqual(1.5, value)
+        value = job_type.get_resources().get_json().get_dict()
+        self.assertEqual(1.5, value['resources']['cpus'])
 
-    def test_get_legacy_cpu_resource_multiplier_from_seed_interface(self):
+    def test_get_seed_mem_resource_from_seed_interface(self):
         job_type = self.seed_job_type
-        value = job_type._get_legacy_resource('cpus', job_type.cpus_required, False)
+        value = job_type.get_resources().get_json().get_dict()
 
-        self.assertEqual(0.0, value)
+        self.assertEqual(244.0, value['resources']['mem'])
 
-    def test_get_legacy_mem_resource_from_seed_interface(self):
+    def test_get_seed_sharedmem_resource_from_seed_interface(self):
         job_type = self.seed_job_type
-        value = job_type.get_mem_const_required()
+        value = job_type.get_resources().get_json().get_dict()
 
-        self.assertEqual(244.0, value)
+        self.assertEqual(1.0, value['resources']['sharedmem'])
 
-    def test_get_legacy_mem_resource_multiplier_from_seed_interface(self):
+    def test_get_seed_disk_resource_from_seed_interface(self):
         job_type = self.seed_job_type
-        value = job_type.get_mem_mult_required()
+        value = job_type.get_resources().get_json().get_dict()
 
-        self.assertEqual(0.0, value)
-
-    def test_get_legacy_sharedmem_resource_from_seed_interface(self):
-        job_type = self.seed_job_type
-        value = job_type.get_shared_mem_required()
-
-        self.assertEqual(1.0, value)
-
-    def test_get_legacy_sharedmem_resource_multiplier_from_seed_interface(self):
-        job_type = self.seed_job_type
-        value = job_type._get_legacy_resource('sharedmem', job_type.shared_mem_required, False)
-
-        self.assertEqual(0.0, value)
-
-    def test_get_legacy_disk_resource_from_seed_interface(self):
-        job_type = self.seed_job_type
-        value = job_type.get_disk_out_const_required()
-
-        self.assertEqual(11.0, value)
-
-    def test_get_legacy_disk_resource_multiplier_from_seed_interface(self):
-        job_type = self.seed_job_type
-        value = job_type.get_disk_out_mult_required()
-
-        self.assertEqual(4.0, value)
+        self.assertEqual(11.0, value['resources']['disk'])
 
     def test_get_job_version_array(self):
         job_type = self.seed_job_type
@@ -801,9 +558,6 @@ class TestJobType(TransactionTestCase):
         value = job_type.get_job_version_array(version)
         self.assertEqual([0,0,0,0], value)
 
-    def test_is_seed_job_type(self):
-        self.assertTrue(self.seed_job_type.is_seed_job_type())
-        self.assertFalse(self.legacy_job_type.is_seed_job_type())
 
 class TestJobTypeRevision(TransactionTestCase):
 
@@ -814,473 +568,25 @@ class TestJobTypeRevision(TransactionTestCase):
         self.seed_job_type_rev = JobTypeRevision.objects.get_revision(self.seed_job_type.name,
                                                                       self.seed_job_type.version,
                                                                       self.seed_job_type.revision_num)
-        self.legacy_job_type = job_test_utils.create_job_type()
-        self.legacy_job_type.cpus_required = 5.0
-        self.legacy_job_type.mem_const_required = 6.0
-        self.legacy_job_type.mem_mult_required = 7.0
-        self.legacy_job_type.shared_mem_required = 8.0
-        self.legacy_job_type.disk_out_const_required = 9.0
-        self.legacy_job_type.disk_out_mult_required = 10.0
-        self.legacy_job_type_rev = JobTypeRevision.objects.get_revision(self.legacy_job_type.name,
-                                                                        self.legacy_job_type.version,
-                                                                        self.legacy_job_type.revision_num)
 
     def test_revision_get_input_interface(self):
         self.assertEqual(self.seed_job_type_rev.get_input_interface().parameters['INPUT_IMAGE'].PARAM_TYPE, 'file')
-        self.assertEqual(self.legacy_job_type_rev.get_input_interface().parameters, {})
 
     def test_revision_get_output_interface(self):
         self.assertEqual(self.seed_job_type_rev.get_output_interface().parameters['OUTPUT_IMAGE'].PARAM_TYPE, 'file')
-        self.assertEqual(self.legacy_job_type_rev.get_output_interface().parameters, {})
 
-class TestJobTypeManagerCreateJobType(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-        self.error = error_test_utils.create_error()
-
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_interface = JobInterface(interface)
-
-        self.configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain'
-            },
-            'data': {
-                'input_data_name': 'Test Input 1',
-                'workspace_name': self.workspace.name
-            }
-        }
-
-        self.error_mapping = create_legacy_error_mapping({
-            'version': '1.0',
-            'exit_codes': {
-                '-15': self.error.name,
-            }
-        })
-
-    def test_successful_no_trigger_rule(self):
-        """Tests calling JobTypeManager.create_job_type_v5() successfully with no trigger rule or error mapping"""
-
-        name = 'my-job-type'
-        version = '1.0'
-
-        # Call test
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 1)
-        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), set())
-
-    def test_successful_other_fields(self):
-        """Tests calling JobTypeManager.create_job_type_v5() successfully with additional fields"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        description = 'my-description'
-        priority = 13
-        custom_resources = Resources({'resources': {'foo': 10.0}})
-        docker_params = [["a","1"],["b","2"]]
-
-        # Call test
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, title=title,
-                                                      description=description, priority=priority,
-                                                      docker_params=docker_params, custom_resources=custom_resources)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 1)
-        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), set())
-        self.assertDictEqual(job_type.get_custom_resources().get_dict(), custom_resources.get_dict())
-        self.assertEqual(job_type.description, description)
-        self.assertEqual(job_type.priority, priority)
-        self.assertIsNone(job_type.deprecated)
-        self.assertIsNone(job_type.paused)
-        self.assertEqual(job_type.docker_params, docker_params)
-
-    def test_successful_paused(self):
-        """Tests calling JobTypeManager.create_job_type_v5() and pausing it"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        description = 'my-description'
-        priority = 13
-        is_paused = True
-
-        # Call test
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, title=title,
-                                                          description=description, priority=priority, is_paused=is_paused)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 1)
-        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), set())
-        self.assertEqual(job_type.description, description)
-        self.assertEqual(job_type.priority, priority)
-        self.assertEqual(job_type.is_paused, is_paused)
-        self.assertIsNotNone(job_type.paused)
-
-    def test_uneditable_field(self):
-        """Tests calling JobTypeManager.create_job_type_v5() with an uneditable field"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        description = 'my-description'
-        priority = 13
-        is_system = True
-
-        # Call test
-        self.assertRaises(Exception, JobType.objects.create_job_type_v5, name, version, self.job_interface, title=title,
-                          description=description, priority=priority, is_system=is_system)
-
-    def test_invalid_error_mapping(self):
-        """Tests calling JobTypeManager.create_job_type_v5() with an invalid error mapping"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        description = 'my-description'
-        priority = 13
-        is_system = True
-        error_mapping = create_legacy_error_mapping({
-            'version': '1.0',
-            'exit_codes': {
-                '1': 'test-invalid-error',
-            }
-        })
-
-        # Call test
-        self.assertRaises(Exception, JobType.objects.create_job_type_v5, name, version, self.job_interface,
-                          error_mapping=error_mapping, title=title, description=description, priority=priority,
-                          is_system=is_system)
-
-
-class TestJobTypeManagerEditJobType(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-        self.error = error_test_utils.create_error()
-
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_interface = JobInterface(interface)
-
-        new_interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        self.new_job_interface = JobInterface(new_interface)
-
-        self.configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain'
-            },
-            'data': {
-                'input_data_name': 'Test Input 1',
-                'workspace_name': self.workspace.name
-            }
-        }
-
-        self.new_configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'application/json'
-            },
-            'data': {
-                'input_data_name': 'Test Input 1',
-                'workspace_name': self.workspace.name
-            }
-        }
-
-    def test_change_general_fields(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() with a change to some general fields"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        priority = 12
-        error_mapping = create_legacy_error_mapping({
-            'version': '1.0',
-            'exit_codes': {
-                '-15': self.error.name,
-            }
-        })
-        custom_resources = Resources({'resources': {'foo': 10.0}})
-        new_title = 'my new title'
-        new_priority = 13
-        new_error_mapping = create_legacy_error_mapping({
-            'version': '1.0',
-            'exit_codes': {
-                '-16': self.error.name,
-            }
-        })
-        new_custom_resources = Resources({'resources': {'foo': 100.0}})
-        new_is_paused = True
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, title=title,
-                                                          priority=priority, error_mapping=error_mapping,
-                                                          custom_resources=custom_resources)
-
-        # Call test
-        JobType.objects.edit_job_type_v5(job_type.id, title=new_title, priority=new_priority,
-                                             error_mapping=new_error_mapping, custom_resources=new_custom_resources,
-                                             is_paused=new_is_paused)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertEqual(job_type.revision_num, 1)
-        self.assertEqual(job_type.title, new_title)
-        self.assertEqual(job_type.priority, new_priority)
-        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), {-16})
-        self.assertDictEqual(job_type.get_custom_resources().get_dict(), new_custom_resources.get_dict())
-        self.assertEqual(job_type.is_paused, new_is_paused)
-        self.assertIsNotNone(job_type.paused)
-
-    def test_change_to_interface(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() with a change to the interface"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface)
-
-        # Call test
-        JobType.objects.edit_job_type_v5(job_type.id, self.new_job_interface, None, False)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.new_job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 2)
-        # New revision due to interface change
-        num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
-        self.assertEqual(num_of_revs, 2)
-
-    def test_change_to_definition(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() with a change to the definitio
-        """
-
-        name = 'my-job-type'
-        version = '1.0'
-
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface)
-
-        # Call test
-        JobType.objects.edit_job_type_v5(job_type.id, self.new_job_interface, False)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.new_job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 2)
-        # New revision due to definition change
-        num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
-        self.assertEqual(num_of_revs, 2)
-
-    def test_system_job_type(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() for a system job type"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        new_title = 'my new title'
-
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, title=title)
-        job_type.is_system = True
-        job_type.save()
-
-        # Call test
-        self.assertRaises(Exception, JobType.objects.edit_job_type_v5, job_type.id, title=new_title)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        # No Change
-        self.assertEqual(job_type.title, title)
-
-    def test_pause_system_job_type(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() and pausing a system job type"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, is_paused=False)
-        job_type.is_system = True
-        job_type.save()
-
-        # Call test
-        JobType.objects.edit_job_type_v5(job_type.id, is_paused=True)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        self.assertEqual(job_type.is_paused, True)
-
-    def test_uneditable_field(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() to change an uneditable field"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        new_title = 'my new title'
-        job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, title=title)
-
-        # Call test
-        self.assertRaises(Exception, JobType.objects.edit_job_type_v5, job_type.id, title=new_title, is_system=True)
-
-        # Check results
-        job_type = JobType.objects.get(pk=job_type.id)
-        # No change
-        self.assertEqual(job_type.title, title)
-
-    def test_invalid_error_mapping(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() with an invalid error mapping"""
-
-        name = 'my-job-type'
-        version = '1.0'
-        title = 'my title'
-        description = 'my-description'
-        priority = 13
-        is_system = True
-        error_mapping = create_legacy_error_mapping({
-            'version': '1.0',
-            'exit_codes': {
-                '1': 'test-invalid-error',
-            }
-        })
-
-        # Call test
-        self.assertRaises(Exception, JobType.objects.edit_job_type_v5, name, version, self.job_interface,
-                          error_mapping=error_mapping, title=title, description=description, priority=priority,
-                          is_system=is_system)
-
-    def test_convert_min_seed_manifest(self):
-        """Tests calling JobTypeManager.convert_manifest_to_v5_interface() with minimum seed manifest"""
-
-        manifest = copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
-
-        interface = JobType.objects.convert_manifest_to_v5_interface(manifest)
-
-        # Call test
-        self.assertEquals(interface['output_data'], [])
-        self.assertEquals(interface['input_data'], [])
-        self.assertEquals(interface['version'], '1.4')
-
-    def test_convert_complete_seed_manifest(self):
-        """Tests calling JobTypeManager.convert_manifest_to_v5_interface() with complete seed manifest"""
-
-        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-
-        interface = JobType.objects.convert_manifest_to_v5_interface(manifest)
-
-        # Call test
-        self.assertListEqual(interface['settings'], manifest['job']['interface']['settings'])
-        self.assertListEqual(interface['mounts'], manifest['job']['interface']['mounts'])
-        self.assertListEqual(interface['output_data'], manifest['job']['interface']['outputs']['files'])
-        self.assertListEqual(interface['input_data'], manifest['job']['interface']['inputs']['files'])
-        self.assertListEqual(interface['env_vars'], manifest['job']['interface']['inputs']['json'])
-        self.assertEquals(interface['version'], '1.4')
-        self.assertEqual(interface['command_arguments'], manifest['job']['interface']['command'])
-
-
-class TestJobTypeManagerValidateJobType(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-        self.error = error_test_utils.create_error()
-
-        self.interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_interface = JobInterface(self.interface)
-
-        self.error_mapping = create_legacy_error_mapping({
-            'version': '1.0',
-            'exit_codes': {
-                '1': self.error.name,
-            }
-        })
-
-        self.configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain'
-            },
-            'data': {
-                'input_data_name': 'Test Input 1',
-                'workspace_name': self.workspace.name
-            }
-        }
-
-    def test_successful(self):
-        """Tests calling JobTypeManager.validate_job_type_v5() successfully"""
-
-        warnings = JobType.objects.validate_job_type_v5('name', '1.0', self.interface, self.error_mapping)
-
-        # Check results
-        self.assertListEqual(warnings, [])
 
 class TestJobTypeRunningStatus(TestCase):
 
     def setUp(self):
         django.setup()
 
-        self.job_type_1 = job_test_utils.create_job_type(name='Type 1', version='1.0')
-        self.job_type_2 = job_test_utils.create_job_type(name='Type 2', version='2.0')
-        self.job_type_3 = job_test_utils.create_job_type(name='Type 1', version='2.0')
+        manifest1 = job_test_utils.create_seed_manifest(name='type-1', jobVersion='1.0.0')
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest1)
+        manifest2 = job_test_utils.create_seed_manifest(name='type-2', jobVersion='2.0.0')
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest2)
+        manifest3 = job_test_utils.create_seed_manifest(name='type-1', jobVersion='2.0.0')
+        self.job_type_3 = job_test_utils.create_seed_job_type(manifest=manifest3)
 
         self.entry_1_longest = datetime.datetime.utcfromtimestamp(500000).replace(tzinfo=timezone.utc)
         self.entry_1_shortest = datetime.datetime.utcfromtimestamp(650000).replace(tzinfo=timezone.utc)
@@ -1309,22 +615,22 @@ class TestJobTypeRunningStatus(TestCase):
 
         # Check entry 1
         self.assertEqual(status[0].job_type.id, self.job_type_1.id)
-        self.assertEqual(status[0].job_type.name, 'Type 1')
-        self.assertEqual(status[0].job_type.version, '1.0')
+        self.assertEqual(status[0].job_type.name, 'type-1')
+        self.assertEqual(status[0].job_type.version, '1.0.0')
         self.assertEqual(status[0].count, 2)
         self.assertEqual(status[0].longest_running, self.entry_1_longest)
 
         # Check entry 2
         self.assertEqual(status[1].job_type.id, self.job_type_2.id)
-        self.assertEqual(status[1].job_type.name, 'Type 2')
-        self.assertEqual(status[1].job_type.version, '2.0')
+        self.assertEqual(status[1].job_type.name, 'type-2')
+        self.assertEqual(status[1].job_type.version, '2.0.0')
         self.assertEqual(status[1].count, 3)
         self.assertEqual(status[1].longest_running, self.entry_2_longest)
 
         # Check entry 3
         self.assertEqual(status[2].job_type.id, self.job_type_3.id)
-        self.assertEqual(status[2].job_type.name, 'Type 1')
-        self.assertEqual(status[2].job_type.version, '2.0')
+        self.assertEqual(status[2].job_type.name, 'type-1')
+        self.assertEqual(status[2].job_type.version, '2.0.0')
         self.assertEqual(status[2].count, 4)
         self.assertEqual(status[2].longest_running, self.entry_3_longest)
 
@@ -1334,9 +640,9 @@ class TestJobTypeFailedStatus(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type_1 = job_test_utils.create_job_type(name='Type 1', version='1.0')
-        self.job_type_2 = job_test_utils.create_job_type(name='Type 2', version='2.0')
-        self.job_type_3 = job_test_utils.create_job_type(name='Type 1', version='2.0')
+        self.job_type_1 = job_test_utils.create_seed_job_type(job_version='1.0')
+        self.job_type_2 = job_test_utils.create_seed_job_type(job_version='2.0')
+        self.job_type_3 = job_test_utils.create_seed_job_type(job_version='2.0')
 
         self.error_1 = Error.objects.create(name='Error 1', description='Test', category='SYSTEM')
         self.error_2 = Error.objects.create(name='Error 2', description='Test', category='SYSTEM')
@@ -1378,7 +684,6 @@ class TestJobTypeFailedStatus(TestCase):
 
         # Check entry 1
         self.assertEqual(status[0].job_type.id, self.job_type_2.id)
-        self.assertEqual(status[0].job_type.name, 'Type 2')
         self.assertEqual(status[0].job_type.version, '2.0')
         self.assertEqual(status[0].error.name, 'Error 2')
         self.assertEqual(status[0].count, 2)
@@ -1387,7 +692,6 @@ class TestJobTypeFailedStatus(TestCase):
 
         # Check entry 2
         self.assertEqual(status[1].job_type.id, self.job_type_1.id)
-        self.assertEqual(status[1].job_type.name, 'Type 1')
         self.assertEqual(status[1].job_type.version, '1.0')
         self.assertEqual(status[1].error.name, 'Error 1')
         self.assertEqual(status[1].count, 1)
@@ -1396,7 +700,6 @@ class TestJobTypeFailedStatus(TestCase):
 
         # Check entry 3
         self.assertEqual(status[2].job_type.id, self.job_type_3.id)
-        self.assertEqual(status[2].job_type.name, 'Type 1')
         self.assertEqual(status[2].job_type.version, '2.0')
         self.assertEqual(status[2].error.name, 'Error 2')
         self.assertEqual(status[2].count, 3)
@@ -1405,7 +708,6 @@ class TestJobTypeFailedStatus(TestCase):
 
         # Check entry 4
         self.assertEqual(status[3].job_type.id, self.job_type_2.id)
-        self.assertEqual(status[3].job_type.name, 'Type 2')
         self.assertEqual(status[3].job_type.version, '2.0')
         self.assertEqual(status[3].error.name, 'Error 1')
         self.assertEqual(status[3].count, 1)

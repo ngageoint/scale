@@ -399,7 +399,7 @@ class RecipeDefinitionV6(object):
         # Populate defaults for input interface
         interface_json = InterfaceV6(self._definition['input'], do_validate=False)
         self._definition['input'] = strip_schema_version(interface_json.get_dict())
-        
+
         # Populate default values for input_condition interface
         # filter_json = DataFilterV6(self._definition['input_condition'], do_validate=False)
         # self._definition['input_condition'] = strip_schema_version(filter_json.get_dict())

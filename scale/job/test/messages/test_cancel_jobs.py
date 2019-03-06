@@ -20,7 +20,7 @@ class TestCancelJobs(TestCase):
 
         when = now()
         data = JobData()
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, status='PENDING')
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict())
         job_ids = [job_1.id, job_2.id]
@@ -55,7 +55,7 @@ class TestCancelJobs(TestCase):
         data = JobData()
         from recipe.test import utils as recipe_test_utils
         recipe = recipe_test_utils.create_recipe()
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict(),
                                           recipe=recipe)
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='CANCELED', input=data.get_dict(),
