@@ -8,7 +8,6 @@ from django.db import transaction
 from data.data.data import Data
 from data.data.value import FileValue
 from ingest.triggers.configuration.ingest_trigger_rule import IngestTriggerRuleConfiguration
-from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData

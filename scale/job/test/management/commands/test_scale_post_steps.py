@@ -9,7 +9,7 @@ from mock import patch
 
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
 from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
-from job.configuration.results.job_results import JobResults
+from job.seed.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.management.commands.scale_post_steps import Command as PostCommand
 from job.models import JobExecutionOutput
@@ -29,10 +29,9 @@ class TestPostJobSteps(TransactionTestCase):
 
         cmd = 'command'
         cmd_args = 'args'
-        interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args, 'input_data': [],
-                     'output_data': [{'name': 'arg1', 'type': 'file'}, {'name': 'arg2', 'type': 'file'}]}
-
-        self.job_type = job_utils.create_job_type(name='Test', version='1.0', interface=interface)
+        outputs = [{'name': 'arg1', 'pattern': '*_.txt'}, {'name': 'arg2', 'pattern': '*_.txt'}]
+        manifest = job_utils.create_seed_manifest(command='command args', outputs_files=outputs)
+        self.job_type = job_utils.create_seed_job_type(job_version='1.0', manifest=manifest)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING')

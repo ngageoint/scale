@@ -185,21 +185,20 @@ class QueuedExecutionConfigurator(object):
         """
 
         workspaces = {}
-        data = job.get_job_data()
+        data = job.get_input_data()
 
         # Configure ingest workspace based on input data values
         if job.job_type.name == 'scale-ingest':
             workspace_name = None
             new_workspace_name = None
-            prop_dict = data.get_property_values(['Ingest ID', 'workspace', 'new_workspace'])
-            if 'workspace' in prop_dict:
-                workspace_name = prop_dict['workspace']
-                if 'new_workspace' in prop_dict:
-                    new_workspace_name = prop_dict['new_workspace']
+            if 'workspace' in data.values:
+                workspace_name = data.values['workspace']
+                if 'new_workspace' in data.values:
+                    new_workspace_name = data.values['new_workspace']
             else:
                 # Old ingest jobs do not have the workspace(s) in their data, will need to query ingest model
-                if 'Ingest ID' in prop_dict:
-                    ingest_id = int(prop_dict['Ingest ID'])
+                if 'INGEST_ID' in data.values:
+                    ingest_id = data.values['INGEST_ID'].value
                     from ingest.models import Ingest
                     ingest = Ingest.objects.select_related('workspace', 'new_workspace').get(id=ingest_id)
                     workspace_name = ingest.workspace.name
@@ -212,7 +211,7 @@ class QueuedExecutionConfigurator(object):
 
         # Configure Strike workspace based on current configuration
         if job.job_type.name == 'scale-strike':
-            strike_id = data.get_property_values(['Strike ID'])['Strike ID']
+            strike_id = data.values['Strike_ID'].value
             from ingest.models import Strike
             strike = Strike.objects.get(id=strike_id)
             workspace_name = strike.get_strike_configuration().get_workspace()
@@ -220,7 +219,7 @@ class QueuedExecutionConfigurator(object):
 
         # Configure Scan workspace based on current configuration
         if job.job_type.name == 'scale-scan':
-            scan_id = data.get_property_values(['Scan ID'])['Scan ID']
+            scan_id = data.values['Scan_ID'].value
             from ingest.models import Scan
             scan = Scan.objects.get(id=scan_id)
             workspace_name = scan.get_scan_configuration().get_workspace()
@@ -230,6 +229,7 @@ class QueuedExecutionConfigurator(object):
         if job.job_type.name == 'scale-delete-files':
             import json
             wrkspc_list = json.loads(data.get_property_values(['workspaces'])['workspaces'])
+
             workspaces = {w_name: TaskWorkspace(w_name, MODE_RW) for d in wrkspc_list for w_name, _v in d.items()}
 
         return workspaces
@@ -320,7 +320,7 @@ class ScheduledExecutionConfigurator(object):
                 env_vars['SCALE_RECIPE_ID'] = unicode(job_exe.recipe_id)
             if job_exe.batch_id:
                 env_vars['SCALE_BATCH_ID'] = unicode(job_exe.batch_id)
-          
+
             # Configure workspace volumes
             workspace_volumes = {}
             for task_workspace in config.get_workspaces(task_type):
@@ -342,8 +342,8 @@ class ScheduledExecutionConfigurator(object):
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
                                         driver_opts=driver_opts)
                     workspace_volumes[task_workspace.name] = volume
-            
-            
+
+
             # Configure the input_metadata env variable
             input_metadata = {}
             if 'input_files' in config._configuration:
@@ -356,7 +356,7 @@ class ScheduledExecutionConfigurator(object):
                         input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
             if job_exe.recipe_id and job_exe.recipe.has_input():
                 input_metadata['RECIPE'] = {}
-                input_data = job_exe.recipe.get_input_data() 
+                input_data = job_exe.recipe.get_input_data()
                 for i in input_data.values.keys():
                     if type(input_data.values[i]) is JsonValue:
                         input_metadata['RECIPE'][i] = input_data.values[i].value
@@ -364,7 +364,7 @@ class ScheduledExecutionConfigurator(object):
                         input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
             if input_metadata:
                 env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
-            
+
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
         # Labels for metric grouping
@@ -421,14 +421,12 @@ class ScheduledExecutionConfigurator(object):
         """
 
         # Set shared memory if required by this job type
-        shared_mem = job_type.get_shared_mem_required()
+        resources = job_type.get_resources().get_json().get_dict()['resources']
+        shared_mem = resources['sharedMem'] if 'sharedMem' in resources else 0
+
         if shared_mem > 0:
             shared_mem = int(math.ceil(shared_mem))
-            if JobInterfaceSunset.is_seed_dict(job_type.manifest):
-                env_vars = {'ALLOCATED_SHAREDMEM': '%.1f' % float(shared_mem)}
-            # Remove legacy code in v6
-            else:
-                env_vars = {'ALLOCATED_SHARED_MEM': '%.1f' % float(shared_mem)}
+            env_vars = {'ALLOCATED_SHAREDMEM': '%.1f' % float(shared_mem)}
 
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
                                env_vars=env_vars)
@@ -500,17 +498,12 @@ class ScheduledExecutionConfigurator(object):
         config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro},
                            env_vars={'SYSTEM_LOGGING_LEVEL': system_logging_level})
 
+
         # Configure output directory
-        # TODO: original output dir and command arg replacement can be removed when Scale no longer supports old-style
-        # job types
-        env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
+        env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH}
         args = config._get_task_dict('main')['args']
 
-        # TODO: Remove old-style logic for command parameters inject when with v6
-        if not JobInterfaceSunset.is_seed_dict(job_type.manifest):
-            args = JobInterface.replace_command_parameters(args, env_vars)
-        else:
-            args = environment_expansion(env_vars, args, remove_extras=True)
+        args = environment_expansion(env_vars, args, remove_extras=True)
         config.add_to_task('main', args=args, env_vars=env_vars)
 
         # Configure task resources
@@ -569,16 +562,6 @@ class ScheduledExecutionConfigurator(object):
                         value = job_config.get_setting_value(name)
                     if 'required' in setting and setting['required'] or value is not None:
                         task_settings[name] = value
-                # TODO: command args and env var replacement from the interface should be removed once Scale drops
-                # support for old-style job types
-                args = config._get_task_dict('main')['args']
-                if JobInterfaceSunset.is_seed_dict(interface.definition):
-                    env_vars = task_settings
-                # TODO: Remove this else block when old-style job types are removed
-                else:
-                    args = JobInterface.replace_command_parameters(args, task_settings)
-                    env_vars = interface.populate_env_vars_arguments(task_settings)
-                _config.add_to_task('main', args=args, env_vars=env_vars, settings=task_settings)
 
         # Configure env vars for settings
         for _config in [config, config_with_secrets]:
@@ -601,16 +584,6 @@ class ScheduledExecutionConfigurator(object):
                     docker_params.append(volume.to_docker_param(is_created=(name in existing_volumes)))
                     existing_volumes.add(name)
                 _config.add_to_task(task_type, docker_params=docker_params)
-
-        # TODO: this feature should be removed once Scale drops support for job type docker params
-        # Configure docker parameters listed in job type
-        if job_type.docker_params:
-            docker_params = []
-            for key, value in job_type.docker_params.items():
-                docker_params.append(DockerParameter(key, value))
-            if docker_params:
-                config.add_to_task('main', docker_params=docker_params)
-                config_with_secrets.add_to_task('main', docker_params=docker_params)
 
         return config_with_secrets
 

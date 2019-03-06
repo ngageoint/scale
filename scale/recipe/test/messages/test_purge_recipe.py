@@ -31,96 +31,58 @@ class TestPurgeRecipe(TransactionTestCase):
         self.file_1 = storage_test_utils.create_file()
         self.file_2 = storage_test_utils.create_file()
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        inputs = [{'name': 'Test_Input_1', 'mediaTypes': ['text/plain']}]
+        outputs = [{'name': 'Test_Output_1', 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        inputs = [{'name': 'Test_Input_2', 'mediaTypes':  ['image/png', 'image/tiff']}]
+        outputs = [{'name': 'Test_Output_2', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='command args', inputs_files=inputs, outputs_files=outputs)
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
 
         definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
+            'version': '6',
+            'input': {'files':[{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': {'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num,
+                    }
                 },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': self.job_type_2.name,
-                    'version': self.job_type_2.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }]
+                'job-2': {
+                    'dependencies': [],
+                    'input': {'Test_Input_2': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num,
+                    }
+                }
+            }
         }
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
-        self.input_1 = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': self.file_1.id,
-            }],
-            'workspace_id': self.workspace.id,
-        }
+        self.input_1 = {'version': '6', 'files': {'Recipe_Input': [self.file_1.id]}}
         self.recipe_1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
         recipe_test_utils.create_input_file(recipe=self.recipe_1)
         self.job_1_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
-        recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='Job 1', job=self.job_1_1)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='job-1', job=self.job_1_1)
         self.job_1_2 = job_test_utils.create_job(job_type=self.job_type_2, status='COMPLETED')
-        recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='Job 2', job=self.job_1_2)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='job-2', job=self.job_1_2)
 
-        self.input_2 = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': self.file_2.id,
-            }],
-            'workspace_id': self.workspace.id,
-        }
+        self.input_2 = {'version': '6', 'files': {'Recipe_Input': [self.file_2.id]}}
         self.recipe_2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.input_2)
         self.job_2_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
-        recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='Job 1', job=self.job_2_1)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job-1', job=self.job_2_1)
         self.job_2_2 = job_test_utils.create_job(job_type=self.job_type_2, status='COMPLETED')
-        recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='Job 2', job=self.job_2_2)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job-2', job=self.job_2_2)
 
         self.old_recipe_ids = [self.recipe_1.id, self.recipe_2.id]
         self.old_job_ids = [self.job_1_1.id, self.job_1_2.id, self.job_2_1.id, self.job_2_2.id]
@@ -329,11 +291,11 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
             trigger_event=trigger.id), 0)
 
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
-        job_type_3 = job_test_utils.create_job_type()
-        job_type_4 = job_test_utils.create_job_type()
-        recipe_type_1 = recipe_test_utils.create_recipe_type_v5()
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
+        job_type_3 = job_test_utils.create_seed_job_type()
+        job_type_4 = job_test_utils.create_seed_job_type()
+        recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
 
         interface = Interface()
         interface.add_parameter(FileParameter('file_param_1', ['image/gif']))
@@ -382,7 +344,7 @@ class TestPurgeRecipe(TransactionTestCase):
                                               source_file_id=file_2.id)
 
         # Execute message
-        with mock.patch('recipe.models.RecipeManager.get_recipe_instance', 
+        with mock.patch('recipe.models.RecipeManager.get_recipe_instance',
                         return_value=RecipeInstance(definition, recipe, recipe_nodes)) as recipe_instance_mock:
             result = message.execute()
             self.assertTrue(result)

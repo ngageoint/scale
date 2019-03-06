@@ -222,7 +222,6 @@ class TestSourceFileManagerSaveParseResults(TestCase):
             }]
         }
         job_type = job_utils.create_seed_job_type(manifest=manifest)
-        # job_type = job_utils.create_job_type(interface=interface)
         job_type.trigger_rule = rule_model
         job_type.save()
 

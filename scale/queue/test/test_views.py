@@ -14,7 +14,6 @@ import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
-from job.configuration.data.job_data import JobData
 from job.models import Job
 from queue.models import Queue
 
@@ -69,28 +68,6 @@ class TestJobLoadView(TransactionTestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['queued_count'], 1)
-
-    def test_job_type_category(self):
-        """Tests successfully calling the job load view filtered by job type category."""
-
-        url = rest_util.get_url('/load/?job_type_category=%s' % self.job_type3.category)
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['running_count'], 1)
-
-    def test_job_type_priority(self):
-        """Tests successfully calling the job load view filtered by job type priority."""
-
-        url = rest_util.get_url('/load/?job_type_priority=%s' % self.job_type1.priority)
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['pending_count'], 1)
 
     def test_max_duration(self):
         """Tests calling the job load view with time values that define a range greater than 31 days"""

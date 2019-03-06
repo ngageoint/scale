@@ -16,7 +16,7 @@ def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=
     """
 
     if not job_type:
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
 
     if not measured:
         measured = timezone.now()

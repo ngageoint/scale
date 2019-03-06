@@ -21,233 +21,12 @@ from data.interface.parameter import FileParameter
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
-from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 from trigger.models import TriggerRule
-
-
-class TestJobTypeManagerEditJobType(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_job_type_v5('name', '1.0', self.job_interface)
-
-        new_valid_interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['application/json'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.new_valid_job_interface = JobInterface(new_valid_interface)
-
-        new_invalid_interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        self.new_invalid_job_interface = JobInterface(new_invalid_interface)
-
-        self.definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type.name,
-                    'version': self.job_type.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }]
-        }
-        self.recipe_def = LegacyRecipeDefinition(self.definition)
-        self.recipe = RecipeType.objects.create_recipe_type_v5('name', '1.0', 'title', 'description', self.recipe_def,
-                                                            None)
-
-    def test_valid_interface(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and a valid interface change
-        is made"""
-
-        # Call test
-        JobType.objects.edit_job_type_v5(self.job_type.id, self.new_valid_job_interface)
-
-        # Check results
-        job_type = JobType.objects.get(pk=self.job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.new_valid_job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 2)
-        # New revision due to interface change
-        num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
-        self.assertEqual(num_of_revs, 2)
-
-    def test_invalid_interface(self):
-        """Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and an invalid interface
-        change is made"""
-
-        # Call test
-        self.assertRaises(OldInvalidDefinition, JobType.objects.edit_job_type_v5, self.job_type.id,
-                          self.new_invalid_job_interface)
-
-        # Check results
-        job_type = JobType.objects.get(pk=self.job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 1)
-        num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
-        self.assertEqual(num_of_revs, 1)
-
-
-class TestJobTypeManagerValidateJobType(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-        interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_job_type_v5('name', '1.0', self.job_interface)
-
-        new_valid_interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['application/json'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.new_valid_job_interface = JobInterface(new_valid_interface)
-
-        new_invalid_interface = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        self.new_invalid_job_interface = JobInterface(new_invalid_interface)
-
-        self.definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type.name,
-                    'version': self.job_type.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }]
-        }
-        self.recipe_def = LegacyRecipeDefinition(self.definition)
-        self.recipe = RecipeType.objects.create_recipe_type_v5('name', '1.0', 'title', 'description', self.recipe_def,
-                                                            None)
-
-    def test_valid_interface(self):
-        """Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and a valid interface
-        change is made"""
-
-        # Call test
-        warnings = JobType.objects.validate_job_type_v5(self.job_type.name, self.job_type.version,
-                                                     self.new_valid_job_interface)
-
-        # Check results
-        job_type = JobType.objects.get(pk=self.job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 1)
-        num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
-        self.assertEqual(num_of_revs, 1)
-        self.assertEqual(len(warnings), 1)
-
-    def test_invalid_interface(self):
-        """Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and an invalid interface
-        change is made"""
-
-        # Call test
-        self.assertRaises(OldInvalidDefinition, JobType.objects.validate_job_type_v5, self.job_type.name,
-                          self.job_type.version, self.new_invalid_job_interface)
-
-        # Check results
-        job_type = JobType.objects.get(pk=self.job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
-        self.assertEqual(job_type.revision_num, 1)
-        num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
-        self.assertEqual(num_of_revs, 1)
 
 
 class TestRecipeManager(TransactionTestCase):
@@ -367,114 +146,29 @@ class TestRecipePopulateJobs(TransactionTestCase):
 
     def setUp(self):
         django.setup()
-
+        # self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
         self.recipe = recipe_test_utils.create_recipe()
-        self.recipe_job1 = recipe_test_utils.create_recipe_job(self.recipe, job_name='job 1')
-        self.recipe_job2 = recipe_test_utils.create_recipe_job(self.recipe, job_name='job 2')
-        self.recipe_job3 = recipe_test_utils.create_recipe_job(self.recipe, job_name='job 3')
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_1 = job_test_utils.create_job(job_type=job_type_1)
+        job_type_2 = job_test_utils.create_seed_job_type()
+        job_2 = job_test_utils.create_job(job_type=job_type_2)
+        job_type_3 = job_test_utils.create_seed_job_type()
+        job_3 = job_test_utils.create_job(job_type=job_type_3)
+
+        self.recipe_node1 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-1', job=job_1)
+        self.recipe_node2 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-2', job=job_2)
+        self.recipe_node3 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-3', job=job_3)
+        RecipeNode.objects.bulk_create([self.recipe_node1, self.recipe_node2, self.recipe_node3])
 
     def test_successful(self):
-        """Tests calling ProductFileManager.populate_source_ancestors() successfully"""
+        """Tests nodes are associated with the recipe successfully?"""
 
-        recipe = Recipe.objects.get_details_v5(self.recipe.id)
-        jobs = list(recipe.jobs)
-        self.assertEqual(len(jobs), 3)
-        self.assertTrue(jobs[0].node_name in ['job 1', 'job 2', 'job 3'])
-        self.assertTrue(jobs[0].node_name in ['job 1', 'job 2', 'job 3'])
-        self.assertTrue(jobs[0].node_name in ['job 1', 'job 2', 'job 3'])
-
-
-class TestRecipeTypeManagerCreateRecipeTypeV5(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
-
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
-
-        self.definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': self.job_type_2.name,
-                    'version': self.job_type_2.version,
-                },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': 'Test Output 1',
-                        'input': 'Test Input 2',
-                    }]
-                }]
-            }]
-        }
-        self.recipe_def = LegacyRecipeDefinition(self.definition)
-        self.recipe_def.validate_job_interfaces()
-
-    def test_successful_v5(self):
-        """Tests calling RecipeTypeManager.create_recipe_type_v5() successfully."""
-
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, None)
-
-        results_recipe_type = RecipeType.objects.get(pk=recipe_type.id)
-        self.assertEqual(results_recipe_type.name, name)
-        self.assertEqual(results_recipe_type.version, version)
-        self.assertEqual(results_recipe_type.title, title)
-        self.assertEqual(results_recipe_type.description, desc)
-        self.assertDictEqual(results_recipe_type.definition, self.definition)
-
-        results_recipe_type_rev = RecipeTypeRevision.objects.get(recipe_type_id=recipe_type.id, revision_num=1)
-        self.assertDictEqual(results_recipe_type_rev.definition, self.definition)
+        jobs = RecipeNode.objects.get_recipe_jobs(self.recipe.id)
+        nodes = jobs.keys()
+        self.assertEqual(len(nodes), 3)
+        self.assertTrue('job-1' in nodes)
+        self.assertTrue('job-2' in nodes)
+        self.assertTrue('job-3' in nodes)
 
 
 class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
@@ -536,343 +230,6 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         invalid_def.add_dependency('node_b', 'node_a')
         self.assertRaises(InvalidDefinition, RecipeType.objects.create_recipe_type_v6, name, title, desc, invalid_def)
 
-
-class TestRecipeTypeManagerEditRecipeTypeV5(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
-
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]}
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
-
-        self.definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': self.job_type_2.name,
-                    'version': self.job_type_2.version,
-                },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': 'Test Output 1',
-                        'input': 'Test Input 2',
-                    }]
-                }]
-            }]
-        }
-        self.recipe_def = LegacyRecipeDefinition(self.definition)
-        self.recipe_def.validate_job_interfaces()
-
-        self.new_definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }]
-        }
-        self.new_recipe_def = LegacyRecipeDefinition(self.new_definition)
-        self.new_recipe_def.validate_job_interfaces()
-
-        self.configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'text/plain'
-            },
-            'data': {
-                'input_data_name': 'Recipe Input',
-                'workspace_name': self.workspace.name
-            }
-        }
-        self.trigger_config = recipe_test_utils.MockTriggerRuleConfiguration(recipe_test_utils.MOCK_TYPE,
-                                                                             self.configuration)
-
-        self.new_configuration = {
-            'version': '1.0',
-            'condition': {
-                'media_type': 'application/json'
-            },
-            'data': {
-                'input_data_name': 'Recipe Input',
-                'workspace_name': self.workspace.name
-            }
-        }
-        self.new_trigger_config = recipe_test_utils.MockTriggerRuleConfiguration(recipe_test_utils.MOCK_TYPE,
-                                                                                 self.new_configuration)
-
-    def test_change_simple_no_trigger(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and no previous trigger rule"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, None)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            new_title = 'New title'
-            new_desc = 'New description'
-            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, new_title, new_desc, None, None, False)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, new_title)
-        self.assertEqual(recipe_type.description, new_desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 1)
-        self.assertIsNone(recipe_type.trigger_rule)
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 1)
-
-    def test_change_simple_with_trigger(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and a previous trigger rule"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                              configuration=self.trigger_config.get_dict())
-        trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            new_title = 'New title'
-            new_desc = 'New description'
-            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, new_title, new_desc, None, None, False)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, new_title)
-        self.assertEqual(recipe_type.description, new_desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 1)
-        self.assertEqual(recipe_type.trigger_rule_id, trigger_rule_id)
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 1)
-
-    def test_change_to_definition(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                              configuration=self.trigger_config.get_dict())
-        trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, self.new_recipe_def, None, False)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, title)
-        self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.new_recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 2)
-        self.assertEqual(recipe_type.trigger_rule_id, trigger_rule_id)
-        trigger_rule = TriggerRule.objects.get(pk=trigger_rule_id)
-        self.assertTrue(trigger_rule.is_active)
-        # New revision due to definition change
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 2)
-
-    def test_change_to_trigger_rule(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to the trigger rule"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                              configuration=self.trigger_config.get_dict())
-        trigger_rule_id = trigger_rule.id
-        new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                                  configuration=self.new_trigger_config.get_dict())
-        new_trigger_rule_id = new_trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, None, new_trigger_rule, False)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, title)
-        self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 1)
-        self.assertEqual(recipe_type.trigger_rule_id, new_trigger_rule_id)
-        trigger_rule = TriggerRule.objects.get(pk=trigger_rule_id)
-        self.assertFalse(trigger_rule.is_active)
-        new_trigger_rule = TriggerRule.objects.get(pk=new_trigger_rule_id)
-        self.assertTrue(new_trigger_rule.is_active)
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 1)
-
-    def test_remove_trigger_rule(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() that removes the trigger rule"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                              configuration=self.trigger_config.get_dict())
-        trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, None, None, True)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, title)
-        self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 1)
-        self.assertIsNone(recipe_type.trigger_rule)
-        trigger_rule = TriggerRule.objects.get(pk=trigger_rule_id)
-        self.assertFalse(trigger_rule.is_active)
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 1)
-
-    def test_change_to_both(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and trigger rule"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                              configuration=self.trigger_config.get_dict())
-        trigger_rule_id = trigger_rule.id
-        new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                                  configuration=self.new_trigger_config.get_dict())
-        new_trigger_rule_id = new_trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v5(recipe_type.id, None, None, self.new_recipe_def, new_trigger_rule,
-                                                False)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, title)
-        self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.new_recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 2)
-        self.assertEqual(recipe_type.trigger_rule_id, new_trigger_rule_id)
-        trigger_rule = TriggerRule.objects.get(pk=trigger_rule_id)
-        self.assertFalse(trigger_rule.is_active)
-        new_trigger_rule = TriggerRule.objects.get(pk=new_trigger_rule_id)
-        self.assertTrue(new_trigger_rule.is_active)
-        # New revision due to definition change
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 2)
-
-    def test_invalid_trigger_rule(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with a new invalid trigger rule"""
-
-        # Create recipe_type
-        name = 'test-recipe'
-        version = '1.0'
-        title = 'Test Recipe'
-        desc = 'Test description'
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
-                                                              configuration=self.trigger_config.get_dict())
-        trigger_rule_id = trigger_rule.id
-        new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_ERROR_TYPE,
-                                                                  configuration=self.new_trigger_config.get_dict())
-        recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, desc, self.recipe_def, trigger_rule)
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
-            # Edit the recipe
-            self.assertRaises(InvalidRecipeConnection, RecipeType.objects.edit_recipe_type_v5, recipe_type.id, None, None,
-                              self.new_recipe_def, new_trigger_rule, False)
-        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
-
-        # Check results
-        self.assertEqual(recipe_type.title, title)
-        self.assertEqual(recipe_type.description, desc)
-        self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.recipe_def.get_dict())
-        self.assertEqual(recipe_type.revision_num, 1)
-        self.assertEqual(recipe_type.trigger_rule_id, trigger_rule_id)
-        trigger_rule = TriggerRule.objects.get(pk=trigger_rule_id)
-        self.assertTrue(trigger_rule.is_active)
-        num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
-        self.assertEqual(num_of_revs, 1)
 
 class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
 
@@ -987,7 +344,7 @@ class TestRecipeTypeSubLinkManager(TransactionTestCase):
         self.rt6 = recipe_test_utils.create_recipe_type_v6()
         self.parents = [self.rt1.id,self.rt1.id,self.rt2.id]
         self.children = [self.rt3.id,self.rt4.id,self.rt5.id]
-        
+
         RecipeTypeSubLink.objects.create_recipe_type_sub_links(self.parents, self.children)
 
     def test_get_recipe_type_ids(self):
@@ -997,7 +354,7 @@ class TestRecipeTypeSubLinkManager(TransactionTestCase):
         self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt4.id]), [self.rt1.id])
         self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt5.id]), [self.rt2.id])
         self.assertItemsEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt6.id]), [])
-        
+
     def test_get_sub_recipe_type_ids(self):
         """Tests calling RecipeTypeSubLinkManager.get_sub_recipe_type_ids()"""
 
@@ -1013,13 +370,13 @@ class TestRecipeTypeJobLinkManager(TransactionTestCase):
         self.rt1 = recipe_test_utils.create_recipe_type_v6()
         self.rt2 = recipe_test_utils.create_recipe_type_v6()
         self.rt3 = recipe_test_utils.create_recipe_type_v6()
-        self.jt3 = job_test_utils.create_job_type()
-        self.jt4 = job_test_utils.create_job_type()
-        self.jt5 = job_test_utils.create_job_type()
-        self.jt6 = job_test_utils.create_job_type()
+        self.jt3 = job_test_utils.create_seed_job_type()
+        self.jt4 = job_test_utils.create_seed_job_type()
+        self.jt5 = job_test_utils.create_seed_job_type()
+        self.jt6 = job_test_utils.create_seed_job_type()
         self.parents = [self.rt1.id,self.rt1.id,self.rt2.id]
         self.children = [self.jt3.id,self.jt4.id,self.jt5.id]
-        
+
         RecipeTypeJobLink.objects.create_recipe_type_job_links(self.parents, self.children)
 
     def test_get_recipe_type_ids(self):
@@ -1029,7 +386,7 @@ class TestRecipeTypeJobLinkManager(TransactionTestCase):
         self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt4.id]), [self.rt1.id])
         self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt5.id]), [self.rt2.id])
         self.assertItemsEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt6.id]), [])
-        
+
     def test_get_job_type_ids(self):
         """Tests calling RecipeTypeJobLinkManager.get_job_type_ids()"""
 

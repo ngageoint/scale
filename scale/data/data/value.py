@@ -9,7 +9,6 @@ from numbers import Number
 from data.data.exceptions import InvalidData
 from data.interface.parameter import FileParameter, JsonParameter
 
-
 class DataValue(object):
     """Represents a data value for an interface parameter
     """

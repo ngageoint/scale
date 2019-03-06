@@ -10,7 +10,6 @@ from django.db import models, transaction
 from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
-from job.data.job_data import JobData
 from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
 from job.models import JobExecution, JobTypeRevision
@@ -20,6 +19,7 @@ from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 from data.data.json import data_v6
+from data.data.data_util import get_file_ids
 from messaging.manager import CommandMessageManager
 from job.messages.process_job_input import create_process_job_input_messages
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
@@ -97,8 +97,7 @@ class JobLoadManager(models.Manager):
             # Save an empty record as a place holder
             JobLoad(measured=measured, pending_count=0, queued_count=0, running_count=0, total_count=0).save()
 
-    def get_job_loads(self, started=None, ended=None, job_type_ids=None, job_type_names=None,job_type_priorities=None,
-                      order=None):
+    def get_job_loads(self, started=None, ended=None, job_type_ids=None, job_type_names=None, order=None):
         """Returns a list of job loads within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -109,8 +108,6 @@ class JobLoadManager(models.Manager):
         :type job_type_ids: list[int]
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: list[str]
-        :param job_type_priorities: Query jobs of the type associated with the priority.
-        :type job_type_priorities: list[int]
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of job loads that match the time range.
@@ -131,8 +128,6 @@ class JobLoadManager(models.Manager):
             job_loads = job_loads.filter(job_type_id__in=job_type_ids)
         if job_type_names:
             job_loads = job_loads.filter(job_type__name__in=job_type_names)
-        if job_type_priorities:
-            job_loads = job_loads.filter(job_type__configuration__priority__in=job_type_priorities)
 
         # Apply sorting
         if order:
@@ -299,7 +294,7 @@ class QueueManager(models.Manager):
         input_files = {}
         input_file_ids = set()
         for job in queued_jobs:
-            input_file_ids.update(job.get_job_data().get_input_file_ids())
+            input_file_ids.update(get_file_ids(job.get_input_data()))
         if input_file_ids:
             for input_file in ScaleFile.objects.get_files_for_queued_jobs(input_file_ids):
                 input_files[input_file.id] = input_file
@@ -314,8 +309,6 @@ class QueueManager(models.Manager):
 
             if priority:
                 queued_priority = priority
-            elif job.priority:
-                queued_priority = job.priority
             elif job.batch and self.batch.get_configuration().priority:
                 queued_priority = self.batch.get_configuration().priority
             else:
@@ -335,7 +328,8 @@ class QueueManager(models.Manager):
             queue.timeout = manifest.get_timeout() if manifest else job.timeout
             queue.interface = job.get_job_interface().get_dict()
             queue.configuration = config.get_dict()
-            queue.resources = job.get_resources().get_json().get_dict()
+            if job.get_resources():
+                queue.resources = job.get_resources().get_json().get_dict()
             queue.queued = when_queued
             queues.append(queue)
 
@@ -363,6 +357,7 @@ class QueueManager(models.Manager):
         """
 
         try:
+            # TODO: this needs to be fixed (get_job_type_rev)
             job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
             with transaction.atomic():
                 job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data,
@@ -481,29 +476,7 @@ class QueueManager(models.Manager):
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param recipe_input: The recipe data to run on, should be None if superseded_recipe is provided
         :type recipe_input: :class:`data.data.data.data`
-        :returns: A handler for the new recipe
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
-
-        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
-        """
-
-        description = {'user': 'Anonymous'}
-        event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
-
-        return self.queue_new_recipe_v6(recipe_type, recipe_input, event, recipe_config=recipe_config)
-
-    def queue_new_recipe_for_user(self, recipe_type, data):
-        """Creates a new recipe for the given type and data at the request of a user.
-
-        The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
-        event model must have already been saved in the database (it must have an ID). All database changes occur in an
-        atomic transaction.
-
-        :param recipe_type: The type of the new recipe to create
-        :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: The recipe data to run on, should be None if superseded_recipe is provided
-        :type data: :class:`recipe.data.recipe_data.RecipeData`
-        :returns: The new recipe
+        :returns: New recipe type
         :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
@@ -512,7 +485,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        return self.queue_new_recipe(recipe_type, data, event)
+        return self.queue_new_recipe_v6(recipe_type, recipe_input, event, recipe_config=recipe_config)
 
 
 class Queue(models.Model):

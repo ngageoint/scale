@@ -4,7 +4,7 @@
 		"pk": null,
 		"fields": {
 			"name": "scale-ingest",
-			"version": "1.0",
+			"version": "1.0.0",
 			"title": "Scale Ingest",
 			"description": "Ingests a source file into a workspace",
 			"is_system": true,
@@ -58,7 +58,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-ingest", "1.0"],
+            "job_type": ["scale-ingest", "1.0.0"],
             "revision_num": 1,
             "manifest": {
 			     "seedVersion": "1.0.0",
@@ -74,7 +74,7 @@
 			         },
     		         "timeout": 3600,
     		         "interface": {
-                         "command": "${scale_ingest -i :Ingest ID} ${-m :Mount}",
+                         "command": "${scale_ingest -i :Ingest_ID} ${-m :Mount}",
                          "inputs": {
                              "json": [
                                  { "name": "Ingest_ID", "type": "integer", "required": true},
@@ -98,7 +98,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-ingest", "1.0"],
+            "job_type": ["scale-ingest", "1.0.0"],
             "revision_num": 2,
             "manifest": {
 			     "seedVersion": "1.0.0",
@@ -114,7 +114,7 @@
 			         },
     		         "timeout": 3600,
     		         "interface": {
-                         "command": "scale_ingest ${-i :Ingest ID}",
+                         "command": "scale_ingest ${-i :Ingest_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "Ingest_ID", "type": "integer", "required": true}
@@ -137,7 +137,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-ingest", "1.0"],
+            "job_type": ["scale-ingest", "1.0.0"],
             "revision_num": 3,
             "manifest": {
 			     "seedVersion": "1.0.0",
@@ -201,7 +201,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_strike ${-i :Strike ID}",
+                         "command": "scale_strike ${-i :Strike_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "Strike_ID", "type": "integer", "required": true}
@@ -246,7 +246,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_strike ${-i :Strike ID}",
+                         "command": "scale_strike ${-i :Strike_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "Strike_ID", "type": "integer", "required": true}
@@ -292,7 +292,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+                         "command": "scale_scan ${-i :Scan_ID} ${-d :Dry Run}",
                          "inputs": {
                             "json": [
                                 {"name": "Scan_ID", "type": "integer", "required": true},
@@ -338,7 +338,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+                         "command": "scale_scan ${-i :Scan_ID} ${-d :Dry_Run}",
                          "inputs": {
                             "json": [
                                 {"name": "Scan_ID", "type": "integer", "required": true},

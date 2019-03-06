@@ -21,7 +21,6 @@ from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
-from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -171,7 +170,7 @@ class IngestManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-ingest', version='1.0')
+        return JobType.objects.get(name='scale-ingest', version='1.0.0')
 
     def get_ingests(self, started=None, ended=None, statuses=None, scan_ids=None, strike_ids=None, file_name=None,
                     order=None):
@@ -323,15 +322,8 @@ class IngestManager(models.Manager):
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 
-            # TODO: What is our way forward with ingest jobs? Move to system task or Seed Job Type?
-            # data = JobData()
-            # data.add_property_input('ingest_id', str(ingest_id))
-            # data.add_property_input('workspace', ingest.workspace.name)
-            # if ingest.new_workspace:
-            #     data.add_property_input('new_workspace', ingest.new_workspace.name)
-
             data = Data()
-            data.add_value(JsonValue('ingest_id', ingest_id))
+            data.add_value(JsonValue('Ingest_ID', ingest_id))
             data.add_value(JsonValue('workspace', ingest.workspace.name))
             if ingest.new_workspace:
                 data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))

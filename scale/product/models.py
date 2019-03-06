@@ -369,44 +369,6 @@ class ProductFileManager(models.GeoManager):
 
         return ScaleFile.objects.all().select_related('workspace').get(pk=product_id, file_type='PRODUCT')
 
-    # TODO: remove when REST API v5 is removed
-    def get_details_v5(self, product_id):
-        """Gets additional details for the given product model based on related model attributes.
-
-        :param product_id: The unique identifier of the product.
-        :type product_id: int
-        :returns: The product with extra related attributes: sources, ancestor/descendant products.
-        :rtype: :class:`storage.models.ScaleFile`
-
-        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
-        """
-
-        # Attempt to fetch the requested product
-        product = ScaleFile.objects.all().select_related('workspace')
-        product = product.get(pk=product_id, file_type='PRODUCT')
-
-        # Attempt to fetch all ancestor files
-        sources = []
-        products = []
-        ancestors = ScaleFile.objects.filter(descendants__descendant_id=product.id)
-        ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
-        ancestors = ancestors.prefetch_related('countries').order_by('created')
-        for ancestor in ancestors:
-            if ancestor.file_type == 'SOURCE':
-                sources.append(ancestor)
-            elif ancestor.file_type == 'PRODUCT':
-                products.append(ancestor)
-        product.sources = sources
-        product.ancestor_products = products
-
-        # Attempt to fetch all descendant products
-        descendants = ScaleFile.objects.filter(ancestors__ancestor_id=product.id)
-        descendants = descendants.select_related('job_type', 'workspace').defer('workspace__json_config')
-        descendants = descendants.prefetch_related('countries').order_by('created')
-        product.descendant_products = descendants
-
-        return product
-
     def populate_source_ancestors(self, products):
         """Populates each of the given products with its source file ancestors in a field called "source_files"
 
@@ -516,6 +478,7 @@ class ProductFileManager(models.GeoManager):
         input_file_uuids = [f['uuid'] for f in input_files]
 
         # Get property names and values as strings
+        #properties = job_exe.job.get_input_data()
         properties = job_exe.job.get_job_data().get_all_properties()
 
         # Product UUID will be based in part on input data (UUIDs of input files and name/value pairs of input

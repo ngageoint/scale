@@ -73,8 +73,8 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def create_job_v6(self, job_type_rev, event_id=None, ingest_event_id=None, input_data=None, root_recipe_id=None, recipe_id=None, batch_id=None,
-                      superseded_job=None, job_config=None):
+    def create_job_v6(self, job_type_rev, event_id=None, ingest_event_id=None, input_data=None, root_recipe_id=None,
+                      recipe_id=None, batch_id=None, superseded_job=None, job_config=None):
         """Creates a new job for the given job type revision and returns the (unsaved) job model
 
         :param job_type_rev: The job type revision (with populated job_type model) of the job to create
@@ -116,11 +116,10 @@ class JobManager(models.Manager):
             job.input = convert_data_to_v6_json(input_data).get_dict()
 
         if job_config:
-            if JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
-                manifest = SeedManifest(job_type_rev.manifest)
-                job_config.validate(manifest)
-                _ = job_config.remove_secret_settings(manifest)
-                job.configuration = convert_config_to_v6_json(job_config).get_dict()
+            manifest = SeedManifest(job_type_rev.manifest)
+            job_config.validate(manifest)
+            _ = job_config.remove_secret_settings(manifest)
+            job.configuration = convert_config_to_v6_json(job_config).get_dict()
 
         if superseded_job:
             root_id = superseded_job.root_superseded_job_id
@@ -288,6 +287,7 @@ class JobManager(models.Manager):
                                 batch_ids=batch_ids, recipe_ids=recipe_ids, error_ids=error_ids,
                                 error_categories=error_categories, is_superseded=is_superseded,
                                 order=order)
+
         jobs = jobs.select_related('job_type', 'job_type_rev', 'event', 'recipe', 'batch', 'node', 'error')
         jobs = jobs.defer('job_type__manifest', 'job_type_rev__job_type', 'job_type_rev__manifest',
                           'recipe__recipe_type', 'recipe__recipe_type_rev', 'recipe__event')
@@ -477,7 +477,7 @@ class JobManager(models.Manager):
         file_ids = set()
         job_file_map = dict()
         for job in jobs:
-            input_file_ids = job.get_job_data().get_input_file_ids()
+            input_file_ids = job.get_input_data() #get_job_data().get_input_file_ids()
             job_file_map[job.id] = input_file_ids
             file_ids.update(input_file_ids)
             job.input_files = []
@@ -1094,7 +1094,7 @@ class Job(models.Model):
 
         return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
 
-    # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
+    # # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
         """Returns the data for this job
 
@@ -1183,8 +1183,10 @@ class Job(models.Model):
         :returns: The job resources dict
         :rtype: dict
         """
+        if self.get_resources():
+            return self.get_resources().get_json().get_dict()
 
-        return self.get_resources().get_json().get_dict()
+        return {}
 
     def get_v6_resources_json(self):
         """Returns the job resources in v6 of the JSON schema
@@ -1380,6 +1382,19 @@ class JobExecutionManager(models.Manager):
         """
 
         return self.select_related('job').get(job_id=job_id, exe_num=F('job__num_exes'))
+
+    def get_logs(self, job_exe_id):
+        """Gets additional details for the given job execution model based on related model attributes.
+
+        :param job_exe_id: The unique identifier of the job execution.
+        :type job_exe_id: int
+        :returns: The job execution with extra related attributes.
+        :rtype: :class:`job.models.JobExecution`
+        """
+        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
+        job_exe = job_exe.get(pk=job_exe_id)
+
+        return job_exe
 
     def get_unfinished_job_exes(self):
         """Returns the job executions for the jobs that are unfinished. Unfinished jobs are jobs where the latest
@@ -2163,54 +2178,6 @@ class JobTypeManager(models.Manager):
 
         return JobType.objects.get(name='scale-clock', version='1.0')
 
-    def get_job_types(self, started=None, ended=None, names=None, categories=None, is_active=True, is_operational=None,
-                      order=None):
-        """Returns a list of job types within the given time range.
-
-        :param started: Query job types updated after this amount of time.
-        :type started: :class:`datetime.datetime`
-        :param ended: Query job types updated before this amount of time.
-        :type ended: :class:`datetime.datetime`
-        :param names: Query jobs of the type associated with the name.
-        :type names: [string]
-        :param categories: Query jobs of the type associated with the category.
-        :type categories: [string]
-        :param is_active: Query job types that are actively available for use.
-        :type is_active: bool
-        :param is_operational: Query job types that are operational or research phase.
-        :type is_operational: bool
-        :param order: A list of fields to control the sort order.
-        :type order: [string]
-        :returns: The list of job types that match the time range.
-        :rtype: [:class:`job.models.JobType`]
-        """
-
-        # Fetch a list of job types
-        job_types = JobType.objects.all()
-
-        # Apply time range filtering
-        if started:
-            job_types = job_types.filter(last_modified__gte=started)
-        if ended:
-            job_types = job_types.filter(last_modified__lte=ended)
-
-        # Apply additional filters
-        if names:
-            job_types = job_types.filter(name__in=names)
-        if categories:
-            job_types = job_types.filter(category__in=categories)
-        if is_active is not None:
-            job_types = job_types.filter(is_active=is_active)
-        if is_operational is not None:
-            job_types = job_types.filter(is_operational=is_operational)
-
-        # Apply sorting
-        if order:
-            job_types = job_types.order_by(*order)
-        else:
-            job_types = job_types.order_by('last_modified')
-        return job_types
-
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
@@ -2221,7 +2188,7 @@ class JobTypeManager(models.Manager):
         :param is_active: Query job types that are actively available for use.
         :type is_active: bool
         :param is_system: Query job types that are system job types.
-        :type is_operational: bool
+        :type is_system: bool
         :param order: A list of fields to control the sort order.
         :type order: list
         :returns: The list of latest version of job types that match the given parameters.
@@ -2373,7 +2340,7 @@ class JobTypeManager(models.Manager):
             results.append(counts)
         return results
 
-    def get_status(self, started, ended=None, is_operational=None):
+    def get_status(self, started, ended=None):
         """Returns a list of job types with counts broken down by job status.
 
         Note that all running job types are counted regardless of date/time filters.
@@ -2382,16 +2349,12 @@ class JobTypeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query job types updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param is_operational: Query job types that are operational or research phase.
-        :type is_operational: bool
         :returns: The list of job types with supplemented statistics.
         :rtype: [:class:`job.models.JobTypeStatus`]
         """
 
         # Build a mapping of all job type identifier -> status model
         job_types = JobType.objects.all().defer('manifest', 'error_mapping').order_by('last_modified')
-        if is_operational is not None:
-            job_types = job_types.filter(is_operational=is_operational)
         status_dict = {job_type.id: JobTypeStatus(job_type, []) for job_type in job_types}
 
         # Build up the filters based on inputs and all running jobs
@@ -2403,8 +2366,6 @@ class JobTypeManager(models.Manager):
 
         # Fetch a count of all jobs grouped by status counts
         count_dicts = Job.objects.values('job_type__id', 'status', 'error__category').filter(count_filters)
-        if is_operational is not None:
-            count_dicts = count_dicts.filter(job_type__is_operational=is_operational)
         count_dicts = count_dicts.annotate(count=models.Count('job_type'),
                                            most_recent=models.Max('last_status_change'))
 
@@ -2577,6 +2538,7 @@ class JobTypeManager(models.Manager):
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
 
+        # TODO: remove this timeout check? - Mike
         if 'timeout' in kwargs:
             timeout = kwargs['timeout']
             if not timeout > 0:
@@ -2622,6 +2584,8 @@ class JobType(models.Model):
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
     :type icon_code: string of a FontAwesome icon code
 
+    :keyword revision_num: The current revision number of the interface, starts at one.
+    :type revision_num: :class:`django.db.models.IntegerField`
     :keyword docker_image: The Docker image containing the code to run for this job (if uses_docker is True)
     :type docker_image: :class:`django.db.models.CharField`
     :keyword manifest: JSON description defining the manifest for running a job of this type (previously interface).
@@ -2638,16 +2602,16 @@ class JobType(models.Model):
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
 
-    :keyword is_operational: Whether this job type is operational (True) or is still in a research & development (R&D)
-        phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
+
+    :keyword trigger_rule: The rule to trigger new jobs of this type - Deprecated remove when remove triggers
+    :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
 
     BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'manifest', 'configuration', 'icon_code',
-        'is_active', 'is_operational', 'is_paused', 'is_published')
+        'is_active', 'is_paused', 'is_published')
 
     UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
-        'last_modified', 'paused')
+        'last_modified', 'paused', 'revision_num')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
@@ -2665,6 +2629,7 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
+    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
@@ -2673,6 +2638,9 @@ class JobType(models.Model):
     deprecated = models.DateTimeField(blank=True, null=True)
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    # deprecated - remove trigger_rule when remove triggers
+    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     objects = JobTypeManager()
 
@@ -2685,7 +2653,7 @@ class JobType(models.Model):
         """
 
         return SeedManifest(self.manifest)
-    # TODO: remove this??? Check it out later - Mike
+
     def get_job_version(self):
         """Gets the Job version either from field or manifest
         :return: the version
@@ -2747,24 +2715,6 @@ class JobType(models.Model):
 
         return version
 
-    def get_category(self):
-        """Returns the category for this job type
-
-        # TODO: Remove in v6 in deference to tag access within the manifest
-        This is merely a placeholder for the short term to minimize changes associate with Seed migration
-
-
-        :returns: The category of job type (or first tag in SeedManifest as of v6)
-        :rtype: str
-        """
-
-        if JobInterfaceSunset.is_seed_dict(self.manifest):
-            tags = self.get_job_interface().get_tags()
-            if tags:
-                return tags[0]
-
-        return self.category
-
     def get_error_mapping(self):
         """Returns the error mapping for this job type
 
@@ -2792,6 +2742,7 @@ class JobType(models.Model):
 
         interface = self.get_job_interface()
         seed_resources = {}
+        resources = None
         # Check all specified resources
         for x in interface.get_scalar_resources():
             name = x['name'].lower()
@@ -2868,14 +2819,9 @@ class JobTypeRevisionManager(models.Manager):
 
         new_rev = JobTypeRevision()
         new_rev.job_type = job_type
+        new_rev.revision_num = job_type.revision_num
         new_rev.manifest = job_type.manifest
         new_rev.docker_image = job_type.docker_image
-
-        revision_num = self.get_latest_job_revision_num(job_type)
-        if revision_num:
-            new_rev.revision_num += revision_num
-        else:
-            new_rev.revision_num = 1
 
         new_rev.save()
 
@@ -2891,20 +2837,6 @@ class JobTypeRevisionManager(models.Manager):
         """
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
-
-    def get_latest_job_revision_num(self, job_type):
-        """Returns the most recent revision number for a given Job Type
-
-        :returns: The latest revision number
-        :rtype: int
-        """
-
-        try:
-            job_type_rev = self.get(job_type=job_type).order_by('-id')[0]
-        except JobTypeRevision.DoesNotExist:
-            return None
-
-        return job_type_rev.revision_num
 
     def get_revision(self, job_type_name, job_type_version, revision_num):
         """Returns the revision (with populated job_type model) for the given job type and revision number
@@ -2970,7 +2902,7 @@ class JobTypeRevisionManager(models.Manager):
         if order:
             job_type_revisions = job_type_revisions.order_by(*order)
         else:
-            job_type_revisions = job_type_revisions.order_by('last_modified')
+            job_type_revisions = job_type_revisions.order_by('created')
 
         return job_type_revisions
 
