@@ -275,6 +275,32 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
                 }
             }
         }
+        definition = {
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
+                },
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
+        }
 
         recipe_definition = RecipeDefinition(definition)
 

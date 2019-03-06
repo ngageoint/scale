@@ -2685,6 +2685,7 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
+    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(default='', max_length=500)
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
@@ -2708,11 +2709,7 @@ class JobType(models.Model):
         """
 
         return SeedManifest(self.manifest)
-<<<<<<< HEAD
 
-=======
-    # TODO: remove this??? Check it out later - Mike
->>>>>>> :fire: Removing v5 job fields
     def get_job_version(self):
         """Gets the Job version either from field or manifest
         :return: the version
@@ -2878,18 +2875,16 @@ class JobTypeRevisionManager(models.Manager):
 
         new_rev = JobTypeRevision()
         new_rev.job_type = job_type
+        new_rev.revision_num = job_type.revision_num
         new_rev.manifest = job_type.manifest
         new_rev.docker_image = job_type.docker_image
 
-<<<<<<< HEAD
-=======
         revision_num = self.get_latest_job_revision_num(job_type)
         if revision_num:
             new_rev.revision_num += revision_num
         else:
             new_rev.revision_num = 1
 
->>>>>>> :fire: Removing v5 job fields
         new_rev.save()
 
     def get_by_natural_key(self, job_type, revision_num):
@@ -2904,20 +2899,6 @@ class JobTypeRevisionManager(models.Manager):
         """
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
-
-    def get_latest_job_revision_num(self, job_type):
-        """Returns the most recent revision number for a given Job Type
-
-        :returns: The latest revision number
-        :rtype: int
-        """
-
-        try:
-            job_type_rev = self.get(job_type=job_type).order_by('-id')[0]
-        except JobTypeRevision.DoesNotExist:
-            return None
-
-        return job_type_rev.revision_num
 
     def get_revision(self, job_type_name, job_type_version, revision_num):
         """Returns the revision (with populated job_type model) for the given job type and revision number

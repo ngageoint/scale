@@ -1199,7 +1199,6 @@ class RecipeTypeManager(models.Manager):
     """Provides additional methods for handling recipe types
     """
 
-
     def create_recipe_type_v6(self, name, title, description, definition):
         """Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.
 
@@ -1242,7 +1241,10 @@ class RecipeTypeManager(models.Manager):
 
         return recipe_type
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> :fire: :fire: :fire: More v5 removal
     def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update):
         """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
         transaction. An argument of None for a field indicates that the field should not change.

@@ -473,7 +473,6 @@ class TestJobDetailsViewV6(TestCase):
 
     api = 'v6'
 
-
     def setUp(self):
         django.setup()
 
@@ -1017,6 +1016,7 @@ class TestJobTypesPostViewV6(TestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
+
         self.assertIsNone(results['manifest']['job']['maintainer'].get('url'))
 
     def test_create_seed_secrets(self):
