@@ -25,7 +25,7 @@ from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV6)
-from job.job_type_serializers import (JobTypeSerializerV6, JobTypeRevisionSerializerV6,
+from job.job_type_serializers import (JobTypeListSerializerV6, JobTypeSerializerV6, JobTypeRevisionSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
                                       JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
                                       JobTypeFailedStatusSerializer, JobTypeStatusSerializer)
@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeSerializerV6
+    serializer_class = JobTypeListSerializerV6
 
     def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
@@ -633,9 +633,8 @@ class JobTypesStatusView(ListAPIView):
         # Get a list of all job type status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
 
-        job_type_statuses = JobType.objects.get_status(started=started, ended=ended, is_operational=is_operational)
+        job_type_statuses = JobType.objects.get_status(started=started, ended=ended)
 
         page = self.paginate_queryset(job_type_statuses)
         serializer = self.get_serializer(page, many=True)
@@ -690,7 +689,6 @@ class JobsView(ListAPIView):
                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
                                        error_categories=error_categories, error_ids=error_ids,
                                        is_superseded=is_superseded, order=order)
-
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
 

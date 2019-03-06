@@ -114,8 +114,6 @@ class TestDatabaseUpdater(TestCase):
         batch_1.recipe_type_rev_id = 1
         batch_1.configuration = {}
         batch_1.save()
-        batch_1.creator_job.status = 'COMPLETED'
-        batch_1.creator_job.save()
         batch_2 = batch_test_utils.create_batch()
 
         recipe_type = recipe_test_utils.create_recipe_type_v6()

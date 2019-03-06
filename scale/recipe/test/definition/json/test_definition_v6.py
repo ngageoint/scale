@@ -105,7 +105,7 @@ class TestRecipeDefinitionV6(TestCase):
                         'input_b': {'type': 'dependency', 'node': 'node_b', 'output': 'output_a'}
                     },
                     'node_type': {
-                        'node_type': 'condition', 
+                        'node_type': 'condition',
                         'interface': {'files': [{'name': 'input_b', 'media_types': ['image/tiff'], 'required': True, 'multiple': True}],
                                        'json': []},
                         'data_filter': {'filters': [{'name': 'input_b', 'type': 'media-type', 'condition': '==', 'values': ['image/tiff']}]}
@@ -172,15 +172,15 @@ class TestRecipeDefinitionV6(TestCase):
                                             'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
                                                       'input_b': {'type': 'dependency', 'node': 'node_b',
                                                                   'output': 'output_a'}},
-                                            'node_type': {'node_type': 'condition', 
-                                                                       'interface': {'files': [{'name': 'input_b', 
-                                                                                                'media_types': ['image/tiff'], 
-                                                                                                'required': True, 
+                                            'node_type': {'node_type': 'condition',
+                                                                       'interface': {'files': [{'name': 'input_b',
+                                                                                                'media_types': ['image/tiff'],
+                                                                                                'required': True,
                                                                                                 'multiple': True}],
                                                                                      'json': []},
-                                                                       'data_filter': {'filters': [{'name': 'output_a', 
-                                                                                                    'type': 'media-type', 
-                                                                                                    'condition': '==', 
+                                                                       'data_filter': {'filters': [{'name': 'output_a',
+                                                                                                    'type': 'media-type',
+                                                                                                    'condition': '==',
                                                                                                     'values': ['image/tiff']}]}}},
                                  'node_d': {'dependencies': [{'name': 'node_c'}],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
@@ -188,33 +188,8 @@ class TestRecipeDefinitionV6(TestCase):
                                                                   'output': 'output_a'}},
                                             'node_type': {'node_type': 'recipe', 'recipe_type_name': 'recipe-type-1',
                                                           'recipe_type_revision': 5}}}}
-        RecipeDefinitionV6(definition=def_v6_dict, do_validate=True)
 
-        # Conversion from v1 definition
-        job_test_utils.create_job_type(name='job-type-1', version='1.0')
-        job_test_utils.create_job_type(name='job-type-2', version='2.0')
-        def_v6_dict = {'version': '6',
-                       'input': {'files': [{'name': 'foo', 'media_types': ['image/tiff'], 'required': True,
-                                            'multiple': True}],
-                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
-                       'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'}},
-                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-1',
-                                                          'job_type_version': '1.0', 'job_type_revision': 1}},
-                                 'node_b': {'dependencies': [{'name': 'node_a'}],
-                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'},
-                                                      'input_b': {'type': 'dependency', 'node': 'node_a',
-                                                                  'output': 'output_a'}},
-                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-2',
-                                                          'job_type_version': '2.0', 'job_type_revision': 1}}}}
-        def_v1_dict = {'version': '1.0',
-                       'input_data': [{'name': 'foo', 'media_types': ['image/tiff'], 'type': 'files'},
-                                      {'name': 'bar', 'type': 'property', 'required': False}],
-                       'jobs': [{'name': 'node_a', 'job_type': {'name': 'job-type-1', 'version': '1.0'},
-                                 'recipe_inputs': [{'recipe_input': 'foo', 'job_input': 'input_a'}]},
-                                {'name': 'node_b', 'job_type': {'name': 'job-type-2', 'version': '2.0'},
-                                 'recipe_inputs': [{'recipe_input': 'foo', 'job_input': 'input_a'}],
-                                 'dependencies': [{'name': 'node_a',
-                                                   'connections': [{'output': 'output_a', 'input': 'input_b'}]}]}]}
-        def_v6_json = RecipeDefinitionV6(definition=def_v1_dict, do_validate=True)
-        self.assertDictEqual(def_v6_json.get_dict(), def_v6_dict)
+        try:
+            RecipeDefinitionV6(definition=def_v6_dict, do_validate=True)
+        except InvalidDefinition:
+            self.fail('Recipe definition failed validation unexpectedly')

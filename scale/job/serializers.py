@@ -118,6 +118,7 @@ class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
     configuration = serializers.JSONField(default=dict)
     output = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
+
 class JobDetailsSerializerV6(JobSerializerV6):
     """Converts job model and related fields to REST output."""
     job_type_rev = JobTypeRevisionDetailsSerializerV6()

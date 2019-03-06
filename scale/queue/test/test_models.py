@@ -10,7 +10,6 @@ from mock import patch
 
 import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
-import product.test.utils as product_test_utils
 import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
@@ -18,18 +17,22 @@ import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
 from data.data.data import Data
-from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.value import FileValue
+from data.data.json.data_v6 import DataV6
 from job.configuration.data.job_data import JobData
-
 from job.data.job_data import JobData as JobDataV6
-from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
+<<<<<<< HEAD
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode
 from data.data.json.data_v6 import DataV6
+=======
+from recipe.definition.definition import RecipeDefinition
+from recipe.models import Recipe
+>>>>>>> :fire: :fire: :fire: More v5 removal
 
 
 class TestJobLoadManager(TestCase):
@@ -156,49 +159,9 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-    def test_successful_legacy(self):
-        """Tests calling QueueManager.queue_new_job() successfully with a legacy job type"""
-
-        workspace = storage_test_utils.create_workspace()
-        source_file = source_test_utils.create_source(workspace=workspace)
-        event = trigger_test_utils.create_trigger_event()
-
-        interface = {
-            'version': '1.0',
-            'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'input_a',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]
-        }
-        job_type = job_test_utils.create_seed_job_type(interface=interface)
-
-        data_dict = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_a',
-                'file_id': source_file.id,
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'workspace_id': workspace.id
-            }]
-        }
-        data = JobData(data_dict)
-
-        job = Queue.objects.queue_new_job_v6(job_type, data, event)
-        self.assertEqual(job.status, 'QUEUED')
-
     @patch('queue.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
-        """Tests calling QueueManager.queue_new_job() successfully with a Seed job type"""
+        """Tests calling QueueManager.queue_new_job_v6() successfully with a Seed job type"""
 
         workspace = storage_test_utils.create_workspace()
         source_file = source_test_utils.create_source(workspace=workspace)
@@ -259,39 +222,42 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.event = trigger_test_utils.create_trigger_event()
 
         interface_1 = {
-            'version': '1.0',
             'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]
+            'inputs': {
+                'files': [{
+                    'name': 'Test_Input_1',
+                    'mediaTypes': ['text/plain'],
+                }]
+            },
+            'outputs': {
+                'files': [{
+                    'name': 'Test_Output_1',
+                    'pattern': 'outfile*.png',
+                    'mediaType': 'image/png',
+                }]
+            }
         }
-        self.job_type_1 = job_test_utils.create_seed_job_type()
+        self.job_type_1 = job_test_utils.create_seed_job_type(interface=interface_1)
 
         interface_2 = {
-            'version': '1.0',
             'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]
+            'inputs': {
+                'files': [{
+                    'name': 'Test_Input_2',
+                    'mediaTypes': ['image/png', 'image/tiff'],
+                }]
+            },
+            'outputs': {
+                'files': [{
+                    'name': 'Test_Output_2',
+                    'pattern': 'outfile*.png',
+                    'mediaType': 'image/png'
+                }]
+            }
         }
-        self.job_type_2 = job_test_utils.create_seed_job_type()
+        self.job_type_2 = job_test_utils.create_seed_job_type(interface=interface_2)
 
-        definition = {
+        old_definition = {
             'version': '1.0',
             'input_data': [{
                 'name': 'Recipe Input',
@@ -306,7 +272,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
                 },
                 'recipe_inputs': [{
                     'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
+                    'job_input': 'Test_Input_1',
                 }]
             }, {
                 'name': 'Job 2',
@@ -317,27 +283,60 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
                 'dependencies': [{
                     'name': 'Job 1',
                     'connections': [{
-                        'output': 'Test Output 1',
-                        'input': 'Test Input 2',
+                        'output': 'Test_Output_1',
+                        'input': 'Test_Input_2',
                     }]
                 }]
             }]
         }
+        definition = {
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
+                },
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
+        }
 
         recipe_definition = RecipeDefinition(definition)
-        recipe_definition.validate_job_interfaces()
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
-        data = {
+        workspace = storage_test_utils.create_workspace()
+        strike_source_file = source_test_utils.create_source(workspace=workspace)
+        scan_source_file = source_test_utils.create_source(workspace=workspace)
+
+        recipetype1 = recipe_test_utils.create_recipe_type_v6()
+        data_dict = {
             'version': '1.0',
             'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': source_file.id,
+                'name': 'INPUT_IMAGE',
+                'file_id': strike_source_file.id,
             }],
-            'workspace_id': workspace.id,
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
         }
-        self.data = LegacyRecipeData(data)
+        self.data = JobDataV6(data_dict)
 
     @patch('queue.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
@@ -346,25 +345,15 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         event = trigger_test_utils.create_trigger_event()
         recipetype1 = recipe_test_utils.create_recipe_type_v6()
 
-        data_dict = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_a',
-                'file_id': source_file.id,
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'workspace_id': workspace.id
-            }]
-        }
-        data = JobDataV6(data_dict)
+        data = Data()
+        data.add_value(FileValue('input_a', [123]))
 
         config_dict = {'version': '6',
                        'output_workspaces': {'default': workspace.name},
                        'priority': 999}
         config = RecipeConfigurationV6(config_dict).get_configuration()
 
-        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event, recipe_config=config)
+        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event, recipe_config=config)
 
         self.assertDictEqual(created_recipe.configuration, config_dict)
 
@@ -414,23 +403,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event, recipe_config=config)
 
         self.assertDictEqual(created_scan_recipe.configuration, config_dict)
-
-    def test_successful_legacy(self):
-        """Tests calling QueueManager.queue_new_recipe() successfully."""
-
-        recipe = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
-
-        # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 1')
-        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
-        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
-
-        recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 2')
-        self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
-        self.assertEqual(recipe_job_2.job.status, 'PENDING')
-
-        recipe = Recipe.objects.get(pk=recipe.id)
-        self.assertIsNone(recipe.completed)
 
     def test_successful_priority(self):
         """Tests calling QueueManager.queue_new_recipe() successfully with an override priority."""

@@ -9,6 +9,7 @@ from django.utils.timezone import now
 from mock import patch, MagicMock
 
 from batch.test import utils as batch_test_utils
+from data.data.data import Data
 from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
@@ -57,7 +58,10 @@ class TestQueuedExecutionConfigurator(TestCase):
         expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
-        job_type = job_test_utils.create_job_type(interface=interface_dict)
+
+        manifest = job_test_utils.create_seed_manifest(command='command ${-a :input_1} ${-b :input_2} ${input_3} ${input_4} ${job_output_dir}',
+                    inputs_files=inputs, outputs_files=outputs)
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest) # interface=interface_dict)
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
 
@@ -143,10 +147,11 @@ class TestQueuedExecutionConfigurator(TestCase):
         file_2 = storage_test_utils.create_file()
         file_3 = storage_test_utils.create_file()
         input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
-        interface_dict = {'version': '1.4', 'command': 'foo',
-                          'command_arguments': '${input_1} ${job_output_dir}',
-                          'input_data': [{'name': 'input_1', 'type': 'files'}],
-                          'output_data': [{'name': 'output_1', 'type': 'file'}]}
+        manifest_inputs = [{'name': 'input_1'}]
+        manifest_outputs = [{'name': 'output_1', 'mediaType': 'image/png', 'multiple': True, 'pattern': 'outfile*.png'}]
+        manifest = job_test_utils.create_seed_manifest(jobVersion='1.4', command='foo', input_files=manifest_inputs,
+                                                       outputs_files=manifest_outputs)
+
         data_dict = {
             'input_data': [{
                 'name': 'input_1', 'file_ids': [file_1.id, file_2.id, file_3.id]
@@ -160,7 +165,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         expected_env_vars = {'INPUT_1': input_1_val}
 
         expected_output_workspaces = {'output_1': workspace.name}
-        job_type = job_test_utils.create_job_type(interface=interface_dict)
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
 
@@ -303,14 +308,14 @@ class TestQueuedExecutionConfigurator(TestCase):
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         ingest_rev_2 = JobTypeRevision.objects.get(job_type=ingest_job_type, revision_num=2)
         data = JobData()
-        data.add_property_input('Ingest ID', str(ingest.id))
+        data.add_property_input('Ingest_ID', str(ingest.id))
         ingest.job.job_type_rev = ingest_rev_2  # Job has old revision (2nd) of ingest job type
         ingest.job.input = data.get_dict()
         ingest.job.status = 'QUEUED'
         ingest.job.save()
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
-        expected_env_vars = {'INGEST ID': str(ingest.id)}
+        expected_env_vars = {'INGEST_ID': str(ingest.id)}
         expected_workspaces = {workspace_1.name: {'mode': 'rw'}, workspace_2.name: {'mode': 'rw'}}
         expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
                                                         'env_vars': expected_env_vars,
@@ -563,13 +568,11 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         framework_id = '1234'
         node = node_test_utils.create_node()
-        interface_dict = {'version': '1.4', 'command': 'foo', 'command_arguments': '', 'env_vars': [], 'settings': [],
-                          'input_data': [], 'output_data': []}
         data_dict = {'input_data': [], 'output_data': []}
-        job_type = job_test_utils.create_job_type(interface=interface_dict)
+        job_type = job_test_utils.create_seed_job_type()
         from queue.job_exe import QueuedJobExecution
         from queue.models import Queue
-        job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
+        job = Queue.objects.queue_new_job_v6(job_type, Data(), trigger_test_utils.create_trigger_event())
         resources = job.get_resources()
         # Get job info off of the queue
         queue = Queue.objects.get(job_id=job.id)
@@ -660,7 +663,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         recipe_data_dict = {'version': '1.0', 'input_data': [{'name': 'input_1', 'value': 'my_val'}, {'name': 'input_files', 'file_id': file_1.id }], 'workspace_id': input_workspace.id}
         job_type_config_dict = {'version': '2.0', 'settings': {'s_1': 's_1_value'},
                                 'mounts': {'m_1': {'type': 'host', 'host_path': '/m_1/host_path'}}}
-        job_type = job_test_utils.create_job_type(interface=interface_dict, configuration=job_type_config_dict)
+        job_type = job_test_utils.create_seed_job_type(manifest=interface_dict, configuration=job_type_config_dict)
         from queue.job_exe import QueuedJobExecution
         from queue.models import Queue
         job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
@@ -707,7 +710,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
 
         expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
-        
+
         input_metadata = {}
         input_metadata['JOB'] = {'input_1': 'my_val'}
         from storage.models import ScaleFile
@@ -789,7 +792,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
                                                {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                            (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)},
-                                               {'flag': 'env', 
+                                               {'flag': 'env',
                                                 'value': 'INPUT_METADATA=%s' % unicode(expected_input_metadata)}
                                                ]}
         expected_pst_task = {'task_id': '%s_post' % job_exe_model.get_cluster_id(), 'type': 'post',
@@ -846,7 +849,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 'value': '/w_1/host/path:%s:rw' % input_wksp_vol_path},
                                                {'flag': 'volume',
                                                 'value': '/w_2/host/path:%s:rw' % output_wksp_vol_path},
-                                               {'flag': 'env', 
+                                               {'flag': 'env',
                                                 'value': 'INPUT_METADATA=%s' % unicode(expected_input_metadata)}
                                                ]}
         expected_main_task = {'task_id': '%s_main' % job_exe_model.get_cluster_id(), 'type': 'main',
@@ -941,15 +944,14 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         framework_id = '1234'
         node = node_test_utils.create_node()
-        interface_dict = {'version': '1.4', 'command': 'foo',
-                          'command_arguments': '',
+        interface_dict = {'command': 'foo',
                           'env_vars': [{'name': 'my_special_env', 'value': '${s_2}'}],
                           'settings': [{'name': 's_1', 'secret': True}, {'name': 's_2', 'secret': True},
                                        {'name': 's_3'}],
                           'input_data': [], 'output_data': []}
         data_dict = {'input_data': [], 'output_data': []}
         job_type_config_dict = {'version': '2.0', 'settings': {'s_3': 's_3_value'}}
-        job_type = job_test_utils.create_job_type(interface=interface_dict, configuration=job_type_config_dict)
+        job_type = job_test_utils.create_seed_job_type(manifest=interface_dict, configuration=job_type_config_dict)
         from queue.job_exe import QueuedJobExecution
         from queue.models import Queue
         job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
@@ -1071,12 +1073,12 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         framework_id = '1234'
         node = node_test_utils.create_node()
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_type.shared_mem_required = 1024.0
         job_type.save()
         from queue.job_exe import QueuedJobExecution
         from queue.models import Queue
-        job = Queue.objects.queue_new_job(job_type, JobData({}), trigger_test_utils.create_trigger_event())
+        job = Queue.objects.queue_new_job_v6(job_type, Data(), trigger_test_utils.create_trigger_event())
         # Get job info off of the queue
         queue = Queue.objects.get(job_id=job.id)
         queued_job_exe = QueuedJobExecution(queue)

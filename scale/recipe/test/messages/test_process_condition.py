@@ -28,17 +28,17 @@ class TestProcessCondition(TestCase):
         """Tests converting a ProcessCondition message to and from JSON"""
 
         definition = RecipeDefinition(Interface())
-        
+
         cond_interface_1 = Interface()
         cond_interface_1.add_parameter(JsonParameter('cond_int', 'integer'))
         df1 = DataFilter(filter_list=[{'name': 'cond_int', 'type': 'integer', 'condition': '==', 'values': [0]}])
         definition = RecipeDefinition(cond_interface_1)
         definition.add_condition_node('node_a', cond_interface_1, df1)
         definition.add_recipe_input_connection('node_a', 'cond_int', 'cond_int')
-        
+
         definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
-        
+
         data_1 = Data()
         data_1.add_value(JsonValue('cond_int', 0))
         data_1_dict = convert_data_to_v6_json(data_1).get_dict()
@@ -93,7 +93,7 @@ class TestProcessCondition(TestCase):
                 }
             }
         }
-        job_type_1 = job_test_utils.create_job_type(interface=manifest_1)
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
         manifest_2 = {
             'seedVersion': '1.0.0',
             'job': {
@@ -116,7 +116,7 @@ class TestProcessCondition(TestCase):
                 }
             }
         }
-        job_type_2 = job_test_utils.create_job_type(interface=manifest_2)
+        job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
         output_1_dict = {
             'version': '1.0',
             'output_data': [{
