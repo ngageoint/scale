@@ -4,47 +4,14 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from data.data.json.data_v6 import DATA_SCHEMA
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMemberDefinition, InvalidDataSetFileDefinition
 from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
 
 SCHEMA_VERSION = '6'
-DATASET_DEFINITION_SCHEMA = {
-    'type': 'object',
-    'required': ['version', 'parameters'],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'The version of the dataset definition schema',
-            'type': 'string',
-        },
-        'global_parameters': {
-            'description': 'Each global parameter of the dataset. The names should be unique and not collide with any regular parameter names.',
-            'type': 'array',
-            'items': {
-                'type': 'object',
-                'description': 'A global dataset parameter',
-                'required': ['name', 'input'],
-                'additionalProperties': False,
-                'properties': {
-                    'name': {
-                        'description': 'The name of the parameter',
-                        'type': 'string',
-                    },
-                    'input': INTERFACE_SCHEMA,
-                },
-            },
-        },
-        'parameters': {
-            'description': 'Name of the parameters of the dataset. A dataset will have n members of each parameter. The names should be unique and not collide with any global parameter names.',
-            'type': 'array',
-            'items': {
-                    'type': 'string',
-            },
-        },
-    },
-}
 
+# TODO: Delete dataset memeber schema?  A dataset member should really just be a data object with appropriate values for each parameter in the dataset.
 DATASET_MEMBER_SCHEMA = {
     'type': 'object',
     'required': ['version', 'name', 'input'],
@@ -59,6 +26,26 @@ DATASET_MEMBER_SCHEMA = {
             'type': 'string',
         },
         'input': INTERFACE_SCHEMA,
+    },
+}
+
+DATASET_DEFINITION_SCHEMA = {
+    'type': 'object',
+    'required': ['version', 'parameters'],
+    'additionalProperties': False,
+    'properties': {
+        'version': {
+            'description': 'The version of the dataset definition schema',
+            'type': 'string',
+        },
+        'global_parameters': INTERFACE_SCHEMA,
+        'global_data': DATA_SCHEMA,
+        'parameters': INTERFACE_SCHEMA,
+        'data': {
+            'description': 'Bundles of data matching the dataset parameters',
+            'type': 'array',
+            'items': DATA_SCHEMA,
+        },
     },
 }
 
@@ -155,7 +142,7 @@ class DataSetDefinitionV6(object):
 
         names.extend(self._definition['parameters'])
         
-        names += [global_param['name'] for global_param in self._definition['global_parameters']
+        names += [global_param['name'] for global_param in self._definition['global_parameters']]
 
         if len(names) != len(set(names)):
             raise InvalidDataSetDefinition('NAME_COLLISION_ERROR','Parameter names must be unique.' )

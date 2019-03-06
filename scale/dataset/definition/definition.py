@@ -24,11 +24,14 @@ class DataSetDefinition(object):
         self._definition = definition
         self.param_names = set()
         self.parameters = {}
+        self.global_parameters = {}
 
         if 'parameters' in self._definition:
             for param in self._definition['parameters']:
                 # param = self._definition['parameters'][param_name]
                 self.add_parameter(Parameter(param['name'], param['param_type']))
+            for param in self._definition['parameters']:
+                self.add_global_parameter(Parameter(param['name'], param['param_type']))
 
     def get_dict(self):
         """Returns the internal dictionary that represents this datasets definition
@@ -52,13 +55,30 @@ class DataSetDefinition(object):
             self.param_names.add(parameter.name)
             self.parameters[parameter.name] = parameter
 
+    def add_global_parameter(self, parameter):
+        """Adds a new global parameter to the dataset definition
+
+        :keyword parameter: Parameter to add
+        :type parameter:
+        """
+        if parameter.name in self.param_names:
+            raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
+                'Invalid dataset definition: %s cannot be defined more than once' % parameter.name)
+        else:
+            self.param_names.add(parameter.name)
+            self.global_parameters[parameter.name] = parameter
+
     def get_parameter(self, parameter_name):
         """Retrieves the specified parameter from the dataset definition
 
-        :returns: The specified parametr of the dataset definition
+        :returns: The specified parameter of the dataset definition
         :rtype: :class:`data.interface.parameter.Parameter`
         """
-        self.parameters[parameter_name]
+        if parameter_name in self.parameters:
+            return self.parameters[parameter_name]
+        if parameter_name in self.global_parameters:
+            return self.global_parameters[parameter_name]
+        return None
 
     def validate(self):
         """Validates the dataset definition
