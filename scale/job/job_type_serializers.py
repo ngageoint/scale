@@ -102,7 +102,6 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
 class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     """Converts job type model fields to REST output for legacy job types."""
     from error.serializers import ErrorSerializerV5
-    from trigger.serializers import TriggerRuleDetailsSerializer
 
     interface = serializers.JSONField(default=dict, source='manifest')
 
@@ -110,7 +109,6 @@ class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     custom_resources = serializers.JSONField(source='convert_custom_resources')
     error_mapping = serializers.JSONField(default=dict)
     errors = ErrorSerializerV5(many=True)
-    trigger_rule = TriggerRuleDetailsSerializer()
 
     job_counts_6h = JobTypeStatusCountsSerializer(many=True)
     job_counts_12h = JobTypeStatusCountsSerializer(many=True)

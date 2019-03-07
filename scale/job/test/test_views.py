@@ -2186,11 +2186,7 @@ class TestJobTypesPostViewV6(TestCase):
                 'workspace_name': self.workspace.name,
             }
         }
-        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                                   configuration=self.trigger_config)
-
-        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest,
-                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
         self.error = error_test_utils.create_error(category='ALGORITHM')
@@ -2202,7 +2198,7 @@ class TestJobTypesPostViewV6(TestCase):
         }
         self.old_job_type = job_test_utils.create_job_type(name='old-job-type', version='1.0.0',
                                                        interface=self.interface, error_mapping=self.error_mapping,
-                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       max_scheduled=2,
                                                        configuration=self.configuration)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
@@ -2659,11 +2655,8 @@ class TestJobTypeDetailsViewV5(TestCase):
                 'workspace_name': self.workspace.name,
             }
         }
-        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                                   configuration=self.trigger_config)
-
         self.job_type = job_test_utils.create_job_type(interface=self.interface, error_mapping=self.error_mapping,
-                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       max_scheduled=2,
                                                        configuration=self.configuration)
 
         self.seed_job_type = job_test_utils.create_seed_job_type()
@@ -2728,7 +2721,7 @@ class TestJobTypeDetailsViewV5(TestCase):
         }]
 
         new_job_type = job_test_utils.create_job_type(interface=interface, error_mapping=self.error_mapping,
-                                                      trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                      max_scheduled=2,
                                                       configuration=configuration)
 
         url = '/%s/job-types/%d/' % (self.api, new_job_type.id)
@@ -2772,7 +2765,7 @@ class TestJobTypeDetailsViewV5(TestCase):
         interface['mounts'] = []
 
         new_job_type = job_test_utils.create_job_type(interface=interface, error_mapping=self.error_mapping,
-                                                      trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                      max_scheduled=2,
                                                       configuration=configuration)
 
         url = '/%s/job-types/%d/' % (self.api, new_job_type.id)
@@ -2926,7 +2919,6 @@ class TestJobTypeDetailsViewV5(TestCase):
         self.assertEqual(result['revision_num'], 1)
         self.assertEqual(result['custom_resources']['resources']['foo'], 10.0)
 
-    # trigger rules are ignored in Scale v6, so no need to check them
     def test_edit_interface_and_trigger_rule(self):
         """Tests editing the job type interface and trigger rule together"""
         interface = self.interface.copy()
@@ -3103,11 +3095,8 @@ class TestJobTypeDetailsViewV5(TestCase):
                 'workspace_name': workspace.name,
             }
         }
-        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                              configuration=trigger_config)
-
         job_type = job_test_utils.create_seed_job_type(manifest=manifest,
-                                                       trigger_rule=trigger_rule, max_scheduled=2,
+                                                       max_scheduled=2,
                                                        configuration=configuration)
 
         url = '/%s/job-types/%d/' % (self.api, job_type.id)
@@ -3162,11 +3151,7 @@ class TestJobTypeDetailsViewV6(TestCase):
                 'workspace_name': self.workspace.name,
             }
         }
-        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                                   configuration=self.trigger_config)
-
-        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest,
-                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
         self.old_job_type = job_test_utils.create_job_type()
@@ -3294,11 +3279,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
                 'workspace_name': self.workspace.name,
             }
         }
-        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                                   configuration=self.trigger_config)
-
-        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest,
-                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
         manifest2 = copy.deepcopy(self.manifest)

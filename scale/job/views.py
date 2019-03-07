@@ -16,7 +16,6 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-import trigger.handler as trigger_handler
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from job.configuration.data.exceptions import InvalidConnection
@@ -49,7 +48,6 @@ from queue.models import Queue
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
-from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType, InvalidTriggerMissingConfiguration
 import util.rest as rest_util
 from util.rest import BadParameter
 from vault.exceptions import InvalidSecretsConfiguration
@@ -202,9 +200,6 @@ class JobTypesView(ListCreateAPIView):
                 custom_resources = Resources(resources_dict)
         except InvalidResources as ex:
             raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
-
-        # trigger rules are ignored in Scale v6, so no need to check them
-        # Check for optional trigger rule parameters
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
@@ -517,9 +512,6 @@ class JobTypeIDDetailsView(GenericAPIView):
                 custom_resources = Resources(resources_dict)
         except InvalidResources as ex:
             raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
-
-        # trigger rules are ignored in Scale v6, so no need to check them
-        # Check for optional trigger rule parameters
 
         # Fetch the current job type model
         try:
@@ -900,14 +892,11 @@ class JobTypesValidationView(APIView):
         except InvalidResources as ex:
             raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
 
-        # trigger rules are ignored in Scale v6, so no need to check them
-        # Check for optional trigger rule parameters
-
         # Validate the job type
         try:
             warnings = JobType.objects.validate_job_type_v5(name=name, version=version, interface=interface,
                                                             error_mapping=error_mapping, configuration=configuration)
-        except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerRule) as ex:
+        except (InvalidInterfaceDefinition, InvalidDefinition) as ex:
             logger.exception('Unable to validate new job type: %s', name)
             raise BadParameter(unicode(ex))
 

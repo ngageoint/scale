@@ -39,14 +39,11 @@ from job.execution.tasks.json.results.task_results import TaskResults
 from job.seed.manifest import SeedManifest
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.results.job_results import JobResults
-from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from messaging.manager import CommandMessageManager
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
-from trigger.configuration.exceptions import InvalidTriggerType
-from trigger.models import TriggerRule
 from util import rest as rest_utils
 from util.exceptions import RollbackTransaction
 from util.validation import ValidationWarning
@@ -74,7 +71,7 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When editing a job/recipe type: RecipeType, JobType, TriggerRule
+# When editing a job/recipe type: RecipeType, JobType
 
 JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
 JobTypeKey = namedtuple('JobTypeKey', ['name', 'version'])
@@ -2613,10 +2610,6 @@ class JobTypeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
-        type for creating jobs
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
-        invalid
         :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
         type interface is invalid
         """
@@ -2626,20 +2619,12 @@ class JobTypeManager(models.Manager):
                 raise Exception('%s is not an editable field' % field_name)
         self._validate_job_type_fields(**kwargs)
 
-        # Validate the trigger rule
-        if trigger_rule:
-            trigger_config = trigger_rule.get_configuration()
-            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
-                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
-            trigger_config.validate_trigger_for_job(interface)
-
         # Create the new job type
         job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
         job_type.version_array = job_type.get_job_version_array(version)
         job_type.manifest = interface.get_dict()
-        job_type.trigger_rule = trigger_rule
         if configuration:
             configuration.validate(job_type.manifest)
             job_type.configuration = configuration.get_dict()
@@ -2780,10 +2765,6 @@ class JobTypeManager(models.Manager):
         :type secrets: dict
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
-        type for creating jobs
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
-        invalid
         :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
         type interface is invalid
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface change
@@ -2807,7 +2788,7 @@ class JobTypeManager(models.Manager):
             for field_name in kwargs:
                 if field_name not in v6_fields:
                     raise InvalidJobField('Invalid field: %s \n Only the following fields are editable for seed job types: %s ' % (field_name, v6_fields))
-            if interface or trigger_rule or remove_trigger_rule or error_mapping or custom_resources or secrets:
+            if interface or error_mapping or custom_resources or secrets:
                 raise InvalidJobField('Only the following fields are editable for seed job types: %s ' % v6_fields)
 
         recipe_types = []
@@ -2828,20 +2809,6 @@ class JobTypeManager(models.Manager):
         if configuration:
             configuration.validate(job_type.manifest)
             job_type.configuration = configuration.get_dict()
-
-        if trigger_rule or remove_trigger_rule:
-            if job_type.trigger_rule:
-                # Archive old trigger rule since we are changing to a new one
-                TriggerRule.objects.archive_trigger_rule(job_type.trigger_rule_id)
-            job_type.trigger_rule = trigger_rule
-
-        # Validate updated trigger rule against updated interface
-        if job_type.trigger_rule:
-            trigger_config = job_type.trigger_rule.get_configuration()
-            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
-                msg = '%s is an invalid trigger rule type for creating jobs'
-                raise InvalidTriggerType(msg % job_type.trigger_rule.type)
-            trigger_config.validate_trigger_for_job(job_type.get_job_interface())
 
         if error_mapping:
             error_mapping.validate_legacy()
@@ -3059,7 +3026,7 @@ class JobTypeManager(models.Manager):
             job_types = job_types.filter(is_active=is_active)
         if is_system is not None:
             job_types = job_types.filter(is_system=is_system)
-        
+
         # Apply sorting
         if order:
             job_types = job_types.order_by(*order)
@@ -3194,7 +3161,7 @@ class JobTypeManager(models.Manager):
         """
 
         # Attempt to get the job type
-        job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
+        job_type = JobType.objects.get(pk=job_type_id)
 
         # Add associated error information
         error_names = job_type.get_error_mapping().get_error_names_legacy()
@@ -3446,24 +3413,11 @@ class JobTypeManager(models.Manager):
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
-            type for creating jobs
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration
-            is invalid
-        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
-            type interface is invalid
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface invalidates any
             existing recipe type definitions
         """
 
         warnings = []
-
-        if trigger_config:
-            trigger_config.validate()
-            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
-                msg = '%s is an invalid trigger rule type for creating jobs'
-                raise InvalidTriggerType(msg % trigger_config.trigger_rule_type)
-            warnings.extend(trigger_config.validate_trigger_for_job(interface))
 
         if configuration:
             warnings.extend(configuration.validate(interface.get_dict()))
@@ -3671,7 +3625,7 @@ class JobType(models.Model):
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'deprecated', 'paused', 'last_modified')
 
-    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'error_mapping', 'custom_resources',
                       'configuration')
 
     UNEDITABLE_FIELDS_V6 = ('is_system', 'revision_num', 'created', 'deprecated', 'last_modified')

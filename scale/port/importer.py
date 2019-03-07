@@ -17,7 +17,6 @@ from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.models import JobType
-from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from port.schema import Configuration, InvalidConfiguration, ValidationWarning
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
@@ -25,9 +24,6 @@ from recipe.configuration.definition.recipe_definition import LegacyRecipeDefini
 from recipe.definition.definition import RecipeDefinition
 from recipe.deprecation import RecipeDefinitionSunset
 from recipe.models import RecipeType
-from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
-from trigger.models import TriggerRule
-from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerRule
 from vault.exceptions import InvalidSecretsConfiguration
 
 logger = logging.getLogger(__name__)
