@@ -1905,13 +1905,22 @@ class TestJobTypesViewV6(TestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 3)
+
+        # self.assertEqual(len(result['results']), 3)
+
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
+
 
         url = '/%s/job-types/?keyword=%s&keyword=%s' % (self.api, 'job-type-for-view-test', self.job_type1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
+
+        # self.assertEqual(len(result['results']), 4)
+
+        self.assertEqual(len(result['results']), 2)
+
 
     def test_id(self):
         """Tests successfully calling the job types view filtered by id."""
@@ -1953,7 +1962,10 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 5)
+
+        # self.assertEqual(len(result['results']), 5)
+
+        self.assertEqual(len(result['results']), 3)
 
         url = '/%s/job-types/?is_system=true' % self.api
         response = self.client.generic('GET', url)
@@ -2186,6 +2198,7 @@ class TestJobTypesPostViewV6(TestCase):
                 'workspace_name': self.workspace.name,
             }
         }
+
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
@@ -2919,6 +2932,7 @@ class TestJobTypeDetailsViewV5(TestCase):
         self.assertEqual(result['revision_num'], 1)
         self.assertEqual(result['custom_resources']['resources']['foo'], 10.0)
 
+
     def test_edit_interface_and_trigger_rule(self):
         """Tests editing the job type interface and trigger rule together"""
         interface = self.interface.copy()
@@ -3152,7 +3166,7 @@ class TestJobTypeDetailsViewV6(TestCase):
             }
         }
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
-                                                       configuration=self.configuration)
+                                                            configuration=self.configuration)
 
         self.old_job_type = job_test_utils.create_job_type()
 
