@@ -13,6 +13,7 @@ from recipe.seed.recipe_data import RecipeData
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import RecipeType
 from storage.models import Workspace
+from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
 
@@ -51,9 +52,10 @@ class IngestRecipeHandler(object):
             recipe_data = RecipeData({})
             input_name = recipe_type.get_definition().get_input_keys()[0]
             recipe_data.add_file_input(input_name, source_file.id)
-            event = self._create_ingest_event(ingest_id, None, source_file, when)
+            event = self._create_trigger_event(None, source_file, when)
+            ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
             logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-            Queue.objects.queue_new_recipe_ingest_v6(recipe_type, recipe_data._new_data, event)
+            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data._new_data, event, ingest_event)
         else:
             logger.info('No recipe type found for id %s' % recipe_type_id)
 
@@ -82,10 +84,11 @@ class IngestRecipeHandler(object):
             recipe_data = RecipeData({})
             input_name = recipe_type.get_definition().get_input_keys()[0]
             recipe_data.add_file_input(input_name, source_file.id)
-            event = self._create_ingest_event(ingest_id, source, source_file, when)
+            event = self._create_trigger_event(source, source_file, when)
+            ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
             logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-            Queue.objects.queue_new_recipe_ingest_v6(recipe_type, recipe_data._new_data, event)
+            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data._new_data, event, ingest_event)
         else:
             logger.info('No recipe type found for %s %s' % (recipe_name, recipe_version))
 
@@ -111,3 +114,27 @@ class IngestRecipeHandler(object):
             return IngestEvent.objects.create_manual_ingest_event(ingest_id, description, when)
         else:
             logger.info('No valid source event for source file %s', source_file.file_name)
+
+    def _create_trigger_event(self, source, source_file, when):
+        """Creates in the database and returns a trigger event model for the given ingested source file and recipe type
+
+        :param source: The source of the ingest
+        :param source_file: The source file that was ingested
+        :type source_file: :class:`source.models.SourceFile`
+        :param when: When the source file was ingested
+        :type when: :class:`datetime.datetime`
+        :returns: The new trigger event
+        :rtype: :class:`trigger.models.TriggerEvent`
+
+        :raises trigger: If the trigger is invalid
+        """
+
+        description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
+        event_type = ''
+        if type(source) is Strike:
+            event_type = 'STRIKE_INGEST'
+        elif type(source) is Scan:
+            event_type = 'SCAN_INGEST'
+        else:
+            event_type = 'MANUAL_INGEST'
+        return TriggerEvent.objects.create_trigger_event(event_type, None, description, when)

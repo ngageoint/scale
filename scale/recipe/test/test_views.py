@@ -347,8 +347,6 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
                 'workspace_name': self.workspace.name,
             }
         }
-        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                                   configuration=self.trigger_config)
 
         self.definition = {
             'version': '1.0',
@@ -367,8 +365,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
                 },
             }],
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=self.definition,
-                                                                trigger_rule=self.trigger_rule)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=self.definition)
 
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""

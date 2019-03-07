@@ -101,16 +101,12 @@ def create_recipe_type_v5(name=None, version=None, title=None, description=None,
             'jobs': [],
         }
 
-    if not trigger_rule:
-        trigger_rule = trigger_test_utils.create_trigger_rule()
-
     recipe_type = RecipeType()
     recipe_type.name = name
     recipe_type.version = version
     recipe_type.title = title
     recipe_type.description = description
     recipe_type.definition = definition
-    recipe_type.trigger_rule = trigger_rule
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
