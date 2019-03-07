@@ -31,7 +31,11 @@ class DataSetDefinition(object):
         if 'global_parameters' in self._definition:
             self.global_parameters = InterfaceV6(definition['global_parameters']).get_interface()
             keys = self.global_parameters.parameters.keys()
-            if keys in
+            dupes = self.param_names.intersection(keys)
+            if dupes:
+                raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
+                    'Invalid dataset definition: Names must be unique. %s defined more than once' % dupes)
+            self.param_names.update(keys)
 
 
     def get_dict(self):

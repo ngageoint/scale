@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from data.data.json.data_v6 import DATA_SCHEMA
+from data.data.json.data_v6 import DATA_SCHEMA, DataV6
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMemberDefinition, InvalidDataSetFileDefinition
 from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
@@ -113,6 +113,12 @@ class DataSetDefinitionV6(object):
         try:
             if do_validate:
                 validate(self._definition, DATASET_DEFINITION_SCHEMA)
+                dd = self.get_definition()
+                gd = DataV6(data=definition['global_data'], do_validate=True)
+                members = []
+                for dm in definition['data']:
+                    members.append(DataV6(data=dm, do_validate=True))
+                dd.validate(global_member=gd, members=members )
         except ValidationError as ex:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', 'Error validating against schema: %s' % unicode(ex))
 
@@ -149,7 +155,7 @@ class DataSetDefinitionV6(object):
         if len(names) != len(set(names)):
             raise InvalidDataSetDefinition('NAME_COLLISION_ERROR','Parameter names must be unique.' )
                                                 
-
+# TODO: Delete?
 class DataSetMemberDefinitionV6(object):
     """
     Represents the definition of a DataSet object
