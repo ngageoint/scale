@@ -20,12 +20,6 @@ class IngestConfig(AppConfig):
         from job.execution.tasks.main_task import JOB_TYPE_TIMEOUT_ERRORS
         JOB_TYPE_TIMEOUT_ERRORS['scale-ingest'] = 'ingest-timeout'
 
-        # from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
-        # from trigger.handler import register_trigger_rule_handler
-
-        # Register ingest trigger rule handler
-        # register_trigger_rule_handler(IngestTriggerHandler())
-
         # Registers the Strike monitors with the monitor system
         import ingest.strike.monitors.factory as factory
         from ingest.strike.monitors.dir_monitor import DirWatcherMonitor
