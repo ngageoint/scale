@@ -39,8 +39,7 @@ class TestBatchManager(TransactionTestCase):
                 'workspace_name': self.workspace.name,
             },
         }
-        # self.rule = trigger_test_utils.create_trigger_rule(configuration=configuration)
-        self.event = trigger_test_utils.create_trigger_event(trigger_type='BATCH') #rule=self.rule)
+        self.event = trigger_test_utils.create_trigger_event(trigger_type='BATCH')
 
         interface_1 = {
             'version': '1.0',
@@ -533,30 +532,6 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.status, 'CREATED')
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
-
-    # def test_schedule_trigger_rule_true(self):
-    #     """Tests calling BatchManager.schedule_recipes() using the default trigger rule of a recipe type."""
-
-    #     # Make sure trigger condition skips mismatched media types
-    #     storage_test_utils.create_file(media_type='text/ignore')
-
-    #     definition = {
-    #         'trigger_rule': True,
-    #     }
-    #     import pdb; pdb.set_trace()
-
-    #     batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
-    #     Batch.objects.schedule_recipes(batch.id)
-
-    #     batch = Batch.objects.get(pk=batch.id)
-    #     self.assertEqual(batch.status, 'CREATED')
-    #     self.assertEqual(batch.total_count, 1)
-
-    #     self.assertEqual(batch.created_count, 1)
-    #     recipe = Recipe.objects.get(batch_id=batch.id)
-    #     self.assertEqual(recipe.batch, batch)
-    #     self.assertEqual(recipe.recipe_type, self.recipe_type)
-    #     self.assertIsNone(recipe.superseded_recipe)
 
     def test_schedule_trigger_rule_custom(self):
         """Tests calling BatchManager.schedule_recipes() using a custom trigger rule."""

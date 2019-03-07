@@ -133,34 +133,6 @@ class TestBatchesViewV5(TestCase):
         self.assertIsNotNone(result['creator_job'])
         self.assertIsNotNone(result['definition'])
 
-    # def test_create_trigger_true(self):
-    #     """Tests creating a new batch using the default trigger rule."""
-    #     storage_test_utils.create_file(media_type='text/plain')
-
-    #     json_data = {
-    #         'recipe_type_id': self.recipe_type1.id,
-    #         'title': 'batch-title-test',
-    #         'description': 'batch-description-test',
-    #         'definition': {
-    #             'version': '1.0',
-    #         },
-    #     }
-
-    #     url = '/v5/batches/'
-    #     response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-    #     batch = Batch.objects.filter(title='batch-title-test').first()
-
-    #     result = json.loads(response.content)
-    #     self.assertEqual(result['id'], batch.id)
-    #     self.assertEqual(result['title'], 'batch-title-test')
-    #     self.assertEqual(result['description'], 'batch-description-test')
-    #     self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
-    #     self.assertIsNotNone(result['event'])
-    #     self.assertIsNotNone(result['creator_job'])
-    #     self.assertIsNotNone(result['definition'])
-
     def test_create_trigger_custom(self):
         """Tests creating a new batch using a custom trigger rule."""
         workspace = storage_test_utils.create_workspace()

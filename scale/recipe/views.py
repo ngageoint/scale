@@ -144,17 +144,11 @@ class RecipeTypesView(ListCreateAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition')
 
-        # trigger rules are ignored in Scale v6, so no need to check them
-        # Check for optional trigger rule parameters
-
         try:
             with transaction.atomic():
                 # Validate the recipe definition
                 logger.info(definition_dict)
                 recipe_def = RecipeDefinitionSunset.create(definition_dict)
-
-                # trigger rules are ignored in Scale v6, so no need to check them
-                # Attempt to create the trigger rule
 
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v5(name, version, title, description, recipe_def,
@@ -285,10 +279,6 @@ class RecipeTypeIDDetailsView(GenericAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
 
-        # trigger rules are ignored in Scale v6, so no need to check them
-        # Check for optional trigger rule parameters
-        # Attempt to look up the trigger handler for the type
-
         # Fetch the current recipe type model
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
@@ -301,9 +291,6 @@ class RecipeTypeIDDetailsView(GenericAPIView):
                 recipe_def = None
                 if definition_dict:
                     recipe_def = RecipeDefinitionSunset.create(definition_dict)
-
-                # trigger rules are ignored in Scale v6, so no need to check/create them
-                # Attempt to create the trigger rule
 
                 # Edit the recipe type
                 RecipeType.objects.edit_recipe_type_v5(recipe_type_id, title, description, recipe_def, None,
@@ -535,9 +522,6 @@ class RecipeTypesValidationView(APIView):
         title = rest_util.parse_string(request, 'title', default_value=name)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition')
-
-        # trigger rules are ignored in Scale v6, so no need to check them
-        # Check for optional trigger rule parameters
 
         # Validate the recipe definition
         try:

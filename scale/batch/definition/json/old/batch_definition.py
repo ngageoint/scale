@@ -223,10 +223,6 @@ class BatchDefinition(object):
         if 'all_jobs' not in self._definition:
             self._definition['all_jobs'] = False
 
-        # if 'trigger_rule' not in self._definition:
-        #     self._definition['trigger_rule'] = {}
-
-
 class BatchTriggerConfiguration(TriggerRuleConfiguration):
 
     def __init__(self, trigger_rule_type, configuration):
