@@ -3734,7 +3734,6 @@ class TestJobTypesValidationViewV5(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    # trigger rules are ignored in Scale v6, so no need to check them
     def test_warnings(self):
         """Tests validating a new job type with mismatched settings warnings."""
         json_data = {

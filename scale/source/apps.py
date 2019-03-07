@@ -22,7 +22,7 @@ class SourceConfig(AppConfig):
         # from trigger.handler import register_trigger_rule_handler
 
         # Register source file parse saver
-        # DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER'] = SourceDataFileParseSaver()
+        DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER'] = SourceDataFileParseSaver()
 
         # Register parse trigger rule handler
         # register_trigger_rule_handler(ParseTriggerHandler())

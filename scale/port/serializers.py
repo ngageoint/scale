@@ -18,20 +18,6 @@ class ConfigurationErrorSerializer(serializers.ModelSerializer):
         model = Error
         fields = ('name', 'title', 'description', 'category')
 
-
-class ConfigurationTriggerRuleSerializer(serializers.ModelSerializer):
-    """Converts trigger rule model fields to REST output."""
-    type = serializers.CharField(required=False)
-    name = serializers.CharField(required=False)
-    is_active = serializers.BooleanField(required=False)
-
-    configuration = serializers.JSONField(default=dict)
-
-    class Meta:
-        model = TriggerRule
-        fields = ('type', 'name', 'is_active', 'configuration')
-
-
 class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     """Converts job type model fields to REST output."""
     name = serializers.CharField()
@@ -65,8 +51,6 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     interface = serializers.JSONField(required=False)
     configuration = serializers.JSONField(required=False)
     error_mapping = serializers.JSONField(allow_null=True, required=False)
-    # TODO 1181: Remove usage when remove triggers in v6
-    trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:
         model = JobType
@@ -85,7 +69,6 @@ class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
     description = serializers.CharField(allow_blank=True, allow_null=True, required=False)
 
     definition = serializers.JSONField(required=False)
-    trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:
         model = RecipeType

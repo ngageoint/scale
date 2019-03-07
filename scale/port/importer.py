@@ -7,7 +7,6 @@ from django.db import transaction
 from django.db.models import Q
 
 import port.serializers as serializers
-import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.exceptions import InvalidJobConfiguration
@@ -277,9 +276,6 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     except (InvalidDefinition, InvalidRecipeConnection) as ex:
         raise InvalidConfiguration('Recipe type definition invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
-    # trigger rules are ignored in Scale v6, so no need to check them
-    # Validate the trigger rule
-
     # Edit or create the associated recipe type model
     title = result.get('title')
     description = result.get('description')
@@ -388,9 +384,6 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
         error_mapping.validate_legacy()
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type error mapping invalid: %s -> %s' % (result.get('name'), unicode(ex)))
-
-    # trigger rules are ignored in Scale v6, so no need to check them
-    # Validate the trigger rule
 
     # Extract the fields that should be updated as keyword arguments
     extra_fields = {}
