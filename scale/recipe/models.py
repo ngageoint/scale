@@ -30,7 +30,6 @@ from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
 from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
-from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
@@ -1606,7 +1605,7 @@ class RecipeTypeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_recipe_type_v5(self, name, version, title, description, definition, trigger_rule):
+    def create_recipe_type_v5(self, name, version, title, description, definition, trigger_rule=None):
         """Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.
 
         :param name: The system name of the recipe type
@@ -1642,13 +1641,6 @@ class RecipeTypeManager(models.Manager):
         else:
             raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
 
-        # Validate the trigger rule
-        if trigger_rule:
-            trigger_config = trigger_rule.get_configuration()
-            if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
-                raise InvalidTriggerType('%s is an invalid trigger rule type for creating recipes' % trigger_rule.type)
-            trigger_config.validate_trigger_for_recipe(definition)
-
         # Create the new recipe type
         recipe_type = RecipeType()
         recipe_type.name = name
@@ -1658,7 +1650,6 @@ class RecipeTypeManager(models.Manager):
         if definition.get_dict()['version'] == '2.0':
             raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
         recipe_type.definition = definition.get_dict()
-        recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
 
         # Create first revision of the recipe type
@@ -1712,7 +1703,7 @@ class RecipeTypeManager(models.Manager):
         return recipe_type
 
     @transaction.atomic
-    def edit_recipe_type_v5(self, recipe_type_id, title, description, definition, trigger_rule, remove_trigger_rule):
+    def edit_recipe_type_v5(self, recipe_type_id, title, description, definition, trigger_rule=None, remove_trigger_rule=False):
         """Edits the given recipe type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -1764,20 +1755,6 @@ class RecipeTypeManager(models.Manager):
             else:
                 raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
             recipe_type.revision_num = recipe_type.revision_num + 1
-
-        if trigger_rule or remove_trigger_rule:
-            if recipe_type.trigger_rule:
-                # Archive old trigger rule since we are changing to a new one
-                TriggerRule.objects.archive_trigger_rule(recipe_type.trigger_rule_id)
-            recipe_type.trigger_rule = trigger_rule
-
-        # Validate updated trigger rule against updated definition
-        if recipe_type.trigger_rule:
-            trigger_config = recipe_type.trigger_rule.get_configuration()
-            if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
-                msg = '%s is an invalid trigger rule type for creating recipes'
-                raise InvalidTriggerType(msg % recipe_type.trigger_rule.type)
-            trigger_config.validate_trigger_for_recipe(recipe_type.get_recipe_definition())
 
         recipe_type.save()
 
@@ -2019,13 +1996,6 @@ class RecipeTypeManager(models.Manager):
         """
 
         warnings = definition.validate_job_interfaces()
-
-        if trigger_config:
-            trigger_config.validate()
-            if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
-                msg = '%s is an invalid trigger rule type for creating recipes'
-                raise InvalidTriggerType(msg % trigger_config.trigger_rule_type)
-            warnings.extend(trigger_config.validate_trigger_for_recipe(definition))
 
         return warnings
 

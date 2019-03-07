@@ -23,7 +23,6 @@ from recipe.messages.create_conditions import Condition
 from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
-from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
@@ -67,66 +66,6 @@ RECIPE_DEFINITION = {'version': '6',
                                                                        'output': 'OUTPUT_IMAGE'}},
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
-
-class MockTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    """Mock trigger rule configuration for testing
-    """
-
-    def __init__(self, trigger_rule_type, configuration):
-        super(MockTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
-
-    def validate(self):
-        pass
-
-    def validate_trigger_for_job(self, job_interface):
-        return []
-
-    def validate_trigger_for_recipe(self, recipe_definition):
-        return []
-
-
-class MockErrorTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    """Mock error trigger rule configuration for testing
-    """
-
-    def __init__(self, trigger_rule_type, configuration):
-        super(MockErrorTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
-
-    def validate(self):
-        pass
-
-    def validate_trigger_for_job(self, job_interface):
-        return []
-
-    def validate_trigger_for_recipe(self, recipe_definition):
-        raise InvalidRecipeConnection('Error!')
-
-
-class MockTriggerRuleHandler(TriggerRuleHandler):
-    """Mock trigger rule handler for testing
-    """
-
-    def __init__(self):
-        super(MockTriggerRuleHandler, self).__init__(MOCK_TYPE)
-
-    def create_configuration(self, config_dict):
-        return MockTriggerRuleConfiguration(MOCK_TYPE, config_dict)
-
-
-class MockErrorTriggerRuleHandler(TriggerRuleHandler):
-    """Mock error trigger rule handler for testing
-    """
-
-    def __init__(self):
-        super(MockErrorTriggerRuleHandler, self).__init__(MOCK_ERROR_TYPE)
-
-    def create_configuration(self, config_dict):
-        return MockErrorTriggerRuleConfiguration(MOCK_ERROR_TYPE, config_dict)
-
-
-register_trigger_rule_handler(MockTriggerRuleHandler())
-register_trigger_rule_handler(MockErrorTriggerRuleHandler())
-
 
 def create_recipe_type_v5(name=None, version=None, title=None, description=None, definition=None, trigger_rule=None):
     """Creates a recipe type for unit testing
