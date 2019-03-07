@@ -26,7 +26,7 @@ def get_recipe_types(recipe_type_ids=None, recipe_type_names=None):
     :returns: A list of matching recipe types.
     :rtype: list[:class:`recipe.models.RecipeType`]
     """
-    recipe_types = RecipeType.objects.all().select_related('trigger_rule')
+    recipe_types = RecipeType.objects.all()
 
     if recipe_type_ids:
         recipe_types = recipe_types.filter(id__in=recipe_type_ids)
@@ -60,7 +60,7 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
             return []
 
     # System job types should never be exported
-    job_types = JobType.objects.exclude(category='system').select_related('trigger_rule')
+    job_types = JobType.objects.exclude(category='system')
 
     # Filter by the referenced job type keys
     job_type_filters = []

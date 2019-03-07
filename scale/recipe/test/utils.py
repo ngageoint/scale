@@ -32,10 +32,6 @@ VERSION_COUNTER = 1
 TITLE_COUNTER = 1
 DESCRIPTION_COUNTER = 1
 
-
-MOCK_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_TYPE'
-MOCK_ERROR_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_ERROR_TYPE'
-
 SUB_RECIPE_DEFINITION = {'version': '6',
                    'input': {'files': [],
                              'json': []},

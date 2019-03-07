@@ -64,8 +64,6 @@ class RecipeTypeSerializerV5(RecipeTypeBaseSerializerV5):
     last_modified = serializers.DateTimeField()
     archived = serializers.DateTimeField(source='deprecated')
 
-    trigger_rule = ModelIdSerializer()
-
 
 class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     """Converts recipe type model fields to REST output."""

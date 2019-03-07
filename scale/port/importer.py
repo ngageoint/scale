@@ -288,8 +288,7 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
             try:
                 with transaction.atomic():
                     RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=title,
-                                                           description=description, definition=definition,
-                                                           trigger_rule=None, remove_trigger_rule=None)
+                                                           description=description, definition=definition)
             except (InvalidDefinition, InvalidRecipeConnection) as ex:
                 logger.exception('Recipe type edit failed')
                 raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
