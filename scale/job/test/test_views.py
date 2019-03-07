@@ -3736,7 +3736,7 @@ class TestJobTypesValidationViewV5(TransactionTestCase):
 
     # trigger rules are ignored in Scale v6, so no need to check them
     def test_warnings(self):
-        """Tests validating a new job type with mismatched media type warnings."""
+        """Tests validating a new job type with mismatched settings warnings."""
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -3752,6 +3752,12 @@ class TestJobTypesValidationViewV5(TransactionTestCase):
                 }],
                 'output_data': [],
             },
+            "configuration": {
+                "version": "2.0",
+                "settings": {
+                    "setting1": "value"
+                }
+            },
         }
 
         url = '/%s/job-types/validation/' % self.api
@@ -3759,10 +3765,8 @@ class TestJobTypesValidationViewV5(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        # TODO: Find another warning to test
-        # self.assertEqual(len(results['warnings']), 1)
-        # self.assertEqual(results['warnings'][0]['id'], 'media_type')
-        pass
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'settings')
 
 class TestJobTypesValidationViewV6(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""
