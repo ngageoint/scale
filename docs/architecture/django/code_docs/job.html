@@ -47,7 +47,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="job.configuration package" href="job.configuration.html" />
-    <link rel="prev" title="ingest.triggers.configuration package" href="ingest.triggers.configuration.html" />
+    <link rel="prev" title="ingest.triggers package" href="ingest.triggers.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -673,19 +673,6 @@
 <li class="toctree-l2"><a class="reference internal" href="job.test.html#module-job.test">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="job.triggers.html">job.triggers package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="job.triggers.configuration.html">job.triggers.configuration package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="job.triggers.configuration.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.triggers.configuration.html#module-job.triggers.configuration.trigger_rule">job.triggers.configuration.trigger_rule module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.triggers.configuration.html#module-job.triggers.configuration">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="job.triggers.html#module-job.triggers">Module contents</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -976,13 +963,6 @@ Seed compliant interfaces.</p>
 <em class="property">class </em><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV5.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
 <p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.job_type_serializers.JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer">
-<em class="property">class </em><code class="descname">TriggerRuleDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
-<p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
 
 </dd></dl>
@@ -4690,7 +4670,7 @@ remove with v5.</li>
 
 <dl class="attribute">
 <dt id="job.models.JobType.BASE_FIELDS_V6">
-<code class="descname">BASE_FIELDS_V6</code><em class="property"> = (u'id', u'name', u'version', u'manifest', u'trigger_rule', u'error_mapping', u'custom_resources', u'configuration')</em><a class="headerlink" href="#job.models.JobType.BASE_FIELDS_V6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">BASE_FIELDS_V6</code><em class="property"> = (u'id', u'name', u'version', u'manifest', u'error_mapping', u'custom_resources', u'configuration')</em><a class="headerlink" href="#job.models.JobType.BASE_FIELDS_V6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -5663,10 +5643,6 @@ transaction.</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid
-type for creating jobs
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is
-invalid
 :raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job
 type interface is invalid</p>
 </dd></dl>
@@ -5728,10 +5704,6 @@ when trigger_rule is None</li>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid
-type for creating jobs
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is
-invalid
 :raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job
 type interface is invalid
 :raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If the interface change
@@ -6127,12 +6099,6 @@ count of associated jobs and the longest running job.</p>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
-<dd>type for creating jobs</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration</dt>
-<dd>is invalid</dd>
-<dt>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job</dt>
-<dd>type interface is invalid</dd>
 <dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If the interface invalidates any</dt>
 <dd>existing recipe type definitions</dd>
 </dl>
@@ -8479,7 +8445,7 @@ object the first time, the query is executed.</p>
         <a href="job.configuration.html" class="btn btn-neutral float-right" title="job.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.triggers.configuration.html" class="btn btn-neutral float-left" title="ingest.triggers.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.triggers.html" class="btn btn-neutral float-left" title="ingest.triggers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

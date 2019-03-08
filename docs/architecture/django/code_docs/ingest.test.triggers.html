@@ -46,7 +46,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="ingest.test.triggers.configuration package" href="ingest.test.triggers.configuration.html" />
+    <link rel="next" title="ingest.triggers package" href="ingest.triggers.html" />
     <link rel="prev" title="ingest.test.strike.monitors package" href="ingest.test.strike.monitors.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -231,19 +231,6 @@
             
   <div class="section" id="ingest-test-triggers-package">
 <h1>ingest.test.triggers package<a class="headerlink" href="#ingest-test-triggers-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ingest.test.triggers.configuration.html">ingest.test.triggers.configuration package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.configuration.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration.test_ingest_trigger_rule">ingest.test.triggers.configuration.test_ingest_trigger_rule module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -278,128 +265,6 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-ingest.test.triggers.test_ingest_trigger_condition">
-<span id="ingest-test-triggers-test-ingest-trigger-condition-module"></span><h2>ingest.test.triggers.test_ingest_trigger_condition module<a class="headerlink" href="#module-ingest.test.triggers.test_ingest_trigger_condition" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet">
-<em class="property">class </em><code class="descclassname">ingest.test.triggers.test_ingest_trigger_condition.</code><code class="descname">TestIngestTriggerConditionIsConditionMet</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_both_correct">
-<code class="descname">test_both_correct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_both_correct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that meets both criteria</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_data_types_incorrect">
-<code class="descname">test_data_types_incorrect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_data_types_incorrect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that only has the correct media type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_does_not_have_data_types">
-<code class="descname">test_does_not_have_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_does_not_have_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that does not have all required data
-types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_all_data_types">
-<code class="descname">test_has_all_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_all_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that has all three data type
-conditions</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_any_and_not_data_types">
-<code class="descname">test_has_any_and_not_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_any_and_not_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that has all required data types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_any_data_types">
-<code class="descname">test_has_any_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_any_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that has all required data types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_data_types">
-<code class="descname">test_has_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that has all required data types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_not_data_types">
-<code class="descname">test_has_not_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_not_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that a match with 
-not_data_types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_incorrect">
-<code class="descname">test_media_type_incorrect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_incorrect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that only has the correct data types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_match">
-<code class="descname">test_media_type_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_match" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a matching media type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_mismatch">
-<code class="descname">test_media_type_mismatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_media_type_mismatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a mismatched media type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_no_any_data_types">
-<code class="descname">test_no_any_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_no_any_data_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with a source file that has no match with 
-any_of_data_types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_no_conditions">
-<code class="descname">test_no_conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_no_conditions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling IngestTriggerCondition.is_condition_met() with no conditions</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.test.triggers.test_ingest_trigger_handler">
-<span id="ingest-test-triggers-test-ingest-trigger-handler-module"></span><h2>ingest.test.triggers.test_ingest_trigger_handler module<a class="headerlink" href="#module-ingest.test.triggers.test_ingest_trigger_handler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile">
-<em class="property">class </em><code class="descclassname">ingest.test.triggers.test_ingest_trigger_handler.</code><code class="descname">TestIngestTriggerHandlerProcessIngestedSourceFile</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.test_successful_job_creation">
-<code class="descname">test_successful_job_creation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.test_successful_job_creation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully processing an ingest that triggers job creation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.test_successful_recipe_creation">
-<code class="descname">test_successful_recipe_creation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.test_ingest_trigger_handler.TestIngestTriggerHandlerProcessIngestedSourceFile.test_successful_recipe_creation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully processing an ingest that triggers recipe creation.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-ingest.test.triggers">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.test.triggers" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -413,7 +278,7 @@ any_of_data_types</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.test.triggers.configuration.html" class="btn btn-neutral float-right" title="ingest.test.triggers.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.triggers.html" class="btn btn-neutral float-right" title="ingest.triggers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ingest.test.strike.monitors.html" class="btn btn-neutral float-left" title="ingest.test.strike.monitors package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

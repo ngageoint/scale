@@ -263,22 +263,6 @@
 <li class="toctree-l4"><a class="reference internal" href="source.test.messages.html#module-source.test.messages">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="source.test.triggers.html">source.test.triggers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="source.test.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="source.test.triggers.configuration.html">source.test.triggers.configuration package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="source.test.triggers.configuration.html#submodules">Submodules</a></li>
-<li class="toctree-l6"><a class="reference internal" href="source.test.triggers.configuration.html#module-source.test.triggers.configuration.test_parse_trigger_rule">source.test.triggers.configuration.test_parse_trigger_rule module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="source.test.triggers.configuration.html#module-source.test.triggers.configuration">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="source.test.triggers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source.test.triggers.html#module-source.test.triggers.test_parse_trigger_condition">source.test.triggers.test_parse_trigger_condition module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source.test.triggers.html#module-source.test.triggers.test_parse_trigger_handler">source.test.triggers.test_parse_trigger_handler module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source.test.triggers.html#module-source.test.triggers">Module contents</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="source.test.html#submodules">Submodules</a></li>
@@ -286,23 +270,6 @@
 <li class="toctree-l2"><a class="reference internal" href="source.test.html#module-source.test.test_views">source.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.test.html#module-source.test.utils">source.test.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.test.html#module-source.test">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source.triggers.html">source.triggers package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="source.triggers.configuration.html">source.triggers.configuration package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="source.triggers.configuration.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source.triggers.configuration.html#module-source.triggers.configuration.parse_trigger_rule">source.triggers.configuration.parse_trigger_rule module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source.triggers.configuration.html#module-source.triggers.configuration.parse_trigger_rule_1_0">source.triggers.configuration.parse_trigger_rule_1_0 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source.triggers.configuration.html#module-source.triggers.configuration">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="source.triggers.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="source.triggers.html#module-source.triggers.parse_trigger_condition">source.triggers.parse_trigger_condition module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="source.triggers.html#module-source.triggers.parse_trigger_handler">source.triggers.parse_trigger_handler module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="source.triggers.html#module-source.triggers">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -613,7 +580,7 @@ transaction.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>src_file_id</strong> (<em>int</em>) &#8211; The ID of the source file</li>
 <li><strong>geo_json</strong> (<em>dict</em>) &#8211; The associated geojson data, possibly None</li>
 <li><strong>data_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code> or None) &#8211; The start time of the data contained in the source file, possibly None</li>
@@ -621,11 +588,7 @@ transaction.</p>
 <li><strong>data_types</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; List of strings containing the data types tags for this source file.</li>
 <li><strong>new_workspace_path</strong> (<em>str</em>) &#8211; New workspace path to move the source file to now that parse data is available. If
 None, the source file should not be moved.</li>
-<li><strong>is_recipe</strong> &#8211; Did this parse result come from a job in a recipe? If so, don&#8217;t trigger</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first last">boolean</p>
 </td>
 </tr>
 </tbody>

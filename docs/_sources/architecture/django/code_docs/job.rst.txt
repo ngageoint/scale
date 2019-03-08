@@ -17,7 +17,6 @@ Subpackages
     job.seed
     job.tasks
     job.test
-    job.triggers
 
 Submodules
 ----------

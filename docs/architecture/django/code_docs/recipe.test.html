@@ -513,24 +513,6 @@ change is made</p>
 <dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_to_trigger_rule">
-<code class="descname">test_change_to_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_to_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to the trigger rule</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_invalid_trigger_rule">
-<code class="descname">test_invalid_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a new invalid trigger rule</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_remove_trigger_rule">
-<code class="descname">test_remove_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() that removes the trigger rule</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -921,45 +903,15 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_trigger">
-<code class="descname">test_edit_bad_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests attempting to edit a recipe type using an invalid trigger rule</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition">
 <code class="descname">test_edit_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the definition of a recipe type</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition_and_trigger_rule">
-<code class="descname">test_edit_definition_and_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition_and_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing the recipe type definition and trigger rule together</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_simple">
 <code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_simple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing only the basic attributes of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule">
-<code class="descname">test_edit_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing the trigger rule of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_pause">
-<code class="descname">test_edit_trigger_rule_pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_pause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests pausing the trigger rule of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_remove">
-<code class="descname">test_edit_trigger_rule_remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests removing the trigger rule from a recipe type</p>
 </dd></dl>
 
 <dl class="method">
@@ -1115,18 +1067,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_config">
-<code class="descname">test_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type with an invalid trigger rule configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_type">
-<code class="descname">test_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type with an invalid trigger type.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new recipe type.</p>
@@ -1236,24 +1176,6 @@ change is made</p>
 <dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_param">
 <code class="descname">test_create_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new recipe type with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_config">
-<code class="descname">test_create_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with an invalid trigger rule configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_type">
-<code class="descname">test_create_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with an invalid trigger type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create_trigger">
-<code class="descname">test_create_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with a trigger rule.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1508,74 +1430,6 @@ change is made</p>
 <div class="section" id="module-recipe.test.utils">
 <span id="recipe-test-utils-module"></span><h2>recipe.test.utils module<a class="headerlink" href="#module-recipe.test.utils" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility methods for testing jobs and job types</p>
-<dl class="class">
-<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration">
-<em class="property">class </em><code class="descclassname">recipe.test.utils.</code><code class="descname">MockErrorTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></code></a></p>
-<p>Mock error trigger rule configuration for testing</p>
-<dl class="method">
-<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job">
-<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_recipe">
-<code class="descname">validate_trigger_for_recipe</code><span class="sig-paren">(</span><em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.utils.MockErrorTriggerRuleHandler">
-<em class="property">class </em><code class="descclassname">recipe.test.utils.</code><code class="descname">MockErrorTriggerRuleHandler</code><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><code class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></code></a></p>
-<p>Mock error trigger rule handler for testing</p>
-<dl class="method">
-<dt id="recipe.test.utils.MockErrorTriggerRuleHandler.create_configuration">
-<code class="descname">create_configuration</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.utils.MockTriggerRuleConfiguration">
-<em class="property">class </em><code class="descclassname">recipe.test.utils.</code><code class="descname">MockTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></code></a></p>
-<p>Mock trigger rule configuration for testing</p>
-<dl class="method">
-<dt id="recipe.test.utils.MockTriggerRuleConfiguration.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job">
-<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_recipe">
-<code class="descname">validate_trigger_for_recipe</code><span class="sig-paren">(</span><em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.utils.MockTriggerRuleHandler">
-<em class="property">class </em><code class="descclassname">recipe.test.utils.</code><code class="descname">MockTriggerRuleHandler</code><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><code class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></code></a></p>
-<p>Mock trigger rule handler for testing</p>
-<dl class="method">
-<dt id="recipe.test.utils.MockTriggerRuleHandler.create_configuration">
-<code class="descname">create_configuration</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="function">
 <dt id="recipe.test.utils.create_conditions">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">create_conditions</code><span class="sig-paren">(</span><em>recipe_model</em>, <em>conditions</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_conditions" title="Permalink to this definition">¶</a></dt>
@@ -1824,7 +1678,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>3</em>, <em>6</em>, <em>15</em>, <em>46</em>, <em>5</em>, <em>729066</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>3</em>, <em>8</em>, <em>14</em>, <em>22</em>, <em>55</em>, <em>343448</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 

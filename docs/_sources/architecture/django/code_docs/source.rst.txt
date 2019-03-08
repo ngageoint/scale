@@ -10,7 +10,6 @@ Subpackages
     source.messages
     source.migrations
     source.test
-    source.triggers
 
 Submodules
 ----------

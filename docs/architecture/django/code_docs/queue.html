@@ -1177,40 +1177,8 @@ atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queue.models.QueueManager.queue_new_recipe_ingest_v6">
-<code class="descname">queue_new_recipe_ingest_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>recipe_input</em>, <em>event</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_ingest_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
-new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
-caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
-All database changes occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
-<li><strong>recipe_input</strong> (<code class="xref py py-class docutils literal"><span class="pre">data.data.data.data</span></code>) &#8211; The recipe data to run on, should be None if superseded_recipe is provided</li>
-<li><strong>event</strong> (<a class="reference internal" href="ingest.html#ingest.models.IngestEvent" title="ingest.models.IngestEvent"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestEvent</span></code></a>) &#8211; The ingest event that triggered the creation of this recipe</li>
-<li><strong>recipe_config</strong> &#8211; config of the recipe</li>
-<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this recipe</li>
-<li><strong>superseded_recipe</strong> (<a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">New recipe type</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.models.QueueManager.queue_new_recipe_v6">
-<code class="descname">queue_new_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>recipe_input</em>, <em>event</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>recipe_input</em>, <em>event</em>, <em>ingest_event=None</em>, <em>recipe_config=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
 new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
 caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.

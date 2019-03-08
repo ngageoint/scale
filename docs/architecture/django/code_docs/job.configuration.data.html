@@ -248,7 +248,7 @@
 input data files.</p>
 <dl class="method">
 <dt id="job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results">
-<code class="descname">save_parse_results</code><span class="sig-paren">(</span><em>parse_results</em>, <em>input_file_ids</em>, <em>is_recipe=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save_parse_results</code><span class="sig-paren">(</span><em>parse_results</em>, <em>input_file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves the given parse results</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -261,7 +261,6 @@ str, str)) &#8211; Dict with each input file name mapping to a tuple of GeoJSON 
 data contained in the file (optionally None), the list of data types, and the new workspace path (optionally
 None)</li>
 <li><strong>input_file_ids</strong> (<em>list of long</em>) &#8211; List of IDs for all input files</li>
-<li><strong>is_recipe</strong> &#8211; Flag if the parse is coming from</li>
 </ul>
 </td>
 </tr>
@@ -797,21 +796,17 @@ download (True).</td>
 
 <dl class="method">
 <dt id="job.configuration.data.job_data.JobData.save_parse_results">
-<code class="descname">save_parse_results</code><span class="sig-paren">(</span><em>parse_results</em>, <em>is_recipe=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.save_parse_results" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save_parse_results</code><span class="sig-paren">(</span><em>parse_results</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.save_parse_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves the given parse results</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>parse_results</strong> ({string: tuple(string, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, [],
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parse_results</strong> ({string: tuple(string, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, [],
 string, string)}) &#8211; Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
 (optionally None), the start time of the data contained in the file (optionally None), the end time of the
 data contained in the file (optionally None), the list of data types, and the new workspace path (optionally
-None)</li>
-<li><strong>is_recipe</strong> (<em>bool</em>) &#8211; Flag if the parse results are being saved from a recipe or standalone parse job. TODO REMOVE THIS FLAG WHEN REMOVING TRIGGERS ALTOGETHER</li>
-</ul>
-</td>
+None)</td>
 </tr>
 </tbody>
 </table>

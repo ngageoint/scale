@@ -1,13 +1,6 @@
 ingest\.triggers package
 ========================
 
-Subpackages
------------
-
-.. toctree::
-
-    ingest.triggers.configuration
-
 Submodules
 ----------
 
@@ -15,22 +8,6 @@ ingest\.triggers\.ingest\_recipe\_handler module
 ------------------------------------------------
 
 .. automodule:: ingest.triggers.ingest_recipe_handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ingest\.triggers\.ingest\_trigger\_condition module
----------------------------------------------------
-
-.. automodule:: ingest.triggers.ingest_trigger_condition
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ingest\.triggers\.ingest\_trigger\_handler module
--------------------------------------------------
-
-.. automodule:: ingest.triggers.ingest_trigger_handler
     :members:
     :undoc-members:
     :show-inheritance:

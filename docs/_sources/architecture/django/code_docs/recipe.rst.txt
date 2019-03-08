@@ -15,7 +15,6 @@ Subpackages
     recipe.migrations
     recipe.seed
     recipe.test
-    recipe.triggers
 
 Submodules
 ----------

@@ -496,19 +496,6 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="recipe.triggers.html">recipe.triggers package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe.triggers.configuration.html">recipe.triggers.configuration package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#module-recipe.triggers.configuration.trigger_rule">recipe.triggers.configuration.trigger_rule module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#module-recipe.triggers.configuration">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.triggers.html#module-recipe.triggers">Module contents</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -3437,10 +3424,6 @@ made in an atomic transaction.</p>
 <dl class="docutils">
 <dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
-<dd>type for creating recipes</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
-<dd>invalid</dd>
 <dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
@@ -3503,10 +3486,6 @@ when trigger_rule is None</li>
 <dl class="docutils">
 <dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
-<dd>type for creating recipes</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
-<dd>invalid</dd>
 <dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
@@ -3536,25 +3515,6 @@ transaction. An argument of None for a field indicates that the field should not
 <dt>:raises <a class="reference internal" href="recipe.definition.html#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.models.RecipeTypeManager.get_active_trigger_rules">
-<code class="descname">get_active_trigger_rules</code><span class="sig-paren">(</span><em>trigger_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_active_trigger_rules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the active trigger rules with the given trigger type that create jobs and recipes</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trigger_type</strong> (<em>str</em>) &#8211; The trigger rule type</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The active trigger rules for the given type and their associated job/recipe types</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[(<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>
-or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>)]</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
@@ -3713,10 +3673,6 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 <dl class="docutils">
 <dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
-<dd>type for creating recipes</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
-<dd>invalid</dd>
 <dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
@@ -4591,13 +4547,6 @@ made in an atomic transaction.</p>
 <dt id="recipe.serializers.RecipeTypeDetailsSerializerV5.RecipeTypeDetailsJobSerializer">
 <em class="property">class </em><code class="descname">RecipeTypeDetailsJobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializerV5.RecipeTypeDetailsJobSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.html#job.job_type_serializers.JobTypeBaseSerializerV5" title="job.job_type_serializers.JobTypeBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.job_type_serializers.JobTypeBaseSerializerV5</span></code></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.serializers.RecipeTypeDetailsSerializerV5.TriggerRuleDetailsSerializer">
-<em class="property">class </em><code class="descname">TriggerRuleDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializerV5.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
-<p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
 
 </dd></dl>
