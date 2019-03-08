@@ -34,7 +34,7 @@ class TestPortViewsV6(TransactionTestCase):
         url = '/v6/configuration/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
         json_data = {
             'import': {
                 'errors': [{
@@ -49,19 +49,19 @@ class TestPortViewsV6(TransactionTestCase):
         url = '/v6/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
         url = '/v6/configuration/download/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
         url = '/v6/configuration/upload/'
         response = self.client.generic('POST', url, '', 'multipart/form-data')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
         url = '/v6/configuration/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
+
 class TestConfigurationViewExportV5(TransactionTestCase):
     """Tests related to the configuration export endpoint"""
 
@@ -620,20 +620,6 @@ class TestConfigurationViewImportV5(TestCase):
             },
         }
 
-        trigger_rule_config = {
-            'version': '1.1',
-            'condition': {
-                'media_type': 'text/plain',
-                'data_types': [],
-                'any_of_data_types': [],
-                'not_data_types': [],
-            },
-            'data': {
-                'input_data_name': 'input_file',
-                'workspace_name': workspace.name,
-            },
-        }
-
         json_data = {
             'import': {
                 'job_types': [{
@@ -660,12 +646,6 @@ class TestConfigurationViewImportV5(TestCase):
                     'interface': interface,
                     'configuration': configuration,
                     'error_mapping': error_mapping,
-                    'trigger_rule': {
-                        'type': 'PARSE',
-                        'name': 'test-name',
-                        'is_active': False,
-                        'configuration': trigger_rule_config,
-                    },
                 }],
             },
         }
@@ -707,12 +687,6 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertDictEqual(result.manifest, interface)
         self.assertDictEqual(result.error_mapping, error_mapping)
 
-        self.assertIsNotNone(result.trigger_rule)
-        self.assertEqual(result.trigger_rule.type, 'PARSE')
-        self.assertEqual(result.trigger_rule.name, 'test-name')
-        self.assertFalse(result.trigger_rule.is_active)
-        self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
-
         self.assertTrue('UNUSED_SETTING' not in result.configuration['settings'])
         self.assertTrue('UNUSED_MOUNT' not in result.configuration['mounts'])
 
@@ -747,7 +721,6 @@ class TestConfigurationViewImportV5(TestCase):
 
         self.assertEqual(result.title, 'test-title EDIT')
         self.assertEqual(result.description, job_type.description)
-        self.assertIsNotNone(result.trigger_rule)
 
     def test_job_types_edit_interface(self):
         """Tests importing only job types that update the interface JSON."""
@@ -823,84 +796,6 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(result.title, job_type.title)
         self.assertDictEqual(result.error_mapping, error_mapping)
 
-    def test_job_types_edit_trigger_rule(self):
-        """Tests importing only job types that update the trigger rule configuration JSON."""
-        workspace = storage_test_utils.create_workspace()
-        job_type = job_test_utils.create_job_type()
-
-        trigger_rule_config = {
-            'version': '1.1',
-            'condition': {
-                'media_type': 'image/jpg',
-                'data_types': ['ABC'],
-                'any_of_data_types': [],
-                'not_data_types': [],
-            },
-            'data': {
-                'input_data_name': 'input_file2',
-                'workspace_name': workspace.name,
-            },
-        }
-
-        json_data = {
-            'import': {
-                'job_types': [{
-                    'name': job_type.name,
-                    'version': job_type.version,
-                    'trigger_rule': {
-                        'type': 'INGEST',
-                        'name': 'test-name2',
-                        'is_active': False,
-                        'configuration': trigger_rule_config,
-                    },
-                }],
-            },
-        }
-
-        url = '/v5/configuration/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        json.loads(response.content)
-
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        self.assertEqual(len(job_types), 1)
-        result = job_types[0]
-
-        self.assertEqual(result.title, job_type.title)
-        self.assertIsNotNone(result.trigger_rule)
-        self.assertEqual(result.trigger_rule.type, 'INGEST')
-        self.assertEqual(result.trigger_rule.name, 'test-name2')
-        self.assertFalse(result.trigger_rule.is_active)
-        self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
-
-    def test_job_types_remove_trigger_rule(self):
-        """Tests importing only job types that remove the trigger rule."""
-        trigger_rule = trigger_test_utils.create_trigger_rule()
-        job_type = job_test_utils.create_job_type(trigger_rule=trigger_rule)
-
-        json_data = {
-            'import': {
-                'job_types': [{
-                    'name': job_type.name,
-                    'version': job_type.version,
-                    'trigger_rule': None,
-                }],
-            },
-        }
-
-        url = '/v5/configuration/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        json.loads(response.content)
-
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        self.assertEqual(len(job_types), 1)
-        result = job_types[0]
-
-        self.assertEqual(result.title, job_type.title)
-        self.assertIsNone(result.trigger_rule)
 
     def test_job_types_bad_system(self):
         """Tests rejecting a system category job type."""
@@ -1041,34 +936,6 @@ class TestConfigurationViewImportV5(TestCase):
 
         self.assertDictEqual(result.error_mapping, job_type.error_mapping)
 
-    def test_job_types_bad_trigger_rule(self):
-        """Tests rejecting a job type with an invalid trigger rule."""
-        job_type = job_test_utils.create_job_type()
-
-        json_data = {
-            'import': {
-                'job_types': [{
-                    'name': job_type.name,
-                    'version': job_type.version,
-                    'trigger_rule': {
-                        'type': 'BAD',
-                    },
-                }],
-            },
-        }
-
-        url = '/v5/configuration/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-        json.loads(response.content)
-
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        self.assertEqual(len(job_types), 1)
-        result = job_types[0]
-
-        self.assertEqual(result.trigger_rule.type, job_type.trigger_rule.type)
-
     def test_job_types_missing_error(self):
         """Tests rejecting a job type with missing error dependencies."""
         job_type = job_test_utils.create_job_type()
@@ -1141,7 +1008,7 @@ class TestConfigurationViewImportV5(TestCase):
     def test_job_types_null_fields(self):
         """Tests importing job types with null values for optional fields."""
         fields = ['author_name', 'author_url', 'category', 'description', 'icon_code', 'max_scheduled',
-                  'title', 'trigger_rule']
+                  'title']
         job_type_dict = {
             'name': 'test-job',
             'version': '1.0.0',
@@ -1204,20 +1071,6 @@ class TestConfigurationViewImportV5(TestCase):
             }],
         }
 
-        trigger_rule_config = {
-            'version': '1.1',
-            'condition': {
-                'media_type': 'text/plain',
-                'data_types': [],
-                'any_of_data_types': [],
-                'not_data_types': [],
-            },
-            'data': {
-                'input_data_name': 'input_file',
-                'workspace_name': workspace.name,
-            },
-        }
-
         json_data = {
             'import': {
                 'recipe_types': [{
@@ -1226,12 +1079,6 @@ class TestConfigurationViewImportV5(TestCase):
                     'title': 'test-title',
                     'description': 'test-description',
                     'definition': definition,
-                    'trigger_rule': {
-                        'type': 'PARSE',
-                        'name': 'test-name',
-                        'is_active': False,
-                        'configuration': trigger_rule_config,
-                    },
                 }],
             },
         }
@@ -1249,12 +1096,6 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(result.title, 'test-title')
         self.assertEqual(result.description, 'test-description')
         self.assertDictEqual(result.definition, definition)
-
-        self.assertIsNotNone(result.trigger_rule)
-        self.assertEqual(result.trigger_rule.type, 'PARSE')
-        self.assertEqual(result.trigger_rule.name, 'test-name')
-        self.assertFalse(result.trigger_rule.is_active)
-        self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
 
     def test_recipe_types_edit_simple(self):
         """Tests importing only recipe types that update basic models."""
@@ -1281,7 +1122,6 @@ class TestConfigurationViewImportV5(TestCase):
 
         self.assertEqual(result.title, 'test-title EDIT')
         self.assertEqual(result.description, recipe_type.description)
-        self.assertIsNotNone(result.trigger_rule)
 
     def test_recipe_types_edit_definition(self):
         """Tests importing only recipe types that update the definition JSON."""
@@ -1334,85 +1174,6 @@ class TestConfigurationViewImportV5(TestCase):
 
         self.assertEqual(result.title, recipe_type.title)
         self.assertDictEqual(result.definition, definition)
-
-    def test_recipe_types_edit_trigger_rule(self):
-        """Tests importing only recipe types that update the trigger rule configuration JSON."""
-        workspace = storage_test_utils.create_workspace()
-        recipe_type = recipe_test_utils.create_recipe_type_v5()
-
-        trigger_rule_config = {
-            'version': '1.1',
-            'condition': {
-                'media_type': 'image/jpg',
-                'data_types': ['ABC'],
-                'any_of_data_types': [],
-                'not_data_types': [],
-            },
-            'data': {
-                'input_data_name': 'input_file2',
-                'workspace_name': workspace.name,
-            },
-        }
-
-        json_data = {
-            'import': {
-                'recipe_types': [{
-                    'name': recipe_type.name,
-                    'version': recipe_type.version,
-                    'trigger_rule': {
-                        'type': 'PARSE',
-                        'name': 'test-name2',
-                        'is_active': False,
-                        'configuration': trigger_rule_config,
-                    },
-                }],
-            },
-        }
-
-        url = '/v5/configuration/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        json.loads(response.content)
-
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-        self.assertEqual(len(recipe_types), 1)
-        result = recipe_types[0]
-
-        self.assertEqual(result.title, recipe_type.title)
-        self.assertIsNotNone(result.trigger_rule)
-        self.assertEqual(result.trigger_rule.type, 'PARSE')
-        self.assertEqual(result.trigger_rule.name, 'test-name2')
-        self.assertFalse(result.trigger_rule.is_active)
-        self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
-
-    def test_recipe_types_remove_trigger_rule(self):
-        """Tests importing only recipe types that remove the trigger rule."""
-        trigger_rule = trigger_test_utils.create_trigger_rule()
-        recipe_type = recipe_test_utils.create_recipe_type_v5(trigger_rule=trigger_rule)
-
-        json_data = {
-            'import': {
-                'recipe_types': [{
-                    'name': recipe_type.name,
-                    'version': recipe_type.version,
-                    'trigger_rule': None,
-                }],
-            },
-        }
-
-        url = '/v5/configuration/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        json.loads(response.content)
-
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-        self.assertEqual(len(recipe_types), 1)
-        result = recipe_types[0]
-
-        self.assertEqual(result.title, recipe_type.title)
-        self.assertIsNone(result.trigger_rule)
 
     def test_recipe_types_bad_name(self):
         """Tests rejecting a recipe type without a name."""
@@ -1467,34 +1228,6 @@ class TestConfigurationViewImportV5(TestCase):
         result = recipe_types[0]
 
         self.assertDictEqual(result.definition, recipe_type.definition)
-
-    def test_recipe_types_bad_trigger_rule(self):
-        """Tests rejecting a recipe type with an invalid trigger rule."""
-        recipe_type = recipe_test_utils.create_recipe_type_v5()
-
-        json_data = {
-            'import': {
-                'recipe_types': [{
-                    'name': recipe_type.name,
-                    'version': recipe_type.version,
-                    'trigger_rule': {
-                        'type': 'BAD',
-                    },
-                }],
-            },
-        }
-
-        url = '/v5/configuration/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-        json.loads(response.content)
-
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-        self.assertEqual(len(recipe_types), 1)
-        result = recipe_types[0]
-
-        self.assertEqual(result.trigger_rule.type, recipe_type.trigger_rule.type)
 
     def test_recipe_types_missing_job_type(self):
         """Tests rejecting a recipe type with missing job type dependencies."""
@@ -1635,20 +1368,6 @@ class TestConfigurationViewImportV5(TestCase):
             },
         }
 
-        trigger_rule_config = {
-            'version': '1.1',
-            'condition': {
-                'media_type': 'text/plain',
-                'data_types': [],
-                'any_of_data_types': [],
-                'not_data_types': [],
-            },
-            'data': {
-                'input_data_name': 'input_file',
-                'workspace_name': workspace.name,
-            },
-        }
-
         definition = {
             'version': '1.0',
             'input_data': [{
@@ -1703,12 +1422,6 @@ class TestConfigurationViewImportV5(TestCase):
                     'disk_out_mult_required': 1.0,
                     'interface': interface,
                     'error_mapping': error_mapping,
-                    'trigger_rule': {
-                        'type': 'PARSE',
-                        'name': 'test-trigger-name',
-                        'is_active': False,
-                        'configuration': trigger_rule_config,
-                    },
                 }],
                 'recipe_types': [{
                     'name': 'test-recipe-name',
@@ -1716,11 +1429,6 @@ class TestConfigurationViewImportV5(TestCase):
                     'title': 'test-recipe-title',
                     'description': 'test-recipe-description',
                     'definition': definition,
-                    'trigger_rule': {
-                        'type': 'PARSE',
-                        'name': 'test-trigger-name',
-                        'configuration': trigger_rule_config,
-                    },
                 }],
             },
         }
@@ -1743,13 +1451,11 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertDictEqual(job_types[0].manifest, interface)
         self.assertIsNone(job_types[0].max_scheduled)
         self.assertDictEqual(job_types[0].error_mapping, error_mapping)
-        self.assertIsNotNone(job_types[0].trigger_rule)
 
         recipe_types = RecipeType.objects.filter(name='test-recipe-name', version='1.0.0')
         self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, 'test-recipe-title')
         self.assertDictEqual(recipe_types[0].definition, definition)
-        self.assertIsNotNone(recipe_types[0].trigger_rule)
 
     def test_all_edit(self):
         """Tests importing all types that edit existing models."""
@@ -1791,13 +1497,11 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(job_types[0].title, 'test-job-title')
         self.assertDictEqual(job_types[0].manifest, job_type.manifest)
         self.assertDictEqual(job_types[0].error_mapping, job_type.error_mapping)
-        self.assertIsNotNone(job_types[0].trigger_rule)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
         self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, 'test-recipe-title')
         self.assertDictEqual(recipe_types[0].definition, recipe_type.definition)
-        self.assertIsNotNone(recipe_types[0].trigger_rule)
 
     def test_all_mixed(self):
         """Tests importing all types that create new models and edit existing models."""
@@ -1898,7 +1602,6 @@ class TestConfigurationViewImportV5(TestCase):
                     'disk_out_mult_required': 1.0,
                     'interface': interface,
                     'error_mapping': None,
-                    'trigger_rule': None,
                 }],
                 'recipe_types': [{
                     'name': recipe_type.name,
@@ -1927,7 +1630,6 @@ class TestConfigurationViewImportV5(TestCase):
         recipe_types = RecipeType.objects.all()
         self.assertEqual(len(recipe_types), 1)
         self.assertDictEqual(recipe_types[0].definition, definition)
-        self.assertIsNotNone(recipe_types[0].trigger_rule)
 
     def test_all_mixed_bad(self):
         """Tests importing all types that invalidates the models as the imports are applied."""

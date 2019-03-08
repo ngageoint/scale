@@ -466,9 +466,8 @@ class BatchManager(models.Manager):
 
         :raises :class:`batch.exceptions.BatchError`: If general batch parameters are invalid.
         """
-
         # Fetch the requested batch for processing
-        batch = Batch.objects.select_related('recipe_type', 'recipe_type__trigger_rule').get(pk=batch_id)
+        batch = Batch.objects.select_related('recipe_type').get(pk=batch_id)
         if batch.status == 'CREATED':
             raise BatchError('Batch already completed: %i', batch_id)
         batch_definition = batch.get_old_definition()
@@ -510,9 +509,7 @@ class BatchManager(models.Manager):
 
         # Determine what trigger rule should be applied
         trigger_config = None
-        if batch_definition.trigger_rule:
-            trigger_config = batch.recipe_type.trigger_rule.get_configuration()
-        elif batch_definition.trigger_config:
+        if batch_definition.trigger_config:
             trigger_config = batch_definition.trigger_config
 
         # Schedule new recipes for old files
@@ -546,7 +543,7 @@ class BatchManager(models.Manager):
         """
 
         # Check whether old files should be triggered
-        if not definition.trigger_rule and not definition.trigger_config:
+        if not definition.trigger_config:
             return ScaleFile.objects.none()
 
         # Fetch all the files that were not already processed by the recipe type

@@ -33,7 +33,7 @@ def create_trigger_event(trigger_type=None, rule=None, description=None, occurre
     return TriggerEvent.objects.create(type=trigger_type, rule=rule, description=description, occurred=occurred)
 
 
-def create_trigger_rule(name=None, trigger_type='PARSE', configuration=None, is_active=True):
+def create_trigger_rule(name=None, trigger_type='USER', configuration=None, is_active=True):
     """Creates a trigger rule model for unit testing
 
     :returns: The trigger rule model

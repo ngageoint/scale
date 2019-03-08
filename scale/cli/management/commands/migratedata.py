@@ -10,15 +10,13 @@ from django.utils import timezone
 
 from ingest.serializers import IngestDetailsSerializerV5
 from ingest.models import Ingest
-from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
+from ingest.triggers.ingest_recipe_handler import RecipeTriggerHandler
 from source.models import SourceFile
 from storage.media_type import get_media_type
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-
-# TODO 1181: Remove usage when remove triggers in v6??
 class Command(BaseCommand):
     """Command that migrates existing data files into scale
     """
@@ -120,10 +118,8 @@ class Command(BaseCommand):
                     ingest.ingest_ended = timezone.now()
                     ingest.source_file = sf
                     ingest.save()
-                    if options['recipe_type']:
-                        RecipeTriggerHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe_type'])
-                    else:
-                        IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
+                    if options['recipe']:
+                        RecipeTriggerHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended)
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 

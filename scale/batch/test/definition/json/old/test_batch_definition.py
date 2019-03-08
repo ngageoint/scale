@@ -144,7 +144,6 @@ class TestBatchDefinition(TestCase):
 
         definition = {
             'version': '1.0',
-            'trigger_rule': True,
         }
 
         # No exception means success

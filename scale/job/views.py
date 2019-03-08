@@ -16,7 +16,6 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-import trigger.handler as trigger_handler
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from job.configuration.data.exceptions import InvalidConnection
@@ -49,7 +48,6 @@ from queue.models import Queue
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
-from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType, InvalidTriggerMissingConfiguration
 import util.rest as rest_util
 from util.rest import BadParameter
 from vault.exceptions import InvalidSecretsConfiguration
@@ -203,26 +201,10 @@ class JobTypesView(ListCreateAPIView):
         except InvalidResources as ex:
             raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
 
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for new job type: %s', name)
-                raise BadParameter(unicode(ex))
-
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
         # TODO: Remove interface from base_fields in v6
-        base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+        base_fields = {'name', 'version', 'interface', 'manifest', 'error_mapping', 'custom_resources',
                        'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
@@ -236,21 +218,14 @@ class JobTypesView(ListCreateAPIView):
 
         try:
             with transaction.atomic():
-
-                # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name,
-                                                                    is_active)
                 # Create the job type
                 job_type = JobType.objects.create_job_type_v5(name=name, version=version, interface=interface,
-                                                              trigger_rule=trigger_rule, error_mapping=error_mapping,
+                                                              error_mapping=error_mapping,
                                                               custom_resources=custom_resources,
                                                               configuration=configuration, secrets=secrets,
                                                               **extra_fields)
 
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection,
-                InvalidSecretsConfiguration, ValueError) as ex:
+        except (InvalidJobField, InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
             logger.exception('Unable to create new job type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -538,32 +513,15 @@ class JobTypeIDDetailsView(GenericAPIView):
         except InvalidResources as ex:
             raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
 
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
-
         # Fetch the current job type model
         try:
-            job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
+            job_type = JobType.objects.get(pk=job_type_id)
         except JobType.DoesNotExist:
             raise Http404
 
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for job type: %i', job_type_id)
-                raise BadParameter(unicode(ex))
-
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+        base_fields = {'name', 'version', 'interface', 'manifest', 'error_mapping', 'custom_resources',
                        'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
@@ -575,25 +533,11 @@ class JobTypeIDDetailsView(GenericAPIView):
 
         try:
             with transaction.atomic():
-
-                # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
-                                                                    job_type.name, is_active)
-
-                # Update the active state separately if that is only given trigger field
-                if not trigger_rule and job_type.trigger_rule and 'is_active' in trigger_rule_dict:
-                    job_type.trigger_rule.is_active = is_active
-                    job_type.trigger_rule.save()
-
                 # Edit the job type
                 JobType.objects.edit_job_type_v5(job_type_id=job_type_id, interface=interface,
-                                                 trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
                                                  error_mapping=error_mapping, custom_resources=custom_resources,
                                                  configuration=configuration, secrets=secrets, **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+        except (InvalidJobField, InvalidConnection, InvalidDefinition, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
             raise BadParameter(unicode(ex))
 
@@ -694,7 +638,7 @@ class JobTypeDetailsView(GenericAPIView):
         except NonSeedJobType as ex:
             logger.exception('Attempting to use v6 interface for non seed image with name=%s, version=%s', name, version)
             raise BadParameter(unicode(ex))
-            
+
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
@@ -948,36 +892,11 @@ class JobTypesValidationView(APIView):
         except InvalidResources as ex:
             raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
 
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for job validation: %s', name)
-                raise BadParameter(unicode(ex))
-
-        # Attempt to look up the trigger rule configuration
-        trigger_config = None
-        if rule_handler and 'configuration' in trigger_rule_dict:
-            try:
-                trigger_config = rule_handler.create_configuration(trigger_rule_dict['configuration'])
-            except InvalidTriggerRule as ex:
-                logger.exception('Invalid trigger rule configuration for job validation: %s', name)
-                raise BadParameter(unicode(ex))
-
         # Validate the job type
         try:
             warnings = JobType.objects.validate_job_type_v5(name=name, version=version, interface=interface,
-                                                            error_mapping=error_mapping, trigger_config=trigger_config,
-                                                            configuration=configuration)
-        except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
+                                                            error_mapping=error_mapping, configuration=configuration)
+        except (InvalidInterfaceDefinition, InvalidDefinition) as ex:
             logger.exception('Unable to validate new job type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -1253,7 +1172,7 @@ class JobsView(ListAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
-            job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(), 
+            job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(),
                                                              job_configuration=configuration)
         except InvalidData as err:
             logger.exception('Invalid job data.')
@@ -1282,7 +1201,7 @@ class CancelJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version == 'v6':
             return self._post_v6(request)
         elif request.version == 'v5':
@@ -1315,7 +1234,7 @@ class CancelJobsView(GenericAPIView):
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)
-        
+
     def _post_v6(self, request):
         """Submit command message to cancel jobs that fit the given filter criteria
 
@@ -1426,7 +1345,7 @@ class RequeueJobsView(GenericAPIView):
         job_status = rest_util.parse_string(request, 'status', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
         priority = rest_util.parse_int(request, 'priority', required=False)
-        
+
         job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_ids', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
@@ -1734,10 +1653,10 @@ class JobExecutionsView(ListAPIView):
 
         job_exes = None
         if not job_id:
-            job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids, 
+            job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids,
                                              job_type_names, job_type_categories, node_ids, order)
         else:
-            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended, 
+            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended,
                                                          statuses=job_statuses, node_ids=node_ids)
 
         page = self.paginate_queryset(job_exes)
@@ -1752,7 +1671,7 @@ class JobExecutionsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         statuses = rest_util.parse_string_list(request, 'status', required=False)
         node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
         error_ids = rest_util.parse_int_list(request, 'error_id', required=False)

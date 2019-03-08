@@ -64,8 +64,6 @@ class RecipeTypeSerializerV5(RecipeTypeBaseSerializerV5):
     last_modified = serializers.DateTimeField()
     archived = serializers.DateTimeField(source='deprecated')
 
-    trigger_rule = ModelIdSerializer()
-
 
 class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     """Converts recipe type model fields to REST output."""
@@ -83,12 +81,10 @@ class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
 class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
     """Converts recipe type model fields to REST output."""
     from job.job_type_serializers import JobTypeBaseSerializerV5
-    from trigger.serializers import TriggerRuleDetailsSerializer
 
     class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV5):
         interface = serializers.JSONField(default=dict, source='manifest')
 
-    trigger_rule = TriggerRuleDetailsSerializer()
     job_types = RecipeTypeDetailsJobSerializer(many=True)
 
 

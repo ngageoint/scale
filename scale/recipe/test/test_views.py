@@ -23,7 +23,7 @@ from rest_framework import status
 
 class TestRecipeTypesViewV5(TransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -68,50 +68,6 @@ class TestRecipeTypesViewV5(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], recipe_type.id)
-        self.assertIsNone(results['trigger_rule'])
-
-    def test_create_trigger(self):
-        """Tests creating a new recipe type with a trigger rule."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'title': 'Recipe Type Post Test',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'is_active': True,
-                'configuration': {
-                    'version': '1.0',
-                    'condition': {
-                        'media_type': 'image/x-hdf5-image',
-                        'data_types': [],
-                    },
-                    'data': {
-                        'input_data_name': 'input_file',
-                        'workspace_name': self.workspace.name,
-                    }
-                }
-            }
-        }
-
-        url = '/%s/recipe-types/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        recipe_type = RecipeType.objects.filter(name='recipe-type-post-test').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], recipe_type.id)
-        self.assertEqual(results['trigger_rule']['type'], 'PARSE')
 
     def test_create_bad_param(self):
         """Tests creating a new recipe type with missing fields."""
@@ -147,60 +103,6 @@ class TestRecipeTypesViewV5(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_create_bad_trigger_type(self):
-        """Tests creating a new recipe type with an invalid trigger type."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'BAD',
-            }
-        }
-
-        url = '/%s/recipe-types/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_create_bad_trigger_config(self):
-        """Tests creating a new recipe type with an invalid trigger rule configuration."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': {
-                    'BAD': '1.0',
-                }
-            }
-        }
-
-        url = '/%s/recipe-types/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
 
 class TestRecipeTypesViewV6(TransactionTestCase):
     """Tests related to the get recipe-types base endpoint"""
@@ -249,7 +151,6 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.assertEqual(len(results['results']), 2)
 
         self.assertIn('deprecated', results['results'][0])
-        self.assertNotIn('trigger_rule', results['results'][0])
 
     def test_keyword(self):
         """Tests successfully calling the recipe types view filtered by keyword."""
@@ -287,7 +188,7 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.recipe_type2.name)
-        
+
         url = '/%s/recipe-types/?keyword=%s&keyword=%s' % (self.api, 'main', 'sub')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -356,7 +257,7 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
 
     def test_create(self):
         """Tests creating a new recipe type."""
-        
+
         main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
         main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
@@ -366,7 +267,7 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
         main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
         main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
-        
+
         json_data = {
             'title': 'Recipe Type Post Test',
             'description': 'This is a test.',
@@ -381,24 +282,24 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], recipe_type.id)
-        
+
         jobs = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         self.assertEqual(len(jobs), 1)
-        
+
         back_links = RecipeTypeJobLink.objects.get_recipe_type_ids(jobs)
         self.assertEqual(len(back_links), 1)
         self.assertEqual(back_links[0], recipe_type.id)
-        
+
         subs = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
         self.assertEqual(len(subs), 1)
-        
+
         back_links = RecipeTypeSubLink.objects.get_recipe_type_ids(subs)
         self.assertEqual(len(back_links), 1)
         self.assertEqual(back_links[0], recipe_type.id)
 
     def test_create_bad_param(self):
         """Tests creating a new recipe type with missing fields."""
-        
+
         json_data = {
             'name': 'recipe-type-post-test',
         }
@@ -410,9 +311,9 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
 
     def test_create_bad_job_type(self):
         """Tests creating a new recipe type with job type that doesn't exist."""
-        
+
         sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
-        
+
         json_data = {
             'title': 'Recipe Type Post Test',
             'description': 'This is a test.',
@@ -426,7 +327,7 @@ class TestCreateRecipeTypeViewV6(TransactionTestCase):
 
 class TestRecipeTypeDetailsViewV5(TransactionTestCase):
     """Tests related to the recipe-types details endpoint"""
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -446,8 +347,6 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
                 'workspace_name': self.workspace.name,
             }
         }
-        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
-                                                                   configuration=self.trigger_config)
 
         self.definition = {
             'version': '1.0',
@@ -466,8 +365,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
                 },
             }],
         }
-        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=self.definition,
-                                                                trigger_rule=self.trigger_rule)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v5(name='my-type', definition=self.definition)
 
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""
@@ -492,7 +390,6 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
         self.assertEqual(len(result['job_types']), 2)
         for entry in result['job_types']:
             self.assertTrue(entry['id'], [self.job_type1.id, self.job_type2.id])
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a recipe type"""
@@ -516,7 +413,6 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
         self.assertEqual(len(result['job_types']), 2)
         for entry in result['job_types']:
             self.assertTrue(entry['id'], [self.job_type1.id, self.job_type2.id])
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
 
     def test_edit_definition(self):
         """Tests editing the definition of a recipe type"""
@@ -541,102 +437,6 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
         self.assertEqual(result['revision_num'], 2)
         self.assertEqual(len(result['definition']['input_data']), 1)
         self.assertEqual(result['definition']['input_data'][0]['name'], 'input_file')
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
-
-    def test_edit_trigger_rule(self):
-        """Tests editing the trigger rule of a recipe type"""
-        trigger_config = self.trigger_config.copy()
-        trigger_config['condition']['media_type'] = 'application/json'
-
-        json_data = {
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': trigger_config,
-            }
-        }
-
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.recipe_type.id)
-        self.assertEqual(result['title'], self.recipe_type.title)
-        self.assertEqual(result['revision_num'], 1)
-        self.assertIsNotNone(result['definition'])
-        self.assertEqual(result['trigger_rule']['configuration']['condition']['media_type'], 'application/json')
-        self.assertNotEqual(result['trigger_rule']['id'], self.trigger_rule.id)
-
-    def test_edit_trigger_rule_pause(self):
-        """Tests pausing the trigger rule of a recipe type"""
-        trigger_config = self.trigger_config.copy()
-        trigger_config['condition']['media_type'] = 'application/json'
-
-        json_data = {
-            'trigger_rule': {
-                'is_active': False,
-            }
-        }
-
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.recipe_type.id)
-        self.assertEqual(result['title'], self.recipe_type.title)
-        self.assertEqual(result['revision_num'], 1)
-        self.assertIsNotNone(result['definition'])
-        self.assertEqual(result['trigger_rule']['is_active'], False)
-
-    def test_edit_trigger_rule_remove(self):
-        """Tests removing the trigger rule from a recipe type"""
-        json_data = {
-            'trigger_rule': None,
-        }
-
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.recipe_type.id)
-        self.assertEqual(result['title'], self.recipe_type.title)
-        self.assertEqual(result['revision_num'], 1)
-        self.assertIsNotNone(result['definition'])
-        self.assertIsNone(result['trigger_rule'])
-
-    def test_edit_definition_and_trigger_rule(self):
-        """Tests editing the recipe type definition and trigger rule together"""
-        definition = self.definition.copy()
-        definition['input_data'] = [{
-            'name': 'input_file',
-            'type': 'file',
-            'media_types': ['text/plain'],
-        }]
-        trigger_config = self.trigger_config.copy()
-        trigger_config['condition']['media_type'] = 'application/json'
-
-        json_data = {
-            'definition': definition,
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': trigger_config,
-            }
-        }
-
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.recipe_type.id)
-        self.assertEqual(result['title'], self.recipe_type.title)
-        self.assertEqual(result['revision_num'], 2)
-        self.assertEqual(len(result['definition']['input_data']), 1)
-        self.assertEqual(result['definition']['input_data'][0]['name'], 'input_file')
-        self.assertEqual(result['trigger_rule']['configuration']['condition']['media_type'], 'application/json')
-        self.assertNotEqual(result['trigger_rule']['id'], self.trigger_rule.id)
 
     def test_edit_bad_definition(self):
         """Tests attempting to edit a recipe type using an invalid recipe definition"""
@@ -645,23 +445,6 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
 
         json_data = {
             'definition': definition,
-        }
-
-        url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_edit_bad_trigger(self):
-        """Tests attempting to edit a recipe type using an invalid trigger rule"""
-        trigger_config = self.trigger_config.copy()
-        trigger_config['version'] = 'BAD'
-
-        json_data = {
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': trigger_config,
-            }
         }
 
         url = '/%s/recipe-types/%d/' % (self.api, self.recipe_type.id)
@@ -833,7 +616,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
 
 class TestRecipeTypeDetailsViewV6(TransactionTestCase):
     """Tests related to the recipe-types details endpoint"""
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -895,8 +678,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
             self.assertTrue(entry['id'], [self.recipe_type1.id])
 
         self.assertIn('deprecated', result)
-        self.assertNotIn('trigger_rule', result)
-        
+
         versionless = copy.deepcopy(self.main_definition)
         del versionless['version']
         self.assertDictEqual(result['definition'], versionless)
@@ -930,7 +712,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.assertEqual(recipe_type.revision_num, 2)
         result_def = recipe_type.get_v6_definition_json()
         self.assertEqual(result_def['input']['json'][0]['name'], 'bar')
-        
+
     @patch('recipe.models.CommandMessageManager')
     @patch('recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message')
     def test_edit_definition_and_update(self, mock_create, mock_msg_mgr):
@@ -948,20 +730,20 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
-        
+
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.revision_num, 2)
         result_def = recipe_type.get_v6_definition_json()
         self.assertEqual(result_def['input']['json'][0]['name'], 'bar')
-        
+
         # Check that create_sub_update_recipe_definition_message message was created and sent
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         mock_create.assert_called_with(self.recipe_type2.id, recipe_type.id)
-        
+
         jobs = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         self.assertEqual(len(jobs), 1)
         self.assertEqual(jobs[0], self.job_type3.id)
-        
+
         back_links = RecipeTypeJobLink.objects.get_recipe_type_ids(jobs)
         self.assertEqual(len(back_links), 1)
         self.assertEqual(back_links[0], recipe_type.id)
@@ -1084,7 +866,7 @@ class TestRecipeTypeRevisionDetailsViewV6(TransactionTestCase):
 
 class TestRecipeTypesValidationViewV5(TransactionTestCase):
     """Tests related to the recipe-types validation endpoint"""
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -1134,20 +916,6 @@ class TestRecipeTypesValidationViewV5(TransactionTestCase):
                 }],
                 'jobs': [],
             },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': {
-                    'version': '1.0',
-                    'condition': {
-                        'media_type': 'image/x-hdf5-image',
-                        'data_types': [],
-                    },
-                    'data': {
-                        'input_data_name': 'input_file',
-                        'workspace_name': self.workspace.name,
-                    }
-                }
-            }
         }
 
         url = '/%s/recipe-types/validation/' % self.api
@@ -1259,63 +1027,9 @@ class TestRecipeTypesValidationViewV5(TransactionTestCase):
         self.assertEqual(results['warnings'][0]['id'], 'media_type')
         self.assertEqual(results['warnings'][1]['id'], 'media_type')
 
-    def test_bad_trigger_type(self):
-        """Tests validating a new recipe type with an invalid trigger type."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'BAD',
-            }
-        }
-
-        url = '/%s/recipe-types/validation/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_bad_trigger_config(self):
-        """Tests validating a new recipe type with an invalid trigger rule configuration."""
-        json_data = {
-            'name': 'recipe-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'input_data': [{
-                    'name': 'input_file',
-                    'type': 'file',
-                    'media_types': ['image/x-hdf5-image'],
-                }],
-                'jobs': [],
-            },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': {
-                    'BAD': '1.0',
-                }
-            }
-        }
-
-        url = '/%s/recipe-types/validation/' % self.api
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-
 class TestRecipeTypesValidationViewV6(TransactionTestCase):
     """Tests related to the recipe-types validation endpoint"""
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -1350,7 +1064,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
         main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
         main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
-        
+
         json_data = {
             'definition': main_definition
         }
@@ -1370,7 +1084,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type3.name
         sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type3.version
         sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type3.revision_num
-        
+
         json_data = {
             'name': 'sub-recipe',
             'definition': sub_definition
@@ -1382,10 +1096,10 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        diff = { u'can_be_reprocessed': True, u'reasons': [], 
+        diff = { u'can_be_reprocessed': True, u'reasons': [],
                  u'nodes': {u'node_a': { u'status': u'CHANGED', u'reprocess_new_node': True, u'force_reprocess': False, u'dependencies': [],
-                            u'node_type': { u'job_type_version': u'1.0.0', u'node_type': u'job', u'job_type_name': u'minimum-two', 
-                                            u'job_type_revision': 1, u'prev_job_type_name': u'my-minimum-job'}, 
+                            u'node_type': { u'job_type_version': u'1.0.0', u'node_type': u'job', u'job_type_name': u'minimum-two',
+                                            u'job_type_revision': 1, u'prev_job_type_name': u'my-minimum-job'},
                             u'changes': [{u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from my-minimum-job to minimum-two'}]}}}
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': diff})
 
@@ -1403,7 +1117,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
     def test_bad_job_type(self):
         """Tests creating a new recipe type with a job type that doesn't exist."""
         sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
-        
+
         json_data = {
             'definition': sub_definition
         }
@@ -1430,7 +1144,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
                                                   'node_type': {'node_type': 'job', 'job_type_name': self.job_type2.name,
                                                                 'job_type_version': self.job_type2.version,
                                                                 'job_type_revision': self.job_type2.revision_num}}}}
-        
+
         json_data = {
             'name': 'sub-recipe',
             'definition': new_definition
@@ -1443,13 +1157,13 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
         diff = {u'can_be_reprocessed': False,
-                u'reasons': [{u'name': u'INPUT_CHANGE', u'description': u"Input interface has changed: Parameter 'INPUT_IMAGE' is required"}], 
+                u'reasons': [{u'name': u'INPUT_CHANGE', u'description': u"Input interface has changed: Parameter 'INPUT_IMAGE' is required"}],
                 u'nodes': { u'node_a': { u'status': u'CHANGED', u'reprocess_new_node': False, u'force_reprocess': False, u'dependencies': [],
-                                         u'node_type': { u'job_type_revision': self.job_type2.revision_num, u'job_type_name': self.job_type2.name, 
-                                                         u'job_type_version': self.job_type2.version, u'node_type': u'job', u'prev_job_type_version': u'1.0.0', 
-                                                         u'prev_job_type_name': u'my-minimum-job' }, 
-                                         u'changes': [{ u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from my-minimum-job to %s' % self.job_type2.name}, 
-                                                      { u'name': u'JOB_TYPE_VERSION_CHANGE', u'description': u'Job type version changed from 1.0.0 to %s' % self.job_type2.version}, 
+                                         u'node_type': { u'job_type_revision': self.job_type2.revision_num, u'job_type_name': self.job_type2.name,
+                                                         u'job_type_version': self.job_type2.version, u'node_type': u'job', u'prev_job_type_version': u'1.0.0',
+                                                         u'prev_job_type_name': u'my-minimum-job' },
+                                         u'changes': [{ u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from my-minimum-job to %s' % self.job_type2.name},
+                                                      { u'name': u'JOB_TYPE_VERSION_CHANGE', u'description': u'Job type version changed from 1.0.0 to %s' % self.job_type2.version},
                                                       { u'name': u'INPUT_NEW', u'description': u'New input INPUT_IMAGE added'}]}}}
 
         warnings = [{u'name': u'REPROCESS_WARNING', u'description': u"This recipe cannot be reprocessed after updating."}]
@@ -1480,7 +1194,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         self.assertTrue(results['is_valid'])
         warnings = [{u'name': u'RECIPE_TYPE_NOT_FOUND', u'description': u"Unable to find an existing recipe type with name: not-a-name"}]
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
-        
+
     def test_mismatched_warning(self):
         """Tests validating a new recipe type."""
         main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
@@ -1493,7 +1207,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
         main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
         main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
-        
+
         json_data = {
             'definition': main_definition
         }
@@ -1509,7 +1223,7 @@ class TestRecipeTypesValidationViewV6(TransactionTestCase):
 
 
 class TestRecipesViewV5(TransactionTestCase):
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -1676,7 +1390,7 @@ class TestRecipesViewV5(TransactionTestCase):
 
 
 class TestRecipesViewV6(TransactionTestCase):
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -1724,9 +1438,9 @@ class TestRecipesViewV6(TransactionTestCase):
                                             'input': {},
                                             'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
                                                           'recipe_type_revision': self.sub.revision_num}}
-                           
+
                        }
-            
+
         }
 
         self.workspace = storage_test_utils.create_workspace()
@@ -1763,7 +1477,7 @@ class TestRecipesViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['count'], 5)
-        
+
         # check new/removed fields
         for result in results['results']:
             if result['id'] == self.recipe1.id:
@@ -1805,14 +1519,14 @@ class TestRecipesViewV6(TransactionTestCase):
         today = today.isoformat() + 'T00:00:00Z'
         tomorrow = timezone.now().date() + timezone.timedelta(days=1)
         tomorrow = tomorrow.isoformat() + 'T00:00:00Z'
-        
+
         url = '/%s/recipes/?started=%s&ended=%s' % (self.api, today, tomorrow)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         results = result['results']
         self.assertEqual(len(results), 5)
-        
+
         url = '/%s/recipes/?started=%s&ended=%s' % (self.api, yesterday, today)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1881,7 +1595,7 @@ class TestRecipesViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(results['count'], 1)
         self.assertEqual(results['results'][0]['id'], self.recipe1.id)
-        
+
     def test_successful_recipe_type_id(self):
         """Tests getting recipes by type id"""
 
@@ -1892,7 +1606,7 @@ class TestRecipesViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(results['count'], 1)
         self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type.id)
-        
+
     def test_successful_recipe_type_name(self):
         """Tests getting recipes by type name"""
 
@@ -1928,7 +1642,7 @@ class TestRecipesViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['count'], 1)
-        
+
         url = '/%s/recipes/?is_superseded=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1945,7 +1659,7 @@ class TestRecipesViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['count'], 0)
-        
+
         url = '/%s/recipes/?is_completed=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1964,7 +1678,7 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(results['results'][4]['source_sensor_class'], 'A')
 
 class TestRecipesPostViewV6(TransactionTestCase):
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -2015,7 +1729,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
             }]
         }
 
-        json_data = { 
+        json_data = {
             "input" : data_dict,
             "recipe_type_id" : self.recipe_type.pk
         }
@@ -2028,7 +1742,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
         result = json.loads(response.content)
         self.assertTrue('data' not in result)
         self.assertTrue('/%s/recipes/' % self.api in response['location'])
-        
+
         mock_create.assert_called_once()
 
     @patch('queue.models.CommandMessageManager')
@@ -2103,7 +1817,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
 
 
 class TestRecipeDetailsViewV6(TransactionTestCase):
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -2133,7 +1847,7 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
                                                           'job_type_version': self.jt2.version, 'job_type_revision': self.jt2.revision_num}}}}
 
         self.sub = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_sub)
-        
+
         self.def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
@@ -2178,12 +1892,12 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
         self.assertEqual(result['id'], self.recipe1.id)
         self.assertEqual(result['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertEqual(result['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
-        
+
         self.assertEqual(result['source_sensor_class'], self.s_class)
         self.assertEqual(result['source_sensor'], self.s_sensor)
         self.assertEqual(result['source_collection'], self.collection)
         self.assertEqual(result['source_task'], self.task)
-        
+
         self.assertTrue('inputs' not in result)
         self.assertTrue('definiton' not in result['recipe_type'])
         self.maxDiff = None
@@ -2215,20 +1929,20 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
                                          u'sub_recipes_completed': 0,
                                          u'sub_recipes_total': 0}}}}
         self.assertEqual(result['details'], details_dict)
-        
+
         self.assertEqual(result['job_types'][0]['id'], self.jt1.id)
         self.assertEqual(result['sub_recipe_types'][0]['id'], self.sub.id)
 
     def test_superseded(self):
         """Tests successfully calling the recipe details view for superseded recipes."""
 
-        new_recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data, 
+        new_recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data,
                                                        superseded_recipe=self.recipe1)
-                                                       
+
         self.recipe1.is_superseded=True
         self.recipe1.superseded = timezone.now()
         self.recipe1.save()
-        
+
         url = '/%s/recipes/%i/' % (self.api,  self.recipe1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -2257,10 +1971,10 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    
+
 # TODO: remove this class when REST API v5 is removed
 class OldTestRecipeDetailsView(TransactionTestCase):
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -2371,7 +2085,7 @@ class OldTestRecipeDetailsView(TransactionTestCase):
 
 
 class TestRecipeReprocessViewV5(TransactionTestCase):
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -2484,7 +2198,7 @@ class TestRecipeReprocessViewV5(TransactionTestCase):
 
 
 class TestRecipeReprocessViewV6(TransactionTestCase):
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -2496,7 +2210,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.s_sensor = '1'
         self.collection = '12345'
         self.task = 'abcd'
-        
+
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['name'] = 'scale-batch-creator'
 
@@ -2526,9 +2240,9 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
                                             'input': {},
                                             'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
                                                           'recipe_type_revision': self.sub.revision_num}}
-                           
+
                        }
-            
+
         }
 
         self.workspace = storage_test_utils.create_workspace()
@@ -2668,7 +2382,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
 
 
 class TestRecipeInputFilesViewV5(TestCase):
-    
+
     api = 'v5'
 
     def setUp(self):
@@ -2850,7 +2564,7 @@ class TestRecipeInputFilesViewV5(TestCase):
 
 
 class TestRecipeInputFilesViewV6(TestCase):
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -2910,7 +2624,7 @@ class TestRecipeInputFilesViewV6(TestCase):
             }],
             'workspace_id': workspace1.id,
         }
-        
+
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['name'] = 'scale-batch-creator'
 
@@ -2926,7 +2640,7 @@ class TestRecipeInputFilesViewV6(TestCase):
                                                           'job_type_version': self.jt2.version, 'job_type_revision': self.jt2.revision_num}}}}
 
         self.sub = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_sub)
-        
+
         self.def_v6_dict = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
                                             'multiple': True}],
@@ -2944,14 +2658,14 @@ class TestRecipeInputFilesViewV6(TestCase):
                                  }
 
                        }
-        
+
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=self.def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v5(name='my-type2', definition=definition)
         recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type2, data=data)
         self.legacy_recipe = recipe_handler.recipe
-        
+
         # Create RecipeInputFile entry files
         self.f3_file_name = 'foo.bar'
         self.f3_last_modified = datetime.datetime(2016, 1, 11, tzinfo=utc)

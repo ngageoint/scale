@@ -56,7 +56,7 @@ class ConfigurationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version != 'v5':
             raise Http404()
 
@@ -99,10 +99,10 @@ class ConfigurationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version != 'v5':
             raise Http404()
-            
+
         import_dict = rest_util.parse_dict(request, 'import')
 
         try:
@@ -133,7 +133,7 @@ class ConfigurationUploadView(APIView):
     def post(self, request, *args, **kwargs):
         if request.version != 'v5':
             raise Http404()
-        
+
         file_name = None
         file_content = None
 
@@ -186,10 +186,10 @@ class ConfigurationValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         if request.version != 'v5':
             raise Http404()
-            
+
         import_dict = rest_util.parse_dict(request, 'import')
 
         try:

@@ -9,7 +9,7 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
     """Implements the data file parse saver to provide a way to save parse results for source files.
     """
 
-    def save_parse_results(self, parse_results, input_file_ids, is_recipe=True):
+    def save_parse_results(self, parse_results, input_file_ids):
         """See :meth:`job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results`
         """
 
@@ -35,4 +35,4 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
                 data_ended = parse_datetime(data_ended)
 
             SourceFile.objects.save_parse_results(src_file_id, geo_json, data_started, data_ended, data_types,
-                                                  new_workspace_path, is_recipe=is_recipe)
+                                                  new_workspace_path)

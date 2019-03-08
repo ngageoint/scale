@@ -180,11 +180,10 @@ class BatchDefinition(object):
             except ValueError:
                 raise InvalidDefinition('', 'Invalid priority: %s' % self._definition['priority'])
 
-        self.trigger_rule = False
         self.trigger_config = None
         if 'trigger_rule' in self._definition:
             if isinstance(self._definition['trigger_rule'], bool):
-                self.trigger_rule = self._definition['trigger_rule']
+                self.trigger_config = None
             else:
                 self.trigger_config = BatchTriggerConfiguration('BATCH', self._definition['trigger_rule'])
 
@@ -205,15 +204,9 @@ class BatchDefinition(object):
         :returns: A list of warnings discovered during validation.
         :rtype: list
         """
-
         if self.trigger_config:
             self.trigger_config.validate()
-
-        warnings = []
-        if self._definition['trigger_rule'] is True and recipe_type.trigger_rule is None:
-            warnings.append(ValidationWarning('trigger_rule',
-                                              'Recipe type does not have a trigger rule: %i' % recipe_type.id))
-        return warnings
+        return []
 
     def _populate_default_values(self):
         """Goes through the definition and populates any missing values with defaults"""
@@ -229,10 +222,6 @@ class BatchDefinition(object):
             self._definition['job_names'] = None
         if 'all_jobs' not in self._definition:
             self._definition['all_jobs'] = False
-
-        if 'trigger_rule' not in self._definition:
-            self._definition['trigger_rule'] = False
-
 
 class BatchTriggerConfiguration(TriggerRuleConfiguration):
 

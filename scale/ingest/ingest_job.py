@@ -8,7 +8,6 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from ingest.models import Ingest
-from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
 from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from source.models import SourceFile
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
@@ -113,8 +112,6 @@ def _complete_ingest(ingest, status):
             if ingest.get_recipe_name():
                 IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.get_ingest_source_event(),
                     ingest.source_file, ingest.ingest_ended)
-            else:
-                IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
 
 def _delete_file(file_path):
