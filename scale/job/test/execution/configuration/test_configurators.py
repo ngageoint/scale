@@ -56,6 +56,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         expected_args = 'command -a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
+
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
 
