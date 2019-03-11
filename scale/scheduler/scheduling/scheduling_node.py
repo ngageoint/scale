@@ -104,7 +104,6 @@ class SchedulingNode(object):
         if self._remaining_resources.is_sufficient_to_meet(resources):
 
             if resources.gpus > 0:
-                resources.increase_up_to(NodeResources([Gpus(math.ceil(resources.gpus))]))  # gpus only deal in whole numbers
                 if not GPUManager.reserve_gpus_for_job(self.node_id, int(resources.gpus)):
                     return False
                     
