@@ -59,8 +59,11 @@ class TestQueuedExecutionConfigurator(TestCase):
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
 
+        inputs_json=[{'name': 'input_1', 'type': 'string'}]
+        inputs=[{'name': 'input_2', 'mediaTypes':['text/plain']}, {'name': 'input_3', 'mediaTypes': ['text/plain']}, {'name': 'input_4', 'mediaTypes': ['text/plain'], 'required': False}]
+        outputs=[{'name': 'output_1', 'mediaType': 'text/plain'}]
         manifest = job_test_utils.create_seed_manifest(command='command ${-a :input_1} ${-b :input_2} ${input_3} ${input_4} ${job_output_dir}',
-                    inputs_files=inputs, outputs_files=outputs)
+                    inputs_files=inputs, inputs_json=inputs_json, outputs_files=outputs)
         job_type = job_test_utils.create_seed_job_type(manifest=manifest) # interface=interface_dict)
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
@@ -149,7 +152,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
         manifest_inputs = [{'name': 'input_1'}]
         manifest_outputs = [{'name': 'output_1', 'mediaType': 'image/png', 'multiple': True, 'pattern': 'outfile*.png'}]
-        manifest = job_test_utils.create_seed_manifest(jobVersion='1.4', command='foo', input_files=manifest_inputs,
+        manifest = job_test_utils.create_seed_manifest(jobVersion='1.4', command='foo', inputs_files=manifest_inputs,
                                                        outputs_files=manifest_outputs)
 
         data_dict = {
@@ -1073,7 +1076,8 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         framework_id = '1234'
         node = node_test_utils.create_node()
-        job_type = job_test_utils.create_seed_job_type()
+        manifest = job_test_utils.create_seed_manifest(inputs_files=[{}], inputs_json=[{}])
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         job_type.shared_mem_required = 1024.0
         job_type.save()
         from queue.job_exe import QueuedJobExecution
