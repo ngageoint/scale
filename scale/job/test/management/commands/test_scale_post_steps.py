@@ -30,7 +30,6 @@ class TestPostJobSteps(TransactionTestCase):
 
         cmd = 'command'
         cmd_args = 'args'
-
         outputs = [{'name': 'arg1', 'pattern': '*_.txt'}, {'name': 'arg2', 'pattern': '*_.txt'}]
         manifest = job_utils.create_seed_manifest(command='command args', outputs_files=outputs)
         self.job_type = job_utils.create_seed_job_type(job_version='1.0', manifest=manifest)

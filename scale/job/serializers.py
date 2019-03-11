@@ -107,6 +107,7 @@ class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     timeout = serializers.IntegerField()
     input_file_size = serializers.FloatField()
 
+
 class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
     task_results = serializers.JSONField(default=dict, source='jobexecutionend.task_results')

@@ -185,5 +185,4 @@ class TestBatchManager(TransactionTestCase):
         self.assertTrue(result)
 
         batch = Batch.objects.get(pk=batch.id)
-
         self.assertTrue(batch.is_creation_done)

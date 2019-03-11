@@ -2629,7 +2629,7 @@ class JobType(models.Model):
     :type is_published: :class:`django.db.models.BooleanField`
 
     :keyword unmet_resources: List of resource names that currently don't exist or aren't sufficient in the cluster
-    :type unmet_resources: :class:`django.db.models.CharField`
+    :type un: :class:`django.db.models.CharField`
 
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`
