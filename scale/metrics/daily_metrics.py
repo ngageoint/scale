@@ -40,5 +40,5 @@ class DailyMetricsProcessor(ClockEventProcessor):
         # Schedule one job for each required day
         for day in days:
             job_data = Data()
-            data.add_value(JsonValue('Day', day.strftime('%Y-%m-%d')))
+            job_data.add_value(JsonValue('Day', day.strftime('%Y-%m-%d')))
             Queue.objects.queue_new_job(job_type, job_data, event)

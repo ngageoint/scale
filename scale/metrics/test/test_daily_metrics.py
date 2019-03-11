@@ -8,6 +8,7 @@ from django.test import TransactionTestCase
 from django.utils.timezone import utc
 from mock import call, patch
 
+from data.data.json.data_v6 import convert_data_to_v6_json
 import job.test.utils as job_test_utils
 from metrics.daily_metrics import DailyMetricsProcessor
 
@@ -30,9 +31,9 @@ class TestDailyMetricsProcessor(TransactionTestCase):
         self.processor.process_event(event, None)
 
         call_args = mock_Queue.objects.queue_new_job.call_args[0]
+        inputs = convert_data_to_v6_json(call_args[1])
         self.assertEqual(self.job_type, call_args[0])
-        self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-09'}], 'output_data': [],
-                              'version': '1.0'}, call_args[1].get_dict())
+        self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-09'}, u'version': u'6'}, inputs.get_dict())
         self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
@@ -46,8 +47,8 @@ class TestDailyMetricsProcessor(TransactionTestCase):
 
         call_args = mock_Queue.objects.queue_new_job.call_args[0]
         self.assertEqual(self.job_type, call_args[0])
-        self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-09'}], 'output_data': [],
-                              'version': '1.0'}, call_args[1].get_dict())
+        inputs = convert_data_to_v6_json(call_args[1])
+        self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-09'}, u'version': u'6'}, inputs.get_dict())
         self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
@@ -64,15 +65,14 @@ class TestDailyMetricsProcessor(TransactionTestCase):
             args = call_args[0]
             self.assertEqual(self.job_type, args[0])
             self.assertEqual(event, args[2])
+
+            inputs = convert_data_to_v6_json(args[1])
             if i == 1:
-                self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-07'}], 'output_data': [],
-                                      'version': '1.0'}, args[1].get_dict())
+                self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-07'}, u'version': u'6'}, inputs.get_dict())
             if i == 2:
-                self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-08'}], 'output_data': [],
-                                      'version': '1.0'}, args[1].get_dict())
+                self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-08'}, u'version': u'6'}, inputs.get_dict())
             if i == 3:
-                self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-09'}], 'output_data': [],
-                                      'version': '1.0'}, args[1].get_dict())
+                self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-09'}, u'version': u'6'}, inputs.get_dict())
             i += 1
 
         self.assertEqual(mock_Queue.objects.queue_new_job.call_count, 3)
