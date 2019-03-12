@@ -16,8 +16,6 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 import source.test.utils as source_test_utils
-from recipe.handlers.graph import RecipeGraph
-from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
