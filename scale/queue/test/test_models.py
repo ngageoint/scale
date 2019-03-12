@@ -378,4 +378,4 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             }]
         }
         data = JobDataV6(data_dict)
-        created_scan_recipe = Queue.objects.queue_new_recipe_ingest_v6(recipetype1, data._new_data, scan_event)
+        created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event)
