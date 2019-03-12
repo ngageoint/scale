@@ -11,6 +11,7 @@ from job.messages.publish_job import create_publish_job_message
 from job.models import Job
 from messaging.messages.message import CommandMessage
 from util.parse import datetime_to_string, parse_datetime
+from util.retry import retry_database_query
 
 # This is the maximum number of job models that can fit in one message. This maximum ensures that every message of this
 # type is less than 25 KiB long.
@@ -143,6 +144,7 @@ class CompletedJobs(CommandMessage):
 
         return message
 
+    @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
