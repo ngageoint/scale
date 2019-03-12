@@ -33,7 +33,10 @@ class TestPostJobSteps(TransactionTestCase):
 
         outputs = [{'name': 'arg1', 'pattern': '*_.txt'}, {'name': 'arg2', 'pattern': '*_.txt'}]
         manifest = job_utils.create_seed_manifest(command='command args', outputs_files=outputs)
+
         self.job_type = job_utils.create_seed_job_type(job_version='1.0', manifest=manifest)
+        self.recipe_type = recipe_utils.create_recipe_type_v6()
+        self.recipe = recipe_utils.create_recipe(recipe_type=self.recipe_type)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING', recipe=self.recipe)
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING')

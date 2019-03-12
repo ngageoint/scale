@@ -25,7 +25,7 @@ from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV6)
-from job.job_type_serializers import (JobTypeListSerializerV6, JobTypeSerializerV6, JobTypeRevisionSerializerV6,
+from job.job_type_serializers import (JobTypeSerializerV6, JobTypeRevisionSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
                                       JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
                                       JobTypeFailedStatusSerializer, JobTypeStatusSerializer)
@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeListSerializerV6
+    serializer_class = JobTypeSerializerV6
 
     def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
