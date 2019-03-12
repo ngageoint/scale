@@ -6,7 +6,7 @@ import logging
 from django.db import transaction
 
 from data.data.data import Data
-from data.data.data.value import FileValue
+from data.data.value import FileValue
 from ingest.models import IngestEvent, Scan, Strike
 from job.models import JobType
 from queue.models import Queue
@@ -54,7 +54,7 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
             logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data._new_data, event, ingest_event)
+            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for id %s' % recipe_type_id)
 
@@ -87,7 +87,7 @@ class IngestRecipeHandler(object):
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
             logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data._new_data, event, ingest_event)
+            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for %s %s' % (recipe_name, recipe_version))
 
