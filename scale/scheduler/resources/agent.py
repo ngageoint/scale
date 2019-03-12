@@ -4,10 +4,14 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
+from django.utils.timezone import now
+
 from node.resources.node_resources import NodeResources
 
 # Maximum time that each offer should be held
 MAX_OFFER_HOLD_DURATION = datetime.timedelta(seconds=10)
+# Decline offers that we have had for over 30 seconds
+MAX_OFFER_DECLINE_DURATION = datetime.timedelta(seconds=30)
 
 
 logger = logging.getLogger(__name__)
@@ -154,6 +158,28 @@ class AgentResources(object):
         node_dict['resources'] = resources_dict
         return num_offers
 
+    def decline_offers(self):
+        """Removes offers older than 30 seconds from the agent's list of offers
+        and returns their ids to send to mesos to decline them
+
+        :returns: list of declined offer ids
+        :rtype: list
+        """
+        
+        # Decline old offers
+        declined_ids = []
+        for offer in self._offers.values():
+            if now() - offer.received >= MAX_OFFER_DECLINE_DURATION:
+                declined_ids.append(offer.id)
+                
+        for id in declined_ids:
+            if id in self._offers:
+                del self._offers[id]
+
+        self._update_resources()
+        
+        return declined_ids
+        
     def has_total_resources(self):
         """Indicates whether this agent knows its total resources or not
 
