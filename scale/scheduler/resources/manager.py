@@ -67,6 +67,20 @@ class ResourceManager(object):
 
         return allocated_offers
 
+    def decline_old_offers(self):
+        """Directs all agents to return a list of offers that are old and should be declined.
+
+        :returns: list of offer ids to decline
+        :rtype: list
+        """
+
+        declined = []
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                declined.extend(agent_resources.decline_offers())
+
+        return declined
+
     def clear(self):
         """Clears all offer data from the manager. This method is intended for testing only.
         """

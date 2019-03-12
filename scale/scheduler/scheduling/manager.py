@@ -110,6 +110,8 @@ class SchedulingManager(object):
             return 0
 
         self._allocate_offers(nodes)
+        decline_ids = resource_mgr.decline_old_offers()
+        self._decline_offers(decline_ids)
         task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
@@ -179,6 +181,25 @@ class SchedulingManager(object):
                 ignore_job_type_ids.add(job_type_id)
 
         return ignore_job_type_ids
+
+    def _decline_offers(self, offer_ids):
+        """Declines offers that have expired
+
+        :param client: The Mesos scheduler client
+        :type client: :class:`mesoshttp.client.MesosClient`
+        :param nodes: The dict of all scheduling nodes stored by node ID
+        :type nodes: dict
+        :returns: The number of tasks that were launched and the number of offers accepted
+        :rtype: tuple
+        """
+
+        started = now()
+
+        for id in offer_ids:
+            mesos_offer = create_simple_offer(id)
+            mesos_offer.decline()
+        
+        logger.debug("Declined %d offers" % len(offer_ids))
 
     def _launch_tasks(self, client, nodes):
         """Launches all of the tasks that have been scheduled on the given nodes
