@@ -34,18 +34,8 @@ cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
 POSTGIS_TEMPLATE = 'template_postgis'
 
-# Example settings for using PostgreSQL database with PostGIS.
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'scale',
-        'USER': 'scale',
-        'PASSWORD': 'scale',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'TEST': {'NAME': 'test_scale'},
-    },
-}
+DATABASES = {'default': dj_database_url.config(default='postgis://scale:scale@localhost:5432/scale')}
+EOF
 EOF
 
 # Load up database with schema migrations to date and fixtures

@@ -39,7 +39,9 @@ Response: 200 OK
              "name": "READY", 
              "title": "Ready", 
              "description": "Scheduler is ready to run new jobs." 
-          } 
+          },
+          "warnings": {[]
+          }
        }, 
        "system": { 
           "database_update": { 
@@ -262,6 +264,9 @@ Response: 200 OK
 | scheduler.mesos          | JSON Object       | Contains Scale's framework ID and hostname and port of the Mesos master        |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | scheduler.state          | JSON Object       | The current scheduler state, with a title and description                      |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.warnings       | Array             | List of scheduler warning objects, with a title, description, and when the     |
+|                          |                   | warning began and was last updated                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | system                   | JSON Object       | System information                                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+

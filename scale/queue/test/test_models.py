@@ -364,7 +364,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        created_strike_recipe = Queue.objects.queue_new_recipe_ingest_v6(recipetype1, data._new_data, strike_event)
+        created_strike_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, strike_event)
 
         data_dict = {
             'version': '1.0',

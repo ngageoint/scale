@@ -524,8 +524,7 @@ class JobInterface(object):
                 new_workspace_path = os.path.join(new_workspace_path, filename)
             job_data_parse_results[filename] = (geo_json, data_started, data_ended, data_types, new_workspace_path)
 
-        is_recipe = job_exe.recipe_id is not None
-        job_data.save_parse_results(job_data_parse_results, is_recipe)
+        job_data.save_parse_results(job_data_parse_results)
         return (job_data.store_output_data_files(files_to_store, job_exe), results_manifest)
 
     def perform_pre_steps(self, job_data):

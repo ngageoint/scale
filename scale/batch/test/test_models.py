@@ -39,8 +39,7 @@ class TestBatchManager(TransactionTestCase):
                 'workspace_name': self.workspace.name,
             },
         }
-        self.rule = trigger_test_utils.create_trigger_rule(configuration=configuration)
-        self.event = trigger_test_utils.create_trigger_event(rule=self.rule)
+        self.event = trigger_test_utils.create_trigger_event(trigger_type='BATCH')
 
         manifest = {
             'seedVersion': '1.0.0',

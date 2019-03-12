@@ -26,7 +26,6 @@ from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
-from trigger.models import TriggerRule
 
 
 class TestRecipeManager(TransactionTestCase):

@@ -19,7 +19,6 @@ from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, TaskUpdate
 from job.seed.manifest import SeedManifest
 from job.tasks.update import TaskStatusUpdate
-from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
 import storage.test.utils as storage_test_utils
 from storage.models import ScaleFile, Workspace
@@ -31,10 +30,6 @@ JOB_TYPE_VERSION_COUNTER = 1
 JOB_TYPE_CATEGORY_COUNTER = 1
 
 RULE_EVENT_COUNTER = 1
-
-
-MOCK_TYPE = 'MOCK_JOB_TRIGGER_RULE_TYPE'
-MOCK_ERROR_TYPE = 'MOCK_JOB_TRIGGER_RULE_ERROR_TYPE'
 
 COMPLETE_MANIFEST = {
     'seedVersion': '1.0.0',
@@ -171,61 +166,6 @@ MINIMUM_MANIFEST = {
         'timeout': 3600
     }
 }
-
-
-class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
-    """Mock trigger rule configuration for testing
-    """
-
-    def __init__(self, trigger_rule_type, configuration):
-        super(MockTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
-
-    def validate(self):
-        pass
-
-    def validate_trigger_for_job(self, job_interface):
-        return []
-
-
-class MockErrorTriggerRuleConfiguration(JobTriggerRuleConfiguration):
-    """Mock error trigger rule configuration for testing
-    """
-
-    def __init__(self, trigger_rule_type, configuration):
-        super(MockErrorTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
-
-    def validate(self):
-        pass
-
-    def validate_trigger_for_job(self, job_interface):
-        raise InvalidConnection('Error!')
-
-
-class MockTriggerRuleHandler(TriggerRuleHandler):
-    """Mock trigger rule handler for testing
-    """
-
-    def __init__(self):
-        super(MockTriggerRuleHandler, self).__init__(MOCK_TYPE)
-
-    def create_configuration(self, config_dict):
-        return MockTriggerRuleConfiguration(MOCK_TYPE, config_dict)
-
-
-class MockErrorTriggerRuleHandler(TriggerRuleHandler):
-    """Mock error trigger rule handler for testing
-    """
-
-    def __init__(self):
-        super(MockErrorTriggerRuleHandler, self).__init__(MOCK_ERROR_TYPE)
-
-    def create_configuration(self, config_dict):
-        return MockErrorTriggerRuleConfiguration(MOCK_ERROR_TYPE, config_dict)
-
-
-register_trigger_rule_handler(MockTriggerRuleHandler())
-register_trigger_rule_handler(MockErrorTriggerRuleHandler())
-
 
 def create_clock_rule(name=None, rule_type='CLOCK', event_type=None, schedule='PT1H0M0S', is_active=True):
     """Creates a scale clock trigger rule model for unit testing
@@ -545,6 +485,7 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                                       manifest=manifest, max_tries=max_tries, max_scheduled=max_scheduled,
                                       is_active=is_active, configuration=configuration, docker_image=docker_image,
                                       is_system=is_system)
+
     version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
     job_type.version_array = version_array
     job_type.save()

@@ -21,7 +21,6 @@ from recipe.messages.create_conditions import Condition
 from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
-from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
@@ -30,10 +29,6 @@ NAME_COUNTER = 1
 VERSION_COUNTER = 1
 TITLE_COUNTER = 1
 DESCRIPTION_COUNTER = 1
-
-
-MOCK_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_TYPE'
-MOCK_ERROR_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_ERROR_TYPE'
 
 SUB_RECIPE_DEFINITION = {'version': '6',
                    'input': {'files': [],

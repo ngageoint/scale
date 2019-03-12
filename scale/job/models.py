@@ -40,6 +40,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
 from util import rest as rest_utils
+from util.validation import ValidationWarning
 from vault.secrets_handler import SecretsHandler
 
 
@@ -64,7 +65,7 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When editing a job/recipe type: RecipeType, JobType, TriggerRule
+# When editing a job/recipe type: RecipeType, JobType
 
 JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
 JobTypeKey = namedtuple('JobTypeKey', ['name', 'version'])
@@ -2116,6 +2117,7 @@ class JobTypeManager(models.Manager):
             error_mapping.save_models()
 
             job_type.populate_from_manifest(manifest)
+            job_type.unmet_resources = None #assume edit is fixing resources; reset unmet_resources
             job_type.save()
             JobTypeTag.objects.update_job_type_tags(job_type, manifest)
         else:
@@ -2179,6 +2181,49 @@ class JobTypeManager(models.Manager):
         return JobType.objects.get(name='scale-clock', version='1.0')
 
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
+        """Returns a list of all job types
+
+        :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
+        :type keywords: list
+        :param ids: Query job types with a version matching the given ids
+        :type keyword: list
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
+        :param is_system: Query job types that are system job types.
+        :type is_operational: bool
+        :param order: A list of fields to control the sort order.
+        :type order: list
+        :returns: The list of latest version of job types that match the given parameters.
+        :rtype: list
+        """
+
+        # Execute a sub-query that returns distinct job type names that match the provided filter arguments
+        job_types = self.all()
+        if keywords:
+            key_query = Q()
+            for keyword in keywords:
+                key_query |= Q(name__icontains=keyword)
+                key_query |= Q(title__icontains=keyword)
+                key_query |= Q(description__icontains=keyword)
+                key_query |= Q(jobtypetag__tag__icontains=keyword)
+            job_types = job_types.filter(key_query)
+        if ids:
+            job_types = job_types.filter(id__in=ids)
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
+        if is_system is not None:
+            job_types = job_types.filter(is_system=is_system)
+
+        # Apply sorting
+        if order:
+            job_types = job_types.order_by(*order)
+        else:
+            job_types = job_types.order_by('last_modified')
+
+        return job_types
+
+
+    def get_job_type_names_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
         :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
@@ -2523,6 +2568,12 @@ class JobTypeManager(models.Manager):
         if config and manifest:
             try:
                 warnings.extend(config.validate(manifest))
+                resources = manifest.get_scalar_resources()
+                for r in resources:
+                    name = r['name'].lower()
+                    if name not in ['cpus', 'mem', 'disk', 'gpus', 'sharedmem']:
+                        msg = '\'%s\' is not a standard resouce. This job type might not be schedulable.'
+                        warnings.append(ValidationWarning('NONSTANDARD_RESOURCE', msg % r['name']))
             except InvalidJobConfiguration as ex:
                 is_valid = False
                 errors.append(ex.error)
@@ -2577,6 +2628,9 @@ class JobType(models.Model):
     :param is_published: Whether this job type has outputs that are published.
     :type is_published: :class:`django.db.models.BooleanField`
 
+    :keyword unmet_resources: List of resource names that currently don't exist or aren't sufficient in the cluster
+    :type un: :class:`django.db.models.CharField`
+
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`
     :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
@@ -2624,6 +2678,7 @@ class JobType(models.Model):
     is_active = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
+    unmet_resources = models.CharField(blank=True, max_length=250, null=True)
 
     max_scheduled = models.IntegerField(blank=True, null=True)
     max_tries = models.IntegerField(default=3)

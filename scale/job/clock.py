@@ -13,7 +13,7 @@ from trigger.models import TriggerEvent, TriggerRule
 
 logger = logging.getLogger(__name__)
 
-
+# TODO 1514: Address when/if we switch the clock from using trigger rules
 # Mapping of clock event processor name to processor class definition
 _PROCESSORS = {}
 
@@ -48,6 +48,7 @@ def perform_tick():
     configured type and the registered clock function is executed.
     """
 
+    # TODO 1514: Address when/if we switch the clock from using trigger rules
     # Check all the clock trigger rules
     rules = TriggerRule.objects.filter(type='CLOCK', is_active=True)
     for rule in rules:

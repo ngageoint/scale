@@ -9,7 +9,6 @@ from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
 from job.models import Job
-from source.triggers.parse_trigger_handler import ParseTriggerHandler
 from storage.brokers.broker import FileMove
 from storage.models import ScaleFile
 
@@ -251,7 +250,7 @@ class SourceFileManager(models.GeoManager):
         return ScaleFile.objects.all().select_related('workspace').get(pk=source_id, file_type='SOURCE')
 
     @transaction.atomic
-    def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path, is_recipe=True):
+    def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path):
         """Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
         transaction.
 
@@ -268,8 +267,6 @@ class SourceFileManager(models.GeoManager):
         :param new_workspace_path: New workspace path to move the source file to now that parse data is available. If
             None, the source file should not be moved.
         :type new_workspace_path: str
-        :param is_recipe: Did this parse result come from a job in a recipe? If so, don't trigger
-        :type: boolean
         """
 
         geom = None
@@ -317,20 +314,6 @@ class SourceFileManager(models.GeoManager):
         old_workspace_path = src_file.file_path
         if new_workspace_path and src_file.workspace.is_move_enabled:
             ScaleFile.objects.move_files([FileMove(src_file, new_workspace_path)])
-
-        # TODO: NEED SOME WAY OF KNOWING IF THIS PARSE IS PART OF A RECIPE OR NOT
-        # IF IT'S NOT, THEN IT'S AN OLD PARSE THAT NEEDS TO TRIGGER A RECIEP
-        # CURRENTLY PASSING THROUGH AN is_recipe FLAG THAT STEMS FROM THE JOB POST_STEPS
-        # THIS IS A TERRIBLE WAY OF DOING IT FOR A TRANSITIONAL PIECE
-        try:
-            # Check trigger rules for parsed source files
-            if not is_recipe:
-                ParseTriggerHandler().process_parsed_source_file(src_file)
-        except Exception:
-            # Move file back if there was an error
-            if new_workspace_path and src_file.workspace.is_move_enabled:
-                ScaleFile.objects.move_files([FileMove(src_file, old_workspace_path)])
-            raise
 
 
 class SourceFile(ScaleFile):

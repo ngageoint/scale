@@ -6,6 +6,7 @@ from abc import ABCMeta, abstractmethod
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 
+# TODO 1181: Remove usage when remove triggers in v6
 
 # Registered handlers for trigger rules
 # {"Trigger Rule Type": Handler Object}

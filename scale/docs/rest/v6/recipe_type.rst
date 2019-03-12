@@ -267,7 +267,6 @@ which pieces (nodes) within the recipe will be reprocessed when a newer recipe t
 |                            |                |          | revision, if changed in the newer revision                         |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 
-#TODO: update when recipe type config is defined
 .. _rest_v6_recipe_type_configuration:
 
 Recipe Type Configuration JSON

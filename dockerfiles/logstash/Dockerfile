@@ -7,13 +7,10 @@ LABEL \
     SOURCE="https://github.com/ngageoint/scale/tree/master/dockerfiles/logstash" \
     DESCRIPTION="Log aggregator, formatter and Elasticsearch forwarder for Scale jobs" 
 
-RUN apk add --no-cache supervisor py-requests
+RUN apk add --no-cache py-requests python
 
-COPY supervisord.conf /etc/supervisord.conf
+COPY . /opt/logstash
+RUN chown logstash /var/run /opt/logstash && chmod +x /opt/logstash/entrypoint.sh
 
-RUN mkdir -p /opt/watchdog && chown -R logstash /opt/watchdog && chown logstash /var/run
-COPY logstash.conf-template /opt/logstash/logstash.conf-template
-COPY elastic_watchdog.py /opt/logstash/elastic_watchdog.py
-
-CMD [ "supervisord" ]
+CMD [ "/opt/logstash/entrypoint.sh" ]
 

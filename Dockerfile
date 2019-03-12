@@ -24,10 +24,6 @@ ARG EPEL_INSTALL=1
 ## By default build the docs
 ARG BUILD_DOCS=1
 
-# setup the scale user and sudo so mounts, etc. work properly
-RUN useradd --uid 7498 -M -d /opt/scale scale
-#COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
-
 # install required packages for scale execution
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
@@ -59,7 +55,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && rm -f /etc/httpd/conf.d/*.conf \
  && rm -rf /usr/share/httpd \
  && rm -rf /usr/share/{anaconda,backgrounds,kde4,plymouth,wallpapers}/* \
- && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
+ && sed -i 's^User apache^User nobody^g' /etc/httpd/conf/httpd.conf \
  # Patch access logs to show originating IP instead of reverse proxy.
  && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
  && sed -ri \
@@ -106,11 +102,11 @@ WORKDIR /opt/scale
 
 # setup ownership and permissions. create some needed directories
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
- && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
+ && chown -R nobody:nobody /opt/scale /var/log/scale /var/lib/scale-metrics /scale /var/run/httpd \
  && chmod 777 /scale/output_data \
  && chmod a+x entryPoint.sh
-# Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
-#USER 7498
+
+USER nobody
 
 # finish the build
 RUN python manage.py collectstatic --noinput --settings=

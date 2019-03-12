@@ -68,7 +68,6 @@ class TestRecipeTypesViewV6(TransactionTestCase):
         self.assertEqual(len(results['results']), 2)
 
         self.assertIn('deprecated', results['results'][0])
-        self.assertNotIn('trigger_rule', results['results'][0])
 
     def test_keyword(self):
         """Tests successfully calling the recipe types view filtered by keyword."""
@@ -307,7 +306,6 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
             self.assertTrue(entry['id'], [self.recipe_type1.id])
 
         self.assertIn('deprecated', result)
-        self.assertNotIn('trigger_rule', result)
 
         versionless = copy.deepcopy(self.main_definition)
         del versionless['version']

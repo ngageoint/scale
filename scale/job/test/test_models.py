@@ -25,7 +25,6 @@ from job.error.mapping import create_legacy_error_mapping
 from job.seed.results.job_results import JobResults as SeedJobResults
 from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, JobTypeTag
 from node.resources.json.resources import Resources
-from trigger.models import TriggerRule
 
 
 # TODO: Remove before release, just for reference (v5, v6)
@@ -516,8 +515,6 @@ class TestJobType(TransactionTestCase):
 
         self.seed_job_type = job_test_utils.create_seed_job_type(manifest=json.loads(seed_interface_str))
 
-
-
     def test_get_seed_cpu_resource_from_seed_interface(self):
         job_type = self.seed_job_type
         value = job_type.get_resources().get_json().get_dict()
@@ -558,6 +555,7 @@ class TestJobType(TransactionTestCase):
         version = '1.0'
         value = job_type.get_job_version_array(version)
         self.assertEqual([0,0,0,0], value)
+
 
 class TestJobTypeRevision(TransactionTestCase):
 

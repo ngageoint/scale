@@ -38,6 +38,7 @@ class JobTypeSerializerV6(JobTypeBaseSerializerV6):
     max_scheduled = serializers.IntegerField()
     revision_num = serializers.IntegerField()
     docker_image = serializers.CharField()
+    unmet_resources = serializers.CharField()
 
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()

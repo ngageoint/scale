@@ -33,8 +33,7 @@
     },
     "env": {
         "LOGSTASH_ARGS": "-w 1",
-        "ELASTICSEARCH_URLS": "",
-        "ELASTICSEARCH_LB": "false"
+        "ELASTICSEARCH_URLS": ""
     },
     "healthChecks": [
         {

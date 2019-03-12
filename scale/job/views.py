@@ -16,7 +16,6 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-import trigger.handler as trigger_handler
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from job.configuration.exceptions import InvalidJobConfiguration

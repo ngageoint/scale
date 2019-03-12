@@ -27,7 +27,6 @@ from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.instance.recipe import RecipeInstance
 from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
-from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
@@ -1262,30 +1261,6 @@ class RecipeTypeManager(models.Manager):
                 super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
                 msgs = [create_sub_update_recipe_definition_message(id, recipe_type.id) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
-
-    def get_active_trigger_rules(self, trigger_type):
-        """Returns the active trigger rules with the given trigger type that create jobs and recipes
-
-        :param trigger_type: The trigger rule type
-        :type trigger_type: str
-        :returns: The active trigger rules for the given type and their associated job/recipe types
-        :rtype: list[(:class:`trigger.models.TriggerRule`, :class:`job.models.JobType`
-            or :class:`recipe.models.RecipeType`)]
-        """
-
-        trigger_rules = []
-
-        # Get trigger rules that create jobs
-        job_type_qry = JobType.objects.select_related('trigger_rule')
-        for job_type in job_type_qry.filter(trigger_rule__is_active=True, trigger_rule__type=trigger_type):
-            trigger_rules.append((job_type.trigger_rule, job_type))
-
-        # Get trigger rules that create recipes
-        recipe_type_qry = RecipeType.objects.select_related('trigger_rule')
-        for recipe_type in recipe_type_qry.filter(trigger_rule__is_active=True, trigger_rule__type=trigger_type):
-            trigger_rules.append((recipe_type.trigger_rule, recipe_type))
-
-        return trigger_rules
 
     def get_by_natural_key(self, name, version):
         """Django method to retrieve a recipe type for the given natural key
