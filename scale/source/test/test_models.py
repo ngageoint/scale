@@ -227,7 +227,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         job_type.save()
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, is_recipe=False)
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None)
 
         # Ensure there's an event for the parse
         evt = TriggerEvent.objects.first()
