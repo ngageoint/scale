@@ -7,7 +7,6 @@ from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from django.utils.timezone import now
 
-from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
