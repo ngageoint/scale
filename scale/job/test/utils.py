@@ -365,25 +365,25 @@ def create_seed_manifest(name=None, jobVersion=None, packageVersion=None, title=
     # interface
     if command:
         manifest['job']['interface']['command'] = command
-    if inputs_files:
+    if inputs_files is not None:
         manifest['job']['interface']['inputs']['files'] = inputs_files
-    if inputs_json:
+    if inputs_json is not None:
         manifest['job']['interface']['inputs']['json'] = inputs_json
-    if outputs_files:
+    if outputs_files is not None:
         manifest['job']['interface']['outputs']['files'] = outputs_files
-    if outputs_json:
+    if outputs_json is not None:
         manifest['job']['interface']['outputs']['json'] = outputs_json
 
-    if mounts:
+    if mounts is not None:
         manifest['job']['interface']['mounts'] = mounts
-    if settings:
-        manifest['job']['interface']['settings'] = mounts
+    if settings is not None:
+        manifest['job']['interface']['settings'] = settings
 
     # resources
-    if resources:
+    if resources is not None:
         manifest['job']['resources'] = resources
 
-    if errors:
+    if errors is not None:
         manifest['job']['errors'] = errors
 
     return manifest
