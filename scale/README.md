@@ -260,5 +260,6 @@ below for reference.
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+| SESSION_COOKIE_SECURE       | True                            | Should cookies be served only over HTTPS   |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 

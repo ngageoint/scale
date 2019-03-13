@@ -101,9 +101,8 @@ MESOS_SANDBOX = os.getenv('MESOS_SANDBOX')
 # Security settings for production
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = get_env_boolean('SESSION_COOKIE_SECURE', True)
+CSRF_USE_SESSIONS = True
 X_FRAME_OPTIONS = 'DENY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
