@@ -8,6 +8,7 @@ import django
 from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc
 from rest_framework import status
+from mock import patch
 
 import job.test.utils as job_utils
 import ingest.test.utils as ingest_test_utils
@@ -479,13 +480,13 @@ class TestScanDetailsViewV6(TestCase):
 
         config = {
             'version': '1.0',
-            'workspace': 'raw',
+            'workspace': self.workspace.name,
             'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
                 'data_types': ['test'],
                 'filename_regex': '.*txt',
                 'new_file_path': 'my_path',
-                'new_workspace': 'raw',
+                'new_workspace': self.workspace.name,
             }],
         }
 
@@ -750,7 +751,8 @@ class TestScansProcessViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    def test_dry_run_process(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_dry_run_process(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for a dry run Scan."""
 
         url = '/%s/scans/%d/process/' % (self.api, self.scan.id)
@@ -761,7 +763,8 @@ class TestScansProcessViewV6(TestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
 
-    def test_ingest_process(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_ingest_process(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for an ingest Scan."""
 
         url = '/%s/scans/%d/process/' % (self.api, self.scan.id)
@@ -792,7 +795,8 @@ class TestScansProcessViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.content)
 
-    def test_dry_run_process_reprocess(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_dry_run_process_reprocess(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
 
         self.scan.dry_run_job = job_utils.create_job()
@@ -807,7 +811,8 @@ class TestScansProcessViewV6(TestCase):
         self.assertIsNotNone(result['dry_run_job'])
         self.assertNotEqual(result['dry_run_job']['id'], old_job_id)
 
-    def test_ingest_after_dry_run(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_ingest_after_dry_run(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for an ingest Scan. following dry run"""
 
         self.scan.dry_run_job = job_utils.create_job()
@@ -947,21 +952,26 @@ class TestStrikeCreateViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling the create Strike view successfully."""
 
         json_data = {
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
-                'version': '1.0',
-                'mount': 'host:/my/path',
-                'transfer_suffix': '_tmp',
+                'version': '2.0',
+                'workspace': self.workspace.name,
+                'monitor': {
+                    'type': 'dir-watcher',
+                    'transfer_suffix': '_tmp',
+                },
                 'files_to_ingest': [{
                     'filename_regex': '.*txt',
-                    'workspace_path': 'my/path',
-                    'workspace_name': 'raw',
-                }],
+                    'data_types': ['one', 'two'],
+                    'new_file_path': os.path.join('my', 'path'),
+                    'new_workspace': self.new_workspace.name,
+                }]
             },
         }
 
@@ -977,7 +987,8 @@ class TestStrikeCreateViewV6(TestCase):
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
 
-    def test_successful_v6(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful_v6(self, mock_msg_mgr):
         """Tests creating strike with recipe configuration"""
 
         definition = {
@@ -1085,14 +1096,16 @@ class TestStrikeDetailsViewV6(TestCase):
         """Tests editing the configuration of a Strike process"""
 
         config = {
-            'version': '1.0',
-            'mount': 'host:/my/path/EDIT',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'data_types': ['test'],
                 'filename_regex': '.*txt',
-                'workspace_path': 'my_path',
-                'workspace_name': 'raw',
+                'data_types': ['test'],
+                'new_file_path': os.path.join('my', 'path', 'EDIT'),
+                'new_workspace': self.workspace.name,
             }],
         }
 
@@ -1228,13 +1241,17 @@ class TestStrikesValidationViewV6(TestCase):
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
-                'version': '1.0',
-                'mount': 'host:/my/path',
-                'transfer_suffix': '_tmp',
+                'version': '2.0',
+                'workspace': self.workspace.name,
+                'monitor': {
+                    'type': 'dir-watcher',
+                    'transfer_suffix': '_tmp',
+                },
                 'files_to_ingest': [{
                     'filename_regex': '.*txt',
-                    'workspace_path': 'my/path',
-                    'workspace_name': 'raw',
+                    'data_types': ['one', 'two'],
+                    'new_file_path': os.path.join('my', 'path'),
+                    'new_workspace': self.workspace.name,
                 }],
             },
         }

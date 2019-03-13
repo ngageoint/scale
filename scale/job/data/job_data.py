@@ -300,7 +300,7 @@ class JobData(object):
         file_map = {job_file.id: job_file for job_file in job_files}
         for in_file in input_files:
             # Use internal JobInputFiles data structure to get Scale File IDs
-            # Follow that up with a list comprehension over potentially multiple IDs to get 
+            # Follow that up with a list comprehension over potentially multiple IDs to get
             # final list of ScaleFile objects
 
             in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
@@ -337,8 +337,9 @@ class JobData(object):
                     if input_file.local_file_name:
                         file_name = input_file.local_file_name
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
+
         for json_input in self._new_data.values.values():
-            if isinstance(file_input, JsonValue):
+            if isinstance(json_input, JsonValue):
                 env_vars[normalize_env_var_name(json_input.name)] = json_input.value
 
         return env_vars
