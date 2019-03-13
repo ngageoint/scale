@@ -11,7 +11,6 @@ from jsonschema.exceptions import ValidationError
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from ingest.strike.configuration.json.configuration_1_0 import StrikeConfigurationV1
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.monitors import factory
 from storage.models import Workspace
@@ -113,7 +112,7 @@ class StrikeConfigurationV6(object):
 
         # Convert old versions
         if 'version' in self._configuration and self._configuration['version'] == '1.0':
-            self._configuration = self._convert_schema(configuration)
+            raise InvalidStrikeConfiguration('Invalid Strike configuration. Strike configuration version 1.0 is no longer supported')
 
         if 'version' in self._configuration and self._configuration['version'] == '2.0':
             self._configuration['version'] = '6'
@@ -171,49 +170,6 @@ class StrikeConfigurationV6(object):
 
         return config
 
-    def _convert_schema(self, configuration):
-        """Tries to validate the configuration as version 1.0 and convert it to version 6
-
-        :param configuration: The Strike configuration
-        :type configuration: dict
-        :returns: The converted configuration
-        :rtype: dict
-        """
-
-        # Try converting from 1.0
-        converted_configuration = StrikeConfigurationV1(configuration).get_dict()
-        converted_configuration['version'] = SCHEMA_VERSION
-
-        mount = converted_configuration['mount']
-        mount_path = mount.split(':')[1]
-        transfer_suffix = converted_configuration['transfer_suffix']
-        del converted_configuration['mount']
-        del converted_configuration['transfer_suffix']
-        auto_workspace_name = 'auto_wksp_for_%s' % mount.replace(':', '_').replace('/', '_')
-        auto_workspace_name = auto_workspace_name[:50]  # Truncate to max name length of 50 chars
-        title = 'Auto Workspace for %s' % mount
-        title = title[:50]  # Truncate to max title length of 50 chars
-        try:
-            Workspace.objects.get(name=auto_workspace_name)
-        except Workspace.DoesNotExist:
-            workspace = Workspace()
-            workspace.name = auto_workspace_name
-            workspace.title = title
-            desc = 'This workspace was automatically created for mount %s to support converting Strike from 1.0 to 2.0'
-            workspace.description = desc % mount
-            workspace.json_config = {'version': '1.0', 'broker': {'type': 'host', 'host_path': mount_path}}
-            workspace.save()
-
-        converted_configuration['workspace'] = auto_workspace_name
-        converted_configuration['monitor'] = {'type': 'dir-watcher', 'transfer_suffix': transfer_suffix}
-        for file_dict in converted_configuration['files_to_ingest']:
-            file_dict['new_workspace'] = file_dict['workspace_name']
-            file_dict['new_file_path'] = file_dict['workspace_path']
-            del file_dict['workspace_name']
-            del file_dict['workspace_path']
-
-        return converted_configuration
-
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
 
@@ -224,7 +180,6 @@ class StrikeConfigurationV6(object):
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
 
-        # TODO for v6 when strike recipe config is mandatory
         # if 'recipe' not in self._configuration:
         #     self._configuration['recipe'] = {
         #         'name': '',

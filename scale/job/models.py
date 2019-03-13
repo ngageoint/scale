@@ -2704,8 +2704,7 @@ class JobType(models.Model):
         """Returns the interface for running jobs of this type
 
         :returns: The job interface for this type
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or
-                :class:`job.seed.manifest.SeedManifest`
+        :rtype: :class:`job.seed.manifest.SeedManifest`
         """
 
         return SeedManifest(self.manifest)
