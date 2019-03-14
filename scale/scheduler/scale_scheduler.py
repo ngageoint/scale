@@ -236,6 +236,10 @@ class ScaleScheduler(object):
         total_resources = NodeResources()
         skipped_roles = set()
         for offer in offers:
+            # ignore offers while we're paused
+            if scheduler_mgr.config.is_paused:
+                offer.decline()
+                continue
             offer = from_mesos_offer(offer)
             offer_id = offer.id.value
             agent_id = offer.agent_id.value
