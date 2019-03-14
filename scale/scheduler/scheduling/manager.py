@@ -100,8 +100,8 @@ class SchedulingManager(object):
             return 0
 
         self._allocate_offers(nodes)
-        decline_ids = resource_mgr.decline_old_offers()
-        self._decline_offers(decline_ids)
+        declined = resource_mgr.decline_offers()
+        self._decline_offers(declined)
         task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
@@ -183,11 +183,8 @@ class SchedulingManager(object):
         :rtype: tuple
         """
 
-        started = now()
-
-        for id in offer_ids:
-            mesos_offer = create_simple_offer(id)
-            mesos_offer.decline()
+        for offer in offers:
+            offer.decline()
         
         logger.debug("Declined %d offers" % len(offer_ids))
 

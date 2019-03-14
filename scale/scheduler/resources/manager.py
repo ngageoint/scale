@@ -67,10 +67,10 @@ class ResourceManager(object):
 
         return allocated_offers
 
-    def decline_old_offers(self):
-        """Directs all agents to return a list of offers that are old and should be declined.
+    def decline_offers(self):
+        """Directs all agents to return a list of offers that have not been allocated.
 
-        :returns: list of offer ids to decline
+        :returns: list of offers to decline
         :rtype: list
         """
 
