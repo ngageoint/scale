@@ -355,8 +355,7 @@ class ScaleScheduler(object):
                     logger.info("job_exe with job id %s and node id %s is finished", job_exe.job_id, job_exe.node_id)
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
-                    if job_exe.resources.gpus > 0:
-                        GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
+                    GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
 
             except Exception:
                 cluster_id = JobExecution.parse_cluster_id(task_id)
