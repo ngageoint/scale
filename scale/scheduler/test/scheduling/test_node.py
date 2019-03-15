@@ -400,10 +400,10 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(all_required_resources))
 
         # Set up offers (we get back more than we need)
-        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(1.0)]), now())
-        offer_2 = ResourceOffer('offer_2', 'agent_1', '1234', all_required_resources, now())
+        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(1.0)]), now(), None)
+        offer_2 = ResourceOffer('offer_2', 'agent_1', '1234', all_required_resources, now(), None)
         offer_3 = ResourceOffer('offer_3', 'agent_1', '1234', NodeResources([Cpus(7.5), Mem(600.0), Disk(800.0)]),
-                                now())
+                                now(), None)
 
         scheduling_node.add_allocated_offers([offer_1, offer_2, offer_3])
         self.assertListEqual(scheduling_node.allocated_offers, [offer_1, offer_2, offer_3])
@@ -458,8 +458,8 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(all_required_resources))
 
         # Set up offers (enough for node tasks but not enough for job exes)
-        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(0.5)]), now())
-        offer_2 = ResourceOffer('offer_2', 'agent_1', '1234', node_task_resources, now())
+        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(0.5)]), now(), None)
+        offer_2 = ResourceOffer('offer_2', 'agent_1', '1234', node_task_resources, now(), None)
 
         scheduling_node.add_allocated_offers([offer_1, offer_2])
         self.assertListEqual(scheduling_node.allocated_offers, [offer_1, offer_2])
@@ -514,7 +514,7 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(all_required_resources))
 
         # Set up offers (not enough for job exes or node tasks)
-        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(0.1), Mem(600.0)]), now())
+        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(0.1), Mem(600.0)]), now(), None)
 
         scheduling_node.add_allocated_offers([offer_1])
         self.assertListEqual(scheduling_node.allocated_offers, [offer_1])

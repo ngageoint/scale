@@ -75,9 +75,9 @@ class TestSchedulingManager(TestCase):
     def test_successful_schedule(self):
         """Tests successfully calling perform_scheduling()"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._client, now())
@@ -92,9 +92,9 @@ class TestSchedulingManager(TestCase):
     def test_increased_resources(self):
         """Tests calling perform_scheduling() with more resources"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(225.0), Mem(22048.0), Disk(22048.0)]), now())
+                                NodeResources([Cpus(225.0), Mem(22048.0), Disk(22048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._client, now())
@@ -114,7 +114,7 @@ class TestSchedulingManager(TestCase):
         node_mgr.sync_with_database(scheduler_mgr.config)
 
         offer = ResourceOffer('offer', self.agent_3.agent_id, self.framework_id,
-                              NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                              NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer])
 
         scheduling_manager = SchedulingManager()
@@ -133,9 +133,9 @@ class TestSchedulingManager(TestCase):
     def test_paused_scheduler(self):
         """Tests calling perform_scheduling() with a paused scheduler"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
         Scheduler.objects.update(is_paused=True)
         scheduler_mgr.sync_with_database()
@@ -152,9 +152,9 @@ class TestSchedulingManager(TestCase):
     def test_missing_job_types(self):
         """Tests calling perform_scheduling() when a queued job type has not been synced to the scheduler"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()
@@ -174,9 +174,9 @@ class TestSchedulingManager(TestCase):
         """Tests calling perform_scheduling() when a queued job's workspace has not been synced to the scheduler"""
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         # Add workspaces to the queued jobs
@@ -207,9 +207,9 @@ class TestSchedulingManager(TestCase):
     def test_paused_job_type(self):
         """Tests calling perform_scheduling() when a job type is paused"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
         self.queue_1.job_type.is_paused = True
         self.queue_1.job_type.save()
@@ -242,9 +242,9 @@ class TestSchedulingManager(TestCase):
         job_exe_mgr.schedule_job_exes([running_job_exe_1], [])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(0.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(0.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()
@@ -254,9 +254,9 @@ class TestSchedulingManager(TestCase):
     def test_canceled_queue_model(self):
         """Tests successfully calling perform_scheduling() when a queue model has been canceled"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
         self.queue_1.is_canceled = True
         self.queue_1.save()
@@ -280,9 +280,9 @@ class TestSchedulingManager(TestCase):
     def test_schedule_system_tasks(self):
         """Tests successfully calling perform_scheduling() when scheduling system tasks"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         # Clear the queue
@@ -301,11 +301,11 @@ class TestSchedulingManager(TestCase):
     def test_max_resources(self):
         """Tests successfully calculating the max resources in a cluster"""
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now(), None)
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
         offer_3 = ResourceOffer('offer_3', self.agent_2.agent_id, self.framework_id,
-                                NodeResources([Cpus(225.0), Mem(1024.0), Disk(22048.0)]), now()) 
+                                NodeResources([Cpus(225.0), Mem(1024.0), Disk(22048.0)]), now(), None) 
         resource_mgr.add_new_offers([offer_1, offer_2, offer_3])
         
         resource_mgr.refresh_agent_resources([], now())
