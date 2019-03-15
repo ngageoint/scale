@@ -66,7 +66,6 @@ def extract_credentials(endpoint):
 
 def check_for_life(endpoints):
     for endpoint in endpoints:
-        print endpoint
         response = urllib.urlopen(endpoint)
         if json.load(response.fp)['version']['number']:
             return True
