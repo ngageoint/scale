@@ -1,4 +1,4 @@
-ARG IMAGE=logstash:2.4-alpine
+ARG IMAGE=logstash:6.6.2
 FROM $IMAGE
 MAINTAINER Scale Developers "https://github.com/ngageoint/scale"
 
@@ -7,10 +7,7 @@ LABEL \
     SOURCE="https://github.com/ngageoint/scale/tree/master/dockerfiles/logstash" \
     DESCRIPTION="Log aggregator, formatter and Elasticsearch forwarder for Scale jobs" 
 
-RUN apk add --no-cache py-requests python
-
 COPY . /opt/logstash
-RUN chown logstash /var/run /opt/logstash && chmod +x /opt/logstash/entrypoint.sh
 
-CMD [ "/opt/logstash/entrypoint.sh" ]
+CMD [ "sh", "/opt/logstash/entrypoint.sh" ]
 
