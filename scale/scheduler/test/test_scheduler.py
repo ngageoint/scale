@@ -59,10 +59,11 @@ class TestScheduler(TransactionTestCase):
         self.assertEqual(reconcile_calls_after - reconcile_calls_before, 1,
                          're-registering the scheduler should trigger a call to reconcile running jobs')
 
+    @patch('mesoshttp.offers.Offer.decline')
     @patch('scheduler.manager.SchedulerManager.add_new_offer_count')
     @patch('scheduler.resources.manager.ResourceManager.add_new_offers')
     @patch('scheduler.node.manager.NodeManager.register_agents')
-    def test_offer_match_against_matched_and_unmatched(self, register_agents, add_new_offers, add_new_offer_count):
+    def test_offer_match_against_matched_and_unmatched(self, register_agents, add_new_offers, add_new_offer_count, decline):
         """Validate resource reservations that don't match with ACCEPTED_RESOURCE_ROLE are ignored"""
 
         settings.ACCEPTED_RESOURCE_ROLE = 'service-account'
@@ -102,10 +103,11 @@ class TestScheduler(TransactionTestCase):
                 {u'role': u'*', u'scalar': {u'value': 14861.0}, u'type': u'SCALAR', u'name': u'mem'}]}
         ]}, u'type': u'OFFERS'}
 
-        offers = [Offer('', '', '', x) for x in offers_json['offers']['offers']]
+        offers = [Offer('http://127.0.0.1', '', '', x) for x in offers_json['offers']['offers']]
 
         ScaleScheduler().offers(offers)
 
         register_agents.called_with(['6777f785-2d17-4a2c-9e06-2bf56efa3417-S3'])
         add_new_offer_count.called_with(1)
         self.assertEquals(add_new_offers.call_count, 1)
+        self.assertTrue(decline.called)
