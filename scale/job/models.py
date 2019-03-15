@@ -2147,7 +2147,7 @@ class JobExecution(models.Model):
         if self.status == 'QUEUED':
             return None, timezone.now()
 
-        if settings.ELASTICSEARCH_VERSION == "2.4":
+        if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERISON.startswith('2.'):
             extension = ".raw"
         else:
             extension = ".keyword"

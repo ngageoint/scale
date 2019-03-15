@@ -58,11 +58,11 @@ LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
 
 # Base URL of elasticsearch nodes
-ELASTICSEARCH_URLS = None
+ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS')
+# placeholder for elasticsearch version. needed to properly form ES log query.
+ELASTICSEARCH_VERSION = os.environ.get('SCALE_ELASTICSEARCH_VERSION')
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
-# placeholder for elasticsearch version. needed to properly form ES log query.
-ELASTICSERACH_VERSION = None
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
