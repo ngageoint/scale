@@ -264,7 +264,7 @@ class ScaleScheduler(object):
                 resources = NodeResources(resource_list)
                 total_resources.add(resources)
                 agents[agent_id] = Agent(agent_id, hostname)
-                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started, offer))
 
         logger.debug("Offer analysis complete with %i resource offers." % len(resource_offers))
 
