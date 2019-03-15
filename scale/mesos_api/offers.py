@@ -7,6 +7,8 @@ from mesoshttp.offers import Offer
 
 from mesos_api.utils import obj_from_json
 
+from scheduler.resources.offer import ResourceOffer
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,6 +23,16 @@ def create_simple_offer(offer_id):
 
     return Offer(None, None, None, {"id":{"value":offer_id}}, None, None)
 
+def create_complex_offer(offer, mesos_url):
+    """Creates and returns a MesosHTTP useful for offer declination
+
+    :param offer: offer to decline
+    :type offer: scheduler.resources.offer.ResourceOffer
+    :returns: Offer
+    :rtype: :class:`mesoshttp.offers.Offer`
+    """
+
+    return Offer(None, mesos_url, offer.framework_id, {"id":{"value":offer.id}}, None, None)
 
 def from_mesos_offer(mesos_offer):
     """Creates a dot accessible offer from input dict

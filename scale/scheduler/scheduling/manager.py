@@ -17,7 +17,7 @@ from job.messages.running_jobs import create_running_job_messages
 from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
-from mesos_api.offers import create_simple_offer
+from mesos_api.offers import create_simple_offer, create_complex_offer
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
@@ -101,7 +101,7 @@ class SchedulingManager(object):
 
         self._allocate_offers(nodes)
         declined = resource_mgr.decline_offers()
-        self._decline_offers(declined)
+        self._decline_offers(declined, client.mesos_url)
         task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
@@ -172,21 +172,17 @@ class SchedulingManager(object):
 
         return ignore_job_type_ids
 
-    def _decline_offers(self, offer_ids):
+    def _decline_offers(self, offers, mesos_url):
         """Declines offers that have expired
 
-        :param client: The Mesos scheduler client
-        :type client: :class:`mesoshttp.client.MesosClient`
-        :param nodes: The dict of all scheduling nodes stored by node ID
-        :type nodes: dict
-        :returns: The number of tasks that were launched and the number of offers accepted
-        :rtype: tuple
+        :param offers: The Mesos offers
+        :type offers: :class:`mesoshttp.offers.Offer`
         """
 
         for offer in offers:
-            offer.decline()
+            create_complex_offer(offer, mesos_url).decline()
         
-        logger.debug("Declined %d offers" % len(offer_ids))
+        logger.debug("Declined %d offers" % len(offers))
 
     def _launch_tasks(self, client, nodes):
         """Launches all of the tasks that have been scheduled on the given nodes
