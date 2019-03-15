@@ -17,7 +17,6 @@ from job.messages.running_jobs import create_running_job_messages
 from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
-from mesos_api.offers import create_simple_offer, create_complex_offer
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
@@ -101,7 +100,7 @@ class SchedulingManager(object):
 
         self._allocate_offers(nodes)
         declined = resource_mgr.decline_offers()
-        self._decline_offers(declined, client.mesos_url)
+        self._decline_offers(declined)
         task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
@@ -172,7 +171,7 @@ class SchedulingManager(object):
 
         return ignore_job_type_ids
 
-    def _decline_offers(self, offers, mesos_url):
+    def _decline_offers(self, offers):
         """Declines offers that have expired
 
         :param offers: The Mesos offers
@@ -180,7 +179,10 @@ class SchedulingManager(object):
         """
 
         for offer in offers:
-            create_complex_offer(offer, mesos_url).decline()
+            if offer.mesos_offer:
+                offer.mesos_offer.decline()
+            else:
+                logger.debug("Trying to decline offer without original mesos_offer object")
         
         logger.debug("Declined %d offers" % len(offers))
 
@@ -218,8 +220,7 @@ class SchedulingManager(object):
             for offer in offers:
                 total_offer_count += 1
                 total_offer_resources.add(offer.resources)
-                mesos_offer = create_simple_offer(offer.id)
-                mesos_offers.append(mesos_offer)
+                mesos_offers.append(offer.mesos_offer)
             tasks = node.allocated_tasks
             for task in tasks:
                 total_task_resources.add(task.get_resources())
