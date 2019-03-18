@@ -48,8 +48,8 @@ def run(client):
     if not len(es_urls):
         deploy_elasticsearch(client, elasticsearch_app_name)
         es_urls = "http://%s.marathon.l4lb.thisdcos.directory:9200" % subdomain_gen(elasticsearch_app_name)
-        print("ELASTICSEARCH_URLS=%s" % (es_urls))
         blocking_apps.append(elasticsearch_app_name)
+    print("ELASTICSEARCH_URLS=%s" % (es_urls))
 
     # Determine if rabbitmq should be deployed. If SCALE_BROKER_URL is unset we need to deploy it
     broker_url = os.getenv('SCALE_BROKER_URL', '')
@@ -71,7 +71,7 @@ def run(client):
     if not len(SCALE_LOGGING_ADDRESS):
         deploy_logstash(client, log_app_name, es_urls)
         print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:8080" % subdomain_gen(log_app_name))
         blocking_apps.append(log_app_name)
 
     # Determine if Web Server should be deployed.

@@ -7,7 +7,7 @@
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "elasticsearch:2-alpine",
+            "image": "elasticsearch:6.6.2",
             "forcePullImage": false,
             "privileged": false,
             "portMappings": [

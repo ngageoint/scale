@@ -3,7 +3,7 @@ input {
     port => 8000
   }
   http {
-    port => 80
+    port => 8080
     type => "app-healthcheck"
   }
 }
@@ -36,6 +36,8 @@ filter {
 output {
   elasticsearch {
     hosts => _ES_HOSTS_
+    _ES_USER_
+    _ES_PASSWORD_
   }
   if [@metadata][DEBUG] == 'true' {
     stdout { codec => rubydebug }
