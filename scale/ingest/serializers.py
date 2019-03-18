@@ -4,7 +4,7 @@ import rest_framework.serializers as serializers
 from ingest.models import Ingest
 #TODO: Look at moving job serializers imports back to top of file
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
-from storage.serializers import DataTypeField, WorkspaceSerializerV5, WorkspaceDetailsSerializerV5
+from storage.serializers import WorkspaceSerializerV5, WorkspaceDetailsSerializerV5
 from storage.serializers import WorkspaceSerializerV6, WorkspaceDetailsSerializerV6
 from util.rest import ModelIdSerializer
 
@@ -107,7 +107,7 @@ class IngestBaseSerializer(ModelIdSerializer):
 
     media_type = serializers.CharField()
     file_size = serializers.IntegerField()  # TODO: BigIntegerField?
-    data_type = DataTypeField()
+    data_type_tags = data_type_tags = serializers.CharField(many=true)
 
     file_path = serializers.CharField()
     workspace = ModelIdSerializer()
