@@ -25,7 +25,6 @@ from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
 from storage.media_type import get_media_type
-from storage.models import VALID_TAG_PATTERN
 from trigger.models import TriggerEvent
 from util.file_size import file_size_to_string
 from util import rest as rest_utils
@@ -512,6 +511,7 @@ class Ingest(models.Model):
     media_type = models.CharField(max_length=250, blank=True)
     file_size = models.BigIntegerField(blank=True, null=True)
     data_type = models.TextField(blank=True)
+    data_type_tags = django.contrib.postgres.fields.ArrayField(models.CharField(max_length=250, blank=True), default=list)
 
     file_path = models.CharField(max_length=1000, blank=True)
     workspace = models.ForeignKey('storage.Workspace', blank=True, null=True, related_name='+')
@@ -532,16 +532,12 @@ class Ingest(models.Model):
     objects = IngestManager()
 
     def add_data_type_tag(self, tag):
-        """Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
-        spaces.
+        """Adds a new data type tag to the file.
 
         :param tag: The data type tag to add
         :type tag: string
-        :raises InvalidDataTypeTag: If the given tag is invalid
         """
 
-        if not VALID_TAG_PATTERN.match(tag):
-            raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
 
         tags = self.get_data_type_tags()
         tags.add(tag)
@@ -554,11 +550,7 @@ class Ingest(models.Model):
         :rtype: set of string
         """
 
-        tags = set()
-        if self.data_type:
-            for tag in self.data_type.split(','):
-                tags.add(tag)
-        return tags
+        return set(self.data_type_tags)
 
     def add_file(self, file_name, workspace, scan_id=None, strike_id=None):
         """Add file source metadata to ingest record
@@ -640,7 +632,7 @@ class Ingest(models.Model):
         :type tags: set of string
         """
 
-        self.data_type = ','.join(tags)
+        self.data_type_tags = tags
 
     def get_ingest_source_event(self):
         """Returns the event that triggered the ingest

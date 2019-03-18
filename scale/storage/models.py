@@ -28,9 +28,6 @@ from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
-# Allow alphanumerics, dashes, underscores, and spaces
-VALID_TAG_PATTERN = re.compile('^[a-zA-Z0-9\\-_ ]+$')
-
 
 class CountryDataManager(models.Manager):
     """Provides additional methods for handling country data
@@ -654,6 +651,7 @@ class ScaleFile(models.Model):
     media_type = models.CharField(max_length=250)
     file_size = models.BigIntegerField()
     data_type = models.TextField(blank=True)
+    data_type_tags = django.contrib.postgres.fields.ArrayField(models.CharField(max_length=250, blank=True), default=list)
     file_path = models.CharField(max_length=1000)
     workspace = models.ForeignKey('storage.Workspace', on_delete=models.PROTECT)
     is_deleted = models.BooleanField(default=False)
@@ -729,16 +727,11 @@ class ScaleFile(models.Model):
         return self.uuid
 
     def add_data_type_tag(self, tag):
-        """Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
-        spaces.
+        """Adds a new data type tag to the file.
 
         :param tag: The data type tag to add
         :type tag: string
-        :raises InvalidDataTypeTag: If the given tag is invalid
         """
-
-        if not VALID_TAG_PATTERN.match(tag):
-            raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
 
         tags = self.get_data_type_tags()
         tags.add(tag)
@@ -751,11 +744,7 @@ class ScaleFile(models.Model):
         :rtype: {string}
         """
 
-        tags = set()
-        if self.data_type:
-            for tag in self.data_type.split(','):
-                tags.add(tag)
-        return tags
+        return set(self.data_type_tags)
 
     def set_basic_fields(self, file_name, file_size, media_type=None, data_type=None):
         """Sets the basic fields for the Scale file
@@ -810,7 +799,7 @@ class ScaleFile(models.Model):
         :type tags: {string}
         """
 
-        self.data_type = ','.join(tags)
+        self.data_type_tags = tags
 
     def _get_url(self):
         """Gets the absolute URL used to download this file.
