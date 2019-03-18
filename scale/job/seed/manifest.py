@@ -50,6 +50,7 @@ class SeedManifest(object):
         try:
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
+                self.validate_resources()
         except ValidationError as validation_error:
             raise InvalidSeedManifestDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
 
@@ -94,13 +95,14 @@ class SeedManifest(object):
         for file_output_name in self.get_file_output_names():
             job_data.add_file_output({'name':file_output_name, 'workspace_id': workspace_id})
 
-    # def validate_resources(self):
-    #     """verifies GPUs are whole numbers"""
+    def validate_resources(self):
+        """verifies GPUs are whole numbers"""
 
-    #     resources = self.get_scalar_resources()
-    #     if "gpus" in resources:
-    #         if not float.is_integer(resources["gpus"]):
-    #             raise ValidationError("gpu resource not set to whole number")
+        resources = self.get_scalar_resources()
+        for item in resources:
+            if item['name'] == "gpus":
+                if not float.is_integer(item['value']):
+                    raise ValidationError("gpu resource not set to whole number")
 
     def get_name(self):
         """Gets the Job name
