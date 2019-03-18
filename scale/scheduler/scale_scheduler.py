@@ -236,13 +236,17 @@ class ScaleScheduler(object):
         total_resources = NodeResources()
         skipped_roles = set()
         for offer in offers:
-            offer = from_mesos_offer(offer)
-            offer_id = offer.id.value
-            agent_id = offer.agent_id.value
-            framework_id = offer.framework_id.value
-            hostname = offer.hostname
+            # ignore offers while we're paused
+            if scheduler_mgr.config.is_paused:
+                offer.decline()
+                continue
+            scale_offer = from_mesos_offer(offer)
+            offer_id = scale_offer.id.value
+            agent_id = scale_offer.agent_id.value
+            framework_id = scale_offer.framework_id.value
+            hostname = scale_offer.hostname
             resource_list = []
-            for resource in offer.resources:
+            for resource in scale_offer.resources:
                 # Only accept resource that are of SCALAR type and have a role matching our accept list
                 if resource.type == RESOURCE_TYPE_SCALAR:
                     if resource.role in settings.ACCEPTED_RESOURCE_ROLE:
@@ -251,6 +255,7 @@ class ScaleScheduler(object):
                         resource_list.append(ScalarResource(resource.name, resource.scalar.value))
                     else:
                         skipped_roles.add(resource.role)
+                        offer.decline()
 
             logger.debug("Number of resources: %i" % len(resource_list))
 
@@ -259,7 +264,7 @@ class ScaleScheduler(object):
                 resources = NodeResources(resource_list)
                 total_resources.add(resources)
                 agents[agent_id] = Agent(agent_id, hostname)
-                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started, offer))
 
         logger.debug("Offer analysis complete with %i resource offers." % len(resource_offers))
 

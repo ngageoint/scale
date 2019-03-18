@@ -67,6 +67,20 @@ class ResourceManager(object):
 
         return allocated_offers
 
+    def decline_offers(self):
+        """Directs all agents to remove offers that have not been allocated and return them to be declined by the scheduler.
+
+        :returns: list of offers to decline
+        :rtype: list
+        """
+
+        declined = []
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                declined.extend(agent_resources.decline_offers())
+
+        return declined
+
     def clear(self):
         """Clears all offer data from the manager. This method is intended for testing only.
         """
