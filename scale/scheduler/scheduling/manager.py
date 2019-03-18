@@ -182,7 +182,7 @@ class SchedulingManager(object):
         return ignore_job_type_ids
 
     def _decline_offers(self, offers):
-        """Declines offers that have expired
+        """Declines offers that have not been allocated
 
         :param offers: The Mesos offers
         :type offers: :class:`mesoshttp.offers.Offer`

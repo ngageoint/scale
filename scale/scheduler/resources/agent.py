@@ -156,7 +156,7 @@ class AgentResources(object):
 
     def decline_offers(self):
         """Removes offers that haven't been allocated
-        and returns their ids to send to mesos to decline them
+        and returns them for the scheduler to decline them.
 
         :returns: list of declined offers
         :rtype: list

@@ -68,7 +68,7 @@ class ResourceManager(object):
         return allocated_offers
 
     def decline_offers(self):
-        """Directs all agents to return a list of offers that have not been allocated.
+        """Directs all agents to remove offers that have not been allocated and return them to be declined by the scheduler.
 
         :returns: list of offers to decline
         :rtype: list
