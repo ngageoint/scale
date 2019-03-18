@@ -458,8 +458,8 @@ class Ingest(models.Model):
     :type media_type: :class:`django.db.models.CharField`
     :keyword file_size: The size of the file in bytes
     :type file_size: :class:`django.db.models.BigIntegerField`
-    :keyword data_type: A comma-separated string listing the data type "tags" for the file
-    :type data_type: :class:`django.db.models.TextField`
+    :keyword data_type_tags: An array of data type "tags" for the file
+    :type data_type_tags: :class:`django.db.models.ArrayField`
 
     :keyword file_path: The relative path for where the file is stored in the workspace
     :type file_path: :class:`django.db.models.CharField`
@@ -510,7 +510,6 @@ class Ingest(models.Model):
 
     media_type = models.CharField(max_length=250, blank=True)
     file_size = models.BigIntegerField(blank=True, null=True)
-    data_type = models.TextField(blank=True)
     data_type_tags = django.contrib.postgres.fields.ArrayField(models.CharField(max_length=250, blank=True), default=list)
 
     file_path = models.CharField(max_length=1000, blank=True)

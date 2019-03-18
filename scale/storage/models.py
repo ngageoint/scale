@@ -552,8 +552,8 @@ class ScaleFile(models.Model):
     :type media_type: :class:`django.db.models.CharField`
     :keyword file_size: The size of the file in bytes
     :type file_size: :class:`django.db.models.BigIntegerField`
-    :keyword data_type: A comma-separated string listing the data type "tags" for the file
-    :type data_type: :class:`django.db.models.TextField`
+    :keyword data_type_tags: An array of data type "tags" for the file
+    :type data_type_tags: :class:`django.db.models.ArrayField`
     :keyword file_path: The relative path of the file in its workspace
     :type file_path: :class:`django.db.models.CharField`
     :keyword workspace: The workspace that stores this file
@@ -650,7 +650,6 @@ class ScaleFile(models.Model):
     file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50, db_index=True)
     media_type = models.CharField(max_length=250)
     file_size = models.BigIntegerField()
-    data_type = models.TextField(blank=True)
     data_type_tags = django.contrib.postgres.fields.ArrayField(models.CharField(max_length=250, blank=True), default=list)
     file_path = models.CharField(max_length=1000)
     workspace = models.ForeignKey('storage.Workspace', on_delete=models.PROTECT)
