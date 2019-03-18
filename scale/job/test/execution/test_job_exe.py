@@ -7,7 +7,7 @@ from django.test import TransactionTestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from error.models import reset_error_cache
+from error.models import Error, reset_error_cache
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
@@ -35,6 +35,15 @@ class TestRunningJobExecution(TransactionTestCase):
         manifest = job_test_utils.create_seed_manifest(errors=error_mapping)
         job_type = job_test_utils.create_seed_job_type(manifest=manifest, max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
+
+        error_model = Error()
+        error_model.name = error_mapping[0]['name']
+        error_model.job_type_name = job_type.name
+        error_model.title = error_mapping[0]['title']
+        error_model.description = error_mapping[0]['description']
+        error_model.category = 'ALGORITHM'
+        Error.objects.save_job_error_models(job_type.name, [error_model])
+
         self.agent_id = 'agent'
         self.running_job_exe = job_test_utils.create_running_job_exe(agent_id=self.agent_id, job=job)
 
