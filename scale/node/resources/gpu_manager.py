@@ -13,9 +13,15 @@ class GPUManager(object):
     def assign_gpus_for_job(cls, node_id, job_id, required_gpu_count):
         """
         method that assigns a specific GPU to a job id
-        :param node_id: the node ID
-        :param job_id: the job ID
-        :param required_gpu_count: required GPUs
+
+            :param node_id: the node ID
+            :type node_id: int
+            :param job_id: the job ID
+            :type job_id: int
+            :param required_gpu_count: required GPUs
+            :type required_gpu_count: int
+            :returns: success or failure of assignment
+            :rtype: bool
         """
         logger.info("assigning GPUs, request came for node %s and job %s for %s GPUs", node_id, job_id, required_gpu_count)
         assigned_gpu_count = 0
@@ -45,8 +51,13 @@ class GPUManager(object):
     def reserve_gpus_for_job(cls, node_id, required_gpu_count):
         """
         Method that reserves GPUs for future assignment to a job id
-        :param node_id: the node id
-        :param required_gpu_count: requred GPUs
+
+            :param node_id: the node id
+            :type node_id: int
+            :param required_gpu_count: requred GPUs
+            :type required_gpu_count: int
+            :returns: whether or not reserve was successful
+            :rtype: bool
         """
         
         logger.info("reserving GPUs, request came for node %s and for %s GPUs", node_id, required_gpu_count)
@@ -74,8 +85,13 @@ class GPUManager(object):
         """
         method that returns a formatted string that is to be used
         as a variable for nvidia-docker which specifies which GPUs will be used
-        :param node_id: the node ID
-        :param job_id: the job ID
+
+            :param node_id: the node ID
+            :type node_id: int
+            :param job_id: the job ID
+            :type job_id: int
+            :returns: comma delimited list of GPUs to use 
+            :rtype: string
         """
         gpu_list = ""
         
@@ -94,8 +110,11 @@ class GPUManager(object):
     def define_node_gpus(cls, node_id, gpu_count):
         """
         Method that will create new GPUs in the dictionary based on offered resources from MESOS/DCOS
-        :param node_id: the node ID
-        :param gpu_count: required GPUs
+
+            :param node_id: the node ID
+            :type node_id: int
+            :param gpu_count: required GPUs
+            :type gpu_count: int
         """
         logger.debug("this node has at least %s gpu(s)", gpu_count)
         
@@ -118,8 +137,11 @@ class GPUManager(object):
     def release_gpus(cls, node_id, job_id):
         """
         Method sets GPU status back to available for completed jobs
+
             :param node_id: node ID
+            :type node_id: int
             :param job_id: job ID
+            :type job_id: int
         """
         if node_id in cls.__GPUs:
             for gpunum, gpustatus in cls.__GPUs[node_id].iteritems():
@@ -132,7 +154,11 @@ class GPUManager(object):
     def get_gpu_count_for_node(cls, node_id):
         """
         method to retrieve amount of GPUs for a specific node
+
             :param node_id: node ID
+            :type node_id: int
+            :returns: total amount of GPUs for a specific mode
+            :rtype: int
         """   
         if node_id in cls.__GPUs:
             return len(cls.__GPUs[node_id])
@@ -143,7 +169,11 @@ class GPUManager(object):
     def get_available_gpu_for_node(cls, node_id):
         """
         method to retrieve number of available GPUs for a specific node
+
             :param node_id: node ID
+            :type node_id: int
+            :returns: amount of GPUs available for a specific mode
+            :rtype: int
         """   
         if node_id in cls.__GPUs:
             total_available = 0
