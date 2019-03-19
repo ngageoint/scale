@@ -26,6 +26,7 @@ from job.seed.manifest import SeedManifest
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
+from node.resources.gpu_manager import GPUManager
 from scheduler.vault.manager import secrets_mgr
 from storage.container import get_workspace_volume_path
 from storage.models import Workspace, ScaleFile
@@ -307,9 +308,14 @@ class ScheduledExecutionConfigurator(object):
         for task_type in config.get_task_types():
             # Configure env vars describing allocated task resources
             env_vars = {}
+            nvidia_docker_label = None
+
             for resource in config.get_resources(task_type).resources:
                 env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
                 env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
+                if resource.name == "gpus" and int(resource.value) > 0:
+                    gpu_list = GPUManager.get_nvidia_docker_label(job_exe.node_id, job_exe.job_id)
+                    nvidia_docker_label = DockerParameter('env','NVIDIA_VISIBLE_DEVICES={}'.format(gpu_list.strip(',')))
 
             # Configure env vars for Scale meta-data
             env_vars['SCALE_JOB_ID'] = unicode(job_exe.job_id)
@@ -371,8 +377,13 @@ class ScheduledExecutionConfigurator(object):
         job_type_name_label = DockerParameter('label', 'scale-job-type-name={}'.format(job_type.name))
         job_type_version_label = DockerParameter('label', 'scale-job-type-version={}'.format(job_type.version))
         main_label = DockerParameter('label', 'scale-task-type=main')
-        config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
-                                                  job_execution_id_label, main_label])
+        if nvidia_docker_label:
+            config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
+                                                    job_execution_id_label, main_label, nvidia_docker_label])
+        else:
+            config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
+                                                    job_execution_id_label, main_label])
+
         if not job_type.is_system:
             pre_label = DockerParameter('label', 'scale-task-type=pre')
             post_label = DockerParameter('label', 'scale-task-type=post')

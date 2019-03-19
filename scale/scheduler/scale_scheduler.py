@@ -21,6 +21,7 @@ from mesos_api.tasks import RESOURCE_TYPE_SCALAR
 from mesoshttp.client import MesosClient
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
+from node.resources.gpu_manager import GPUManager
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
 from scheduler.manager import scheduler_mgr
@@ -356,8 +357,11 @@ class ScaleScheduler(object):
             try:
                 job_exe = job_exe_mgr.handle_task_update(task_update)
                 if job_exe and job_exe.is_finished():
+                    logger.info("job_exe with job id %s and node id %s is finished", job_exe.job_id, job_exe.node_id)
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
+                    GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
+
             except Exception:
                 cluster_id = JobExecution.parse_cluster_id(task_id)
                 logger.exception('Error handling status update for job execution: %s', cluster_id)

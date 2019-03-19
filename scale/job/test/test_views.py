@@ -2556,6 +2556,24 @@ class TestJobTypesPostViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_create_seed_partial_gpu_resource(self):
+        """Tests creating a job type with partial GPU resource."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['resources']['scalar'].append({'name': 'gpus', 'value': 1.1 })
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'max_scheduled': '1',
+            'docker_image': '',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
     @patch('job.models.CommandMessageManager')
     @patch('recipe.messages.update_recipe_definition.create_job_update_recipe_definition_message')
     def test_edit_seed_job_type_and_update(self, mock_create, mock_msg_mgr):
