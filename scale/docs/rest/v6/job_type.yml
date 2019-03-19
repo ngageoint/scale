@@ -303,7 +303,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/job_type_name'
+            $ref: '#/components/schemas/job_type_base'
           description: List of Job Type objects
     job_type_name:
       title: Job Type Name
@@ -352,9 +352,15 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_paused:
+          type: boolean
+          example: false
         is_published:
           type: boolean
           example: true
+        unmet_resources:
+          type: string
+          example: "cpu"
     job_type_versions:
       title: Job Type Versions
       type: object
@@ -409,6 +415,9 @@ components:
         is_paused:
           type: boolean
           example: false
+        is_published:
+          type: boolean
+          example: false
         is_system:
           type: boolean
           example: false
@@ -421,7 +430,7 @@ components:
         docker_image:
           type: string
           example: "my-job-1.0.0-seed:1.0.0"
-        unmet_resources
+        unmet_resources:
           type: string
           example: "cpu"
         created:

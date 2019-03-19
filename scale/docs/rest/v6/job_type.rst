@@ -456,8 +456,10 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
-            "icon_code": "012F",
-            "is_published": true
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f013",
+            "unmet_resources": []
           },
           "revision_num": 1,
           "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -528,7 +530,10 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "My first job",
         "description": "My very first job",
-        "icon_code": "012F"
+        "is_paused": false,
+        "is_published": false,
+        "icon_code": "f013",
+        "unmet_resources": []
       },
       "revision_num": 1,
       "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -1122,16 +1127,10 @@ Request: GET http://.../v6/job-types/status/
           "version": "1.0",
           "title": "Scale Ingest",
           "description": "Ingests a source file into a workspace",
-          "category": "system",
-          "author_name": null,
-          "author_url": null,
-          "is_system": true,
-          "is_long_running": false,
-          "is_active": true,
-          "is_operational": true,
           "is_paused": false,
           "is_published": true,
-          "icon_code": "f013"
+          "icon_code": "f013",
+          "unmet_resources": []
         },
         "job_counts": [{
             "status": "RUNNING",
@@ -1160,15 +1159,10 @@ Request: GET http://.../v6/job-types/status/
           "version": "1.0",
           "title": "Scale Clock",
           "description": "Monitors a directory for incoming files to ingest",
-          "category": "system",
-          "author_name": null,
-          "author_url": null,
-          "is_system": true,
-          "is_long_running": true,
-          "is_active": true,
-          "is_operational": true,
           "is_paused": false,
-          "icon_code": "f013"
+          "is_published": true,
+          "icon_code": "f013",
+          "unmet_resources": []
         },
         "job_counts": []
       }
@@ -1253,16 +1247,10 @@ Request: GET http://.../v6/job-types/pending/
         "version": "1.0",
         "title": "Scale Clock",
         "description": "",
-        "category": "system",
-        "author_name": null,
-        "author_url": null,
-        "is_system": true,
-        "is_long_running": true,
-        "is_active": true,
-        "is_operational": true,
         "is_paused": false,
         "is_published": true,
-        "icon_code": "f013"
+        "icon_code": "f013",
+        "unmet_resources": []
       },
       "count": 1,
       "longest_pending": "2015-09-08T15:43:15.681Z"
@@ -1322,16 +1310,10 @@ Request: GET http://.../v6/job-types/status/
         "version": "1.0",
         "title": "Scale Clock",
         "description": "",
-        "category": "system",
-        "author_name": null,
-        "author_url": null,
-        "is_system": true,
-        "is_long_running": true,
-        "is_active": true,
-        "is_operational": true,
         "is_paused": false,
         "is_published": true,
-        "icon_code": "f013"
+        "icon_code": "f013",
+        "unmet_resources": []
       },
       "count": 1,
       "longest_running": "2015-09-08T15:43:15.681Z"
@@ -1390,16 +1372,10 @@ Request: GET http://.../v6/job-types/system-failures/
         "version": "1.0",
         "title": "Scale Clock",
         "description": "",
-        "category": "system",
-        "author_name": null,
-        "author_url": null,
-        "is_system": true,
-        "is_long_running": true,
-        "is_active": true,
-        "is_operational": true,
         "is_paused": false,
         "is_published": true,
-        "icon_code": "f013"
+        "icon_code": "f013",
+        "unmet_resources": []
       },
       "error": {
         "id": 1,

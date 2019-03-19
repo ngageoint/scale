@@ -63,8 +63,10 @@ Response: 200 OK
                     "version": "1.0.0",
                     "title": "KML Footprint", 
                     "description": "Creates a KML file.",
-                    "revision_num": 1, 
-                    "icon_code": "f0ac" 
+                    "is_paused": false,
+                    "is_published": true,
+                    "icon_code": "f013",
+                    "unmet_resources": []
                 }, 
                 "recipe": { 
                     "id": 60 
@@ -314,8 +316,10 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "PNG Filter", 
             "description": "Filters PNG images into a new PNG image", 
-            "revision_num": 1, 
-            "icon_code": "f0ac" 
+            "is_paused": false,
+            "is_published": true,
+            "icon_code": "f013",
+            "unmet_resources": []
         }, 
         "recipe": { 
             "id": 60 
