@@ -131,6 +131,8 @@ class IngestSerializerV5(IngestBaseSerializer):
 
     scan = ScanBaseSerializer()
     strike = StrikeBaseSerializer()
+    data_type = serializers.ListField(child=serializers.CharField(), source='data_type_tags')
+    data_type_tags = None
 
     workspace = WorkspaceSerializerV5()
     new_workspace = WorkspaceSerializerV5()
