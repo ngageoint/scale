@@ -38,7 +38,9 @@ from job.job_type_serializers import (JobTypeSerializerV5, JobTypeSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV5,
                                       JobTypeDetailsSerializerV6, JobTypePendingStatusSerializer,
                                       JobTypeRunningStatusSerializer, JobTypeFailedStatusSerializer,
-                                      JobTypeStatusSerializer)
+                                      JobTypeStatusSerializer,JobTypePendingStatusSerializerV6,
+                                      JobTypeRunningStatusSerializerV6, JobTypeFailedStatusSerializerV6,
+                                      JobTypeStatusSerializerV6)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.exceptions import InvalidResources
@@ -928,8 +930,17 @@ class JobTypesValidationView(APIView):
 class JobTypesPendingView(ListAPIView):
     """This view is the endpoint for retrieving the status of all currently pending job types."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypePendingStatusSerializer
+    #serializer_class = JobTypePendingStatusSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobTypePendingStatusSerializerV6
+        else:
+            return JobTypePendingStatusSerializer
+            
     def list(self, request):
         """Retrieves the current status of pending job types and returns it in JSON form
 
@@ -951,8 +962,17 @@ class JobTypesPendingView(ListAPIView):
 class JobTypesRunningView(ListAPIView):
     """This view is the endpoint for retrieving the status of all currently running job types."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeRunningStatusSerializer
+    #serializer_class = JobTypeRunningStatusSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobTypeRunningStatusSerializerV6
+        else:
+            return JobTypeRunningStatusSerializer
+            
     def list(self, request):
         """Retrieves the current status of running job types and returns it in JSON form
 
@@ -974,8 +994,17 @@ class JobTypesRunningView(ListAPIView):
 class JobTypesSystemFailuresView(ListAPIView):
     """This view is the endpoint for viewing system errors organized by job type."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeFailedStatusSerializer
+    #serializer_class = JobTypeFailedStatusSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobTypeFailedStatusSerializerV6
+        else:
+            return JobTypeFailedStatusSerializer
+            
     def list(self, request):
         """Retrieves the job types that have failed with system errors and returns them in JSON form
 
@@ -997,8 +1026,17 @@ class JobTypesSystemFailuresView(ListAPIView):
 class JobTypesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall job type status information."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeStatusSerializer
+    #serializer_class = JobTypeStatusSerializer
+    
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
 
+        if self.request.version == 'v6':
+            return JobTypeStatusSerializerV6
+        else:
+            return JobTypeStatusSerializer
+            
     def list(self, request):
         """Retrieves the list of all job types with status and returns it in JSON form
 
