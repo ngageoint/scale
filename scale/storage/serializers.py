@@ -129,6 +129,7 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     from recipe.serializers import RecipeTypeBaseSerializerV6
 
     workspace = WorkspaceBaseSerializer()
+    data_type_tags = serializers.ListField(child=serializers.CharField())
     media_type = serializers.CharField()
     file_type = serializers.CharField()
     file_size = serializers.IntegerField()  # TODO: BigIntegerField?

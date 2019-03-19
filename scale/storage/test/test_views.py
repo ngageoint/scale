@@ -32,7 +32,7 @@ class TestFilesViewV5(TestCase):
         self.f1_source_started = dt.datetime(2016, 1, 1, tzinfo=utc)
         self.f1_source_ended = dt.datetime(2016, 1, 2, tzinfo=utc)
         self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
-                                                    source_ended=self.f1_source_ended,
+                                                    source_ended=self.f1_source_ended, data_type_tags=['type1', 'type2'],
                                                     last_modified=self.f1_last_modified)
 
         self.f2_file_name = 'qaz.bar'
@@ -40,7 +40,7 @@ class TestFilesViewV5(TestCase):
         self.f2_source_started = dt.datetime(2016, 1, 2, tzinfo=utc)
         self.f2_source_ended = dt.datetime(2016, 1, 3, tzinfo=utc)
         self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
-                                                    source_ended=self.f2_source_ended,
+                                                    source_ended=self.f2_source_ended, 
                                                     last_modified=self.f2_last_modified)
 
     def test_file_name_successful(self):
@@ -57,6 +57,7 @@ class TestFilesViewV5(TestCase):
         self.assertEqual(self.f1_file_name, result[0]['file_name'])
         self.assertEqual('2016-01-01T00:00:00Z', result[0]['source_started'])
         self.assertEqual(self.file1.id, result[0]['id'])
+        self.assertListEqual(['type1', 'type2'], result[0]['data_type'])
 
     def test_bad_file_name(self):
         """Tests unsuccessfully calling the get files by name view"""
@@ -109,7 +110,8 @@ class TestFilesViewV6(TestCase):
                                                           source_sensor_class=self.source_sensor_class,
                                                           source_sensor=self.source_sensor,
                                                           source_collection=self.source_collection,
-                                                          source_task=self.source_task)
+                                                          source_task=self.source_task,
+                                                          data_type_tags=['type1', 'type2'])
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
@@ -252,6 +254,7 @@ class TestFilesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['file_name'], self.file1.file_name)
+        self.assertListEqual(['type1', 'type2'], result['results'][0]['data_type_tags'])
         
     def test_job_output(self):
         """Tests successfully calling the files view filtered by job output."""
