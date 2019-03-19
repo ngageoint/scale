@@ -536,7 +536,7 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_trigger_rule_custom(self):
         """Tests calling BatchManager.schedule_recipes() using a custom trigger rule."""
 
-        file1 = storage_test_utils.create_file(media_type='text/custom', data_type='test')
+        file1 = storage_test_utils.create_file(media_type='text/custom', data_type_tags=['test'])
 
         definition = {
             'trigger_rule': {

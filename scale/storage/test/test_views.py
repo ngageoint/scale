@@ -304,7 +304,7 @@ class TestFileDetailsViewV6(TestCase):
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
         self.batch1 = batch_test_utils.create_batch(recipe_type=self.recipe_type1, is_creation_done=True)
         self.file = storage_test_utils.create_file( file_name='test.txt', file_type='SOURCE', media_type='image/png', 
-                                                    file_size=1000, data_type='png',  file_path='/test/path', 
+                                                    file_size=1000, data_type_tags=['png'],  file_path='/test/path',
                                                     workspace=self.workspace1, is_deleted=False, last_modified='', 
                                                     data_started='2017-01-01T00:00:00Z', data_ended='2017-01-01T00:00:00Z', 
                                                     source_started='2017-01-01T00:00:00Z', source_ended='2017-01-01T00:00:00Z', 

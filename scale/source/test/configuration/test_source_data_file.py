@@ -21,12 +21,12 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
         self.file_name_1 = 'my_file.txt'
         self.media_type_1 = 'text/plain'
         self.source_file_1 = ScaleFile.objects.create(file_name=self.file_name_1, file_type='SOURCE',
-                                                      media_type=self.media_type_1, file_size=10, data_type='Dummy',
+                                                      media_type=self.media_type_1, file_size=10, data_type_tags=['Dummy'],
                                                       file_path='the_path', workspace=self.workspace)
         self.file_name_2 = 'my_file.json'
         self.media_type_2 = 'application/json'
         self.source_file_2 = ScaleFile.objects.create(file_name=self.file_name_2, file_type='SOURCE',
-                                                      media_type=self.media_type_2, file_size=10, data_type='Dummy',
+                                                      media_type=self.media_type_2, file_size=10, data_type_tags=['Dummy'],
                                                       file_path='the_path', workspace=self.workspace)
 
         self.extra_source_file_id = 99999

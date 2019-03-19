@@ -136,7 +136,7 @@ class TestBatchesViewV5(TestCase):
     def test_create_trigger_custom(self):
         """Tests creating a new batch using a custom trigger rule."""
         workspace = storage_test_utils.create_workspace()
-        storage_test_utils.create_file(media_type='text/plain', data_type='test', workspace=workspace)
+        storage_test_utils.create_file(media_type='text/plain', data_type_tags=['test'], workspace=workspace)
 
         json_data = {
             'recipe_type_id': self.recipe_type1.id,
@@ -867,7 +867,7 @@ class TestBatchesValidationViewV5(TestCase):
     def test_successful_trigger_custom(self):
         """Tests validating a batch definition with a custom trigger rule."""
         workspace = storage_test_utils.create_workspace()
-        storage_test_utils.create_file(media_type='text/plain', data_type='test', workspace=workspace)
+        storage_test_utils.create_file(media_type='text/plain', data_type_tags=['test'], workspace=workspace)
 
         json_data = {
             'recipe_type_id': self.recipe_type1.id,

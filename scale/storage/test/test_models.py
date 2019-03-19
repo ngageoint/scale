@@ -89,13 +89,18 @@ class TestScaleFileAddDataTypeTag(TestCase):
 
         self.assertSetEqual(tags, correct_set)
 
-    def test_invalid(self):
-        """Tests calling add_data_type_tag() with invalid tags"""
+    def test_same_tag(self):
+        """Tests calling add_data_type_tag() with the same tag twice"""
 
         the_file = ScaleFile()
+        the_file.add_data_type_tag('Hello-1')
+        the_file.add_data_type_tag('Hello-1')
+        tags = the_file.get_data_type_tags()
 
-        self.assertRaises(InvalidDataTypeTag, the_file.add_data_type_tag, 'my.invalid.tag')
-        self.assertRaises(InvalidDataTypeTag, the_file.add_data_type_tag, 'my\invalid\tag!')
+        correct_set = set()
+        correct_set.add('Hello-1')
+
+        self.assertSetEqual(tags, correct_set)
 
 
 class TestScaleFileGetDataTypeTags(TestCase):
@@ -106,7 +111,7 @@ class TestScaleFileGetDataTypeTags(TestCase):
     def test_tags(self):
         """Tests calling get_data_type_tags() with tags"""
 
-        the_file = ScaleFile(data_type='A,B,c')
+        the_file = ScaleFile(data_type_tags=['A','B','c'])
         tags = the_file.get_data_type_tags()
 
         correct_set = set()

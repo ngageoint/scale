@@ -107,7 +107,7 @@ class IngestBaseSerializer(ModelIdSerializer):
 
     media_type = serializers.CharField()
     file_size = serializers.IntegerField()  # TODO: BigIntegerField?
-    data_type_tags = data_type_tags = serializers.CharField(many=true)
+    data_type_tags = serializers.ListField(child=serializers.CharField())
 
     file_path = serializers.CharField()
     workspace = ModelIdSerializer()

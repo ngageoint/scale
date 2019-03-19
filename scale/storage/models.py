@@ -745,7 +745,7 @@ class ScaleFile(models.Model):
 
         return set(self.data_type_tags)
 
-    def set_basic_fields(self, file_name, file_size, media_type=None, data_type=None):
+    def set_basic_fields(self, file_name, file_size, media_type=None, data_type_tags=None):
         """Sets the basic fields for the Scale file
 
         :param file_name: The name of the file
@@ -764,8 +764,8 @@ class ScaleFile(models.Model):
         self.file_name = file_name
         self.file_size = file_size
         self.media_type = media_type
-        if data_type:
-            for tag in data_type:
+        if data_type_tags:
+            for tag in data_type_tags:
                 self.add_data_type_tag(tag)
 
     def set_countries(self):
