@@ -1193,9 +1193,6 @@ Request: GET http://.../v6/job-types/status/
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| is_operational     | String            | Optional | Return only job types that are operational (True) or still in a     |
-|                    |                   |          | research & development (R&D) phase (False).                         |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -1418,7 +1415,7 @@ Request: GET http://.../v6/job-types/system-failures/
 | .job_type          | JSON Object       | The job type that is associated with the count.                                |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .count             | Integer           | The number of jobs of this type that are currently running.                    |
+| .count             | Integer           | The number of jobs of this type that have an error.                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .error             | JSON Object       | The error that is associated with the count.                                   |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
