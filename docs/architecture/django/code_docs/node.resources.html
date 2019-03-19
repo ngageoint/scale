@@ -255,6 +255,200 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-node.resources.gpu_manager">
+<span id="node-resources-gpu-manager-module"></span><h2>node.resources.gpu_manager module<a class="headerlink" href="#module-node.resources.gpu_manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that keeps track of GPU resources on a per node basis</p>
+<dl class="class">
+<dt id="node.resources.gpu_manager.GPUManager">
+<em class="property">class </em><code class="descclassname">node.resources.gpu_manager.</code><code class="descname">GPUManager</code><a class="headerlink" href="#node.resources.gpu_manager.GPUManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The class that holds the GPU library and manages it. 
+Not thread safe!!!</p>
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.assign_gpus_for_job">
+<em class="property">classmethod </em><code class="descname">assign_gpus_for_job</code><span class="sig-paren">(</span><em>node_id</em>, <em>job_id</em>, <em>required_gpu_count</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.assign_gpus_for_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>method that assigns a specific GPU to a job id</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">the node ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param job_id:</th><td class="field-body">the job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type job_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">param required_gpu_count:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">required GPUs</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">type required_gpu_count:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">success or failure of assignment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.define_node_gpus">
+<em class="property">classmethod </em><code class="descname">define_node_gpus</code><span class="sig-paren">(</span><em>node_id</em>, <em>gpu_count</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.define_node_gpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that will create new GPUs in the dictionary based on offered resources from MESOS/DCOS</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">the node ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">param gpu_count:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">required GPUs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type gpu_count:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.get_available_gpu_for_node">
+<em class="property">classmethod </em><code class="descname">get_available_gpu_for_node</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.get_available_gpu_for_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>method to retrieve number of available GPUs for a specific node</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">node ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">amount of GPUs available for a specific mode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.get_gpu_count_for_node">
+<em class="property">classmethod </em><code class="descname">get_gpu_count_for_node</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.get_gpu_count_for_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>method to retrieve amount of GPUs for a specific node</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">node ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">total amount of GPUs for a specific mode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.get_nvidia_docker_label">
+<em class="property">classmethod </em><code class="descname">get_nvidia_docker_label</code><span class="sig-paren">(</span><em>node_id</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.get_nvidia_docker_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>method that returns a formatted string that is to be used
+as a variable for nvidia-docker which specifies which GPUs will be used</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">the node ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param job_id:</th><td class="field-body">the job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type job_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">comma delimited list of GPUs to use</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.release_gpus">
+<em class="property">classmethod </em><code class="descname">release_gpus</code><span class="sig-paren">(</span><em>node_id</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.release_gpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method sets GPU status back to available for completed jobs</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">node ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param job_id:</th><td class="field-body">job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type job_id:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.reserve_gpus_for_job">
+<em class="property">classmethod </em><code class="descname">reserve_gpus_for_job</code><span class="sig-paren">(</span><em>node_id</em>, <em>required_gpu_count</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.reserve_gpus_for_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that reserves GPUs for future assignment to a job id</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param node_id:</th><td class="field-body">the node id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type node_id:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">param required_gpu_count:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">requred GPUs</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">type required_gpu_count:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">whether or not reserve was successful</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="node.resources.gpu_manager.GPUManager.reset_gpu_dict">
+<em class="property">classmethod </em><code class="descname">reset_gpu_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.gpu_manager.GPUManager.reset_gpu_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>resets the GPU dictionary.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-node.resources.node_resources">
 <span id="node-resources-node-resources-module"></span><h2>node.resources.node_resources module<a class="headerlink" href="#module-node.resources.node_resources" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that represents a set of resources on a node</p>

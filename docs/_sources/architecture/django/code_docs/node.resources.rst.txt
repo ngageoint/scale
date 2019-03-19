@@ -19,6 +19,14 @@ node\.resources\.exceptions module
     :undoc-members:
     :show-inheritance:
 
+node\.resources\.gpu\_manager module
+------------------------------------
+
+.. automodule:: node.resources.gpu_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 node\.resources\.node\_resources module
 ---------------------------------------
 

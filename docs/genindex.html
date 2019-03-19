@@ -832,6 +832,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.exceptions.ArchivedWorkspace">ArchivedWorkspace</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.assign_gpus_for_job">assign_gpus_for_job() (node.resources.gpu_manager.GPUManager class method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.AtomicCounter">AtomicCounter (class in job.tasks.base_task)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.author_name">author_name (job.models.JobType attribute)</a>
@@ -2205,6 +2207,8 @@
       <li><a href="architecture/django/code_docs/util.html#util.rest.DefaultPagination">DefaultPagination (class in util.rest)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.deferred_count">deferred_count (metrics.models.MetricsIngest attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.define_node_gpus">define_node_gpus() (node.resources.gpu_manager.GPUManager class method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.definition">definition (batch.models.Batch attribute)</a>
 
@@ -3662,6 +3666,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_args">get_args() (job.execution.configuration.json.exe_config.ExecutionConfiguration method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.get_available_gpu_for_node">get_available_gpu_for_node() (node.resources.gpu_manager.GPUManager class method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_basic_jobs">get_basic_jobs() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_batch_comparison_v6">get_batch_comparison_v6() (batch.models.BatchManager method)</a>
@@ -4031,6 +4037,8 @@
       <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.forced_nodes_v6.ForcedNodesV6.get_forced_nodes">get_forced_nodes() (recipe.diff.json.forced_nodes_v6.ForcedNodesV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.forced_nodes.ForcedNodes.get_forced_nodes_for_subrecipe">get_forced_nodes_for_subrecipe() (recipe.diff.forced_nodes.ForcedNodes method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.get_gpu_count_for_node">get_gpu_count_for_node() (node.resources.gpu_manager.GPUManager class method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_graph">get_graph() (recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition method)</a>
 
@@ -4589,6 +4597,8 @@
       <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff.get_nodes_to_unpublish">get_nodes_to_unpublish() (recipe.diff.diff.RecipeDiff method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.get_num_job_exes">get_num_job_exes() (scheduler.cleanup.node.NodeCleanup method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.get_nvidia_docker_label">get_nvidia_docker_label() (node.resources.gpu_manager.GPUManager class method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.S3Client.get_object">get_object() (util.aws.S3Client method)</a>
 </li>
@@ -5321,6 +5331,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.gmi">gmi (storage.models.CountryData attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager">GPUManager (class in node.resources.gpu_manager)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Gpus">Gpus (class in node.resources.resource)</a>
 </li>
@@ -8754,6 +8766,8 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#module-node.resources.exceptions">node.resources.exceptions (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.resources.html#module-node.resources.gpu_manager">node.resources.gpu_manager (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/node.resources.json.html#module-node.resources.json">node.resources.json (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.json.html#module-node.resources.json.resources">node.resources.json.resources (module)</a>
@@ -8771,6 +8785,8 @@
       <li><a href="architecture/django/code_docs/node.test.resources.json.html#module-node.test.resources.json">node.test.resources.json (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.resources.json.html#module-node.test.resources.json.test_resources">node.test.resources.json.test_resources (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#module-node.test.resources.test_gpu_manager">node.test.resources.test_gpu_manager (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#module-node.test.test_views">node.test.test_views (module)</a>
 </li>
@@ -10806,12 +10822,12 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeConditionManager">RecipeConditionManager (class in recipe.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.apps.RecipeConfig">RecipeConfig (class in recipe.apps)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.html#recipe.configuration.configuration.RecipeConfiguration">RecipeConfiguration (class in recipe.configuration.configuration)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.configuration.json.html#recipe.configuration.json.recipe_config_v6.RecipeConfigurationV6">RecipeConfigurationV6 (class in recipe.configuration.json.recipe_config_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.seed.html#recipe.seed.recipe_connection.RecipeConnection">RecipeConnection (class in recipe.seed.recipe_connection)</a>
@@ -11068,6 +11084,8 @@
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.lock.DebugLock.release">release() (util.lock.DebugLock method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.release_gpus">release_gpus() (node.resources.gpu_manager.GPUManager class method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.reload_configuration">reload_configuration() (ingest.strike.monitors.monitor.Monitor method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.JobExeMetrics.remove_job_execution">remove_job_execution() (job.execution.metrics.JobExeMetrics method)</a>
@@ -11138,7 +11156,11 @@
         <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.rescind_offers">(scheduler.resources.manager.ResourceManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.reserve_gpus_for_job">reserve_gpus_for_job() (node.resources.gpu_manager.GPUManager class method)</a>
+</li>
       <li><a href="architecture/django/code_docs/error.html#error.models.reset_error_cache">reset_error_cache() (in module error.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.gpu_manager.GPUManager.reset_gpu_dict">reset_gpu_dict() (node.resources.gpu_manager.GPUManager class method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.reset_new_job_exes">reset_new_job_exes() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
@@ -12321,6 +12343,8 @@
 </li>
         <li><a href="architecture/django/code_docs/node.test.resources.json.html#node.test.resources.json.test_resources.TestResources.setUp">(node.test.resources.json.test_resources.TestResources method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.setUp">(node.test.resources.test_gpu_manager.test_GPUManager method)</a>
+</li>
         <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.setUp">(node.test.test_views.TestNodeDetailsViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.setUp">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
@@ -13474,6 +13498,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestPurgeResults.test_access">(storage.test.test_models.TestPurgeResults method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_add_additional_GPU">test_add_additional_GPU() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers">test_add_allocated_offers() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers_remove_all_tasks">test_add_allocated_offers_remove_all_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
@@ -13486,6 +13512,8 @@
 </li>
       <li><a href="architecture/django/code_docs/data.test.filter.html#data.test.filter.test_filter.TestDataFilter.test_add_filter">test_add_filter() (data.test.filter.test_filter.TestDataFilter method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_add_less_gpu">test_add_less_gpu() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_backends.TestBackendsFactory.test_add_message_backend">test_add_message_backend() (messaging.test.test_backends.TestBackendsFactory method)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_messages.TestMessagesFactory.test_add_message_type">test_add_message_type() (messaging.test.test_messages.TestMessagesFactory method)</a>
@@ -13496,6 +13524,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.configuration.html#recipe.test.configuration.test_configuration.TestRecipeConfiguration.test_add_mount">(recipe.test.configuration.test_configuration.TestRecipeConfiguration method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_add_new_node_gpus">test_add_new_node_gpus() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.html#job.test.configuration.test_configuration.TestJobConfiguration.test_add_output_workspace">test_add_output_workspace() (job.test.configuration.test_configuration.TestJobConfiguration method)</a>
 
       <ul>
@@ -13577,6 +13607,8 @@
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail_10_times">test_always_fail_10_times() (util.test.test_retry.TestRetry method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail_no_decorator_args">test_always_fail_no_decorator_args() (util.test.test_retry.TestRetry method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_assign_gpus">test_assign_gpus() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.test_bad_config">test_bad_config() (recipe.test.test_views.TestRecipesPostViewV6 method)</a>
 </li>
@@ -13789,6 +13821,8 @@
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestJobLoadManager.test_calculate_status">test_calculate_status() (queue.test.test_models.TestJobLoadManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_strike_is_none">test_calculate_strike_is_none() (metrics.test.test_models.TestMetricsIngest method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_calls_where_node_has_no_gpus">test_calls_where_node_has_no_gpus() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsViewV5.test_cancel">test_cancel() (job.test.test_views.TestCancelJobsViewV5 method)</a>
 
@@ -14193,6 +14227,8 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_param">test_create_seed_missing_param() (job.test.test_views.TestJobTypesPostViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_setting">test_create_seed_missing_setting() (job.test.test_views.TestJobTypesPostViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_partial_gpu_resource">test_create_seed_partial_gpu_resource() (job.test.test_views.TestJobTypesPostViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_secrets">test_create_seed_secrets() (job.test.test_views.TestJobTypesPostViewV6 method)</a>
 </li>
@@ -14938,6 +14974,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.instance.html#recipe.test.instance.test_recipe.TestRecipe.test_get_nodes_to_process_input">test_get_nodes_to_process_input() (recipe.test.instance.test_recipe.TestRecipe method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_get_nvidia_label">test_get_nvidia_label() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.instance.html#recipe.test.instance.test_recipe.TestRecipe.test_get_original_leaf_nodes">test_get_original_leaf_nodes() (recipe.test.instance.test_recipe.TestRecipe method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs">test_get_pending_jobs() (recipe.test.handlers.test_handler.TestRecipeHandler method)</a>
@@ -15009,6 +15047,8 @@
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph.TestRecipeGraph.test_get_topological_order">test_get_topological_order() (recipe.test.handlers.test_graph.TestRecipeGraph method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.seed.html#job.test.seed.test_types.TestSeedOutputsJson.test_get_values">test_get_values() (job.test.seed.test_types.TestSeedOutputsJson method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager">test_GPUManager (class in node.test.resources.test_gpu_manager)</a>
 </li>
       <li><a href="architecture/django/code_docs/data.test.filter.html#data.test.filter.test_filter.TestDataFilter.test_greater_than">test_greater_than() (data.test.filter.test_filter.TestDataFilter method)</a>
 </li>
@@ -16278,6 +16318,8 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_post">test_parse_dict_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration">test_parse_duration() (util.test.test_parse.TestParse method)</a>
@@ -16286,8 +16328,6 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_default">test_parse_duration_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration_invalid">test_parse_duration_invalid() (util.test.test_parse.TestParse method)</a>
@@ -16582,6 +16622,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_recursive_successfully_strip_path">test_recursive_successfully_strip_path() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_release_gpu">test_release_gpu() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.html#job.test.configuration.test_configuration.TestJobConfiguration.test_remove_secret_settings">test_remove_secret_settings() (job.test.configuration.test_configuration.TestJobConfiguration method)</a>
 
       <ul>
@@ -16623,6 +16665,8 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_required_workspace_missing">test_required_workspace_missing() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_scheduler.TestScheduler.test_reregistration_triggers_reconciliation">test_reregistration_triggers_reconciliation() (scheduler.test.test_scheduler.TestScheduler method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#node.test.resources.test_gpu_manager.test_GPUManager.test_reserve_gpu">test_reserve_gpu() (node.test.resources.test_gpu_manager.test_GPUManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_reset_new_job_exes">test_reset_new_job_exes() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
@@ -19507,6 +19551,8 @@
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.validate_recipe_type_v5">validate_recipe_type_v5() (recipe.models.RecipeTypeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.validate_recipe_type_v6">validate_recipe_type_v6() (recipe.models.RecipeTypeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.validate_resources">validate_resources() (job.seed.manifest.SeedManifest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.validate_scan_v6">validate_scan_v6() (ingest.models.ScanManager method)</a>
 </li>

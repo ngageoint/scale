@@ -8,6 +8,18 @@ Subpackages
 
     node.test.resources.json
 
+Submodules
+----------
+
+node\.test\.resources\.test\_gpu\_manager module
+------------------------------------------------
+
+.. automodule:: node.test.resources.test_gpu_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 
