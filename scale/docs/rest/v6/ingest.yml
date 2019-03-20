@@ -36,10 +36,10 @@ paths:
           name: order
           schema:
             type: string
-          description: "One or more fields to use when ordering the results.
-                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
-                        Nested objects require a delimiter (ex: order=source_file__created)
-                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+          description: "One or more fields to use when ordering the results. |
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+                        Nested objects require a delimiter (ex: order=source_file__created) |
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created) |
         - in: query
           name: status
           schema:
