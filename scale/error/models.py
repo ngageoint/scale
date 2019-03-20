@@ -129,7 +129,7 @@ class ErrorManager(models.Manager):
         for error in self.filter(is_builtin=True).iterator():
             _cache_error(error)
 
-    def get_errors(self, started=None, ended=None, order=None):
+    def get_errors(self, started=None, ended=None, order=None, is_builtin=None, job_type_name=None, name=None, category=None):
         """Returns a list of errors within the given time range.
 
         :param started: Query errors updated after this amount of time.
@@ -138,7 +138,15 @@ class ErrorManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :param order: A list of fields to control the sort order.
         :type order: list[str]
-        :returns: The list of errors that match the time range.
+        :param is_builtin: Query errors that match the is_builtin flag
+        :type is_builtin: bool
+        :param job_type_name: Query errors that match the given job type name
+        :type job_type_ids: sring
+        :param name: Query errors with the given name
+        :type name: string
+        :param category: Query errors with the given category.
+        :type category: string
+        :returns: The list of errors that match the given filters
         :rtype: list[:class:`error.models.Error`]
         """
 
@@ -150,6 +158,15 @@ class ErrorManager(models.Manager):
             errors = errors.filter(last_modified__gte=started)
         if ended:
             errors = errors.filter(last_modified__lte=ended)
+
+        if is_builtin:
+            errors = errors.filter(is_builtin=is_builtin)
+        if job_type_name:
+            errors = errors.filter(job_type_name=job_type_name)
+        if name:
+            errors = errors.filter(name=name)
+        if category:
+            errors = errors.filter(category=category)
 
         # Apply sorting
         if order:
