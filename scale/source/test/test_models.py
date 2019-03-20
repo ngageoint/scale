@@ -34,7 +34,7 @@ class TestSourceFileManager(TestCase):
                                                   last_modified=now())
 
         self.src_file = ScaleFile.objects.create(file_name='text.txt', file_type='SOURCE', media_type='text/plain',
-                                                 file_size=10, data_type='type', file_path='the_path',
+                                                 file_size=10, data_type_tags=['type'], file_path='the_path',
                                                  workspace=self.workspace)
 
         self.started = now()
@@ -121,7 +121,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(), last_modified=now())
 
         self.src_file = ScaleFile.objects.create(file_name='text.txt', file_type='SOURCE', media_type='text/plain',
-                                                 file_size=10, data_type='type', file_path='the_path',
+                                                 file_size=10, data_type_tags=['type'], file_path='the_path',
                                                  workspace=workspace)
 
         self.started = now()

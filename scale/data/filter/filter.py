@@ -315,7 +315,8 @@ class DataFilter(object):
                         elif type == 'media-type':
                             file_values = [scale_file.media_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
                         elif type == 'data-type':
-                            file_values = [scale_file.data_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                            list_of_lists = [scale_file.data_type_tags for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
+                            file_values = [item for sublist in list_of_lists for item in sublist]
                         # attempt to run condition on list, i.e. in case we're checking 'contains'
                         filter_success |= ALL_CONDITIONS[cond](file_values, values)
                         file_success = all_files

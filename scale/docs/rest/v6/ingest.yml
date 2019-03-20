@@ -202,7 +202,7 @@ components:
           type: integer
           description: The size of the file in bytes.
           example: 1234
-        data_type:
+        data_type_tags:
           type: array
           style: simple
           items:
@@ -423,7 +423,7 @@ components:
           type: integer
           description: The size of the file in bytes.
           example: 1234
-        data_type:
+        data_type_tags:
           type: array
           style: simple
           items:

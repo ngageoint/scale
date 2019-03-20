@@ -6,27 +6,6 @@ from rest_framework.fields import CharField
 
 from util.rest import ModelIdSerializer
 
-class DataTypeField(CharField):
-    """Field for displaying the list of data type tags for a Scale file"""
-
-    type_name = 'DataTypeField'
-    type_label = 'datatype'
-
-    def to_representation(self, value):
-        """Converts the model field to a list of data type tags
-
-        :param value: the comma-separated data types for the Scale file
-        :type value: str
-        :rtype: list of str
-        :returns: the list of data type tags
-        """
-
-        tags = []
-        if value:
-            for tag in value.split(','):
-                tags.append(tag)
-        return tags
-
 
 class WktField(CharField):
     """Field for displaying geometry objects as Well Known Text"""
@@ -112,7 +91,7 @@ class ScaleFileBaseSerializerV5(ModelIdSerializer):
     media_type = serializers.CharField()
     file_type = serializers.CharField()
     file_size = serializers.IntegerField()  # TODO: BigIntegerField?
-    data_type = DataTypeField()
+    data_type = serializers.ListField(child=serializers.CharField(), source='data_type_tags')
     is_deleted = serializers.BooleanField()
     uuid = serializers.CharField()
     url = serializers.URLField()
@@ -150,6 +129,7 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     from recipe.serializers import RecipeTypeBaseSerializerV6
 
     workspace = WorkspaceBaseSerializer()
+    data_type_tags = serializers.ListField(child=serializers.CharField())
     media_type = serializers.CharField()
     file_type = serializers.CharField()
     file_size = serializers.IntegerField()  # TODO: BigIntegerField?

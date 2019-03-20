@@ -29,13 +29,18 @@ class TestIngestAddDataTypeTag(TestCase):
 
         self.assertSetEqual(tags, correct_set)
 
-    def test_invalid(self):
-        """Tests calling add_data_type_tag() with invalid tags"""
+    def test_same_tag(self):
+        """Tests calling add_data_type_tag() with the same tag twice"""
 
         ingest = Ingest()
+        ingest.add_data_type_tag('Hello1')
+        ingest.add_data_type_tag('Hello1')
+        tags = ingest.get_data_type_tags()
 
-        self.assertRaises(InvalidDataTypeTag, ingest.add_data_type_tag, 'my.invalid.tag')
-        self.assertRaises(InvalidDataTypeTag, ingest.add_data_type_tag, 'my\invalid\tag!')
+        correct_set = set()
+        correct_set.add('Hello1')
+
+        self.assertSetEqual(tags, correct_set)
 
 
 class TestIngestGetDataTypeTags(TestCase):
@@ -45,7 +50,7 @@ class TestIngestGetDataTypeTags(TestCase):
     def test_tags(self):
         """Tests calling get_data_type_tags() with tags"""
 
-        ingest = Ingest(data_type='A,B,c')
+        ingest = Ingest(data_type_tags=['A','B','c'])
         tags = ingest.get_data_type_tags()
 
         correct_set = set()

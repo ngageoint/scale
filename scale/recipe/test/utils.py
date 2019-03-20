@@ -777,7 +777,7 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
 
 
 def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
-                      file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type='',
+                      file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type_tags=[],
                       last_modified=None, source_started=None, source_ended=None):
     """Creates a Scale file and recipe input file model for unit testing
 
@@ -792,7 +792,7 @@ def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name
     if not input_file:
         input_file = storage_test_utils.create_file(file_name=file_name, media_type=media_type, file_size=file_size,
                                                     file_path=file_path, workspace=workspace, countries=countries,
-                                                    is_deleted=is_deleted, data_type=data_type,
+                                                    is_deleted=is_deleted, data_type_tags=data_type_tags,
                                                     last_modified=last_modified, source_started=source_started,
                                                     source_ended=source_ended)
 

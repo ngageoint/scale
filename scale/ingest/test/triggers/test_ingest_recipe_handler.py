@@ -28,7 +28,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         self.workspace = storage_test_utils.create_workspace()
         self.source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
-                                               media_type='text/plain', file_size=10, data_type='type1',
+                                               media_type='text/plain', file_size=10, data_type_tags=['type1'],
                                                     file_path='the_path', workspace=self.workspace)
         self.source_file.add_data_type_tag('type1')
         self.source_file.add_data_type_tag('type2')
