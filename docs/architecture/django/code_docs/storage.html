@@ -306,6 +306,9 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0012_auto_20180920_1320">storage.migrations.0012_auto_20180920_1320 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0013_purgeresults">storage.migrations.0013_purgeresults module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0014_purgeresults_force_stop_purge">storage.migrations.0014_purgeresults_force_stop_purge module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0015_scalefile_data_type_tags">storage.migrations.0015_scalefile_data_type_tags module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0016_populate_data_type_tags">storage.migrations.0016_populate_data_type_tags module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0017_remove_scalefile_data_type">storage.migrations.0017_remove_scalefile_data_type module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -986,7 +989,7 @@ object the first time, the query is executed.</p>
 <li><strong>file_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The (Scale) type of the file</li>
 <li><strong>media_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The IANA media type of the file</li>
 <li><strong>file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The size of the file in bytes</li>
-<li><strong>data_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; A comma-separated string listing the data type &#8220;tags&#8221; for the file</li>
+<li><strong>data_type_tags</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ArrayField</span></code>) &#8211; An array of data type &#8220;tags&#8221; for the file</li>
 <li><strong>file_path</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The relative path of the file in its workspace</li>
 <li><strong>workspace</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The workspace that stores this file</li>
 <li><strong>is_deleted</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the file has been deleted or not</li>
@@ -1059,15 +1062,12 @@ complete successfully and has not been unpublished.</li>
 <dl class="method">
 <dt id="storage.models.ScaleFile.add_data_type_tag">
 <code class="descname">add_data_type_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
-spaces.</p>
+<dd><p>Adds a new data type tag to the file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>string</em>) &#8211; The data type tag to add</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#storage.exceptions.InvalidDataTypeTag" title="storage.exceptions.InvalidDataTypeTag"><strong>InvalidDataTypeTag</strong></a> &#8211; If the given tag is invalid</td>
 </tr>
 </tbody>
 </table>
@@ -1151,8 +1151,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="storage.models.ScaleFile.data_type">
-<code class="descname">data_type</code><a class="headerlink" href="#storage.models.ScaleFile.data_type" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.models.ScaleFile.data_type_tags">
+<code class="descname">data_type_tags</code><a class="headerlink" href="#storage.models.ScaleFile.data_type_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1503,7 +1503,7 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.set_basic_fields">
-<code class="descname">set_basic_fields</code><span class="sig-paren">(</span><em>file_name</em>, <em>file_size</em>, <em>media_type=None</em>, <em>data_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_basic_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_basic_fields</code><span class="sig-paren">(</span><em>file_name</em>, <em>file_size</em>, <em>media_type=None</em>, <em>data_type_tags=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_basic_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the basic fields for the Scale file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2432,41 +2432,6 @@ transaction. An argument of None for a field indicates that the field should not
 <div class="section" id="module-storage.serializers">
 <span id="storage-serializers-module"></span><h2>storage.serializers module<a class="headerlink" href="#module-storage.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for Scale files and workspaces</p>
-<dl class="class">
-<dt id="storage.serializers.DataTypeField">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">DataTypeField</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.DataTypeField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></code></p>
-<p>Field for displaying the list of data type tags for a Scale file</p>
-<dl class="method">
-<dt id="storage.serializers.DataTypeField.to_representation">
-<code class="descname">to_representation</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.DataTypeField.to_representation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the model field to a list of data type tags</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>str</em>) &#8211; the comma-separated data types for the Scale file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of data type tags</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="storage.serializers.DataTypeField.type_label">
-<code class="descname">type_label</code><em class="property"> = u'datatype'</em><a class="headerlink" href="#storage.serializers.DataTypeField.type_label" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.serializers.DataTypeField.type_name">
-<code class="descname">type_name</code><em class="property"> = u'DataTypeField'</em><a class="headerlink" href="#storage.serializers.DataTypeField.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="storage.serializers.GeoJsonField">
 <em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">GeoJsonField</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.GeoJsonField" title="Permalink to this definition">¶</a></dt>

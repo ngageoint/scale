@@ -225,6 +225,7 @@
                 <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_type_tags&quot;</span><span class="o">:</span> <span class="p">[],</span>
             <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
             <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
             <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
@@ -483,13 +484,21 @@ Duplicate it to filter by multiple values.</td>
 <td>String</td>
 <td colspan="2">The name of the file.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.media_type</td>
+<tr class="row-even"><td colspan="2">.data_type_tags</td>
+<td>Array</td>
+<td colspan="2">A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.media_type</td>
 <td>String</td>
 <td colspan="2">The IANA media type of the file.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.file_size</td>
+<tr class="row-even"><td colspan="2">.file_size</td>
 <td>Integer</td>
 <td colspan="2">The size of the file in bytes.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.file_path</td>
+<td>String</td>
+<td colspan="2">The relative path of the file in the workspace.</td>
 </tr>
 <tr class="row-even"><td colspan="2">.is_deleted</td>
 <td>Boolean</td>
@@ -622,6 +631,7 @@ contained in the geographic boundary of this file.</td>
         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file2.png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data_type_tags&quot;</span><span class="o">:</span> <span class="p">[],</span>
     <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
     <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
     <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
@@ -724,13 +734,21 @@ contained in the geographic boundary of this file.</td>
 <td>String</td>
 <td>The name of the file.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">media_type</td>
+<tr class="row-odd"><td colspan="2">data_type_tags</td>
+<td>Array</td>
+<td>A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">media_type</td>
 <td>String</td>
 <td>The IANA media type of the file.</td>
 </tr>
-<tr class="row-even"><td colspan="2">file_size</td>
+<tr class="row-odd"><td colspan="2">file_size</td>
 <td>Integer</td>
 <td>The size of the file in bytes.</td>
+</tr>
+<tr class="row-even"><td colspan="2">file_path</td>
+<td>String</td>
+<td>The relative path of the file in the workspace.</td>
 </tr>
 <tr class="row-odd"><td colspan="2">is_deleted</td>
 <td>Boolean</td>

@@ -2156,10 +2156,12 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.data_started">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.data_type">data_type (ingest.models.Ingest attribute)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.data_type_tags">data_type_tags (ingest.models.Ingest attribute)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.data_type">(storage.models.ScaleFile attribute)</a>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestSerializerV5.data_type_tags">(ingest.serializers.IngestSerializerV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.data_type_tags">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.manager.SystemTaskManager.DATABASE_UPDATE_ERR_THRESHOLD">DATABASE_UPDATE_ERR_THRESHOLD (scheduler.tasks.manager.SystemTaskManager attribute)</a>
@@ -2175,8 +2177,6 @@
       <li><a href="architecture/django/code_docs/data.filter.html#data.filter.filter.DataFilter">DataFilter (class in data.filter.filter)</a>
 </li>
       <li><a href="architecture/django/code_docs/data.filter.json.html#data.filter.json.filter_v6.DataFilterV6">DataFilterV6 (class in data.filter.json.filter_v6)</a>
-</li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.DataTypeField">DataTypeField (class in storage.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/data.data.json.html#data.data.json.data_v1.DataV1">DataV1 (class in data.data.json.data_v1)</a>
 </li>
@@ -2316,6 +2316,12 @@
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0014_auto_20170412_1225.Migration.dependencies">(ingest.migrations.0014_auto_20170412_1225.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0015_ingestevent.Migration.dependencies">(ingest.migrations.0015_ingestevent.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0016_ingest_data_type_tags.Migration.dependencies">(ingest.migrations.0016_ingest_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0017_populate_data_type_tags.Migration.dependencies">(ingest.migrations.0017_populate_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0018_remove_ingest_data_type.Migration.dependencies">(ingest.migrations.0018_remove_ingest_data_type.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0001_initial.Migration.dependencies">(job.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -2642,6 +2648,12 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration.dependencies">(storage.migrations.0013_purgeresults.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0014_purgeresults_force_stop_purge.Migration.dependencies">(storage.migrations.0014_purgeresults_force_stop_purge.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0015_scalefile_data_type_tags.Migration.dependencies">(storage.migrations.0015_scalefile_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0016_populate_data_type_tags.Migration.dependencies">(storage.migrations.0016_populate_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0017_remove_scalefile_data_type.Migration.dependencies">(storage.migrations.0017_remove_scalefile_data_type.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.dependencies">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -5764,6 +5776,12 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0015_ingestevent">ingest.migrations.0015_ingestevent (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0016_ingest_data_type_tags">ingest.migrations.0016_ingest_data_type_tags (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0017_populate_data_type_tags">ingest.migrations.0017_populate_data_type_tags (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0018_remove_ingest_data_type">ingest.migrations.0018_remove_ingest_data_type (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.models">ingest.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.MultipleObjectsReturned">Ingest.MultipleObjectsReturned</a>
@@ -5932,10 +5950,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent">IngestEvent (class in ingest.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.DoesNotExist">IngestEvent.DoesNotExist</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.DoesNotExist">IngestEvent.DoesNotExist</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent.MultipleObjectsReturned">IngestEvent.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.ingestevent_set">ingestevent_set (ingest.models.Ingest attribute)</a>
@@ -8165,6 +8183,12 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0015_ingestevent.Migration">(class in ingest.migrations.0015_ingestevent)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0016_ingest_data_type_tags.Migration">(class in ingest.migrations.0016_ingest_data_type_tags)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0017_populate_data_type_tags.Migration">(class in ingest.migrations.0017_populate_data_type_tags)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0018_remove_ingest_data_type.Migration">(class in ingest.migrations.0018_remove_ingest_data_type)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0001_initial.Migration">(class in job.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0002_jobexecution_job_metrics.Migration">(class in job.migrations.0002_jobexecution_job_metrics)</a>
@@ -8490,6 +8514,12 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration">(class in storage.migrations.0013_purgeresults)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0014_purgeresults_force_stop_purge.Migration">(class in storage.migrations.0014_purgeresults_force_stop_purge)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0015_scalefile_data_type_tags.Migration">(class in storage.migrations.0015_scalefile_data_type_tags)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0016_populate_data_type_tags.Migration">(class in storage.migrations.0016_populate_data_type_tags)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0017_remove_scalefile_data_type.Migration">(class in storage.migrations.0017_remove_scalefile_data_type)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration">(class in trigger.migrations.0001_initial)</a>
 </li>
@@ -9063,6 +9093,12 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0015_ingestevent.Migration.operations">(ingest.migrations.0015_ingestevent.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0016_ingest_data_type_tags.Migration.operations">(ingest.migrations.0016_ingest_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0017_populate_data_type_tags.Migration.operations">(ingest.migrations.0017_populate_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0018_remove_ingest_data_type.Migration.operations">(ingest.migrations.0018_remove_ingest_data_type.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0001_initial.Migration.operations">(job.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0002_jobexecution_job_metrics.Migration.operations">(job.migrations.0002_jobexecution_job_metrics.Migration attribute)</a>
@@ -9389,6 +9425,12 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0014_purgeresults_force_stop_purge.Migration.operations">(storage.migrations.0014_purgeresults_force_stop_purge.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0015_scalefile_data_type_tags.Migration.operations">(storage.migrations.0015_scalefile_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0016_populate_data_type_tags.Migration.operations">(storage.migrations.0016_populate_data_type_tags.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0017_remove_scalefile_data_type.Migration.operations">(storage.migrations.0017_remove_scalefile_data_type.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.operations">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration.operations">(trigger.migrations.0002_auto_20151125_1438.Migration attribute)</a>
@@ -9620,6 +9662,12 @@
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_2.JobInterface.populate_command_argument_settings">(job.configuration.interface.job_interface_1_2.JobInterface method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_3.JobInterface.populate_command_argument_settings">(job.configuration.interface.job_interface_1_3.JobInterface method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0017_populate_data_type_tags.populate_data_type_tags">populate_data_type_tags() (in module ingest.migrations.0017_populate_data_type_tags)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0016_populate_data_type_tags.populate_data_type_tags">(in module storage.migrations.0016_populate_data_type_tags)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.populate_env_vars_arguments">populate_env_vars_arguments() (job.configuration.interface.job_interface.JobInterface method)</a>
@@ -13110,6 +13158,12 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0014_purgeresults_force_stop_purge">storage.migrations.0014_purgeresults_force_stop_purge (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0015_scalefile_data_type_tags">storage.migrations.0015_scalefile_data_type_tags (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0016_populate_data_type_tags">storage.migrations.0016_populate_data_type_tags (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0017_remove_scalefile_data_type">storage.migrations.0017_remove_scalefile_data_type (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.models">storage.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.move_files_job">storage.move_files_job (module)</a>
@@ -15336,12 +15390,6 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_with_share_resource_works">test_interface_with_share_resource_works() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid">test_invalid() (ingest.test.test_models.TestIngestAddDataTypeTag method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileAddDataTypeTag.test_invalid">(storage.test.test_models.TestScaleFileAddDataTypeTag method)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_forced_nodes_v6.TestForcedNodesV6.test_invalid_additional_property">test_invalid_additional_property() (recipe.test.diff.json.test_forced_nodes_v6.TestForcedNodesV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewJobView.test_invalid_args">test_invalid_args() (queue.test.test_views.TestQueueNewJobView method)</a>
@@ -16318,10 +16366,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_post">test_parse_dict_post() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration">test_parse_duration() (util.test.test_parse.TestParse method)</a>
 
       <ul>
@@ -16710,6 +16758,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_metrics.TestTotalJobExeMetrics.test_running_executions">test_running_executions() (job.test.execution.test_metrics.TestTotalJobExeMetrics method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestIngestAddDataTypeTag.test_same_tag">test_same_tag() (ingest.test.test_models.TestIngestAddDataTypeTag method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileAddDataTypeTag.test_same_tag">(storage.test.test_models.TestScaleFileAddDataTypeTag method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestErrorManager.test_save_job_error_models">test_save_job_error_models() (error.test.test_models.TestErrorManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_mapping.TestJobErrorMapping.test_save_models">test_save_models() (job.test.error.test_mapping.TestJobErrorMapping method)</a>
@@ -18955,8 +19009,6 @@
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.serializers.SourceFileUpdateField.to_representation">(source.serializers.SourceFileUpdateField method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.html#storage.serializers.DataTypeField.to_representation">(storage.serializers.DataTypeField method)</a>
-</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.serializers.GeoJsonField.to_representation">(storage.serializers.GeoJsonField method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.serializers.WktField.to_representation">(storage.serializers.WktField method)</a>
@@ -19097,8 +19149,6 @@
       <ul>
         <li><a href="architecture/django/code_docs/source.html#source.serializers.SourceFileUpdateField.type_label">(source.serializers.SourceFileUpdateField attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.html#storage.serializers.DataTypeField.type_label">(storage.serializers.DataTypeField attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.serializers.GeoJsonField.type_label">(storage.serializers.GeoJsonField attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.serializers.WktField.type_label">(storage.serializers.WktField attribute)</a>
@@ -19108,8 +19158,6 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/source.html#source.serializers.SourceFileUpdateField.type_name">(source.serializers.SourceFileUpdateField attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/storage.html#storage.serializers.DataTypeField.type_name">(storage.serializers.DataTypeField attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.serializers.GeoJsonField.type_name">(storage.serializers.GeoJsonField attribute)</a>
 </li>

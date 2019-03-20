@@ -358,9 +358,9 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid">
-<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling add_data_type_tag() with invalid tags</p>
+<dt id="ingest.test.test_models.TestIngestAddDataTypeTag.test_same_tag">
+<code class="descname">test_same_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_same_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling add_data_type_tag() with the same tag twice</p>
 </dd></dl>
 
 <dl class="method">
@@ -1601,7 +1601,7 @@
 <p>Defines utility methods for testing ingests</p>
 <dl class="function">
 <dt id="ingest.test.utils.create_ingest">
-<code class="descclassname">ingest.test.utils.</code><code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name=u'test.txt'</em>, <em>status=u'TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>new_workspace=None</em>, <em>strike=None</em>, <em>scan=None</em>, <em>source_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name=u'test.txt'</em>, <em>status=u'TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>new_workspace=None</em>, <em>strike=None</em>, <em>scan=None</em>, <em>source_file=None</em>, <em>data_type_tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">

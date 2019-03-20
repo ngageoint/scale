@@ -124,6 +124,30 @@ ingest\.migrations\.0015\_ingestevent module
     :undoc-members:
     :show-inheritance:
 
+ingest\.migrations\.0016\_ingest\_data\_type\_tags module
+---------------------------------------------------------
+
+.. automodule:: ingest.migrations.0016_ingest_data_type_tags
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.migrations\.0017\_populate\_data\_type\_tags module
+-----------------------------------------------------------
+
+.. automodule:: ingest.migrations.0017_populate_data_type_tags
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.migrations\.0018\_remove\_ingest\_data\_type module
+-----------------------------------------------------------
+
+.. automodule:: ingest.migrations.0018_remove_ingest_data_type
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

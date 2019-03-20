@@ -116,6 +116,30 @@ storage\.migrations\.0014\_purgeresults\_force\_stop\_purge module
     :undoc-members:
     :show-inheritance:
 
+storage\.migrations\.0015\_scalefile\_data\_type\_tags module
+-------------------------------------------------------------
+
+.. automodule:: storage.migrations.0015_scalefile_data_type_tags
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.migrations\.0016\_populate\_data\_type\_tags module
+------------------------------------------------------------
+
+.. automodule:: storage.migrations.0016_populate_data_type_tags
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.migrations\.0017\_remove\_scalefile\_data\_type module
+---------------------------------------------------------------
+
+.. automodule:: storage.migrations.0017_remove_scalefile_data_type
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

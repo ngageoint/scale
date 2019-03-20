@@ -472,9 +472,9 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.test_models.TestScaleFileAddDataTypeTag.test_invalid">
-<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling add_data_type_tag() with invalid tags</p>
+<dt id="storage.test.test_models.TestScaleFileAddDataTypeTag.test_same_tag">
+<code class="descname">test_same_tag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.test_same_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling add_data_type_tag() with the same tag twice</p>
 </dd></dl>
 
 <dl class="method">
@@ -1312,7 +1312,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type=u''</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_class=None</em>, <em>source_sensor=None</em>, <em>source_collection=None</em>, <em>source_task=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data={}</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type_tags=[]</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_class=None</em>, <em>source_sensor=None</em>, <em>source_collection=None</em>, <em>source_task=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data={}</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

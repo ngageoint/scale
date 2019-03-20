@@ -270,6 +270,9 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0013_auto_20170406_1517">ingest.migrations.0013_auto_20170406_1517 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0014_auto_20170412_1225">ingest.migrations.0014_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0015_ingestevent">ingest.migrations.0015_ingestevent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0016_ingest_data_type_tags">ingest.migrations.0016_ingest_data_type_tags module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0017_populate_data_type_tags">ingest.migrations.0017_populate_data_type_tags module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0018_remove_ingest_data_type">ingest.migrations.0018_remove_ingest_data_type module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -520,7 +523,7 @@
 <li><strong>bytes_transferred</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The total number of bytes transferred so far</li>
 <li><strong>media_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The IANA media type of the file</li>
 <li><strong>file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The size of the file in bytes</li>
-<li><strong>data_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; A comma-separated string listing the data type &#8220;tags&#8221; for the file</li>
+<li><strong>data_type_tags</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ArrayField</span></code>) &#8211; An array of data type &#8220;tags&#8221; for the file</li>
 <li><strong>file_path</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The relative path for where the file is stored in the workspace</li>
 <li><strong>workspace</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The workspace where the file was transferred</li>
 <li><strong>new_file_path</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The relative path for where the file should be moved as part of ingesting</li>
@@ -558,15 +561,12 @@
 <dl class="method">
 <dt id="ingest.models.Ingest.add_data_type_tag">
 <code class="descname">add_data_type_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
-spaces.</p>
+<dd><p>Adds a new data type tag to the file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>string</em>) &#8211; The data type tag to add</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.exceptions.InvalidDataTypeTag" title="storage.exceptions.InvalidDataTypeTag"><strong>InvalidDataTypeTag</strong></a> &#8211; If the given tag is invalid</td>
 </tr>
 </tbody>
 </table>
@@ -621,8 +621,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ingest.models.Ingest.data_type">
-<code class="descname">data_type</code><a class="headerlink" href="#ingest.models.Ingest.data_type" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.models.Ingest.data_type_tags">
+<code class="descname">data_type_tags</code><a class="headerlink" href="#ingest.models.Ingest.data_type_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2333,6 +2333,11 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.IngestSerializerV5.data_type_tags">
+<code class="descname">data_type_tags</code><em class="property"> = None</em><a class="headerlink" href="#ingest.serializers.IngestSerializerV5.data_type_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
