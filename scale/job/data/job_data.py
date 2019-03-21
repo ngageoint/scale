@@ -340,7 +340,7 @@ class JobData(object):
 
         for json_input in self._new_data.values.values():
             if isinstance(json_input, JsonValue):
-                env_vars[normalize_env_var_name(json_input.name)] = json_input.value
+                env_vars[normalize_env_var_name(json_input.name)] = str(json_input.value)
 
         return env_vars
 

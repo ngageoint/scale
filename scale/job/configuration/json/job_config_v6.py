@@ -174,7 +174,6 @@ class JobConfigurationV6(object):
         :returns: The job configuration
         :rtype: :class:`job.configuration.configuration.JobConfiguration`:
         """
-
         config = JobConfiguration()
 
         for name, mount_dict in self._config['mounts'].items():

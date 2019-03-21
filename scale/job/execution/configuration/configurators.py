@@ -71,23 +71,7 @@ class QueuedExecutionConfigurator(object):
 
         # Set up env vars for job's input data
         input_values = data.get_injected_input_values(input_files_dict)
-        interface = None
-        if JobInterfaceSunset.is_seed_dict(job.job_type.manifest):
-            interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
-        elif job.job_type.manifest and 'input_data' in job.job_type.manifest:
-            # TODO: This can be removed when support for legacy job types is removed
-            interface = Interface()
-            for input_dict in job.job_type.manifest['input_data']:
-                media_types = input_dict['media_types'] if 'media_types' in input_dict else []
-                required = input_dict['required'] if 'required' in input_dict else True
-                if input_dict['type'] == 'file':
-                    param = FileParameter(input_dict['name'], media_types, required, False)
-                    interface.add_parameter(param)
-                elif input_dict['type'] == 'files':
-                    param = FileParameter(input_dict['name'], media_types, required, True)
-                    interface.add_parameter(param)
-                elif input_dict['type'] == 'property':
-                    interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
+        interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
 
         env_vars = {}
         if isinstance(data, JobData):
@@ -184,7 +168,6 @@ class QueuedExecutionConfigurator(object):
         :returns: A dict where workspaces are stored by name
         :rtype: dict
         """
-
         workspaces = {}
         data = job.get_input_data()
 
@@ -193,13 +176,13 @@ class QueuedExecutionConfigurator(object):
             workspace_name = None
             new_workspace_name = None
             if 'workspace' in data.values:
-                workspace_name = data.values['workspace']
+                workspace_name = data.values['workspace'].value
                 if 'new_workspace' in data.values:
-                    new_workspace_name = data.values['new_workspace']
+                    new_workspace_name = data.values['new_workspace'].value
             else:
                 # Old ingest jobs do not have the workspace(s) in their data, will need to query ingest model
-                if 'INGEST_ID' in data.values:
-                    ingest_id = data.values['INGEST_ID'].value
+                if 'ingest_id' in data.values:
+                    ingest_id = data.values['ingest_id'].value
                     from ingest.models import Ingest
                     ingest = Ingest.objects.select_related('workspace', 'new_workspace').get(id=ingest_id)
                     workspace_name = ingest.workspace.name
@@ -428,10 +411,9 @@ class ScheduledExecutionConfigurator(object):
         :param interface: The job interface
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         """
-
         # Set shared memory if required by this job type
         resources = job_type.get_resources().get_json().get_dict()['resources']
-        shared_mem = resources['sharedMem'] if 'sharedMem' in resources else 0
+        shared_mem = resources['sharedmem'] if 'sharedmem' in resources else 0
 
         if shared_mem > 0:
             shared_mem = int(math.ceil(shared_mem))
@@ -468,7 +450,6 @@ class ScheduledExecutionConfigurator(object):
         :param system_logging_level: The logging level to be passed in through environment
         :type system_logging_level: str
         """
-
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_exe.docker_image))
         config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS)
@@ -512,7 +493,8 @@ class ScheduledExecutionConfigurator(object):
         env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH}
         args = config._get_task_dict('main')['args']
 
-        args = environment_expansion(env_vars, args, remove_extras=True)
+        args = environment_expansion(env_vars, args)#, remove_extras=True)
+
         config.add_to_task('main', args=args, env_vars=env_vars)
 
         # Configure task resources
@@ -556,6 +538,7 @@ class ScheduledExecutionConfigurator(object):
             config.add_to_task('post', settings=self._system_settings_hidden)
             config_with_secrets.add_to_task('post', settings=self._system_settings)
             job_config = job_exe.job.get_job_configuration()
+
             secret_settings = secrets_mgr.retrieve_job_type_secrets(job_type.get_secrets_key())
             for _config, secrets_hidden in [(config, True), (config_with_secrets, False)]:
                 task_settings = {}
@@ -571,6 +554,11 @@ class ScheduledExecutionConfigurator(object):
                         value = job_config.get_setting_value(name)
                     if 'required' in setting and setting['required'] or value is not None:
                         task_settings[name] = value
+
+                # env_vars = task_settings
+                args = config._get_task_dict('main')['args']
+                args = environment_expansion(task_settings, args)#, remove_extras=True)
+                _config.add_to_task('main', args=args, settings=task_settings)
 
         # Configure env vars for settings
         for _config in [config, config_with_secrets]:
