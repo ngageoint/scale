@@ -486,6 +486,8 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                                       is_active=is_active, configuration=configuration, docker_image=docker_image,
                                       is_system=is_system)
 
+
+
     version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
     job_type.version_array = version_array
     job_type.save()
