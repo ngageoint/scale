@@ -7,6 +7,7 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
+from batch.definition.definition import BatchDefinition
 from batch.test import utils as batch_test_utils
 from batch.models import Batch
 from job.models import Job, JobExecution, TaskUpdate
@@ -110,9 +111,12 @@ class TestDatabaseUpdater(TestCase):
     def test_update_batch_fields(self):
         """Tests running the database update to populate new batch fields in job and recipe models"""
 
-        batch_1 = batch_test_utils.create_batch()
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
+        batch_1 = batch_test_utils.create_batch(recipe_type=recipe_type)
         batch_1.recipe_type_rev_id = 1
         batch_1.configuration = {}
+        batch_1.root_batch_id = batch_1.id
+        batch_1.superseded_batch = None
         batch_1.save()
         batch_2 = batch_test_utils.create_batch()
 
@@ -152,6 +156,8 @@ class TestDatabaseUpdater(TestCase):
         batch_3 = batch_test_utils.create_batch(recipe_type=recipe_type_3)
         batch_3.recipe_type_rev_id = 1
         batch_3.created = time_batch
+        batch_3.root_batch_id = batch_3.id
+        batch_3.superseded_batch = None
         batch_3.save()
 
         # Run update
@@ -160,8 +166,7 @@ class TestDatabaseUpdater(TestCase):
 
         # Check results
         batch_1 = Batch.objects.get(id=batch_1.id)
-        self.assertTrue(batch_1.is_creation_done)
-        self.assertEqual(batch_1.recipes_estimated, 2)
+        self.assertEqual(batch_1.recipes_estimated, 10)
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         self.assertEqual(batch_1.recipe_type_rev_id, recipe_type_rev.id)
         self.assertEqual(batch_1.root_batch_id, batch_1.id)
