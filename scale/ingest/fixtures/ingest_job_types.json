@@ -47,6 +47,7 @@
 			"configuration": {
 			    "priority": 10
 			},
+			"revision_num": 3,
             "max_scheduled": 50,
 			"max_tries": 3,
 			"created": "2015-03-11T00:00:00.0Z",
@@ -74,7 +75,7 @@
 			         },
     		         "timeout": 3600,
     		         "interface": {
-                         "command": "${scale_ingest -i :Ingest_ID} ${-m :Mount}",
+                         "command": "scale_ingest -i ${INGEST_ID} -m ${MOUNT}",
                          "inputs": {
                              "json": [
                                  { "name": "Ingest_ID", "type": "integer", "required": true},
@@ -114,7 +115,7 @@
 			         },
     		         "timeout": 3600,
     		         "interface": {
-                         "command": "scale_ingest ${-i :Ingest_ID}",
+                         "command": "scale_ingest -i ${INGEST_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "Ingest_ID", "type": "integer", "required": true}
@@ -153,7 +154,7 @@
 			         },
     		         "timeout": 3600,
     		         "interface": {
-                         "command": "scale_ingest ${-i :ingest_id}",
+                         "command": "scale_ingest -i ${INGEST_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "ingest_id", "type": "integer", "required": true},
@@ -201,7 +202,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_strike ${-i :Strike_ID}",
+                         "command": "scale_strike -i ${STRIKE_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "Strike_ID", "type": "integer", "required": true}
@@ -220,6 +221,7 @@
 			"configuration": {
                 "priority": 5
 			},
+			"revision_num": 1,
             "max_tries": 0,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z",
@@ -246,7 +248,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_strike ${-i :Strike_ID}",
+                         "command": "scale_strike -i ${STRIKE_ID}",
                          "inputs": {
                              "json": [
                                  { "name": "Strike_ID", "type": "integer", "required": true}
@@ -292,7 +294,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_scan ${-i :Scan_ID} ${-d :Dry Run}",
+                         "command": "scale_scan -i ${SCAN_ID} -d ${DRY_RUN}",
                          "inputs": {
                             "json": [
                                 {"name": "Scan_ID", "type": "integer", "required": true},
@@ -312,6 +314,7 @@
 			"configuration": {
                 "priority": 5
 			},
+			"revision_num": 1,
             "max_tries": 0,
             "created": "2017-02-07T00:00:00.0Z",
             "last_modified": "2017-02-07T00:00:00.0Z",
@@ -338,7 +341,7 @@
 			         },
     		         "timeout": 0,
     		         "interface": {
-                         "command": "scale_scan ${-i :Scan_ID} ${-d :Dry_Run}",
+                         "command": "scale_scan -i ${SCAN_ID} -d ${DRY_RUN}",
                          "inputs": {
                             "json": [
                                 {"name": "Scan_ID", "type": "integer", "required": true},
