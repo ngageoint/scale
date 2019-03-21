@@ -321,25 +321,8 @@ class IngestManager(models.Manager):
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             data = Data()
             data.add_value(JsonValue('Ingest_ID', ingest_id))
-=======
-            # TODO: What is our way forward with ingest jobs? Move to system task or Seed Job Type?
-            # data = JobData()
-            # data.add_property_input('ingest_id', str(ingest_id))
-            # data.add_property_input('workspace', ingest.workspace.name)
-            # if ingest.new_workspace:
-            #     data.add_property_input('new_workspace', ingest.new_workspace.name)
-
-            data = Data()
-            data.add_value(JsonValue('ingest_id', ingest_id))
->>>>>>> :fire: Removing ingest v5 APIs; fixed the scale system job seed declarations
-=======
-            data = Data()
-            data.add_value(JsonValue('Ingest_ID', ingest_id))
->>>>>>> :fire: :fire: :fire: More v5 removal
             data.add_value(JsonValue('workspace', ingest.workspace.name))
             if ingest.new_workspace:
                 data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
