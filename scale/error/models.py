@@ -159,7 +159,7 @@ class ErrorManager(models.Manager):
         if ended:
             errors = errors.filter(last_modified__lte=ended)
 
-        if is_builtin:
+        if is_builtin is not None:
             errors = errors.filter(is_builtin=is_builtin)
         if job_type_name:
             errors = errors.filter(job_type_name=job_type_name)

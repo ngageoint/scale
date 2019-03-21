@@ -124,7 +124,15 @@ class TestErrorsViewV6(TestCase):
 
         results = json.loads(response.content)
         count = results['count']
-        self.assertEqual(count, 2)
+        self.assertEqual(count, 0)
+        
+        url = '/%s/errors/?started=2017-01-01T00:00:00Z&ended=2117-01-02T00:00:00Z' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        count = results['count']
+        self.assertEqual(count, 3)
         
     def test_list_errors_filter_builtin(self):
         """Tests successfully calling the get Errors method."""
@@ -159,7 +167,7 @@ class TestErrorsViewV6(TestCase):
 
         results = json.loads(response.content)
         count = results['count']
-        self.assertEqual(count, 2)
+        self.assertEqual(count, 1)
 
     def test_list_errors_filter_category(self):
         url = '/%s/errors/?category=SYSTEM' % self.api
