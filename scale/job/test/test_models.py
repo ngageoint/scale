@@ -21,43 +21,10 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
-from job.error.mapping import create_legacy_error_mapping
 from job.seed.results.job_results import JobResults as SeedJobResults
 from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, JobTypeTag
 from node.resources.json.resources import Resources
 
-
-# TODO: Remove before release, just for reference (v5, v6)
-# {
-#     'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
-#     'inputs': {
-#         'files': [{'name': 'INPUT_IMAGE', 'mediaTypes': ['image/png'], 'required': True}]
-#     },
-#     'outputs': {
-#         'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png'}]
-#     },
-#     'mounts': [
-#       {
-#         'name': 'MOUNT_PATH',
-#         'path': '/the/container/path',
-#         'mode': 'ro'
-#       }
-#     ],
-#     'settings': [
-#       {
-#         'name': 'VERSION',
-#         'secret': False
-#       },
-#       {
-#         'name': 'DB_HOST',
-#         'secret': False
-#       },
-#       {
-#         'name': 'DB_PASS',
-#       'secret': True
-#       }
-#     ]
-# }
 
 class TestJobManager(TransactionTestCase):
 
