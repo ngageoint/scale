@@ -71,6 +71,7 @@ class JobTypesView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
+
         """Creates a new job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -423,7 +424,6 @@ class JobTypesValidationView(APIView):
         # Validate the seed manifest and job configuration
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
-
 
         # Validate the job type
         validation = JobType.objects.validate_job_type_v6(manifest_dict=manifest_dict,

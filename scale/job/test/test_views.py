@@ -716,7 +716,6 @@ class TestJobTypesViewV6(TestCase):
         url = '/%s/job-types/?is_active=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
 
@@ -726,7 +725,6 @@ class TestJobTypesViewV6(TestCase):
         url = '/%s/job-types/?is_system=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 5)
 
@@ -1381,7 +1379,6 @@ class TestJobTypeDetailsViewV6(TestCase):
         }
 
         self.workspace = storage_test_utils.create_workspace()
-
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
                                                        configuration=self.configuration)
 
@@ -2027,6 +2024,7 @@ class TestJobExecutionDetailsViewV6(TransactionTestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
+
 class TestJobExecutionSpecificLogViewV6(TestCase):
     api = 'v6'
 
@@ -2155,6 +2153,7 @@ class TestJobExecutionSpecificLogViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
+
 
 class TestJobInputFilesViewV6(TestCase):
     api = 'v6'
@@ -2342,6 +2341,7 @@ class TestJobInputFilesViewV6(TestCase):
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
+
 class TestCancelJobsViewV6(TestCase):
 
     api = 'v6'
@@ -2417,6 +2417,7 @@ class TestCancelJobsViewV6(TestCase):
         url = '/%s/jobs/cancel/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
 
 class TestRequeueJobsViewV6(TestCase):
 

@@ -90,6 +90,7 @@ class IngestBaseSerializer(ModelIdSerializer):
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
+
 class IngestSerializerV6(IngestBaseSerializer):
     """Converts ingest model fields to REST output"""
 

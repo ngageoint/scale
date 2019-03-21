@@ -1614,6 +1614,7 @@ class TestRecipeInputFilesViewV6(TestCase):
             self.assertFalse(result['is_superseded'])
             self.assertIn('superseded', result)
 
+
     def test_filter_recipe_input(self):
         """Tests successfully calling the recipe input files view with recipe_input string filtering"""
 

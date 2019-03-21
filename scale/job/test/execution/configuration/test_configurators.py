@@ -620,7 +620,6 @@ class TestScheduledExecutionConfigurator(TestCase):
             trigger_test_utils.create_trigger_event())
         resources = job.get_resources()
         main_resources = resources.copy()
-        # main_resources.subtract(NodeResources([Disk(job.input_file_size)]))
         post_resources = resources.copy()
         post_resources.remove_resource('disk')
         # Get job info off of the queue

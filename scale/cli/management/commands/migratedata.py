@@ -121,6 +121,7 @@ class Command(BaseCommand):
                         IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe'])
 
 
+
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 
         if mnt_dirs is not None:
