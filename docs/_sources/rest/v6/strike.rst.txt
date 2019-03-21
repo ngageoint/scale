@@ -37,8 +37,10 @@ Response: 200 OK
                         "version": "1.0.0",
                         "title": "Scale Strike",
                         "description": "Monitors a directory for incoming source files to ingest",
-                        "revision_num": 1,
-                        "icon_code": "f0e7"
+                        "is_paused": false,
+                        "is_published": true,
+                        "icon_code": "f013",
+                        "unmet_resources": []
                     },
                     "status": "RUNNING"
                 },
@@ -160,8 +162,10 @@ Location http://.../v6/strikes/105/
                 "version": "1.0.0",
                 "title": "Scale Strike",
                 "description": "Monitors a directory for incoming source files to ingest",
-                "revision_num": 1,
-                "icon_code": "f0e7"
+                "is_paused": false,
+                "is_published": true,
+                "icon_code": "f013",
+                "unmet_resources": []
             },
             "status": "RUNNING"
         },
@@ -241,8 +245,10 @@ Response: 200 OK
                "version": "1.0.0",
                "title": "Scale Strike",
                "description": "Monitors a directory for incoming source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+               "is_paused": false,
+               "is_published": true,
+               "icon_code": "f013",
+               "unmet_resources": []
            },
            "status": "RUNNING"
        },

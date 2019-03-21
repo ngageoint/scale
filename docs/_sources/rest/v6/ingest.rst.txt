@@ -247,8 +247,10 @@ Response: 200 OK
                     "version": "1.0.0",
                     "title": "Scale Strike", 
                     "description": "Monitors a directory for incoming files to ingest", 
-                    "revision_num": 1,
-                    "icon_code": "f013" 
+                    "is_paused": false,
+                    "is_published": false,
+                    "icon_code": "f013",
+                    "unmet_resources": []
                 }, 
                 "status": "RUNNING"
             }, 
@@ -449,8 +451,10 @@ Response: 200 OK
                             "version": "1.0.0",
                             "title": "Scale Strike", 
                             "description": "Monitors a directory for incoming source files to ingest", 
-                            "revision_num": 1,
-                            "icon_code": "f013" 
+                            "is_paused": false,
+                            "is_published": false,
+                            "icon_code": "f013",
+                            "unmet_resources": []
                         }, 
                         "event": { 
                             "id": 5 

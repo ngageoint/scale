@@ -1276,6 +1276,20 @@ superseded will be ignored. All database changes will occur within an atomic tra
 </dd></dl>
 
 <dl class="class">
+<dt id="queue.serializers.QueueStatusSerializerV6">
+<em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">QueueStatusSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<p>Converts queue status model fields to REST output</p>
+<dl class="class">
+<dt id="queue.serializers.QueueStatusSerializerV6.JobTypeBaseSerializerV6">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializerV6.JobTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job type model fields to REST output</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="queue.serializers.RequeueJobSerializer">
 <em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">RequeueJobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.RequeueJobSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
@@ -1414,6 +1428,12 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the queue status.</p>
 <dl class="method">
+<dt id="queue.views.QueueStatusView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="queue.views.QueueStatusView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the current status of the queue and returns it in JSON form</p>
@@ -1435,12 +1455,6 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dt id="queue.views.QueueStatusView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#queue.views.QueueStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.QueueStatusView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.QueueStatusView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">QueueStatusSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

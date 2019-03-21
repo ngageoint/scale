@@ -1886,6 +1886,114 @@ research &amp; development (R&amp;D) phase (False).</td>
 </tr>
 </tbody>
 </table>
+<table border="1" class="docutils" id="rest-job-type-system-failures">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Type System Failures</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns counts of job types that have a critical system failure error, ordered by last error.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /job-types/system-failures/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The number of jobs of this type that are currently running.</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td>The error that is associated with the count.
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.first_error</td>
+<td>ISO-8601 Datetime</td>
+<td>When this error first occurred for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>.last_error</td>
+<td>ISO-8601 Datetime</td>
+<td>When this error most recently occurred for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+           <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;The error that caused the failure is unknown.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+            <span class="s2">&quot;first_error&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T23:29:28.719Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_error&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-08T16:27:42.243Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 <span class="target" id="rest-job-type-rev-details"></span></div>
 
 

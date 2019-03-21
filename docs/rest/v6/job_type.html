@@ -126,6 +126,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#v6-validate-job-type">v6 Validate Job Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-edit-job-type">v6 Edit Job Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#job-type-configuration-json">Job Type Configuration JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-job-type-status">v6 Job Type Status</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-job-types-pending">v6 Job Types Pending</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-job-types-running">v6 Job Types Running</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-job-type-system-failures">v6 Job Type System Failures</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
@@ -893,8 +897,10 @@ same time. May be null.</td>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My first job&quot;</span><span class="p">,</span>
         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My very first job&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;012F&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span>
+        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;unmet_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
       <span class="p">},</span>
       <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
       <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
@@ -1002,7 +1008,10 @@ Defaults to 100, and can be anywhere from 1-1000.</td>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My first job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My very first job&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;012F&quot;</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;unmet_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
   <span class="p">},</span>
   <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
@@ -1588,7 +1597,7 @@ and <em>description</em> string fields.</td>
 <tr class="row-even"><td colspan="5">Edits an existing job type with the associated fields</td>
 </tr>
 <tr class="row-odd"><td colspan="5"><dl class="first last docutils">
-<dt><strong>PATCH</strong> /job-types/{name}/{version}/</dt>
+<dt><strong>PATCH</strong> /v6/job-types/{name}/{version}/</dt>
 <dd>Where {name} is the name of the job type and {version} is its version</dd>
 </dl>
 </td>
@@ -1736,6 +1745,301 @@ value is the unique name of the workspace to use.</td>
 provide to the job. Each key is the name of a setting defined in
 the job&#8217;s Seed manifest and each value is the value to provide for
 that setting.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-job-type-status">
+<span id="rest-v6-job-type-status"></span><h2>v6 Job Type Status<a class="headerlink" href="#v6-job-type-status" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/job-types/status/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/job-types/status/">http://.../v6/job-types/status/</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job Types Status</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of overall job type statistics, based on counts of jobs organized by status.
+Note that all jobs with a status of RUNNING are included regardless of date/time filters.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/job-types/status/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).
+Defaults to the past 3 hours.</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The job type that is associated with the statistics.
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_counts</td>
+<td>Array</td>
+<td colspan="2">A list of recent job counts for the job type, grouped by status.</td>
+</tr>
+<tr class="row-odd"><td>..status</td>
+<td>String</td>
+<td colspan="2">The type of job status the count represents.</td>
+</tr>
+<tr class="row-even"><td>..count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs with that status.</td>
+</tr>
+<tr class="row-odd"><td>..most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when a job was last in that status.</td>
+</tr>
+<tr class="row-even"><td>..category</td>
+<td>String</td>
+<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-job-types-pending">
+<span id="rest-v6-job-type-pending"></span><h2>v6 Job Types Pending<a class="headerlink" href="#v6-job-types-pending" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/job-types/pending/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/job-types/pending/">http://.../v6/job-types/pending/</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Types Pending</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns counts of job types that are pending, ordered by the longest pending job.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /v6/job-types/pending/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The number of jobs of this type that are currently pending.</td>
+</tr>
+<tr class="row-even"><td>.longest_pending</td>
+<td>ISO-8601 Datetime</td>
+<td>The queue start time of the job of this type that has been pending the longest.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-job-types-running">
+<span id="rest-v6-job-type-running"></span><h2>v6 Job Types Running<a class="headerlink" href="#v6-job-types-running" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/job-types/running/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/job-types/status/">http://.../v6/job-types/status/</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Types Running</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns counts of job types that are running, ordered by the longest running job.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /v6/job-types/running/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The number of jobs of this type that are currently running.</td>
+</tr>
+<tr class="row-even"><td>.longest_running</td>
+<td>ISO-8601 Datetime</td>
+<td>The run start time of the job of this type that has been running the longest.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-job-type-system-failures">
+<span id="rest-v6-job-type-system-failures"></span><h2>v6 Job Type System Failures<a class="headerlink" href="#v6-job-type-system-failures" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/job-types/system-failures/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/job-types/system-failures/">http://.../v6/job-types/system-failures/</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Type System Failures</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns counts of job types that have a critical system failure error, ordered by last error.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /v6/job-types/system-failures/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The number of jobs of this type that have an error.</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td>The error that is associated with the count.
+(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.first_error</td>
+<td>ISO-8601 Datetime</td>
+<td>When this error first occurred for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>.last_error</td>
+<td>ISO-8601 Datetime</td>
+<td>When this error most recently occurred for a job of this type.</td>
 </tr>
 </tbody>
 </table>
