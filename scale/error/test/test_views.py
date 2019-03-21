@@ -105,7 +105,7 @@ class TestErrorsViewV6(TestCase):
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         error_test_utils.create_error(category='SYSTEM', is_builtin=True)
         error_test_utils.create_error(category='ALGORITHM')
-        error_test_utils.create_error(name='data', category='DATA')
+        error_test_utils.create_error(name='data', category='DATA', job_type_name='type-1')
 
     def test_list_errors(self):
         """Tests successfully calling the get Errors method."""
@@ -152,13 +152,13 @@ class TestErrorsViewV6(TestCase):
         self.assertEqual(results['count'], 2)
 
     def test_list_errors_filter_job_type(self):
-        url = '/%s/errors/?job_type_name=test-type' % self.api
+        url = '/%s/errors/?job_type_name=type-1' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
         count = results['count']
-        self.assertEqual(count, 2)
+        self.assertEqual(count, 1)
         
     def test_list_errors_filter_name(self):
         url = '/%s/errors/?name=data' % self.api
