@@ -57,6 +57,12 @@ class TestQueuedExecutionConfigurator(TestCase):
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
 
+        inputs_json=[{'name': 'input_1', 'type': 'string'}]
+        inputs=[{'name': 'input_2', 'mediaTypes':['text/plain']}, {'name': 'input_3', 'mediaTypes': ['text/plain'], 'multiple': True}]
+        outputs=[{'name': 'output_1', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest = job_test_utils.create_seed_manifest(command='command -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${job_output_dir}',
+                    inputs_files=inputs, inputs_json=inputs_json, outputs_files=outputs)
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest, configuration={'output_workspaces': {'default': workspace.name}})
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
 
@@ -281,8 +287,6 @@ class TestQueuedExecutionConfigurator(TestCase):
         ingest = ingest_test_utils.create_ingest(workspace=workspace_1, new_workspace=workspace_2)
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         ingest_rev_2 = JobTypeRevision.objects.get(job_type=ingest_job_type, revision_num=2)
-        data = JobData()
-        data.add_property_input('Ingest_ID', str(ingest.id))
         ingest.job.job_type_rev = ingest_rev_2  # Job has old revision (2nd) of ingest job type
         ingest.job.input = {'json': {'ingest_id': str(ingest.id)}}
         ingest.job.status = 'QUEUED'
