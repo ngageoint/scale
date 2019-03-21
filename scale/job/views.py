@@ -71,6 +71,20 @@ class JobTypesView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
+        """Creates a new job type and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.create_v6(request)
+        else:
+            return Http404
+
+    def create_v6(self, request):
         """Creates or edits a Seed job type and returns a link to the detail URL
 
         :param request: the HTTP POST request

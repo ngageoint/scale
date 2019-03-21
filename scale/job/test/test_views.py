@@ -1176,7 +1176,6 @@ class TestJobTypesPostViewV6(TestCase):
             response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name=name).first()
 
@@ -1212,10 +1211,7 @@ class TestJobTypesPostViewV6(TestCase):
             'configuration': config
         }
 
-        with patch.object(SecretsHandler, '__init__', return_value=None), \
-          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
-            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         job_type = JobType.objects.filter(name='my-job-no-mount').first()
@@ -1275,7 +1271,7 @@ class TestJobTypesPostViewV6(TestCase):
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_create_seed_bad_param(self):
         """Tests creating a job type with invalid type fields."""
