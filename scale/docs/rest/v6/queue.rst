@@ -110,12 +110,10 @@ Response: 200 OK
          "version": "1.0",
          "title": "Scale Ingest",
          "description": "Ingests a source file into a workspace",
-         "is_system": true,
-         "is_long_running": false,
-         "is_active": true,
-         "is_operational": true,
          "is_paused": false,
-         "icon_code": "f013"
+         "is_published": true,
+         "icon_code": "f013",
+         "unmet_resources": []
        },
        "count": 19,
        "longest_queued": "1970-01-01T00:00:00.000Z",
