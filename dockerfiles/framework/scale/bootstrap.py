@@ -37,14 +37,14 @@ def dcos_login():
 def run(client):
     elasticsearch_app_name = '%s-elasticsearch' % FRAMEWORK_NAME
     rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
-    log_app_name = '%s-logstash' % FRAMEWORK_NAME
+    log_app_name = '%s-fluentd' % FRAMEWORK_NAME
     db_app_name = '%s-db' % FRAMEWORK_NAME
 
     blocking_apps = []
 
     # Determine if elasticsearch should be deployed. If SCALE_ELASTICSEARCH_URLS is unset we need to deploy it
     es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS', '')
-    es_ver = os.getenv('SCALE_ELASTICSEARCH_VERSION', '2.4')
+    es_ver = os.getenv('SCALE_ELASTICSEARCH_VERSION', '6.6.2')
     if not len(es_urls):
         deploy_elasticsearch(client, elasticsearch_app_name)
         es_urls = "http://%s.marathon.l4lb.thisdcos.directory:9200" % subdomain_gen(elasticsearch_app_name)
@@ -67,11 +67,11 @@ def run(client):
         print("DATABASE_URL=%s" % db_url)
         blocking_apps.append(db_app_name)
 
-    # Determine if Logstash should be deployed.
+    # Determine if fluentd should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
-        deploy_logstash(client, log_app_name, es_urls)
+        deploy_fluentd(client, log_app_name, es_urls)
         print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:8080" % subdomain_gen(log_app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:24220" % subdomain_gen(log_app_name))
         blocking_apps.append(log_app_name)
 
     # Determine if Web Server should be deployed.
@@ -313,9 +313,9 @@ def deploy_elasticsearch(client, app_name):
         deploy_marathon_app(client, marathon)
 
 
-def deploy_logstash(client, app_name, es_urls):
+def deploy_fluentd(client, app_name, es_urls):
     """
-    Logic must handle 3 deployment cases when LOGSTASH_DOCKER_IMAGE is unset:
+    Logic must handle 3 deployment cases when FLUENTD_DOCKER_IMAGE is unset:
 
     localhost:5000/geoint/scale:5.9.2
     localhost:5000/geoint/scale
@@ -328,21 +328,21 @@ def deploy_logstash(client, app_name, es_urls):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
-    # default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-logstash:tag
+    # default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-fluentd:tag
     marathon_img_default = os.getenv('MARATHON_APP_DOCKER_IMAGE')
 
-    logstash_docker_img_default = marathon_img_default + '-logstash'
+    fluentd_docker_img_default = marathon_img_default + '-fluentd'
     if ':' in marathon_img_default:
         # Grab parts to ensure we replace on tag not port
         parts = marathon_img_default.split('/')
         last_index = len(parts) - 1
         if ':' in parts[last_index]:
-            replacement = parts[last_index].replace(':', '-logstash:')
-            logstash_docker_img_default = marathon_img_default.replace(parts[last_index], replacement)
+            replacement = parts[last_index].replace(':', '-fluentd:')
+            fluentd_docker_img_default = marathon_img_default.replace(parts[last_index], replacement)
 
     # Load marathon template file
-    marathon = initialize_app_template('logstash', app_name, os.getenv(
-        'LOGSTASH_DOCKER_IMAGE', logstash_docker_img_default))
+    marathon = initialize_app_template('fluentd', app_name, os.getenv(
+        'FLUENTD_DOCKER_IMAGE', fluentd_docker_img_default))
 
     arbitrary_env = {
         'ELASTICSEARCH_URLS': es_urls,
@@ -352,8 +352,7 @@ def deploy_logstash(client, app_name, es_urls):
         marathon['env'][env] = arbitrary_env[env]
 
     env_map = {
-        'LOGSTASH_TEMPLATE_URI': 'TEMPLATE_URI',
-        'LOGSTASH_DEBUG': 'LOGSTASH_DEBUG'
+        'FLUENTD_TEMPLATE_URI': 'TEMPLATE_URI'
     }
     apply_set_envs(marathon, env_map)
     deploy_marathon_app(client, marathon)

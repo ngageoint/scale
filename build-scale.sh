@@ -12,6 +12,7 @@ then
     docker pull ${IMAGE_URL} || true
     docker build \
         --cache-from ${IMAGE_URL} \
+        --label VERSION=${CI_BUILD_TAG} \
         --build-arg EPEL_INSTALL=${EPEL_INSTALL} \
         --build-arg IMAGE=${CENTOS_IMAGE} \
         --build-arg BUILDNUM=${CI_BUILD_REF:0:8} \
@@ -32,6 +33,7 @@ else
     docker pull ${IMAGE_URL} || true
 
     docker build \
+        --label VERSION=${CI_BUILD_TAG} \
         --build-arg EPEL_INSTALL=${EPEL_INSTALL} \
         --build-arg IMAGE=${CENTOS_IMAGE} \
         --build-arg GOSU_URL=${GOSU_URL} \
