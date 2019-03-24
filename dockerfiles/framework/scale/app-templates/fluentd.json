@@ -1,0 +1,49 @@
+{
+  "id": "scale-template-fluentd",
+  "cpus": 0.5,
+  "mem": 1024,
+  "disk": 256,
+  "instances": 1,
+  "container": {
+    "docker": {
+      "image": "geoint/scale-fluentd",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 0,
+          "protocol": "tcp",
+          "labels": {
+            "VIP_0": "/scale-template-fluentd:8000"
+          }
+        },
+        {
+          "containerPort": 24220,
+          "hostPort": 0,
+          "protocol": "tcp",
+          "labels": {
+            "VIP_1": "/scale-template-fluentd:24220"
+          }
+        }
+      ],
+      "forcePullImage": true
+    },
+    "type": "DOCKER",
+    "volumes": []
+  },
+  "env": {
+    "ELASTICSEARCH_URLS": ""
+  },
+  "healthChecks": [
+    {
+      "protocol": "MESOS_HTTP",
+      "path": "/api/plugins",
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 30,
+      "portIndex": 1,
+      "timeoutSeconds": 15,
+      "maxConsecutiveFailures": 3
+    }
+  ],
+  "uris": []
+}
