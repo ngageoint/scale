@@ -12,7 +12,6 @@ from util import rest
 
 class TestGetUser(APITransactionTestCase):
 
-
     def setUp(self):
         django.setup()
 
@@ -21,8 +20,12 @@ class TestGetUser(APITransactionTestCase):
     def test_get_current_user_unauthorized(self):
         """Tests calling the GetUser view without being authenticated."""
 
-        url = rest_util.get_url('/diagnostics/job/bake/')
-        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
+        json_data = {
+            'num': 10
+        }
+
+        url = rest_util.get_url('/accounts/profile/')
+        response = self.client.get(url, json.dumps(json_data), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -33,8 +36,8 @@ class TestGetUser(APITransactionTestCase):
             'num': 10
         }
 
-        url = rest_util.get_url('/diagnostics/job/bake/')
-        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
+        url = rest_util.get_url('/accounts/profile/')
+        response = self.client.get(url, json.dumps(json_data), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
@@ -56,7 +59,7 @@ class TestIsOwnerOrAdmin(APITransactionTestCase):
         }
 
         url = rest_util.get_url('/diagnostics/recipe/casino/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        response = self.client.generic('POST', url, json.dumps(json_data),  format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -68,7 +71,7 @@ class TestIsOwnerOrAdmin(APITransactionTestCase):
         }
 
         url = rest_util.get_url('/diagnostics/recipe/casino/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        response = self.client.generic('POST', url, json.dumps(json_data),  format='json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
@@ -89,7 +92,7 @@ class TestUserList(APITransactionTestCase):
         }
 
         url = rest_util.get_url('/diagnostics/job/hello/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -101,7 +104,7 @@ class TestUserList(APITransactionTestCase):
         }
 
         url = rest_util.get_url('/diagnostics/job/hello/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
@@ -123,7 +126,7 @@ class TestUserDetail(APITransactionTestCase):
         }
 
         url = rest_util.get_url('/diagnostics/job/roulette/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -135,6 +138,6 @@ class TestUserDetail(APITransactionTestCase):
         }
 
         url = rest_util.get_url('/diagnostics/job/roulette/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
