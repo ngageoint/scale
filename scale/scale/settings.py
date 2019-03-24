@@ -72,8 +72,6 @@ ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 ELASTICSEARCH_VERSION = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
-# placeholder for elasticsearch version. needed to properly form ES log query.
-ELASTICSEARCH_VERSION = None
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 

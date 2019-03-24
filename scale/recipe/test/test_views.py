@@ -13,7 +13,6 @@ import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-import trigger.test.utils as trigger_test_utils
 import source.test.utils as source_test_utils
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status

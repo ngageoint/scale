@@ -37,6 +37,7 @@ DATABASES = {'default': dj_database_url.config(default='postgis://scale:scale@lo
 EOF
 
 # Initialize virtual environment
+pip install virtualenv
 virtualenv -p $(which python2) environment/scale
 environment/scale/bin/pip install -r pip/requirements.txt
 
