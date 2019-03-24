@@ -4,7 +4,7 @@ FROM $IMAGE
 MAINTAINER Scale Developers "https://github.com/ngageoint/scale"
 
 LABEL \
-    RUN="docker run -e ELASTICSEARCH_URLS=http://elastic:9200 -p 8000:8000 -p 80:80 geoint/scale-fluentd" \
+    RUN="docker run -e ELASTICSEARCH_URLS=http://elasticsearch:9200 -p 8000:8000 -p 24220:24220 geoint/scale-fluentd" \
     SOURCE="https://github.com/ngageoint/scale/tree/master/dockerfiles/fluentd" \
     DESCRIPTION="Log aggregator, formatter and Elasticsearch forwarder for Scale jobs" 
 
