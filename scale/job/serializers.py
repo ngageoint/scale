@@ -192,7 +192,14 @@ class JobDetailsInputSerializer(serializers.Serializer):
             if obj['type'] == 'file':
                 value = ScaleFileSerializerV5().to_representation(obj['value'])
             elif obj['type'] == 'files':
-                value = [ScaleFileSerializerV5().to_representation(v) for v in obj['value']]
+                if not obj['value']:
+                    logger.warning('Empty file list')
+                    value = []
+                elif isinstance(obj['value'], ScaleFile):
+                    logger.warning('Unexpected single file with type "files": %s' % obj['value'])
+                    value = [ScaleFileSerializerV5().to_representation(obj['value'])]
+                else:
+                    value = [ScaleFileSerializerV5().to_representation(v) for v in obj['value']]
             else:
                 value = obj['value']
         result['value'] = value
@@ -217,7 +224,14 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
             if obj['type'] == 'file':
                 value = ProductFileBaseSerializer().to_representation(obj['value'])
             elif obj['type'] == 'files':
-                value = [ProductFileBaseSerializer().to_representation(v) for v in obj['value']]
+                if not obj['value']:
+                    logger.warning('Empty file list')
+                    value = []
+                elif isinstance(obj['value'], ScaleFile):
+                    logger.warning('Unexpected single file with type "files": %s' % obj['value'])
+                    value = [ProductFileBaseSerializer().to_representation(obj['value'])]
+                else:
+                    value = [ProductFileBaseSerializer().to_representation(v) for v in obj['value']]
             else:
                 value = obj['value']
         result['value'] = value
