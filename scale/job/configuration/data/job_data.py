@@ -368,7 +368,8 @@ class JobData(object):
                 continue
             file_input = self.data_inputs_by_name[name]
             file_ids = []
-            if multiple:
+            # TODO: Remove with legacy job types. This is a protection against multiple being specified for a single file or no file
+            if multiple and 'file_ids' in file_input:
                 for file_id in file_input['file_ids']:
                     file_id = long(file_id)
                     file_ids.append(file_id)
