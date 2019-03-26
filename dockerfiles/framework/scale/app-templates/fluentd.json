@@ -10,11 +10,11 @@
       "network": "BRIDGE",
       "portMappings": [
         {
-          "containerPort": 8000,
+          "containerPort": 24224,
           "hostPort": 0,
           "protocol": "tcp",
           "labels": {
-            "VIP_0": "/scale-template-fluentd:8000"
+            "VIP_0": "/scale-template-fluentd:24224"
           }
         },
         {

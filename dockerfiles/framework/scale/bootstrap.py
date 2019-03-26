@@ -70,7 +70,7 @@ def run(client):
     # Determine if fluentd should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
         deploy_fluentd(client, log_app_name, es_urls)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(log_app_name))
         print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:24220" % subdomain_gen(log_app_name))
         blocking_apps.append(log_app_name)
 
