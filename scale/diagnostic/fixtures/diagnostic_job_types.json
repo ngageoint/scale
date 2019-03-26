@@ -53,6 +53,56 @@
         "model": "job.JobType",
         "pk": null,
         "fields": {
+            "name": "scale-count",
+            "version": "1.0",
+            "title": "Scale Count",
+            "description": "Counts to 100 for stdout, stderr and interleaved. This job type can be useful for testing Scale's log ordering.",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "uses_docker": true,
+            "docker_privileged": false,
+            "docker_image": "scale",
+            "manifest": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_count"
+            },
+            "revision_num": 1,
+            "error_mapping": {},
+            "priority": 25,
+            "timeout": 600,
+            "max_tries": 0,
+            "cpus_required": 0.1,
+            "mem_const_required": 64.0,
+            "shared_mem_required": 0.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2019-03-25T00:00:00.0Z",
+            "last_modified": "2019-03-25T00:00:00.0Z",
+            "icon_code": "f162"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-count", "1.0"],
+            "revision_num": 1,
+            "manifest": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_count"
+            },
+            "created": "2019-03-25T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
             "name": "scale-bake",
             "version": "1.0",
             "title": "Scale Bake",
