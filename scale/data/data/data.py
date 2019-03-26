@@ -40,10 +40,13 @@ class Data(object):
         :param output_data: The output data
         :type output_data: :class:`data.data.data.Data`
 
-        :raises :class:`data.data.exceptions.InvalidData`: If the value is a duplicate
+        :raises :class:`data.data.exceptions.InvalidData`: If the value is a duplicate or the key does not exist in the output data
         """
 
-        new_value = output_data.values[output_name].copy()
+        try:
+            new_value = output_data.values[output_name].copy()
+        except KeyError:
+            raise InvalidData('MISSING_VALUE', 'Output name \'%s\' is not present in output data' % output_name)
         new_value.name = input_name
         self.add_value(new_value)
 
