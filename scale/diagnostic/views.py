@@ -241,6 +241,61 @@ class QueueScaleHelloView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
+class QueueScaleCountView(GenericAPIView):
+    """This view is the endpoint for queuing new Scale Count jobs."""
+    parser_classes = (JSONParser,)
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializerV6
+
+    def post(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v5':
+            raise NotImplemented
+        elif request.version == 'v6':
+            return self.post_v6(request)
+
+        raise Http404()
+
+    def post_v6(self, request):
+        """Handles v6 post request
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        return self.queue_count_jobs(request)
+
+    def queue_count_jobs(self, request):
+        """Creates and queues the specified number of Scale Count jobs
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        num = rest_util.parse_int(request, 'num')
+
+        if num < 1:
+            raise BadParameter('num must be at least 1')
+
+        # TODO: in the future, send command message to do this asynchronously
+        job_type = JobType.objects.get(name='scale-count', version='1.0')
+        for _ in xrange(num):
+            Queue.objects.queue_new_job_for_user(job_type, {})
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
 class QueueScaleRouletteView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Roulette jobs."""
     parser_classes = (JSONParser,)
