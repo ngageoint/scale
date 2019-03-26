@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^ingests/$', views.IngestsView.as_view(), name='ingests_view'),
     url(r'^ingests/status/$', views.IngestsStatusView.as_view(), name='ingests_status_view'),
     url(r'^ingests/(?P<ingest_id>\d+)/$', views.IngestDetailsView.as_view(), name='ingest_details_view'),
-    url(r'^ingests/(?P<file_name>[\w.]{0,250})/$', views.IngestDetailsView.as_view(), name='ingest_details_view'),
+    url(r'^ingests/(?P<file_name>[\w-.]{0,250})/$', views.IngestDetailsView.as_view(), name='ingest_details_view'),
 
     # Scan views
     url(r'^scans/$', views.ScansView.as_view(), name='scans_view'),
