@@ -458,36 +458,4 @@ class TestProcessJobInput(TransactionTestCase):
         job_2 = Job.objects.get(id=job_2.id)
         # Check for queued jobs message
         self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'queued_jobs')
-        self.assertFalse(message.new_messages[0].requeue)
-
-        # Check job for expected input_file_size
-        self.assertEqual(job_2.input_file_size, 24469.0)
-        # Check job for expected input data
-        self.assertSetEqual(set(job_2.get_input_data().values.keys()), {'INPUT_B'})
-        self.assertListEqual(job_2.get_input_data().values['INPUT_B'].file_ids,
-                             [file_1.id, file_2.id, file_3.id, file_4.id])
-
-        # Make sure job input file models are created
-        job_input_files = JobInputFile.objects.filter(job_id=job_2.id)
-        self.assertEqual(len(job_input_files), 4)
-        file_ids = set()
-        for job_input_file in job_input_files:
-            self.assertEqual(job_input_file.job_input, 'INPUT_B')
-            file_ids.add(job_input_file.input_file_id)
-        self.assertSetEqual(file_ids, {file_1.id, file_2.id, file_3.id, file_4.id})
-
-        # Test executing message again
-        message_json_dict = message.to_json()
-        message = ProcessJobInput.from_json(message_json_dict)
-        result = message.execute()
-        self.assertTrue(result)
-
-        # Still should have queued jobs message
-        self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'queued_jobs')
-        self.assertFalse(message.new_messages[0].requeue)
-
-        # Make sure job input file models are unchanged
-        job_input_files = JobInputFile.objects.filter(job_id=job_2.id)
-        self.assertEqual(len(job_input_files), 4)
+        self.assertEqual(message.new_messages[0].type, 'cancel_jobs')
