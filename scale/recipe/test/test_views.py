@@ -864,7 +864,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
         self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
-        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(name='test.period', definition=self.main_definition)
 
     def test_not_found(self):
         """Tests calling the recipe type details view with a name that does not exist."""

@@ -286,8 +286,6 @@ class JobResults(object):
             file_id_list.append(file_id)
 
         # Create job results
-        # if no files are found for an output, there won't be a data entry for it. this breaks the handshake between jobs in v6
-        # add a dummy entry? check for results manifest?
         for name in param_file_ids:
             param_entry = param_file_ids[name]
             self.add_file_list_parameter(name, param_entry)
