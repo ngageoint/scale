@@ -17,6 +17,7 @@ import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
 from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue
 from data.data.json.data_v6 import DataV6
 from job.configuration.data.job_data import JobData
@@ -441,6 +442,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         Queue.objects.queue_jobs([self.standalone_queued_job], requeue=True)
         self.standalone_failed_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=3,
                                                                priority=100)
+
         self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=1)
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
                                                                  priority=100)
@@ -536,6 +538,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
                         self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id,
                         self.standalone_queued_job.id]
+
 
     def test_successful(self):
         """Tests calling QueueManager.requeue_jobs() successfully"""

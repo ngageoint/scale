@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import datetime
 import os
 
-import copy
 import django
 from django.test import TestCase
 from django.utils.timezone import now
