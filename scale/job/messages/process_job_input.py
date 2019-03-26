@@ -4,8 +4,10 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
+from django.utils.timezone import now
 
 from data.data.exceptions import InvalidData
+from job.messages.cancel_jobs import create_cancel_jobs_messages
 from job.models import Job
 from messaging.messages.message import CommandMessage
 
@@ -75,7 +77,8 @@ class ProcessJobInput(CommandMessage):
             try:
                 self._generate_input_data_from_recipe(job)
             except InvalidData:
-                logger.exception('Recipe created invalid input data for job %d. Message will not re-run.', self.job_id)
+                logger.exception('Recipe created invalid input data for job %d. Message will not re-run. Cancelling job that cannot be queued.', self.job_id)
+                self.new_messages.extend(create_cancel_jobs_messages([self.job_id], now()))
                 return True
 
         # Lock job model and process job's input data
