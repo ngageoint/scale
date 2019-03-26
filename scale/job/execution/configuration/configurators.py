@@ -394,15 +394,22 @@ class ScheduledExecutionConfigurator(object):
 
         # Configure tasks for logging
         if settings.LOGGING_ADDRESS is not None:
-            log_driver = DockerParameter('log-driver', 'syslog')
-            # Must explicitly specify RFC3164 to ensure compatibility with logstash in Docker 1.11+
-            syslog_format = DockerParameter('log-opt', 'syslog-format=rfc3164')
-            log_address = DockerParameter('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
+            log_driver = DockerParameter('log-driver', 'fluentd')
+            fluent_precision = DockerParameter('log-opt', 'fluentd-sub-second-precision=true')
+            log_address = DockerParameter('log-opt', 'fluentd-address=%s' % settings.LOGGING_ADDRESS)
             if not job_type.is_system:
-                pre_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('pre'), job_type.name))
-                config.add_to_task('pre', docker_params=[log_driver, syslog_format, log_address, pre_task_tag])
-                post_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('post'), job_type.name))
-                config.add_to_task('post', docker_params=[log_driver, syslog_format, log_address, post_task_tag])
+                pre_task_tag = DockerParameter('log-opt', 'tag=%s|%s|%s|%s|%s' % (config.get_task_id('pre'),
+                                                                                  job_type.name,
+                                                                                  job_type.version,
+                                                                                  job_exe.job_id,
+                                                                                  job_exe.exe_num))
+                config.add_to_task('pre', docker_params=[log_driver, fluent_precision, log_address, pre_task_tag])
+                post_task_tag = DockerParameter('log-opt', 'tag=%s|%s|%s|%s|%s' % (config.get_task_id('post'),
+                                                                                   job_type.name,
+                                                                                   job_type.version,
+                                                                                   job_exe.job_id,
+                                                                                   job_exe.exe_num))
+                config.add_to_task('post', docker_params=[log_driver, fluent_precision, log_address, post_task_tag])
                 # TODO: remove es_urls parameter when Scale no longer supports old style job types
                 es_urls = None
                 # Use connection pool to get up-to-date list of elasticsearch nodes
@@ -412,8 +419,12 @@ class ScheduledExecutionConfigurator(object):
                 # Post task needs ElasticSearch URL to grab logs for old artifact registration
                 es_param = DockerParameter('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
                 config.add_to_task('post', docker_params=[es_param])
-            main_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('main'), job_type.name))
-            config.add_to_task('main', docker_params=[log_driver, syslog_format, log_address, main_task_tag])
+            main_task_tag = DockerParameter('log-opt', 'tag=%s|%s|%s|%s|%s' % (config.get_task_id('main'),
+                                                                               job_type.name,
+                                                                               job_type.version,
+                                                                               job_exe.job_id,
+                                                                               job_exe.exe_num))
+            config.add_to_task('main', docker_params=[log_driver, fluent_precision, log_address, main_task_tag])
 
     @staticmethod
     def _configure_main_task(config, job_exe, job_type, interface):
