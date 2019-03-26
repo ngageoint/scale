@@ -478,7 +478,7 @@ class JobManager(models.Manager):
         file_ids = set()
         job_file_map = dict()
         for job in jobs:
-            input_file_ids = job.get_input_data() #get_job_data().get_input_file_ids()
+            input_file_ids = job.get_input_data()
             job_file_map[job.id] = input_file_ids
             file_ids.update(input_file_ids)
             job.input_files = []
@@ -755,9 +755,14 @@ class JobManager(models.Manager):
                 if job.can_be_queued():
                     job_ids.append(job.id)
 
+        if requeue:
+            self.increment_max_tries(job_ids, when_queued)
+
         self.filter(id__in=job_ids).update(status='QUEUED', node=None, error=None, queued=when_queued, started=None,
                                            ended=None, last_status_change=when_queued,
                                            num_exes=models.F('num_exes') + 1, last_modified=timezone.now())
+
+
         return job_ids
 
     def update_jobs_to_running(self, jobs, when):
@@ -1575,7 +1580,7 @@ class JobExecution(models.Model):
         if self.status == 'QUEUED':
             return None, timezone.now()
 
-        if settings.ELASTICSEARCH_VERSION == "2.4":
+        if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERISON.startswith('2.'):
             extension = ".raw"
         else:
             extension = ".keyword"
@@ -2583,23 +2588,6 @@ class JobTypeManager(models.Manager):
 
         return JobTypeValidation(is_valid, errors, warnings)
 
-    def _validate_job_type_fields(self, **kwargs):
-        """Validates the given keyword argument fields for job types
-
-        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        """
-
-        # TODO: remove this timeout check? - Mike
-        if 'timeout' in kwargs:
-            timeout = kwargs['timeout']
-            if not timeout > 0:
-                raise InvalidJobField('timeout must be greater than zero')
-        if 'max_tries' in kwargs:
-            max_tries = kwargs['max_tries']
-            if not max_tries > 0:
-                raise InvalidJobField('max_tries must be greater than zero')
-
-
 class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
     lock on the model using select_for_update().
@@ -2629,7 +2617,7 @@ class JobType(models.Model):
     :type is_published: :class:`django.db.models.BooleanField`
 
     :keyword unmet_resources: List of resource names that currently don't exist or aren't sufficient in the cluster
-    :type un: :class:`django.db.models.CharField`
+    :type unmet_resources: :class:`django.db.models.CharField`
 
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`

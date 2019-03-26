@@ -53,7 +53,7 @@ class IngestRecipeHandler(object):
             recipe_data.add_value(FileValue(input_name, [source_file.id]))
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
-            logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
+            logger.info('Queuing new recipe of type %s', recipe_type.name)
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for id %s' % recipe_type_id)
@@ -86,7 +86,7 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(source, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
-            logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
+            logger.info('Queuing new recipe of type %s', recipe_type.name)
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for %s %s' % (recipe_name, recipe_version))

@@ -119,7 +119,7 @@ class QueueScaleCasinoView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        recipe_type = RecipeType.objects.get(name='scale-casino', version='1.0')
+        recipe_type = RecipeType.objects.get(name='scale-casino', revision_num='1')
         for _ in xrange(num):
             Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
 

@@ -17,6 +17,7 @@ import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
 from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue
 from data.data.json.data_v6 import DataV6
 from job.configuration.data.job_data import JobData
@@ -379,3 +380,162 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
         created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event)
+
+class TestQueueManagerRequeueJobs(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        self.new_priority = 200
+        self.standalone_queued_job = job_test_utils.create_job(status='QUEUED', input=data_dict, num_exes=3,
+                                                               priority=100)
+        Queue.objects.queue_jobs([self.standalone_queued_job], requeue=True)
+        self.standalone_failed_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=3,
+                                                               priority=100)
+
+        import pdb; pdb.set_trace()
+        self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=1)
+        self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
+                                                                 priority=100)
+        self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED', input=data_dict,)
+        Job.objects.supersede_jobs([self.standalone_superseded_job.id], now())
+
+        # Create recipe for re-queueing a job that should now be PENDING (and its dependencies)
+        job_type_a_1 = job_test_utils.create_seed_job_type()
+        job_type_a_2 = job_test_utils.create_seed_job_type()
+        definition_a = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_a_1.name,
+                    'version': job_type_a_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_a_2.name,
+                    'version': job_type_a_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }],
+        }
+        recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=definition_a)
+        data_a = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, input=data_a)
+        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', input=data_dict, num_exes=1,
+                                                 recipe=recipe_a)
+        self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED', recipe=recipe_a)
+        recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
+
+        # Create recipe for re-queueing a job that should now be BLOCKED (and its dependencies)
+        job_type_b_1 = job_test_utils.create_seed_job_type()
+        job_type_b_2 = job_test_utils.create_seed_job_type()
+        job_type_b_3 = job_test_utils.create_seed_job_type()
+        definition_b = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_b_1.name,
+                    'version': job_type_b_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_b_2.name,
+                    'version': job_type_b_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }, {
+                'name': 'Job 3',
+                'job_type': {
+                    'name': job_type_b_3.name,
+                    'version': job_type_b_3.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 2'
+                }],
+            }],
+        }
+        recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=definition_b)
+        data_b = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, input=data_b)
+        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED', input=data_dict,
+                                                 recipe=recipe_b)
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED', num_exes=0, recipe=recipe_b)
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED', num_exes=0, recipe=recipe_b)
+
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 1', job=self.job_b_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 2', job=self.job_b_2)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 3', job=self.job_b_3)
+
+        # Job IDs to re-queue
+        self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
+                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id,
+                        self.standalone_queued_job.id]
+        self.jobs = [self.standalone_failed_job, self.standalone_canceled_job,
+                        self.standalone_completed_job, self.job_a_1, self.job_b_2,
+                        self.standalone_queued_job]
+
+    def test_successful(self):
+        """Tests calling QueueManager.requeue_jobs() successfully"""
+
+        status = Queue.objects.get_queue_status()
+        self.assertEqual(status[0].count, 1)
+
+        Queue.objects.queue_jobs(self.jobs, requeue=True, priority=self.new_priority)
+
+        standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
+        self.assertEqual(standalone_failed_job.status, 'QUEUED')
+        self.assertEqual(standalone_failed_job.max_tries, 6)
+
+        standalone_canceled_job = Job.objects.get(id=self.standalone_canceled_job.id)
+        self.assertEqual(standalone_canceled_job.status, 'QUEUED')
+        self.assertEqual(standalone_canceled_job.max_tries, 4)
+
+        # Superseded job should not be re-queued
+        standalone_superseded_job = Job.objects.get(id=self.standalone_superseded_job.id)
+        self.assertEqual(standalone_superseded_job.status, 'FAILED')
+
+        # Completed job should not be re-queued
+        standalone_completed_job = Job.objects.get(id=self.standalone_completed_job.id)
+        self.assertEqual(standalone_completed_job.status, 'COMPLETED')
+
+        job_a_1 = Job.objects.get(id=self.job_a_1.id)
+        self.assertEqual(job_a_1.status, 'QUEUED')
+        job_a_2 = Job.objects.get(id=self.job_a_2.id)
+        self.assertEqual(job_a_2.status, 'BLOCKED')
+
+        job_b_1 = Job.objects.get(id=self.job_b_1.id)
+        self.assertEqual(job_b_1.status, 'FAILED')
+        job_b_2 = Job.objects.get(id=self.job_b_2.id)
+        self.assertEqual(job_b_2.status, 'BLOCKED')
+        job_b_3 = Job.objects.get(id=self.job_b_3.id)
+        self.assertEqual(job_b_3.status, 'BLOCKED')
+
+        # check queue status
+        status = Queue.objects.get_queue_status()
+        sum = 0
+        for s in status:
+            sum += s.count
+        self.assertEqual(sum, 5)
+
+        canceled = Queue.objects.filter(is_canceled=True)
+        self.assertEqual(len(canceled), 1)

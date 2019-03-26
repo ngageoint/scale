@@ -1262,16 +1262,18 @@ class RecipeTypeManager(models.Manager):
                 msgs = [create_sub_update_recipe_definition_message(id, recipe_type.id) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
 
-    def get_by_natural_key(self, name, version):
+    def get_by_natural_key(self, name, revision_num):
         """Django method to retrieve a recipe type for the given natural key
 
         :param name: The human-readable name of the recipe type
         :type name: string
+        :param revision_num: The revision number of the recipe type
+        :type revision_num: int
         :returns: The recipe type defined by the natural key
         :rtype: :class:`recipe.models.RecipeType`
         """
 
-        return self.get(name=name, version=version)
+        return self.get(name=name, revision_num=revision_num)
 
     def get_details_v6(self, name):
         """Gets additional details for the given recipe type model based on related model attributes.
@@ -1460,8 +1462,6 @@ class RecipeType(models.Model):
 
     :keyword name: The identifying name of the recipe type used by clients for queries
     :type name: :class:`django.db.models.CharField`
-    :keyword version: The version of the recipe type
-    :type version: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of the recipe type
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of the recipe type
@@ -1487,7 +1487,6 @@ class RecipeType(models.Model):
     """
 
     name = models.CharField(unique=True, max_length=50)
-    version = models.CharField(db_index=True, max_length=50)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.CharField(blank=True, max_length=500, null=True)
 
@@ -1540,12 +1539,12 @@ class RecipeType(models.Model):
         :rtype: tuple(string, string)
         """
 
-        return self.name, self.version
+        return self.name, self.revision_num
 
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe_type'
-
+        unique_together = ('name', 'revision_num')
 
 class RecipeTypeRevisionManager(models.Manager):
     """Provides additional methods for handling recipe type revisions

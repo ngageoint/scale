@@ -30,7 +30,7 @@ class TestIngestsViewV6(TestCase):
         self.ingest1 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test1.txt',
                                                        status='QUEUED')
         self.ingest2 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test2.txt',
-                                                       status='INGESTED')
+                                                       status='INGESTED', data_type_tags=['type1', 'type2'])
 
     def test_successful(self):
         """Tests successfully calling the ingests view."""
@@ -51,6 +51,7 @@ class TestIngestsViewV6(TestCase):
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['file_name'], expected.file_name)
             self.assertEqual(entry['status'], expected.status)
+            self.assertListEqual(entry['data_type_tags'], expected.data_type_tags)
 
     def test_status(self):
         """Tests successfully calling the ingests view filtered by status."""

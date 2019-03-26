@@ -4,7 +4,6 @@
         "pk": null,
         "fields": {
             "name": "scale-casino",
-            "version": "1.0",
             "title": "Scale Casino",
             "description": "Chains together multiple Scale Roulette jobs. This recipe type can be useful for testing Scale's handling of recipes in the presence of job failures.",
             "is_system": true,
@@ -28,7 +27,7 @@
         "model": "recipe.RecipeTypeRevision",
         "pk": null,
         "fields": {
-            "recipe_type": ["scale-casino", "1.0"],
+            "recipe_type": ["scale-casino", 1],
             "revision_num": 1,
             "definition": {
                  "version": "6",
