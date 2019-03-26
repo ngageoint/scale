@@ -2147,7 +2147,7 @@ class JobExecution(models.Model):
         if self.status == 'QUEUED':
             return None, timezone.now()
 
-        if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERISON.startswith('2.'):
+        if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERSION.startswith('2.'):
             extension = ".raw"
         else:
             extension = ".keyword"
@@ -2173,7 +2173,7 @@ class JobExecution(models.Model):
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 
-        hits = settings.ELASTICSEARCH.search(index='logstash-*', body=q)
+        hits = settings.ELASTICSEARCH.search(index='logstash-*,scalelogs-*', body=q)
 
         if hits['hits']['total'] == 0:
             return None, timezone.now()
