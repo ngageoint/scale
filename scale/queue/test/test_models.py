@@ -394,7 +394,6 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.standalone_failed_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=3,
                                                                priority=100)
 
-        import pdb; pdb.set_trace()
         self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=1)
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
                                                                  priority=100)
@@ -490,17 +489,23 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
                         self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id,
                         self.standalone_queued_job.id]
-        self.jobs = [self.standalone_failed_job, self.standalone_canceled_job,
-                        self.standalone_completed_job, self.job_a_1, self.job_b_2,
-                        self.standalone_queued_job]
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
         status = Queue.objects.get_queue_status()
         self.assertEqual(status[0].count, 1)
 
-        Queue.objects.queue_jobs(self.jobs, requeue=True, priority=self.new_priority)
+        from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
+        messages = []
+        messages.append(create_requeue_jobs_bulk_message(job_ids=self.job_ids))
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                self.fail('Requeue failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
 
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')

@@ -755,13 +755,9 @@ class JobManager(models.Manager):
                 if job.can_be_queued():
                     job_ids.append(job.id)
 
-        if requeue:
-            self.increment_max_tries(job_ids, when_queued)
-
         self.filter(id__in=job_ids).update(status='QUEUED', node=None, error=None, queued=when_queued, started=None,
                                            ended=None, last_status_change=when_queued,
                                            num_exes=models.F('num_exes') + 1, last_modified=timezone.now())
-
 
         return job_ids
 
