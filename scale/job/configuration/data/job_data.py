@@ -424,7 +424,7 @@ class JobData(object):
         data_file_parse_saver = DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER']
         if not data_file_parse_saver:
             raise Exception('No data file parse saver found')
-        data_file_parse_saver.save_parse_results(parse_results, input_file_ids, is_recipe=is_recipe)
+        data_file_parse_saver.save_parse_results(parse_results, input_file_ids)
 
     def setup_job_dir(self, data_files):
         """Sets up the directory structure for a job execution and downloads the given files
