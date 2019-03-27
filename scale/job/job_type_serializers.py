@@ -17,8 +17,10 @@ class JobTypeBaseSerializerV6(ModelIdSerializer):
     version = serializers.CharField()
     title = serializers.CharField()
     description = serializers.CharField()
+    is_paused = serializers.BooleanField()
     is_published = serializers.BooleanField()
     icon_code = serializers.CharField()
+    unmet_resources = serializers.CharField()
 
 class JobTypeListSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
@@ -88,6 +90,35 @@ class JobTypeFailedStatusSerializer(serializers.Serializer):
     first_error = serializers.DateTimeField()
     last_error = serializers.DateTimeField()
 
+class JobTypeStatusSerializerV6(serializers.Serializer):
+    """Converts job type status model and extra statistic fields to REST output."""
+    job_type = JobTypeBaseSerializerV6()
+    job_counts = JobTypeStatusCountsSerializer(many=True)
+
+
+class JobTypePendingStatusSerializerV6(serializers.Serializer):
+    """Converts job type pending status model and extra statistic fields to REST output."""
+    job_type = JobTypeBaseSerializerV6()
+    count = serializers.IntegerField()
+    longest_pending = serializers.DateTimeField()
+
+
+class JobTypeRunningStatusSerializerV6(serializers.Serializer):
+    """Converts job type running status model and extra statistic fields to REST output."""
+    job_type = JobTypeBaseSerializerV6()
+    count = serializers.IntegerField()
+    longest_running = serializers.DateTimeField()
+
+
+class JobTypeFailedStatusSerializerV6(serializers.Serializer):
+    """Converts job type failed status model and extra statistic fields to REST output."""
+    from error.serializers import ErrorSerializerV6
+
+    job_type = JobTypeBaseSerializerV6()
+    error = ErrorSerializerV6()
+    count = serializers.IntegerField()
+    first_error = serializers.DateTimeField()
+    last_error = serializers.DateTimeField()
 
 class JobTypeRevisionBaseSerializer(ModelIdSerializer):
     """Converts job type revision model fields to REST output."""

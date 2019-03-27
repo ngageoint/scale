@@ -47,10 +47,15 @@ class ErrorsView(GenericAPIView):
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
+        is_builtin = rest_util.parse_bool(request, 'is_builtin', required=False)
+        job_type_name = rest_util.parse_string(request, 'job_type_name', required=False)
+        name = rest_util.parse_string(request, 'name', required=False)
+        category = rest_util.parse_string(request, 'category', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        errors = Error.objects.get_errors(started, ended, order)
+        errors = Error.objects.get_errors(started=started, ended=ended, order=order, is_builtin=is_builtin, 
+                                          job_type_name=job_type_name, name=name, category=category)
 
         page = self.paginate_queryset(errors)
         serializer = self.serializer_class(page, many=True)
