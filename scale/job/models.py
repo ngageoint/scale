@@ -885,7 +885,7 @@ class JobManager(models.Manager):
             input_dict = convert_data_to_v6_json(input_data).get_dict()
         else:
             # TODO: remove legacy code path when legacy job types are removed
-            v1_dict = convert_data_to_v1_json(input_data).get_dict()
+            v1_dict = convert_data_to_v1_json(input_data, job.job_type_rev.get_input_interface()).get_dict()
             sunset_job_data = JobDataSunset.create(job.job_type_rev.manifest, v1_dict)
             if job.recipe:
                 sunset_interface = JobInterfaceSunset.create(job.job_type_rev.manifest, do_validate=False)

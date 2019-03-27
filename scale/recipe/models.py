@@ -750,8 +750,9 @@ class RecipeManager(models.Manager):
         input_files = input_files.select_related('workspace').defer('workspace__json_config')
         input_files = input_files.order_by('id').distinct('id')
 
+        interface = recipe.recipe_type_rev.get_definition().input_interface
         recipe_def_dict = convert_recipe_definition_to_v1_json(recipe.recipe_type_rev.get_definition()).get_dict()
-        recipe_data_dict = convert_data_to_v1_json(recipe.get_input_data()).get_dict()
+        recipe_data_dict = convert_data_to_v1_json(recipe.get_input_data(), interface).get_dict()
         recipe.inputs = self._merge_recipe_data(recipe_def_dict['input_data'], recipe_data_dict['input_data'],
                                                 input_files)
 
@@ -839,7 +840,7 @@ class RecipeManager(models.Manager):
         # removed
         if definition_version == '1.0' and recipe.recipe:
             if 'workspace_id' in recipe.recipe.input:
-                input_dict = convert_data_to_v1_json(input_data).get_dict()
+                input_dict = convert_data_to_v1_json(input_data, recipe_definition.input_interface).get_dict()
                 input_dict['workspace_id'] = recipe.recipe.input['workspace_id']
 
         if not input_dict:
