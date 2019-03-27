@@ -782,50 +782,6 @@ class JobManager(models.Manager):
         self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, last_modified=timezone.now())
         return job_ids
 
-    # TODO: this needs to be removed as usage of this is refactored into the messaging backend
-    def update_status(self, jobs, status, when, error=None):
-        """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
-
-        :param jobs: The jobs to update
-        :type jobs: [:class:`job.models.Job`]
-        :param status: The new status
-        :type status: string
-        :param when: The time that the status change occurred
-        :type when: :class:`datetime.datetime`
-        :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
-        :type error: :class:`error.models.Error`
-        """
-
-        if status == 'QUEUED':
-            raise Exception('Changing status to QUEUED must use the queue_jobs() method')
-        if status == 'FAILED' and not error:
-            raise Exception('An error is required when status is FAILED')
-        if not status == 'FAILED' and error:
-            raise Exception('Status %s is invalid with an error' % status)
-
-        change_started = (status == 'RUNNING')
-        ended = when if status in Job.FINAL_STATUSES else None
-        modified = timezone.now()
-
-        # Update job models in memory and collect job IDs
-        job_ids = set()
-        for job in jobs:
-            job_ids.add(job.id)
-            job.status = status
-            job.last_status_change = when
-            if change_started:
-                job.started = when
-            job.ended = ended
-            job.error = error
-            job.last_modified = modified
-
-        # Update job models in database with single query
-        if change_started:
-            self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended, error=error, last_modified=modified)
-        else:
-            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error, last_modified=modified)
-
-
 class Job(models.Model):
     """Represents a job to be run on the cluster. A model lock must be obtained using select_for_update() on any job
     model before updating its status or superseding it.
