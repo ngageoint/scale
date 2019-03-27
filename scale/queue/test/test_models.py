@@ -540,13 +540,22 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
                         self.standalone_queued_job.id]
 
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
         status = Queue.objects.get_queue_status()
         self.assertEqual(status[0].count, 1)
 
-        Queue.objects.requeue_jobs(self.job_ids, self.new_priority)
+        from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
+        messages = []
+        messages.append(create_requeue_jobs_bulk_message(job_ids=self.job_ids))
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                self.fail('Requeue failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
 
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')
