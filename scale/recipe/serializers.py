@@ -1,6 +1,12 @@
 import rest_framework.serializers as serializers
 
+import logging
+
 from util.rest import ModelIdSerializer
+
+from storage.models import ScaleFile
+
+logger = logging.getLogger(__name__)
 
 # Serializers for v6 REST API
 class RecipeTypeBaseSerializerV6(ModelIdSerializer):
@@ -160,7 +166,14 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
             if obj['type'] == 'file':
                 value = ScaleFileSerializerV6().to_representation(obj['value'])
             elif obj['type'] == 'files':
-                value = [ScaleFileSerializerV6().to_representation(v) for v in obj['value']]
+                if not obj['value']:
+                    logger.warning('Empty file list')
+                    value = []
+                elif isinstance(obj['value'], ScaleFile):
+                    logger.warning('Unexpected single file with type "files": %s' % obj['value'])
+                    value = [ScaleFileSerializerV6().to_representation(obj['value'])]
+                else:
+                    value = [ScaleFileSerializerV6().to_representation(v) for v in obj['value']]
             else:
                 value = obj['value']
         result['value'] = value

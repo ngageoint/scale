@@ -6,16 +6,13 @@ import django
 from django.test import TestCase
 from mock import patch, MagicMock, Mock
 
-import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
 from job.configuration.data.exceptions import InvalidConnection, InvalidData
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
-from job.execution.configuration.exceptions import MissingSetting
-from job.execution.configuration.json.exe_config import ExecutionConfiguration
-from job.configuration.results.exceptions import InvalidResultsManifest
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from product.types import ProductFileMetadata
 
@@ -163,6 +160,41 @@ class TestJobInterfacePostSteps(TestCase):
         fake_stdout = ''
 
         self.assertRaises(InvalidResultsManifest, job_interface.perform_post_steps, job_exe, job_data, fake_stdout)
+
+    @patch('os.path.isfile')
+    @patch('os.path.exists')
+    @patch('__builtin__.open')
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_missing_output_files(self, mock_loads, mock_open, mock_exists, mock_isfile):
+        job_interface_dict, job_data_dict = self._get_simple_interface_data()
+        job_interface_dict['output_data'] = [{
+            'name': 'output_files',
+            'type': 'files',
+            'required': True,
+        }]
+        job_data_dict['output_data'].append(
+            { 'name': 'output_files',
+              'workspace_id': self.workspace.id })
+
+        results_manifest = {
+            'version': '1.0',
+            'files': [{
+                'name': 'output_files',
+                'paths': [],
+            }]
+        }
+        mock_loads.return_value = results_manifest
+        mock_exists.return_value = True
+        mock_isfile.return_value = True
+
+        job_exe = MagicMock()
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = JobData(data=job_data_dict)
+        job_data.save_parse_results = Mock()
+        fake_stdout = ''
+
+        self.assertRaises(MissingRequiredOutput, job_interface.perform_post_steps, job_exe, job_data, fake_stdout)
 
     @patch('os.path.isfile')
     @patch('os.path.exists')

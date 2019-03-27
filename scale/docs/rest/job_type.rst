@@ -1405,7 +1405,7 @@ These services provide access to information about job types.
 |                    "is_active": true,                                                                                   |
 |                    "is_operational": true,                                                                              |
 |                    "is_paused": false,                                                                                  |
-|                    "is_published": true,                                                                               |
+|                    "is_published": true,                                                                                |
 |                    "icon_code": "f013"                                                                                  |
 |                },                                                                                                       |
 |               "error": {                                                                                                |

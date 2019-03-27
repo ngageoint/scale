@@ -6,8 +6,12 @@ import logging
 import rest_framework.serializers as serializers
 
 from job.models import Job
-from job.job_type_serializers import (JobTypeBaseSerializerV6, JobTypeRevisionBaseSerializer,
-                                      JobTypeRevisionSerializerV6, JobTypeRevisionDetailsSerializerV6)
+
+from job.job_type_serializers import JobTypeBaseSerializerV6
+from job.job_type_serializers import JobTypeRevisionBaseSerializer
+from job.job_type_serializers import JobTypeRevisionSerializerV6
+from job.job_type_serializers import JobTypeRevisionDetailsSerializerV6
+from storage.models import ScaleFile
 
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
@@ -91,7 +95,6 @@ class JobExecutionBaseSerializerV6(ModelIdSerializer):
     node = ModelIdSerializer()
     error = ModelIdSerializer(source='jobexecutionend.error')
     job_type = ModelIdSerializer()
-
 
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     """Converts job execution model fields to REST output"""

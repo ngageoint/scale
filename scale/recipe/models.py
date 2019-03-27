@@ -452,7 +452,7 @@ class RecipeManager(models.Manager):
         # removed
         if definition_version == '1.0' and recipe.recipe:
             if 'workspace_id' in recipe.recipe.input:
-                input_dict = convert_data_to_v1_json(input_data).get_dict()
+                input_dict = convert_data_to_v1_json(input_data, recipe_definition.input_interface).get_dict()
                 input_dict['workspace_id'] = recipe.recipe.input['workspace_id']
 
         if not input_dict:

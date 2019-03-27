@@ -398,7 +398,7 @@ class JobData(object):
                 if required:
                     raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
 
-        return []
+        return warnings
 
     def validate_input_json(self, input_json):
         """Validates the given property names to ensure they are all populated correctly and exist if they are required.

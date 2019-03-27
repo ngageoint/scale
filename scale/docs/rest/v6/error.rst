@@ -52,6 +52,14 @@ Response: 200 OK
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.                   |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                        |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                                    |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.            |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | is_builtin         | Boolean           | Optional | Return only errors matching the is_builtin flag                          |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | job_type_name      | String            | Optional | Return only errors for job types with the given name (any version)       |

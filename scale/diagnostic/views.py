@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from data.data.data import Data
 from job.models import JobType
 from queue.models import Queue
-from queue.serializers import QueueStatusSerializer
+from queue.serializers import QueueStatusSerializer, QueueStatusSerializerV6
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import RecipeType
 import util.rest as rest_util
@@ -24,7 +24,15 @@ class QueueScaleBakeView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Bake jobs."""
     parser_classes = (JSONParser,)
     queryset = Queue.objects.all()
-    serializer_class = QueueStatusSerializer
+    #serializer_class = QueueStatusSerializer
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        else:
+            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method
@@ -77,7 +85,15 @@ class QueueScaleCasinoView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Casino recipes."""
     parser_classes = (JSONParser,)
     queryset = Queue.objects.all()
-    serializer_class = QueueStatusSerializer
+    #serializer_class = QueueStatusSerializer
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        else:
+            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method
@@ -130,7 +146,15 @@ class QueueScaleHelloView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Hello jobs."""
     parser_classes = (JSONParser,)
     queryset = Queue.objects.all()
-    serializer_class = QueueStatusSerializer
+    #serializer_class = QueueStatusSerializer
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        else:
+            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method
@@ -183,7 +207,15 @@ class QueueScaleRouletteView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Roulette jobs."""
     parser_classes = (JSONParser,)
     queryset = Queue.objects.all()
-    serializer_class = QueueStatusSerializer
+    #serializer_class = QueueStatusSerializer
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        else:
+            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method

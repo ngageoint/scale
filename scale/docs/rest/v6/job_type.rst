@@ -456,8 +456,10 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
-            "icon_code": "012F",
-            "is_published": true
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f013",
+            "unmet_resources": []
           },
           "revision_num": 1,
           "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -528,7 +530,10 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "My first job",
         "description": "My very first job",
-        "icon_code": "012F"
+        "is_paused": false,
+        "is_published": false,
+        "icon_code": "f013",
+        "unmet_resources": []
       },
       "revision_num": 1,
       "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -1007,7 +1012,7 @@ Response: 204 No Content
 +=========================================================================================================================+
 | Edits an existing job type with the associated fields                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **PATCH** /job-types/{name}/{version}/                                                                                  |
+| **PATCH** /v6/job-types/{name}/{version}/                                                                               |
 |           Where {name} is the name of the job type and {version} is its version                                         |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **Content Type**        | *application/json*                                                                            |
@@ -1100,3 +1105,322 @@ A job type configuration JSON describes a set of configuration settings that aff
 |                            |                |          | the job's Seed manifest and each value is the value to provide for |
 |                            |                |          | that setting.                                                      |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
+
+.. _rest_v6_job_type_status:
+
+v6 Job Type Status
+------------------
+
+**Example GET /v6/job-types/status/ API call**
+
+Request: GET http://.../v6/job-types/status/
+
+.. code-block:: javascript 
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+        "job_type": {
+          "id": 1,
+          "name": "scale-ingest",
+          "version": "1.0",
+          "title": "Scale Ingest",
+          "description": "Ingests a source file into a workspace",
+          "is_paused": false,
+          "is_published": true,
+          "icon_code": "f013",
+          "unmet_resources": []
+        },
+        "job_counts": [{
+            "status": "RUNNING",
+            "count": 1,
+            "most_recent": "2015-08-31T22:09:12.674Z",
+            "category": null
+          },
+          {
+            "status": "FAILED",
+            "count": 2,
+            "most_recent": "2015-08-31T19:28:30.799Z",
+            "category": "SYSTEM"
+          },
+          {
+            "status": "COMPLETED",
+            "count": 57,
+            "most_recent": "2015-08-31T21:51:40.900Z",
+            "category": null
+          }
+        ],
+      },
+      {
+        "job_type": {
+          "id": 3,
+          "name": "scale-clock",
+          "version": "1.0",
+          "title": "Scale Clock",
+          "description": "Monitors a directory for incoming files to ingest",
+          "is_paused": false,
+          "is_published": true,
+          "icon_code": "f013",
+          "unmet_resources": []
+        },
+        "job_counts": []
+      }
+    ]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Types Status**                                                                                                    |
++=========================================================================================================================+
+| Returns a list of overall job type statistics, based on counts of jobs organized by status.                             |
+| Note that all jobs with a status of RUNNING are included regardless of date/time filters.                               |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/status/                                                                                           |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
+|                    |                   |          | Defaults to the past 3 hours.                                       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the statistics.                           |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_counts        | Array             | A list of recent job counts for the job type, grouped by status.               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..status           | String            | The type of job status the count represents.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..count            | Integer           | The number of jobs with that status.                                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..most_recent      | ISO-8601 Datetime | The date/time when a job was last in that status.                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..category         | String            | The category of the status, which is only used by a FAILED status.             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_job_type_pending:
+
+v6 Job Types Pending
+--------------------
+
+**Example GET /v6/job-types/pending/ API call**
+
+Request: GET http://.../v6/job-types/pending/
+
+.. code-block:: javascript  
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+      "job_type": {
+        "id": 3,
+        "name": "scale-clock",
+        "version": "1.0",
+        "title": "Scale Clock",
+        "description": "",
+        "is_paused": false,
+        "is_published": true,
+        "icon_code": "f013",
+        "unmet_resources": []
+      },
+      "count": 1,
+      "longest_pending": "2015-09-08T15:43:15.681Z"
+    }]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Types Pending**                                                                                                   |
++=========================================================================================================================+
+| Returns counts of job types that are pending, ordered by the longest pending job.                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/pending/                                                                                          |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the count.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .count             | Integer           | The number of jobs of this type that are currently pending.                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .longest_pending   | ISO-8601 Datetime | The queue start time of the job of this type that has been pending the longest.|
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+
+.. _rest_v6_job_type_running:
+
+v6 Job Types Running
+--------------------
+
+**Example GET /v6/job-types/running/ API call**
+
+Request: GET http://.../v6/job-types/status/
+
+.. code-block:: javascript 
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+      "job_type": {
+        "id": 3,
+        "name": "scale-clock",
+        "version": "1.0",
+        "title": "Scale Clock",
+        "description": "",
+        "is_paused": false,
+        "is_published": true,
+        "icon_code": "f013",
+        "unmet_resources": []
+      },
+      "count": 1,
+      "longest_running": "2015-09-08T15:43:15.681Z"
+    }]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Types Running**                                                                                                   |
++=========================================================================================================================+
+| Returns counts of job types that are running, ordered by the longest running job.                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/running/                                                                                          |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the count.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .count             | Integer           | The number of jobs of this type that are currently running.                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .longest_running   | ISO-8601 Datetime | The run start time of the job of this type that has been running the longest.  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_job_type_system_failures:
+
+v6 Job Type System Failures
+---------------------------
+
+**Example GET /v6/job-types/system-failures/ API call**
+
+Request: GET http://.../v6/job-types/system-failures/
+
+.. code-block:: javascript 
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+      "job_type": {
+        "id": 3,
+        "name": "scale-clock",
+        "version": "1.0",
+        "title": "Scale Clock",
+        "description": "",
+        "is_paused": false,
+        "is_published": true,
+        "icon_code": "f013",
+        "unmet_resources": []
+      },
+      "error": {
+        "id": 1,
+        "name": "Unknown",
+        "description": "The error that caused the failure is unknown.",
+        "category": "SYSTEM",
+        "is_builtin": true,
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z"
+      },
+      "count": 38,
+      "first_error": "2015-08-28T23:29:28.719Z",
+      "last_error": "2015-09-08T16:27:42.243Z"
+    }]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Type System Failures**                                                                                            |
++=========================================================================================================================+
+| Returns counts of job types that have a critical system failure error, ordered by last error.                           |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/system-failures/                                                                                  |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the count.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .count             | Integer           | The number of jobs of this type that have an error.                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .error             | JSON Object       | The error that is associated with the count.                                   |
+|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .first_error       | ISO-8601 Datetime | When this error first occurred for a job of this type.                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .last_error        | ISO-8601 Datetime | When this error most recently occurred for a job of this type.                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
