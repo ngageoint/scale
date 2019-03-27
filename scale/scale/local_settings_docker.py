@@ -40,7 +40,7 @@ if ELASTICSEARCH_URLS:
         sniff_on_connection_fail=False
     )
 
-ELASTICSEARCH_VERSION = ELASTICSEARCH.info()['version']['number']
+    ELASTICSEARCH_VERSION = ELASTICSEARCH.info()['version']['number']
 
 
 # Broker URL for connection to messaging backend. Bootstrap must populate.
