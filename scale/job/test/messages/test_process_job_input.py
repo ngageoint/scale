@@ -395,7 +395,7 @@ class TestProcessJobInput(TransactionTestCase):
                 }
             }
         }
-        job_type_1 = job_test_utils.create_job_type(interface=manifest_1)
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
         manifest_2 = {
             'seedVersion': '1.0.0',
             'job': {
@@ -418,7 +418,7 @@ class TestProcessJobInput(TransactionTestCase):
                 }
             }
         }
-        job_type_2 = job_test_utils.create_job_type(interface=manifest_2)
+        job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
         output_dict = {
             'version': '1.0',
             'output_data': [{

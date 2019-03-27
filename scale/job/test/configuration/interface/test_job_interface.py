@@ -161,13 +161,11 @@ class TestJobInterfacePostSteps(TestCase):
 
         self.assertRaises(InvalidResultsManifest, job_interface.perform_post_steps, job_exe, job_data, fake_stdout)
 
-    @patch('product.configuration.product_data_file.ProductDataFileStore._calculate_remote_path')
     @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
     @patch('job.configuration.interface.job_interface_1_0.json.loads')
-    def test_missing_output_files(self, mock_loads, mock_open, mock_exists, mock_isfile, mock_calculate_remote):
-        mock_calculate_remote.return_value = '/temp/output_file.txt'
+    def test_missing_output_files(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
             'name': 'output_files',
