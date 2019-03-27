@@ -292,6 +292,8 @@ class ResultsManifest(object):
         file_entry_map = {}
         for manifest_file_entry in self._json_manifest['output_data']:
             entry_name = manifest_file_entry['name']
+            if 'files' in manifest_file_entry and not manifest_file_entry['files']:
+                continue
             file_entry_map[entry_name] = manifest_file_entry
 
         for file_name, (is_multiple, is_required) in output_file_definitions.items():
