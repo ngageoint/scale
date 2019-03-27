@@ -5,14 +5,13 @@ dcos marathon app remove /scale-fluentd
 dcos marathon app remove /scale-webserver
 dcos marathon app stop /scale
 
-if [ ! -f scale-ui/deploy/scale-ui-master.tar.gz ]
+# Assumes an adjacent scale-ui source code checkout to grab UI assets from
+if [ ! -f ./scale-ui/index.html ]
 then
-    cd scale-ui
-    tar xf node_modules.tar.gz
-    tar xf bower_components.tar.gz
-    npm install
-    node node_modules/gulp/bin/gulp.js deploy
-    cd ..
+    cd ../scale-ui
+    npm run builddev:prod 
+    cd -
+    cp -R ../scale-ui/dist/developer ./scale-ui
 fi
 
 docker build -t $1 -f Dockerfile-dev .
