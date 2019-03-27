@@ -15,6 +15,13 @@ class SourceConfig(AppConfig):
         """
         Override this method in subclasses to run code when Django starts.
         """
+
+        # Register source file parse saver
+        from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER
+        from source.configuration.source_data_file import SourceDataFileParseSaver
+
+        DATA_FILE_PARSE_SAVER['DATA_FILE_PARSE_SAVER'] = SourceDataFileParseSaver()
+
         # Register source message types
         from messaging.messages.factory import add_message_type
         from source.messages.purge_source_file import PurgeSourceFile
