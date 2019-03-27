@@ -1,8 +1,8 @@
 {
   "id": "scale-template-fluentd",
-  "cpus": 0.5,
+  "cpus": 1,
   "mem": 1024,
-  "disk": 256,
+  "disk": 64,
   "instances": 1,
   "container": {
     "docker": {
