@@ -164,34 +164,35 @@ class TestJobInterfacePostSteps(TestCase):
     @patch('product.configuration.product_data_file.ProductDataFileStore._calculate_remote_path')
     @patch('os.path.isfile')
     @patch('os.path.exists')
-    def test_missing_output_file(self, mock_exists, mock_isfile, mock_calculate_remote):
+    @patch('__builtin__.open')
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_missing_output_files(self, mock_loads, mock_open, mock_exists, mock_isfile, mock_calculate_remote):
         mock_calculate_remote.return_value = '/temp/output_file.txt'
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
-            'name': 'output_file',
-            'type': 'file',
+            'name': 'output_files',
+            'type': 'files',
             'required': True,
         }]
         job_data_dict['output_data'].append(
-            { 'name': 'output_file',
-              'file_ids': [5, 7, 23],
+            { 'name': 'output_files',
               'workspace_id': self.workspace.id })
 
         results_manifest = {
             'version': '1.0',
             'files': [{
-                'name': 'output_file',
-                'path': '/some/path/foo.txt',
+                'name': 'output_files',
+                'paths': [],
             }]
         }
-        #mock_loads.return_value = results_manifest
-        mock_exists.return_value = False
+        mock_loads.return_value = results_manifest
+        mock_exists.return_value = True
         mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
         job_interface = JobInterface(job_interface_dict)
-        job_data = JobData(data={})
+        job_data = JobData(data=job_data_dict)
         job_data.save_parse_results = Mock()
         fake_stdout = ''
 
