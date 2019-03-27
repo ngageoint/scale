@@ -326,15 +326,31 @@ def deploy_rabbitmq(client, app_name):
 
 
 def deploy_logstash(client, app_name, es_urls, es_lb):
+    """
+    Logic must handle 3 deployment cases when LOGSTASH_DOCKER_IMAGE is unset:
+
+    localhost:5000/geoint/scale:5.9.2
+    localhost:5000/geoint/scale
+    geoint/scale:5.9.2
+
+    The most problematic is the 2nd case as we previously we improperly identifying
+    the port colon as the tag colon.
+    """
+
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
-    #default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-logstash:tag
+    # default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-logstash:tag
     marathon_img_default = os.getenv('MARATHON_APP_DOCKER_IMAGE')
-    if marathon_img_default.endswith(':'):
-        logstash_docker_img_default = marathon_img_default.replace(':', '-logstash:')
-    else:
-        logstash_docker_img_default = marathon_img_default + '-logstash'
+
+    logstash_docker_img_default = marathon_img_default + '-logstash'
+    if ':' in marathon_img_default:
+        # Grab parts to ensure we replace on tag not port
+        parts = marathon_img_default.split('/')
+        last_index = len(parts) - 1
+        if ':' in parts[last_index]:
+            replacement = parts[last_index].replace(':', '-logstash:')
+            logstash_docker_img_default = marathon_img_default.replace(parts[last_index], replacement)
 
     # Load marathon template file
     marathon = initialize_app_template('logstash', app_name, os.getenv(
