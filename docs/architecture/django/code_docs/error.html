@@ -752,7 +752,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="error.models.ErrorManager.get_errors">
-<code class="descname">get_errors</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_errors</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em>, <em>is_builtin=None</em>, <em>job_type_name=None</em>, <em>name=None</em>, <em>category=None</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of errors within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -762,10 +762,14 @@ object the first time, the query is executed.</p>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query errors updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query errors updated before this amount of time.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>is_builtin</strong> (<em>bool</em>) &#8211; Query errors that match the is_builtin flag</li>
+<li><strong>job_type_name</strong> &#8211; Query errors that match the given job type name</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; Query errors with the given name</li>
+<li><strong>category</strong> (<em>string</em>) &#8211; Query errors with the given category.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of errors that match the time range.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of errors that match the given filters</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>]</p>
