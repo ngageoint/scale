@@ -1,0 +1,145 @@
+{ "template": "scalelogs-*",
+    "mappings": {ll,
+      
+      "scalelogs": {
+      "properties": {
+        "@timestamp": {
+          "format": "strict_date_optional_time||epoch_millis",
+          "type": "date"
+        },
+        "@version": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "container_name": {
+          "fields": {
+            "raw": {
+              "ignore_above": 256,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        },
+        "host": {
+          "fielddata": {
+            "format": "disabled"
+          },
+          "fields": {
+            "raw": {
+              "ignore_above": 256,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        },
+        "geoip": {
+          "dynamic": "true",
+          "properties": {
+            "ip": {
+              "type": "ip"
+            },
+            "latitude": {
+              "type": "float"
+            },
+            "location": {
+              "type": "geo_point"
+            },
+            "longitude": {
+              "type": "float"
+            }
+          }
+        },
+        "message": {
+          "fielddata": {
+            "format": "disabled"
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        },
+        "scale_job_exe": {
+          "fielddata": {
+            "format": "disabled"
+          },
+          "fields": {
+            "raw": {
+              "ignore_above": 256,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        },
+        "scale_job_exe_num": {
+          "type": "long"
+        },
+        "scale_job_id": {
+          "type": "long"
+        },
+        "scale_job_type": {
+          "fielddata": {
+            "format": "disabled"
+          },
+          "fields": {
+            "raw": {
+              "ignore_above": 256,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        },
+        "scale_job_version": {
+          "fielddata": {
+            "format": "disabled"
+          },
+          "fields": {
+            "raw": {
+              "ignore_above": 256,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        },
+        "scale_order_num": {
+          "type": "long"
+        },
+        "stream": {
+          "fielddata": {
+            "format": "disabled"
+          },
+          "fields": {
+            "raw": {
+              "ignore_above": 256,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "norms": {
+            "enabled": false
+          },
+          "type": "string"
+        }
+      }
+    }
+}
+}
