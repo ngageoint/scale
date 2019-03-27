@@ -246,7 +246,6 @@ below for reference.
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
-| SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
 | SCALE_LOGGING_ADDRESS       | None                            | Fluentd URL. By default set by bootstrap   |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |

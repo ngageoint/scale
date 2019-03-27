@@ -59,8 +59,8 @@ LOGGING_HEALTH_ADDRESS = None
 
 # Base URL of elasticsearch nodes
 ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS')
-# placeholder for elasticsearch version. needed to properly form ES log query.
-ELASTICSEARCH_VERSION = os.environ.get('SCALE_ELASTICSEARCH_VERSION')
+# Placeholder for elasticsearch version. Supplied in production by local_settings_docker.py
+ELASTICSEARCH_VERSION = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 
