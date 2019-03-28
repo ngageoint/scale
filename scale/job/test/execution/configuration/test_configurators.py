@@ -560,7 +560,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                         found_log_precision = True
                     elif opt_name == 'fluentd-address':
                         self.assertEqual(opt_value, 'test-logging-address')
-                        found_syslog_address = True
+                        found_logging_address = True
                     elif opt_name == 'tag':
                         tag_value = '%s|%s|%s|%i|%i' % (exe_config_with_secrets.get_task_id(task_type),
                                                         job_type.name,
@@ -571,7 +571,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                         found_tag = True
             self.assertTrue(found_log_driver)
             self.assertTrue(found_log_precision)
-            self.assertTrue(found_syslog_address)
+            self.assertTrue(found_logging_address)
             self.assertTrue(found_tag)
 
     def test_configure_scheduled_job_regular(self):
