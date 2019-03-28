@@ -631,7 +631,7 @@ class Ingest(models.Model):
         :type tags: set of string
         """
 
-        self.data_type_tags = tags
+        self.data_type_tags = list(tags)
 
     def get_ingest_source_event(self):
         """Returns the event that triggered the ingest
