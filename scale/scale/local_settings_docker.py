@@ -37,7 +37,9 @@ if ELASTICSEARCH_URLS:
         # disable all sniffing
         sniff_on_start=False,
         # refresh nodes after a node fails to respond
-        sniff_on_connection_fail=False
+        sniff_on_connection_fail=False,
+        # dont verify SSL certificates presently
+        verify_certs=False
     )
 
     ELASTICSEARCH_VERSION = ELASTICSEARCH.info()['version']['number']
