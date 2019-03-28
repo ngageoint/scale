@@ -21,7 +21,6 @@ from recipe.configuration.json.recipe_config_v6 import convert_config_to_v6_json
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
-from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
 from recipe.diff.diff import RecipeDiff
 from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
@@ -680,16 +679,6 @@ class Recipe(models.Model):
         return DataV6(data=self.input, do_validate=False).get_data()
 
 
-    # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
-    def get_recipe_data(self):
-        """Returns the data for this recipe
-
-        :returns: The input for this recipe
-        :rtype: :class:`recipe.configuration.data.recipe_data.LegacyRecipeData`
-        """
-
-        return RecipeDataSunset.create(self.get_recipe_definition(), self.input)
-
     def get_definition(self):
         """Returns the definition for this recipe
 
@@ -698,17 +687,6 @@ class Recipe(models.Model):
         """
 
         return self.recipe_type_rev.get_definition()
-
-    # TODO: deprecated, remove in Scale v6 once the trigger system is gone ??
-    def get_recipe_definition(self):
-        """Returns the definition for this recipe
-
-        :returns: The definition for this recipe
-        :rtype: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition` or
-                :class:`recipe.seed.recipe_definition.RecipeDefinition`
-        """
-
-        return RecipeDefinitionSunset.create(self.recipe_type_rev.definition)
 
     def get_v6_input_data_json(self):
         """Returns the input data for this recipe as v6 json with the version stripped
@@ -1545,15 +1523,6 @@ class RecipeType(models.Model):
 
         return RecipeDefinitionV6(definition=self.definition, do_validate=False).get_definition()
 
-    # TODO: deprecated, remove in Scale v6 once the trigger system is gone, use get_definition() instead
-    def get_recipe_definition(self):
-        """Returns the definition for running recipes of this type
-
-        :returns: The recipe definition for this type
-        :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
-        """
-
-        return RecipeDefinitionSunset.create(self.definition)
 
     def get_v6_definition_json(self):
         """Returns the recipe type definition in v6 of the JSON schema
@@ -1697,16 +1666,6 @@ class RecipeTypeRevision(models.Model):
         """
 
         return self.get_definition().input_interface
-
-    # TODO: deprecated, remove in Scale v6 once the trigger system is gone, use get_definition() instead
-    def get_recipe_definition(self):
-        """Returns the recipe type definition for this revision
-
-        :returns: The recipe type definition for this revision
-        :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
-        """
-
-        return RecipeDefinitionSunset.create(self.definition)
 
     def get_v6_definition_json(self):
         """Returns the revision definition in v6 of the JSON schema
