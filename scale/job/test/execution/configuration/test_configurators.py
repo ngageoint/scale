@@ -544,8 +544,8 @@ class TestScheduledExecutionConfigurator(TestCase):
             if task_type == 'pull':
                 continue  # Ignore pull tasks which are not Docker tasks
             found_log_driver = False
-            found_log_format = False
             found_log_precision = False
+            found_logging_address = False
             found_tag = False
             for docker_param in exe_config_with_secrets.get_docker_params(task_type):
                 if docker_param.flag == 'log-driver':
@@ -565,8 +565,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                         tag_value = '%s|%s|%s|%i|%i' % (exe_config_with_secrets.get_task_id(task_type),
                                                         job_type.name,
                                                         job_type.version,
-                                                        job_exe.job_id,
-                                                        job_exe.exe_num)
+                                                        job_exe_model.job_id,
+                                                        job_exe_model.exe_num)
                         self.assertEqual(opt_value, tag_value)
                         found_tag = True
             self.assertTrue(found_log_driver)
