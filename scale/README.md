@@ -245,8 +245,8 @@ below for reference.
 | DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
-| SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
-| SCALE_LOGGING_ADDRESS       | None                            | Fluentd URL. By default set by bootstrap   |
+| ELASTICSEARCH_URL           | None                            | Elasticsearch backend URL for log storage  |
+| LOGGING_ADDRESS             | None                            | Fluentd URL. By default set by bootstrap   |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
