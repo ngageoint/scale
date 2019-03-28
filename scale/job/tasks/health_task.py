@@ -62,11 +62,11 @@ class HealthTask(NodeTask):
         low_docker_space_check = 'if [[ -d /var/lib/docker ]]; then %s; fi' % test_disk_space
         health_check_commands.append(low_docker_space_check)
 
-        # Check to ensure that logstash is reachable
+        # Check to ensure that fluentd is reachable
         if settings.LOGGING_HEALTH_ADDRESS:
-            logstash_check = 'timeout -s SIGKILL 5s curl %s; if [[ $? != 0 ]]; then exit %d; fi'
-            logstash_check = logstash_check % (settings.LOGGING_HEALTH_ADDRESS, HealthTask.BAD_LOGSTASH_CODE)
-            health_check_commands.append(logstash_check)
+            logging_check = 'timeout -s SIGKILL 5s curl %s; if [[ $? != 0 ]]; then exit %d; fi'
+            logging_check = logstash_check % (settings.LOGGING_HEALTH_ADDRESS, HealthTask.BAD_LOGSTASH_CODE)
+            health_check_commands.append(logging_check)
 
         self._command = ' && '.join(health_check_commands)
 

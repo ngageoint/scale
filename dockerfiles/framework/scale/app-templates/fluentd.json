@@ -32,7 +32,7 @@
     "volumes": []
   },
   "env": {
-    "ELASTICSEARCH_URLS": ""
+    "ELASTICSEARCH_URL": ""
   },
   "healthChecks": [
     {

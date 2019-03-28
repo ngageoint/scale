@@ -53,12 +53,12 @@ CONFIG_URI = None
 # Directory for rotating metrics storage
 METRICS_DIR = None
 
-# URL for logstash, or None to disable logstash
+# URL for fluentd, or None to disable fluentd
 LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
 
 # Base URL of elasticsearch nodes
-ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS')
+ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 # Placeholder for elasticsearch version. Supplied in production by local_settings_docker.py
 ELASTICSEARCH_VERSION = None
 # Placeholder for Elasticsearch object. Needed for unit tests.

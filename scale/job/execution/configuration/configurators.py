@@ -411,13 +411,9 @@ class ScheduledExecutionConfigurator(object):
                                                                                    job_exe.exe_num))
                 config.add_to_task('post', docker_params=[log_driver, fluent_precision, log_address, post_task_tag])
                 # TODO: remove es_urls parameter when Scale no longer supports old style job types
-                es_urls = None
-                # Use connection pool to get up-to-date list of elasticsearch nodes
-                if settings.ELASTICSEARCH:
-                    hosts = [host.host for host in settings.ELASTICSEARCH.transport.connection_pool.connections]
-                    es_urls = ','.join(hosts)
+
                 # Post task needs ElasticSearch URL to grab logs for old artifact registration
-                es_param = DockerParameter('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
+                es_param = DockerParameter('env', 'ELASTICSEARCH_URL=%s' % settings.ELASTICSEARCH_URL)
                 config.add_to_task('post', docker_params=[es_param])
             main_task_tag = DockerParameter('log-opt', 'tag=%s|%s|%s|%s|%s' % (config.get_task_id('main'),
                                                                                job_type.name,
