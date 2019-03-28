@@ -11,6 +11,7 @@ from job.job_type_serializers import JobTypeSerializerV5
 from job.job_type_serializers import JobTypeRevisionBaseSerializer
 from job.job_type_serializers import JobTypeRevisionSerializerV5, JobTypeRevisionSerializerV6
 from job.job_type_serializers import JobTypeRevisionDetailsSerializerV6
+from storage.models import ScaleFile
 
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer

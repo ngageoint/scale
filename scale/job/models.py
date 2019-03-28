@@ -892,7 +892,7 @@ class JobManager(models.Manager):
 
                 # Add workspace for file outputs if needed
                 if sunset_interface.get_file_output_names():
-                    if 'workspace_id' in job.recipe.input:
+                    if 'workspace_id' in job.recipe.input: # MISSING WORKSPACE IDS BECAUSE WE HAVE A V6 RECIPE!
                         workspace_id = job.recipe.input['workspace_id']
                         sunset_interface.add_workspace_to_data(sunset_job_data, workspace_id)
             input_dict = sunset_job_data.get_dict()
