@@ -15,7 +15,7 @@ from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializerV6, R
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import Recipe, RecipeType
-from recipe.serializers import RecipeDetailsSerializerV6, OldRecipeDetailsSerializer
+from recipe.serializers import RecipeDetailsSerializerV6
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class QueueStatusView(ListAPIView):
 
         if self.request.version == 'v6':
             return QueueStatusSerializerV6
-            
+
     def list(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
 
