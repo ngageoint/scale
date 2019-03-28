@@ -1,4 +1,4 @@
-ARG IMAGE=fluent/fluentd:v1.4-onbuild-1
+ARG IMAGE=fluent/fluentd:v1.4-1
 FROM $IMAGE
 
 MAINTAINER Scale Developers "https://github.com/ngageoint/scale"
@@ -19,3 +19,5 @@ RUN apk add --no-cache --update --virtual .build-deps \
  && rm -rf /home/fluent/.gem/ruby/2.5.0/cache/*.gem
 
 USER fluent
+
+COPY fluent.conf /fluentd/etc/

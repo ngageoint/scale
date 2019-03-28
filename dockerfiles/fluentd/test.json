@@ -1,6 +1,0 @@
-{
-    "size":500,
-    "query": {
-        "match_all": {}
-    }
-}
