@@ -25,7 +25,10 @@ else:
 if result.port:
     template = template.replace('_ES_PORT_', 'port "{}"'.format(result.port))
 else:
-    template = template.replace('_ES_PORT_', '')
+    if 'https' in result.scheme.lower():
+        template = template.replace('_ES_PORT_', 'port "443"')
+    else:
+        template = template.replace('_ES_PORT_', 'port "9200"')
     
 template = template.replace('_ES_HOST_', 'host "{}"'.format(result.hostname))
 
@@ -34,4 +37,3 @@ template = template.replace('_ES_SCHEME_', 'scheme "{}"'.format(result.scheme))
 
 with open(outfile, 'w') as file_handle:
     file_handle.write(template)
-    
