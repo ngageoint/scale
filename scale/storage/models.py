@@ -272,7 +272,7 @@ class ScaleFileManager(models.Manager):
 
         return scale_file
 
-    def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
+    def filter_files_v6(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
 
         :param started: Query Scale files updated after this amount of time.
