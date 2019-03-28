@@ -544,29 +544,33 @@ class TestScheduledExecutionConfigurator(TestCase):
             if task_type == 'pull':
                 continue  # Ignore pull tasks which are not Docker tasks
             found_log_driver = False
-            found_syslog_format = False
-            found_syslog_address = False
+            found_log_format = False
+            found_log_precision = False
             found_tag = False
             for docker_param in exe_config_with_secrets.get_docker_params(task_type):
                 if docker_param.flag == 'log-driver':
-                    self.assertEqual(docker_param.value, 'syslog')
+                    self.assertEqual(docker_param.value, 'fluentd')
                     found_log_driver = True
                 elif docker_param.flag == 'log-opt':
                     array = docker_param.value.split('=')
                     opt_name = array[0]
                     opt_value = array[1]
-                    if opt_name == 'syslog-format':
-                        self.assertEqual(opt_value, 'rfc3164')
-                        found_syslog_format = True
-                    elif opt_name == 'syslog-address':
+                    if opt_name == 'fluentd-sub-second-precision':
+                        self.assertEqual(opt_value, 'true')
+                        found_log_precision = True
+                    elif opt_name == 'fluentd-address':
                         self.assertEqual(opt_value, 'test-logging-address')
                         found_syslog_address = True
                     elif opt_name == 'tag':
-                        tag_value = '%s|%s' % (exe_config_with_secrets.get_task_id(task_type), job_type.name)
+                        tag_value = '%s|%s|%s|%i|%i' % (exe_config_with_secrets.get_task_id(task_type),
+                                                        job_type.name,
+                                                        job_type.version,
+                                                        job_exe.job_id,
+                                                        job_exe.exe_num)
                         self.assertEqual(opt_value, tag_value)
                         found_tag = True
             self.assertTrue(found_log_driver)
-            self.assertTrue(found_syslog_format)
+            self.assertTrue(found_log_precision)
             self.assertTrue(found_syslog_address)
             self.assertTrue(found_tag)
 
