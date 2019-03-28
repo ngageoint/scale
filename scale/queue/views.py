@@ -10,7 +10,7 @@ from rest_framework.response import Response
 
 import util.rest as rest_util
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, QueueStatusSerializerV6
 
 logger = logging.getLogger(__name__)
 
