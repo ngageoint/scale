@@ -1,6 +1,12 @@
 # Fluentd - Scale
 Fluentd image loaded with custom configurations to support log capture within Scale.
 
-This image provides environment variables that can be used to manipulate the behavior of the log forwarder.
+We require a single environment variable to configure the backing Elasticsearch cluster. `ELASTICSEARCH_URL` accepts a single URL serving the Elasticsearch API.
+Production deployments of Elasticsearch should be fronted with a load balancer to satisfy this requirement.
 
-* ELASTICSEARCH_URLS: Comma delimited IP or DNS addresses serving the Elasticsearch API. Production deployments of Elasticsearch should be fronted with a load balancer. In this case, a single value should be provided.
+Supported example settings for `ELASTICSEARCH_URL`:
+
+- "http://192.168.1.10"
+- "http://192.168.1.10:9200"
+- "https://elastic.example.com"
+- "https://username@password:elastic.example.com"
