@@ -65,7 +65,7 @@ class HealthTask(NodeTask):
         # Check to ensure that fluentd is reachable
         if settings.LOGGING_HEALTH_ADDRESS:
             logging_check = 'timeout -s SIGKILL 5s curl %s; if [[ $? != 0 ]]; then exit %d; fi'
-            logging_check = logstash_check % (settings.LOGGING_HEALTH_ADDRESS, HealthTask.BAD_LOGSTASH_CODE)
+            logging_check = logging_check % (settings.LOGGING_HEALTH_ADDRESS, HealthTask.BAD_LOGSTASH_CODE)
             health_check_commands.append(logging_check)
 
         self._command = ' && '.join(health_check_commands)

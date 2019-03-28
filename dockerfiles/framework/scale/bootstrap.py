@@ -202,7 +202,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, db_url, broker_url):
+def deploy_webserver(client, app_name, es_url, db_url, broker_url):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
