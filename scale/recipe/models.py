@@ -868,7 +868,7 @@ class RecipeInputFileManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        files = ScaleFile.objects.filter_files_v5(started=started, ended=ended,
+        files = ScaleFile.objects.filter_files_v6(started=started, ended=ended,
                 time_field=time_field, file_name=file_name)
 
         files = files.filter(recipeinputfile__recipe=recipe_id).order_by('last_modified')
