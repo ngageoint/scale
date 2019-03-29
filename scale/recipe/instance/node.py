@@ -255,6 +255,9 @@ class JobNodeInstance(NodeInstance):
         """See :meth:`recipe.instance.node.NodeInstance.needs_to_process_input`
         """
 
+        if self.job.status not in ['PENDING', 'BLOCKED']:
+            return False
+            
         # Check parent nodes
         can_process_input = super(JobNodeInstance, self).needs_to_process_input()
 
