@@ -30,6 +30,7 @@ from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
 from recipe.messages.create_recipes import create_reprocess_messages
+from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,
                                 RecipeSerializerV5, RecipeSerializerV6,
@@ -902,18 +903,10 @@ class RecipeReprocessView(GenericAPIView):
             raise BadParameter('Cannot reprocess a superseded recipe')
         event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
-        recipe_type_name = recipe.recipe_type.name
-        revision_num = recipe.recipe_type_rev.revision_num
-        forced_nodes = ForcedNodes()
-        if all_jobs:
-            forced_nodes.set_all_nodes()
-        elif job_names:
-            for job_name in job_names:
-                forced_nodes.add_node(job_name)
 
         # Execute all of the messages to perform the reprocess
-        messages = create_reprocess_messages([root_recipe_id], recipe_type_name, revision_num, event.id,
-                                             forced_nodes=forced_nodes)
+        messages = create_reprocess_recipes_messages([root_recipe_id], recipe.recipe_type_rev.id, event.id,
+                                             all_jobs=all_jobs, job_names=job_names)
         while messages:
             msg = messages.pop(0)
             result = msg.execute()
