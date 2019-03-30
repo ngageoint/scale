@@ -889,8 +889,11 @@ class JobManager(models.Manager):
                 sunset_interface = JobInterfaceSunset.create(job.job_type_rev.manifest, do_validate=False)
 
                 # Add workspace for file outputs if needed
-                if sunset_interface.get_file_output_names():
-                    if 'workspace_id' in job.recipe.input: # MISSING WORKSPACE IDS BECAUSE WE HAVE A V6 RECIPE!
+                # Workspace needed if we have outputs and one is not defined in the job config
+                jc = job.get_job_configuration()
+                workspace_exists = jc.output_workspaces or jc.default_output_workspace
+                if sunset_interface.get_file_output_names() and not workspace_exists:
+                    if 'workspace_id' in job.recipe.input:
                         workspace_id = job.recipe.input['workspace_id']
                         sunset_interface.add_workspace_to_data(sunset_job_data, workspace_id)
             input_dict = sunset_job_data.get_dict()

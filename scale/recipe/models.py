@@ -18,7 +18,7 @@ from data.interface.parameter import FileParameter
 from job.models import Job, JobType
 from messaging.manager import CommandMessageManager
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
-from recipe.configuration.json.recipe_config_v6 import convert_config_to_v6_json
+from recipe.configuration.json.recipe_config_v6 import convert_config_to_v6_json, RecipeConfigurationV6
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
@@ -30,7 +30,7 @@ from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
 from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
-from storage.models import ScaleFile
+from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util import rest as rest_utils
@@ -167,6 +167,20 @@ class RecipeManager(models.Manager):
 
             if copy_superseded_input:
                 input_data = superseded_recipe.get_input_data()
+
+                # TODO: Remove when legacy recipes go away
+                # get workspace ids from v1 data and pass them on to job configs so we don't lose them
+                workspace_id = superseded_recipe.get_recipe_data().get_workspace_id()
+                workspace = None
+                try:
+                    workspace = Workspace.objects.get(pk=workspace_id)
+                except Workspace.DoesNotExist:
+                    logger.exception('Could not copy workspace from superseded recipe. Workspace does not exist: %d', workspace_id)
+
+                config = RecipeConfigurationV6(recipe.configuration)
+                if workspace:
+                    config.get_configuration().default_output_workspace = workspace.name
+                    recipe.configuration = config.get_dict()
 
         if input_data:
             input_data.validate(recipe_type_rev.get_input_interface())
@@ -837,15 +851,32 @@ class RecipeManager(models.Manager):
 
         # TODO: this code path supports passing output workspace ID in recipe data, remove when legacy trigger system is
         # removed
+        config = None
         if definition_version == '1.0' and recipe.recipe:
             if 'workspace_id' in recipe.recipe.input:
                 input_dict = convert_data_to_v1_json(input_data, recipe_definition.input_interface).get_dict()
                 input_dict['workspace_id'] = recipe.recipe.input['workspace_id']
 
+                # store workspace id in config so it isn't lost
+                workspace_id = input_dict['workspace_id']
+                workspace = None
+                try:
+                    workspace = Workspace.objects.get(pk=workspace_id)
+                except Workspace.DoesNotExist:
+                    logger.exception('Could not set workspace from input data. Workspace does not exist: %d', workspace_id)
+
+                config = RecipeConfigurationV6(recipe.configuration)
+                if workspace:
+                    config.get_configuration().default_output_workspace = workspace.name
+                    config = config.get_dict()
+
         if not input_dict:
             input_dict = convert_data_to_v6_json(input_data).get_dict()
 
-        self.filter(id=recipe.id).update(input=input_dict)
+        if config:
+            self.filter(id=recipe.id).update(input=input_dict, configuration=config)
+        else:
+            self.filter(id=recipe.id).update(input=input_dict)
 
     def supersede_recipes(self, recipe_ids, when):
         """Updates the given recipes to be superseded
