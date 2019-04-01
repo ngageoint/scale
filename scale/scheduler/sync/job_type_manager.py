@@ -31,7 +31,7 @@ class JobTypeManager(object):
         with self._lock:
             for job_type in self._job_types.values():
                 job_type_dict = {'id': job_type.id, 'name': job_type.name, 'version': job_type.version,
-                                 'title': job_type.title, 'description': job_type.description,
+                                 'title': job_type.get_title(), 'description': job_type.get_description(),
                                  'is_system': job_type.is_system, 'icon_code': job_type.icon_code}
                 job_types_list.append(job_type_dict)
 
