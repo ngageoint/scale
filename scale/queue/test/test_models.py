@@ -27,6 +27,7 @@ from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode
 from data.data.json.data_v6 import DataV6
 
@@ -468,7 +469,14 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event)
+        config_dict = {'version': '6',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
+
+        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event, recipe_config=config)
+
+        self.assertDictEqual(created_recipe.configuration, config_dict)
 
     @patch('queue.models.CommandMessageManager')
     def test_successful_ingest(self, mock_msg_mgr):
@@ -492,7 +500,14 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        created_strike_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, strike_event)
+        config_dict = {'version': '6',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
+
+        created_strike_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, strike_event, recipe_config=config)
+
+        self.assertDictEqual(created_strike_recipe.configuration, config_dict)
 
         data_dict = {
             'version': '1.0',
@@ -506,7 +521,9 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             }]
         }
         data = JobDataV6(data_dict)
-        created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event)
+        created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event, recipe_config=config)
+
+        self.assertDictEqual(created_scan_recipe.configuration, config_dict)
 
     def test_successful_legacy(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""

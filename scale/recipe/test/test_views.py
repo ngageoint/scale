@@ -21,6 +21,12 @@ from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
+class MockCommandMessageManager():
+    
+    def send_messages(self, commands):
+        for command in commands:
+            command.execute()
+
 class TestRecipeTypesViewV5(TransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
 
@@ -2146,6 +2152,8 @@ class TestRecipeReprocessViewV5(TransactionTestCase):
         results = json.loads(response.content)
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+        new_recipe = Recipe.objects.get(pk=results['id'])
+        self.assertDictEqual(new_recipe.input, self.recipe1.input)
 
     def test_job(self):
         """Tests reprocessing one job in an existing recipe"""
@@ -2258,6 +2266,61 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
+
+        legacy_definition = {
+            'version': '1.0',
+            'input_data': [{
+                'media_types': [
+                    'image/x-hdf5-image',
+                ],
+                'type': 'file',
+                'name': 'input_file',
+            }],
+            'jobs': [{
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+                'name': 'kml',
+                'recipe_inputs': [{
+                    'job_input': 'input_file',
+                    'recipe_input': 'input_file',
+                }],
+            }],
+        }
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': self.file1.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+
+        self.legacy_recipe_type = recipe_test_utils.create_recipe_type_v5(name='legacy-type', definition=legacy_definition)
+        legacy_recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.legacy_recipe_type, data=data)
+        self.legacy_recipe = legacy_recipe_handler.recipe
+
+
+    @patch('recipe.views.CommandMessageManager')
+    def test_legacy_all_jobs(self, mock_mgr):
+        """Tests reprocessing all jobs in an existing legacy recipe with v6 endpoint"""
+
+        mock_mgr.return_value = MockCommandMessageManager()
+        json_data = {
+            'forced_nodes': {
+                'all': True
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.legacy_recipe.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+
+        new_recipe = Recipe.objects.get(superseded_recipe_id=self.legacy_recipe.id)
+        self.assertEqual(new_recipe.configuration['output_workspaces']['default'], self.workspace.name)
+
 
     @patch('recipe.views.CommandMessageManager')
     @patch('recipe.views.create_reprocess_messages')
