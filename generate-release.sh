@@ -46,7 +46,6 @@ tput sgr0
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '-snapshot')/" scale/scale/__init__.py
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '-snapshot___BUILDNUM___')/" scale/scale/__init__.py.template
 grep "VERSION = " scale/scale/__init__.py scale/scale/__init__.py.template
-grep "VERSION=" Dockerfile dockerfiles/logstash-elastic-ha/Dockerfile
 
 tput setaf 2
 echo -e "\nCommit and push the change"
@@ -65,7 +64,6 @@ tput sgr0
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '')/" scale/scale/__init__.py
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '___BUILDNUM___')/" scale/scale/__init__.py.template
 grep "VERSION = " scale/scale/__init__.py scale/scale/__init__.py.template
-grep "VERSION=" Dockerfile dockerfiles/logstash-elastic-ha/Dockerfile
 
 tput setaf 2
 echo -e "\nCommit the change"

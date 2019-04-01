@@ -53,6 +53,85 @@
         "model": "job.JobType",
         "pk": null,
         "fields": {
+            "name": "scale-count",
+            "version": "1.0.0",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "docker_image": "scale",
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-count",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Count",
+                    "description": "Counts to 100 for stdout, stderr and interleaved. This job type can be useful for testing Scale's log ordering.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_count"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 0.0},
+                            {"name": "mem", "value": 64.0}
+                        ]
+                    }
+                }
+            },
+            "configuration": {
+                "priority": 25
+            },
+            "max_tries": 0,
+            "created": "2019-03-25T00:00:00.0Z",
+            "last_modified": "2019-03-25T00:00:00.0Z",
+            "icon_code": "f162"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-count", "1.0.0"],
+            "revision_num": 1,
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-count",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Count",
+                    "description": "Counts to 100 for stdout, stderr and interleaved. This job type can be useful for testing Scale's log ordering.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_count"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 0.0},
+                            {"name": "mem", "value": 64.0}
+                        ]
+                    }
+                }
+            },
+            "created": "2019-03-25T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
             "name": "scale-bake",
             "version": "1.0",
             "title": "Scale Bake",

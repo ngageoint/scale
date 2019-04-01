@@ -48,6 +48,9 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gcc \
          wget \
          python-devel \
+         postgresql-devel \
+ # Remove warnings about psycopg2-binary on every job launch
+ && pip install -U --no-binary :all: psycopg2\<3 \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \

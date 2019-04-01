@@ -25,8 +25,7 @@
         "SCALE_STATIC_URL": "/service/scale/static/",
         "SCALE_WEBSERVER_CPU": "0.5",
         "SCALE_WEBSERVER_MEMORY": "512",
-        "SCALE_ELASTICSEARCH_URLS": "",
-        "SCALE_ELASTICSEARCH_VERSION" : ""
+        "ELASTICSEARCH_URL": ""
     },
     "labels": {
         "HAPROXY_GROUP": "internal,external",
