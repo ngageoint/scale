@@ -1,7 +1,7 @@
 {
     "id": "scale-template-elasticsearch",
     "cpus": 1,
-    "mem": 1024,
+    "mem": 4096,
     "disk": 0,
     "instances": 1,
     "container": {
@@ -24,7 +24,7 @@
         }
     },
     "env": {
-        "ES_JAVA_OPTS": "-Xms512m -Xmx512m"
+        "ES_JAVA_OPTS": "-Xms2g -Xmx2g"
     },
     "healthChecks": [
         {
