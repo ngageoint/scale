@@ -16,11 +16,16 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 import source.test.utils as source_test_utils
-from messaging.manager import CommandMessageManager
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
+
+class MockCommandMessageManager():
+    
+    def send_messages(self, commands):
+        for command in commands:
+            command.execute()
 
 class TestRecipeTypesViewV5(TransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
@@ -2583,14 +2588,12 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         legacy_recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.legacy_recipe_type, data=data)
         self.legacy_recipe = legacy_recipe_handler.recipe
 
-    def execute_messages(messages):
-        for msg in messages:
-            msg.execute()
 
-    @patch('recipe.views.CommandMessageManager.send_messages', side_effect=execute_messages)
-    def test_legacy_all_jobs(self, mock_send):
+    @patch('recipe.views.CommandMessageManager')
+    def test_legacy_all_jobs(self, mock_mgr):
         """Tests reprocessing all jobs in an existing legacy recipe with v6 endpoint"""
 
+        mock_mgr.return_value = MockCommandMessageManager()
         json_data = {
             'forced_nodes': {
                 'all': True
