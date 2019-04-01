@@ -10,7 +10,8 @@ from django.utils import timezone
 
 from ingest.serializers import IngestDetailsSerializerV5
 from ingest.models import Ingest
-from ingest.triggers.ingest_recipe_handler import RecipeTriggerHandler
+from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
+from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
 from source.models import SourceFile
 from storage.media_type import get_media_type
 from storage.models import Workspace
@@ -85,7 +86,7 @@ class Command(BaseCommand):
                 ingest.add_data_type_tag(data_type)
             ingest.status = 'TRANSFERRED'
             if options['no_commit']:
-                s = IngestDetailsSerializer()
+                s = IngestDetailsSerializerV5()
                 logger.info(s.to_representation(ingest))
             else:
                 ingest.save()
@@ -118,8 +119,10 @@ class Command(BaseCommand):
                     ingest.ingest_ended = timezone.now()
                     ingest.source_file = sf
                     ingest.save()
-                    if options['recipe']:
-                        RecipeTriggerHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended)
+                    if options['recipe_type']:
+                        IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe_type'])
+                    else:
+                        IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 

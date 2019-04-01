@@ -166,21 +166,22 @@ class RecipeManager(models.Manager):
             recipe.superseded_recipe = superseded_recipe
 
             if copy_superseded_input:
+                if 'workspace_id' in superseded_recipe.input:
+                    # TODO: Remove when legacy recipes go away
+                    # get workspace ids from v1 data and pass them on to job configs so we don't lose them
+                    workspace_id = superseded_recipe.get_recipe_data().get_workspace_id()
+                    workspace = None
+                    try:
+                        workspace = Workspace.objects.get(pk=workspace_id)
+                    except Workspace.DoesNotExist:
+                        logger.exception('Could not copy workspace from superseded recipe. Workspace does not exist: %d', workspace_id)
+
+                    config = RecipeConfigurationV6(recipe.configuration)
+                    if workspace:
+                        config = config.get_configuration()
+                        config.default_output_workspace = workspace.name
+                        recipe.configuration = convert_config_to_v6_json(config).get_dict()
                 input_data = superseded_recipe.get_input_data()
-
-                # TODO: Remove when legacy recipes go away
-                # get workspace ids from v1 data and pass them on to job configs so we don't lose them
-                workspace_id = superseded_recipe.get_recipe_data().get_workspace_id()
-                workspace = None
-                try:
-                    workspace = Workspace.objects.get(pk=workspace_id)
-                except Workspace.DoesNotExist:
-                    logger.exception('Could not copy workspace from superseded recipe. Workspace does not exist: %d', workspace_id)
-
-                config = RecipeConfigurationV6(recipe.configuration)
-                if workspace:
-                    config.get_configuration().default_output_workspace = workspace.name
-                    recipe.configuration = config.get_dict()
 
         if input_data:
             input_data.validate(recipe_type_rev.get_input_interface())
