@@ -5,8 +5,6 @@
         "fields": {
             "name": "scale-batch-creator",
             "version": "1.0",
-            "title": "Scale Batch Creator",
-            "description": "Creates and queues the jobs and recipes for a Scale batch",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,

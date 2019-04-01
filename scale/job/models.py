@@ -2160,8 +2160,6 @@ class JobTypeManager(models.Manager):
             key_query = Q()
             for keyword in keywords:
                 key_query |= Q(name__icontains=keyword)
-                key_query |= Q(title__icontains=keyword)
-                key_query |= Q(description__icontains=keyword)
                 key_query |= Q(jobtypetag__tag__icontains=keyword)
             job_types = job_types.filter(key_query)
         if ids:
@@ -2203,8 +2201,6 @@ class JobTypeManager(models.Manager):
             key_query = Q()
             for keyword in keywords:
                 key_query |= Q(name__icontains=keyword)
-                key_query |= Q(title__icontains=keyword)
-                key_query |= Q(description__icontains=keyword)
                 key_query |= Q(jobtypetag__tag__icontains=keyword)
             sub_query = sub_query.filter(key_query)
         if ids:
@@ -2550,10 +2546,6 @@ class JobType(models.Model):
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
     :type version_array: list
-    :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
-    :type title: :class:`django.db.models.CharField`
-    :keyword description: An optional description of the job type. Deprecated - remove with v5.
-    :type description: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -2601,7 +2593,7 @@ class JobType(models.Model):
     :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
 
-    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'manifest', 'configuration', 'icon_code',
+    BASE_FIELDS = ('id', 'name', 'version', 'manifest', 'configuration', 'icon_code',
         'is_active', 'is_paused', 'is_published')
 
     UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
@@ -2610,8 +2602,6 @@ class JobType(models.Model):
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
-    title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
@@ -2691,6 +2681,30 @@ class JobType(models.Model):
 
         return version_array
 
+    def get_title(self):
+        """Gets the job title from the manifest
+
+        :return: The Title
+        :rtype: str
+        """
+
+        interface = self.get_job_interface()
+        title = interface.get_title()
+
+        return title
+
+    def get_description(self):
+        """Gets the job description from the manifest
+
+        :return: The description
+        :rtype: str
+        """
+
+        interface = self.get_job_interface()
+        description = interface.get_description()
+
+        return description
+
     def get_package_version(self):
         """Gets the package version from manifest
 
@@ -2701,11 +2715,7 @@ class JobType(models.Model):
         """
 
         interface = self.get_job_interface()
-
-        version = None
-        # TODO: Make this the only code path when legacy job types are removed
-        if isinstance(interface, SeedManifest):
-            version = interface.get_package_version()
+        version = interface.get_package_version()
 
         return version
 
@@ -2786,8 +2796,8 @@ class JobType(models.Model):
         :type manifest: :class:`job.seed.manifest.SeedManifest`
         """
 
-        self.title = manifest.get_title()
-        self.description = manifest.get_description()
+        # self.title = manifest.get_title()
+        # self.description = manifest.get_description()
         self.author_name = manifest.get_maintainer().get('name')
         self.author_url = manifest.get_maintainer().get('url')
         self.manifest = manifest.get_dict()

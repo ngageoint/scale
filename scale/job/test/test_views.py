@@ -316,10 +316,10 @@ class TestJobsViewV6(TestCase):
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
         # May fail because of job_type name ordering
-        job_type1b = job_test_utils.create_seed_job_type(job_version='2.0')
+        job_type1b = job_test_utils.create_seed_job_type(job_version='2.0.0')
         job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
 
-        job_type1c = job_test_utils.create_seed_job_type(job_version='3.0')
+        job_type1c = job_test_utils.create_seed_job_type(job_version='3.0.0')
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
         url = '/%s/jobs/?is_superseded=false&order=job_type__name&order=-job_type__version' % self.api
@@ -649,8 +649,8 @@ class TestJobTypesViewV6(TestCase):
                 self.fail('Found unexpected result: %s' % entry['id'])
 
             self.assertEqual(entry['name'], expected.name)
-            self.assertEqual(entry['title'], expected.title)
-            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['title'], expected.get_title())
+            self.assertEqual(entry['description'], expected.get_description())
             self.assertEqual(entry['icon_code'], expected.icon_code)
             self.assertEqual(entry['is_published'], expected.is_published)
             self.assertEqual(entry['is_active'], expected.is_active)
@@ -757,8 +757,8 @@ class TestJobTypesViewV6(TestCase):
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)
             self.assertEqual(entry['version'], expected.version)
-            self.assertEqual(entry['title'], expected.title)
-            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['title'], expected.get_title())
+            self.assertEqual(entry['description'], expected.get_description())
             self.assertEqual(entry['icon_code'], expected.icon_code)
             self.assertEqual(entry['is_published'], expected.is_published)
             self.assertEqual(entry['is_active'], expected.is_active)
@@ -822,8 +822,8 @@ class TestJobTypeNamesViewV6(TestCase):
             else:
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)
-            self.assertEqual(entry['title'], expected.title)
-            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['title'], expected.get_title())
+            self.assertEqual(entry['description'], expected.get_description())
             if entry['name'] == 'job-type-for-view-test':
                 self.assertItemsEqual(entry['versions'], ["1.0.0", "1.2.0", "1.10.0"])
             else:
@@ -1022,7 +1022,7 @@ class TestJobTypesPostViewV6(TestCase):
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 1)
         self.assertIsNone(results['max_scheduled'])
@@ -1051,7 +1051,7 @@ class TestJobTypesPostViewV6(TestCase):
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 1)
         self.assertEqual(results['is_published'], json_data['is_published'])
@@ -1082,7 +1082,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['is_published'], json_data['is_published'])
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
@@ -1113,7 +1113,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 2)
         self.assertIsNotNone(results['configuration']['mounts'])
@@ -1339,7 +1339,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['name'], job_type.name)
         self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['is_published'], job_type.is_published)
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 2)

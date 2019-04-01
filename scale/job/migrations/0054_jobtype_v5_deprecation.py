@@ -88,4 +88,12 @@ class Migration(migrations.Migration):
             model_name='jobtype',
             name='uses_docker',
         ),
+        migrations.RemoveField(
+            model_name='jobtype',
+            name='description',
+        ),
+        migrations.RemoveField(
+            model_name='jobtype',
+            name='title',
+        ),
     ]

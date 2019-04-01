@@ -5,8 +5,6 @@
         "fields": {
             "name": "scale-hello",
             "version": "1.0.0",
-            "title": "Scale Hello",
-            "description": "Prints out a simple hello message. This job type can be useful for testing Scale's job throughput.",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
@@ -86,8 +84,6 @@
         "fields": {
             "name": "scale-bake",
             "version": "1.0.0",
-            "title": "Scale Bake",
-            "description": "This test job sleeps for 15 minutes.",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
@@ -167,8 +163,6 @@
         "fields": {
             "name": "scale-roulette",
             "version": "1.0.0",
-            "title": "Scale Roulette",
-            "description": "This test job randomly succeeds or fails.",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,

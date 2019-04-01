@@ -5,8 +5,6 @@
 		"fields": {
 			"name": "scale-ingest",
 			"version": "1.0.0",
-			"title": "Scale Ingest",
-			"description": "Ingests a source file into a workspace",
 			"is_system": true,
 			"is_long_running": false,
 			"is_active": true,
@@ -181,8 +179,6 @@
         "fields": {
             "name": "scale-strike",
             "version": "1.0",
-            "title": "Scale Strike",
-            "description": "Monitors a directory for incoming source files to ingest",
             "is_system": true,
             "is_long_running": true,
             "is_active": true,
@@ -273,8 +269,6 @@
         "fields": {
             "name": "scale-scan",
             "version": "1.0",
-            "title": "Scale Scan",
-            "description": "Scans a workspace for existing files to ingest",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
