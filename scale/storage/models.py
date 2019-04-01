@@ -167,7 +167,7 @@ class PurgeResults(models.Model):
     :type num_recipes_deleted: :class:`django.db.models.PositiveIntegerField`
     :keyword num_products_deleted: The number of products deleted as part of the purge process
     :type num_products_deleted: :class:`django.db.models.PositiveIntegerField`
-    :keyword purge_started: The datetime that the purge process began 
+    :keyword purge_started: The datetime that the purge process began
     :type purge_started: :class:`django.db.models.DateTimeField`
     :keyword purge_completed: The datetime that the purge process completed
     :type purge_completed: :class:`django.db.models.DateTimeField`
@@ -271,7 +271,7 @@ class ScaleFileManager(models.Manager):
         scale_file = ScaleFile.objects.get(pk=file_id)
 
         return scale_file
-        
+
     def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
 
@@ -315,11 +315,11 @@ class ScaleFileManager(models.Manager):
 
         files = files.order_by('last_modified')
         return files
-        
+
     def filter_files(self, data_started=None, data_ended=None, source_started=None, source_ended=None,
                         source_sensor_classes=None, source_sensors=None, source_collections=None,
                         source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
-                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None, 
+                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
                         recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
@@ -798,7 +798,7 @@ class ScaleFile(models.Model):
         :type tags: {string}
         """
 
-        self.data_type_tags = tags
+        self.data_type_tags = list(tags)
 
     def _get_url(self):
         """Gets the absolute URL used to download this file.
@@ -1000,7 +1000,7 @@ class WorkspaceManager(models.Manager):
         # Add broker-specific warnings
         warnings.extend(config.validate_broker())
         return warnings
-        
+
     def validate_workspace_v6(self, name, configuration):
         """Validates a new workspace prior to attempting a save
 
@@ -1011,11 +1011,11 @@ class WorkspaceManager(models.Manager):
         :returns: The workspace validation.
         :rtype: :class:`storage.models.WorkspaceValidation`
         """
-        
+
         is_valid = True
         errors = []
         warnings = []
-        
+
         config = None
 
         # Validate the configuration, no exception is success
