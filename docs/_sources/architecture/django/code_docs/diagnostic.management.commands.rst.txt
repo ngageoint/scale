@@ -12,6 +12,14 @@ diagnostic\.management\.commands\.scale\_bake module
     :undoc-members:
     :show-inheritance:
 
+diagnostic\.management\.commands\.scale\_count module
+-----------------------------------------------------
+
+.. automodule:: diagnostic.management.commands.scale_count
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 diagnostic\.management\.commands\.scale\_hello module
 -----------------------------------------------------
 
