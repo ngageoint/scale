@@ -571,6 +571,16 @@ change is made</p>
 <div class="section" id="module-recipe.test.test_views">
 <span id="recipe-test-test-views-module"></span><h2>recipe.test.test_views module<a class="headerlink" href="#module-recipe.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="recipe.test.test_views.MockCommandMessageManager">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">MockCommandMessageManager</code><a class="headerlink" href="#recipe.test.test_views.MockCommandMessageManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="recipe.test.test_views.MockCommandMessageManager.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>commands</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.MockCommandMessageManager.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.test_views.OldTestRecipeDetailsView">
 <em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">OldTestRecipeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -871,6 +881,12 @@ change is made</p>
 <dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_job">
 <code class="descname">test_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing one job in an existing recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_legacy_all_jobs">
+<code class="descname">test_legacy_all_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_legacy_all_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing all jobs in an existing legacy recipe with v6 endpoint</p>
 </dd></dl>
 
 <dl class="method">
@@ -1678,7 +1694,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>3</em>, <em>28</em>, <em>19</em>, <em>46</em>, <em>44</em>, <em>14874</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>4</em>, <em>1</em>, <em>16</em>, <em>53</em>, <em>59</em>, <em>797885</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 
