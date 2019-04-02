@@ -26,6 +26,7 @@ from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.definition.definition import RecipeDefinition
 from recipe.models import Recipe
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 
 
 class TestJobLoadManager(TestCase):

@@ -17,7 +17,7 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
 from messaging.manager import CommandMessageManager
-from recipe.configuration.json.recipe_config_v6 import convert_config_to_v6_json
+from recipe.configuration.json.recipe_config_v6 import convert_config_to_v6_json, RecipeConfigurationV6
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
