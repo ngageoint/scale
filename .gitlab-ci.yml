@@ -10,7 +10,7 @@
 # DOCKER_IMAGE
 # DIND_IMAGE
 # GOSU_URL
-# LOGSTASH_IMAGE
+# FLUENTD_IMAGE
 # REGISTRY
 # VAULT_ZIP
 
@@ -26,10 +26,10 @@ services:
 stages:
   - package
 
-logstash:
+fluentd:
   stage: package
   script:
-    - ./build-support.sh ${LOGSTASH_IMAGE} logstash
+    - ./build-support.sh ${FLUENTD_IMAGE} fluentd
   only:
     - tags
 

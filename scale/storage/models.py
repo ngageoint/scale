@@ -793,7 +793,7 @@ class ScaleFile(models.Model):
         :type tags: {string}
         """
 
-        self.data_type_tags = tags
+        self.data_type_tags = list(tags)
 
     def _get_url(self):
         """Gets the absolute URL used to download this file.

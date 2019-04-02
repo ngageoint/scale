@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 dcos marathon app remove /scale-db
-dcos marathon app remove /scale-logstash
+dcos marathon app remove /scale-fluentd
 dcos marathon app remove /scale-webserver
 dcos marathon app stop /scale
 

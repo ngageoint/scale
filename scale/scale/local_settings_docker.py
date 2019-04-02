@@ -29,16 +29,20 @@ SECRET = os.getenv('SECRET')
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/service/%s/static/' % FRAMEWORK_NAME)
 
-LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
-LOGGING_HEALTH_ADDRESS = os.environ.get('SCALE_LOGGING_HEALTH_ADDRESS', LOGGING_HEALTH_ADDRESS)
-if ELASTICSEARCH_URLS:
+LOGGING_ADDRESS = os.environ.get('LOGGING_ADDRESS', LOGGING_ADDRESS)
+LOGGING_HEALTH_ADDRESS = os.environ.get('LOGGING_HEALTH_ADDRESS', LOGGING_HEALTH_ADDRESS)
+if ELASTICSEARCH_URL:
     ELASTICSEARCH = elasticsearch.Elasticsearch(
-        ELASTICSEARCH_URLS.split(','),
+        [ELASTICSEARCH_URL],
         # disable all sniffing
         sniff_on_start=False,
         # refresh nodes after a node fails to respond
-        sniff_on_connection_fail=False
+        sniff_on_connection_fail=False,
+        # dont verify SSL certificates presently
+        verify_certs=False
     )
+
+    ELASTICSEARCH_VERSION = ELASTICSEARCH.info()['version']['number']
 
 
 # Broker URL for connection to messaging backend. Bootstrap must populate.

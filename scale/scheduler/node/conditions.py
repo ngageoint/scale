@@ -29,8 +29,8 @@ class NodeConditions(object):
     BAD_DAEMON_ERR = NodeError(name='BAD_DAEMON', title='Docker Not Responding',
                                description='The Docker daemon on this node is not responding.', daemon_bad=True,
                                pull_bad=True)
-    BAD_LOGSTASH_ERR = NodeError(name='BAD_LOGSTASH', title='Logstash Not Responding',
-                                 description='The Scale logstash is not responding to this node.', daemon_bad=False,
+    BAD_LOGSTASH_ERR = NodeError(name='BAD_LOGSTASH', title='Fluentd Not Responding',
+                                 description='The Scale fluentd is not responding to this node.', daemon_bad=False,
                                  pull_bad=False)
     CLEANUP_ERR = NodeError(name='CLEANUP', title='Cleanup Failure',
                             description='The node failed to clean up some Scale Docker containers and volumes.',
@@ -170,7 +170,7 @@ class NodeConditions(object):
             logger.warning('Low Docker disk space on host %s', self._hostname)
             self._error_active(NodeConditions.LOW_DOCKER_SPACE_ERR)
         elif task_update.exit_code == HealthTask.BAD_LOGSTASH_CODE:
-            logger.warning('Logstash not responding on host %s', self._hostname)
+            logger.warning('Fluentd not responding on host %s', self._hostname)
             self._error_active(NodeConditions.BAD_LOGSTASH_ERR)
         else:
             logger.error('Unknown health check exit code %s on host %s', str(task_update.exit_code), self._hostname)

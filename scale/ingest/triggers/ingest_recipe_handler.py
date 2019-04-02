@@ -89,7 +89,7 @@ class IngestRecipeHandler(object):
             logger.info('Queuing new recipe of type %s', recipe_type.name)
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
-            logger.info('No recipe type found for %s %s' % (recipe_name, recipe_version))
+            logger.info('No recipe type found for %s %s' % (recipe_name, recipe_revision))
 
     def _create_ingest_event(self, ingest_id, source, source_file, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and recipe type

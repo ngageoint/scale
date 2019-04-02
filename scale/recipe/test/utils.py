@@ -8,6 +8,7 @@ import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
 from batch.models import Batch
 from data.data.exceptions import InvalidData
+from job.configuration.json.job_config_v6 import JobConfigurationV6
 from job.messages.create_jobs import RecipeJob
 from job.models import Job, JobTypeRevision
 from queue.messages.queued_jobs import QueuedJob
@@ -381,9 +382,10 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
         tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
         revision = revs_by_tuple[tup]
         superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
+        job_config = JobConfigurationV6(recipe_model.configuration).get_configuration() if recipe_model.configuration else None
         job = Job.objects.create_job_v6(revision, event_id=recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
                                         recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
-                                        superseded_job=superseded_job)
+                                        superseded_job=superseded_job, job_config=job_config)
         recipe_jobs_map[node_name] = job
 
     Job.objects.bulk_create(recipe_jobs_map.values())

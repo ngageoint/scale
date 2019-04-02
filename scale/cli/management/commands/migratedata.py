@@ -84,7 +84,7 @@ class Command(BaseCommand):
                 ingest.add_data_type_tag(data_type)
             ingest.status = 'TRANSFERRED'
             if options['no_commit']:
-                s = IngestDetailsSerializer()
+                s = IngestDetailsSerializerV5()
                 logger.info(s.to_representation(ingest))
             else:
                 ingest.save()
@@ -118,9 +118,7 @@ class Command(BaseCommand):
                     ingest.source_file = sf
                     ingest.save()
                     if options['recipe']:
-                        IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended, options['recipe'])
-
-
+                        IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended)
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 

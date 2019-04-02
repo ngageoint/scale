@@ -68,6 +68,10 @@ class ProcessJobInput(CommandMessage):
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
 
         job = Job.objects.get_job_with_interfaces(self.job_id)
+        
+        if job.status not in ['PENDING', 'BLOCKED']:
+            logger.warning('Job %d input has already been processed. Message will not re-run', self.job_id)
+            return True
 
         if not job.has_input():
             if not job.recipe:

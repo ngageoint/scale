@@ -237,7 +237,7 @@ below for reference.
 | ELASTICSEARCH_DOCKER_IMAGE  | 'elasticsearch:2.4-alpine'      | Docker image for Elasticsearch             |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
-| LOGSTASH_DOCKER_IMAGE       | 'geoint/scale-logstash'         | Docker image for logstash                  |
+| FLUENTD_DOCKER_IMAGE        | 'geoint/scale-fluentd'          | Docker image for fluentd                   |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
@@ -245,9 +245,8 @@ below for reference.
 | DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
-| SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
-| SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
-| SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
+| ELASTICSEARCH_URL           | None                            | Elasticsearch backend URL for log storage  |
+| LOGGING_ADDRESS             | None                            | Fluentd URL. By default set by bootstrap   |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |

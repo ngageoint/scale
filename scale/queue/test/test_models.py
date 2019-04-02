@@ -340,7 +340,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         data = Data()
         data.add_value(FileValue('input_a', [123]))
-
         created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event)
 
     @patch('queue.models.CommandMessageManager')
@@ -365,7 +364,14 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        created_strike_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, strike_event)
+        config_dict = {'version': '6',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
+
+        created_strike_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, strike_event, recipe_config=config)
+
+        self.assertDictEqual(created_strike_recipe.configuration, config_dict)
 
         data_dict = {
             'version': '1.0',
@@ -379,7 +385,9 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             }]
         }
         data = JobDataV6(data_dict)
-        created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event)
+        created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event, recipe_config=config)
+
+        self.assertDictEqual(created_scan_recipe.configuration, config_dict)
 
 class TestQueueManagerRequeueJobs(TransactionTestCase):
 
