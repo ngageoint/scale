@@ -368,7 +368,8 @@ class JobData(object):
                 continue
             file_input = self.data_inputs_by_name[name]
             file_ids = []
-            if multiple:
+            # TODO: Remove with legacy job types. This is a protection against multiple being specified for a single file or no file
+            if multiple and 'file_ids' in file_input:
                 for file_id in file_input['file_ids']:
                     file_id = long(file_id)
                     file_ids.append(file_id)
@@ -757,13 +758,13 @@ class JobData(object):
         """
 
         workspace_dict = {}  # {Output name: workspace ID}
-
         if job_data.has_workspaces():
             # Do the old way of getting output workspaces from job data
             for name, output_dict in job_data.data_outputs_by_name.items():
                 workspace_id = output_dict['workspace_id']
                 workspace_dict[name] = workspace_id
-        else:
+        config = job_exe.job.get_job_configuration()
+        if config and (config.default_output_workspace or config.output_workspaces):
             workspace_names_dict = {}  # {Output name: workspace name}
             # Do the new way, grabbing output workspaces from job configuration
             config = job_exe.job.get_job_configuration()
