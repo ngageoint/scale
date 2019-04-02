@@ -342,6 +342,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         data = Data()
         data.add_value(FileValue('input_a', [123]))
         created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event)
+        pass
 
     @patch('queue.models.CommandMessageManager')
     def test_successful_ingest(self, mock_msg_mgr):
