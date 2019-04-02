@@ -338,7 +338,7 @@ class JobConfiguration(object):
             # Remove mounts not used in the interface
             interface_mount_names = [mount['name'] for mount in interface.get_mounts()]
             for mount_config in self.mounts.values():
-                if mount_config.mount_name not in interface_mount_names:
+                if mount_config.name not in interface_mount_names:
                     warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_config.mount_name
                     mounts_to_delete.append({'name': mount_config.mount_name, 'warning': warning_str})
 
