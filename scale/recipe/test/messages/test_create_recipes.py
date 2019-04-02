@@ -1369,21 +1369,21 @@ class TestCreateRecipes(TestCase):
         file2 = storage_test_utils.create_file()
         workspace = storage_test_utils.create_workspace()
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_command',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]}
-        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        interface_1 = {'version': '1.4', 'command': 'foo',
+                          'command_arguments': '${-a :input_file} ${s_1} ${job_output_dir}',
+                          'env_vars': [{'name': 'my_special_env', 'value': '${s_2}'}],
+                          'mounts': [{'name': 'm_1', 'path': '/the/cont/path', 'mode': 'ro'},
+                                     {'name': 'm_2', 'path': '/the/missing/cont/path', 'mode': 'rw'},
+                                     {'name': 'm_3', 'path': '/the/optional/cont/path', 'mode': 'rw',
+                                      'required': True}],
+                          'settings': [{'name': 's_1'}, {'name': 's_2', 'secret': True}, {'name': 's_3'},
+                                       {'name': 's_4', 'required': False}],
+                          'input_data': [{'name': 'input_file', 'type': 'file'}],
+                          'output_data': [{'name': 'output_1', 'type': 'file'}]}
+
+        job_type_config_dict = {'version': '2.0', 'settings': {'s_1': 's_1_value'},
+                                'mounts': {'m_1': {'type': 'host', 'host_path': '/m_1/host_path'}}}
+        job_type_1 = job_test_utils.create_job_type(interface=interface_1, configuration=job_type_config_dict)
 
         interface_2 = {
             'version': '1.0',
@@ -1415,7 +1415,7 @@ class TestCreateRecipes(TestCase):
                 },
                 'recipe_inputs': [{
                     'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
+                    'job_input': 'input_file',
                 }]
             }, {
                 'name': 'Job 2',
@@ -1426,7 +1426,7 @@ class TestCreateRecipes(TestCase):
                 'dependencies': [{
                     'name': 'Job 1',
                     'connections': [{
-                        'output': 'Test Output 1',
+                        'output': 'output_1',
                         'input': 'Test Input 2',
                     }]
                 }]

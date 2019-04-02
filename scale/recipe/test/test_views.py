@@ -24,8 +24,16 @@ from rest_framework import status
 class MockCommandMessageManager():
     
     def send_messages(self, commands):
-        for command in commands:
-            command.execute()
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []
+
 
 class TestRecipeTypesViewV5(TransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
@@ -2553,6 +2561,22 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
 
+        interface_dict = {'version': '1.4', 'command': 'foo',
+                          'command_arguments': '${-a :input_file} ${s_1} ${job_output_dir}',
+                          'env_vars': [{'name': 'my_special_env', 'value': '${s_2}'}],
+                          'mounts': [{'name': 'm_1', 'path': '/the/cont/path', 'mode': 'ro'},
+                                     {'name': 'm_2', 'path': '/the/missing/cont/path', 'mode': 'rw'},
+                                     {'name': 'm_3', 'path': '/the/optional/cont/path', 'mode': 'rw',
+                                      'required': True}],
+                          'settings': [{'name': 's_1'}, {'name': 's_2', 'secret': True}, {'name': 's_3'},
+                                       {'name': 's_4', 'required': False}],
+                          'input_data': [{'name': 'input_file', 'type': 'file'}],
+                          'output_data': [{'name': 'output_1', 'type': 'file'}]}
+
+        job_type_config_dict = {'version': '2.0', 'settings': {'s_1': 's_1_value'},
+                                'mounts': {'m_1': {'type': 'host', 'host_path': '/m_1/host_path'}}}
+        self.legacy_job_type = job_test_utils.create_job_type(interface=interface_dict, configuration=job_type_config_dict)
+
         legacy_definition = {
             'version': '1.0',
             'input_data': [{
@@ -2564,8 +2588,8 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
             }],
             'jobs': [{
                 'job_type': {
-                    'name': self.job_type1.name,
-                    'version': self.job_type1.version,
+                    'name': self.legacy_job_type.name,
+                    'version': self.legacy_job_type.version,
                 },
                 'name': 'kml',
                 'recipe_inputs': [{
@@ -2587,7 +2611,6 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.legacy_recipe_type = recipe_test_utils.create_recipe_type_v5(name='legacy-type', definition=legacy_definition)
         legacy_recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.legacy_recipe_type, data=data)
         self.legacy_recipe = legacy_recipe_handler.recipe
-
 
     @patch('recipe.views.CommandMessageManager')
     def test_legacy_all_jobs(self, mock_mgr):
