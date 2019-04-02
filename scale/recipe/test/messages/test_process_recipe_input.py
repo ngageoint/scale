@@ -10,6 +10,7 @@ from data.data.value import FileValue, JsonValue
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.test import utils as job_test_utils
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
