@@ -765,7 +765,6 @@ class JobData(object):
         if config and (config.default_output_workspace or config.output_workspaces):
             workspace_names_dict = {}  # {Output name: workspace name}
             # Do the new way, grabbing output workspaces from job configuration
-            config = job_exe.job.get_job_configuration()
             for name in output_params:
                 if name in config.output_workspaces:
                     workspace_names_dict[name] = config.output_workspaces[name]
@@ -777,6 +776,8 @@ class JobData(object):
             from storage.models import Workspace
             workspace_mapping = {w.name: w.id for w in Workspace.objects.filter(name__in=workspace_names_dict.values())}
             for output_name, workspace_name in workspace_names_dict.items():
+                if workspace_name not in workspace_mapping:
+                    raise Exception('Workspace with name %s does not exist!' % workspace_name)
                 workspace_dict[output_name] = workspace_mapping[workspace_name]
 
         return workspace_dict
