@@ -788,17 +788,12 @@ class TestJobTypeNamesViewV6(TestCase):
 
         self.workspace = storage_test_utils.create_workspace()
         self.error = error_test_utils.create_error()
-
-        self.job_type1 = job_test_utils.create_seed_job_type(job_version="1.0.0", priority=2, max_scheduled=1)
-        self.job_type2 = job_test_utils.create_seed_job_type(job_version="1.0.0", priority=1, is_system=True)
-        self.job_type3 = job_test_utils.create_seed_job_type(job_version="1.0.0", priority=1, is_active=False)
-
-        manifest = job_test_utils.create_seed_manifest(name="job-type-for-view-test", jobVersion="1.0.0")
-        self.job_type4 = job_test_utils.create_seed_job_type(manifest=manifest, is_active=False)
-        manifest = job_test_utils.create_seed_manifest(name="job-type-for-view-test", jobVersion="1.2.0")
-        self.job_type5 = job_test_utils.create_seed_job_type(manifest=manifest, is_active=True)
-        manifest = job_test_utils.create_seed_manifest(name="job-type-for-view-test", jobVersion="1.10.0")
-        self.job_type6 = job_test_utils.create_seed_job_type(manifest=manifest, is_active=True)
+        self.job_type1 = job_test_utils.create_job_type(version="1.0.0", priority=2, mem=1.0, max_scheduled=1)
+        self.job_type2 = job_test_utils.create_job_type(version="1.0.0", priority=1, mem=2.0, is_system=True)
+        self.job_type3 = job_test_utils.create_job_type(version="1.0.0", priority=1, mem=2.0, is_active=False)
+        self.job_type4 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.0.0", is_active=False)
+        self.job_type5 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.2.0", is_active=True)
+        self.job_type6 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.10.0", is_active=True)
 
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
@@ -1176,6 +1171,7 @@ class TestJobTypesPostViewV6(TestCase):
             response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name=name).first()
 
@@ -1211,7 +1207,10 @@ class TestJobTypesPostViewV6(TestCase):
             'configuration': config
         }
 
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         job_type = JobType.objects.filter(name='my-job-no-mount').first()
@@ -1271,7 +1270,7 @@ class TestJobTypesPostViewV6(TestCase):
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
     def test_create_seed_bad_param(self):
         """Tests creating a job type with invalid type fields."""
@@ -1284,24 +1283,6 @@ class TestJobTypesPostViewV6(TestCase):
             'icon_code': 'BEEF',
             'is_published': True,
             'max_scheduled': 'BAD',
-            'docker_image': '',
-            'manifest': manifest,
-            'configuration': self.configuration
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_create_seed_partial_gpu_resource(self):
-        """Tests creating a job type with partial GPU resource."""
-
-        url = '/%s/job-types/' % self.api
-        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest['job']['resources']['scalar'].append({'name': 'gpus', 'value': 1.1 })
-        json_data = {
-            'icon_code': 'BEEF',
-            'is_published': True,
-            'max_scheduled': '1',
             'docker_image': '',
             'manifest': manifest,
             'configuration': self.configuration

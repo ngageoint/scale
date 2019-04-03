@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('storage', '0017_remove_scalefile_data_type'),
+        ('storage', '0014_purgeresults_force_stop_purge'),
     ]
 
     operations = [
