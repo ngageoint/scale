@@ -328,6 +328,8 @@ class TestJobDataStoreOutputDataFiles(TestCase):
 
         job_exe = MagicMock()
         job_exe.id = 1
+        job_exe.job.get_job_configuration().default_output_workspace = None
+        job_exe.job.get_job_configuration().output_workspaces = None
         data = {'output_data': [{'name': 'Param1', 'workspace_id': 1},
                                  {'name': 'Param2', 'workspace_id': 2}]}
         file_path_1 = os.path.join('/path', '1', 'my_file.txt')
