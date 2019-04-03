@@ -490,8 +490,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
                         self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id,
                         self.standalone_queued_job.id]
 
-    @patch('queue.models.CommandMessageManager')
-    def test_successful(self, mock_msg_mgr):
+    def test_successful(self):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
         status = Queue.objects.get_queue_status()
