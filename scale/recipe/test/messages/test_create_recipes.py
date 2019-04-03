@@ -1297,4 +1297,3 @@ class TestCreateRecipes(TestCase):
         self.assertDictEqual(msg_forced_nodes, forced_nodes_b_dict)
         # Check message to update recipe metrics for the recipe containing the new sub-recipes
         self.assertListEqual(update_metrics_msg._recipe_ids, [new_top_recipe.id])
-

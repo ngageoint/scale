@@ -19,6 +19,7 @@ import source.test.utils as source_test_utils
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
+
 class TestRecipeTypesViewV6(TransactionTestCase):
     """Tests related to the get recipe-types base endpoint"""
 
@@ -1330,7 +1331,6 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
-
 
 
     @patch('recipe.views.CommandMessageManager')
