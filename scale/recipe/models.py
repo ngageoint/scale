@@ -183,6 +183,8 @@ class RecipeManager(models.Manager):
                         config.default_output_workspace = workspace.name
                         recipe.configuration = convert_config_to_v6_json(config).get_dict()
                 input_data = superseded_recipe.get_input_data()
+                if not recipe_config and superseded_recipe.configuration:
+                    recipe.configuration = superseded_recipe.configuration
 
         if input_data:
             input_data.validate(recipe_type_rev.get_input_interface())

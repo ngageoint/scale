@@ -250,7 +250,7 @@ def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=No
                                                auto_update=auto_update)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
-                  superseded_recipe=None, batch=None, save=True):
+                  superseded_recipe=None, config=None, batch=None, save=True):
     """Creates a recipe for unit testing
 
     :returns: The recipe model
@@ -274,6 +274,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     recipe.is_superseded = is_superseded
     recipe.superseded = superseded
     recipe.batch = batch
+    recipe.configuration = config
     if superseded_recipe:
         root_id = superseded_recipe.root_superseded_recipe_id
         if root_id is None:
