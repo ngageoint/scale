@@ -101,8 +101,9 @@ class SeedManifest(object):
         resources = self.get_scalar_resources()
         for item in resources:
             if item['name'] == "gpus":
-                if not float.is_integer(item['value']):
-                    raise ValidationError("gpu resource not set to whole number")
+                if isinstance(item['value'], float):
+                    if not float.is_integer(item['value']):
+                        raise ValidationError("gpu resource not set to whole number")
 
     def get_name(self):
         """Gets the Job name

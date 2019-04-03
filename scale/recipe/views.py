@@ -29,6 +29,7 @@ from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
 from recipe.messages.create_recipes import create_reprocess_messages
+from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.serializers import (RecipeDetailsSerializerV6,
                                 RecipeSerializerV6,
@@ -587,6 +588,7 @@ class RecipeReprocessView(GenericAPIView):
             return self._post_v6(request, recipe_id)
 
         raise Http404()
+
 
     def _post_v6(self, request, recipe_id):
         """Schedules a recipe for reprocessing and returns it in JSON form

@@ -274,7 +274,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
         self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
         self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
-        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
+        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(name='test.period', definition=self.main_definition)
 
     def test_not_found(self):
         """Tests calling the recipe type details view with a name that does not exist."""
@@ -1268,6 +1268,7 @@ class TestRecipeDetailsViewV6(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
+
 class TestRecipeReprocessViewV6(TransactionTestCase):
 
     api = 'v6'
@@ -1329,6 +1330,8 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
+
+
 
     @patch('recipe.views.CommandMessageManager')
     @patch('recipe.views.create_reprocess_messages')

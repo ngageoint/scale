@@ -413,7 +413,8 @@ class QueueManager(models.Manager):
         :type recipe_input: :class:`data.data.data.data`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
-        :param recipe_config: config of the recipe
+        :param recipe_config: config of the recipe, possibly None
+        :type recipe_config: :class:`recipe.configuration.configuration.RecipeConfiguration`
         :param batch_id: The ID of the batch that contains this recipe
         :type batch_id: int
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None

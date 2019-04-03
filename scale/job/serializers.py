@@ -92,6 +92,38 @@ class JobExecutionBaseSerializerV6(ModelIdSerializer):
     error = ModelIdSerializer(source='jobexecutionend.error')
     job_type = ModelIdSerializer()
 
+# class JobDetailsInputSerializer(serializers.Serializer):
+#     """Converts job detail model input fields to REST output"""
+
+#     name = serializers.CharField()
+#     type = serializers.CharField()
+
+#     def to_representation(self, obj):
+#         result = super(JobDetailsInputSerializer, self).to_representation(obj)
+
+#         value = None
+#         if 'value' in obj:
+#             from storage.serializers import ScaleFileSerializerV6
+#             if obj['type'] == 'file':
+#                 value = ScaleFileSerializerV6().to_representation(obj['value'])
+#             elif obj['type'] == 'files':
+#                 if not obj['value']:
+#                     logger.warning('Empty file list')
+#                     value = []
+#                 elif isinstance(obj['value'], ScaleFile):
+#                     logger.warning('Unexpected single file with type "files": %s' % obj['value'])
+#                     value = [ScaleFileSerializerV6().to_representation(obj['value'])]
+#                 else:
+#                     value = [ScaleFileSerializerV6().to_representation(v) for v in obj['value']]
+#             else:
+#                 value = obj['value']
+#         result['value'] = value
+#         return result
+
+#     class Meta:
+#         from storage.serializers import ScaleFileSerializerV6
+#         FILE_SERIALIZER = ScaleFileSerializerV6
+
 
 class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     """Converts job execution model fields to REST output"""

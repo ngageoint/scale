@@ -32,8 +32,10 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "Scale Ingest",
             "description": "Ingests a source file into a workspace",
-            "revision_num": 1,
-            "icon_code": "f013"
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f013",
+            "unmet_resources": []
           },
           "job_type_rev": {
             "id": 5,
@@ -279,7 +281,10 @@ Location http://.../v6/job/1/
           "version": "1.0.0",
           "title": null,
           "description": null,
-          "icon_code": null
+          "is_paused": false,
+          "is_published": false,
+          "icon_code": null,
+          "unmet_resources": []
       },
       "status": "QUEUED",
       "job_type_rev": {
@@ -290,7 +295,10 @@ Location http://.../v6/job/1/
               "version": "1.0.0",
               "title": null,
               "description": null,
-              "icon_code": null
+              "is_paused": false,
+              "is_published": false,
+              "icon_code": null,
+              "unmet_resources": []
           },
           "revision_num": 1,
           "docker_image": "fake",
@@ -427,7 +435,10 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "Scale Ingest",
         "description": "Ingests a source file into a workspace",
-        "icon_code": "f013"
+        "is_paused": false,
+        "is_published": false,
+        "icon_code": "f013",
+        "unmet_resources": []
       },
       "job_type_rev": {
         "id": 5,
@@ -512,8 +523,10 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "Scale Ingest",
             "description": "Ingests a source file into a workspace",
-            "revision_num": 1,
-            "icon_code": "f013"
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f013",
+            "unmet_resources": []
          },
          "timeout": 1800,
          "input_file_size": 64.0,
@@ -763,8 +776,10 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "Scale Ingest",
             "description": "Ingests a source file into a workspace",
-            "revision_num": 1,
-            "icon_code": "f013"
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f013",
+            "unmet_resources": []
           },
           "timeout": 1800,
           "input_file_size": 10
@@ -888,8 +903,10 @@ Response: 200 OK
       "version": "1.0.0",
       "title": "Scale Ingest",
       "description": "Ingests a source file into a workspace",
-      "revision_num": 1,
-      "icon_code": "f013"
+      "is_paused": false,
+      "is_published": false,
+      "icon_code": "f013",
+      "unmet_resources": []
     },
     "timeout": 1800,
     "input_file_size": 10,

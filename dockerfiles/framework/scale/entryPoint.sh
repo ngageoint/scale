@@ -11,17 +11,17 @@ check_db () {
 }
 
 check_logging () {
-    if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
+    if [[ "${LOGGING_ADDRESS}x" == "x" ]]
     then
-        echo SCALE_LOGGING_ADDRESS is not populated. Scale requires a valid logstash URL configured.
+        echo LOGGING_ADDRESS is not populated. Scale requires a valid URL to fluentd configured.
         exit 1
     fi
 }
 
 check_elastic () {
-    if [[ "${SCALE_ELASTICSEARCH_URLS}x" == "x" ]]
+    if [[ "${ELASTICSEARCH_URL}x" == "x" ]]
     then
-        echo SCALE_ELASTICSEARCH_URLS is not populated. Scale requires a valid list of Elasticsearch URLs configured.
+        echo ELASTICSEARCH_URL is not populated. Scale requires a valid Elasticsearch URL configured.
         exit 1
     fi
 }
@@ -42,7 +42,7 @@ then
       export SCALE_SECRET_KEY=`python -c "import random;import string;print(''.join(random.SystemRandom().choice(string.hexdigits) for _ in range(50)))"`
     fi
 
-    if [[ "${DATABASE_URL}x" == "x" || "${SCALE_LOGGING_ADDRESS}x" == "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
+    if [[ "${DATABASE_URL}x" == "x" || "${LOGGING_ADDRESS}x" == "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
     then
       python -u bootstrap.py | tee bootstrap.log
     fi
@@ -52,11 +52,11 @@ then
         export DATABASE_URL=`cat bootstrap.log | grep DATABASE_URL | cut -d '=' -f2`
     fi
 
-    if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
+    if [[ "${LOGGING_ADDRESS}x" == "x" ]]
     then
-        export SCALE_LOGGING_ADDRESS=`cat bootstrap.log | grep LOGGING_ADDRESS | cut -d '=' -f2`
-        export SCALE_LOGGING_HEALTH_ADDRESS=`cat bootstrap.log | grep LOGGING_HEALTH_ADDRESS | cut -d '=' -f2`
-        export SCALE_ELASTICSEARCH_URLS=`cat bootstrap.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
+        export LOGGING_ADDRESS=`cat bootstrap.log | grep LOGGING_ADDRESS | cut -d '=' -f2`
+        export LOGGING_HEALTH_ADDRESS=`cat bootstrap.log | grep LOGGING_HEALTH_ADDRESS | cut -d '=' -f2`
+        export ELASTICSEARCH_URL=`cat bootstrap.log | grep ELASTICSEARCH_URL | cut -d '=' -f2`
     fi
 
     if [[ "${SCALE_BROKER_URL}x" == "x" ]]

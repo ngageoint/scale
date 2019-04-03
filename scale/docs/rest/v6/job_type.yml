@@ -280,6 +280,83 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_validation'
+
+  /job-types/status/:
+    get:
+      operationId: _rest_v6_job_type_status
+      summary: Job Type Status
+      description: Returns a list of overall job type statistics, based on counts of jobs organized by status.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_status_list'
+                
+  /job-types/pending/:
+    get:
+      operationId: _rest_v6_job_type_pending
+      summary: Job Type Pending
+      description: Returns counts of job types that are pending, ordered by the longest pending job.
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_pending_list'
+                
+  /job-types/running/:
+    get:
+      operationId: _rest_v6_job_type_running
+      summary: Job Type Running
+      description: Returns counts of job types that are running, ordered by the longest running job.
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_running_list'
+
+  /job-types/system-failures/:
+    get:
+      operationId: _rest_v6_job_type_system_failures
+      summary: Job Type System Failures
+      description: Returns counts of job types that have a critical system failure error, ordered by last error.
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_failed_list'
+                
 components:
   schemas:
     job_type_list:
@@ -352,9 +429,15 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_paused:
+          type: boolean
+          example: false
         is_published:
           type: boolean
           example: true
+        unmet_resources:
+          type: string
+          example: "cpu"
     job_type_versions:
       title: Job Type Versions
       type: object
@@ -409,6 +492,9 @@ components:
         is_paused:
           type: boolean
           example: false
+        is_published:
+          type: boolean
+          example: false
         is_system:
           type: boolean
           example: false
@@ -421,7 +507,7 @@ components:
         docker_image:
           type: string
           example: "my-job-1.0.0-seed:1.0.0"
-        unmet_resources
+        unmet_resources:
           type: string
           example: "cpu"
         created:
@@ -693,3 +779,187 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/validation_warning'
+            
+    job_type_status_counts:
+      title: Job Type Status Counts
+      type: object
+      properties:
+        status:
+          type: string
+          description: The type of job status the count represents. |
+                        Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]."
+          example: QUEUED
+        count:
+          type: integer
+          example: 100
+        most_recent:
+          type: string
+          format: date-time
+          description: The date/time when a job was last in that status.  
+          example: 2015-09-10T15:24:53.503Z
+        category:
+          type: string
+          description: The category of the status, which is only used by a FAILED status.
+          example: SYSTEM
+          
+    job_type_status_list:
+      title: Job Type Status List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_status'
+          description: List of Job Type Status objects
+          
+    job_type_status:
+      title: Job Type Status
+      type: object
+      properties:
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        job_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_status_counts'
+
+    job_type_pending_list:
+      title: Job Type Pending List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_pending_status'
+          description: List of Job Type Pending Status objects
+
+    job_type_pending_status:
+      title: Job Type Pending Status
+      type: object
+      properties:
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        count:
+          type: integer
+          description: The number of jobs of this type that are currently pending.
+          example: 10
+        longest_pending:
+          type: string
+          format: date-time
+          description: The queue start time of the job of this type that has been pending the longest. 
+          example: 2015-09-10T15:24:53.503Z
+
+    job_type_running_list:
+      title: Job Type Running List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_running_status'
+          description: List of Job Type Running Status objects
+            
+    job_type_running_status:
+      title: Job Type Running Status
+      type: object
+      properties:
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        count:
+          type: integer
+          description: The number of jobs of this type that are currently running.
+          example: 10
+        longest_running:
+          type: string
+          format: date-time
+          description: The queue start time of the job of this type that has been running the longest. 
+          example: 2015-09-10T15:24:53.503Z
+
+    job_type_failed_list:
+      title: Job Type Failed List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_failed_status'
+          description: List of Job Type Failed Status objects
+          
+    job_type_failed_status:
+      title: Job Type Failed Status
+      type: object
+      properties:
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        error:
+          $ref: './error#/components/schemas/error_details'
+        count:
+          type: integer
+          description: The number of jobs of this type that have an error.
+          example: 10
+        first_error:
+          type: string
+          format: date-time
+          description: When this error first occurred for a job of this type. 
+          example: 2015-09-10T15:24:53.503Z
+        last_error:
+          type: string
+          format: date-time
+          description: When this error most recently occurred for a job of this type. 
+          example: 2015-09-10T15:24:53.503Z

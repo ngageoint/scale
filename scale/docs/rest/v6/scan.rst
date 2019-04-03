@@ -38,8 +38,10 @@ Response: 200 OK
                         "version": "1.0.0",
                         "title": "Scale Scan",
                         "description": "Scans a workspace for existing source files to ingest",
-                        "revision_num": 1,
-                        "icon_code": "f0e7"
+                        "is_paused": false,
+                        "is_published": true,
+                        "icon_code": "f013",
+                        "unmet_resources": []
                     },
                     "job_type_rev": {
                         "id": 2
@@ -54,8 +56,10 @@ Response: 200 OK
                         "version": "1.0.0",
                         "title": "Scale scan",
                         "description": "Scans a workspace for existing source files to ingest",
-                        "revision_num": 1,
-                        "icon_code": "f0e7"
+                        "is_paused": false,
+                        "is_published": true,
+                        "icon_code": "f013",
+                        "unmet_resources": []
                     },
                     "status": "RUNNING"
                 },
@@ -183,8 +187,10 @@ Location http://.../v6/scans/105/
                "version": "1.0.0",
                "title": "Scale Scan",
                "description": "Scans a workspace for existing source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+              "is_paused": false,
+              "is_published": true,
+              "icon_code": "f013",
+              "unmet_resources": []
            },
            "status": "RUNNING"
        },
@@ -196,8 +202,10 @@ Location http://.../v6/scans/105/
                "version": "1.0.0",
                "title": "Scale Scan",
                "description": "Scans a workspace for existing source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+              "is_paused": false,
+              "is_published": true,
+              "icon_code": "f013",
+              "unmet_resources": []
            },
            "status": "RUNNING"
        },
@@ -278,8 +286,10 @@ Response: 200 OK
                "version": "1.0.0",
                "title": "Scale Scan",
                "description": "Scans a workspace for existing source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+               "is_paused": false,
+               "is_published": true,
+               "icon_code": "f013",
+               "unmet_resources": []
            },
            "status": "RUNNING"
        },
@@ -291,8 +301,10 @@ Response: 200 OK
                "version": "1.0.0",
                "title": "Scale Scan",
                "description": "Scans a workspace for existing source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+               "is_paused": false,
+               "is_published": true,
+               "icon_code": "f013",
+               "unmet_resources": []
            },
            "status": "RUNNING"
        },
@@ -524,8 +536,10 @@ Response: 200 OK
                "version": "1.0.0",
                "title": "Scale Scan",
                "description": "Scans a workspace for existing source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+               "is_paused": false,
+               "is_published": true,
+               "icon_code": "f013",
+               "unmet_resources": []
            },
            "status": "RUNNING"
        },
@@ -537,8 +551,10 @@ Response: 200 OK
                "version": "1.0.0",
                "title": "Scale Scan",
                "description": "Scans a workspace for existing source files to ingest",
-               "revision_num": 1,
-               "icon_code": "f0e7"
+               "is_paused": false,
+               "is_published": true,
+               "icon_code": "f013",
+               "unmet_resources": []
            },
            "status": "RUNNING"
        },

@@ -10,7 +10,7 @@ from rest_framework.response import Response
 
 import util.rest as rest_util
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, QueueStatusSerializerV6
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,16 @@ class JobLoadView(ListAPIView):
 class QueueStatusView(ListAPIView):
     """This view is the endpoint for retrieving the queue status."""
     queryset = Queue.objects.all()
-    serializer_class = QueueStatusSerializer
+    #serializer_class = QueueStatusSerializer
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = RecipeDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        else:
+            return QueueStatusSerializer
 
     def list(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
