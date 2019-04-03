@@ -25,7 +25,7 @@ from job.exceptions import InvalidJobField, NonSeedJobType
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV6)
-from job.job_type_serializers import (JobTypeSerializerV6, JobTypeRevisionSerializerV6,
+from job.job_type_serializers import (JobTypeSerializerV6,JobTypeListSerializerV6, JobTypeRevisionSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
                                       JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
                                       JobTypeFailedStatusSerializer, JobTypeStatusSerializer,
