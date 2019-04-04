@@ -2806,7 +2806,12 @@ class JobTypeManager(models.Manager):
             job_type.revision_num += 1
             job_type.save()
             for recipe_type in recipe_types:
-                recipe_type.get_recipe_definition().validate_job_interfaces()
+                definition = recipe_type.get_recipe_definition()
+                if RecipeDefinitionSunset.is_seed(definition):
+                    inputs, outputs = RecipeType.objects.get_interfaces(definition)
+                    definition.validate(inputs, outputs)
+                else:
+                    definition.validate_job_interfaces()
 
         # New job configuration
         if configuration:
