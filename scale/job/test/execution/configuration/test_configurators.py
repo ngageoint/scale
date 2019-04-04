@@ -958,7 +958,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         settings = [{'name': 's_1', 'secret': True}, {'name': 's_2', 'secret': True},
             {'name': 's_3'}, {'name': 'my_special_env', 'secret': True}]
         data_dict = {'input_data': [], 'output_data': []}
-        job_type_config_dict = {'version': '2.0', 'settings': {'s_3': 's_3_value'}}
+        job_type_config_dict = {'version': '6', 'settings': {'s_3': 's_3_value'}}
         manifest = job_test_utils.create_seed_manifest(command='foo', settings=settings, inputs_files=[], inputs_json=[], outputs_files=[], outputs_json=[])
         job_type = job_test_utils.create_seed_job_type(manifest=manifest, configuration=job_type_config_dict)
         from queue.job_exe import QueuedJobExecution
