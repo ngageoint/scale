@@ -46,7 +46,8 @@ from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
-from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidRecipeDefinition
+from recipe.definition.exceptions import InvalidDefinition
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType, InvalidTriggerMissingConfiguration
@@ -542,8 +543,8 @@ class JobTypeIDDetailsView(GenericAPIView):
                                                  trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
                                                  error_mapping=error_mapping, custom_resources=custom_resources,
                                                  configuration=configuration, secrets=secrets, **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition, 
+                OldInvalidRecipeDefinition, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
             raise BadParameter(unicode(ex))
 
