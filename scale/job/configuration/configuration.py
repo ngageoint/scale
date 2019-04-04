@@ -156,16 +156,16 @@ class JobConfiguration(object):
 
         if config_to_merge.default_output_workspace:
             self.default_output_workspace = config_to_merge.default_output_workspace
-            
+
         self.output_workspaces.update(config_to_merge.output_workspaces)
 
         if config_to_merge.priority:
             self.priority = config_to_merge.priority
 
         self.mounts.update(config_to_merge.mounts)
-        
+
         self.settings.update(config_to_merge.settings)
-        
+
     def remove_secret_settings(self, manifest):
         """Removes and returns the secret setting values from this job configuration
 
@@ -290,3 +290,4 @@ class JobConfiguration(object):
                 warnings.append(ValidationWarning('MISSING_SETTING', 'Missing configuration for setting \'%s\'' % name))
 
         return warnings
+
