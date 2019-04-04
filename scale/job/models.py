@@ -2593,10 +2593,12 @@ class JobType(models.Model):
     :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
 
-    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
-                      'configuration')
+    BASE_FIELDS = ('id', 'name', 'version', 'manifest', 'configuration', 'icon_code',
+                   'is_active', 'is_paused', 'is_published')
 
-    UNEDITABLE_FIELDS_V6 = ('version_array', 'is_system', 'created', 'deprecated', 'last_modified')
+
+    UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
+        'last_modified', 'paused', 'revision_num')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)

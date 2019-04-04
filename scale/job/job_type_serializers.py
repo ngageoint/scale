@@ -84,6 +84,7 @@ class JobTypeRunningStatusSerializer(serializers.Serializer):
 
 class JobTypeFailedStatusSerializer(serializers.Serializer):
     """Converts job type failed status model and extra statistic fields to REST output."""
+    from error.serializers import ErrorSerializerV6
 
     job_type = JobTypeBaseSerializerV6()
     error = ErrorSerializerV6()

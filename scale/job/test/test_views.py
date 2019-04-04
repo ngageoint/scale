@@ -1919,7 +1919,6 @@ class TestJobTypesSystemFailuresView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['name'], self.job.job_type.name)
         self.assertEqual(result['results'][0]['count'], 1)
 
-
 class TestJobExecutionsViewV6(TransactionTestCase):
 
     api = 'v6'

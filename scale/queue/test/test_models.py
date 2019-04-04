@@ -418,19 +418,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         self.assertDictEqual(created_scan_recipe.configuration, config_dict)
 
-    def test_successful_priority(self):
-        """Tests calling QueueManager.queue_new_recipe() successfully with an override priority."""
-
-        recipe = Queue.objects.queue_new_recipe(recipe_type=self.recipe_type, data=self.data, event=self.event,
-                                                priority=1111)
-
-        # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 1')
-        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
-        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
-        self.assertEqual(recipe_job_1.job.priority, 1111)
-
-
 class TestQueueManagerRequeueJobs(TransactionTestCase):
 
     def setUp(self):
@@ -448,7 +435,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
                                                                  priority=100)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED', input=data_dict,)
-        Job.objects.supersede_jobs([self.standalone_superseded_job], now())
+        Job.objects.supersede_jobs([self.standalone_superseded_job.id], now())
 
         # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
         job_type_a_1 = job_test_utils.create_seed_job_type()
