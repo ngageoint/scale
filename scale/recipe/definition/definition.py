@@ -295,6 +295,15 @@ class RecipeDefinition(object):
         return self._topological_order
 
 
+    # TODO: Delete when legacy job types go away
+    def validate_job_interfaces(self):
+        """Placeholder so v5 job types can validate with v6 recipe definitions.  V6 definitions are tied to a specific
+        job type revision so a v5 edit cannot cause incompatibility. The recipe definition needs to be updated manually
+        to use the new revision and connections will be tested then.
+        """
+
+        return True
+
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition
 
