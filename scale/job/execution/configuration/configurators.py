@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals
 import json
 import logging
 import math
+import os
 
 from django.conf import settings
 
@@ -364,7 +365,10 @@ class ScheduledExecutionConfigurator(object):
                     elif type(input_data.values[i]) is FileValue:
                         input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
             if input_metadata:
-                env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
+                input_metadata_path = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'input_metadata.json')
+                with open(input_metadata_path, 'w') as metadata_file:
+                    json.dump(input_metadata, metadata_file)
+                env_vars['INPUT_METADATA'] = input_metadata_path
             
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
