@@ -28,3 +28,4 @@ class QueueStatusSerializerV6(serializers.Serializer):
     count = serializers.IntegerField()
     longest_queued = serializers.DateTimeField()
     highest_priority = serializers.IntegerField()
+

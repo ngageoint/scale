@@ -71,6 +71,7 @@ class JobTypesView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
+
         """Creates a new job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -830,7 +831,23 @@ class JobExecutionsView(ListAPIView):
     queryset = JobExecution.objects.all()
     serializer_class = JobExecutionSerializerV6
 
-    def list(self, request, job_id):
+    def list(self, request, job_id=None):
+        """Gets job executions and their associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v6':
+            return self.list_v6(request, job_id)
+        else:
+            raise Http404
+
+    def list_v6(self, request, job_id):
         """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request

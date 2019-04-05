@@ -2587,15 +2587,12 @@ class JobType(models.Model):
     :type paused: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-
-
     :keyword trigger_rule: The rule to trigger new jobs of this type - Deprecated remove when remove triggers
     :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
 
     BASE_FIELDS = ('id', 'name', 'version', 'manifest', 'configuration', 'icon_code',
                    'is_active', 'is_paused', 'is_published')
-
 
     UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
         'last_modified', 'paused', 'revision_num')

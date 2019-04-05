@@ -50,6 +50,7 @@ class RecipeTypeRevisionDetailsSerializerV6(RecipeTypeRevisionSerializerV6):
     recipe_type = RecipeTypeListSerializerV6()
     definition = serializers.JSONField(source='get_v6_definition_json')
 
+
 class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     """Converts recipe type model fields to REST output."""
     is_active = serializers.BooleanField()

@@ -843,6 +843,7 @@ class TestJobTypeNamesViewV6(TestCase):
 
         url = '/%s/job-type-names/?keyword=%s' % (self.api, 'job-type')
         response = self.client.generic('GET', url)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 4)
@@ -871,6 +872,7 @@ class TestJobTypeNamesViewV6(TestCase):
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
 
         url = '/%s/job-type-names/?id=%d&id=%d' % (self.api, self.job_type1.id, self.job_type2.id)
+
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
@@ -888,8 +890,8 @@ class TestJobTypeNamesViewV6(TestCase):
         url = '/%s/job-type-names/?is_active=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
         result = json.loads(response.content)
+
         self.assertEqual(len(result['results']), 2)
 
     def test_is_system(self):
@@ -898,8 +900,15 @@ class TestJobTypeNamesViewV6(TestCase):
         url = '/%s/job-type-names/?is_system=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
         result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
+
+        url = '/%s/job-type-names/?keyword=%s&keyword=%s' % (self.api, 'job-type-for-view-test', self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+
         self.assertEqual(len(result['results']), 3)
 
         url = '/%s/job-type-names/?is_system=true' % self.api
@@ -1222,7 +1231,6 @@ class TestJobTypesPostViewV6(TestCase):
 
     def test_create_seed_missing_setting(self):
         """Tests creating a new seed job type with a setting referenced in configuration but not interface."""
-
         url = '/%s/job-types/' % self.api
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['name'] = 'my-job-no-setting'
@@ -1872,7 +1880,6 @@ class TestJobTypesPendingView(TestCase):
         self.assertEqual(result['results'][0]['count'], 1)
         self.assertIsNotNone(result['results'][0]['longest_pending'])
 
-
 class TestJobTypesRunningView(TestCase):
 
     api = 'v6'
@@ -1993,7 +2000,6 @@ class TestJobExecutionsViewV6(TransactionTestCase):
         results = json.loads(response.content)
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 1)
-
 
 class TestJobExecutionDetailsViewV6(TransactionTestCase):
 

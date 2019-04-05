@@ -411,8 +411,6 @@ class TestJobType(TransactionTestCase):
 
         self.seed_job_type = job_test_utils.create_seed_job_type(manifest=json.loads(seed_interface_str))
 
-
-
     def test_get_seed_cpu_resource_from_seed_interface(self):
         job_type = self.seed_job_type
         value = job_type.get_resources().get_json().get_dict()

@@ -10,7 +10,6 @@ from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
 
-
 class JobTypeBaseSerializerV6(ModelIdSerializer):
     """Converts job type model fields to REST output"""
     name = serializers.CharField()
@@ -88,6 +87,7 @@ class JobTypeFailedStatusSerializer(serializers.Serializer):
 
     job_type = JobTypeBaseSerializerV6()
     error = ErrorSerializerV6()
+
     count = serializers.IntegerField()
     first_error = serializers.DateTimeField()
     last_error = serializers.DateTimeField()
