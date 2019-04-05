@@ -900,15 +900,8 @@ class TestJobTypeNamesViewV6(TestCase):
         url = '/%s/job-type-names/?is_system=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
 
-        url = '/%s/job-type-names/?keyword=%s&keyword=%s' % (self.api, 'job-type-for-view-test', self.job_type1.name)
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-
         self.assertEqual(len(result['results']), 3)
 
         url = '/%s/job-type-names/?is_system=true' % self.api

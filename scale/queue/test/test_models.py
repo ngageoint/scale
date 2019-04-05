@@ -364,7 +364,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         strike_source_file = source_test_utils.create_source(workspace=workspace)
         scan_source_file = source_test_utils.create_source(workspace=workspace)
 
-        recipetype1 = recipe_test_utils.create_recipe_type_v6()
         data_dict = {
             'version': '1.0',
             'input_data': [{
@@ -383,6 +382,8 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         workspace = storage_test_utils.create_workspace()
         strike_source_file = source_test_utils.create_source(workspace=workspace)
         scan_source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+        recipetype1 = recipe_test_utils.create_recipe_type_v6()
 
         data = Data()
         data.add_value(FileValue('input_a', [123]))
