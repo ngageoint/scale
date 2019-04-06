@@ -313,8 +313,8 @@ class ScheduledExecutionConfigurator(object):
 
         # Write input metadata file and upload it to workspace
         workspace_models = []
-        main_workspaces = config.get_workspaces('main')
-        for w in main_workspaces:
+        input_workspaces = config.get_input_workspace_names()
+        for w in input_workspaces:
             workspace_model = self._workspaces[w.name]
             workspace_models.append(workspace_model)
         input_metadata_path = ''
@@ -349,12 +349,12 @@ class ScheduledExecutionConfigurator(object):
                 except ScaleFile.DoesNotExist:
                     scale_file = ScaleFile()
                     scale_file.update_uuid(file_name)
-                scale_file.file_path = 'input_metadata'
+                scale_file.file_path = '/scale/input_data'
                 today = now()
                 year_dir = str(today.year)
                 month_dir = '%02d' % today.month
                 day_dir = '%02d' % today.day
-                scale_file.file_path = os.path.join(scale_file.file_path, year_dir, month_dir, day_dir)
+                scale_file.file_path = os.path.join(scale_file.file_path, year_dir, month_dir, day_dir, file_name)
                 input_metadata_path = scale_file.file_path
 
                 uploaded = False
@@ -364,7 +364,7 @@ class ScheduledExecutionConfigurator(object):
                             ScaleFile.objects.upload_files(workspace, [FileUpload(scale_file, local_path)])
                             uploaded = True
                     except:
-                        logger.exception('Error uploading input_metadata manifest for job_exe %d' % job_exe.id)
+                        logger.exception('Error uploading input_metadata manifest for job_exe %d' % job_exe.job.id)
 
         for task_type in config.get_task_types():
             # Configure env vars describing allocated task resources
@@ -403,8 +403,8 @@ class ScheduledExecutionConfigurator(object):
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
                                         driver_opts=driver_opts)
                     workspace_volumes[task_workspace.name] = volume
-            
 
+            if input_metadata_path:
                 env_vars['INPUT_METADATA'] = input_metadata_path
             
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
