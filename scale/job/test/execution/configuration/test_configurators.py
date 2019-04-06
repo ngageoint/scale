@@ -714,7 +714,12 @@ class TestScheduledExecutionConfigurator(TestCase):
         for i in expected_input_files.keys():
             input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in expected_input_files[i]]
         input_metadata['RECIPE'] = {'input_1': 'my_val', 'input_files': ['http://host/my/path/file/path/my_test_file.txt']}
-        expected_input_metadata = json.dumps(input_metadata)
+        today = now()
+        year_dir = str(today.year)
+        month_dir = '%02d' % today.month
+        day_dir = '%02d' % today.day
+        file_path = os.path.join('/scale/input_data/', year_dir, month_dir, day_dir, '%d-input_metadata.json' % job.id)
+        expected_input_metadata = file_path#json.dumps(input_metadata)
 
         expected_output_workspaces = {'output_1': output_workspace.name}
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
@@ -913,6 +918,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                             (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)}
                                                ]}
+        print ("-v /w_1/host/path:%s:ro" % input_wksp_vol_path)
+        print ("-v %s:%s:ro" % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH))
         expected_config = {'version': '2.0',
                            'input_files': expected_input_files,
                            'output_workspaces': expected_output_workspaces,
