@@ -413,6 +413,14 @@ class SeedManifest(object):
         :param job_data: The job data
         :type job_data: :class:`job.data.job_data.JobData`
         """
+
+        input_files = self.get_input_files()
+        try:
+            input_metadata_manifest_id = os.getenv('INPUT_METADATA_MANIFEST_ID')
+            job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
+            input_files.append({'name': 'INPUT_METADATA_MANIFEST', 'multiple': False, 'required': False, 'partial': False})
+        except InvalidData:
+            logging.exception('Unable to add INPUT_METADATA_MANIFEST file in pre step. Key exists!')
         job_data.setup_job_dir(self.get_input_files())
 
     def validate_connection(self, job_conn):
