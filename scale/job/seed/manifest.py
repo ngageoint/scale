@@ -58,6 +58,7 @@ class SeedManifest(object):
 
         self._check_for_name_collisions()
         self._check_mount_name_uniqueness()
+        self._check_for_error_name_uniqueness()
 
         self._validate_mount_paths()
         # self._create_validation_dicts()
@@ -523,6 +524,18 @@ class SeedManifest(object):
 
         if len(mounts) != len(set(mounts)):
             raise InvalidSeedManifestDefinition('DUPLICATE_MOUNT_NAMES','Mount names must be unique.')
+
+    def _check_error_name_uniqueness(self):
+        """Ensures all the error names are unique, and throws a
+        :class:`job.seed.exceptions.InvalidInterfaceDefinition` if they are not unique
+        """
+
+        errors = []
+        for error in self.get_errors():
+            errors.append(error['name'])
+
+        if len(errors) != len(set(errors)):
+            raise InvalidSeedManifestDefinition('DUPLICATE_ERROR_NAMES','Error names must be unique.')
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
