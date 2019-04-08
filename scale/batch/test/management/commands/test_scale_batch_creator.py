@@ -30,14 +30,3 @@ class TestBatchCreator(TransactionTestCase):
 
         cmd = BatchCommand()
         self.assertRaises(SystemExit, cmd.run_from_argv, ['manage.py', 'scale_batch_creator', '-i', '123'])
-
-    @patch('batch.views.CommandMessageManager')
-    @patch('batch.management.commands.scale_batch_creator.Batch.objects')
-    def test_successful(self, mock_msg_mgr, mock_batch_manager):
-        """Tests calling command for a valid batch"""
-
-        cmd = BatchCommand()
-        cmd.run_from_argv(['manage.py', 'scale_batch_creator', '-i', str(self.batch.id)])
-
-        batches = mock_batch_manager.get_batches_v6()
-        pass
