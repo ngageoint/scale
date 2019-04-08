@@ -536,10 +536,14 @@ class JobInterface(object):
         :param job_environment: The job environment
         :type job_environment: dict
         """
-        retrieve_files_dict = self._create_retrieve_files_dict()
+
         input_metadata_manifest_id = os.getenv('INPUT_METADATA_MANIFEST_ID')
+        if input_metadata_manifest_id:
+            self.definition['input_data'].append({'name':'INPUT_METADATA_MANIFEST', 'type': 'file', 'partial': False, 'required': False})
+        retrieve_files_dict = self._create_retrieve_files_dict()
         try:
-            job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
+            if input_metadata_manifest_id:
+                job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
         except:
             logging.exception('Unable to add INPUT_METADATA_MANIFEST input; key already exists.')
         job_data.setup_job_dir(retrieve_files_dict)
@@ -710,7 +714,6 @@ class JobInterface(object):
         """
 
         retrieve_files_dict = {}
-        self.definition['input_data'].append({'name':'INPUT_METADATA_MANIFEST', 'type': 'file', 'partial': False})
         for input_data in self.definition['input_data']:
             input_name = input_data['name']
             input_type = input_data['type']
