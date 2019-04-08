@@ -567,12 +567,12 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
         messages = []
         messages.append(create_requeue_jobs_bulk_message(job_ids=self.job_ids))
-        # while messages:
-        #     msg = messages.pop(0)
-        #     result = msg.execute()
-        #     if not result:
-        #         self.fail('Requeue failed on message type \'%s\'' % msg.type)
-        #     messages.extend(msg.new_messages)
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                self.fail('Requeue failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
 
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')

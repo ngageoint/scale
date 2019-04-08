@@ -623,11 +623,11 @@ class TestSupersedeRecipeNodes(TestCase):
 
         # Execute original message and all resulting messages
         messages = [message]
-        # while messages:
-        #     msg = messages.pop(0)
-        #     result = msg.execute()
-        #     self.assertTrue(result)
-        #     messages.extend(msg.new_messages)
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            self.assertTrue(result)
+            messages.extend(msg.new_messages)
 
         # Ensure jobs for node_c and node_d are superseded, as well as recursive jobs under node_g and node_h
         superseded_job_ids = [job_1_c.id, job_1_d.id, job_1_g_1.id, job_1_g_2.id, job_1_h_1.id, job_1_h_2.id,
