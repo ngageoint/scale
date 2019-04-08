@@ -314,9 +314,10 @@ class ScheduledExecutionConfigurator(object):
         workspace_models = []
         input_workspaces = config.get_input_workspace_names()
         for w in input_workspaces:
-            workspace_model = self._workspaces[w.name]
+            workspace_model = self._workspaces[w]
             workspace_models.append(workspace_model)
         input_metadata_path = ''
+        input_metadata_id = None
         input_metadata = {}
         if 'input_files' in config._configuration:
             input_metadata['JOB'] = {}
@@ -362,6 +363,7 @@ class ScheduledExecutionConfigurator(object):
                         if not uploaded:
                             ScaleFile.objects.upload_files(workspace, [FileUpload(scale_file, local_path)])
                             uploaded = True
+                            input_metadata_id = ScaleFile.objects.get(file_name=file_name).id
                     except:
                         logger.exception('Error uploading input_metadata manifest for job_exe %d' % job_exe.job.id)
 
@@ -410,6 +412,8 @@ class ScheduledExecutionConfigurator(object):
 
             if input_metadata_path:
                 env_vars['INPUT_METADATA'] = input_metadata_path
+            if input_metadata_id:
+                env_vars['INPUT_METADATA_MANIFEST_ID'] = input_metadata_id
             
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 

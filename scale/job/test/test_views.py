@@ -2264,6 +2264,29 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertIsNone(results['max_scheduled'])
         self.assertEqual(results['configuration']['settings'], good_setting)
 
+    def test_add_seed_job_type_duplicate_error(self):
+        """Tests adding a seed image with a duplicate error name."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['errors'][0]['name'] = 'dupe'
+        manifest['job']['errors'][1]['name'] = 'dupe'
+
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        good_setting = {
+            'DB_HOST': 'scale'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
     def test_add_seed_job_type_existing_error(self):
         """Tests adding a seed image with an existing error."""
 
@@ -4064,6 +4087,26 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertFalse(results['is_valid'])
         self.assertEqual(len(results['errors']), 1)
         self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
+
+    def test_duplicate_error(self):
+        """Tests validating a new job type with duplicate error names."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['errors'][0]['name'] = 'dupe'
+        manifest['job']['errors'][1]['name'] = 'dupe'
+
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'DUPLICATE_ERROR_NAMES')
 
     def test_invalid_output_workspace(self):
         """Tests validating a new job type with an invalid output workspace."""

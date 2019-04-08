@@ -918,8 +918,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                             (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)}
                                                ]}
-        print ("-v /w_1/host/path:%s:ro" % input_wksp_vol_path)
-        print ("-v %s:%s:ro" % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH))
+
         expected_config = {'version': '2.0',
                            'input_files': expected_input_files,
                            'output_workspaces': expected_output_workspaces,

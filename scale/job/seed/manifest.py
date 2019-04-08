@@ -58,7 +58,7 @@ class SeedManifest(object):
 
         self._check_for_name_collisions()
         self._check_mount_name_uniqueness()
-        self._check_for_error_name_uniqueness()
+        self._check_error_name_uniqueness()
 
         self._validate_mount_paths()
         # self._create_validation_dicts()
@@ -416,10 +416,11 @@ class SeedManifest(object):
         """
 
         input_files = self.get_input_files()
+        input_metadata_manifest_id = os.getenv('INPUT_METADATA_MANIFEST_ID')
         try:
-            input_metadata_manifest_id = os.getenv('INPUT_METADATA_MANIFEST_ID')
-            job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
-            input_files.append({'name': 'INPUT_METADATA_MANIFEST', 'multiple': False, 'required': False, 'partial': False})
+            if input_metadata_manifest_id:
+                job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
+                input_files.append({'name': 'INPUT_METADATA_MANIFEST', 'multiple': False, 'required': False, 'partial': False})
         except InvalidData:
             logging.exception('Unable to add INPUT_METADATA_MANIFEST file in pre step. Key exists!')
         job_data.setup_job_dir(self.get_input_files())
