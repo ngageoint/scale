@@ -320,8 +320,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)
 
-    def test_configure_queued_job_ingest_with_new_workspace(self):
-        """Tests successfully calling configure_queued_job() on an ingest job with a new workspace"""
+    # def test_configure_queued_job_ingest_with_new_workspace(self):
+        # """Tests successfully calling configure_queued_job() on an ingest job with a new workspace"""
 
         # workspace_1 = storage_test_utils.create_workspace()
         # workspace_2 = storage_test_utils.create_workspace()
@@ -339,7 +339,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         #                                                 'env_vars': expected_env_vars,
         #                                                 'workspaces': expected_workspaces}]}
 
-        pass
+        # pass
         # configurator = QueuedExecutionConfigurator({})
 
         # # Test method
@@ -351,8 +351,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         # ExecutionConfiguration(config_dict)
         # self.assertDictEqual(config_dict, expected_config)
 
-    def test_configure_queued_job_ingest_without_new_workspace(self):
-        """Tests successfully calling configure_queued_job() on an ingest job without a new workspace"""
+    # def test_configure_queued_job_ingest_without_new_workspace(self):
+    #     """Tests successfully calling configure_queued_job() on an ingest job without a new workspace"""
 
         # workspace_1 = storage_test_utils.create_workspace()
         # from ingest.models import Ingest
@@ -376,7 +376,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         # # Make sure the dict validates
         # ExecutionConfiguration(config_dict)
         # self.assertDictEqual(config_dict, expected_config)
-        pass
+        # pass
 
     def test_configure_queued_job_strike(self):
         """Tests successfully calling configure_queued_job() on a Strike job"""
@@ -964,7 +964,7 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         self.assertDictEqual(config_with_secrets_dict, expected_config)
 
-    @patch('batch.views.CommandMessageManager')
+    @patch('queue.models.CommandMessageManager')
     def test_configure_scheduled_job_secrets(self, mock_msg_mgr):
         """Tests successfully calling configure_scheduled_job() and checks to make sure secrets are appropriately
         handled
