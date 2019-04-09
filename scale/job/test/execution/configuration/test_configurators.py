@@ -446,7 +446,8 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         add_message_backend(AMQPMessagingBackend)
 
-    def test_configure_scheduled_job_ingest(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_configure_scheduled_job_ingest(self, mock_msg_mgr):
         """Tests successfully calling configure_scheduled_job() on an ingest job"""
 
         framework_id = '1234'
