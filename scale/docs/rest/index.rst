@@ -12,8 +12,7 @@ to Scale. The following sections describe the services available.
 
 API Versions
 ------------
-Future Version: ``v6``
-Current Version: ``v5``
+Current Version: ``v6``
 
 The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
@@ -27,39 +26,11 @@ current version.
 All endpoints should include a prefix of the form ``vX``, where ``X`` is the desired version number. Making a request
 without a version prefix or an invalid version prefix will result in a 404 error.
 
-Request Example: ``/v5/jobs/``
+Request Example: ``/v6/jobs/``
 
 .. _rest_services:
 
-Current v5 Services
--------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   batch
-   diagnostic
-   error
-   ingest
-   job
-   job_execution
-   job_type
-   metrics
-   node
-   port
-   product
-   queue
-   recipe
-   recipe_type
-   scale_file
-   scan
-   scheduler
-   source_file
-   strike
-   system
-   workspace
-
-Future v6 Services
+Current v6 Services
 ------------------
 
 .. toctree::
