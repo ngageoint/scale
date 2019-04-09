@@ -133,7 +133,7 @@ class Command(BaseCommand):
         input_metadata_id = None
         if input_metadata:
             file_name = '%d-input_metadata.json' % job_exe.job.id
-            local_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_name)
+            local_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'tmp', file_name)
             with open(local_path, 'w') as metadata_file:
                 json.dump(input_metadata, metadata_file)
                 try:
