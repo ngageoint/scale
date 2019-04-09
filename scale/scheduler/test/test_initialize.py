@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 
 from django.test.testcases import TransactionTestCase
+from mock import patch
 
 from job.models import Job, JobType
 from scheduler.initialize import initialize_system
