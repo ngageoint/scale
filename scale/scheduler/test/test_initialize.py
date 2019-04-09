@@ -6,6 +6,8 @@ from django.test.testcases import TransactionTestCase
 
 from job.models import Job, JobType
 from scheduler.initialize import initialize_system
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 
 
 class TestInitializeSystem(TransactionTestCase):
@@ -14,6 +16,9 @@ class TestInitializeSystem(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        add_message_backend(AMQPMessagingBackend)
+
 
     def test_create_clock_job(self):
         """Tests creating the Scale clock job"""
