@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-import json
 
 import django
 from django.test import TestCase
@@ -707,20 +706,6 @@ class TestScheduledExecutionConfigurator(TestCase):
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
 
         expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
-        
-        input_metadata = {}
-        input_metadata['JOB'] = {'input_1': 'my_val'}
-        from storage.models import ScaleFile
-        for i in expected_input_files.keys():
-            input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in expected_input_files[i]]
-        input_metadata['RECIPE'] = {'input_1': 'my_val', 'input_files': ['http://host/my/path/file/path/my_test_file.txt']}
-        today = now()
-        year_dir = str(today.year)
-        month_dir = '%02d' % today.month
-        day_dir = '%02d' % today.day
-        file_path = os.path.join('/scale/input_data/', year_dir, month_dir, day_dir, '%d-input_metadata.json' % job.id)
-        expected_input_metadata = file_path#json.dumps(input_metadata)
-
         expected_output_workspaces = {'output_1': output_workspace.name}
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
                               'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},

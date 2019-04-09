@@ -15,7 +15,6 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from product.types import ProductFileMetadata
-from util.os_helper import makedirs
 
 
 class TestJobInterfaceAddOutputToConnection(TestCase):
@@ -723,14 +722,10 @@ class TestJobInterfacePreSteps(TestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace('input-workspace')
-        makedirs('/scale/workspace_mounts/input-workspace/')
+        self.workspace = storage_test_utils.create_workspace()
         self.file = storage_test_utils.create_file(workspace=self.workspace)
-        self.input_metadata = storage_test_utils.create_file(workspace=self.workspace, file_name='1-input_metadata.json')
-        #os.environ['INPUT_METADATA_MANIFEST_ID'] = str(self.input_metadata.id)
 
-    @patch('storage.models.ScaleFile.objects.download_files')
-    def test_simple_case(self, mock_download):
+    def test_simple_case(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface = JobInterface(job_interface_dict)
@@ -742,8 +737,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
 
-    @patch('storage.models.ScaleFile.objects.download_files')
-    def test_property_in_command(self, mock_download):
+    def test_property_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
         job_interface_dict['command_arguments'] = '${prop1}'
         job_interface_dict['input_data'] = [{
@@ -765,8 +759,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, 'property-value', 'expected a different command from pre_steps')
 
-    @patch('storage.models.ScaleFile.objects.download_files')
-    def test_complex_command(self, mock_download):
+    def test_complex_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
         job_interface_dict['command_arguments'] = '${-f :prop1}'
         job_interface_dict['input_data'] = [{
@@ -788,12 +781,11 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '-f property-value', 'expected a different command from pre_steps')
 
-    @patch('storage.models.ScaleFile.objects.download_files')
     @patch('os.path.isdir')
     @patch('job.configuration.interface.job_interface.JobInterface._get_one_file_from_directory')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file, mock_isdir, mock_download):
+    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file, mock_isdir):
         job_exe_id = 1
 
         def new_retrieve(arg1):
@@ -828,11 +820,10 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, input_file_path, 'expected a different command from pre_steps')
 
-    @patch('storage.models.ScaleFile.objects.download_files')
     @patch('os.path.isdir')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_isdir, mock_download):
+    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_isdir):
         def new_retrieve(arg1):
             return {
                 'files1_out': ['/test/file1/foo.txt', '/test/file1/bar.txt'],
@@ -866,8 +857,7 @@ class TestJobInterfacePreSteps(TestCase):
         self.assertEqual(job_command_arguments, expected_command_arguments,
                          'expected a different command from pre_steps')
 
-    @patch('storage.models.ScaleFile.objects.download_files')
-    def test_output_dir_in_command(self, mock_download):
+    def test_output_dir_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
         job_interface_dict['command_arguments'] = '${job_output_dir}'
 
@@ -881,8 +871,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, job_output_dir, 'expected a different command from pre_steps')
 
-    @patch('storage.models.ScaleFile.objects.download_files')
-    def test_absent_required_file_in_command(self, mock_download):
+    def test_absent_required_file_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
         job_interface_dict['command_arguments'] = '${input_file}'
 
