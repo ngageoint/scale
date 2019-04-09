@@ -5,6 +5,7 @@ import json
 import django
 from django.test import TransactionTestCase
 from rest_framework import status
+from mock import patch
 
 import util.rest as rest_util
 
@@ -28,7 +29,8 @@ class TestQueueScaleBakeView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling the view to create Scale Bake jobs."""
 
         json_data = {
