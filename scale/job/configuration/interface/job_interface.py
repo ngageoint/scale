@@ -431,6 +431,15 @@ class JobInterface(object):
 
         return self.get_dict().get('settings', [])
 
+    def needs_input_metadata(self):
+        """Whether this job needs an input metadata manifest input
+
+        :return: true if this interface has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.definition['input_data']
+
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
         """Stores the files and deletes any working directories
 
@@ -536,15 +545,7 @@ class JobInterface(object):
         :type job_environment: dict
         """
 
-        input_metadata_manifest_id = os.getenv('INPUT_METADATA_MANIFEST_ID')
-        if input_metadata_manifest_id:
-            self.definition['input_data'].append({'name':'INPUT_METADATA_MANIFEST', 'type': 'file', 'partial': False, 'required': False})
         retrieve_files_dict = self._create_retrieve_files_dict()
-        try:
-            if input_metadata_manifest_id:
-                job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
-        except:
-            logging.exception('Unable to add INPUT_METADATA_MANIFEST input; key already exists.')
         job_data.setup_job_dir(retrieve_files_dict)
 
     def populate_command_argument_properties(self, job_data):

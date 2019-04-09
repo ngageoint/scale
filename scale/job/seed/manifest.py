@@ -408,6 +408,15 @@ class SeedManifest(object):
             names.append(output_file['name'])
         return names
 
+    def needs_input_metadata(self):
+        """Whether this manifest has an input metadata manifest input
+
+        :return: true if this manifest has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.get_input_files()
+
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
@@ -415,14 +424,6 @@ class SeedManifest(object):
         :type job_data: :class:`job.data.job_data.JobData`
         """
 
-        input_files = self.get_input_files()
-        input_metadata_manifest_id = os.getenv('INPUT_METADATA_MANIFEST_ID')
-        try:
-            if input_metadata_manifest_id:
-                job_data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_manifest_id)
-                input_files.append({'name': 'INPUT_METADATA_MANIFEST', 'multiple': False, 'required': False, 'partial': False})
-        except InvalidData:
-            logging.exception('Unable to add INPUT_METADATA_MANIFEST file in pre step. Key exists!')
         job_data.setup_job_dir(self.get_input_files())
 
     def validate_connection(self, job_conn):

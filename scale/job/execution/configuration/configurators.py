@@ -310,63 +310,6 @@ class ScheduledExecutionConfigurator(object):
 
         config.set_task_ids(job_exe.get_cluster_id())
 
-        # Write input metadata file and upload it to workspace
-        workspace_models = []
-        input_workspaces = config.get_input_workspace_names()
-        for w in input_workspaces:
-            workspace_model = self._workspaces[w]
-            workspace_models.append(workspace_model)
-        input_metadata_path = ''
-        input_metadata_id = None
-        input_metadata = {}
-        if 'input_files' in config._configuration:
-            input_metadata['JOB'] = {}
-            input_data = job_exe.job.get_input_data()
-            for i in input_data.values.keys():
-                if type(input_data.values[i]) is JsonValue:
-                    input_metadata['JOB'][i] = input_data.values[i].value
-                elif type(input_data.values[i]) is FileValue:
-                    input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in
-                                                input_data.values[i].file_ids]
-        if job_exe.recipe_id and job_exe.recipe.has_input():
-            input_metadata['RECIPE'] = {}
-            input_data = job_exe.recipe.get_input_data()
-            for i in input_data.values.keys():
-                if type(input_data.values[i]) is JsonValue:
-                    input_metadata['RECIPE'][i] = input_data.values[i].value
-                elif type(input_data.values[i]) is FileValue:
-                    input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in
-                                                   input_data.values[i].file_ids]
-        if input_metadata:
-            tmp_path = os.path.join('/tmp', get_job_exe_input_vol_name(job_exe))
-            makedirs(tmp_path)
-            file_name = '%d-input_metadata.json' % job_exe.job.id
-            local_path = os.path.join(tmp_path, file_name)
-            with open(local_path, 'w') as metadata_file:
-                json.dump(input_metadata, metadata_file)
-                try:
-                    scale_file = ScaleFile.objects.get(file_name=file_name)
-                except ScaleFile.DoesNotExist:
-                    scale_file = ScaleFile()
-                    scale_file.update_uuid(file_name)
-                scale_file.file_path = '/scale/input_data'
-                today = now()
-                year_dir = str(today.year)
-                month_dir = '%02d' % today.month
-                day_dir = '%02d' % today.day
-                scale_file.file_path = os.path.join(scale_file.file_path, year_dir, month_dir, day_dir, file_name)
-                input_metadata_path = scale_file.file_path
-
-                uploaded = False
-                for workspace in workspace_models:
-                    try:
-                        if not uploaded:
-                            ScaleFile.objects.upload_files(workspace, [FileUpload(scale_file, local_path)])
-                            uploaded = True
-                            input_metadata_id = ScaleFile.objects.get(file_name=file_name).id
-                    except:
-                        logger.exception('Error uploading input_metadata manifest for job_exe %d' % job_exe.job.id)
-
         for task_type in config.get_task_types():
             # Configure env vars describing allocated task resources
             env_vars = {}
@@ -389,7 +332,6 @@ class ScheduledExecutionConfigurator(object):
           
             # Configure workspace volumes
             workspace_volumes = {}
-            workspace_models = []
             for task_workspace in config.get_workspaces(task_type):
                 logger.debug(self._workspaces)
                 workspace_model = self._workspaces[task_workspace.name]
@@ -409,11 +351,6 @@ class ScheduledExecutionConfigurator(object):
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
                                         driver_opts=driver_opts)
                     workspace_volumes[task_workspace.name] = volume
-
-            if input_metadata_path:
-                env_vars['INPUT_METADATA'] = input_metadata_path
-            if input_metadata_id:
-                env_vars['INPUT_METADATA_MANIFEST_ID'] = input_metadata_id
             
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
