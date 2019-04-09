@@ -19,8 +19,8 @@ class TestInitializeSystem(TransactionTestCase):
 
         add_message_backend(AMQPMessagingBackend)
 
-
-    def test_create_clock_job(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_create_clock_job(self, mock_msg_mgr):
         """Tests creating the Scale clock job"""
 
         clock_job_type = JobType.objects.get_clock_job_type()
