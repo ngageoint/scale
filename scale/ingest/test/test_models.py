@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase, TransactionTestCase
+from mock import patch
 
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
@@ -80,8 +81,8 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         self.workspace = storage_test_utils.create_workspace()
         self.recipe = recipe_test_utils.create_recipe_type_v6()
 
-
-    def test_successful_v6(self):
+    @patch('queue.modesl.CommandMessageManager')
+    def test_successful_v6(self, mock_msg_mgr):
         """Tests calling StrikeManager.create_strike successfully with v6 config"""
 
         config = {
