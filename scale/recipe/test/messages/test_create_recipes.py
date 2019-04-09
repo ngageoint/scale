@@ -668,7 +668,7 @@ class TestCreateRecipes(TestCase):
 
         # Execute entire message chain
         messages = [message]
-        # while messages:
+        while messages:
             msg = messages.pop(0)
             result = msg.execute()
             self.assertTrue(result)
