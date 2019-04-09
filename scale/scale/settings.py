@@ -175,7 +175,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.AdminRenderer',
     ),
-    'ALLOWED_VERSIONS': ('v5', 'v6'),
+    'ALLOWED_VERSIONS': ('v6', 'v7'),
     'DEFAULT_VERSION': 'v6',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
