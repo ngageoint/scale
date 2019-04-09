@@ -7,6 +7,8 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.models import Ingest, Strike
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 from storage.exceptions import InvalidDataTypeTag
 
 
@@ -73,9 +75,11 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+        add_message_backend(AMQPMessagingBackend)
 
         self.workspace = storage_test_utils.create_workspace()
         self.recipe = recipe_test_utils.create_recipe_type_v6()
+
 
     def test_successful_v6(self):
         """Tests calling StrikeManager.create_strike successfully with v6 config"""
