@@ -9,6 +9,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from ingest.models import Ingest
+from ingest.serializers import IngestDetailsSerializerV6
 from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from source.models import SourceFile
 from storage.media_type import get_media_type
@@ -84,7 +85,7 @@ class Command(BaseCommand):
                 ingest.add_data_type_tag(data_type)
             ingest.status = 'TRANSFERRED'
             if options['no_commit']:
-                s = IngestDetailsSerializerV5()
+                s = IngestDetailsSerializerV6()
                 logger.info(s.to_representation(ingest))
             else:
                 ingest.save()
