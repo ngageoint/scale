@@ -348,7 +348,9 @@ class TestQueuedExecutionConfigurator(TestCase):
         ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)
 
-    def test_configure_queued_job_ingest_without_new_workspace(self):
+
+    @patch('queue.models.CommandMessageManager')
+    def test_configure_queued_job_ingest_without_new_workspace(self, mock_msg_mgr):
         """Tests successfully calling configure_queued_job() on an ingest job without a new workspace"""
 
         workspace_1 = storage_test_utils.create_workspace()
