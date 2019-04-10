@@ -498,10 +498,10 @@ class ScheduledExecutionConfigurator(object):
 
 
         # Configure output directory
-        env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH}
+        env_vars = {'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
         args = config._get_task_dict('main')['args']
 
-        args = environment_expansion(env_vars, args)#, remove_extras=True)
+        args = environment_expansion(env_vars, args)
 
         config.add_to_task('main', args=args, env_vars=env_vars)
 
@@ -563,9 +563,8 @@ class ScheduledExecutionConfigurator(object):
                     if 'required' in setting and setting['required'] or value is not None:
                         task_settings[name] = value
 
-                # env_vars = task_settings
                 args = config._get_task_dict('main')['args']
-                args = environment_expansion(task_settings, args)#, remove_extras=True)
+                args = environment_expansion(task_settings, args)
                 _config.add_to_task('main', args=args, settings=task_settings)
 
         # Configure env vars for settings

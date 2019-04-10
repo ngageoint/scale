@@ -20,24 +20,24 @@ Request: GET http://.../v6/job-type-names/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
-        "count": 1, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
+ .. code-block:: javascript
+
+    {
+        "count": 1,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
                 "name": "my-job",
-                "title": "My Job", 
-                "description": "A simple job type", 
-                "icon_code": "f013", 
-                "versions": ["1.0.0"], 
-                "latest_version": "1.0.0" 
+                "title": "My Job",
+                "description": "A simple job type",
+                "icon_code": "f013",
+                "versions": ["1.0.0"],
+                "latest_version": "1.0.0"
             }
-        ] 
-    } 
-    
+        ]
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Type Names**                                                                                                      |
 +=========================================================================================================================+
@@ -52,7 +52,7 @@ Response: 200 OK
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
+| keyword            | String            | Optional | Performs a like search on name and tags                             |
 |                    |                   |          | Duplicate to search for multiple keywords.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | id                 | Integer           | Optional | Return only job types with one version has a matching id.           |
@@ -110,36 +110,36 @@ Request: GET http://.../v6/job-types/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
-        "count": 2, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 3, 
+ .. code-block:: javascript
+
+    {
+        "count": 2,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 3,
                 "name": "my-job",
-                "version": "1.0.0" 
-                "title": "My Job", 
-                "description": "A simple job type", 
-                "icon_code": "f013", 
-                "is_published": true, 
-                "is_active": true, 
-                "is_paused": false, 
-                "is_system": false, 
-                "max_scheduled": 1, 
-                "revision_num": 1, 
-                "docker_image": "my-job-1.0.0-seed:1.0.0", 
-                "created": "2015-03-11T00:00:00Z", 
-                "deprecated": null, 
-                "paused": null, 
-                "last_modified": "2015-03-11T00:00:00Z" 
-            }, 
-            ... 
-        ] 
-    } 
-    
+                "version": "1.0.0"
+                "title": "My Job",
+                "description": "A simple job type",
+                "icon_code": "f013",
+                "is_published": true,
+                "is_active": true,
+                "is_paused": false,
+                "is_system": false,
+                "max_scheduled": 1,
+                "revision_num": 1,
+                "docker_image": "my-job-1.0.0-seed:1.0.0",
+                "created": "2015-03-11T00:00:00Z",
+                "deprecated": null,
+                "paused": null,
+                "last_modified": "2015-03-11T00:00:00Z"
+            },
+            ...
+        ]
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Types**                                                                                                  |
 +=========================================================================================================================+
@@ -154,7 +154,7 @@ Response: 200 OK
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
+| keyword            | String            | Optional | Performs a like search on name and tags                             |
 |                    |                   |          | Duplicate to search for multiple keywords.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | id                 | Integer           | Optional | Return only job types with a matching id.                           |
@@ -232,37 +232,37 @@ Request: GET http://.../v6/job-types/{name}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
-        "count": 2, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 3, 
+ .. code-block:: javascript
+
+    {
+        "count": 2,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 3,
                 "name": "my-job",
-                "version": "1.0.0" 
-                "title": "My Job", 
-                "description": "A simple job type", 
-                "icon_code": "f013", 
+                "version": "1.0.0"
+                "title": "My Job",
+                "description": "A simple job type",
+                "icon_code": "f013",
                 "is_published": true,
                 "is_active": true,
-                "is_paused": false, 
-                "is_system": false, 
-                "max_scheduled": 1, 
-                "revision_num": 1, 
-                "docker_image": "my-job-1.0.0-seed:1.0.0", 
+                "is_paused": false,
+                "is_system": false,
+                "max_scheduled": 1,
+                "revision_num": 1,
+                "docker_image": "my-job-1.0.0-seed:1.0.0",
                 "unmet_resources": null,
                 "created": "2015-03-11T00:00:00Z",
-                "deprecated": null, 
-                "paused": null, 
-                "last_modified": "2015-03-11T00:00:00Z" 
-            }, 
-            ... 
-        ] 
-    } 
-    
+                "deprecated": null,
+                "paused": null,
+                "last_modified": "2015-03-11T00:00:00Z"
+            },
+            ...
+        ]
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Versions**                                                                                          |
 +=========================================================================================================================+
@@ -345,9 +345,9 @@ Request: GET http://.../v6/job-types/{name}/{version}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
+ .. code-block:: javascript
+
+    {
     "id": 3,
     "name": "my-job",
     "version": "1.0.0"
@@ -368,8 +368,8 @@ Response: 200 OK
     "deprecated": null,
     "paused": null,
     "last_modified": "2015-03-11T00:00:00Z"
-    } 
-    
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Details**                                                                                           |
 +=========================================================================================================================+
@@ -417,7 +417,7 @@ Response: 200 OK
 | unmet_resources          | String            | Resources required by this job type that are not present.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | manifest                 | String            | Seed manifest describing Job, interface and requirements.                |
-|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
+|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | configuration            | JSON Object       | JSON description of the configuration for running the job                |
 |                          |                   | (See :ref:`rest_v6_job_type_configuration`)                              |
@@ -442,8 +442,8 @@ Request: GET http://.../v6/job-types/{name}/{version}/revisions/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
+ .. code-block:: javascript
+
     {
       "count": 1,
       "next": null,
@@ -467,7 +467,7 @@ Response: 200 OK
         }
       ]
     }
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Revisions**                                                                                         |
 +=========================================================================================================================+
@@ -521,8 +521,8 @@ Request: GET http://.../v6/job-types/{name}/{version}/revisions/{revision_num}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
+ .. code-block:: javascript
+
     {
       "id": 3,
       "job_type": {
@@ -540,7 +540,7 @@ Response: 200 OK
       "manifest": "",
       "created": "2015-03-11T00:00:00Z"
     }
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Revision Details**                                                                                  |
 +=========================================================================================================================+
@@ -566,7 +566,7 @@ Response: 200 OK
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | manifest                 | String            | Seed manifest describing Job, interface and requirements.                |
-|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
+|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | created                  | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -581,7 +581,7 @@ v6 Add Seed Image
 Request: POST http://.../v6/job-types/
 
  .. code-block:: javascript
- 
+
      {
       "icon_code": "f1c5",
       "max_scheduled": 1,
@@ -714,14 +714,14 @@ Request: POST http://.../v6/job-types/
       },
       "auto_update": true
     }
-    
+
 Response: 201 CREATED
 Headers:
 Location http://.../v6/job-types/test/1.0.0/
 
- .. code-block:: javascript  
- 
-    { 
+ .. code-block:: javascript
+
+    {
     "id": 3,
     "name": "test",
     "version": "1.0.0"
@@ -742,7 +742,7 @@ Location http://.../v6/job-types/test/1.0.0/
     "deprecated": null,
     "paused": null,
     "last_modified": "2015-03-11T00:00:00Z"
-    } 
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Add Seed Image**                                                                                                      |
@@ -793,7 +793,7 @@ v6 Validate Job Type
 Request: POST http://.../v6/job-types/validation/
 
  .. code-block:: javascript
- 
+
      {
       "configuration": {
         "mounts": {
@@ -922,7 +922,7 @@ Request: POST http://.../v6/job-types/validation/
         }
       }
     }
-    
+
 Response: 200 OK
 
 .. code-block:: javascript
@@ -932,7 +932,7 @@ Response: 200 OK
       "errors": [],
       "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}]
    }
-   
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Validate Job Type**                                                                                                   |
 +=========================================================================================================================+
@@ -980,7 +980,7 @@ v6 Edit Job Type
 Request: PATCH http://.../v6/job-types/test/1.0.0/
 
  .. code-block:: javascript
- 
+
     {
       "icon_code": "012F",
       "is_published": true,
@@ -1115,7 +1115,7 @@ v6 Job Type Status
 
 Request: GET http://.../v6/job-types/status/
 
-.. code-block:: javascript 
+.. code-block:: javascript
   {
     "count": 1,
     "next": null,
@@ -1232,7 +1232,7 @@ v6 Job Types Pending
 
 Request: GET http://.../v6/job-types/pending/
 
-.. code-block:: javascript  
+.. code-block:: javascript
   {
     "count": 1,
     "next": null,
@@ -1295,7 +1295,7 @@ v6 Job Types Running
 
 Request: GET http://.../v6/job-types/status/
 
-.. code-block:: javascript 
+.. code-block:: javascript
   {
     "count": 1,
     "next": null,
@@ -1357,7 +1357,7 @@ v6 Job Type System Failures
 
 Request: GET http://.../v6/job-types/system-failures/
 
-.. code-block:: javascript 
+.. code-block:: javascript
   {
     "count": 1,
     "next": null,

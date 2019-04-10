@@ -179,9 +179,3 @@ class StrikeConfigurationV6(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
-
-        # if 'recipe' not in self._configuration:
-        #     self._configuration['recipe'] = {
-        #         'name': '',
-        #         'version': ''
-        #     }

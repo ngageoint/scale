@@ -1052,7 +1052,7 @@ class Job(models.Model):
 
         return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
 
-    # # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
+    # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
         """Returns the data for this job
 
@@ -2587,8 +2587,6 @@ class JobType(models.Model):
     :type paused: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    :keyword trigger_rule: The rule to trigger new jobs of this type - Deprecated remove when remove triggers
-    :type trigger_rule: :class:`django.db.models.ForeignKey` - Deprecated remove when remove triggers
     """
 
     BASE_FIELDS = ('id', 'name', 'version', 'manifest', 'configuration', 'icon_code',
@@ -2621,9 +2619,6 @@ class JobType(models.Model):
     deprecated = models.DateTimeField(blank=True, null=True)
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-
-    # deprecated - remove trigger_rule when remove triggers
-    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     objects = JobTypeManager()
 
@@ -2794,8 +2789,6 @@ class JobType(models.Model):
         :type manifest: :class:`job.seed.manifest.SeedManifest`
         """
 
-        # self.title = manifest.get_title()
-        # self.description = manifest.get_description()
         self.author_name = manifest.get_maintainer().get('name')
         self.author_url = manifest.get_maintainer().get('url')
         self.manifest = manifest.get_dict()

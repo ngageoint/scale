@@ -608,8 +608,6 @@ class ExecutionConfiguration(object):
             task_dict['docker_params'] = task_docker_params
 
         for param in docker_params:
-            # if param.flag == 'env':
-            #     print 'param flag env, value ', param.value
             task_docker_params.append({'flag': param.flag, 'value': param.value})
 
     @staticmethod

@@ -53,14 +53,14 @@ class TestQueuedExecutionConfigurator(TestCase):
         data_dict = {'json': { 'input_1': 'my_val'}, 'files': {'input_2': [file_1.id], 'input_3': [file_2.id, file_3.id]}}
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
-        expected_args = 'command -a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
+        expected_args = 'command -a my_val -b %s %s ${OUTPUT_DIR}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
 
         inputs_json=[{'name': 'input_1', 'type': 'string'}]
         inputs=[{'name': 'input_2', 'mediaTypes':['text/plain']}, {'name': 'input_3', 'mediaTypes': ['text/plain'], 'multiple': True}]
         outputs=[{'name': 'output_1', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
-        manifest = job_test_utils.create_seed_manifest(command='command -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${job_output_dir}',
+        manifest = job_test_utils.create_seed_manifest(command='command -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${OUTPUT_DIR}',
                     inputs_files=inputs, inputs_json=inputs_json, outputs_files=outputs)
         job_type = job_test_utils.create_seed_job_type(manifest=manifest, configuration={'output_workspaces': {'default': workspace.name}})
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
@@ -99,7 +99,7 @@ class TestQueuedExecutionConfigurator(TestCase):
 
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
-        expected_args = 'foo -a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
+        expected_args = 'foo -a my_val -b %s %s ${OUTPUT_DIR}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
 
@@ -108,7 +108,7 @@ class TestQueuedExecutionConfigurator(TestCase):
                       {'name': 'input_4', 'mediaTypes': ['text/plain'], 'multiple': True, 'required': False}]
         inputs_json = [{'name': 'input_1', 'type': 'string'}]
         outputs_files = [{'name': 'output_1', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
-        manifest = job_test_utils.create_seed_manifest(command='foo -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${job_output_dir}',
+        manifest = job_test_utils.create_seed_manifest(command='foo -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${OUTPUT_DIR}',
                     inputs_files=inputs_files, inputs_json=inputs_json, outputs_files=outputs_files)
         job_type = job_test_utils.create_seed_job_type(manifest=manifest)
 
@@ -152,13 +152,13 @@ class TestQueuedExecutionConfigurator(TestCase):
         input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
         manifest_inputs = [{'name': 'input_1', 'multiple': True}]
         manifest_outputs = [{'name': 'output_1', 'mediaType': 'image/png', 'multiple': True, 'pattern': 'outfile*.png'}]
-        manifest = job_test_utils.create_seed_manifest(jobVersion='1.4.0', command='${INPUT_1} ${job_output_dir}',
+        manifest = job_test_utils.create_seed_manifest(jobVersion='1.4.0', command='${INPUT_1} ${OUTPUT_DIR}',
                                                        inputs_files=manifest_inputs, inputs_json=[],
                                                        outputs_files=manifest_outputs, outputs_json=[])
 
         data_dict = {'files': {'input_1': [file_1.id, file_2.id, file_3.id]}}
         input_1_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_1')
-        expected_args = '%s ${job_output_dir}' % (input_1_val)
+        expected_args = '%s ${OUTPUT_DIR}' % (input_1_val)
         expected_env_vars = {'INPUT_1': input_1_val}
 
         expected_output_workspaces = {'output_1': workspace.name}
@@ -195,7 +195,7 @@ class TestQueuedExecutionConfigurator(TestCase):
                 },
                 'timeout': 10,
                 'interface': {
-                    'command': '${SEED_INPUT_1} ${job_output_dir}',
+                    'command': '${SEED_INPUT_1} ${OUTPUT_DIR}',
                     'inputs': {
                         'files': [{'name': 'seed_input_1', 'multiple': True }]
                     },
@@ -207,7 +207,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         }
         data_dict = {'files': {'seed_input_1': [file_1.id, file_2.id, file_3.id]}}
         input_1_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'seed_input_1')
-        expected_args = '%s ${job_output_dir}' % (input_1_val)
+        expected_args = '%s ${OUTPUT_DIR}' % (input_1_val)
         expected_env_vars = {'SEED_INPUT_1': input_1_val}
 
         seed_job_type = job_test_utils.create_seed_job_type(manifest=manifest)
@@ -243,7 +243,7 @@ class TestQueuedExecutionConfigurator(TestCase):
                 },
                 'timeout': 10,
                 'interface': {
-                    'command': '${SEED_M_INPUT_1} ${job_output_dir}',
+                    'command': '${SEED_M_INPUT_1} ${OUTPUT_DIR}',
                     'inputs': {
                         'files': [{'name': 'seed_m_input_1', 'multiple': True }]
                     },
@@ -256,7 +256,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         data_dict = {'files': {'seed_m_input_1': [file_1.id]}}
         input_files = {file_1.id: file_1}
         input_1_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'seed_m_input_1')
-        expected_args = '%s ${job_output_dir}' % (input_1_val)
+        expected_args = '%s ${OUTPUT_DIR}' % (input_1_val)
         expected_env_vars = {'SEED_M_INPUT_1': input_1_val}
 
         seed_job_type = job_test_utils.create_seed_job_type(manifest=manifest)
@@ -653,7 +653,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                 'maintainer': {'name': 'John Doe','email': 'jdoe@example.com'},
                 'timeout': 3600,
                 'interface': {
-                  'command': 'foo -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${s_1} ${job_output_dir}',
+                  'command': 'foo -a ${INPUT_1} -b ${INPUT_2} ${INPUT_3} ${s_1} ${OUTPUT_DIR}',
                   'inputs': {
                     'files': [{'name': 'input_2', 'mediaTypes': ['text/plain']},
                               {'name': 'input_3', 'mediaTypes': ['text/plain'], 'multiple': True}],
@@ -873,7 +873,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                               'args': 'foo -a my_val -b %s %s s_1_value %s' %
                                       (input_2_val, input_3_val, SCALE_JOB_EXE_OUTPUT_PATH),
                               'env_vars': {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
-                                           'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH,
+                                           'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH,
                                            'S_1': 's_1_value', 'S_2': 's_2_secret',
                                            'MY_SPECIAL_ENV': 's_2_secret',
                                            'ALLOCATED_CPUS': unicode(main_resources.cpus),
@@ -907,7 +907,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'INPUT_2=%s' % input_2_val},
                                                 {'flag': 'env', 'value': 'INPUT_3=%s' % input_3_val},
                                                 {'flag': 'env', 'value': 'INPUT_1=my_val'},
-                                                {'flag': 'env', 'value': 'job_output_dir=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
+                                                {'flag': 'env', 'value': 'OUTPUT_DIR=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
                                                 {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
                                                 {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                 {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
@@ -950,7 +950,6 @@ class TestScheduledExecutionConfigurator(TestCase):
                 docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
             task_dict['docker_params'] = docker_params_set
         self.maxDiff = None
-
         self.assertDictEqual(config_with_secrets_dict, expected_config)
 
     @patch('queue.models.CommandMessageManager')

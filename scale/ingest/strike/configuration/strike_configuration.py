@@ -110,13 +110,18 @@ class StrikeConfiguration(object):
         if monitor_type not in factory.get_monitor_types():
             raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
 
-        # TODO not mandatory until v6
         if 'recipe' in self.configuration:
-            recipe_name = self.configuration['recipe']['name']
-            revision_num = self.configuration['recipe']['revision_num']
+            recipe_name = self.configuration['recipe']['name'] if 'name' in self.configuration['recipe'] else None
+            revision_num = self.configuration['recipe']['revision_num'] if 'revision_num' in self.configuration['recipe'] else None
+
+            if not recipe_name:
+                msg = 'Recipe Type name is not defined'
+                raise InvalidStrikeConfiguration(msg)
+
             if recipe_name and RecipeType.objects.filter(name=recipe_name, revision_num=revision_num).count() == 0:
                 msg = 'Recipe Type %s does not exist'
                 raise InvalidStrikeConfiguration(msg % recipe_name)
+
 
         monitored_workspace_name = self.configuration['workspace']
         workspace_names = {monitored_workspace_name}

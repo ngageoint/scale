@@ -957,11 +957,13 @@ class TestStrikeCreateViewV6(TestCase):
     def test_successful(self, mock_msg_mgr):
         """Tests calling the create Strike view successfully."""
 
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
+
         json_data = {
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
-                'version': '2.0',
+                'version': '6',
                 'workspace': self.workspace.name,
                 'monitor': {
                     'type': 'dir-watcher',
@@ -972,7 +974,11 @@ class TestStrikeCreateViewV6(TestCase):
                     'data_types': ['one', 'two'],
                     'new_file_path': os.path.join('my', 'path'),
                     'new_workspace': self.new_workspace.name,
-                }]
+                }],
+                'recipe': {
+                    'name': recipe_type.name,
+                    'revision_num': recipe_type.revision_num,
+                },
             },
         }
 
@@ -1018,7 +1024,7 @@ class TestStrikeCreateViewV6(TestCase):
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
-                'version': '2.0',
+                'version': '6',
                 'workspace': self.workspace.name,
                 'monitor': {
                     'type': 'dir-watcher',
@@ -1096,6 +1102,7 @@ class TestStrikeDetailsViewV6(TestCase):
     def test_edit_config(self):
         """Tests editing the configuration of a Strike process"""
 
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
         config = {
             'workspace': self.workspace.name,
             'monitor': {
@@ -1108,6 +1115,10 @@ class TestStrikeDetailsViewV6(TestCase):
                 'new_file_path': os.path.join('my', 'path', 'EDIT'),
                 'new_workspace': self.workspace.name,
             }],
+            'recipe': {
+                'name': recipe_type.name,
+                'revision_num': recipe_type.revision_num,
+            },
         }
 
         json_data = {
@@ -1236,13 +1247,14 @@ class TestStrikesValidationViewV6(TestCase):
 
     def test_successful(self):
         """Tests validating a new Strike process."""
+        recipe_type = recipe_test_utils.create_recipe_type_v6()
 
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
-                'version': '2.0',
+                'version': '6',
                 'workspace': self.workspace.name,
                 'monitor': {
                     'type': 'dir-watcher',
@@ -1254,6 +1266,10 @@ class TestStrikesValidationViewV6(TestCase):
                     'new_file_path': os.path.join('my', 'path'),
                     'new_workspace': self.workspace.name,
                 }],
+                'recipe': {
+                    'name': recipe_type.name,
+                    'revision_num': recipe_type.revision_num,
+                },
             },
         }
 
@@ -1288,7 +1304,7 @@ class TestStrikesValidationViewV6(TestCase):
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
-                'version': '2.0',
+                'version': '6',
                 'workspace': self.workspace.name,
                 'monitor': {
                     'type': 'dir-watcher',

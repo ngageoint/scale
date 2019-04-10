@@ -96,4 +96,8 @@ class Migration(migrations.Migration):
             model_name='jobtype',
             name='title',
         ),
+        migrations.RemoveField(
+            model_name='jobtype',
+            name='trigger_rule',
+        ),
     ]
