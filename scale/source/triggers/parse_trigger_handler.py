@@ -5,10 +5,14 @@ import logging
 
 from django.db import transaction
 
+from data.data.data import Data
+from data.data.value import FileValue
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
+from recipe.deprecation import RecipeDefinitionSunset
 from recipe.models import RecipeType
 from source.triggers.configuration.parse_trigger_rule import ParseTriggerRuleConfiguration
 from storage.models import Workspace
@@ -77,7 +81,15 @@ class ParseTriggerHandler(TriggerRuleHandler):
                     recipe_data.add_file_input(rule_config.get_input_data_name(), source_file.id)
                     recipe_data.set_workspace_id(workspace.id)
                     logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-                    Queue.objects.queue_new_recipe(recipe_type, recipe_data, event)
+                    if not RecipeDefinitionSunset.is_seed_dict(recipe_type.definition):
+                        Queue.objects.queue_new_recipe(recipe_type, recipe_data, event)
+                    else:
+                        recipe_data = Data()
+                        file_value = FileValue(rule_config.get_input_data_name(), [source_file.id])
+                        recipe_data.add_value(file_value)
+                        workspace_name = rule_config.get_workspace_name()
+                        config = RecipeConfigurationV6({'output_workspaces': {'default': workspace_name}}).get_configuration()
+                        Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, recipe_config=config)
 
         if not any_rules:
             logger.info('No rules triggered')
