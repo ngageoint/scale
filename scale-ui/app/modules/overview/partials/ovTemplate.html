@@ -110,7 +110,7 @@
                     <div ng-show="vm.jobError" class="alert alert-danger text-center"><strong>{{ vm.jobError }}</strong> {{ vm.jobErrorStatus }}</div>
                     <div ng-show="!vm.jobError">
                         <div class="margin-bottom-md">
-                            Performance and activity status for all current job types.
+                            Performance and activity status for running job types.
                         </div>
                     </div>
                     <ais-grid-chart data="vm.jobData" icons="true" scale="1" mode="tooltip"></ais-grid-chart>

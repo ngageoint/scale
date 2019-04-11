@@ -430,11 +430,11 @@
                     return getCellPauseResume(d);
                 });
 
-            containerGroup.selectAll('.cell-activity-icon')
-                .data(gridData, function (d) { return d.coords; })
-                .html(function (d) {
-                    return getCellActivity(d);
-                });
+            // containerGroup.selectAll('.cell-activity-icon')
+            //     .data(gridData, function (d) { return d.coords; })
+            //     .html(function (d) {
+            //         return getCellActivity(d);
+            //     });
 
             containerGroup.selectAll('.cell-title')
                 .data(gridData, function (d) { return d.coords; })
