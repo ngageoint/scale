@@ -49,10 +49,10 @@
         };
 
         var getJobTypes = function () {
-            jobTypeService.getJobTypes().then(null, null, function (data) {
+            jobService.getRunningJobs().then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.jobError = null;
-                    vm.jobData.data = data.results;
+                    vm.jobData.data = _.map(data.results, 'job_type');
                     redrawGrid();
                 } else {
                     if (data.statusText && data.statusText !== '') {
