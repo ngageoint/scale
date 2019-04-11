@@ -54,7 +54,6 @@
                             ALGORITHM: scaleConfig.colors.failure_algorithm,
                             DATA: scaleConfig.colors.failure_data,
                             SYSTEM: scaleConfig.colors.failure_system,
-                            Offline: scaleConfig.colors.chart_red,
                             'High Failure Rate': scaleConfig.colors.chart_orange,
                             Paused: scaleConfig.colors.chart_yellow
                         }
