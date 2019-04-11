@@ -57,7 +57,7 @@ class SeedManifest(object):
 
         self._check_for_name_collisions()
         self._check_mount_name_uniqueness()
-        self._check_error_name_uniqueness()
+        #self._check_error_name_uniqueness()
 
         self._validate_mount_paths()
         # self._create_validation_dicts()
