@@ -116,6 +116,7 @@ class TestBatchesViewV5(TestCase):
                 'version': '1.0',
                 'all_jobs': True,
             },
+            'secret': '12345'
         }
 
         url = '/v5/batches/'
@@ -145,6 +146,7 @@ class TestBatchesViewV5(TestCase):
                 'version': '1.0',
                 'trigger_rule': True,
             },
+            'secret': '12345'
         }
 
         url = '/v5/batches/'
@@ -184,6 +186,7 @@ class TestBatchesViewV5(TestCase):
                     },
                 },
             },
+            'secret': '12345'
         }
 
         url = '/v5/batches/'
@@ -205,6 +208,7 @@ class TestBatchesViewV5(TestCase):
         """Tests creating a batch with missing fields."""
         json_data = {
             'title': 'batch-test',
+            'secret': '12345'
         }
 
         url = '/v5/batches/'
@@ -222,6 +226,7 @@ class TestBatchesViewV5(TestCase):
                 'version': '1.0',
                 'all_jobs': True,
             },
+            'secret': '12345'
         }
 
         url = '/v5/batches/'
@@ -241,6 +246,7 @@ class TestBatchesViewV5(TestCase):
                     'type': 'BAD',
                 },
             },
+            'secret': '12345'
         }
 
         url = '/v5/batches/'
@@ -344,7 +350,8 @@ class TestBatchesViewV6(TransactionTestCase):
             'title': 'batch-title-test',
             'description': 'batch-description-test',
             'recipe_type_id': self.recipe_type_1.id,
-            'definition': {}
+            'definition': {},
+            'secret': '12345'
         }
 
         url = '/v1/batches/'
@@ -363,7 +370,8 @@ class TestBatchesViewV6(TransactionTestCase):
                 'previous_batch': {
                     'root_batch_id': self.batch_1.root_batch_id
                 }
-            }
+            },
+            'secret': '12345'
         }
 
         url = '/v6/batches/'
@@ -382,7 +390,8 @@ class TestBatchesViewV6(TransactionTestCase):
                 'previous_batch': {
                     'bad_definition': 'foo'
                 }
-            }
+            },
+            'secret': '12345'
         }
 
         url = '/v6/batches/'
@@ -404,7 +413,8 @@ class TestBatchesViewV6(TransactionTestCase):
             },
             'configuration': {
                 'bad-config': 'foo'
-            }
+            },
+            'secret': '12345'
         }
 
         url = '/v6/batches/'
@@ -431,7 +441,8 @@ class TestBatchesViewV6(TransactionTestCase):
             },
             'configuration': {
                 'priority': 100
-            }
+            },
+            'secret': '12345'
         }
 
         url = '/v6/batches/'

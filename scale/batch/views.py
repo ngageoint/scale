@@ -141,6 +141,10 @@ class BatchesView(ListCreateAPIView):
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
+        # TODO: require an undocumented secret until #1580 is addressed
+        secret = rest_util.parse_string(request, 'secret', required=True)
+        if secret != '12345':
+            raise Http404
 
         # Make sure the recipe type exists
         try:
@@ -185,6 +189,10 @@ class BatchesView(ListCreateAPIView):
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         definition_dict = rest_util.parse_dict(request, 'definition')
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        # TODO: require an undocumented secret until #1580 is addressed so we can test without accidentally breaking things
+        secret = rest_util.parse_string(request, 'secret', required=True)
+        if secret != '12345':
+            raise Http404
 
         # Make sure the recipe type exists
         try:
