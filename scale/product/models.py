@@ -594,11 +594,17 @@ class ProductFileManager(models.GeoManager):
                 product.recipe_node = job_recipe.node_name
 
                 # Add batch info to product if available.
-                try:
-                    from batch.models import BatchJob
-                    product.batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
-                except BatchJob.DoesNotExist:
-                    product.batch_id = None
+                
+                if job_exe.batch:
+                    product.batch_id = job_exe.batch.id
+                elif job_exe.job.batch:
+                    product.batch_id = job_exe.job.batch.id
+                else:
+                    try:
+                        from batch.models import BatchJob
+                        product.batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
+                    except BatchJob.DoesNotExist:
+                        product.batch_id = None
 
             # Allow override, if set via side-car metadata, otherwise take derived values from above
             product.source_started = entry.source_started if entry.source_started else source_started

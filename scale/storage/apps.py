@@ -31,6 +31,8 @@ class StorageConfig(AppConfig):
 
         # Register storage message types
         from storage.messages.delete_files import DeleteFiles
+        from storage.messages.move_files import MoveFile
         from messaging.messages.factory import add_message_type
 
         add_message_type(DeleteFiles)
+        add_message_type(MoveFile)
