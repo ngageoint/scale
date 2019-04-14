@@ -88,9 +88,6 @@ COPY scale/pip/docs.txt /tmp/
 
 RUN if [ $BUILD_DOCS -eq 1 ]; then pip install -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi 
 
-# Copy UI assets
-COPY scale-ui /opt/scale/ui
-
 WORKDIR /opt/scale
 
 # setup ownership and permissions. create some needed directories
