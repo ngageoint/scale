@@ -68,7 +68,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum -y history undo last \
- && rm -rf /var/cache/yum 
+ && rm -rf /var/cache/yum ~/.cache/pip
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
@@ -86,7 +86,10 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale/pip/docs.txt /tmp/
 
-RUN if [ $BUILD_DOCS -eq 1 ]; then pip install -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi 
+RUN if [ $BUILD_DOCS -eq 1 ]; then pip install --no-cache-dir -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi
+
+# Copy UI assets
+COPY scale-ui /opt/scale/ui
 
 WORKDIR /opt/scale
 
