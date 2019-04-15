@@ -20,7 +20,6 @@ REST_API_APPS = [
     'queue',
     'recipe',
     'scheduler',
-    'source',
     'storage',
 ]
 
