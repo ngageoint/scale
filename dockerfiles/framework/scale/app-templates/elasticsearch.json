@@ -29,8 +29,8 @@
     "healthChecks": [
         {
             "gracePeriodSeconds": 300,
-            "intervalSeconds": 60,
-            "maxConsecutiveFailures": 3,
+            "intervalSeconds": 30,
+            "maxConsecutiveFailures": 6,
             "portIndex": 0,
             "timeoutSeconds": 20,
             "delaySeconds": 15,

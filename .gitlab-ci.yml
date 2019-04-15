@@ -15,6 +15,7 @@
 # VAULT_ZIP
 
 variables:
+  GIT_DEPTH: 1
   IMAGE_PREFIX: "scale"
   EPEL_INSTALL: "0"
 
