@@ -80,13 +80,11 @@ class TestJobsViewV6(TestCase):
                 'workspace_id': self.workspace.id
             }]}
 
-        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest['job']['name'] = 'scale-batch-creator'
+        manifest = job_test_utils.create_seed_manifest(name='scale-batch-creator')
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', input=self.data_1, input_file_size=None)
 
-        manifest2 = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest2['job']['name'] = 'test2'
+        manifest2 = job_test_utils.create_seed_manifest(name='test2')
         self.job_type2 = job_test_utils.create_seed_job_type(manifest=manifest2)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING', input=self.data_2, input_file_size=None)
 
@@ -315,11 +313,12 @@ class TestJobsViewV6(TestCase):
 
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
-        # May fail because of job_type name ordering
-        job_type1b = job_test_utils.create_seed_job_type(job_version='2.0.0')
+        manifestb = job_test_utils.create_seed_manifest(name='scale-batch-creator', jobVersion='2.0.0')
+        job_type1b = job_test_utils.create_seed_job_type(manifest=manifestb)
         job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
 
-        job_type1c = job_test_utils.create_seed_job_type(job_version='3.0.0')
+        manifestc = job_test_utils.create_seed_manifest(name='scale-batch-creator', jobVersion='3.0.0')
+        job_type1c = job_test_utils.create_seed_job_type(manifest=manifestc)
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
         url = '/%s/jobs/?is_superseded=false&order=job_type__name&order=-job_type__version' % self.api
@@ -327,12 +326,12 @@ class TestJobsViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-
         self.assertEqual(len(result['results']), 4)
-        # self.assertEqual(result['results'][0]['job_type']['id'], self.job_type1.id)
-        # self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
-        # self.assertEqual(result['results'][2]['job_type']['id'], job_type1c.id)
-        # self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
+
+        self.assertEqual(result['results'][0]['job_type']['id'], job_type1c.id)
+        self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
+        self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
+        self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 
 class TestJobsPostViewV6(TestCase):
