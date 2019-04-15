@@ -394,11 +394,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         config = RecipeConfigurationV6(config_dict).get_configuration()
 
         created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event, recipe_config=config)
-
-        data = Data()
-        data.add_value(FileValue('input_a', [123]))
-        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event)
-        pass
+        self.assertDictEqual(created_recipe.configuration, config_dict)
 
     @patch('queue.models.CommandMessageManager')
     def test_successful_ingest(self, mock_msg_mgr):
