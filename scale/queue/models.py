@@ -311,8 +311,6 @@ class QueueManager(models.Manager):
 
             if priority:
                 queued_priority = priority
-            elif job.priority:
-                queued_priority = job.priority
             elif job.batch and job.batch.get_configuration().priority:
                 queued_priority = job.batch.get_configuration().priority
             else:

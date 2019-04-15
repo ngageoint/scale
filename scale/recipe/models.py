@@ -1272,18 +1272,16 @@ class RecipeTypeManager(models.Manager):
                 msgs = [create_sub_update_recipe_definition_message(id, recipe_type.id) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
 
-    def get_by_natural_key(self, name, revision_num):
+    def get_by_natural_key(self, name):
         """Django method to retrieve a recipe type for the given natural key
 
         :param name: The human-readable name of the recipe type
         :type name: string
-        :param revision_num: The revision number of the recipe type
-        :type revision_num: int
         :returns: The recipe type defined by the natural key
         :rtype: :class:`recipe.models.RecipeType`
         """
 
-        return self.get(name=name, revision_num=revision_num)
+        return self.get(name=name)
 
     def get_details_v6(self, name):
         """Gets additional details for the given recipe type model based on related model attributes.
@@ -1485,9 +1483,6 @@ class RecipeType(models.Model):
     :type definition: :class:`django.contrib.postgres.fields.JSONField`
     :keyword revision_num: The current revision number of the definition, starts at one
     :type revision_num: :class:`django.db.models.IntegerField`
-    :keyword trigger_rule: The rule to trigger new recipes of this type
-    :type trigger_rule: :class:`django.db.models.ForeignKey`
-
     :keyword created: When the recipe type was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword deprecated: When the recipe type was deprecated (no longer active)
@@ -1504,9 +1499,6 @@ class RecipeType(models.Model):
     is_active = models.BooleanField(default=True)
     definition = django.contrib.postgres.fields.JSONField(default=dict)
     revision_num = models.IntegerField(default=1)
-
-    # TODO: remove this when going to Scale v6
-    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
     deprecated = models.DateTimeField(blank=True, null=True)
@@ -1533,19 +1525,9 @@ class RecipeType(models.Model):
 
         return rest_utils.strip_schema_version(convert_recipe_definition_to_v6_json(self.get_definition()).get_dict())
 
-    def natural_key(self):
-        """Django method to define the natural key for a recipe type as the combination of name and version
-
-        :returns: A tuple representing the natural key
-        :rtype: tuple(string, string)
-        """
-
-        return self.name, self.revision_num
-
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe_type'
-        unique_together = ('name', 'revision_num')
 
 class RecipeTypeRevisionManager(models.Manager):
     """Provides additional methods for handling recipe type revisions
@@ -1752,7 +1734,7 @@ class RecipeTypeRevision(models.Model):
         return ForcedNodesValidation(is_valid, errors, warnings, forced_nodes)
 
     def natural_key(self):
-        """Django method to define the natural key for a recipe type revision as the combination of job type and
+        """Django method to define the natural key for a recipe type revision as the combination of recipe type and
         revision number
 
         :returns: A tuple representing the natural key

@@ -27,7 +27,7 @@
         "model": "recipe.RecipeTypeRevision",
         "pk": null,
         "fields": {
-            "recipe_type": ["scale-casino", 1],
+            "recipe_type": ["scale-casino"],
             "revision_num": 1,
             "definition": {
                  "version": "6",
