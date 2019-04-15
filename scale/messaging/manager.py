@@ -101,7 +101,7 @@ class CommandMessageManager(object):
 
             return message_class.from_json(message_body)
         except KeyError as ex:
-            raise_from(InvalidCommandMessage('No message type handler available.'), ex)
+            raise_from(InvalidCommandMessage('No message type handler available for message type %s' % message['type']), ex)
 
     def _process_message(self, message):
         """Inspects message for type and then attempts to launch execution

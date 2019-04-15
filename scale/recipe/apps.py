@@ -23,6 +23,7 @@ class RecipeConfig(AppConfig):
         from recipe.messages.purge_recipe import PurgeRecipe
         from recipe.messages.supersede_recipe_nodes import SupersedeRecipeNodes
         from recipe.messages.update_recipe import UpdateRecipe
+        from recipe.messages.update_recipe_definition import UpdateRecipeDefinition
         from recipe.messages.update_recipe_metrics import UpdateRecipeMetrics
 
         add_message_type(CreateConditions)
@@ -32,4 +33,5 @@ class RecipeConfig(AppConfig):
         add_message_type(PurgeRecipe)
         add_message_type(SupersedeRecipeNodes)
         add_message_type(UpdateRecipe)
+        add_message_type(UpdateRecipeDefinition)
         add_message_type(UpdateRecipeMetrics)
