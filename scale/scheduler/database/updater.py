@@ -35,6 +35,9 @@ class DatabaseUpdater(object):
         self._current_batch_id = None
         self._updated_batch = 0
         self._total_batch = 0
+        self._total_recipe_definition = 0
+        self._update_recipe_definition = 0
+        self._current_recipe_definition_id = None
 
     def update(self):
         """Runs the database update
@@ -87,7 +90,6 @@ class DatabaseUpdater(object):
         logger.info('Scale database updater has been told to stop')
         self._running = False
 
-    # TODO: remove/fix with v5 removal
     def _perform_batch_field_init(self):
         """Performs any initialization piece of the setting of batch fields on job and recipe models
         """
@@ -106,7 +108,6 @@ class DatabaseUpdater(object):
         self._total_batch = Batch.objects.all().count()
         logger.info('Found %d batches that need to be done', self._total_batch)
 
-    # TODO: remove/fix with v5 removal
     def _perform_batch_field_iteration(self):
         """Performs a single iteration of the setting of batch fields on job and recipe models
         """
