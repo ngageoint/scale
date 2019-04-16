@@ -54,3 +54,4 @@ Current v6 Services
    v6/strike
    v6/system
    v6/workspace
+   v6/deprecated
