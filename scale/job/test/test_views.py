@@ -917,29 +917,6 @@ class TestJobTypesPostViewV6(TestCase):
     def setUp(self):
         django.setup()
 
-        self.manifest = job_test_utils.COMPLETE_MANIFEST
-
-        self.interface = {
-            'version': '1.4',
-            'command': 'test_cmd',
-            'command_arguments': 'test_arg',
-            'env_vars': [],
-            'mounts': [{
-                'name': 'dted',
-                'path': '/some/path',
-                'required': True,
-                'mode': 'ro'
-            }],
-            'settings': [{
-                'name': 'DB_HOST',
-                'required': True,
-                'secret': False,
-            }],
-            'input_data': [],
-            'output_data': [],
-            'shared_resources': [],
-        }
-
         self.output_workspace = storage_test_utils.create_workspace()
         self.configuration = {
             'version': '6',
@@ -955,45 +932,18 @@ class TestJobTypesPostViewV6(TestCase):
             },
         }
 
-        self.workspace = storage_test_utils.create_workspace()
-        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,
-                                                            configuration=self.configuration)
-
-        self.error = error_test_utils.create_error(category='ALGORITHM')
-        self.error_mapping = {
-            'version': '1.0',
-            'exit_codes': {
-                '1': self.error.name,
-            }
-        }
-
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
-        self.job_type2 = job_test_utils.create_seed_job_type()
 
-        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
-        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
-        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
-        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+        sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition,
+        self.recipe_type1 = recipe_test_utils.create_recipe_type_v6(definition=sub_definition,
                                                                     description="A sub recipe",
                                                                     is_active=False,
                                                                     is_system=False)
 
-        self.main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
-        self.main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
-        self.main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
-        self.main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
-        self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
-        self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
-
-        self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition,
-                                                                    title="My main recipe",
-                                                                    is_active=True,
-                                                                    is_system=True)
 
     def test_add_seed_job_type(self):
         """Tests adding a seed image."""
@@ -1092,6 +1042,13 @@ class TestJobTypesPostViewV6(TestCase):
         """Tests editing an existing seed job type."""
 
         url = '/%s/job-types/' % self.api
+
+        # Create original job
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        _ = job_test_utils.create_seed_job_type(manifest=manifest, max_scheduled=2,
+                                                            configuration=self.configuration)
+
+        # Create edit for job
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['packageVersion'] = '1.0.1'
 
