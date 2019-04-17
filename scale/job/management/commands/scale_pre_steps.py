@@ -171,7 +171,7 @@ class Command(BaseCommand):
         if job_exe.job.recipe:
             recipe = job_exe.job.recipe
             recipe_type_path = get_valid_filename(recipe.recipe_type.name)
-            recipe_version_path = get_valid_filename(recipe.recipe_type.version)
+            recipe_version_path = get_valid_filename(recipe.recipe_type.revision_num)
             remote_path = os.path.join(remote_path, 'recipes', recipe_type_path, recipe_version_path)
         job_type_path = get_valid_filename(job_exe.job.job_type.name)
         job_version_path = get_valid_filename(job_exe.job.job_type.version)
