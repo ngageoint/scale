@@ -1599,3 +1599,13 @@ class TestCreateRecipes(TestCase):
         msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_2_msg.forced_nodes).get_dict()
         forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
         self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
+        
+    def test_create_101_recipes(self):
+        """Tests calling create_reprocess_messages() with 101 recipes
+        """
+        
+        ids = [i for i in range(101)]
+        msgs = create_reprocess_messages(ids, 'recipe-name', 1, 1)
+        self.assertEqual(len(msgs), 2)
+        self.assertEqual(len(msgs[0].root_recipe_ids), 100)
+        self.assertEqual(len(msgs[1].root_recipe_ids), 1)
