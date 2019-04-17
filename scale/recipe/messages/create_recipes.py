@@ -74,6 +74,7 @@ def create_reprocess_messages(root_recipe_ids, recipe_type_name, revision_num, e
             message.forced_nodes = forced_nodes
         elif not message.can_fit_more():
             messages.append(message)
+            message = CreateRecipes()
             message.create_recipes_type = REPROCESS_TYPE
             message.recipe_type_name = recipe_type_name
             message.recipe_type_rev_num = revision_num
