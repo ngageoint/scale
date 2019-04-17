@@ -7,7 +7,7 @@ dcos marathon app remove /scale-webserver
 dcos marathon app remove /scale-rabbitmq
 dcos marathon app stop /scale
 
-docker build -t $1 .
+docker build --build-arg BUILD_DOCS=0 -t $1 .
 docker push $1
 
 dcos marathon app start /scale 1
