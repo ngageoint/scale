@@ -43,10 +43,6 @@ class Command(BaseCommand):
                                                  password=new_password)
 
         if user:
-            if settings.MESOS_SANDBOX:
-                with open(os.path.join(settings.MESOS_SANDBOX, 'admin-pass.txt'), 'w') as pass_file:
-                    pass_file.write(new_password)
-            else:
-                print('Superuser admin password set: %s' % (new_password,))
+            print('Superuser admin password: %s' % (new_password,))
 
 
