@@ -9,6 +9,7 @@ import port.serializers as serializers
 from error.models import Error
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_v6 import JobConfigurationV6
 from job.models import JobType
 from port.schema import Configuration
 from recipe.models import RecipeType
@@ -81,7 +82,7 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
     # Scrub configuration for secrets
     for job_type in job_types:
         if job_type.configuration:
-            configuration = JobConfigurationV2(job_type.configuration)
+            configuration = JobConfigurationV6(job_type.configuration)
             interface = JobInterface(job_type.manifest)
             configuration.validate(interface.get_dict())
             job_type.configuration = configuration.get_dict()
