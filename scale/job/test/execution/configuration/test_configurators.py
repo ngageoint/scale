@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-import json
 
 import django
 from django.test import TestCase
@@ -707,15 +706,6 @@ class TestScheduledExecutionConfigurator(TestCase):
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
 
         expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
-        
-        input_metadata = {}
-        input_metadata['JOB'] = {'input_1': 'my_val'}
-        from storage.models import ScaleFile
-        for i in expected_input_files.keys():
-            input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f['id'])._get_url() for f in expected_input_files[i]]
-        input_metadata['RECIPE'] = {'input_1': 'my_val', 'input_files': ['http://host/my/path/file/path/my_test_file.txt']}
-        expected_input_metadata = json.dumps(input_metadata)
-
         expected_output_workspaces = {'output_1': output_workspace.name}
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
                               'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
@@ -727,8 +717,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'SCALE_JOB_ID': unicode(job.id),
                                            'SCALE_EXE_NUM': unicode(job.num_exes),
                                            'SCALE_RECIPE_ID': unicode(recipe.id),
-                                           'SCALE_BATCH_ID': unicode(batch.id),
-                                           'INPUT_METADATA': unicode(expected_input_metadata)
+                                           'SCALE_BATCH_ID': unicode(batch.id)
                               },
                               'docker_params': [{'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
                                                 {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
@@ -737,8 +726,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
                                                 {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                 {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
-                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
-                                                {'flag': 'env', 'value': 'INPUT_METADATA=%s' % unicode(expected_input_metadata)}]}
+                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)}
+                                                ]}
         expected_pre_task = {'task_id': '%s_pre' % job_exe_model.get_cluster_id(), 'type': 'pre',
                              'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
                              'args': PRE_TASK_COMMAND_ARGS,
@@ -750,8 +739,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
                                           'SCALE_BROKER_URL': 'mock://broker-url',
-                                          'SYSTEM_LOGGING_LEVEL': 'INFO',
-                                          'INPUT_METADATA': unicode(expected_input_metadata)
+                                          'SYSTEM_LOGGING_LEVEL': 'INFO'
                              },
                              'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                              'mounts': {input_mnt_name: input_vol_name, output_mnt_name: output_vol_name},
@@ -788,9 +776,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'volume',
                                                 'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
                                                {'flag': 'volume', 'value': '%s:%s:rw' %
-                                                                           (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)},
-                                               {'flag': 'env', 
-                                                'value': 'INPUT_METADATA=%s' % unicode(expected_input_metadata)}
+                                                                           (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)}
                                                ]}
         expected_pst_task = {'task_id': '%s_post' % job_exe_model.get_cluster_id(), 'type': 'post',
                              'resources': {'cpus': post_resources.cpus, 'mem': post_resources.mem,
@@ -804,8 +790,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
                                           'SCALE_BROKER_URL': 'mock://broker-url',
-                                          'SYSTEM_LOGGING_LEVEL': 'INFO',
-                                          'INPUT_METADATA': unicode(expected_input_metadata)
+                                          'SYSTEM_LOGGING_LEVEL': 'INFO'
                              },
                              'workspaces': {input_workspace.name: {'mode': 'rw', 'volume_name': input_wksp_vol_name},
                                             output_workspace.name: {'mode': 'rw', 'volume_name': output_wksp_vol_name}},
@@ -845,9 +830,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'volume',
                                                 'value': '/w_1/host/path:%s:rw' % input_wksp_vol_path},
                                                {'flag': 'volume',
-                                                'value': '/w_2/host/path:%s:rw' % output_wksp_vol_path},
-                                               {'flag': 'env', 
-                                                'value': 'INPUT_METADATA=%s' % unicode(expected_input_metadata)}
+                                                'value': '/w_2/host/path:%s:rw' % output_wksp_vol_path}
                                                ]}
         expected_main_task = {'task_id': '%s_main' % job_exe_model.get_cluster_id(), 'type': 'main',
                               'resources': {'cpus': main_resources.cpus, 'mem': main_resources.mem,
@@ -863,8 +846,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'ALLOCATED_DISK': unicode(main_resources.disk),
                                            'ALLOCATED_GPUS': unicode(main_resources.gpus),
                                            'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
-                                           'INPUT_METADATA': unicode(expected_input_metadata)
+                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
                               },
                               'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                               'mounts': {'m_1': m_1_vol_name, 'm_2': None, 'm_3': None, input_mnt_name: input_vol_name,
@@ -894,7 +876,6 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                 {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
                                                 {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
-                                                {'flag': 'env', 'value': 'INPUT_METADATA=%s' % unicode(expected_input_metadata)},
                                                 {'flag': 'label',
                                                  'value': 'scale-job-execution-id=%s' % unicode(job.num_exes)},
                                                 {'flag': 'label',
@@ -913,6 +894,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                             (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)}
                                                ]}
+
         expected_config = {'version': '2.0',
                            'input_files': expected_input_files,
                            'output_workspaces': expected_output_workspaces,

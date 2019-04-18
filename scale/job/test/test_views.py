@@ -2264,6 +2264,65 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertIsNone(results['max_scheduled'])
         self.assertEqual(results['configuration']['settings'], good_setting)
 
+    def test_add_seed_job_type_duplicate_error(self):
+        """Tests adding a seed image with a duplicate error name."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['errors'][0]['name'] = 'dupe'
+        manifest['job']['errors'][1]['name'] = 'dupe'
+
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        good_setting = {
+            'DB_HOST': 'scale'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_add_seed_job_type_existing_error(self):
+        """Tests adding a seed image with an existing error."""
+
+        existing_error = error_test_utils.create_error(name='error-name-one', job_type_name='other-job')
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-new-job'
+
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        good_setting = {
+            'DB_HOST': 'scale'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-new-job/1.0.0/' % self.api in response['location'])
+
+        job_type = JobType.objects.filter(name='my-new-job').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 1)
+        self.assertIsNone(results['max_scheduled'])
+        self.assertEqual(results['configuration']['settings'], good_setting)
+
     def test_add_seed_job_type_minimum_manifest(self):
         """Tests adding a Seed image with a minimum Seed manifest"""
 
@@ -2682,6 +2741,32 @@ class TestJobTypeDetailsViewV5(TestCase):
 
         self.error1 = error_test_utils.create_error()
         self.error2 = error_test_utils.create_error()
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type.name,
+                    'version': self.job_type.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'input_files',
+                }]
+            }]
+        }
+        self.old_recipe_type = recipe_test_utils.create_recipe_type_v5(definition=definition)
+        v6_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        v6_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type.name
+        v6_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type.version
+        v6_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type.revision_num
+        self.new_recipe_type = recipe_test_utils.create_recipe_type_v6()
 
     def test_not_found(self):
         """Tests successfully calling the get job type details view with a job id that does not exist."""
@@ -4002,6 +4087,26 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertFalse(results['is_valid'])
         self.assertEqual(len(results['errors']), 1)
         self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
+
+    def test_duplicate_error(self):
+        """Tests validating a new job type with duplicate error names."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['errors'][0]['name'] = 'dupe'
+        manifest['job']['errors'][1]['name'] = 'dupe'
+
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'DUPLICATE_ERROR_NAMES')
 
     def test_invalid_output_workspace(self):
         """Tests validating a new job type with an invalid output workspace."""

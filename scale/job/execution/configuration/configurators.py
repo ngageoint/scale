@@ -4,8 +4,10 @@ from __future__ import absolute_import, unicode_literals
 import json
 import logging
 import math
+import os
 
 from django.conf import settings
+from django.utils.timezone import now
 
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
@@ -28,10 +30,12 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
 from node.resources.gpu_manager import GPUManager
 from scheduler.vault.manager import secrets_mgr
+from storage.brokers.broker import FileUpload
 from storage.container import get_workspace_volume_path
 from storage.models import Workspace, ScaleFile
 from util.environment import normalize_env_var_name
 from util.command import environment_expansion
+from util.os_helper import makedirs
 
 
 logger = logging.getLogger(__name__)
@@ -347,28 +351,6 @@ class ScheduledExecutionConfigurator(object):
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
                                         driver_opts=driver_opts)
                     workspace_volumes[task_workspace.name] = volume
-            
-            
-            # Configure the input_metadata env variable
-            input_metadata = {}
-            if 'input_files' in config._configuration:
-                input_metadata['JOB'] = {}
-                input_data = job_exe.job.get_input_data()
-                for i in input_data.values.keys():
-                    if type(input_data.values[i]) is JsonValue:
-                        input_metadata['JOB'][i] = input_data.values[i].value
-                    elif type(input_data.values[i]) is FileValue:
-                        input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
-            if job_exe.recipe_id and job_exe.recipe.has_input():
-                input_metadata['RECIPE'] = {}
-                input_data = job_exe.recipe.get_input_data() 
-                for i in input_data.values.keys():
-                    if type(input_data.values[i]) is JsonValue:
-                        input_metadata['RECIPE'][i] = input_data.values[i].value
-                    elif type(input_data.values[i]) is FileValue:
-                        input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in input_data.values[i].file_ids]
-            if input_metadata:
-                env_vars['INPUT_METADATA'] = json.dumps(input_metadata)
             
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
