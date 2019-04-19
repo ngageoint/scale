@@ -3,8 +3,9 @@
 dcos marathon app remove /scale-db
 dcos marathon app remove /scale-elasticsearch
 dcos marathon app remove /scale-fluentd
-dcos marathon app remove /scale-webserver
 dcos marathon app remove /scale-rabbitmq
+dcos marathon app remove /scale-ui
+dcos marathon app remove /scale-webserver
 dcos marathon app stop /scale
 
 docker build --build-arg BUILD_DOCS=0 -t $1 .

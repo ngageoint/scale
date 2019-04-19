@@ -219,7 +219,7 @@ sudo sh environment/legacy-cloud-init.sh
 
 Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
 to isolate dependencies per project.
-=======
+
 ## Deployment / Configuration
 
 As a result, of being Scale being packaged as a Docker image for distribution most of the setting that
@@ -262,4 +262,5 @@ below for reference.
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
 | SESSION_COOKIE_SECURE       | True                            | Should cookies be served only over HTTPS   |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
+| UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
 
