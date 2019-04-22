@@ -37,7 +37,7 @@
     },
     "healthChecks": [
         {
-            "path": "/api/v5/version/",
+            "path": "/api/v6/version/",
             "protocol": "MESOS_HTTP",
             "gracePeriodSeconds": 300,
             "intervalSeconds": 30,
