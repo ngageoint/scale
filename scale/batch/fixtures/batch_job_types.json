@@ -24,10 +24,10 @@
                      },
     		         "timeout": 3600,
                      "interface": {
-                         "command": "scale_batch_creator ${-i :Batch ID}",
+                         "command": "scale_batch_creator ${-i :Batch_ID}",
                          "inputs": {
                              "json": [
-                                 {"name": "Batch ID", "type": "integer", "required": true}
+                                 {"name": "Batch_ID", "type": "integer", "required": true}
                              ]
                          }
                      },
@@ -69,10 +69,10 @@
                      },
     		         "timeout": 3600,
                      "interface": {
-                         "command": "scale_batch_creator ${-i :Batch ID}",
+                         "command": "scale_batch_creator ${-i :Batch_ID}",
                          "inputs": {
                              "json": [
-                                 {"name": "Batch ID", "type": "integer", "required": true}
+                                 {"name": "Batch_ID", "type": "integer", "required": true}
                              ]
                          }
                      },
