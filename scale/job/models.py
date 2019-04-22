@@ -2352,7 +2352,7 @@ class JobTypeManager(models.Manager):
         """
 
         # Build a mapping of all job type identifier -> status model
-        job_types = JobType.objects.all().defer('manifest', 'error_mapping').order_by('last_modified')
+        job_types = JobType.objects.all().defer('manifest').order_by('last_modified')
         status_dict = {job_type.id: JobTypeStatus(job_type, []) for job_type in job_types}
 
         # Build up the filters based on inputs and all running jobs
