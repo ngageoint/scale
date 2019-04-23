@@ -286,6 +286,7 @@ def deploy_ui(client, app_name, webserver_url):
     vhost = os.getenv('SCALE_VHOST')
 
     env_map = {
+        'SILO_URL': 'SILO_URL',
     }
 
     apply_set_envs(marathon, env_map)

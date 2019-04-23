@@ -19,15 +19,14 @@
         "type": "DOCKER"
     },
     "env": {
-        "API_PREFIX": "/api",
-        "AUTH_ENABLED": "true",
-        "AUTH_URL": "/api/login/"
+        "CONTEXTS": "/service/scale"
     },
     "labels": {
         "HAPROXY_GROUP": "internal,external",
         "DCOS_SERVICE_SCHEME": "http",
         "DCOS_SERVICE_NAME": "scale",
         "DCOS_SERVICE_PORT_INDEX": "0",
+        "DCOS_SERVICE_REWRITE_REQUEST_URLS": false,
         "HAPROXY_0_VHOST": "scale.marathon.mesos",
         "HAPROXY_0_BACKEND_HTTP_OPTIONS": "rspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\nrspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n",
         "HAPROXY_0_BACKEND_REDIRECT_HTTP_TO_HTTPS": "true"
