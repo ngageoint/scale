@@ -162,7 +162,7 @@ def _in(input, values):
     except TypeError:
         return False
     return False
-    
+
 def _not_in(input, values):
     """Checks if the given input is not in the list of values and is not a subset of a value
 
@@ -202,7 +202,7 @@ def _contains(input, values):
     except TypeError:
         return False # catch error if input is not an iterable
     return False
-    
+
 def _subset(input, values):
     """Checks if the given input is a subset of the given value
 
@@ -242,7 +242,7 @@ def _superset(input, values):
     return False
 
 ALL_CONDITIONS = {'<': _less_than, '<=': _less_than_equal, '>': _greater_than,'>=': _greater_than_equal,
-                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'not in': _not_in, 
+                  '==': _equal, '!=': _not_equal, 'between': _between, 'in': _in, 'not in': _not_in,
                   'contains': _contains, 'subset of': _subset, 'superset of': _superset}
 
 def _getNestedDictField(data_dict, map_list):
@@ -405,7 +405,7 @@ class DataFilter(object):
 
         equal = self.all == data_filter.all
         equal &= self.filter_list == data_filter.filter_list
-        
+
         return equal
 
     def validate(self, interface):
@@ -445,7 +445,7 @@ class DataFilter(object):
             else:
                 warnings.append(ValidationWarning('UNMATCHED_FILTER',
                                                   'Filter with name \'%s\' does not have a matching parameter'))
-        
+
         if unmatched:
             warnings.append(ValidationWarning('UNMATCHED_PARAMETERS', 'No matching filters for these parameters: \'%s\' ' % unmatched))
 
@@ -476,11 +476,11 @@ class DataFilter(object):
 
         if 'values' not in filter_dict:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
-            
+
         type = filter_dict['type']
         condition = filter_dict['condition']
         values = filter_dict['values']
-        
+
         if condition not in ALL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, ALL_CONDITIONS))

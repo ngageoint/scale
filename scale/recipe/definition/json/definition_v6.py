@@ -339,21 +339,18 @@ class RecipeDefinitionV6(object):
         # Convert input parameters
         files = []
         json = []
-        # filters = []
         for input_data_dict in v1_json_dict['input_data']:
             name = input_data_dict['name']
             if input_data_dict['type'] in ['file', 'files']:
                 file_input_dict = {'name': name, 'required': input_data_dict['required'],
-                                   'multiple': input_data_dict['type'] == 'files'}
+                                  'multiple': input_data_dict['type'] == 'files'}
                 if 'media_types' in input_data_dict:
                     file_input_dict['media_types'] = input_data_dict['media_types']
-                    # filters.append({'name': name, 'type': 'media-type', 'condition': 'in', 'values': file_input_dict['media_types']})
                 files.append(file_input_dict)
             elif input_data_dict['type'] == 'property':
                 json.append({'name': name, 'type': 'string', 'required': input_data_dict['required']})
         del v1_json_dict['input_data']
         v1_json_dict['input'] = {'files': files, 'json': json}
-        # v1_json_dict['input_conditon'] = {'filters': filters}
 
         # Convert jobs
         nodes = {}
@@ -399,7 +396,7 @@ class RecipeDefinitionV6(object):
         # Populate defaults for input interface
         interface_json = InterfaceV6(self._definition['input'], do_validate=False)
         self._definition['input'] = strip_schema_version(interface_json.get_dict())
-        
+
         # Populate default values for input_condition interface
         # filter_json = DataFilterV6(self._definition['input_condition'], do_validate=False)
         # self._definition['input_condition'] = strip_schema_version(filter_json.get_dict())

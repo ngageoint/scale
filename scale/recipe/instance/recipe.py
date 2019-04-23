@@ -25,7 +25,6 @@ class RecipeInstance(object):
         :param recipe_nodes: The list of RecipeNode models with related fields populated
         :type recipe_nodes: list
         """
-
         self._definition = definition
         self.recipe_model = recipe_model
         self.graph = {}  # {Name: Node}

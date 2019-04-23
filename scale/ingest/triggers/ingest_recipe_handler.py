@@ -5,12 +5,11 @@ import logging
 
 from django.db import transaction
 
+from data.data.data import Data
+from data.data.value import FileValue
 from ingest.models import IngestEvent, Scan, Strike
-from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
-from recipe.seed.recipe_data import RecipeData
-from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import RecipeType
 from storage.models import Workspace
 from trigger.models import TriggerEvent
@@ -49,13 +48,13 @@ class IngestRecipeHandler(object):
         recipe_type = RecipeType.objects.get(id=recipe_type_id)
 
         if recipe_type:
-            recipe_data = RecipeData({})
+            recipe_data = Data()
             input_name = recipe_type.get_definition().get_input_keys()[0]
-            recipe_data.add_file_input(input_name, source_file.id)
+            recipe_data.add_value(FileValue(input_name, [source_file.id]))
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
-            logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data._new_data, event, ingest_event)
+            logger.info('Queuing new recipe of type %s', recipe_type.name)
+            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for id %s' % recipe_type_id)
 
@@ -81,14 +80,14 @@ class IngestRecipeHandler(object):
         recipe_type = RecipeType.objects.get(name=recipe_name, revision_num=recipe_revision)
         if recipe_type:
             # Assuming one input per recipe, so pull the first defined input you find
-            recipe_data = RecipeData({})
+            recipe_data = Data()
             input_name = recipe_type.get_definition().get_input_keys()[0]
-            recipe_data.add_file_input(input_name, source_file.id)
+            recipe_data.add_value(FileValue(input_name, [source_file.id]))
             event = self._create_trigger_event(source, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
-            logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data._new_data, event, ingest_event)
+            logger.info('Queuing new recipe of type %s', recipe_type.name)
+            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for %s %s' % (recipe_name, recipe_revision))
 

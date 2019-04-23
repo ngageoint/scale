@@ -110,7 +110,7 @@ EXE_CONFIG_SCHEMA = {
                     'description': 'The environment variables for this task',
                     'type': 'object',
                     'additionalProperties': {
-                        'type': 'string',
+                        'type': 'string'
                     },
                 },
                 'workspaces': {
@@ -429,7 +429,6 @@ class ExecutionConfiguration(object):
         :returns: The list of the names of all output workspaces
         :rtype: list
         """
-
         if 'output_workspaces' in self._configuration:
             return list(self._configuration['output_workspaces'].values())
         return []
@@ -567,7 +566,6 @@ class ExecutionConfiguration(object):
         :param output_workspaces: A dict where job output parameters map to output workspace name
         :type output_workspaces: dict
         """
-
         if output_workspaces:
             self._configuration['output_workspaces'] = output_workspaces
 
@@ -806,7 +804,6 @@ class ExecutionConfiguration(object):
         :param old_task_name: The old task name
         :type old_task_name: string
         """
-
         if old_task_name not in configuration:
             return
 
@@ -864,7 +861,7 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type:
                 return task_dict
-        return None
+        return {}
 
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values

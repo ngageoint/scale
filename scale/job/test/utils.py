@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import copy
 import datetime
 
 import django.utils.timezone as timezone
@@ -208,9 +209,6 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-#def create_seed_job()
-
-
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None, job_config=None,
                superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, recipe=None, save=True):
@@ -221,7 +219,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     """
 
     if not job_type:
-        job_type = create_job_type()
+        job_type = create_seed_job_type()
     if not event:
         event = trigger_test_utils.create_trigger_event()
     if not last_status_change:
@@ -230,7 +228,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
         input_file_size = None
 
     if superseded_job and not superseded_job.is_superseded:
-        Job.objects.supersede_jobs_old([superseded_job], timezone.now())
+        Job.objects.supersede_jobs([superseded_job.id], timezone.now())
     if is_superseded and not superseded:
         superseded = timezone.now()
 
@@ -260,9 +258,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
         job.save()
     return job
 
-
 def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=None, input_file_size=10.0, queued=None,
-                   started=None, status='RUNNING', error=None, ended=None, output=None, task_results=None):
+                   started=None, status='RUNNING', error=None, ended=None, output=None, task_results=None, configuration=None):
     """Creates a job_exe model for unit testing, may also create job_exe_end and job_exe_output models depending on
     status
 
@@ -286,11 +283,13 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         node = node_utils.create_node()
     job_exe.node = node
     if not timeout:
-        timeout = job.timeout
+        timeout = 3600
     job_exe.timeout = timeout
     job_exe.input_file_size = input_file_size
     job_exe.resources = job.get_resources().get_json().get_dict()
-    job_exe.configuration = ExecutionConfiguration().get_dict()
+    if not configuration:
+        configuration = ExecutionConfiguration().get_dict()
+    job_exe.configuration = configuration
     if not queued:
         queued = when
     job_exe.queued = queued
@@ -337,18 +336,117 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
 
     return job_exe
 
+def create_seed_manifest(name=None, jobVersion=None, packageVersion=None, title=None,
+                         description=None, tags=None, maintainer=None, timeout=None,
+                         command=None, inputs_files=None, inputs_json=None,
+                         outputs_files=None, outputs_json=None, mounts=None, settings=None,
+                         resources=None, errors=None):
+    manifest = copy.deepcopy(COMPLETE_MANIFEST)
 
-def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None,
-                         is_active=True, is_operational=True, configuration=None, docker_image='fake'):
+    if not name:
+        global JOB_TYPE_NAME_COUNTER
+        name = 'test-job-type-%i' % JOB_TYPE_NAME_COUNTER
+        JOB_TYPE_NAME_COUNTER += 1
+    manifest['job']['name'] = name
+
+    if jobVersion:
+        manifest['job']['jobVersion'] = jobVersion
+    if packageVersion:
+        manifest['job']['packageVersion'] = packageVersion
+    if title:
+        manifest['job']['title'] = title
+    if description:
+        manifest['job']['description'] = description
+    if tags:
+        manifest['job']['tags'] = tags
+    if maintainer:
+        manifest['job']['maintainer'] = maintainer
+    if timeout:
+        manifest['job']['timeout'] = timeout
+
+    # interface
+    if command:
+        manifest['job']['interface']['command'] = command
+    if inputs_files is not None:
+        manifest['job']['interface']['inputs']['files'] = inputs_files
+    if inputs_json is not None:
+        manifest['job']['interface']['inputs']['json'] = inputs_json
+    if outputs_files is not None:
+        manifest['job']['interface']['outputs']['files'] = outputs_files
+    if outputs_json is not None:
+        manifest['job']['interface']['outputs']['json'] = outputs_json
+
+    if mounts is not None:
+        manifest['job']['interface']['mounts'] = mounts
+    if settings is not None:
+        manifest['job']['interface']['settings'] = settings
+
+    # resources
+    if resources is not None:
+        manifest['job']['resources'] = resources
+
+    if errors is not None:
+        manifest['job']['errors'] = errors
+
+    return manifest
+
+def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None, is_active=True,
+                         configuration=None, docker_image='fake', is_system=False, job_version='0.1.0',
+                         interface=None, interface_command=None, interface_inputs=None, interface_outputs=None,
+                         interface_mounts=None, interface_settings=None):
     if not manifest:
         global JOB_TYPE_NAME_COUNTER
         name = 'test-job-type-%i' % JOB_TYPE_NAME_COUNTER
         JOB_TYPE_NAME_COUNTER += 1
+
+        if not interface:
+            interface = {
+                'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
+                'inputs': {
+                    'files': [{'name': 'INPUT_IMAGE', 'mediaTypes': ['image/png'], 'required': True}]
+                },
+                'outputs': {
+                    'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png'}]
+                },
+                'mounts': [
+                  {
+                    'name': 'MOUNT_PATH',
+                    'path': '/the/container/path',
+                    'mode': 'ro'
+                  }
+                ],
+                'settings': [
+                  {
+                    'name': 'VERSION',
+                    'secret': False
+                  },
+                  {
+                    'name': 'DB_HOST',
+                    'secret': False
+                  },
+                  {
+                    'name': 'DB_PASS',
+                   'secret': True
+                  }
+                ]
+            }
+
+        if interface_command:
+            interface['command'] = interface_command
+        if interface_inputs:
+            interface['inputs'] = interface_inputs
+        if interface_outputs:
+            interface['outputs'] = interface_outputs
+        if interface_mounts:
+            interface['mounts'] = interface_mounts
+        if interface_settings:
+            interface['settings'] = interface_settings
+
         manifest = {
             'seedVersion': '1.0.0',
             'job': {
                 'name': name,
-                'jobVersion': '0.1.0',
+                'jobVersion': job_version,
                 'packageVersion': '0.1.0',
                 'title': 'Image Watermarker',
                 'description': 'Processes an input PNG and outputs watermarked PNG.',
@@ -357,36 +455,7 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                     'email': 'jdoe@example.com'
                 },
                 'timeout': 30,
-                'interface': {
-                    'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
-                    'inputs': {
-                        'files': [{'name': 'INPUT_IMAGE', 'mediaTypes': ['image/png'], 'required': True}]
-                    },
-                    'outputs': {
-                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png'}]
-                    },
-                    'mounts': [
-                      {
-                        'name': 'MOUNT_PATH',
-                        'path': '/the/container/path',
-                        'mode': 'ro'
-                      }
-                    ],
-                    'settings': [
-                      {
-                        'name': 'VERSION',
-                        'secret': False
-                      },
-                      {
-                        'name': 'DB_HOST',
-                        'secret': False
-                      },
-                      {
-                        'name': 'DB_PASS',
-                       'secret': True
-                      }
-                    ]
-                },
+                'interface': interface,
                 'resources': {
                     'scalar': [
                         {'name': 'cpus', 'value': 1.0},
@@ -408,15 +477,18 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     if not configuration:
         configuration = {
             'version': '6',
+            'priority': priority,
             'output_workspaces': {'default': storage_test_utils.create_workspace().name}
         }
         configuration = JobConfigurationV6(config=configuration).get_dict()
 
     job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
-                                      manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
-                                      max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
-                                      is_operational=is_operational,
-                                      configuration=configuration, docker_image=docker_image)
+                                      manifest=manifest, max_tries=max_tries, max_scheduled=max_scheduled,
+                                      is_active=is_active, configuration=configuration, docker_image=docker_image,
+                                      is_system=is_system)
+
+
+
     version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
     job_type.version_array = version_array
     job_type.save()
@@ -437,67 +509,6 @@ def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=
     JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image,
                          icon_code=icon_code, is_active=is_active, is_paused=is_paused,
                          is_published=is_published, max_scheduled=max_scheduled, configuration=configuration)
-
-def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
-                    max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
-                    is_system=False, is_operational=True, trigger_rule=None, configuration=None, docker_image='fake'):
-    """Creates a job type model for unit testing
-
-    :returns: The job type model
-    :rtype: :class:`job.models.JobType`
-    """
-
-    if not name:
-        global JOB_TYPE_NAME_COUNTER
-        name = 'test-job-type-%i' % JOB_TYPE_NAME_COUNTER
-        JOB_TYPE_NAME_COUNTER += 1
-
-    if not version:
-        global JOB_TYPE_VERSION_COUNTER
-        version = '%i.0.0' % JOB_TYPE_VERSION_COUNTER
-        JOB_TYPE_VERSION_COUNTER += 1
-
-    if not category:
-        global JOB_TYPE_CATEGORY_COUNTER
-        category = 'test-category-%i' % JOB_TYPE_CATEGORY_COUNTER
-        JOB_TYPE_CATEGORY_COUNTER += 1
-
-    if not interface:
-        interface = {
-            'version': '1.4',
-            'command': 'test_cmd',
-            'command_arguments': 'test_arg',
-            'env_vars': [],
-            'mounts': [],
-            'settings': [],
-            'input_data': [],
-            'output_data': [],
-            'shared_resources': [],
-        }
-    if not error_mapping:
-        error_mapping = {
-            'version': '1.0',
-            'exit_codes': {}
-        }
-
-    if not configuration:
-        configuration = {
-            'version': '1.0',
-            'default_settings': {}
-        }
-
-    job_type = JobType.objects.create(name=name, version=version, category=category, manifest=interface,
-                                      priority=priority, timeout=timeout, max_tries=max_tries,
-                                      max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
-                                      disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
-                                      is_system=is_system, is_operational=is_operational,
-                                      configuration=configuration, docker_image=docker_image)
-    version_array = job_type.get_job_version_array(version)
-    job_type.version_array = version_array
-    job_type.save()
-    JobTypeRevision.objects.create_job_type_revision(job_type)
-    return job_type
-
 
 def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=None, timeout=None, input_file_size=10.0,
                            queued=None, started=None, resources=None, priority=None, num_exes=1):
@@ -529,7 +540,7 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
         node = node_utils.create_node()
     job_exe.node = node
     if not timeout:
-        timeout = job.timeout
+        timeout = job.get_job_interface().get_timeout()
     job_exe.timeout = timeout
     job_exe.input_file_size = input_file_size
     if not resources:

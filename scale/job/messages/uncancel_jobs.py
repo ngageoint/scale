@@ -118,7 +118,7 @@ class UncancelJobs(CommandMessage):
                 logger.info('Set %d job(s) to PENDING status', len(job_ids))
 
         if root_recipe_ids:
-             # Create messages to update recipes
+            # Create messages to update recipes
             from recipe.messages.update_recipe import create_update_recipe_messages_from_node
             self.new_messages.extend(create_update_recipe_messages_from_node(root_recipe_ids))
 

@@ -5,15 +5,10 @@
         "fields": {
             "name": "scale-move-files",
             "version": "1.0.0",
-            "title": "Scale Move Files",
-            "description": "Moves a given file to a new workspace/location.",
-            "category": "system",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
             "is_paused": false,
-            "uses_docker": true,
-            "docker_privileged": false,
             "docker_image": "scale",
             "manifest": {
                 "seedVersion": "1.0.0",
@@ -31,43 +26,48 @@
                     "interface": {
                         "command": "scale_move_files",
                         "inputs": {
-                            "json": [ 
+                            "json": [
                                 {
                                     "name": "files",
-                                    "type": "string", 
-                                    "required": true 
+                                    "type": "string",
+                                    "required": true
                                 },
                                 {
                                     "name": "workspace",
-                                    "type": "string", 
-                                    "required": true 
+                                    "type": "string",
+                                    "required": true
                                 },
                                 {
                                     "name": "uri",
-                                    "type": "string", 
-                                    "required": true 
+                                    "type": "string",
+                                    "required": true
                                 }
                             ]
                         }
-                    }
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.5},
+                            {"name": "mem", "value": 128.0},
+                            {"name": "sharedMem", "value": 0}
+                        ]
+                    },
+                    "errors": [
+                        {
+                            "code": 10,
+                            "name": "filesystem-io",
+                            "title": "Filesystem I/O",
+                            "description": "Filesystem I/O Error",
+                            "category": "job"
+                        }
+                    ]
                 }
             },
-            "revision_num": 1,
-            "error_mapping": {
-                "version": "1.0",
-                "exit_codes": {
-                    "10": "filesystem-io"
-                }
+            "configuration": {
+                "priority": 10
             },
-            "priority": 10,
             "max_scheduled": 100,
-            "timeout": 3600,
             "max_tries": 3,
-            "cpus_required": 0.5,
-            "mem_const_required": 128.0,
-            "shared_mem_required": 0.0,
-            "disk_out_const_required": 0.0,
-            "disk_out_mult_required": 0.0,
             "created": "2019-01-15T00:00:00.0Z",
             "last_modified": "2019-01-15T00:00:00.0Z",
             "icon_code": "f1c3"
@@ -95,21 +95,21 @@
                     "interface": {
                         "command": "scale_move_files",
                         "inputs": {
-                            "json": [ 
+                            "json": [
                                 {
                                     "name": "files",
-                                    "type": "string", 
-                                    "required": true 
+                                    "type": "string",
+                                    "required": true
                                 },
                                 {
                                     "name": "workspace",
-                                    "type": "string", 
-                                    "required": true 
+                                    "type": "string",
+                                    "required": true
                                 },
                                 {
                                     "name": "uri",
-                                    "type": "string", 
-                                    "required": true 
+                                    "type": "string",
+                                    "required": true
                                 }
                             ]
                         }

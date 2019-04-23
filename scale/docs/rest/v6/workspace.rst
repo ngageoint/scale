@@ -1,7 +1,7 @@
 
 .. _rest_v6_workspace:
 
-V6 Workspace Services
+v6 Workspace Services
 =====================
 
 These services provide access to information about workspaces that Scale uses to manage files.
@@ -17,38 +17,38 @@ Request: GET http://.../v6/workspaces/
 
 Response: 200 OK
 
- .. code-block:: javascript 
- 
-    { 
-        "count": 5, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 2, 
-                "name": "products", 
-                "title": "Products", 
-                "description": "Products Workspace", 
-                "base_url": "http://host.com/products", 
+ .. code-block:: javascript
+
+    {
+        "count": 5,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 2,
+                "name": "products",
+                "title": "Products",
+                "description": "Products Workspace",
+                "base_url": "http://host.com/products",
                 "is_active": true,
-                "created": "2015-10-05T21:26:04.876Z", 
+                "created": "2015-10-05T21:26:04.876Z",
                 "deprecated": null,
-                "last_modified": "2015-10-05T21:26:04.876Z" 
-            }, 
-            { 
-                "id": 1, 
-                "name": "raw", 
-                "title": "Raw Source", 
-                "description": "Raw Source Workspace", 
-                "base_url": "http://host.com/rs", 
+                "last_modified": "2015-10-05T21:26:04.876Z"
+            },
+            {
+                "id": 1,
+                "name": "raw",
+                "title": "Raw Source",
+                "description": "Raw Source Workspace",
+                "base_url": "http://host.com/rs",
                 "is_active": true,
-                "created": "2015-10-05T21:26:04.855Z", 
+                "created": "2015-10-05T21:26:04.855Z",
                 "deprecated": null,
-                "last_modified": "2015-10-05T21:26:04.855Z" 
-            }, 
-            ... 
-        ] 
-    } 
+                "last_modified": "2015-10-05T21:26:04.855Z"
+            },
+            ...
+        ]
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Workspace List**                                                                                                      |
@@ -126,8 +126,8 @@ v6 Create Workspace
 
 Request: POST http://.../v6/workspaces/
 
- .. code-block:: javascript  
- 
+ .. code-block:: javascript
+
     {
         "title": "Raw Source",
         "description": "Raw Source Workspace",
@@ -140,30 +140,30 @@ Request: POST http://.../v6/workspaces/
             }
         }
     }
- 
+
 Response: 201 Created
 Headers:
 Location http://.../v6/workspaces/105/
 
- .. code-block:: javascript  
- 
-    { 
-        "id": 1, 
-        "name": "raw-source", 
-        "title": "Raw Source", 
-        "description": "Raw Source Workspace", 
-        "base_url": "http://host.com/rs", 
+ .. code-block:: javascript
+
+    {
+        "id": 1,
+        "name": "raw-source",
+        "title": "Raw Source",
+        "description": "Raw Source Workspace",
+        "base_url": "http://host.com/rs",
         "is_active": true,
-        "created": "2015-10-05T21:26:04.855Z", 
+        "created": "2015-10-05T21:26:04.855Z",
         "deprecated": null,
-        "last_modified": "2015-10-05T21:26:04.855Z" 
-        "configuration": { 
-            "broker": { 
-                "type": "host", 
-                "host_path": "/host/path" 
-            } 
-        } 
-    } 
+        "last_modified": "2015-10-05T21:26:04.855Z"
+        "configuration": {
+            "broker": {
+                "type": "host",
+                "host_path": "/host/path"
+            }
+        }
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Create Workspace**                                                                                                    |
@@ -215,8 +215,8 @@ Request: GET http://.../v6/workspaces/{id}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
+ .. code-block:: javascript
+
     {
         "id": 1,
         "name": "raw",
@@ -283,7 +283,7 @@ v6 Validate Workspace
 
 Request: POST http://.../v6/workspaces/validation/
 
- .. code-block:: javascript 
+ .. code-block:: javascript
 
     {
         "name": "raw-source",
@@ -301,8 +301,8 @@ Request: POST http://.../v6/workspaces/validation/
 
 Response: 200 OK
 
-.. code-block:: javascript 
- 
+.. code-block:: javascript
+
    {
       "is_valid": true,
       "errors": [],
@@ -368,7 +368,7 @@ v6 Edit Workspace
 
 Request: POST http://.../v6/workspaces/{id}/
 
- .. code-block:: javascript 
+ .. code-block:: javascript
 
     {
         "title": "Raw Source",
@@ -384,7 +384,7 @@ Request: POST http://.../v6/workspaces/{id}/
     }
 
 Response: 204 NO CONTENT
-   
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Workspace**                                                                                                      |
 +=========================================================================================================================+
@@ -432,7 +432,7 @@ A workspace configuration JSON describes a set of configuration settings for a w
           "host_path": "/the/absolute/host/path"
        }
     }
-    
+
 **Example NFS configuration:**
 
 .. code-block:: javascript
@@ -443,7 +443,7 @@ A workspace configuration JSON describes a set of configuration settings for a w
           "nfs_path": "host:/my/path"
        }
     }
-    
+
 **Example S3 configuration:**
 
 .. code-block:: javascript
@@ -496,9 +496,9 @@ A workspace configuration JSON describes a set of configuration settings for a w
 |                            |                |          | able to make requests on behalf of the associated IAM account      |
 |                            |                |          | without requiring the actual password used by that account.        |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .host_path                 | String         | Optional | Adds S3 workspace support for locally mounted buckets and partial  |   
+| .host_path                 | String         | Optional | Adds S3 workspace support for locally mounted buckets and partial  |
 |                            |                |          | file read-only access. If a FUSE file system (such as s3fs or      |
-|                            |                |          | goofys) mounts the S3 bucket at the host_path location on all      | 
+|                            |                |          | goofys) mounts the S3 bucket at the host_path location on all      |
 |                            |                |          | nodes, an alternative to downloading large files is available to   |
 |                            |                |          | jobs that use only portions of a file. The job interface must      |
 |                            |                |          | indicate partial equal to true for any input files to take         |

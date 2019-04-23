@@ -7,7 +7,7 @@ from django.test import TransactionTestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from error.models import reset_error_cache
+from error.models import Error, reset_error_cache
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
@@ -25,8 +25,25 @@ class TestRunningJobExecution(TransactionTestCase):
         reset_error_cache()
 
         Scheduler.objects.initialize_scheduler()
-        job_type = job_test_utils.create_job_type(max_tries=1)
+        error_mapping=[{
+            'code': 1,
+            'name': 'algorithm-unknown',
+            'title': 'Algorithm Error',
+            'description': 'Algorithm Error Occurred',
+            'category': 'job'
+        }]
+        manifest = job_test_utils.create_seed_manifest(errors=error_mapping)
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest, max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
+
+        error_model = Error()
+        error_model.name = error_mapping[0]['name']
+        error_model.job_type_name = job_type.name
+        error_model.title = error_mapping[0]['title']
+        error_model.description = error_mapping[0]['description']
+        error_model.category = 'ALGORITHM'
+        Error.objects.save_job_error_models(job_type.name, [error_model])
+
         self.agent_id = 'agent'
         self.running_job_exe = job_test_utils.create_running_job_exe(agent_id=self.agent_id, job=job)
 
@@ -429,7 +446,7 @@ class TestRunningJobExecution(TransactionTestCase):
     def test_timed_out_system_job_task(self):
         """Tests running through a job execution where a system job task times out"""
 
-        job_type = job_test_utils.create_job_type(max_tries=1)
+        job_type = job_test_utils.create_seed_job_type(max_tries=1)
         job_type.is_system = True
         job_type.save()
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
@@ -769,7 +786,7 @@ class TestRunningJobExecution(TransactionTestCase):
         self.assertTrue(self.running_job_exe.is_finished())
         self.assertEqual(self.running_job_exe.status, 'FAILED')
         self.assertEqual(self.running_job_exe.error_category, 'SYSTEM')
-        self.assertEqual(self.running_job_exe.error.name, 'docker-task-launch')
+        self.assertEqual(self.running_job_exe.error.name, 'task-launch')
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
     def test_post_task_launch_error(self):

@@ -29,7 +29,7 @@ class JobExecutionTask(Task):
         :type job_type: :class:`job.models.JobType`
         """
 
-        task_name = '%s %s' % (job_type.title, job_type.version)
+        task_name = '%s %s' % (job_type.get_title(), job_type.version)
         if not job_type.is_system:
             task_name = 'Scale %s' % task_name
         super(JobExecutionTask, self).__init__(task_id, task_name, agent_id)

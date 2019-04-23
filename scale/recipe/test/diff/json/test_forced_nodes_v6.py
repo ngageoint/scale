@@ -8,13 +8,10 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.models import JobType
 from job.test import utils as job_test_utils
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as OldRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
-from recipe.handlers.graph import RecipeGraph
-from recipe.handlers.graph_delta import RecipeGraphDelta
 
 
 class TestForcedNodesV6(TestCase):

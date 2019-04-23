@@ -13,13 +13,9 @@ from job.messages.create_jobs import RecipeJob
 from job.models import Job, JobTypeRevision
 from queue.messages.queued_jobs import QueuedJob
 from queue.models import Queue
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
-from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
-from recipe.handlers.graph import RecipeGraph
-from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.messages.create_conditions import Condition
 from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
@@ -64,51 +60,6 @@ RECIPE_DEFINITION = {'version': '6',
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
 
-def create_recipe_type_v5(name=None, version=None, title=None, description=None, definition=None, trigger_rule=None):
-    """Creates a recipe type for unit testing
-
-    :returns: The RecipeType model
-    :rtype: :class:`recipe.models.RecipeType`
-    """
-
-    if not name:
-        global NAME_COUNTER
-        name = 'test-recipe-type-%i' % NAME_COUNTER
-        NAME_COUNTER += 1
-
-    if not version:
-        global VERSION_COUNTER
-        version = '%i.0.0' % VERSION_COUNTER
-        VERSION_COUNTER += 1
-
-    if not title:
-        global TITLE_COUNTER
-        title = 'Test Recipe Type %i' % TITLE_COUNTER
-        TITLE_COUNTER += 1
-
-    if not description:
-        global DESCRIPTION_COUNTER
-        description = 'Test Description %i' % DESCRIPTION_COUNTER
-        DESCRIPTION_COUNTER += 1
-
-    if not definition:
-        definition = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [],
-        }
-
-    recipe_type = RecipeType()
-    recipe_type.name = name
-    recipe_type.version = version
-    recipe_type.title = title
-    recipe_type.description = description
-    recipe_type.definition = definition
-    recipe_type.save()
-
-    RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
-
-    return recipe_type
 
 def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,
                           is_system=None):
@@ -154,6 +105,7 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
         recipe_type.is_active = is_active
     if is_system is not None:
         recipe_type.is_system = is_system
+
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
@@ -162,15 +114,6 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
     RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
     return recipe_type
-
-
-def edit_recipe_type_v5(recipe_type, definition):
-    """Updates the definition of a recipe type, including creating a new revision for unit testing
-    """
-    with transaction.atomic():
-        RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=None, description=None,
-                                               definition=RecipeDefinition(definition), trigger_rule=None,
-                                               remove_trigger_rule=False)
 
 def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=None):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
@@ -189,7 +132,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     """
 
     if not recipe_type:
-        recipe_type = create_recipe_type_v5()
+        recipe_type = create_recipe_type_v6()
     if not input:
         input = {}
     if not event:
@@ -754,30 +697,6 @@ def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, su
         recipe_node.save()
 
     return recipe_node
-
-
-def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_recipe=None, delta=None,
-                          superseded_jobs=None):
-    """Creates a recipe along with its declared jobs for unit testing
-
-    :returns: The recipe handler with created recipe and jobs
-    :rtype: :class:`recipe.handlers.handler.RecipeHandler`
-    """
-
-    if not recipe_type:
-        recipe_type = create_recipe_type_v5()
-    if not data:
-        data = {}
-    if not isinstance(data, LegacyRecipeData):
-        data = LegacyRecipeData(data)
-    if not event:
-        event = trigger_test_utils.create_trigger_event()
-    if superseded_recipe and not delta:
-        delta = RecipeGraphDelta(RecipeGraph(), RecipeGraph())
-
-    return Recipe.objects.create_recipe_old(recipe_type, data, event, superseded_recipe=superseded_recipe,
-                                            delta=delta, superseded_jobs=superseded_jobs)
-
 
 def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
                       file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type_tags=[],

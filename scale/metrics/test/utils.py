@@ -42,7 +42,7 @@ def create_job_type(job_type=None, occurred=None, **kwargs):
     :rtype: :class:`metrics.models.MetricsJobType`
     """
     if not job_type:
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
     if not occurred:
         occurred = timezone.now()
 

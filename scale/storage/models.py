@@ -272,7 +272,7 @@ class ScaleFileManager(models.Manager):
 
         return scale_file
 
-    def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
+    def filter_files_v6(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
 
         :param started: Query Scale files updated after this amount of time.
@@ -379,9 +379,8 @@ class ScaleFileManager(models.Manager):
         files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                   'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                   'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                  'job_type__manifest', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
-                                  'batch__definition')
+                                  'job_type__manifest', 'job_type__configuration', 'recipe__input',
+                                  'recipe_type__definition', 'batch__definition')
         files = files.prefetch_related('countries')
 
         # Apply time range filtering
@@ -619,9 +618,6 @@ class ScaleFile(models.Model):
     :type source_collection: :class:`django.db.models.CharField`
     :keyword source_task: The task that produced the source file.
     :type source_task: :class:`django.db.models.CharField`
-    :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
-        is still in a research & development (R&D) phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
     :keyword has_been_published: Whether this product has ever been published. A product becomes published when its job
         execution completes successfully. A product that has been published will appear in the API call to retrieve
         product updates.
@@ -692,7 +688,6 @@ class ScaleFile(models.Model):
     recipe_node = models.CharField(null=True, blank=True, max_length=250)
     recipe_type = models.ForeignKey('recipe.RecipeType', blank=True, null=True, on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
-    is_operational = models.BooleanField(default=True)
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
     is_superseded = models.BooleanField(default=False)
@@ -966,41 +961,6 @@ class WorkspaceManager(models.Manager):
             workspaces = workspaces.order_by('last_modified')
         return workspaces
 
-    def validate_workspace_v5(self, name, json_config):
-        """Validates a new workspace prior to attempting a save
-
-        :param name: The identifying name of a Workspace to validate
-        :type name: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
-        :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`storage.configuration.workspace_configuration.ValidationWarning`]
-
-        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
-        """
-        warnings = []
-
-        # Validate the configuration, no exception is success
-        config = WorkspaceConfigurationV1(json_config, do_validate=True).get_configuration()
-
-        # Check for issues when changing an existing workspace configuration
-        try:
-            workspace = Workspace.objects.get(name=name)
-
-            # Assign to short names in the interest of single-line conditional
-            old_conf = workspace.json_config
-            new_conf = json_config
-
-            if new_conf['broker'] and old_conf['broker'] and new_conf['broker']['type'] != old_conf['broker']['type']:
-                warnings.append(ValidationWarning('broker_type',
-                                                  'Changing the broker type may disrupt queued/running jobs.'))
-        except Workspace.DoesNotExist:
-            pass
-
-        # Add broker-specific warnings
-        warnings.extend(config.validate_broker())
-        return warnings
-
     def validate_workspace_v6(self, name, configuration):
         """Validates a new workspace prior to attempting a save
 
@@ -1090,14 +1050,6 @@ class Workspace(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = WorkspaceManager()
-
-    #TODO remove with v5
-    @property
-    def zero_size(self):
-        """hack to get a zero value returned for removed total_size and used_size fields
-        """
-
-        return 0
 
     @property
     def volume(self):

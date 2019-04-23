@@ -4,32 +4,41 @@
         "pk": null,
         "fields": {
             "name": "scale-hello",
-            "version": "1.0",
-            "title": "Scale Hello",
-            "description": "Prints out a simple hello message. This job type can be useful for testing Scale's job throughput.",
-            "category": "system",
+            "version": "1.0.0",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
             "is_paused": false,
-            "uses_docker": true,
-            "docker_privileged": false,
             "docker_image": "scale",
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_hello"
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-hello",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Hello",
+                    "description": "Prints out a simple hello message. This job type can be useful for testing Scale's job throughput.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_hello"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
             },
-            "revision_num": 1,
-            "error_mapping": {},
-            "priority": 25,
-            "timeout": 600,
+            "configuration": {
+                "priority": 25
+            },
             "max_tries": 0,
-            "cpus_required": 0.1,
-            "mem_const_required": 64.0,
-            "shared_mem_required": 0.0,
-            "disk_out_const_required": 0.0,
-            "disk_out_mult_required": 0.0,
             "created": "2017-05-11T00:00:00.0Z",
             "last_modified": "2017-05-11T00:00:00.0Z",
             "icon_code": "f118"
@@ -39,12 +48,32 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-hello", "1.0"],
+            "job_type": ["scale-hello", "1.0.0"],
             "revision_num": 1,
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_hello"
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-hello",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Hello",
+                    "description": "Prints out a simple hello message. This job type can be useful for testing Scale's job throughput.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_hello"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
             },
             "created": "2017-05-11T00:00:00.0Z"
         }
@@ -133,32 +162,41 @@
         "pk": null,
         "fields": {
             "name": "scale-bake",
-            "version": "1.0",
-            "title": "Scale Bake",
-            "description": "This test job sleeps for 15 minutes.",
-            "category": "system",
+            "version": "1.0.0",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
             "is_paused": false,
-            "uses_docker": true,
-            "docker_privileged": false,
             "docker_image": "scale",
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_bake"
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-bake",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Bake",
+                    "description": "This test job sleeps for 15 minutes.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 1800,
+                    "interface": {
+                         "command": "scale_hello"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
             },
-            "revision_num": 1,
-            "error_mapping": {},
-            "priority": 25,
-            "timeout": 1800,
+            "configuration": {
+                "priority": 25
+            },
             "max_tries": 0,
-            "cpus_required": 0.1,
-            "mem_const_required": 64.0,
-            "shared_mem_required": 0.0,
-            "disk_out_const_required": 0.0,
-            "disk_out_mult_required": 0.0,
             "created": "2017-05-11T00:00:00.0Z",
             "last_modified": "2017-05-11T00:00:00.0Z",
             "icon_code": "f1fd"
@@ -168,12 +206,32 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-bake", "1.0"],
+            "job_type": ["scale-bake", "1.0.0"],
             "revision_num": 1,
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_bake"
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-bake",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Bake",
+                    "description": "This test job sleeps for 15 minutes.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 1800,
+                    "interface": {
+                         "command": "scale_hello"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
             },
             "created": "2017-05-11T00:00:00.0Z"
         }
@@ -183,32 +241,41 @@
         "pk": null,
         "fields": {
             "name": "scale-roulette",
-            "version": "1.0",
-            "title": "Scale Roulette",
-            "description": "This test job randomly succeeds or fails.",
-            "category": "system",
+            "version": "1.0.0",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
             "is_paused": false,
-            "uses_docker": true,
-            "docker_privileged": false,
             "docker_image": "scale",
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_roulette"
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-roulette",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Roulette",
+                    "description": "This test job randomly succeeds or fails.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_roulette"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
             },
-            "revision_num": 1,
-            "error_mapping": {},
-            "priority": 25,
-            "timeout": 600,
+            "configuration": {
+                "priority": 25
+            },
             "max_tries": 0,
-            "cpus_required": 0.1,
-            "mem_const_required": 64.0,
-            "shared_mem_required": 0.0,
-            "disk_out_const_required": 0.0,
-            "disk_out_mult_required": 0.0,
             "created": "2017-05-11T00:00:00.0Z",
             "last_modified": "2017-05-11T00:00:00.0Z",
             "icon_code": "f0d6"
@@ -218,12 +285,32 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-roulette", "1.0"],
+            "job_type": ["scale-roulette", "1.0.0"],
             "revision_num": 1,
             "manifest": {
-                 "version": "1.0",
-                 "command": "",
-                 "command_arguments": "scale_roulette"
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-roulette",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Roulette",
+                    "description": "This test job randomly succeeds or fails.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_roulette"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
             },
             "created": "2017-05-11T00:00:00.0Z"
         }

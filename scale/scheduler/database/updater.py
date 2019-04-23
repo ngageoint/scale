@@ -35,6 +35,9 @@ class DatabaseUpdater(object):
         self._current_batch_id = None
         self._updated_batch = 0
         self._total_batch = 0
+        self._total_recipe_definition = 0
+        self._update_recipe_definition = 0
+        self._current_recipe_definition_id = None
 
     def update(self):
         """Runs the database update
@@ -92,22 +95,9 @@ class DatabaseUpdater(object):
         """
 
         logger.info('Scale is checking batch models to update new recipe estimation/creation fields')
-        # Set batch.recipes_estimated and batch.is_creation_done to correct values
-        qry_1 = 'UPDATE batch SET recipes_estimated = total_count WHERE recipes_estimated = 0'
-        qry_2 = 'UPDATE batch b SET is_creation_done = true FROM '
-        qry_2 += '(SELECT b.id, j.status FROM batch b JOIN job j ON b.creator_job_id = j.id) s '
-        qry_2 += 'WHERE b.id = s.id AND s.status = \'COMPLETED\' AND b.is_creation_done = false'
         qry_3 = 'UPDATE batch SET root_batch_id = id WHERE root_batch_id is null'
 
         with connection.cursor() as cursor:
-            cursor.execute(qry_1, [])
-            count = cursor.rowcount
-            if count:
-                logger.info('%d batch(s) updated with correct recipes_estimated value', count)
-            cursor.execute(qry_2, [])
-            count = cursor.rowcount
-            if count:
-                logger.info('%d batch(s) updated with correct is_creation_done value', count)
             cursor.execute(qry_3, [])
             count = cursor.rowcount
             if count:
@@ -165,17 +155,6 @@ class DatabaseUpdater(object):
             if count:
                 logger.info('Batch with batch_id %d set to correct recipe type revision (based on revision creation)',
                             batch_id)
-
-        batch = Batch.objects.get(id=batch_id)
-        if not batch.configuration:
-            definition = batch.get_old_definition()
-            if definition.priority is not None:
-                configuration = BatchConfiguration()
-                configuration.priority = definition.priority
-                from batch.configuration.json.configuration_v6 import convert_configuration_to_v6
-                config_dict = convert_configuration_to_v6(configuration).get_dict()
-                Batch.objects.filter(id=batch_id).update(configuration=config_dict)
-                logger.info('Batch with batch_id %d updated with new configuration', batch_id)
 
         self._current_batch_id = batch_id
         self._updated_batch += 1

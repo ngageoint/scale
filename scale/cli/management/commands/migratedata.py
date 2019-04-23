@@ -8,8 +8,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from ingest.serializers import IngestDetailsSerializerV5
 from ingest.models import Ingest
+from ingest.serializers import IngestDetailsSerializerV6
 from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from source.models import SourceFile
 from storage.media_type import get_media_type
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         parser.add_argument("-p", "--workspace-path", action="store", help="Path in the workspace to ingest.")
         parser.add_argument("-l", "--local-path", action="store",
                             help="If specified, use this as the workspace and workspace path instead of using the workspace mount.")
-        parser.add_argument("-r", "--recipe", action="store", default=[], help="Recipe to kick off after ingest complete")
+        parser.add_argument("-r", "--recipe", action="store", default=[], help="Recipe id to kick off after ingest complete")
         parser.add_argument("-d", "--data-type", action="append", default=[], help="Data type tag")
         parser.add_argument("-i", "--include", action="append", help="Include glob")
         parser.add_argument("-e", "--exclude", action="append", default=[], help="Exclude glob")
@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 ingest.add_data_type_tag(data_type)
             ingest.status = 'TRANSFERRED'
             if options['no_commit']:
-                s = IngestDetailsSerializerV5()
+                s = IngestDetailsSerializerV6()
                 logger.info(s.to_representation(ingest))
             else:
                 ingest.save()
@@ -120,6 +120,8 @@ class Command(BaseCommand):
                     ingest.save()
                     if options['recipe']:
                         IngestRecipeHandler().process_ingested_source_file(ingest.id, ingest.source_file, ingest.ingest_ended)
+
+
 
         logging.info("Ingests processed, monitor the queue for triggered jobs.")
 

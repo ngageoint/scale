@@ -5,6 +5,7 @@ import json
 import django
 from django.test import TransactionTestCase
 from rest_framework import status
+from mock import patch
 
 import util.rest as rest_util
 
@@ -28,7 +29,8 @@ class TestQueueScaleBakeView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling the view to create Scale Bake jobs."""
 
         json_data = {
@@ -60,7 +62,8 @@ class TestQueueScaleCasinoView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling the view to create Scale Casino recipes."""
 
         json_data = {
@@ -91,7 +94,8 @@ class TestQueueScaleHelloView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling the view to create Scale Hello jobs."""
 
         json_data = {
@@ -123,7 +127,8 @@ class TestQueueScaleRouletteView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_successful(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling the view to create Scale Roulette jobs."""
 
         json_data = {
@@ -132,5 +137,4 @@ class TestQueueScaleRouletteView(TransactionTestCase):
 
         url = rest_util.get_url('/diagnostics/job/roulette/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)

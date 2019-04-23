@@ -12,15 +12,15 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 from django.utils.timezone import now
 
+from data.data.data import Data
+from data.data.value import JsonValue
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
-from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -169,7 +169,7 @@ class IngestManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-ingest', version='1.0')
+        return JobType.objects.get(name='scale-ingest', version='1.0.0')
 
     def get_ingests(self, started=None, ended=None, statuses=None, scan_ids=None, strike_ids=None, file_name=None,
                     order=None):
@@ -321,14 +321,13 @@ class IngestManager(models.Manager):
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 
-            # TODO: What is our way forward with ingest jobs? Move to system task or Seed Job Type?
-            data = JobData()
-            data.add_property_input('ingest_id', str(ingest_id))
-            data.add_property_input('workspace', ingest.workspace.name)
+            data = Data()
+            data.add_value(JsonValue('ingest_id', ingest_id))
+            data.add_value(JsonValue('workspace', ingest.workspace.name))
             if ingest.new_workspace:
-                data.add_property_input('new_workspace', ingest.new_workspace.name)
+                data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
 
-            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
+            ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
 
             ingest.job = ingest_job
             ingest.status = 'QUEUED'
@@ -947,20 +946,21 @@ class ScanManager(models.Manager):
         scan = Scan.objects.select_for_update().get(pk=scan_id)
         scan_type = self.get_scan_job_type()
 
-        job_data = JobData()
-        job_data.add_property_input('Scan ID', str(scan.id))
-        job_data.add_property_input('Dry Run', str(dry_run))
         event_description = {'scan_id': scan.id}
+
+        job_data = Data()
+        job_data.add_value(JsonValue('Scan_ID', scan.id))
+        job_data.add_value(JsonValue('Dry_Run', dry_run))
 
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
 
         if dry_run:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
-            scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
+            scan.dry_run_job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
         else:
             event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
-            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+            scan.job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
 
         scan.save()
 
@@ -1040,15 +1040,6 @@ class Scan(models.Model):
 
         return ScanConfigurationV6(self.configuration).get_configuration()
 
-    def get_v1_configuration_json(self):
-        """Returns the scan configuration in v1 of the JSON schema
-
-        :returns: The scan configuration in v1 of the JSON schema
-        :rtype: dict
-        """
-
-        return self.configuration
-
     def get_v6_configuration_json(self):
         """Returns the scan configuration in v6 of the JSON schema
 
@@ -1101,11 +1092,12 @@ class StrikeManager(models.Manager):
         strike.save()
 
         strike_type = self.get_strike_job_type()
-        job_data = JobData()
-        job_data.add_property_input('Strike ID', unicode(strike.id))
+
+        job_data = Data()
+        job_data.add_value(JsonValue('Strike_ID', strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
+        strike.job = Queue.objects.queue_new_job_v6(strike_type, job_data, event)
         strike.save()
 
         return strike
@@ -1262,15 +1254,6 @@ class Strike(models.Model):
         """
 
         return StrikeConfigurationV6(self.configuration).get_configuration()
-
-    def get_v5_strike_configuration_as_dict(self):
-        """Returns the v5 configuration for this Strike process as a dict
-
-        :returns: The configuration for this Strike process
-        :rtype: dict
-        """
-
-        return StrikeConfigurationV2(self.configuration).get_configuration().get_dict()
 
     def get_v6_configuration_json(self):
         """Returns the batch configuration in v6 of the JSON schema

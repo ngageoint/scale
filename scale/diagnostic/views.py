@@ -8,6 +8,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
+from data.data.data import Data
 from job.models import JobType
 from queue.models import Queue
 from queue.serializers import QueueStatusSerializer, QueueStatusSerializerV6
@@ -42,23 +43,10 @@ class QueueScaleBakeView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_bake_jobs(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -86,9 +74,9 @@ class QueueScaleBakeView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-bake', version='1.0')
+        job_type = JobType.objects.get(name='scale-bake', version='1.0.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -116,23 +104,10 @@ class QueueScaleCasinoView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_casino_recipes(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -160,9 +135,9 @@ class QueueScaleCasinoView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        recipe_type = RecipeType.objects.get(name='scale-casino', version='1.0')
+        recipe_type = RecipeType.objects.get(name='scale-casino', revision_num='1')
         for _ in xrange(num):
-            Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData())
+            Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -190,23 +165,10 @@ class QueueScaleHelloView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_hello_jobs(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -234,9 +196,9 @@ class QueueScaleHelloView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-hello', version='1.0')
+        job_type = JobType.objects.get(name='scale-hello', version='1.0.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -256,9 +218,7 @@ class QueueScaleCountView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            raise NotImplemented
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
@@ -291,7 +251,7 @@ class QueueScaleCountView(GenericAPIView):
         # TODO: in the future, send command message to do this asynchronously
         job_type = JobType.objects.get(name='scale-count', version='1.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -319,23 +279,10 @@ class QueueScaleRouletteView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.post_v5(request)
-        elif request.version == 'v6':
+        if request.version == 'v6':
             return self.post_v6(request)
 
         raise Http404()
-
-    def post_v5(self, request):
-        """Handles v5 post request
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return self.queue_roulette_jobs(request)
 
     def post_v6(self, request):
         """Handles v6 post request
@@ -363,8 +310,8 @@ class QueueScaleRouletteView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-roulette', version='1.0')
+        job_type = JobType.objects.get(name='scale-roulette', version='1.0.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user(job_type, {})
+            Queue.objects.queue_new_job_for_user_v6(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)

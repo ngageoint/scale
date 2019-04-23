@@ -229,7 +229,7 @@ class SeedManifest(object):
                 if 'partial' in file_dict:
                     del file_dict['partial']
                 if 'mediaTypes' in file_dict:
-                    file_dict['media_types'] = file_dict['mediaTypes'] 
+                    file_dict['media_types'] = file_dict['mediaTypes']
                     del file_dict['mediaTypes']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
@@ -253,7 +253,7 @@ class SeedManifest(object):
                 if 'key' in json_dict:
                     del json_dict['key']
         return InterfaceV6(interface=output_dict, do_validate=False).get_interface()
-        
+
     def get_inputs(self):
         """Gets the inputs defined in the interface
 
@@ -366,7 +366,6 @@ class SeedManifest(object):
 
         job_type_name = self.get_name()
         mapping = JobErrorMapping(job_type_name)
-
         for error_dict in self.get_errors():
             exit_code = error_dict['code']
             error_name = error_dict['name']
@@ -445,11 +444,11 @@ class SeedManifest(object):
         if len(self.get_output_files()) and not job_conn.has_workspace():
             raise InvalidConnection('No workspace provided for output files')
         return warnings
-        
+
     def validate_workspace_for_outputs(self, exe_config):
         """Validates the given job's output workspaces
         :param exe_config: The job configuration
-        
+
         :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
         """
         if len(self.get_output_files()) and not exe_config.get_output_workspace_names():

@@ -137,8 +137,8 @@ class SourceFileManager(models.GeoManager):
                                              statuses=statuses, scan_ids=scan_ids, strike_ids=strike_ids, order=order)
 
     def get_source_jobs(self, source_file_id, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
-                        job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None,
-                        include_superseded=False, order=None):
+                        job_type_names=None, batch_ids=None, error_categories=None,
+                        order=None):
         """Returns a query for the list of jobs that have used the given source file as input. The returned query
         includes the related job_type, job_type_rev, event, and error fields, except for the job_type.manifest and
         job_type_rev.manifest fields.
@@ -157,14 +157,10 @@ class SourceFileManager(models.GeoManager):
         :type job_type_ids: [int]
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: [string]
-        :param job_type_categories: Query jobs of the type associated with the category.
-        :type job_type_categories: [string]
         :param batch_ids: Query jobs associated with batches with the given identifiers.
         :type batch_ids: list[int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
-        :param include_superseded: Whether to include jobs that are superseded.
-        :type include_superseded: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
         :returns: The list of jobs that match the time range.
@@ -176,18 +172,16 @@ class SourceFileManager(models.GeoManager):
             order.append('id')
         else:
             order = ['last_modified', 'id']
-        jobs = Job.objects.filter_jobs_related_v5(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+        jobs = Job.objects.filter_jobs_related_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                                job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                               job_type_categories=job_type_categories, batch_ids=batch_ids,
-                                               error_categories=error_categories, include_superseded=include_superseded,
-                                               order=order)
+                                               batch_ids=batch_ids, error_categories=error_categories, order=order)
         distinct = [field.replace('-', '') for field in order]  # Remove - char for reverse sort fields
         jobs = jobs.filter(job_file_links__ancestor_id=source_file_id).distinct(*distinct)
         return jobs
 
     def get_source_products(self, source_file_id, started=None, ended=None, time_field=None, batch_ids=None,
-                            job_type_ids=None, job_type_names=None, job_type_categories=None, job_ids=None,
-                            is_operational=None, is_published=None, is_superseded=None, file_name=None,
+                            job_type_ids=None, job_type_names=None, job_ids=None,
+                            is_published=None, is_superseded=None, file_name=None,
                             job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None, order=None):
         """Returns a query for the list of products produced by the given source file ID. The returned query includes
         the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
@@ -207,12 +201,8 @@ class SourceFileManager(models.GeoManager):
         :type job_type_ids: list[int]
         :param job_type_names: Query product files produced by jobs with the given type names.
         :type job_type_names: list[str]
-        :param job_type_categories: Query product files produced by jobs with the given type categories.
-        :type job_type_categories: list[str]
         :param job_ids: Query product files produced by jobs with the given identifiers.
         :type job_ids: list[int]
-        :param is_operational: Query product files flagged as operational or R&D only.
-        :type is_operational: bool
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query product files that have/have not been superseded.
@@ -236,8 +226,7 @@ class SourceFileManager(models.GeoManager):
         from product.models import ProductFile
         products = ProductFile.objects.filter_products(started=started, ended=ended, time_field=time_field,
                                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                                       job_type_categories=job_type_categories, job_ids=job_ids,
-                                                       is_operational=is_operational, is_published=is_published,
+                                                       job_ids=job_ids, is_published=is_published,
                                                        is_superseded=None, file_name=file_name, job_output=job_output,
                                                        recipe_ids=recipe_ids, recipe_job=recipe_job,
                                                        recipe_type_ids=recipe_type_ids, order=order)

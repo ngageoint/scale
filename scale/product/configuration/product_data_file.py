@@ -10,7 +10,7 @@ from django.utils.timezone import now
 from job.configuration.data.data_file import AbstractDataFileStore
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from product.models import FileAncestryLink, ProductFile
-from recipe.models import Recipe
+from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import Workspace
 
 
@@ -82,7 +82,8 @@ class ProductDataFileStore(AbstractDataFileStore):
         if job_recipe:
             recipe = job_recipe.recipe
             recipe_type_path = get_valid_filename(recipe.recipe_type.name)
-            recipe_version_path = get_valid_filename(recipe.recipe_type.version)
+            recipe_revision = RecipeTypeRevision.objects.get_revision(recipe.recipe_type.name, recipe.recipe_type.revision_num).revision_num
+            recipe_version_path = get_valid_filename('revision_%i' % recipe.recipe_type.revision_num)
             remote_path = os.path.join(remote_path, 'recipes', recipe_type_path, recipe_version_path)
         job_type_path = get_valid_filename(job_exe.job.job_type.name)
         job_version_path = get_valid_filename(job_exe.job.job_type.version)
