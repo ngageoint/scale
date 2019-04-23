@@ -19,6 +19,19 @@ import source.test.utils as source_test_utils
 from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 
+class MockCommandMessageManager():
+
+    def send_messages(self, commands):
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []
+
 class TestRecipeTypesViewV6(TransactionTestCase):
     """Tests related to the get recipe-types base endpoint"""
 
@@ -1331,7 +1344,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
                                                               'driver_opts': {'opt_1': 'foo', 'opt_2': 'bar'}}},
                        'output_workspaces': {'default': self.workspace.name, 'outputs': {'output': self.workspace.name}},
                        'priority': 999, 'settings': {'setting_1': '1234', 'setting_2': '5678'}}
-                       
+
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data, config=self.config)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
@@ -1339,7 +1352,7 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
     @patch('recipe.views.CommandMessageManager')
     def test_all_jobs(self, mock_mgr):
         """Tests reprocessing all jobs in an existing recipe"""
-        
+
         mock_mgr.return_value = MockCommandMessageManager()
 
         json_data = {
