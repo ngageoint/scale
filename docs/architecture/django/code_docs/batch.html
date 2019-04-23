@@ -137,7 +137,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -249,15 +248,6 @@
 <li class="toctree-l1"><a class="reference internal" href="batch.definition.html">batch.definition package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="batch.definition.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="batch.definition.json.html">batch.definition.json package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="batch.definition.json.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="batch.definition.json.old.html">batch.definition.json.old package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="batch.definition.json.old.html#submodules">Submodules</a></li>
-<li class="toctree-l6"><a class="reference internal" href="batch.definition.json.old.html#module-batch.definition.json.old.batch_definition">batch.definition.json.old.batch_definition module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="batch.definition.json.old.html#module-batch.definition.json.old">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l4"><a class="reference internal" href="batch.definition.json.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="batch.definition.json.html#module-batch.definition.json.definition_v6">batch.definition.json.definition_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="batch.definition.json.html#module-batch.definition.json">Module contents</a></li>
@@ -300,6 +290,7 @@
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0005_auto_20180314_1827">batch.migrations.0005_auto_20180314_1827 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0006_auto_20180401_0218">batch.migrations.0006_auto_20180401_0218 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0007_auto_20180516_1915">batch.migrations.0007_auto_20180516_1915 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0008_auto_20190226_1255">batch.migrations.0008_auto_20190226_1255 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -323,15 +314,6 @@
 <li class="toctree-l3"><a class="reference internal" href="batch.test.definition.html">batch.test.definition package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="batch.test.definition.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="batch.test.definition.json.html">batch.test.definition.json package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l7"><a class="reference internal" href="batch.test.definition.json.old.html">batch.test.definition.json.old package</a><ul>
-<li class="toctree-l8"><a class="reference internal" href="batch.test.definition.json.old.html#submodules">Submodules</a></li>
-<li class="toctree-l8"><a class="reference internal" href="batch.test.definition.json.old.html#module-batch.test.definition.json.old.test_batch_definition">batch.test.definition.json.old.test_batch_definition module</a></li>
-<li class="toctree-l8"><a class="reference internal" href="batch.test.definition.json.old.html#module-batch.test.definition.json.old">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.html#submodules">Submodules</a></li>
 <li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.html#module-batch.test.definition.json.test_definition_v6">batch.test.definition.json.test_definition_v6 module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.html#module-batch.test.definition.json">Module contents</a></li>
@@ -440,14 +422,10 @@
 <li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of recipe being processed in this batch</li>
 <li><strong>recipe_type_rev</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The revision of the recipe type being processed in this batch</li>
 <li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this batch</li>
-<li><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The status of the batch</li>
 <li><strong>creator_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that will create the batch recipes and jobs for processing</li>
 <li><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON definition for what is being processed by this batch</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON configuration for running the batch</li>
 <li><strong>is_creation_done</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Indicates whether all of the recipes for the batch have been created (True)</li>
-<li><strong>created_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of batch recipes created by this batch.</li>
-<li><strong>failed_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of batch recipes failed by this batch.</li>
-<li><strong>total_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; An approximation of the total number of batch recipes that should be created by this batch.</li>
 <li><strong>is_superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Indicates whether this batch has been superseded (re-processed by another batch)</li>
 <li><strong>root_batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The first (root) batch in this chain of iterative batches. This field will be null for the
 first batch in the chain.</li>
@@ -472,11 +450,6 @@ batch</li>
 </tr>
 </tbody>
 </table>
-<dl class="attribute">
-<dt id="batch.models.Batch.BATCH_STATUSES">
-<code class="descname">BATCH_STATUSES</code><em class="property"> = ((u'SUBMITTED', u'SUBMITTED'), (u'CREATED', u'CREATED'))</em><a class="headerlink" href="#batch.models.Batch.BATCH_STATUSES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="exception">
 <dt id="batch.models.Batch.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#batch.models.Batch.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -520,20 +493,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
-<dt id="batch.models.Batch.completed_job_count">
-<code class="descname">completed_job_count</code><a class="headerlink" href="#batch.models.Batch.completed_job_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="batch.models.Batch.completed_recipe_count">
-<code class="descname">completed_recipe_count</code><a class="headerlink" href="#batch.models.Batch.completed_recipe_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="batch.models.Batch.conditions_for_batch">
 <code class="descname">conditions_for_batch</code><a class="headerlink" href="#batch.models.Batch.conditions_for_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -558,13 +517,6 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="batch.models.Batch.created">
 <code class="descname">created</code><a class="headerlink" href="#batch.models.Batch.created" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="batch.models.Batch.created_count">
-<code class="descname">created_count</code><a class="headerlink" href="#batch.models.Batch.created_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -619,13 +571,6 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <dl class="attribute">
 <dt id="batch.models.Batch.event_id">
 <code class="descname">event_id</code><a class="headerlink" href="#batch.models.Batch.event_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="batch.models.Batch.failed_count">
-<code class="descname">failed_count</code><a class="headerlink" href="#batch.models.Batch.failed_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -688,38 +633,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="batch.models.Batch.get_old_definition">
-<code class="descname">get_old_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_old_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the definition for this batch</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The definition for this batch</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition" title="batch.definition.json.old.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.definition.json.old.batch_definition.BatchDefinition</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.models.Batch.get_old_definition_json">
-<code class="descname">get_old_definition_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_old_definition_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the batch definition in the old version of the JSON schema</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The batch definition in the old version of the JSON schema</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="batch.models.Batch.get_previous_by_created">
 <code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -727,11 +640,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="method">
 <dt id="batch.models.Batch.get_previous_by_last_modified">
 <code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.models.Batch.get_status_display">
-<code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1055,13 +963,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
-<dt id="batch.models.Batch.status">
-<code class="descname">status</code><a class="headerlink" href="#batch.models.Batch.status" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="batch.models.Batch.superseded">
 <code class="descname">superseded</code><a class="headerlink" href="#batch.models.Batch.superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -1090,13 +991,6 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="batch.models.Batch.title">
 <code class="descname">title</code><a class="headerlink" href="#batch.models.Batch.title" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="batch.models.Batch.total_count">
-<code class="descname">total_count</code><a class="headerlink" href="#batch.models.Batch.total_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1231,35 +1125,6 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling batches</p>
 <dl class="method">
-<dt id="batch.models.BatchManager.create_batch_old">
-<code class="descname">create_batch_old</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.create_batch_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
-method also queues a new system job that will process the batch request. All database changes occur in an atomic
-transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of recipes that should be re-processed</li>
-<li><strong>definition</strong> (<a class="reference internal" href="batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition" title="batch.definition.json.old.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.definition.json.old.batch_definition.BatchDefinition</span></code></a>) &#8211; The definition for running a batch</li>
-<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of the batch</li>
-<li><strong>description</strong> (<em>string</em>) &#8211; An optional description of the batch</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The newly created batch</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="#batch.exceptions.BatchError" title="batch.exceptions.BatchError"><code class="xref py py-class docutils literal"><span class="pre">batch.exceptions.BatchError</span></code></a>: If general batch parameters are invalid</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="batch.models.BatchManager.create_batch_v6">
 <code class="descname">create_batch_v6</code><span class="sig-paren">(</span><em>title</em>, <em>description</em>, <em>recipe_type</em>, <em>event</em>, <em>definition</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.create_batch_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new batch that will contain a collection of recipes to process. The definition and configuration
@@ -1351,34 +1216,6 @@ will have no related fields populated.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="batch.models.BatchManager.get_batches_v5">
-<code class="descname">get_batches_v5</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_type_names=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_batches_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of batches within the given time range.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query batches with the a specific execution status.</li>
-<li><strong>recipe_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query batches for the recipe type associated with the identifier.</li>
-<li><strong>recipe_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query batches for the recipe type associated with the name.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of batches that match the time range.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="batch.models.BatchManager.get_batches_v6">
 <code class="descname">get_batches_v6</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>recipe_type_ids=None</em>, <em>is_creation_done=None</em>, <em>is_superseded=None</em>, <em>root_batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_batches_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of batches for the v6 batches REST API</p>
@@ -1402,24 +1239,6 @@ will have no related fields populated.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.models.BatchManager.get_details_v5">
-<code class="descname">get_details_v5</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_details_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the batch for the given ID with all detail fields included.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>int</em>) &#8211; The unique identifier of the batch.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The batch with all detail fields included.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1463,54 +1282,6 @@ will have no related fields populated. Caller must be within an atomic transacti
 </dd></dl>
 
 <dl class="method">
-<dt id="batch.models.BatchManager.get_matched_files">
-<code class="descname">get_matched_files</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_matched_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all the input files that were never triggered against the given batch criteria.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of recipes that should be re-processed</li>
-<li><strong>definition</strong> (<a class="reference internal" href="batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition" title="batch.definition.json.old.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.definition.json.old.batch_definition.BatchDefinition</span></code></a>) &#8211; The definition for running a batch</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of files that match the batch definition and were never run before.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.models.BatchManager.get_matched_recipes">
-<code class="descname">get_matched_recipes</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_matched_recipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all the recipes that might be affected by the given batch criteria.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of recipes that should be re-processed</li>
-<li><strong>definition</strong> (<a class="reference internal" href="batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition" title="batch.definition.json.old.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.definition.json.old.batch_definition.BatchDefinition</span></code></a>) &#8211; The definition for running a batch</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of recipes that match the batch definition.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="batch.models.BatchManager.mark_creation_done">
 <code class="descname">mark_creation_done</code><span class="sig-paren">(</span><em>batch_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.mark_creation_done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks recipe creation as done for this batch</p>
@@ -1526,21 +1297,6 @@ will have no related fields populated. Caller must be within an atomic transacti
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.models.BatchManager.schedule_recipes">
-<code class="descname">schedule_recipes</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.schedule_recipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Schedules each recipe that matches the batch for re-processing and creates associated batch models.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>string</em>) &#8211; The unique identifier of the batch that defines the recipes to schedule.</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="#batch.exceptions.BatchError" title="batch.exceptions.BatchError"><code class="xref py py-class docutils literal"><span class="pre">batch.exceptions.BatchError</span></code></a>: If general batch parameters are invalid.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2046,74 +1802,10 @@ object the first time, the query is executed.</p>
 <span id="batch-serializers-module"></span><h2>batch.serializers module<a class="headerlink" href="#module-batch.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for batches</p>
 <dl class="class">
-<dt id="batch.serializers.BatchBaseSerializerV5">
-<em class="property">class </em><code class="descclassname">batch.serializers.</code><code class="descname">BatchBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts batch model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="batch.serializers.BatchBaseSerializerV6">
 <em class="property">class </em><code class="descclassname">batch.serializers.</code><code class="descname">BatchBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Base serializer for batches</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5">
-<em class="property">class </em><code class="descclassname">batch.serializers.</code><code class="descname">BatchDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#batch.serializers.BatchSerializerV5" title="batch.serializers.BatchSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">batch.serializers.BatchSerializerV5</span></code></a></p>
-<p>Converts batch model fields to REST output.</p>
-<dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5">
-<em class="property">class </em><code class="descname">JobSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobBaseSerializerV5" title="job.serializers.JobBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobBaseSerializerV5</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-<dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5">
-<em class="property">class </em><code class="descname">ErrorBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializerV5">
-<em class="property">class </em><code class="descname">TriggerEventBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required">
-<code class="descname">cpus_required</code><em class="property"> = ''</em><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.disk_out_required">
-<code class="descname">disk_out_required</code><em class="property"> = ''</em><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.disk_out_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.mem_required">
-<code class="descname">mem_required</code><em class="property"> = ''</em><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.mem_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.RecipeTypeSerializerV5">
-<em class="property">class </em><code class="descname">RecipeTypeSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.RecipeTypeSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="recipe.html#recipe.serializers.RecipeTypeBaseSerializerV5" title="recipe.serializers.RecipeTypeBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeBaseSerializerV5</span></code></a></p>
-<p>Converts recipe type model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.TriggerEventDetailsSerializerV5">
-<em class="property">class </em><code class="descname">TriggerEventDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.TriggerEventDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializerV5" title="trigger.serializers.TriggerEventBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV5</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -2132,34 +1824,6 @@ object the first time, the query is executed.</p>
 <dt id="batch.serializers.BatchDetailsSerializerV6.TriggerEventDetailsSerializerV6">
 <em class="property">class </em><code class="descname">TriggerEventDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV6.TriggerEventDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializerV6" title="trigger.serializers.TriggerEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV6</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchSerializerV5">
-<em class="property">class </em><code class="descclassname">batch.serializers.</code><code class="descname">BatchSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#batch.serializers.BatchBaseSerializerV5" title="batch.serializers.BatchBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">batch.serializers.BatchBaseSerializerV5</span></code></a></p>
-<p>Converts batch model fields to REST output.</p>
-<dl class="class">
-<dt id="batch.serializers.BatchSerializerV5.JobBaseSerializerV5">
-<em class="property">class </em><code class="descname">JobBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializerV5.JobBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchSerializerV5.RecipeTypeBaseSerializerV5">
-<em class="property">class </em><code class="descname">RecipeTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializerV5.RecipeTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts recipe type model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.serializers.BatchSerializerV5.TriggerEventBaseSerializerV5">
-<em class="property">class </em><code class="descname">TriggerEventBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializerV5.TriggerEventBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 

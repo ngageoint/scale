@@ -126,7 +126,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">queue package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
@@ -542,7 +541,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="queue.models.JobLoadManager.get_job_loads">
-<code class="descname">get_job_loads</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>job_type_priorities=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoadManager.get_job_loads" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_loads</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoadManager.get_job_loads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of job loads within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -553,8 +552,6 @@ object the first time, the query is executed.</p>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
 <li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
 <li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>job_type_priorities</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the priority.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
@@ -931,24 +928,6 @@ mode</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queue.models.QueueManager.handle_job_cancellation">
-<code class="descname">handle_job_cancellation</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.handle_job_cancellation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handles the cancellation of a job. All database changes occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_id</strong> (<em>int</em>) &#8211; The ID of the job to be canceled</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the job was canceled</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.models.QueueManager.queue_jobs">
 <code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>requeue=False</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
@@ -969,62 +948,6 @@ ignored.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueManager.queue_new_job">
-<code class="descname">queue_new_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
-job_exe, and queue models are saved in the database in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
-<li><strong>data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data to run on</li>
-<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this job</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new queued job</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><strong>job.configuration.data.exceptions.InvalidData</strong></a> &#8211; If the job data is invalid</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueManager.queue_new_job_for_user">
-<code class="descname">queue_new_job_for_user</code><span class="sig-paren">(</span><em>job_type</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_for_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
-the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
-job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
-invalid, a <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></code></a> will be thrown.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
-<li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the job data to run on</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The ID of the new job</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
 </td>
 </tr>
 </tbody>
@@ -1090,65 +1013,6 @@ job_exe, and queue models are saved in the database in an atomic transaction.</p
 </dd></dl>
 
 <dl class="method">
-<dt id="queue.models.QueueManager.queue_new_recipe">
-<code class="descname">queue_new_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
-new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
-caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
-All database changes occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
-<li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">recipe.data.recipe_data.RecipeData</span></code>) &#8211; The recipe data to run on, should be None if superseded_recipe is provided</li>
-<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this recipe</li>
-<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this recipe</li>
-<li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the priority of associated jobs before they are queued</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueManager.queue_new_recipe_for_user">
-<code class="descname">queue_new_recipe_for_user</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new recipe for the given type and data at the request of a user.</p>
-<p>The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
-event model must have already been saved in the database (it must have an ID). All database changes occur in an
-atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
-<li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">recipe.data.recipe_data.RecipeData</span></code>) &#8211; The recipe data to run on, should be None if superseded_recipe is provided</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.models.QueueManager.queue_new_recipe_for_user_v6">
 <code class="descname">queue_new_recipe_for_user_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given type and data at the request of a user.</p>
@@ -1165,10 +1029,10 @@ atomic transaction.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A handler for the new recipe</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">New recipe type</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.handler.RecipeHandler" title="recipe.handlers.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.handler.RecipeHandler</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -1206,25 +1070,6 @@ All database changes occur in an atomic transaction.</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueManager.requeue_jobs">
-<code class="descname">requeue_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.requeue_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
-superseded will be ignored. All database changes will occur within an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; The IDs of the jobs to re-queue</li>
-<li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority before they are queued</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>
@@ -1267,8 +1112,8 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts queue status model fields to REST output</p>
 <dl class="class">
-<dt id="queue.serializers.QueueStatusSerializer.JobTypeBaseSerializerV5">
-<em class="property">class </em><code class="descname">JobTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializer.JobTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dt id="queue.serializers.QueueStatusSerializer.JobTypeBaseSerializerV6">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializer.JobTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
@@ -1287,13 +1132,6 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.serializers.RequeueJobSerializer">
-<em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">RequeueJobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.RequeueJobSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
-<p>Converts re-queue job JSON input to dictionary attributes</p>
 </dd></dl>
 
 </div>
@@ -1341,88 +1179,6 @@ superseded will be ignored. All database changes will occur within an atomic tra
 </dd></dl>
 
 <dl class="class">
-<dt id="queue.views.QueueNewJobView">
-<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueNewJobView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
-<p>This view is the endpoint for creating new jobs and putting them on the queue.</p>
-<dl class="method">
-<dt id="queue.views.QueueNewJobView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewJobView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.QueueNewJobView.parser_classes">
-<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.QueueNewJobView.parser_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.views.QueueNewJobView.post">
-<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewJobView.post" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new job, places it on the queue, and returns the new job information in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.QueueNewJobView.queryset">
-<code class="descname">queryset</code><a class="headerlink" href="#queue.views.QueueNewJobView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.views.QueueNewRecipeView">
-<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueNewRecipeView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewRecipeView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
-<p>This view is the endpoint for queuing recipes and returns the detail information for the recipe that was queued.</p>
-<dl class="method">
-<dt id="queue.views.QueueNewRecipeView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewRecipeView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.QueueNewRecipeView.parser_classes">
-<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.QueueNewRecipeView.parser_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.views.QueueNewRecipeView.post">
-<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewRecipeView.post" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queue a recipe and returns the new job information in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.QueueNewRecipeView.queryset">
-<code class="descname">queryset</code><a class="headerlink" href="#queue.views.QueueNewRecipeView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="queue.views.QueueStatusView">
 <em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueStatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
@@ -1455,45 +1211,6 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dt id="queue.views.QueueStatusView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#queue.views.QueueStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.views.RequeueJobsView">
-<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">RequeueJobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueJobsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
-<p>This view is the endpoint for requeuing jobs which have already been executed.</p>
-<dl class="attribute">
-<dt id="queue.views.RequeueJobsView.parser_classes">
-<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueJobsView.parser_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.views.RequeueJobsView.post">
-<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueJobsView.post" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increase max_tries, place it on the queue, and returns the new job information in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.RequeueJobsView.queryset">
-<code class="descname">queryset</code><a class="headerlink" href="#queue.views.RequeueJobsView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.RequeueJobsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV5</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

@@ -126,7 +126,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -752,40 +751,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.test.test_views.TestFilesViewV5">
-<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFilesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="storage.test.test_views.TestFilesViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestFilesViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestFilesViewV5.test_bad_file_name">
-<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests unsuccessfully calling the get files by name view</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestFilesViewV5.test_file_name_successful">
-<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get files by name view</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestFilesViewV5.test_time_successful">
-<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_time_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get files by time</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="storage.test.test_views.TestFilesViewV6">
 <em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFilesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -945,46 +910,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5">
-<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspaceCreateViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5.test_configuration_bad_type">
-<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Workspace view with configuration that is not a dict.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5.test_invalid_configuration">
-<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Workspace view with invalid configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5.test_missing_configuration">
-<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Workspace view with missing configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceCreateViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Workspace view successfully.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="storage.test.test_views.TestWorkspaceCreateViewV6">
 <em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspaceCreateViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -1020,52 +945,6 @@
 <dt id="storage.test.test_views.TestWorkspaceCreateViewV6.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the create Workspace view successfully.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5">
-<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspaceDetailsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.test_edit_bad_config">
-<code class="descname">test_edit_bad_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.test_edit_bad_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests attempting to edit a workspace using an invalid configuration</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.test_edit_config">
-<code class="descname">test_edit_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.test_edit_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing the configuration of a workspace</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.test_edit_simple">
-<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.test_edit_simple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing only the basic attributes of a workspace</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.test_not_found">
-<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.test_not_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get workspace details view with a workspace id that does not exist.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspaceDetailsViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get workspace details view.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1117,53 +996,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5">
-<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspacesValidationViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<p>Tests related to the workspaces validation endpoint</p>
-<dl class="attribute">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.test_configuration_bad_type">
-<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new workspace with configuration that is not a dict.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.test_invalid_configuration">
-<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new workspace with invalid configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.test_missing_configuration">
-<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new workspace with missing configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new workspace.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesValidationViewV5.test_warnings">
-<code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV5.test_warnings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new workspace where the broker type is changed.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="storage.test.test_views.TestWorkspacesValidationViewV6">
 <em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspacesValidationViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -1206,46 +1038,6 @@
 <dt id="storage.test.test_views.TestWorkspacesValidationViewV6.test_warnings">
 <code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesValidationViewV6.test_warnings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new workspace where the broker type is changed.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.test.test_views.TestWorkspacesViewV5">
-<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspacesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="storage.test.test_views.TestWorkspacesViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesViewV5.test_name">
-<code class="descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5.test_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the workspaces view filtered by workspace name.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesViewV5.test_reverse_sorting">
-<code class="descname">test_reverse_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests custom sorting in reverse.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesViewV5.test_sorting">
-<code class="descname">test_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5.test_sorting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests custom sorting.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.test_views.TestWorkspacesViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get all workspaces view.</p>
 </dd></dl>
 
 </dd></dl>

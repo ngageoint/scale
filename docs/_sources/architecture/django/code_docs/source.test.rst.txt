@@ -20,14 +20,6 @@ source\.test\.test\_models module
     :undoc-members:
     :show-inheritance:
 
-source\.test\.test\_views module
---------------------------------
-
-.. automodule:: source.test.test_views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 source\.test\.utils module
 --------------------------
 

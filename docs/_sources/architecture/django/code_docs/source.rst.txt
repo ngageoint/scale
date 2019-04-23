@@ -38,22 +38,6 @@ source\.serializers module
     :undoc-members:
     :show-inheritance:
 
-source\.urls module
--------------------
-
-.. automodule:: source.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-source\.views module
---------------------
-
-.. automodule:: source.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

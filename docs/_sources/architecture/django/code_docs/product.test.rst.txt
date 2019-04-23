@@ -19,14 +19,6 @@ product\.test\.test\_models module
     :undoc-members:
     :show-inheritance:
 
-product\.test\.test\_views module
----------------------------------
-
-.. automodule:: product.test.test_views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 product\.test\.utils module
 ---------------------------
 

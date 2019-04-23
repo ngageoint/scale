@@ -28,14 +28,6 @@ recipe\.handlers\.graph\_delta module
     :undoc-members:
     :show-inheritance:
 
-recipe\.handlers\.handler module
---------------------------------
-
-.. automodule:: recipe.handlers.handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 recipe\.handlers\.node module
 -----------------------------
 

@@ -300,6 +300,22 @@ recipe\.migrations\.0035\_auto\_20190126\_2340 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0036\_remove\_recipetype\_version module
+------------------------------------------------------------
+
+.. automodule:: recipe.migrations.0036_remove_recipetype_version
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.migrations\.0037\_remove\_recipetype\_trigger\_rule module
+------------------------------------------------------------------
+
+.. automodule:: recipe.migrations.0037_remove_recipetype_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

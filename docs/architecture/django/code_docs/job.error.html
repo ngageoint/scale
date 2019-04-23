@@ -141,7 +141,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -314,62 +313,11 @@ returned. For a failure exit code with no mapping, the given default error is re
 </dd></dl>
 
 <dl class="method">
-<dt id="job.error.mapping.JobErrorMapping.get_error_names_legacy">
-<code class="descname">get_error_names_legacy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.error.mapping.JobErrorMapping.get_error_names_legacy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a set of all error names for this interface</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of error names</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string}</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.error.mapping.JobErrorMapping.save_models">
 <code class="descname">save_models</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.error.mapping.JobErrorMapping.save_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves this mapping as error models in the database</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.error.mapping.JobErrorMapping.validate_legacy">
-<code class="descname">validate_legacy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.error.mapping.JobErrorMapping.validate_legacy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the error mappings to ensure that all referenced errors actually exist.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.exceptions.InvalidInterfaceDefinition" title="job.configuration.interface.exceptions.InvalidInterfaceDefinition"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.exceptions.InvalidInterfaceDefinition</span></code></a>: If there is a missing error.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="job.error.mapping.create_legacy_error_mapping">
-<code class="descclassname">job.error.mapping.</code><code class="descname">create_legacy_error_mapping</code><span class="sig-paren">(</span><em>error_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.error.mapping.create_legacy_error_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error mapping for the given legacy error dict</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error_dict</strong> (<em>dict</em>) &#8211; The legacy error dict</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error mapping</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.error.mapping.JobErrorMapping" title="job.error.mapping.JobErrorMapping"><code class="xref py py-class docutils literal"><span class="pre">job.error.mapping.JobErrorMapping</span></code></a></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

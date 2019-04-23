@@ -126,14 +126,12 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -295,56 +293,6 @@ reprocessing</p>
 <code class="descname">test_reprocess_identical_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_reprocess_identical_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeGraphDelta.reprocess_identical_node() to indicate identical nodes that should be marked
 as changed</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-recipe.test.handlers.test_handler">
-<span id="recipe-test-handlers-test-handler-module"></span><h2>recipe.test.handlers.test_handler module<a class="headerlink" href="#module-recipe.test.handlers.test_handler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler">
-<em class="property">class </em><code class="descclassname">recipe.test.handlers.test_handler.</code><code class="descname">TestRecipeHandler</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_blocked_jobs">
-<code class="descname">test_get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_blocked_jobs()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_dependent_job_ids">
-<code class="descname">test_get_dependent_job_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_dependent_job_ids()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue">
-<code class="descname">test_get_existing_jobs_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_existing_jobs_to_queue()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_jobs_ready_for_first_queue">
-<code class="descname">test_get_jobs_ready_for_first_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_jobs_ready_for_first_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_jobs_ready_for_first_queue()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_jobs_ready_for_input">
-<code class="descname">test_get_jobs_ready_for_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_jobs_ready_for_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_jobs_ready_for_input()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs">
-<code class="descname">test_get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_pending_jobs()</p>
 </dd></dl>
 
 </dd></dl>

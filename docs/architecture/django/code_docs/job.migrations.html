@@ -141,7 +141,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -1264,6 +1263,25 @@
 <dl class="attribute">
 <dt id="job.migrations.0053_jobtype_unmet_resources.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.CharField&gt;, name=u'unmet_resources', model_name=u'jobtype'&gt;]</em><a class="headerlink" href="#job.migrations.0053_jobtype_unmet_resources.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0054_jobtype_v5_deprecation">
+<span id="job-migrations-0054-jobtype-v5-deprecation-module"></span><h2>job.migrations.0054_jobtype_v5_deprecation module<a class="headerlink" href="#module-job.migrations.0054_jobtype_v5_deprecation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0054_jobtype_v5_deprecation.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0054_jobtype_v5_deprecation.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0054_jobtype_v5_deprecation.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0054_jobtype_v5_deprecation.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0053_jobtype_unmet_resources')]</em><a class="headerlink" href="#job.migrations.0054_jobtype_v5_deprecation.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0054_jobtype_v5_deprecation.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'priority', model_name=u'job'&gt;, &lt;RemoveField  name=u'timeout', model_name=u'job'&gt;, &lt;RemoveField  name=u'author_name', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'author_url', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'category', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'cpus_required', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'custom_resources', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'disk_out_const_required', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'disk_out_mult_required', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'docker_params', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'docker_privileged', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'error_mapping', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'is_operational', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'mem_const_required', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'mem_mult_required', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'priority', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'shared_mem_required', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'timeout', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'uses_docker', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'description', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'title', model_name=u'jobtype'&gt;, &lt;RemoveField  name=u'trigger_rule', model_name=u'jobtype'&gt;]</em><a class="headerlink" href="#job.migrations.0054_jobtype_v5_deprecation.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

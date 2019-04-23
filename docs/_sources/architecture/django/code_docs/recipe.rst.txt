@@ -27,14 +27,6 @@ recipe\.apps module
     :undoc-members:
     :show-inheritance:
 
-recipe\.deprecation module
---------------------------
-
-.. automodule:: recipe.deprecation
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 recipe\.exceptions module
 -------------------------
 

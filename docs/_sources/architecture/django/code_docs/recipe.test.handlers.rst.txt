@@ -20,14 +20,6 @@ recipe\.test\.handlers\.test\_graph\_delta module
     :undoc-members:
     :show-inheritance:
 
-recipe\.test\.handlers\.test\_handler module
---------------------------------------------
-
-.. automodule:: recipe.test.handlers.test_handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

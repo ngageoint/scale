@@ -46,7 +46,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Batch Services" href="batch.html" />
+    <link rel="next" title="v6 Batch Services" href="v6/batch.html" />
     <link rel="prev" title="manage module" href="../architecture/django/code_docs/manage.html" />
     <link href="../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -107,31 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">REST API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#api-versions">API Versions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#current-v5-services">Current v5 Services</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="batch.html">Batch Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">Diagnostic Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scan.html">Scan Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#future-v6-services">Future v6 Services</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#current-v6-services">Current v6 Services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="v6/batch.html">v6 Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="v6/data.html">v6 Data Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="v6/diagnostic.html">v6 Diagnostic Services</a></li>
@@ -149,7 +125,9 @@
 <li class="toctree-l3"><a class="reference internal" href="v6/scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="v6/strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="v6/system.html">v6 System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="v6/workspace.html">V6 Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/workspace.html">v6 Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/deprecated.html">v6 Removals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/deprecated.html#v6-deprecated-messages">v6 Deprecated Messages</a></li>
 </ul>
 </li>
 </ul>
@@ -226,8 +204,7 @@
 to Scale. The following sections describe the services available.</p>
 <div class="section" id="api-versions">
 <span id="rest-versions"></span><h2>API Versions<a class="headerlink" href="#api-versions" title="Permalink to this headline">¶</a></h2>
-<p>Future Version: <code class="docutils literal"><span class="pre">v6</span></code>
-Current Version: <code class="docutils literal"><span class="pre">v5</span></code></p>
+<p>Current Version: <code class="docutils literal"><span class="pre">v6</span></code></p>
 <p>The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
 will support both the old (deprecated) and current API versions within the same release. Eventually, deprecated API
@@ -237,38 +214,10 @@ may change at any time. The deprecated versions will be removed in the future, s
 current version.</p>
 <p>All endpoints should include a prefix of the form <code class="docutils literal"><span class="pre">vX</span></code>, where <code class="docutils literal"><span class="pre">X</span></code> is the desired version number. Making a request
 without a version prefix or an invalid version prefix will result in a 404 error.</p>
-<p>Request Example: <code class="docutils literal"><span class="pre">/v5/jobs/</span></code></p>
+<p>Request Example: <code class="docutils literal"><span class="pre">/v6/jobs/</span></code></p>
 </div>
-<div class="section" id="current-v5-services">
-<span id="rest-services"></span><h2>Current v5 Services<a class="headerlink" href="#current-v5-services" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="batch.html">Batch Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diagnostic.html">Diagnostic Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job.html">Job Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scan.html">Scan Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="future-v6-services">
-<h2>Future v6 Services<a class="headerlink" href="#future-v6-services" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="current-v6-services">
+<span id="rest-services"></span><h2>Current v6 Services<a class="headerlink" href="#current-v6-services" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="v6/batch.html">v6 Batch Services</a></li>
@@ -288,7 +237,9 @@ without a version prefix or an invalid version prefix will result in a 404 error
 <li class="toctree-l1"><a class="reference internal" href="v6/scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="v6/strike.html">v6 Strike Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="v6/system.html">v6 System Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="v6/workspace.html">V6 Workspace Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/workspace.html">v6 Workspace Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/deprecated.html">v6 Removals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/deprecated.html#v6-deprecated-messages">v6 Deprecated Messages</a></li>
 </ul>
 </div>
 </div>
@@ -302,7 +253,7 @@ without a version prefix or an invalid version prefix will result in a 404 error
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="batch.html" class="btn btn-neutral float-right" title="Batch Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="v6/batch.html" class="btn btn-neutral float-right" title="v6 Batch Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../architecture/django/code_docs/manage.html" class="btn btn-neutral float-left" title="manage module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

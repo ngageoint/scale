@@ -137,7 +137,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -359,6 +358,25 @@
 <dl class="attribute">
 <dt id="batch.migrations.0007_auto_20180516_1915.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'batch', model_name=u'batchmetrics'&gt;]</em><a class="headerlink" href="#batch.migrations.0007_auto_20180516_1915.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.migrations.0008_auto_20190226_1255">
+<span id="batch-migrations-0008-auto-20190226-1255-module"></span><h2>batch.migrations.0008_auto_20190226_1255 module<a class="headerlink" href="#module-batch.migrations.0008_auto_20190226_1255" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.migrations.0008_auto_20190226_1255.Migration">
+<em class="property">class </em><code class="descclassname">batch.migrations.0008_auto_20190226_1255.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.migrations.0008_auto_20190226_1255.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="batch.migrations.0008_auto_20190226_1255.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'batch', u'0007_auto_20180516_1915')]</em><a class="headerlink" href="#batch.migrations.0008_auto_20190226_1255.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.migrations.0008_auto_20190226_1255.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'completed_job_count', model_name=u'batch'&gt;, &lt;RemoveField  name=u'completed_recipe_count', model_name=u'batch'&gt;, &lt;RemoveField  name=u'created_count', model_name=u'batch'&gt;, &lt;RemoveField  name=u'failed_count', model_name=u'batch'&gt;, &lt;RemoveField  name=u'status', model_name=u'batch'&gt;, &lt;RemoveField  name=u'total_count', model_name=u'batch'&gt;]</em><a class="headerlink" href="#batch.migrations.0008_auto_20190226_1255.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

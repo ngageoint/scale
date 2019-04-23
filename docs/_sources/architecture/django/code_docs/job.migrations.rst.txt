@@ -428,6 +428,14 @@ job\.migrations\.0053\_jobtype\_unmet\_resources module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0054\_jobtype\_v5\_deprecation module
+------------------------------------------------------
+
+.. automodule:: job.migrations.0054_jobtype_v5_deprecation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

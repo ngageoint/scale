@@ -141,7 +141,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -259,8 +258,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="job.configuration.json.html">job.configuration.json package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_1_0">job.configuration.json.job_config_1_0 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_2_0">job.configuration.json.job_config_2_0 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_v6">job.configuration.json.job_config_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json">Module contents</a></li>
 </ul>
@@ -475,6 +472,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0051_auto_20190211_1500">job.migrations.0051_auto_20190211_1500 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0052_jobtype_is_published">job.migrations.0052_jobtype_is_published module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0053_jobtype_unmet_resources">job.migrations.0053_jobtype_unmet_resources module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0054_jobtype_v5_deprecation">job.migrations.0054_jobtype_v5_deprecation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -529,7 +527,6 @@
 </li>
 <li class="toctree-l5"><a class="reference internal" href="job.test.configuration.json.html">job.test.configuration.json package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.html#submodules">Submodules</a></li>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.html#module-job.test.configuration.json.test_job_config_2_0">job.test.configuration.json.test_job_config_2_0 module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.html#module-job.test.configuration.json.test_job_config_v6">job.test.configuration.json.test_job_config_v6 module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.html#module-job.test.configuration.json">Module contents</a></li>
 </ul>
@@ -940,31 +937,10 @@ Seed compliant interfaces.</p>
 <span id="job-job-type-serializers-module"></span><h2>job.job_type_serializers module<a class="headerlink" href="#module-job.job_type_serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for jobs and job types</p>
 <dl class="class">
-<dt id="job.job_type_serializers.JobTypeBaseSerializerV5">
-<em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts job type model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="job.job_type_serializers.JobTypeBaseSerializerV6">
 <em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job type model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.job_type_serializers.JobTypeDetailsSerializerV5">
-<em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.job_type_serializers.JobTypeSerializerV5" title="job.job_type_serializers.JobTypeSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.job_type_serializers.JobTypeSerializerV5</span></code></a></p>
-<p>Converts job type model fields to REST output for legacy job types.</p>
-<dl class="class">
-<dt id="job.job_type_serializers.JobTypeDetailsSerializerV5.ErrorSerializerV5">
-<em class="property">class </em><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV5.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -980,9 +956,9 @@ Seed compliant interfaces.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts job type failed status model and extra statistic fields to REST output.</p>
 <dl class="class">
-<dt id="job.job_type_serializers.JobTypeFailedStatusSerializer.ErrorSerializerV5">
-<em class="property">class </em><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeFailedStatusSerializer.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
+<dt id="job.job_type_serializers.JobTypeFailedStatusSerializer.ErrorSerializerV6">
+<em class="property">class </em><code class="descname">ErrorSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeFailedStatusSerializer.ErrorSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializerV6" title="error.serializers.ErrorBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV6</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
@@ -1048,13 +1024,6 @@ Seed compliant interfaces.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.job_type_serializers.JobTypeRevisionSerializerV5">
-<em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeRevisionSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeRevisionSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.job_type_serializers.JobTypeRevisionBaseSerializer" title="job.job_type_serializers.JobTypeRevisionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.job_type_serializers.JobTypeRevisionBaseSerializer</span></code></a></p>
-<p>Converts job type revision model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="job.job_type_serializers.JobTypeRevisionSerializerV6">
 <em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeRevisionSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeRevisionSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.job_type_serializers.JobTypeRevisionBaseSerializer" title="job.job_type_serializers.JobTypeRevisionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.job_type_serializers.JobTypeRevisionBaseSerializer</span></code></a></p>
@@ -1073,13 +1042,6 @@ Seed compliant interfaces.</p>
 <em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeRunningStatusSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeRunningStatusSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts job type running status model and extra statistic fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.job_type_serializers.JobTypeSerializerV5">
-<em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.job_type_serializers.JobTypeBaseSerializerV5" title="job.job_type_serializers.JobTypeBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.job_type_serializers.JobTypeBaseSerializerV5</span></code></a></p>
-<p>Converts job type model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
@@ -1145,8 +1107,6 @@ using &#8216;superseded_by_job&#8217;.</li>
 <li><strong>error</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The error that caused the failure (should only be set when status is FAILED)</li>
 <li><strong>max_tries</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum number of times to try executing this job in case of errors (minimum one)</li>
 <li><strong>num_exes</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of executions this job has had</li>
-<li><strong>priority</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The priority of the job (lower number is higher priority)</li>
-<li><strong>timeout</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum amount of time to allow this job to run before being killed (in seconds)</li>
 <li><strong>input</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description defining the data for this job. This field must be populated when the job is first
 queued.</li>
 <li><strong>input_file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for input files for this job</li>
@@ -1810,22 +1770,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.Job.is_ready_to_requeue">
-<code class="descname">is_ready_to_requeue</code><a class="headerlink" href="#job.models.Job.is_ready_to_requeue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this job can be added to the queue after being attempted previously.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job status allows the job to be queued, false otherwise.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.Job.is_superseded">
 <code class="descname">is_superseded</code><a class="headerlink" href="#job.models.Job.is_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -2003,13 +1947,6 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.Job.output">
 <code class="descname">output</code><a class="headerlink" href="#job.models.Job.output" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.Job.priority">
-<code class="descname">priority</code><a class="headerlink" href="#job.models.Job.priority" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2279,13 +2216,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="job.models.Job.superseded_job_id">
 <code class="descname">superseded_job_id</code><a class="headerlink" href="#job.models.Job.superseded_job_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.Job.timeout">
-<code class="descname">timeout</code><a class="headerlink" href="#job.models.Job.timeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -3323,54 +3253,6 @@ job_exe, job_type, and error models will be populated.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling job executions.</p>
 <dl class="method">
-<dt id="job.models.JobExecutionManager.get_details">
-<code class="descname">get_details</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_details" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets additional details for the given job execution model based on related model attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The unique identifier of the job execution.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution with extra related attributes.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobExecutionManager.get_exes">
-<code class="descname">get_exes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>node_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_exes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of job executions within the given time range.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions with the a specific status.</li>
-<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions of the type associated with the category.</li>
-<li><strong>node_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions that ran on a node with the identifier.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job executions that match the time range.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobExecutionManager.get_job_exe_details">
 <code class="descname">get_job_exe_details</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_job_exe_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns additional details about a job execution related to the given job identifier and execution number.</p>
@@ -3443,24 +3325,6 @@ job_exe, job_type, and error models will be populated.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobExecutionManager.get_latest">
-<code class="descname">get_latest</code><span class="sig-paren">(</span><em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_latest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the latest job execution associated with each given job.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> ([class:<cite>job.models.Job</cite>]) &#8211; The jobs to populate with latest execution models.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary that maps each job identifier to its latest execution.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of int -&gt; class:<cite>job.models.JobExecution</cite></td>
 </tr>
 </tbody>
 </table>
@@ -3819,36 +3683,6 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling jobs</p>
 <dl class="method">
-<dt id="job.models.JobManager.create_job_old">
-<code class="descname">create_job_old</code><span class="sig-paren">(</span><em>job_type</em>, <em>event_id</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
-job is superseding. The returned job model will have not yet been saved in the database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type</strong> (<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the job to create</li>
-<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID that triggered the creation of this job</li>
-<li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this job</li>
-<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this job</li>
-<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this job</li>
-<li><strong>superseded_job</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job that the created job is superseding, possibly None</li>
-<li><strong>delete_superseded</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; Whether the created job should delete products from the superseded job</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new job</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobManager.create_job_v6">
 <code class="descname">create_job_v6</code><span class="sig-paren">(</span><em>job_type_rev</em>, <em>event_id=None</em>, <em>ingest_event_id=None</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>job_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given job type revision and returns the (unsaved) job model</p>
@@ -3908,41 +3742,6 @@ job is superseding. The returned job model will have not yet been saved in the d
 <li><strong>error_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs that failed due to these errors.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query jobs that match the is_superseded flag.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The job query</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobManager.filter_jobs_related_v5">
-<code class="descname">filter_jobs_related_v5</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs_related_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a query for job models that filters on the given fields. The returned query includes the related
-job_type, job_type_rev, event, and error fields, except for the job_type.manifest and job_type_rev.manifest
-fields.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with the identifier.</li>
-<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with the given batch identifiers.</li>
-<li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
-<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -4036,55 +3835,6 @@ fields.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.get_details_v5">
-<code class="descname">get_details_v5</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_details_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets additional details for the given job model based on related model attributes.</p>
-<p>The additional fields include: input files, recipe, job executions, and generated products.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The unique identifier of the job.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job with extra related attributes.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobManager.get_job_updates">
-<code class="descname">get_job_updates</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_job_updates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of jobs that changed status within the given time range.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of jobs that match the time range.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobManager.get_job_with_interfaces">
 <code class="descname">get_job_with_interfaces</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_job_with_interfaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models</p>
@@ -4097,39 +3847,6 @@ fields.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job model with related job_type_rev and recipe__recipe_type_rev models</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobManager.get_jobs_v5">
-<code class="descname">get_jobs_v5</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of jobs within the given time range.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with the identifier.</li>
-<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with batches with the given identifiers.</li>
-<li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
-<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of jobs that match the time range.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
-</td>
 </tr>
 </tbody>
 </table>
@@ -4265,28 +3982,6 @@ setting of their associated job type.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.populate_job_data_v5">
-<code class="descname">populate_job_data_v5</code><span class="sig-paren">(</span><em>job</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.populate_job_data_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
-on the job model. The job should have its related job_type and job_type_rev models populated.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job</li>
-<li><strong>data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; JSON description defining the job data to run on</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><strong>job.configuration.data.exceptions.InvalidData</strong></a> &#8211; If the job data is invalid</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobManager.process_job_input">
 <code class="descname">process_job_input</code><span class="sig-paren">(</span><em>job</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.process_job_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes the input data for the given job to populate its input file models and input meta-data fields. The
@@ -4367,24 +4062,6 @@ model populated.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.supersede_jobs_old">
-<code class="descname">supersede_jobs_old</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.supersede_jobs_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>jobs</strong> ([<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]) &#8211; The jobs to supersede</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the jobs were superseded</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobManager.update_jobs_node">
 <code class="descname">update_jobs_node</code><span class="sig-paren">(</span><em>job_ids</em>, <em>node_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the jobs with the given IDs to have the given node and start time</p>
@@ -4449,25 +4126,6 @@ that are not in a valid state for being CANCELED will be ignored.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobManager.update_jobs_to_canceled_old">
-<code class="descname">update_jobs_to_canceled_old</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_canceled_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
-updates occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of job IDs</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The cancel time</li>
-</ul>
 </td>
 </tr>
 </tbody>
@@ -4606,26 +4264,6 @@ that are not in a valid state for RUNNING will be ignored.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.models.JobManager.update_status">
-<code class="descname">update_status</code><span class="sig-paren">(</span><em>jobs</em>, <em>status</em>, <em>when</em>, <em>error=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the given jobs with the new status. The caller must have obtained model locks on the job models.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>jobs</strong> ([<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]) &#8211; The jobs to update</li>
-<li><strong>status</strong> (<em>string</em>) &#8211; The new status</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the status change occurred</li>
-<li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>) &#8211; The error that caused the failure (required if status is FAILED, should be None otherwise)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -4642,21 +4280,18 @@ lock on the model using select_for_update().</p>
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the job type used by clients for queries</li>
 <li><strong>version</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The version of the job type</li>
 <li><strong>version_array</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The version of the job type split into SemVer integer components (major,minor,patch,prerelease)</li>
-<li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of the job type. Deprecated - remove with v5.</li>
-<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of the job type. Deprecated - remove with v5.</li>
 <li><strong>is_system</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this is a system type</li>
 <li><strong>is_long_running</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this type is long running. A job of this type is intended to run for a long time,
 potentially indefinitely, without timing out and always being re-queued after a failure</li>
 <li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the job type is active (false once job type is deprecated)</li>
 <li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the job type is paused (while paused no jobs of this type will be scheduled off of the
 queue)</li>
-<li><strong>is_published</strong> &#8211; Whether this job type has outputs that are published.
-:type is_published: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code></li>
+<li><strong>is_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this job type has outputs that are published.</li>
 <li><strong>unmet_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; List of resource names that currently don&#8217;t exist or aren&#8217;t sufficient in the cluster</li>
 <li><strong>max_scheduled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum number of jobs of this type that may be scheduled to run at the same time</li>
 <li><strong>max_tries</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum number of times to try executing a job in case of errors (minimum one)</li>
 <li><strong>icon_code</strong> (<em>string of a FontAwesome icon code</em>) &#8211; A font-awesome icon code (like &#8216;f013&#8217; for gear) to use when representing this job type</li>
-<li><strong>revision_num</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The current revision number of the interface, starts at one. Deprecated - remove with v5.</li>
+<li><strong>revision_num</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The current revision number of the interface, starts at one.</li>
 <li><strong>docker_image</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The Docker image containing the code to run for this job (if uses_docker is True)</li>
 <li><strong>manifest</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description defining the manifest for running a job of this type (previously interface).</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON describing the default job configuration for jobs of this type</li>
@@ -4664,35 +4299,6 @@ queue)</li>
 <li><strong>deprecated</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was deprecated (no longer active)</li>
 <li><strong>paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was paused</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was last modified</li>
-<li><strong>category</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional overall category of the job type. Deprecated - remove with v5.</li>
-<li><strong>author_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the person or organization that created the associated algorithm. Deprecated -
-remove with v5.</li>
-<li><strong>author_url</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; The address to a home page about the author or associated algorithm. Deprecated - removed in
-v6.</li>
-<li><strong>is_operational</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this job type is operational (True) or is still in a research &amp; development (R&amp;D)
-phase (False)</li>
-<li><strong>uses_docker</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the job type uses Docker. Deprecated - remove with v5.</li>
-<li><strong>docker_privileged</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the job type uses Docker in privileged mode. Deprecated - remove with v5.</li>
-<li><strong>docker_params</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON array of 2-tuples (key-value) which will be passed as-is to docker. See the mesos
-prototype file for further information. Deprecated - remove with v5.</li>
-<li><strong>error_mapping</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; Mapping for translating an exit code to an error type. Deprecated - remove with v5.</li>
-<li><strong>trigger_rule</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The rule to trigger new jobs of this type</li>
-<li><strong>priority</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The priority of the job type (lower number is higher priority)</li>
-<li><strong>timeout</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum amount of time to allow a job of this type to run before being killed (in seconds)</li>
-<li><strong>cpus_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The number of CPUs required for a job of this type. Deprecated - remove with v5.</li>
-<li><strong>mem_const_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A constant amount of RAM in MiB required for a job of this type. Deprecated - removed
-in v6.</li>
-<li><strong>mem_mult_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A multiplier (2x = 2.0) applied to the size of the input files to determine additional
-RAM in MiB required for a job of this type. Deprecated - remove with v5.</li>
-<li><strong>shared_mem_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of shared memory (/dev/shm) in MiB required for a job of this type.
-Deprecated - remove with v5.</li>
-<li><strong>disk_out_const_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A constant amount of disk space in MiB required for job output (temp work and
-products) for a job of this type. Deprecated - remove with v5.</li>
-<li><strong>disk_out_mult_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A multiplier (2x = 2.0) applied to the size of the input files to determine
-additional disk space in MiB required for job output (temp work and products) for a job of this type.
-Deprecated - remove with v5.</li>
-<li><strong>custom_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON describing the custom resources required for jobs of this type. Deprecated -
-remove with v5.</li>
 </ul>
 </td>
 </tr>
@@ -4700,12 +4306,7 @@ remove with v5.</li>
 </table>
 <dl class="attribute">
 <dt id="job.models.JobType.BASE_FIELDS">
-<code class="descname">BASE_FIELDS</code><em class="property"> = (u'id', u'name', u'version', u'title', u'description', u'category', u'author_name', u'author_url', u'is_system', u'is_long_running', u'is_active', u'is_operational', u'is_paused', u'is_published', u'icon_code')</em><a class="headerlink" href="#job.models.JobType.BASE_FIELDS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.BASE_FIELDS_V6">
-<code class="descname">BASE_FIELDS_V6</code><em class="property"> = (u'id', u'name', u'version', u'manifest', u'error_mapping', u'custom_resources', u'configuration')</em><a class="headerlink" href="#job.models.JobType.BASE_FIELDS_V6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">BASE_FIELDS</code><em class="property"> = (u'id', u'name', u'version', u'manifest', u'configuration', u'icon_code', u'is_active', u'is_paused', u'is_published')</em><a class="headerlink" href="#job.models.JobType.BASE_FIELDS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -4722,62 +4323,12 @@ remove with v5.</li>
 
 <dl class="attribute">
 <dt id="job.models.JobType.UNEDITABLE_FIELDS">
-<code class="descname">UNEDITABLE_FIELDS</code><em class="property"> = (u'name', u'version', u'is_system', u'is_long_running', u'is_active', u'uses_docker', u'revision_num', u'created', u'deprecated', u'paused', u'last_modified')</em><a class="headerlink" href="#job.models.JobType.UNEDITABLE_FIELDS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">UNEDITABLE_FIELDS</code><em class="property"> = (u'version_array', u'is_system', u'is_long_running', u'is_active', u'created', u'deprecated', u'last_modified', u'paused', u'revision_num')</em><a class="headerlink" href="#job.models.JobType.UNEDITABLE_FIELDS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.UNEDITABLE_FIELDS_V6">
-<code class="descname">UNEDITABLE_FIELDS_V6</code><em class="property"> = (u'is_system', u'revision_num', u'created', u'deprecated', u'last_modified')</em><a class="headerlink" href="#job.models.JobType.UNEDITABLE_FIELDS_V6" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.author_name">
-<code class="descname">author_name</code><a class="headerlink" href="#job.models.JobType.author_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.author_url">
-<code class="descname">author_url</code><a class="headerlink" href="#job.models.JobType.author_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.category">
-<code class="descname">category</code><a class="headerlink" href="#job.models.JobType.category" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="job.models.JobType.configuration">
 <code class="descname">configuration</code><a class="headerlink" href="#job.models.JobType.configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.convert_custom_resources">
-<code class="descname">convert_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.convert_custom_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes the raw custom_resources dict and performs the Scale version conversion on it so that the REST API
-always returns the latest version of the JSON schema</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The custom resources dict converted to the latest version of the JSON schema</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.cpus_required">
-<code class="descname">cpus_required</code><a class="headerlink" href="#job.models.JobType.cpus_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -4790,36 +4341,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobType.custom_resources">
-<code class="descname">custom_resources</code><a class="headerlink" href="#job.models.JobType.custom_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobType.deprecated">
 <code class="descname">deprecated</code><a class="headerlink" href="#job.models.JobType.deprecated" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.description">
-<code class="descname">description</code><a class="headerlink" href="#job.models.JobType.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.disk_out_const_required">
-<code class="descname">disk_out_const_required</code><a class="headerlink" href="#job.models.JobType.disk_out_const_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.disk_out_mult_required">
-<code class="descname">disk_out_mult_required</code><a class="headerlink" href="#job.models.JobType.disk_out_mult_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -4831,107 +4354,17 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="job.models.JobType.docker_params">
-<code class="descname">docker_params</code><a class="headerlink" href="#job.models.JobType.docker_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.docker_privileged">
-<code class="descname">docker_privileged</code><a class="headerlink" href="#job.models.JobType.docker_privileged" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.error_mapping">
-<code class="descname">error_mapping</code><a class="headerlink" href="#job.models.JobType.error_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
 <dl class="method">
-<dt id="job.models.JobType.get_category">
-<code class="descname">get_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the category for this job type</p>
-<p># TODO: Remove in v6 in deference to tag access within the manifest
-This is merely a placeholder for the short term to minimize changes associate with Seed migration</p>
+<dt id="job.models.JobType.get_description">
+<code class="descname">get_description</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the job description from the manifest</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The category of job type (or first tag in SeedManifest as of v6)</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The description</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_cpus_required">
-<code class="descname">get_cpus_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_cpus_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Either returns field value or pulls from Seed resources</p>
-<p># TODO remove in v6 in deference to direct exposure of Seed Manifest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">cpus required by job</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_custom_resources">
-<code class="descname">get_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_custom_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the custom resources required for jobs of this type</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The custom resources</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_disk_out_const_required">
-<code class="descname">get_disk_out_const_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_disk_out_const_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Either returns field value or pulls from Seed resources</p>
-<p># TODO remove in v6 in deference to direct exposure of Seed Manifest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">disk constant required by job</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_disk_out_mult_required">
-<code class="descname">get_disk_out_mult_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_disk_out_mult_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Either returns field value or pulls from Seed resources</p>
-<p># TODO remove in v6 in deference to direct exposure of Seed Manifest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">disk multiplier required by job</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
 </tbody>
 </table>
@@ -4979,8 +4412,7 @@ This is merely a placeholder for the short term to minimize changes associate wi
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job interface for this type</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a> or
-<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -5013,40 +4445,6 @@ present this function will attempt to convert it into an integer for sorting.</d
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the version array</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">array</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_mem_const_required">
-<code class="descname">get_mem_const_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_mem_const_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Either returns field value or pulls from Seed resources</p>
-<p># TODO remove in v6 in deference to direct exposure of Seed Manifest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">memory constant required by job</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_mem_mult_required">
-<code class="descname">get_mem_mult_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_mem_mult_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Either returns field value or pulls from Seed resources</p>
-<p># TODO remove in v6 in deference to direct exposure of Seed Manifest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">memory multiplier required by job</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
 </tbody>
 </table>
@@ -5122,33 +4520,16 @@ present this function will attempt to convert it into an integer for sorting.</d
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobType.get_shared_mem_required">
-<code class="descname">get_shared_mem_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_shared_mem_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Either returns field value or pulls from Seed resources</p>
-<p># TODO remove in v6 in deference to direct exposure of Seed Manifest</p>
+<dt id="job.models.JobType.get_title">
+<code class="descname">get_title</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the job title from the manifest</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">shared memory required by job</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Title</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.get_v2_configuration_json">
-<code class="descname">get_v2_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_v2_configuration_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the job configuration in v2 of the JSON schema</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job configuration in v2 of the JSON schema</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>
@@ -5199,13 +4580,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobType.is_operational">
-<code class="descname">is_operational</code><a class="headerlink" href="#job.models.JobType.is_operational" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobType.is_paused">
 <code class="descname">is_paused</code><a class="headerlink" href="#job.models.JobType.is_paused" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -5217,22 +4591,6 @@ object the first time, the query is executed.</p>
 <code class="descname">is_published</code><a class="headerlink" href="#job.models.JobType.is_published" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobType.is_seed_job_type">
-<code class="descname">is_seed_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.is_seed_job_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the JobType object is a Seed job type (True) or legacy job type (False)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this job type is legacy or Seed</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -5391,20 +4749,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobType.mem_const_required">
-<code class="descname">mem_const_required</code><a class="headerlink" href="#job.models.JobType.mem_const_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.mem_mult_required">
-<code class="descname">mem_mult_required</code><a class="headerlink" href="#job.models.JobType.mem_mult_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobType.metricsjobtype_set">
 <code class="descname">metricsjobtype_set</code><a class="headerlink" href="#job.models.JobType.metricsjobtype_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -5470,13 +4814,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobType.priority">
-<code class="descname">priority</code><a class="headerlink" href="#job.models.JobType.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobType.queue_set">
 <code class="descname">queue_set</code><a class="headerlink" href="#job.models.JobType.queue_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -5514,56 +4851,8 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobType.shared_mem_required">
-<code class="descname">shared_mem_required</code><a class="headerlink" href="#job.models.JobType.shared_mem_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.timeout">
-<code class="descname">timeout</code><a class="headerlink" href="#job.models.JobType.timeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.title">
-<code class="descname">title</code><a class="headerlink" href="#job.models.JobType.title" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.trigger_rule">
-<code class="descname">trigger_rule</code><a class="headerlink" href="#job.models.JobType.trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related object on the forward side of a many-to-one or
-one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.trigger_rule_id">
-<code class="descname">trigger_rule_id</code><a class="headerlink" href="#job.models.JobType.trigger_rule_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobType.unmet_resources">
 <code class="descname">unmet_resources</code><a class="headerlink" href="#job.models.JobType.unmet_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobType.uses_docker">
-<code class="descname">uses_docker</code><a class="headerlink" href="#job.models.JobType.uses_docker" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -5629,60 +4918,6 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling job types</p>
 <dl class="method">
-<dt id="job.models.JobTypeManager.convert_manifest_to_v5_interface">
-<code class="descname">convert_manifest_to_v5_interface</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.convert_manifest_to_v5_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses a Seed manifest interface definition and reshapes it to match the format of the old style
-interface.  This is done so that v5 API calls to get job details can still receive information about
-new Seed style job types.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manifest</strong> (<em>dict</em>) &#8211; The Seed Manifest interface definition</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The converted manifest</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeManager.create_job_type_v5">
-<code class="descname">create_job_type_v5</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.create_job_type_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
-transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of the job type used by clients for queries</li>
-<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
-<li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
-<li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
-<li><strong>error_mapping</strong> (<a class="reference internal" href="job.error.html#job.error.mapping.JobErrorMapping" title="job.error.mapping.JobErrorMapping"><code class="xref py py-class docutils literal"><span class="pre">job.error.mapping.JobErrorMapping</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
-<li><strong>custom_resources</strong> (<a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a>) &#8211; Custom resources required by this job type. Deprecated - remove with v5.</li>
-<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.html#job.configuration.json.job_config_2_0.JobConfigurationV2" title="job.configuration.json.job_config_2_0.JobConfigurationV2"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job_config_2_0.JobConfigurationV2</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
-<li><strong>secrets</strong> (<em>dict</em>) &#8211; Secret settings required by this job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new job type</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value
-:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job
-type interface is invalid</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobTypeManager.create_job_type_v6">
 <code class="descname">create_job_type_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.create_job_type_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
@@ -5710,39 +4945,6 @@ transaction.</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeManager.edit_job_type_v5">
-<code class="descname">edit_job_type_v5</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.edit_job_type_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits the given job type and saves the changes in the database. The caller must provide the related
-trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
-indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
-no change to the trigger rule (False) and removing the trigger rule (True) when trigger_rule is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the job type to edit</li>
-<li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type, possibly None</li>
-<li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
-<li><strong>remove_trigger_rule</strong> (<em>bool</em>) &#8211; Indicates whether the trigger rule should be unchanged (False) or removed (True)
-when trigger_rule is None</li>
-<li><strong>error_mapping</strong> (<a class="reference internal" href="job.error.html#job.error.mapping.JobErrorMapping" title="job.error.mapping.JobErrorMapping"><code class="xref py py-class docutils literal"><span class="pre">job.error.mapping.JobErrorMapping</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
-<li><strong>custom_resources</strong> (<a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a>) &#8211; Custom resources required by this job type</li>
-<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.html#job.configuration.json.job_config_2_0.JobConfigurationV2" title="job.configuration.json.job_config_2_0.JobConfigurationV2"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job_config_2_0.JobConfigurationV2</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
-<li><strong>secrets</strong> (<em>dict</em>) &#8211; Secret settings required by this job type</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value
-:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job
-type interface is invalid
-:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If the interface change
-invalidates any existing recipe type definitions</p>
 </dd></dl>
 
 <dl class="method">
@@ -5815,25 +5017,6 @@ indicates that the field should not change.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobTypeManager.get_details_v5">
-<code class="descname">get_details_v5</code><span class="sig-paren">(</span><em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_details_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the job type for the given ID with all detail fields included.</p>
-<p>The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the job type.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job type with all detail fields included.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobTypeManager.get_details_v6">
 <code class="descname">get_details_v6</code><span class="sig-paren">(</span><em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_details_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the job type for the given name and version with all detail fields included.</p>
@@ -5888,7 +5071,7 @@ count of associated jobs and the last status change of a running job.</p>
 <li><strong>keywords</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query job types with name, title, description or tag matching one of the specified keywords</li>
 <li><strong>ids</strong> &#8211; Query job types with a version matching the given ids</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Query job types that are actively available for use.</li>
-<li><strong>is_system</strong> &#8211; Query job types that are system job types.</li>
+<li><strong>is_system</strong> (<em>bool</em>) &#8211; Query job types that are system job types.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
@@ -5919,35 +5102,6 @@ count of associated jobs and the last status change of a running job.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of versions of the job type that match the given parameters.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeManager.get_job_types">
-<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>names=None</em>, <em>categories=None</em>, <em>is_active=True</em>, <em>is_operational=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_job_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of job types within the given time range.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
-<li><strong>names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>is_active</strong> (<em>bool</em>) &#8211; Query job types that are actively available for use.</li>
-<li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query job types that are operational or research phase.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job types that match the time range.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</p>
@@ -6065,7 +5219,7 @@ count of associated jobs and the longest running job.</p>
 
 <dl class="method">
 <dt id="job.models.JobTypeManager.get_status">
-<code class="descname">get_status</code><span class="sig-paren">(</span><em>started</em>, <em>ended=None</em>, <em>is_operational=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_status</code><span class="sig-paren">(</span><em>started</em>, <em>ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of job types with counts broken down by job status.</p>
 <p>Note that all running job types are counted regardless of date/time filters.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -6075,7 +5229,6 @@ count of associated jobs and the longest running job.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
-<li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query job types that are operational or research phase.</li>
 </ul>
 </td>
 </tr>
@@ -6105,38 +5258,6 @@ count of associated jobs and the longest running job.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeManager.validate_job_type_v5">
-<code class="descname">validate_job_type_v5</code><span class="sig-paren">(</span><em>name</em>, <em>version</em>, <em>interface</em>, <em>error_mapping=None</em>, <em>trigger_config=None</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.validate_job_type_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a new job type prior to attempting a save</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; The system name of the job type</li>
-<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
-<li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
-<li><strong>error_mapping</strong> (<a class="reference internal" href="job.error.html#job.error.mapping.JobErrorMapping" title="job.error.mapping.JobErrorMapping"><code class="xref py py-class docutils literal"><span class="pre">job.error.mapping.JobErrorMapping</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
-<li><strong>trigger_config</strong> (<a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a>) &#8211; The trigger rule configuration, possibly None</li>
-<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.html#job.configuration.json.job_config_2_0.JobConfigurationV2" title="job.configuration.json.job_config_2_0.JobConfigurationV2"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job_config_2_0.JobConfigurationV2</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If the interface invalidates any</dt>
-<dd>existing recipe type definitions</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -6864,95 +5985,10 @@ object the first time, the query is executed.</p>
 <span id="job-serializers-module"></span><h2>job.serializers module<a class="headerlink" href="#module-job.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for jobs and job types</p>
 <dl class="class">
-<dt id="job.serializers.JobBaseSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="job.serializers.JobBaseSerializerV6">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsInputSerializer">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobDetailsInputSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
-<p>Converts job detail model input fields to REST output</p>
-<dl class="class">
-<dt id="job.serializers.JobDetailsInputSerializer.Meta">
-<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="job.serializers.JobDetailsInputSerializer.Meta.FILE_SERIALIZER">
-<code class="descname">FILE_SERIALIZER</code><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.Meta.FILE_SERIALIZER" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5" title="job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializerV5</span></code></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5">
-<em class="property">class </em><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
-<p>Converts Scale file model fields to REST output</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="method">
-<dt id="job.serializers.JobDetailsInputSerializer.to_representation">
-<code class="descname">to_representation</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.to_representation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsOutputSerializer">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobDetailsOutputSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsOutputSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobDetailsInputSerializer" title="job.serializers.JobDetailsInputSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobDetailsInputSerializer</span></code></a></p>
-<p>Converts job detail model output fields to REST output</p>
-<p>TODO: Deprecated in v6</p>
-<dl class="method">
-<dt id="job.serializers.JobDetailsOutputSerializer.to_representation">
-<code class="descname">to_representation</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsOutputSerializer.to_representation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobSerializerV5" title="job.serializers.JobSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializerV5</span></code></a></p>
-<p>Converts job model and related fields to REST output.</p>
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV5.ErrorSerializerV5">
-<em class="property">class </em><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV5.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV5.RecipeSerializerV5">
-<em class="property">class </em><code class="descname">RecipeSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV5.RecipeSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="recipe.html#recipe.serializers.RecipeBaseSerializerV5" title="recipe.serializers.RecipeBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeBaseSerializerV5</span></code></a></p>
-<p>Converts recipe model fields to REST output.</p>
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV5.RecipeSerializerV5.TriggerEventBaseSerializerV5">
-<em class="property">class </em><code class="descname">TriggerEventBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV5.RecipeSerializerV5.TriggerEventBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV5.TriggerEventDetailsSerializerV5">
-<em class="property">class </em><code class="descname">TriggerEventDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV5.TriggerEventDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializerV5" title="trigger.serializers.TriggerEventBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV5</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -6963,38 +5999,10 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionBaseSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts job execution model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="job.serializers.JobExecutionBaseSerializerV6">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobExecutionSerializerV5" title="job.serializers.JobExecutionSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializerV5</span></code></a></p>
-<p>Converts job execution model fields to REST output</p>
-<dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializerV5.ErrorSerializerV5">
-<em class="property">class </em><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializerV5.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializerV5.NodeSerializer">
-<em class="property">class </em><code class="descname">NodeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializerV5.NodeSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="node.html#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
-<p>Converts node model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -7005,38 +6013,10 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionLogSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionLogSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionLogSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobExecutionSerializerV5" title="job.serializers.JobExecutionSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializerV5</span></code></a></p>
-<p>Converts job execution model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="job.serializers.JobExecutionLogSerializerV6">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionLogSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionLogSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.serializers.JobExecutionSerializerV6" title="job.serializers.JobExecutionSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializerV6</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobExecutionSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobExecutionBaseSerializerV5" title="job.serializers.JobExecutionBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionBaseSerializerV5</span></code></a></p>
-<p>Converts job execution model fields to REST output</p>
-<dl class="class">
-<dt id="job.serializers.JobExecutionSerializerV5.ErrorBaseSerializerV5">
-<em class="property">class </em><code class="descname">ErrorBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializerV5.ErrorBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobExecutionSerializerV5.NodeBaseSerializer">
-<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializerV5.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts node model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -7061,53 +6041,10 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobRevisionSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobRevisionSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobRevisionSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobSerializerV5" title="job.serializers.JobSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializerV5</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="job.serializers.JobRevisionSerializerV6">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobRevisionSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobRevisionSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.serializers.JobSerializerV6" title="job.serializers.JobSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializerV6</span></code></a></p>
 <p>Converts job model fields to REST output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobBaseSerializerV5" title="job.serializers.JobBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobBaseSerializerV5</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-<dl class="class">
-<dt id="job.serializers.JobSerializerV5.ErrorBaseSerializerV5">
-<em class="property">class </em><code class="descname">ErrorBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobSerializerV5.ErrorBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobSerializerV5.TriggerEventBaseSerializerV5">
-<em class="property">class </em><code class="descname">TriggerEventBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobSerializerV5.TriggerEventBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.serializers.JobSerializerV5.cpus_required">
-<code class="descname">cpus_required</code><em class="property"> = ''</em><a class="headerlink" href="#job.serializers.JobSerializerV5.cpus_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.serializers.JobSerializerV5.disk_out_required">
-<code class="descname">disk_out_required</code><em class="property"> = ''</em><a class="headerlink" href="#job.serializers.JobSerializerV5.disk_out_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.serializers.JobSerializerV5.mem_required">
-<code class="descname">mem_required</code><em class="property"> = ''</em><a class="headerlink" href="#job.serializers.JobSerializerV5.mem_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -7150,27 +6087,6 @@ object the first time, the query is executed.</p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobUpdateSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobUpdateSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobUpdateSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobSerializerV5" title="job.serializers.JobSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializerV5</span></code></a></p>
-<p>Converts job updates to REST output</p>
-<dl class="class">
-<dt id="job.serializers.JobUpdateSerializerV5.ScaleFileSerializerV5">
-<em class="property">class </em><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobUpdateSerializerV5.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
-<p>Converts Scale file model fields to REST output</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobWithExecutionSerializerV5">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobWithExecutionSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobWithExecutionSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobSerializerV5" title="job.serializers.JobSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializerV5</span></code></a></p>
-<p>Converts job with latest execution model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
@@ -7221,7 +6137,7 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.views.CancelJobsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#job.views.CancelJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV5</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV6</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -7255,40 +6171,16 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.views.JobDetailsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobDetailsView.patch">
-<code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.patch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify job info with a subset of fields</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>job_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.views.JobDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializerV6</span></code></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -7297,12 +6189,6 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobExecutionDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
 <p>This view is the endpoint for viewing job execution detail</p>
-<dl class="method">
-<dt id="job.views.JobExecutionDetailsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.views.JobExecutionDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobExecutionDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -7310,7 +6196,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="job.views.JobExecutionDetailsView.retrieve">
-<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em>, <em>exe_num=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em>, <em>exe_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets job execution and associated job_type id, name, and version</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -7331,6 +6217,12 @@ object the first time, the query is executed.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobExecutionDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobExecutionDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobExecutionDetailsSerializerV6</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -7378,12 +6270,6 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for viewing job executions and their associated job_type id, name, and version</p>
 <dl class="method">
-<dt id="job.views.JobExecutionsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.views.JobExecutionsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>job_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets job executions and their associated job_type id, name, and version</p>
@@ -7402,24 +6288,6 @@ object the first time, the query is executed.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobExecutionsView.list_v5">
-<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets job executions and their associated job_type id, name, and version</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
 </tbody>
 </table>
@@ -7447,6 +6315,12 @@ object the first time, the query is executed.</p>
 <dt id="job.views.JobExecutionsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobExecutionsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobExecutionsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobExecutionsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobExecutionSerializerV6</span></code></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -7479,16 +6353,16 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.views.JobInputFilesView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobInputFilesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.views.JobInputFilesView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobInputFilesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobInputFilesView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobInputFilesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializerV6</span></code></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -7523,57 +6397,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.views.JobTypeDetailsView.get_v6">
-<code class="descname">get_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeDetailsView.get_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the details for a job type version and return them in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>name</strong> (<em>string</em>) &#8211; The name of the job type</li>
-<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.views.JobTypeDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits an existing job type and returns the updated details</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job type.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeDetailsView.patch_v6">
-<code class="descname">patch_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeDetailsView.patch_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing seed job type and returns the updated details</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -7604,120 +6429,6 @@ object the first time, the query is executed.</p>
 <dt id="job.views.JobTypeDetailsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobTypeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobTypeDetailsSerializerV6</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.views.JobTypeIDDetailsView">
-<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobTypeIDDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
-<p>This view is the endpoint for retrieving/updating details of a job type.</p>
-<dl class="method">
-<dt id="job.views.JobTypeIDDetailsView.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the details for a job type and return them in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeIDDetailsView.get_v5">
-<code class="descname">get_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView.get_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the details for a job type and return them in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeIDDetailsView.patch">
-<code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView.patch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits an existing job type and returns the updated details</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job type.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeIDDetailsView.patch_v5">
-<code class="descname">patch_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView.patch_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits an existing legacy job type and returns the updated details</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job type.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobTypeIDDetailsView.queryset">
-<code class="descname">queryset</code><a class="headerlink" href="#job.views.JobTypeIDDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobTypeIDDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobTypeIDDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobTypeDetailsSerializerV5</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -7807,32 +6518,6 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.views.JobTypeRevisionDetailsView.get_v6">
-<code class="descname">get_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeRevisionDetailsView.get_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the details for a job type version and return them in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>name</strong> (<em>string</em>) &#8211; The name of the job type</li>
-<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
-<li><strong>revision_num</strong> (<em>int encoded as a str</em>) &#8211; The revision number of the job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.views.JobTypeRevisionDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobTypeRevisionDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -7854,31 +6539,6 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="job.views.JobTypeRevisionsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeRevisionsView.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine api version and call specific method</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>name</strong> (<em>string</em>) &#8211; The name of the job type</li>
-<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeRevisionsView.list_v6">
-<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeRevisionsView.list_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of versions for a job type with the given name and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -7922,30 +6582,6 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="job.views.JobTypeVersionsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeVersionsView.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine api version and call specific method</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>name</strong> (<em>string</em>) &#8211; The name of the job type</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeVersionsView.list_v6">
-<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeVersionsView.list_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of versions for a job type with the given name and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -8178,24 +6814,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.views.JobTypesView.create_v5">
-<code class="descname">create_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesView.create_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a legacy job type and returns a link to the detail URL</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.views.JobTypesView.create_v6">
 <code class="descname">create_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesView.create_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates or edits a Seed job type and returns a link to the detail URL</p>
@@ -8211,12 +6829,6 @@ object the first time, the query is executed.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypesView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
 </dd></dl>
 
 <dl class="method">
@@ -8237,81 +6849,15 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.views.JobTypesView.list_v5">
-<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesView.list_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the list of all job types and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypesView.list_v6">
-<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesView.list_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the list of all job types and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.views.JobTypesView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobTypesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="job.views.JobUpdatesView">
-<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobUpdatesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobUpdatesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
-<p>This view is the endpoint for retrieving job updates over a given time range.</p>
-<dl class="method">
-<dt id="job.views.JobUpdatesView.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobUpdatesView.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the job updates for a given time range and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
-<dt id="job.views.JobUpdatesView.queryset">
-<code class="descname">queryset</code><a class="headerlink" href="#job.views.JobUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobUpdatesView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobUpdatesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobUpdateSerializerV5</span></code></p>
+<dt id="job.views.JobTypesView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobTypesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobTypeSerializerV6</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -8321,12 +6867,6 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving a list of all available jobs.</p>
-<dl class="method">
-<dt id="job.views.JobsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="job.views.JobsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsView.list" title="Permalink to this definition">¶</a></dt>
@@ -8368,58 +6908,10 @@ object the first time, the query is executed.</p>
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="job.views.JobsWithExecutionView">
-<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobsWithExecutionView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsWithExecutionView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
-<p>This view is the endpoint for viewing jobs and their associated latest execution</p>
-<dl class="method">
-<dt id="job.views.JobsWithExecutionView.list">
-<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsWithExecutionView.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets jobs and their associated latest execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobsWithExecutionView.list_v5">
-<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsWithExecutionView.list_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets jobs and their associated latest execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
-<dt id="job.views.JobsWithExecutionView.queryset">
-<code class="descname">queryset</code><a class="headerlink" href="#job.views.JobsWithExecutionView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobsWithExecutionView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobsWithExecutionView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobWithExecutionSerializerV5</span></code></p>
+<dt id="job.views.JobsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV6</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -8454,12 +6946,6 @@ object the first time, the query is executed.</p>
 <dt id="job.views.RequeueJobsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.RequeueJobsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.RequeueJobsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV5</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

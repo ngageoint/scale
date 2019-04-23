@@ -126,7 +126,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -309,6 +308,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0015_scalefile_data_type_tags">storage.migrations.0015_scalefile_data_type_tags module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0016_populate_data_type_tags">storage.migrations.0016_populate_data_type_tags module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0017_remove_scalefile_data_type">storage.migrations.0017_remove_scalefile_data_type module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0018_remove_scalefile_is_operational">storage.migrations.0018_remove_scalefile_is_operational module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1021,8 +1021,6 @@ record will result in the same UUID, which can then be used as a stable permanen
 <li><strong>source_sensor</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The specific identifier of the sensor used to produce the source file.</li>
 <li><strong>source_collection</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The collection of the source file.</li>
 <li><strong>source_task</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The task that produced the source file.</li>
-<li><strong>is_operational</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product was produced by an operational job type (True) or by a job type that
-is still in a research &amp; development (R&amp;D) phase (False)</li>
 <li><strong>has_been_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has ever been published. A product becomes published when its job
 execution completes successfully. A product that has been published will appear in the API call to retrieve
 product updates.</li>
@@ -1285,13 +1283,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.is_deleted">
 <code class="descname">is_deleted</code><a class="headerlink" href="#storage.models.ScaleFile.is_deleted" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="storage.models.ScaleFile.is_operational">
-<code class="descname">is_operational</code><a class="headerlink" href="#storage.models.ScaleFile.is_operational" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1742,8 +1733,8 @@ to be pre-fetched as part of the query.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="storage.models.ScaleFileManager.filter_files_v5">
-<code class="descname">filter_files_v5</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files_v5" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.models.ScaleFileManager.filter_files_v6">
+<code class="descname">filter_files_v6</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for Scale files that is filtered on the given fields.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2217,12 +2208,6 @@ this property should be None.</p>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="storage.models.Workspace.zero_size">
-<code class="descname">zero_size</code><a class="headerlink" href="#storage.models.Workspace.zero_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>hack to get a zero value returned for removed total_size and used_size fields</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -2328,31 +2313,6 @@ transaction. An argument of None for a field indicates that the field should not
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.models.WorkspaceManager.validate_workspace_v5">
-<code class="descname">validate_workspace_v5</code><span class="sig-paren">(</span><em>name</em>, <em>json_config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.WorkspaceManager.validate_workspace_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a new workspace prior to attempting a save</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of a Workspace to validate</li>
-<li><strong>json_config</strong> (<em>dict</em>) &#8211; The Workspace configuration</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<code class="xref py py-class docutils literal"><span class="pre">storage.configuration.workspace_configuration.ValidationWarning</span></code>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="storage.configuration.html#storage.configuration.exceptions.InvalidWorkspaceConfiguration" title="storage.configuration.exceptions.InvalidWorkspaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.exceptions.InvalidWorkspaceConfiguration</span></code></a>: If the configuration is invalid</p>
 </dd></dl>
 
 <dl class="method">
@@ -2468,13 +2428,6 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.serializers.ScaleFileBaseSerializerV5">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts Scale file model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="storage.serializers.ScaleFileBaseSerializerV6">
 <em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -2486,13 +2439,6 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileSerializerV6" title="storage.serializers.ScaleFileSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializerV6</span></code></a></p>
 <p>Converts file model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.serializers.ScaleFileSerializerV5">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
-<p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
@@ -2566,23 +2512,9 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.serializers.WorkspaceDetailsSerializerV5">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceSerializerV5" title="storage.serializers.WorkspaceSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceSerializerV5</span></code></a></p>
-<p>Converts workspace model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="storage.serializers.WorkspaceDetailsSerializerV6">
 <em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceSerializerV6" title="storage.serializers.WorkspaceSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceSerializerV6</span></code></a></p>
-<p>Converts workspace model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.serializers.WorkspaceSerializerV5">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceBaseSerializer" title="storage.serializers.WorkspaceBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceBaseSerializer</span></code></a></p>
 <p>Converts workspace model fields to REST output</p>
 </dd></dl>
 

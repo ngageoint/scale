@@ -45,22 +45,6 @@ product\.types module
     :undoc-members:
     :show-inheritance:
 
-product\.urls module
---------------------
-
-.. automodule:: product.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-product\.views module
----------------------
-
-.. automodule:: product.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

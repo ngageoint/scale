@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>v6 Removals &mdash; Scale 6.9.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'6.9.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Install" href="../../install/index.html" />
+    <link rel="prev" title="v6 Workspace Services" href="workspace.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                6.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#current-v6-services">Current v6 Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">v6 Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">v6 Ingest Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">v6 Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">v6 Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">v6 Recipe Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">v6 Workspace Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Removals</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#import-export-rest-api">Import/export REST API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-rest-api">Job REST API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#queue-rest-api">queue REST API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#products-rest-api">products REST API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-rest-api">recipe REST API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source-rest-api">source REST API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#v6-deprecated-messages">v6 Deprecated Messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#recipes">Recipes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">REST API</a> &raquo;</li>
+        
+      <li>v6 Removals</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/rest/v6/deprecated.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="v6-removals">
+<span id="rest-v6-deprecated"></span><h1>v6 Removals<a class="headerlink" href="#v6-removals" title="Permalink to this headline">¶</a></h1>
+<p>All v5 REST API endpoints were removed in Scale v6. Attempting to use v5 with Scale v6 will result in a 404 Error page.</p>
+<p>The following APIs were removed from Scale v6:</p>
+<div class="section" id="import-export-rest-api">
+<h2>Import/export REST API<a class="headerlink" href="#import-export-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>The import/export REST API endpoints were deprecated in Scale v5 and completely removed in Scale v6. This endpoint will now return a 500 Server Error if used. There is no Scale v6 replacement for the import/export REST APIs.</p>
+</div>
+<div class="section" id="job-rest-api">
+<h2>Job REST API<a class="headerlink" href="#job-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>Specific endpoints under the job and job-type REST API were removed in Scale v6.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>v5/job-types/{id}</dt>
+<dd>Scale v6 no longer supports retrieving job details through the /job-types/{id} endpoint. Users should use the new Scale v6 /job-types/{name} endpoint instead. See <span class="xref std std-ref">_rest_v6_job_type_versions</span> for more details.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>v5/jobs/executions</dt>
+<dd>Scale v6 no longer supports retrieving job execution details through the /jobs/executions endpoint. The /jobs/{id}/executions endpoint should be used instead. See <span class="xref std std-ref">_rest_v6_job_execution_list</span> for more details.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>v5/jobs/updates</dt>
+<dd>Scale v6 no longer supports the /jobs/updates endpoint. Using this endpoint will return a 500 Server Error.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="queue-rest-api">
+<h2>queue REST API<a class="headerlink" href="#queue-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>Specific endpoints under the queue API were deprecated in Scale v5 and completely removed in Scale v6. These endpoints will now return a 500 Server error if used.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>v5/queue/new-job</dt>
+<dd>The v5/queue/new-job REST endpoint was moved to the v6/jobs/ API. Jobs are now queued by posting to the v6/jobs/ endpoint. See <a class="reference internal" href="job.html#rest-v6-job-queue-new-job"><span class="std std-ref">v6 Job Queue new Job</span></a> for more details.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>v5/queue/new-recipe/</dt>
+<dd>The v5/queue/new-recipe REST endpoint was moved to the v6/recipes/ API. Recipes are now queued by posting to the v6/recipes/ endpoint. See <a class="reference internal" href="recipe.html#rest-v6-recipe-queue-new-recipe"><span class="std std-ref">Recipe Queue New Recipe</span></a> for more details.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>v5/queue/requeue-jobs/</dt>
+<dd>The v5/queue/requeue-jobs REST endpoint was moved to the v6/jobs/requeue/ API. Failed/Canceled jobs are now requeued by posting to the v6/job/requeue/ endpoint. See <span class="xref std std-ref">_rest_v6_job_requeue</span> for more details.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="products-rest-api">
+<h2>products REST API<a class="headerlink" href="#products-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>The products REST API endpoint was deprecated in Scale v5 and completely removed in Scale v6. Attempting to use these endpoints will result in a 404 error. The v6 files API should be used to retrieve product details. See <span class="xref std std-ref">_rest_v6_scale_file</span></p>
+</div>
+<div class="section" id="recipe-rest-api">
+<h2>recipe REST API<a class="headerlink" href="#recipe-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>Specific endpoints under the recipe API were deprecated in Scale v5 and completely removed in Scale v6. These endpoints will now return a 500 Server Error if used.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>v5/recipe-types/{id}</dt>
+<dd>Recipe types are no longer accessed via their ids through the Scale v6 API. Recipe type names are used instead. See <a class="reference internal" href="recipe.html#rest-v6-recipe-details"><span class="std std-ref">V6 Recipe Details</span></a> for more details.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="source-rest-api">
+<h2>source REST API<a class="headerlink" href="#source-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>The source REST API endpoint was deprecated in Scale v5 and completely removed in Scale v6. Attempting to use these endpoints will result in a 500 Server Error. The v6/files API should be used to retrieve source file details. See <span class="xref std std-ref">_rest_v6_scale_file</span></p>
+</div>
+</div>
+<div class="section" id="v6-deprecated-messages">
+<h1>v6 Deprecated Messages<a class="headerlink" href="#v6-deprecated-messages" title="Permalink to this headline">¶</a></h1>
+<p>The following command messages were removed/replaced in Scale v6:</p>
+<div class="section" id="recipes">
+<h2>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>reprocess_recipes Message</dt>
+<dd>This message was deprecated in Scale v5 and removed in Scale v6. The create_recipes message should be used instead.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>update_recipes Message</dt>
+<dd>This message was deprecated in Scale v5 and removed in Scale v6. The update_recipe message should be used instead.</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../install/index.html" class="btn btn-neutral float-right" title="Install" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="workspace.html" class="btn btn-neutral float-left" title="v6 Workspace Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,13 +1,6 @@
 batch\.definition\.json package
 ===============================
 
-Subpackages
------------
-
-.. toctree::
-
-    batch.definition.json.old
-
 Submodules
 ----------
 

@@ -132,7 +132,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -304,6 +303,45 @@ will be removed.</p>
 <p>:raises <a class="reference internal" href="#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the data is invalid</p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.data.data_util">
+<span id="data-data-data-util-module"></span><h2>data.data.data_util module<a class="headerlink" href="#module-data.data.data_util" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="data.data.data_util.get_file_ids">
+<code class="descclassname">data.data.data_util.</code><code class="descname">get_file_ids</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.data_util.get_file_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the file ids from a data object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<a class="reference internal" href="#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The Data object to inspect</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of file ids</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[int]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.data.data_util.get_parameter_names">
+<code class="descclassname">data.data.data_util.</code><code class="descname">get_parameter_names</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.data_util.get_parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the paramater names from a data object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<a class="reference internal" href="#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The Data object to inspect</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of paramater names</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

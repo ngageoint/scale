@@ -126,7 +126,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="queue.html">queue package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="queue.html#subpackages">Subpackages</a></li>
@@ -327,59 +326,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation">
-<em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerHandleJobCancellation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_canceled_job">
-<code class="descname">test_exception_with_canceled_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_canceled_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() with a canceled job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job">
-<code class="descname">test_exception_with_completed_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() with a completed job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_blocked_job">
-<code class="descname">test_successful_with_blocked_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_blocked_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_failed_job">
-<code class="descname">test_successful_with_failed_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_failed_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a failed job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_pending_job">
-<code class="descname">test_successful_with_pending_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_pending_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a pending job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_queued_job">
-<code class="descname">test_successful_with_queued_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_queued_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a queued job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_running_job">
-<code class="descname">test_successful_with_running_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_running_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a running job.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="queue.test.test_models.TestQueueManagerQueueNewJob">
 <em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerQueueNewJob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewJob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -391,13 +337,7 @@
 <dl class="method">
 <dt id="queue.test.test_models.TestQueueManagerQueueNewJob.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewJob.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.queue_new_job() successfully with a Seed job type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerQueueNewJob.test_successful_legacy">
-<code class="descname">test_successful_legacy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewJob.test_successful_legacy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.queue_new_job() successfully with a legacy job type</p>
+<dd><p>Tests calling QueueManager.queue_new_job_v6() successfully with a Seed job type</p>
 </dd></dl>
 
 </dd></dl>
@@ -426,18 +366,6 @@
 <code class="descname">test_successful_ingest</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_ingest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_legacy">
-<code class="descname">test_successful_legacy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_legacy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.queue_new_recipe() successfully.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_priority">
-<code class="descname">test_successful_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.queue_new_recipe() successfully with an override priority.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -451,7 +379,7 @@
 
 <dl class="method">
 <dt id="queue.test.test_models.TestQueueManagerRequeueJobs.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueJobs.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueJobs.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling QueueManager.requeue_jobs() successfully</p>
 </dd></dl>
 
@@ -470,12 +398,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="queue.test.test_views.TestJobLoadView.test_job_type_category">
-<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the job load view filtered by job type category.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.test.test_views.TestJobLoadView.test_job_type_id">
 <code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job laod view filtered by job type identifier.</p>
@@ -485,12 +407,6 @@
 <dt id="queue.test.test_views.TestJobLoadView.test_job_type_name">
 <code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job load view filtered by job type name.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestJobLoadView.test_job_type_priority">
-<code class="descname">test_job_type_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the job load view filtered by job type priority.</p>
 </dd></dl>
 
 <dl class="method">
@@ -508,100 +424,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="queue.test.test_views.TestQueueNewJobView">
-<em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestQueueNewJobView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_bad_job_type_id">
-<code class="descname">test_bad_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_bad_job_type_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue new job view with an invalid job type ID.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_bad_type_args">
-<code class="descname">test_bad_type_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_bad_type_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue new job view with a string job_data value (which is invalid).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_bad_type_job_type_id">
-<code class="descname">test_bad_type_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_bad_type_job_type_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue new job view with a string job type ID (which is invalid).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_invalid_args">
-<code class="descname">test_invalid_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_invalid_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue new job view with invalid job_data for the job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_missing_job_type_id">
-<code class="descname">test_missing_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_missing_job_type_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue new job view without the required job type ID.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue new job view successfully.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewJobView.test_v6_404">
-<code class="descname">test_v6_404</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_v6_404" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests v6 call will return 404 error</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.test.test_views.TestQueueNewRecipeView">
-<em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestQueueNewRecipeView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewRecipeView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewRecipeView.test_bad_recipe_id">
-<code class="descname">test_bad_recipe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_bad_recipe_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue recipe view with an invalid recipe ID.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewRecipeView.test_bad_type_recipe_id">
-<code class="descname">test_bad_type_recipe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_bad_type_recipe_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue recipe view with a string recipe ID (which is invalid).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewRecipeView.test_missing_recipe_id">
-<code class="descname">test_missing_recipe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_missing_recipe_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue recipe view without the required job type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewRecipeView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the queue recipe view successfully.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestQueueNewRecipeView.test_v6_404">
-<code class="descname">test_v6_404</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_v6_404" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests v6 call will return 404 error</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="queue.test.test_views.TestQueueStatusView">
 <em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestQueueStatusView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -614,89 +436,6 @@
 <dt id="queue.test.test_views.TestQueueStatusView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the queue status view.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.test.test_views.TestRequeueJobsView">
-<em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestRequeueJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_error_categories">
-<code class="descname">test_error_categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_error_categories" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view filtered by job error category.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_job_ids">
-<code class="descname">test_job_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_job_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view filtered by job identifier.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_job_type_categories">
-<code class="descname">test_job_type_categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_job_type_categories" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view filtered by job type category.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_job_type_ids">
-<code class="descname">test_job_type_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_job_type_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view filtered by job type identifier.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_job_type_names">
-<code class="descname">test_job_type_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_job_type_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view filtered by job type name.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_no_match">
-<code class="descname">test_no_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_no_match" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view where there are no matching jobs to schedule.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_priority">
-<code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view changing the queue priority.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_requeue_canceled">
-<code class="descname">test_requeue_canceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_requeue_canceled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view successfully for a job that was never queued.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_requeue_failed">
-<code class="descname">test_requeue_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_requeue_failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view successfully for a job that was previously queued.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_requeue_ignored">
-<code class="descname">test_requeue_ignored</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_requeue_ignored" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view when the job has already completed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_status">
-<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view filtered by status.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_v6">
-<code class="descname">test_v6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the v6 requeue view which should return 404</p>
 </dd></dl>
 
 </dd></dl>
@@ -723,7 +462,7 @@
 
 <dl class="function">
 <dt id="queue.test.utils.create_queue">
-<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>resources=None</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>gpus_required=0</em>, <em>queued=datetime.datetime(2019</em>, <em>4</em>, <em>23</em>, <em>16</em>, <em>40</em>, <em>41</em>, <em>296258</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>resources=None</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>gpus_required=0</em>, <em>queued=datetime.datetime(2019</em>, <em>4</em>, <em>23</em>, <em>20</em>, <em>5</em>, <em>0</em>, <em>55612</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a queue model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

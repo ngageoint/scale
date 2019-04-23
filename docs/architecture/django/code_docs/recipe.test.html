@@ -126,14 +126,12 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -290,7 +288,6 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_graph">recipe.test.handlers.test_graph module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_graph_delta">recipe.test.handlers.test_graph_delta module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_handler">recipe.test.handlers.test_handler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers">Module contents</a></li>
 </ul>
 </li>
@@ -316,12 +313,10 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_condition">recipe.test.messages.test_process_condition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_purge_recipe">recipe.test.messages.test_purge_recipe module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_supersede_recipe_nodes">recipe.test.messages.test_supersede_recipe_nodes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe">recipe.test.messages.test_update_recipe module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_definition">recipe.test.messages.test_update_recipe_definition module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_metrics">recipe.test.messages.test_update_recipe_metrics module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipes">recipe.test.messages.test_update_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages">Module contents</a></li>
 </ul>
 </li>
@@ -333,56 +328,6 @@
 </div>
 <div class="section" id="module-recipe.test.test_models">
 <span id="recipe-test-test-models-module"></span><h2>recipe.test.test_models module<a class="headerlink" href="#module-recipe.test.test_models" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType">
-<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestJobTypeManagerEditJobType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.test_invalid_interface">
-<code class="descname">test_invalid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.test_invalid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and an invalid interface
-change is made</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.test_valid_interface">
-<code class="descname">test_valid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.test_valid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and a valid interface change
-is made</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType">
-<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestJobTypeManagerValidateJobType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.test_invalid_interface">
-<code class="descname">test_invalid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.test_invalid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and an invalid interface
-change is made</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.test_valid_interface">
-<code class="descname">test_valid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.test_valid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and a valid interface
-change is made</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="recipe.test.test_models.TestRecipeManager">
 <em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManager" title="Permalink to this definition">¶</a></dt>
@@ -412,7 +357,7 @@ change is made</p>
 <dl class="method">
 <dt id="recipe.test.test_models.TestRecipePopulateJobs.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipePopulateJobs.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling ProductFileManager.populate_source_ancestors() successfully</p>
+<dd><p>Tests nodes are associated with the recipe successfully?</p>
 </dd></dl>
 
 </dd></dl>
@@ -441,23 +386,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeTypeManagerCreateRecipeTypeV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5.test_successful_v5">
-<code class="descname">test_successful_v5</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV5.test_successful_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.create_recipe_type_v5() successfully.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV6">
 <em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeTypeManagerCreateRecipeTypeV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -476,41 +404,6 @@ change is made</p>
 <dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV6.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeTypeV6.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeTypeManager.create_recipe_type_v6() successfully.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeTypeManagerEditRecipeTypeV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_simple_no_trigger">
-<code class="descname">test_change_simple_no_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_simple_no_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and no previous trigger rule</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_simple_with_trigger">
-<code class="descname">test_change_simple_with_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_simple_with_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and a previous trigger rule</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_to_both">
-<code class="descname">test_change_to_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_to_both" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and trigger rule</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_to_definition">
-<code class="descname">test_change_to_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV5.test_change_to_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition</p>
 </dd></dl>
 
 </dd></dl>
@@ -577,34 +470,6 @@ change is made</p>
 <dt id="recipe.test.test_views.MockCommandMessageManager.send_messages">
 <code class="descname">send_messages</code><span class="sig-paren">(</span><em>commands</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.MockCommandMessageManager.send_messages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_views.OldTestRecipeDetailsView">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">OldTestRecipeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.OldTestRecipeDetailsView.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.OldTestRecipeDetailsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.OldTestRecipeDetailsView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipe details</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.OldTestRecipeDetailsView.test_superseded">
-<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.test_superseded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe details view for superseded recipes.</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -678,64 +543,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeInputFilesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_bad_file_name">
-<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests unsuccessfully calling the get files by name view</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_file_name_successful">
-<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get files by name view</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_filter_recipe_input">
-<code class="descname">test_filter_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_filter_recipe_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe inputs files view with recipe_input string filtering</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_legacy_filter_recipe_input">
-<code class="descname">test_legacy_filter_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_legacy_filter_recipe_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe inputs files view for legacy files with recipe_input string filtering</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_legacy_successful_file">
-<code class="descname">test_legacy_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_legacy_successful_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe input files view for legacy files with recipe_data</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_successful_file">
-<code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_successful_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe input files view</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV5.test_time_successful">
-<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV5.test_time_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests unsuccessfully calling the get files by name view</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="recipe.test.test_views.TestRecipeInputFilesViewV6">
 <em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeInputFilesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -768,18 +575,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV6.test_legacy_filter_recipe_input">
-<code class="descname">test_legacy_filter_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV6.test_legacy_filter_recipe_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe input files view for legacy files with recipe_input string filtering</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeInputFilesViewV6.test_legacy_successful_file">
-<code class="descname">test_legacy_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV6.test_legacy_successful_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe input files view for legacy files with job_data</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeInputFilesViewV6.test_successful_file">
 <code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV6.test_successful_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the recipe input files view</p>
@@ -789,46 +584,6 @@ change is made</p>
 <dt id="recipe.test.test_views.TestRecipeInputFilesViewV6.test_time_successful">
 <code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesViewV6.test_time_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get recipe input files view by time</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeReprocessViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.test_all_jobs">
-<code class="descname">test_all_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.test_all_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing all jobs in an existing recipe</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.test_job">
-<code class="descname">test_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.test_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing one job in an existing recipe</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.test_priority">
-<code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.test_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing all jobs in an existing recipe with a priority override</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.test_superseded">
-<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.test_superseded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that is already superseded throws an error.</p>
 </dd></dl>
 
 </dd></dl>
@@ -884,68 +639,9 @@ change is made</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_legacy_all_jobs">
-<code class="descname">test_legacy_all_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_legacy_all_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing all jobs in an existing legacy recipe with v6 endpoint</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_superseded">
 <code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing a recipe that is already superseded throws an error.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypeDetailsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<p>Tests related to the recipe-types details endpoint</p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_definition">
-<code class="descname">test_edit_bad_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests attempting to edit a recipe type using an invalid recipe definition</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition">
-<code class="descname">test_edit_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing the definition of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_simple">
-<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_simple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests editing only the basic attributes of a recipe type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_get_details_with_seed_job">
-<code class="descname">test_get_details_with_seed_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_get_details_with_seed_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipe details for a recipe that contains a seed recipe</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_not_found">
-<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_not_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the recipe type details view with an id that does not exist.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe type details view.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1056,53 +752,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypesValidationViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<p>Tests related to the recipe-types validation endpoint</p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_job">
-<code class="descname">test_bad_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with an invalid job relationship.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_param">
-<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful_trigger">
-<code class="descname">test_successful_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new recipe type with a trigger.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV5.test_warnings">
-<code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_warnings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with mismatched media type warnings.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6">
 <em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypesValidationViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -1157,47 +806,6 @@ change is made</p>
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_successful_update">
 <code class="descname">test_successful_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_successful_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating an updated recipe type.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<p>Tests related to the recipe-types base endpoint</p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create">
-<code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_job">
-<code class="descname">test_create_bad_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with an invalid job relationship.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_param">
-<code class="descname">test_create_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new recipe type with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeTypesViewV5.test_list_all">
-<code class="descname">test_list_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesViewV5.test_list_all" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting a list of recipe types.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1281,64 +889,6 @@ change is made</p>
 <dt id="recipe.test.test_views.TestRecipesPostViewV6.test_successful_v6data">
 <code class="descname">test_successful_v6data</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesPostViewV6.test_successful_v6data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_views.TestRecipesViewV5">
-<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="attribute">
-<dt id="recipe.test.test_views.TestRecipesViewV5.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_successful_all">
-<code class="descname">test_successful_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_successful_all" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipes</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_successful_batch">
-<code class="descname">test_successful_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_successful_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipes by batch id</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_successful_details">
-<code class="descname">test_successful_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_successful_details" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipe details</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_successful_superseded">
-<code class="descname">test_successful_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_successful_superseded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting superseded recipes</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_successful_type_id">
-<code class="descname">test_successful_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_successful_type_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipes by type id</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_successful_type_name">
-<code class="descname">test_successful_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_successful_type_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting recipes by type name</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesViewV5.test_superseded">
-<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesViewV5.test_superseded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the recipe details view for superseded recipes.</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -1518,22 +1068,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="recipe.test.utils.create_recipe_handler">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_handler</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em>, <em>superseded_recipe=None</em>, <em>delta=None</em>, <em>superseded_jobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_handler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a recipe along with its declared jobs for unit testing</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe handler with created recipe and jobs</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.handler.RecipeHandler" title="recipe.handlers.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.handler.RecipeHandler</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="recipe.test.utils.create_recipe_job">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_job</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>job_name=None</em>, <em>job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job type model for unit testing</p>
@@ -1588,22 +1122,6 @@ change is made</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="recipe.test.utils.create_recipe_type_v5">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_type_v5</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em>, <em>trigger_rule=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_type_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a recipe type for unit testing</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The RecipeType model</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="recipe.test.utils.create_recipe_type_v6">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_type_v6</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em>, <em>is_active=None</em>, <em>is_system=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe type for unit testing</p>
@@ -1623,12 +1141,6 @@ change is made</p>
 <dt id="recipe.test.utils.create_subrecipes">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">create_subrecipes</code><span class="sig-paren">(</span><em>recipe_model</em>, <em>subrecipes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_subrecipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_subrecipes_messages for unit testing</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="recipe.test.utils.edit_recipe_type_v5">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">edit_recipe_type_v5</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.edit_recipe_type_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the definition of a recipe type, including creating a new revision for unit testing</p>
 </dd></dl>
 
 <dl class="function">
@@ -1694,7 +1206,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>4</em>, <em>23</em>, <em>16</em>, <em>39</em>, <em>59</em>, <em>159339</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>4</em>, <em>23</em>, <em>20</em>, <em>4</em>, <em>28</em>, <em>290545</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 

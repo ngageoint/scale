@@ -141,7 +141,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -259,8 +258,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.configuration.json.html">job.configuration.json package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_1_0">job.configuration.json.job_config_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_2_0">job.configuration.json.job_config_2_0 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_v6">job.configuration.json.job_config_v6 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json">Module contents</a></li>
 </ul>
@@ -463,24 +460,6 @@ possibly None</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the configuration is invalid</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.configuration.configuration.JobConfiguration.validate_old">
-<code class="descname">validate_old</code><span class="sig-paren">(</span><em>interface_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.validate_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the configuration against old interface to find setting and mount usages</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface_dict</strong> (<em>dict</em>) &#8211; The interface for the job type</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>

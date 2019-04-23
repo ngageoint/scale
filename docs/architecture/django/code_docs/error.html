@@ -138,7 +138,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -704,29 +703,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.models.ErrorManager.create_legacy_error">
-<code class="descname">create_legacy_error</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>description</em>, <em>category</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.create_legacy_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new error in the database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the error</li>
-<li><strong>title</strong> (<em>str</em>) &#8211; The title of the error</li>
-<li><strong>description</strong> (<em>str</em>) &#8211; A longer description of the error</li>
-<li><strong>category</strong> &#8211; The category of the error</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first last">str in Error.CATEGORIES</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="error.models.ErrorManager.get_by_natural_key">
 <code class="descname">get_by_natural_key</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>error_name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Django method to retrieve an error for the given natural key</p>
@@ -977,13 +953,6 @@ object the first time, the query is executed.</p>
 <span id="error-serializers-module"></span><h2>error.serializers module<a class="headerlink" href="#module-error.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for errors</p>
 <dl class="class">
-<dt id="error.serializers.ErrorBaseSerializerV5">
-<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="error.serializers.ErrorBaseSerializerV6">
 <em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -991,23 +960,9 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="error.serializers.ErrorDetailsSerializerV5">
-<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorSerializerV5" title="error.serializers.ErrorSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorSerializerV5</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="error.serializers.ErrorDetailsSerializerV6">
 <em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorSerializerV6" title="error.serializers.ErrorSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorSerializerV6</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="error.serializers.ErrorSerializerV5">
-<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
@@ -1055,39 +1010,27 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.views.ErrorDetailsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="error.views.ErrorDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>error_id</em><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorDetailsView.patch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits an existing error and returns the updated model</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>error_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the error</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Edits an existing error and returns the updated model
+:param request: the HTTP PATCH request
+:type request: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>
+:param error_id: The id of the error
+:type error_id: int encoded as a str
+:rtype: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code>
+:returns: the HTTP response to send back to the user</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="error.views.ErrorDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#error.views.ErrorDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.views.ErrorDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#error.views.ErrorDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ErrorDetailsSerializerV6</span></code></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1115,12 +1058,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.views.ErrorsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="error.views.ErrorsView.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorsView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new error and returns a link to the info URL</p>
@@ -1142,6 +1079,12 @@ object the first time, the query is executed.</p>
 <dt id="error.views.ErrorsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#error.views.ErrorsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.views.ErrorsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#error.views.ErrorsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ErrorSerializerV6</span></code></p>
+</dd></dl>
 
 </dd></dl>
 

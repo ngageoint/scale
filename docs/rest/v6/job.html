@@ -107,8 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#current-v6-services">Current v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
@@ -137,7 +136,9 @@
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">V6 Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">v6 Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deprecated.html">v6 Removals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deprecated.html#v6-deprecated-messages">v6 Deprecated Messages</a></li>
 </ul>
 </li>
 </ul>
@@ -1525,22 +1526,22 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td>job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the execution.
-(See <a class="reference internal" href="../job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <span class="xref std std-ref">Job Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>node</td>
 <td>JSON Object</td>
 <td>The node that ran the execution.
-(See <a class="reference internal" href="../node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
+(See <span class="xref std std-ref">Node Details</span>)</td>
 </tr>
 <tr class="row-even"><td>error</td>
 <td>JSON Object</td>
 <td>The last error that was recorded for the execution.
-(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+(See <span class="xref std std-ref">Error Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the execution.
-(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <span class="xref std std-ref">Job Type Details</span>)</td>
 </tr>
 <tr class="row-even"><td>timeout</td>
 <td>Integer</td>

@@ -126,14 +126,12 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -327,12 +325,6 @@ resulting messages</p>
 sub-recipes</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_reprocess_legacy_recipe">
-<code class="descname">test_reprocess_legacy_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_reprocess_legacy_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling CreateRecipes.execute() successfully from</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -476,32 +468,6 @@ recipe</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-recipe.test.messages.test_reprocess_recipes">
-<span id="recipe-test-messages-test-reprocess-recipes-module"></span><h2>recipe.test.messages.test_reprocess_recipes module<a class="headerlink" href="#module-recipe.test.messages.test_reprocess_recipes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes">
-<em class="property">class </em><code class="descclassname">recipe.test.messages.test_reprocess_recipes.</code><code class="descname">TestReprocessRecipes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_execute">
-<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling ReprocessRecipes.execute() successfully</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json">
-<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests coverting a ReprocessRecipes message to and from JSON</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-recipe.test.messages.test_supersede_recipe_nodes">
 <span id="recipe-test-messages-test-supersede-recipe-nodes-module"></span><h2>recipe.test.messages.test_supersede_recipe_nodes module<a class="headerlink" href="#module-recipe.test.messages.test_supersede_recipe_nodes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -626,32 +592,6 @@ recipe</p>
 <dt id="recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes.test_json">
 <code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes.test_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests coverting a UpdateRecipeMetrics message to and from JSON</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-recipe.test.messages.test_update_recipes">
-<span id="recipe-test-messages-test-update-recipes-module"></span><h2>recipe.test.messages.test_update_recipes module<a class="headerlink" href="#module-recipe.test.messages.test_update_recipes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.messages.test_update_recipes.TestUpdateRecipes">
-<em class="property">class </em><code class="descclassname">recipe.test.messages.test_update_recipes.</code><code class="descname">TestUpdateRecipes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestUpdateRecipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.messages.test_update_recipes.TestUpdateRecipes.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestUpdateRecipes.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute">
-<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling UpdateRecipes.execute() successfully</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_json">
-<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests coverting a UpdateRecipes message to and from JSON</p>
 </dd></dl>
 
 </dd></dl>

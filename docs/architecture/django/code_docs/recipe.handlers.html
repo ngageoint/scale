@@ -126,14 +126,12 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -567,167 +565,6 @@ that have not changed. All children nodes will be changed as well.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_name</strong> (<em>string</em>) &#8211; The job name of the node</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-recipe.handlers.handler">
-<span id="recipe-handlers-handler-module"></span><h2>recipe.handlers.handler module<a class="headerlink" href="#module-recipe.handlers.handler" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class for handling recipes</p>
-<dl class="class">
-<dt id="recipe.handlers.handler.RecipeHandler">
-<em class="property">class </em><code class="descclassname">recipe.handlers.handler.</code><code class="descname">RecipeHandler</code><span class="sig-paren">(</span><em>recipe</em>, <em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class handles the logic for a recipe</p>
-<dl class="attribute">
-<dt id="recipe.handlers.handler.RecipeHandler.BLOCKING_STATUSES">
-<code class="descname">BLOCKING_STATUSES</code><em class="property"> = [u'BLOCKED', u'FAILED', u'CANCELED']</em><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.BLOCKING_STATUSES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.add_jobs">
-<code class="descname">add_jobs</code><span class="sig-paren">(</span><em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.add_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given jobs to the recipe handler</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of recipe_job models with related job and job_type_rev models</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_blocked_jobs">
-<code class="descname">get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the jobs within this recipe that should be updated to BLOCKED status</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to BLOCKED</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_dependent_job_ids">
-<code class="descname">get_dependent_job_ids</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the IDs of the jobs that depend upon the job with the given ID</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The set of job IDs that depend on the given job</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int}</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_existing_jobs_to_queue">
-<code class="descname">get_existing_jobs_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all of the existing recipe jobs that are ready to be queued</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of existing jobs that are ready to be queued along with their data</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>, <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>)]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_first_queue">
-<code class="descname">get_jobs_ready_for_first_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_first_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the models for each job in the recipe that is ready to be queued for the first time</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs ready to be queued</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_input">
-<code class="descname">get_jobs_ready_for_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the models for each job in the recipe that is ready for its input. The new inputs have been set on
-each model, but not saved in the database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs with their input</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_jobs_to_create">
-<code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a dict where recipe job_name maps to a list of job models that need to be created</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict where job_name maps to list of job models</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.get_pending_jobs">
-<code class="descname">get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_pending_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the jobs within this recipe that should be updated to PENDING status</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to PENDING</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.handlers.handler.RecipeHandler.is_completed">
-<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.is_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this recipe has been completed</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this recipe has been completed, False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>

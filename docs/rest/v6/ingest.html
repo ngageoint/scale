@@ -107,8 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#current-v6-services">Current v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
@@ -131,7 +130,9 @@
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">V6 Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">v6 Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deprecated.html">v6 Removals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deprecated.html#v6-deprecated-messages">v6 Deprecated Messages</a></li>
 </ul>
 </li>
 </ul>
@@ -407,7 +408,7 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="../ingest.html#rest-ingest-details"><span class="std std-ref">Ingest Details</span></a>)</td>
+(See <span class="xref std std-ref">Ingest Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>.file_name</td>
 <td>String</td>
@@ -416,12 +417,12 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td>.scan</td>
 <td>JSON Object</td>
 <td colspan="2">The scan process that triggered the ingest.
-(See <a class="reference internal" href="../scan.html#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
+(See <span class="xref std std-ref">Scan Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>.strike</td>
 <td>JSON Object</td>
 <td colspan="2">The strike process that triggered the ingest.
-(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+(See <span class="xref std std-ref">Strike Details</span>)</td>
 </tr>
 <tr class="row-even"><td>.status</td>
 <td>String</td>
@@ -460,7 +461,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace storing the file.
-(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+(See <span class="xref std std-ref">Workspace Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>.new_file_path</td>
 <td>String</td>
@@ -469,7 +470,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>.new_workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The new workspace to move the file into as part of ingesting.
-(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+(See <span class="xref std std-ref">Workspace Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>.job</td>
 <td>JSON Object</td>
@@ -486,7 +487,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>.source_file</td>
 <td>JSON Object</td>
 <td colspan="2">A reference to the source file that was stored by this ingest.
-(See <a class="reference internal" href="../source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
+(See <span class="xref std std-ref">Source File Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>.data_started</td>
 <td>ISO-8601 Datetime</td>
@@ -665,7 +666,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="../ingest.html#rest-ingest-details"><span class="std std-ref">Ingest Details</span></a>)</td>
+(See <span class="xref std std-ref">Ingest Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>file_name</td>
 <td>String</td>
@@ -674,12 +675,12 @@ DUPLICATE].</td>
 <tr class="row-even"><td>scan</td>
 <td>JSON Object</td>
 <td>The scan process that triggered the ingest.
-(See <a class="reference internal" href="../scan.html#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
+(See <span class="xref std std-ref">Scan Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>strike</td>
 <td>JSON Object</td>
 <td>The strike process that triggered the ingest.
-(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+(See <span class="xref std std-ref">Strike Details</span>)</td>
 </tr>
 <tr class="row-even"><td>status</td>
 <td>String</td>
@@ -718,7 +719,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>workspace</td>
 <td>JSON Object</td>
 <td>The workspace storing the file.
-(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+(See <span class="xref std std-ref">Workspace Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>new_file_path</td>
 <td>String</td>
@@ -727,7 +728,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>new_workspace</td>
 <td>JSON Object</td>
 <td>The new workspace to move the file into as part of ingesting.
-(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+(See <span class="xref std std-ref">Workspace Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
@@ -744,7 +745,7 @@ DUPLICATE].</td>
 <tr class="row-even"><td>source_file</td>
 <td>JSON Object</td>
 <td>A reference to the source file that was stored by this ingest.
-(See <a class="reference internal" href="../source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
+(See <span class="xref std std-ref">Source File Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>data_started</td>
 <td>ISO-8601 Datetime</td>
@@ -905,7 +906,7 @@ Defaults to False (data time).</td>
 <tr class="row-even"><td>.strike</td>
 <td>JSON Object</td>
 <td colspan="2">The strike process that triggered the ingest.
-(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+(See <span class="xref std std-ref">Strike Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>.most_recent</td>
 <td>ISO-8601 Datetime</td>

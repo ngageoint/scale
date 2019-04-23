@@ -137,7 +137,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -250,15 +249,6 @@
 <li class="toctree-l1"><a class="reference internal" href="batch.test.definition.html">batch.test.definition package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="batch.test.definition.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="batch.test.definition.json.html">batch.test.definition.json package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="batch.test.definition.json.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="batch.test.definition.json.old.html">batch.test.definition.json.old package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.old.html#submodules">Submodules</a></li>
-<li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.old.html#module-batch.test.definition.json.old.test_batch_definition">batch.test.definition.json.old.test_batch_definition module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="batch.test.definition.json.old.html#module-batch.test.definition.json.old">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l4"><a class="reference internal" href="batch.test.definition.json.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="batch.test.definition.json.html#module-batch.test.definition.json.test_definition_v6">batch.test.definition.json.test_definition_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="batch.test.definition.json.html#module-batch.test.definition.json">Module contents</a></li>
@@ -314,81 +304,9 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_create_successful">
-<code class="descname">test_create_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_create_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.create_batch() successfully</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_all_jobs">
-<code class="descname">test_schedule_all_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_all_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_created">
-<code class="descname">test_schedule_date_range_created</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_created" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a created date range restriction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_ended">
-<code class="descname">test_schedule_date_range_data_ended</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_ended" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a data ended date range restriction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_full">
-<code class="descname">test_schedule_date_range_data_full</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_full" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a data date range restriction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_none">
-<code class="descname">test_schedule_date_range_data_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_none" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch data date range where no data matches</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_started">
-<code class="descname">test_schedule_date_range_data_started</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_started" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a data started date range restriction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_invalid_status">
-<code class="descname">test_schedule_invalid_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_invalid_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that was already created</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_job_names">
-<code class="descname">test_schedule_job_names</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_job_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_new_batch">
-<code class="descname">test_schedule_new_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_new_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that has never been started</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_no_changes">
-<code class="descname">test_schedule_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_no_changes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a recipe type that has nothing to reprocess</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_partial_batch">
-<code class="descname">test_schedule_partial_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_partial_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that is incomplete</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_trigger_rule_custom">
-<code class="descname">test_schedule_trigger_rule_custom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_trigger_rule_custom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() using a custom trigger rule.</p>
+<dt id="batch.test.test_models.TestBatchManager.test_create_successful_v6">
+<code class="descname">test_create_successful_v6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_create_successful_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling BatchManager.create_batch_v6</p>
 </dd></dl>
 
 </dd></dl>
@@ -396,40 +314,6 @@
 </div>
 <div class="section" id="module-batch.test.test_views">
 <span id="batch-test-test-views-module"></span><h2>batch.test.test_views module<a class="headerlink" href="#module-batch.test.test_views" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="batch.test.test_views.TestBatchDetailsViewV5">
-<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchDetailsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="batch.test.test_views.TestBatchDetailsViewV5.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV5.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchDetailsViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchDetailsViewV5.test_not_found">
-<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV5.test_not_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the v5 batch details view with a batch id that does not exist</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchDetailsViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the v5 batch details view</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchDetailsViewV5.test_successful_with_new_batch">
-<code class="descname">test_successful_with_new_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV5.test_successful_with_new_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the v5 batch details view with a new (v6) batch</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="batch.test.test_views.TestBatchDetailsViewV6">
 <em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV6" title="Permalink to this definition">¶</a></dt>
@@ -492,12 +376,6 @@
 <dd><p>Tests successfully calling the v6 batch details view</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchDetailsViewV6.test_successful_with_old_batch">
-<code class="descname">test_successful_with_old_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV6.test_successful_with_old_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the v6 batch details view with an old-style batch</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -525,52 +403,6 @@
 <dt id="batch.test.test_views.TestBatchesComparisonViewV6.test_successful_no_batches">
 <code class="descname">test_successful_no_batches</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesComparisonViewV6.test_successful_no_batches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the v6 batch comparison view with a root batch ID that does not exist</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5">
-<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchesValidationViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.test_bad_definition">
-<code class="descname">test_bad_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.test_bad_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a new batch with an invalid definition.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.test_bad_param">
-<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.test_bad_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a batch with invalid type fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.test_missing_param">
-<code class="descname">test_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.test_missing_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a batch with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a batch definition.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesValidationViewV5.test_successful_trigger_custom">
-<code class="descname">test_successful_trigger_custom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV5.test_successful_trigger_custom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating a batch definition with a custom trigger rule.</p>
 </dd></dl>
 
 </dd></dl>
@@ -624,82 +456,6 @@
 <dt id="batch.test.test_views.TestBatchesValidationViewV6.test_invalid_version">
 <code class="descname">test_invalid_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationViewV6.test_invalid_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new batch with an invalid REST API version</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="batch.test.test_views.TestBatchesViewV5">
-<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="batch.test.test_views.TestBatchesViewV5.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_create">
-<code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new batch.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_create_bad_definition">
-<code class="descname">test_create_bad_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_create_bad_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new batch with an invalid definition.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_create_bad_param">
-<code class="descname">test_create_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a batch with invalid type fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_create_missing_param">
-<code class="descname">test_create_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_create_missing_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a batch with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_create_trigger_custom">
-<code class="descname">test_create_trigger_custom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_create_trigger_custom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new batch using a custom trigger rule.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_order_by">
-<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_order_by" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the batches view with sorting.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_recipe_type_id">
-<code class="descname">test_recipe_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_recipe_type_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the batches view filtered by recipe type identifier.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_recipe_type_name">
-<code class="descname">test_recipe_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_recipe_type_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the batches view filtered by recipe type name.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_status">
-<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the batches view filtered by status.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_views.TestBatchesViewV5.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the batches view.</p>
 </dd></dl>
 
 </dd></dl>
@@ -818,22 +574,6 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The BatchJob model</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="batch.html#batch.models.BatchJob" title="batch.models.BatchJob"><code class="xref py py-class docutils literal"><span class="pre">batch.models.BatchJob</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="batch.test.utils.create_batch_old">
-<code class="descclassname">batch.test.utils.</code><code class="descname">create_batch_old</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>definition=None</em>, <em>title=None</em>, <em>description=None</em>, <em>status=None</em>, <em>recipe_count=0</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.utils.create_batch_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a batch model for unit testing</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The batch model</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="batch.html#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a></td>
 </tr>
 </tbody>
 </table>

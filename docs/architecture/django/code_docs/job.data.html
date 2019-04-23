@@ -141,7 +141,6 @@
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
@@ -348,19 +347,11 @@ needed to ensure the data provided by the connection will be sufficient to execu
 <dl class="method">
 <dt id="job.data.job_connection.SeedJobConnection.validate_properties">
 <code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#job.data.job_connection.SeedJobConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>dict of str -&gt; bool</em>) &#8211; Dict of property names mapped to a bool indicating if they are required</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Validates the given property names to make sure all properties exist if they are required.
+:param files: List of file inputs
+:type files: [<a class="reference internal" href="job.seed.html#job.seed.types.SeedInputFiles" title="job.seed.types.SeedInputFiles"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedInputFiles</span></code></a>]
+:returns: A list of warnings discovered during validation.
+:rtype: list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</p>
 <p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If there is a configuration problem.</p>
 </dd></dl>
 
@@ -448,30 +439,6 @@ connect shared resources to resource instances in Scale, and details needed to s
 <dt id="job.data.job_data.JobData.extend_interface_with_inputs">
 <code class="descname">extend_interface_with_inputs</code><span class="sig-paren">(</span><em>interface</em>, <em>job_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.data.job_data.JobData.extend_interface_with_inputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a value property to both files and json objects within Seed Manifest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>interface</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; Seed manifest which should have concrete inputs injected</li>
-<li><strong>job_files</strong> ([<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]) &#8211; A list of files that are referenced by the job data.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dictionary of Seed Manifest inputs key mapped to the corresponding data value.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.data.job_data.JobData.extend_interface_with_inputs_v5">
-<code class="descname">extend_interface_with_inputs_v5</code><span class="sig-paren">(</span><em>interface</em>, <em>job_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.data.job_data.JobData.extend_interface_with_inputs_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an input_data like object for legacy v5 API</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

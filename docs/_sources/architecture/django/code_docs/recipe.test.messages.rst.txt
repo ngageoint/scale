@@ -44,14 +44,6 @@ recipe\.test\.messages\.test\_purge\_recipe module
     :undoc-members:
     :show-inheritance:
 
-recipe\.test\.messages\.test\_reprocess\_recipes module
--------------------------------------------------------
-
-.. automodule:: recipe.test.messages.test_reprocess_recipes
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 recipe\.test\.messages\.test\_supersede\_recipe\_nodes module
 -------------------------------------------------------------
 
@@ -80,14 +72,6 @@ recipe\.test\.messages\.test\_update\_recipe\_metrics module
 ------------------------------------------------------------
 
 .. automodule:: recipe.test.messages.test_update_recipe_metrics
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-recipe\.test\.messages\.test\_update\_recipes module
-----------------------------------------------------
-
-.. automodule:: recipe.test.messages.test_update_recipes
     :members:
     :undoc-members:
     :show-inheritance:

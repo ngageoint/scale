@@ -4,14 +4,6 @@ job\.test\.configuration\.json package
 Submodules
 ----------
 
-job\.test\.configuration\.json\.test\_job\_config\_2\_0 module
---------------------------------------------------------------
-
-.. automodule:: job.test.configuration.json.test_job_config_2_0
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job\.test\.configuration\.json\.test\_job\_config\_v6 module
 ------------------------------------------------------------
 

@@ -19,6 +19,14 @@ data\.data\.data module
     :undoc-members:
     :show-inheritance:
 
+data\.data\.data\_util module
+-----------------------------
+
+.. automodule:: data.data.data_util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 data\.data\.exceptions module
 -----------------------------
 
