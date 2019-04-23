@@ -1316,6 +1316,7 @@ class TestJobTypeDetailsViewV6(TestCase):
 
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
+
         self.output_workspace = storage_test_utils.create_workspace()
         self.configuration = {
             'version': '6',
@@ -1334,6 +1335,7 @@ class TestJobTypeDetailsViewV6(TestCase):
                 'DB_HOST': 'scale',
             },
         }
+
 
         self.workspace = storage_test_utils.create_workspace()
 

@@ -58,6 +58,7 @@ class SeedManifest(object):
 
         self._check_for_name_collisions()
         self._check_mount_name_uniqueness()
+        self._check_error_name_uniqueness()
 
         self._validate_mount_paths()
         # self._create_validation_dicts()
@@ -406,12 +407,22 @@ class SeedManifest(object):
             names.append(output_file['name'])
         return names
 
+    def needs_input_metadata(self):
+        """Whether this manifest has an input metadata manifest input
+
+        :return: true if this manifest has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.get_input_files()
+
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
         :type job_data: :class:`job.data.job_data.JobData`
         """
+
         job_data.setup_job_dir(self.get_input_files())
 
     def validate_connection(self, job_conn):
@@ -514,6 +525,18 @@ class SeedManifest(object):
 
         if len(mounts) != len(set(mounts)):
             raise InvalidSeedManifestDefinition('DUPLICATE_MOUNT_NAMES','Mount names must be unique.')
+
+    def _check_error_name_uniqueness(self):
+        """Ensures all the error names are unique, and throws a
+        :class:`job.seed.exceptions.InvalidInterfaceDefinition` if they are not unique
+        """
+
+        errors = []
+        for error in self.get_errors():
+            errors.append(error['name'])
+
+        if len(errors) != len(set(errors)):
+            raise InvalidSeedManifestDefinition('DUPLICATE_ERROR_NAMES','Error names must be unique.')
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):

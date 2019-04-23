@@ -128,6 +128,7 @@ class TestPreJobSteps(TransactionTestCase):
         def get_env_vars(name, *args, **kwargs):
             return str(self.seed_job.id) if name == 'SCALE_JOB_ID' else str(self.seed_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
+        mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.needs_input_metadata.return_value = None
         mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_pre_steps.side_effect = IOError()
 
         # Call method to test

@@ -1298,3 +1298,12 @@ class TestCreateRecipes(TestCase):
         # Check message to update recipe metrics for the recipe containing the new sub-recipes
         self.assertListEqual(update_metrics_msg._recipe_ids, [new_top_recipe.id])
 
+    def test_create_101_recipes(self):
+        """Tests calling create_reprocess_messages() with 101 recipes
+        """
+
+        ids = [i for i in range(101)]
+        msgs = create_reprocess_messages(ids, 'recipe-name', 1, 1)
+        self.assertEqual(len(msgs), 2)
+        self.assertEqual(len(msgs[0].root_recipe_ids), 100)
+        self.assertEqual(len(msgs[1].root_recipe_ids), 1)
