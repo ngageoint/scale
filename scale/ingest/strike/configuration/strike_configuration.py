@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 from ingest.handlers.file_handler import FileHandler
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.monitors import factory
-from recipe.models import RecipeType
+from recipe.models import RecipeType, RecipeTypeRevision
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
@@ -118,9 +118,15 @@ class StrikeConfiguration(object):
                 msg = 'Recipe Type name is not defined'
                 raise InvalidStrikeConfiguration(msg)
 
-            if recipe_name and RecipeType.objects.filter(name=recipe_name, revision_num=revision_num).count() == 0:
+            if RecipeType.objects.filter(name=recipe_name).count() == 0:
                 msg = 'Recipe Type %s does not exist'
                 raise InvalidStrikeConfiguration(msg % recipe_name)
+            
+            if revision_num:
+                rt = RecipeType.objects.get(name=recipe_name)
+                if RecipeTypeRevision.objects.filter(recipe_type=rt, revision_num=revision_num).count() == 0:
+                    msg = 'Recipe Type revision number %s does not exist for recipe type %s'
+                    raise InvalidStrikeConfiguration(msg % (revision_num, recipe_name))
 
 
         monitored_workspace_name = self.configuration['workspace']

@@ -33,10 +33,8 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.source_file.add_data_type_tag('type1')
         self.source_file.add_data_type_tag('type2')
         self.source_file.add_data_type_tag('type3')
-
-        self.jt1 = job_test_utils.create_seed_job_type()
-
-
+        manifest = job_test_utils.create_seed_manifest(inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
+        self.jt1 = job_test_utils.create_seed_job_type(manifest=manifest)
         recipe_type_def = {'version': '6',
                            'input': {'files': [{'name': 'INPUT_FILE',
                                                 'media_types': ['text/plain'],
@@ -68,8 +66,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                 'new_file_path': 'my/path'
             }],
             'recipe': {
-                'name': self.recipe.name,
-                'revision_num': self.recipe.revision_num
+                'name': self.recipe.name
             },
         }
         config = StrikeConfigurationV6(strike_config).get_configuration()
@@ -94,7 +91,6 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
             }],
             'recipe': {
                 'name': self.recipe.name,
-                'revision_num': self.recipe.revision_num,
             },
         }
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
@@ -103,7 +99,50 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
         self.assertEqual(mock_create.call_count, 2)
+        
+        # Update the recipe then call ingest with revision 1
+        from django.db import transaction
+        from recipe.models import RecipeType
+        from recipe.definition.json.definition_v6 import RecipeDefinitionV6
+        manifest = job_test_utils.create_seed_manifest(
+            inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
+        jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
+        definition = {'version': '6',
+                       'input': {'files': [{'name': 'INPUT_FILE',
+                                            'media_types': ['text/plain'],
+                                            'required': True,
+                                            'multiple': True}],
+                                'json': []},
+                       'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
+                                                              'job_type_version': self.jt1.version,
+                                                              'job_type_revision': 1}},
+                                'node_b': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt2.name,
+                                                              'job_type_version': jt2.version,
+                                                              'job_type_revision': 1}}}}
+        
+        new_def = RecipeDefinitionV6(definition).get_definition()
+        
+        with transaction.atomic():
+            recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe.id)
+            # Edit the recipe
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, new_def, True)
+        
+        strike_config['recipe'] = {
+            'name': self.recipe.name,
+            'revision_num': 1,
+        }
+        config = StrikeConfigurationV6(strike_config).get_configuration()
+        strike = Strike.objects.create_strike('my_name_2', 'my_title_2', 'my_description_2', config)
+        ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
 
+        # Call method to test
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
+        self.assertEqual(mock_create.call_count, 3)
+        
 
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_recipe_input_messages')

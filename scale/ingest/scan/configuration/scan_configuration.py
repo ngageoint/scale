@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 from ingest.handlers.file_handler import FileHandler
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners import factory
-from recipe.models import RecipeType
+from recipe.models import RecipeType, RecipeTypeRevision
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
@@ -114,13 +114,23 @@ class ScanConfiguration(object):
         if scanner_type not in factory.get_scanner_types():
             raise InvalidScanConfiguration('\'%s\' is an invalid scanner' % scanner_type)
 
-        # TODO not mandatory until v6
         if 'recipe' in self.config_dict:
-            recipe_name = self.config_dict['recipe']['name']
-            revision_num = self.config_dict['recipe']['revision_num']
-            if recipe_name and RecipeType.objects.filter(name=recipe_name, revision_num=revision_num).count() == 0:
+            recipe_name = self.config_dict['recipe']['name'] if 'name' in self.config_dict['recipe'] else None
+            revision_num = self.config_dict['recipe']['revision_num'] if 'revision_num' in self.config_dict['recipe'] else None
+
+            if not recipe_name:
+                msg = 'Recipe Type name is not defined'
+                raise InvalidScanConfiguration(msg)
+
+            if RecipeType.objects.filter(name=recipe_name).count() == 0:
                 msg = 'Recipe Type %s does not exist'
                 raise InvalidScanConfiguration(msg % recipe_name)
+            
+            if revision_num:
+                rt = RecipeType.objects.get(name=recipe_name)
+                if RecipeTypeRevision.objects.filter(recipe_type=rt, revision_num=revision_num).count() == 0:
+                    msg = 'Recipe Type revision number %s does not exist for recipe type %s'
+                    raise InvalidScanConfiguration(msg % (revision_num, recipe_name))
 
         scanned_workspace_name = self.workspace
         workspace_names = {scanned_workspace_name}
