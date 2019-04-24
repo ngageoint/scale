@@ -16,6 +16,8 @@ class TestNodesViewV6(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client)
+
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()
 
@@ -37,10 +39,13 @@ class TestNodesViewV6(APITransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
+
 class TestNodesViewEmptyV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_nodes_view(self):
         """ test the REST call to retrieve an empty list of nodes"""
@@ -68,7 +73,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
     def test_get_node_success(self):
         """Test successfully calling the Get Node method."""
 
-        url = '/v5/nodes/%d/' % self.node2.id
+        url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -79,7 +84,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
     def test_get_node_not_found(self):
         """Test calling the Get Node method with a bad node id."""
 
-        url = '/v5/nodes/9999/'
+        url = '/v6/nodes/9999/'
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -92,7 +97,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
             'pause_reason': 'Test reason',
         }
 
-        url = '/v5/nodes/%d/' % self.node2.id
+        url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -107,7 +112,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
 
         json_data = {'is_paused': False, 'pause_reason': 'Test reason'}
 
-        url = '/v5/nodes/%d/' % self.node2.id
+        url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -124,7 +129,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
             'is_paused': False,
         }
 
-        url = '/v5/nodes/9999/'
+        url = '/v6/nodes/9999/'
         response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -133,7 +138,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
         """Test calling the Update Node method with no fields."""
 
         json_data = {}
-        url = '/v5/nodes/%d/' % self.node2.id
+        url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -145,7 +150,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
             'foo': 'bar',
         }
 
-        url = '/v5/nodes/%d/' % self.node2.id
+        url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -157,13 +162,14 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
             'is_active': False,
         }
 
-        url = '/v5/nodes/%d/' % self.node2.id
+        url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(result['is_active'], False)
         self.assertIn('deprecated', result)
+
 
 class TestNodeDetailsViewV6(APITransactionTestCase):
 

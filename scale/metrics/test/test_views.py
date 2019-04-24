@@ -57,10 +57,13 @@ class TestMetricsViewV6(APITestCase):
                 self.assertGreaterEqual(len(entry['columns']), 1)
                 self.assertFalse('choices' in entry)
 
+
 class TestMetricDetailsViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
         job_test_utils.create_seed_job_type()
 
@@ -77,10 +80,13 @@ class TestMetricDetailsViewV6(APITransactionTestCase):
         self.assertGreaterEqual(len(result['columns']), 1)
         self.assertEqual(len(result['choices']), 1)
 
+
 class TestMetricPlotViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
         self.job_type1 = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=self.job_type1, completed_count=8, failed_count=2, total_count=10)
