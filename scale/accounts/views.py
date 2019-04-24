@@ -13,7 +13,7 @@ class GetUser(APIView):
     View to get details on the client user.
     """
 
-    def get(self, request, format=None):
+    def get(self, request):
         """
         Return details of a specific user.
         """
