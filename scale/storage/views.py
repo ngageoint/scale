@@ -39,6 +39,8 @@ class FilesView(ListAPIView):
 
         if self.request.version == 'v6':
             return ScaleFileSerializerV6
+        elif self.request.version == 'v7':
+            return ScaleFileSerializerV6
 
     def list(self, request):
         """Retrieves the batches and returns them in JSON form
@@ -50,6 +52,8 @@ class FilesView(ListAPIView):
         """
 
         if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
             return self._list_v6(request)
 
         raise Http404()
@@ -127,6 +131,8 @@ class FileDetailsView(RetrieveAPIView):
 
         if request.version == 'v6':
             return self.retrieve_impl(request, file_id)
+        elif request.version == 'v7':
+            return self.retrieve_impl(request, file_id)
 
         raise Http404()
 
@@ -202,6 +208,8 @@ class WorkspacesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return WorkspaceSerializerV6
+        elif self.request.version == 'v7':
+            return WorkspaceSerializerV6
 
     def list(self, request):
         """Retrieves the list of all workspaces and returns it in JSON form
@@ -213,6 +221,8 @@ class WorkspacesView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
             return self._list_v6(request)
 
         raise Http404()
@@ -249,6 +259,8 @@ class WorkspacesView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self._create_v6(request)
+        elif request.version == 'v7':
             return self._create_v6(request)
 
         raise Http404()
@@ -303,6 +315,8 @@ class WorkspaceDetailsView(GenericAPIView):
 
         if self.request.version == 'v6':
             return WorkspaceDetailsSerializerV6
+        elif self.request.version == 'v7':
+            return WorkspaceDetailsSerializerV6
 
     def get(self, request, workspace_id):
         """Retrieves the details for a workspace and return them in JSON form
@@ -316,6 +330,8 @@ class WorkspaceDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self._get_v6(request, workspace_id)
+        elif request.version == 'v7':
             return self._get_v6(request, workspace_id)
 
         raise Http404()
@@ -351,6 +367,8 @@ class WorkspaceDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self._patch_v6(request, workspace_id)
+        elif request.version == 'v7':
             return self._patch_v6(request, workspace_id)
 
         raise Http404()
@@ -406,6 +424,8 @@ class WorkspacesValidationView(APIView):
         """
 
         if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v7':
             return self._post_v6(request)
 
         raise Http404()

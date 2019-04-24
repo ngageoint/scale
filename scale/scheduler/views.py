@@ -29,6 +29,8 @@ class SchedulerView(GenericAPIView):
 
         if self.request.version == 'v6':
             return SchedulerSerializerV6
+        elif self.request.version == 'v7':
+            return SchedulerSerializerV6
 
     def get(self, request):
         """Gets scheduler information
@@ -40,6 +42,8 @@ class SchedulerView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.get_v6(request)
+        elif request.version == 'v7':
             return self.get_v6(request)
 
         raise Http404()
@@ -71,6 +75,8 @@ class SchedulerView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.patch_v6(request)
+        elif request.version == 'v7':
             return self.patch_v6(request)
 
         raise Http404()
@@ -115,6 +121,8 @@ class StatusView(GenericAPIView):
 
         if request.version == 'v6':
             return self.get_v6(request)
+        elif request.version == 'v7':
+            return self.get_v6(request)
 
         raise Http404()
 
@@ -153,6 +161,8 @@ class VersionView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.get_v6(request)
+        elif request.version == 'v7':
             return self.get_v6(request)
 
         raise Http404()

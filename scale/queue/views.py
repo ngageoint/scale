@@ -46,13 +46,13 @@ class JobLoadView(ListAPIView):
 class QueueStatusView(ListAPIView):
     """This view is the endpoint for retrieving the queue status."""
     queryset = Queue.objects.all()
-    #serializer_class = QueueStatusSerializer
-    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
-    # serializer_class = RecipeDetailsSerializer
+    
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
             return QueueStatusSerializerV6
         else:
             return QueueStatusSerializer

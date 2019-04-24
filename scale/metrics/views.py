@@ -32,6 +32,8 @@ class MetricsView(ListAPIView):
 
         if request.version == 'v6':
             return self.list_v6(request)
+        elif request.version == 'v7':
+            return self.list_v6(request)
 
         raise Http404()
 
@@ -75,6 +77,8 @@ class MetricDetailsView(RetrieveAPIView):
         """
 
         if request.version == 'v6':
+            return self.retrieve_v6(request, name)
+        elif request.version == 'v7':
             return self.retrieve_v6(request, name)
 
         raise Http404()
@@ -123,6 +127,8 @@ class MetricPlotView(ListAPIView):
         """
 
         if request.version == 'v6':
+            return self.list_v6(request, name)
+        elif request.version == 'v7':
             return self.list_v6(request, name)
 
         raise Http404()

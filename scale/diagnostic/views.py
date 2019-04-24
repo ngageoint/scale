@@ -31,6 +31,8 @@ class QueueScaleBakeView(GenericAPIView):
 
         if self.request.version == 'v6':
             return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
+            return QueueStatusSerializerV6
         else:
             return QueueStatusSerializer
 
@@ -44,6 +46,8 @@ class QueueScaleBakeView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.post_v6(request)
+        elif request.version == 'v7':
             return self.post_v6(request)
 
         raise Http404()
@@ -92,6 +96,8 @@ class QueueScaleCasinoView(GenericAPIView):
 
         if self.request.version == 'v6':
             return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
+            return QueueStatusSerializerV6
         else:
             return QueueStatusSerializer
 
@@ -105,6 +111,8 @@ class QueueScaleCasinoView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.post_v6(request)
+        elif request.version == 'v7':
             return self.post_v6(request)
 
         raise Http404()
@@ -153,6 +161,8 @@ class QueueScaleHelloView(GenericAPIView):
 
         if self.request.version == 'v6':
             return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
+            return QueueStatusSerializerV6
         else:
             return QueueStatusSerializer
 
@@ -166,6 +176,8 @@ class QueueScaleHelloView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.post_v6(request)
+        elif request.version == 'v7':
             return self.post_v6(request)
 
         raise Http404()
@@ -218,7 +230,7 @@ class QueueScaleCountView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v6':
+        if request.version == 'v6' or request.version == 'v7':
             return self.post_v6(request)
 
         raise Http404()
@@ -267,6 +279,8 @@ class QueueScaleRouletteView(GenericAPIView):
 
         if self.request.version == 'v6':
             return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
+            return QueueStatusSerializerV6
         else:
             return QueueStatusSerializer
 
@@ -279,7 +293,7 @@ class QueueScaleRouletteView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v6':
+        if request.version == 'v6' or request.version == 'v7':
             return self.post_v6(request)
 
         raise Http404()

@@ -37,6 +37,8 @@ class IngestsView(ListAPIView):
 
         if self.request.version == 'v6':
             return IngestSerializerV6
+        elif self.request.version == 'v7':
+            return IngestSerializerV6
 
     def list(self, request):
         """Determine api version and call specific method
@@ -48,6 +50,8 @@ class IngestsView(ListAPIView):
         """
 
         if request.version == 'v6':
+            return self.list_impl(request)
+        elif request.version == 'v7':
             return self.list_impl(request)
 
         raise Http404()
@@ -91,6 +95,8 @@ class IngestDetailsView(RetrieveAPIView):
 
         if self.request.version == 'v6':
             return IngestDetailsSerializerV6
+        elif self.request.version == 'v7':
+            return IngestDetailsSerializerV6
 
     def retrieve(self, request, ingest_id=None, file_name=None):
         """Determine api version and call specific method
@@ -105,7 +111,7 @@ class IngestDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v6':
+        if request.version == 'v6' or request.version == 'v7':
             return self.retrieve_v6(request, ingest_id)
 
         raise Http404()
@@ -138,6 +144,8 @@ class IngestsStatusView(ListAPIView):
 
         if self.request.version == 'v6':
             return IngestStatusSerializerV6
+        elif self.request.version == 'v7':
+            return IngestStatusSerializerV6
 
     def list(self, request):
         """Determine api version and call specific method
@@ -148,7 +156,7 @@ class IngestsStatusView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v6':
+        if request.version == 'v6' or request.version == 'v7':
             return self.list_impl(request)
 
         raise Http404()
@@ -183,6 +191,8 @@ class ScansProcessView(GenericAPIView):
 
         if self.request.version == 'v6':
             return ScanDetailsSerializerV6
+        elif self.request.version == 'v7':
+            return ScanDetailsSerializerV6
 
     def post(self, request, scan_id=None):
         """Launches a scan to ingest from an existing scan model instance
@@ -196,6 +206,8 @@ class ScansProcessView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self._post_v6(request, scan_id)
+        elif request.version == 'v7':
             return self._post_v6(request, scan_id)
 
         raise Http404()
@@ -230,6 +242,8 @@ class ScansView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return ScanSerializerV6
+        elif self.request.version == 'v7':
+            return ScanSerializerV6
 
     def list(self, request):
         """Retrieves the list of all Scan process and returns it in JSON form
@@ -241,6 +255,8 @@ class ScansView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
             return self._list_v6(request)
 
         raise Http404()
@@ -277,6 +293,8 @@ class ScansView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self._create_v6(request)
+        elif request.version == 'v7':
             return self._create_v6(request)
 
         raise Http404()
@@ -319,6 +337,8 @@ class ScansDetailsView(GenericAPIView):
 
         if self.request.version == 'v6':
             return ScanDetailsSerializerV6
+        elif self.request.version == 'v7':
+            return ScanDetailsSerializerV6
 
     def get(self, request, scan_id):
         """Retrieves the details for a Scan process and return them in JSON form
@@ -332,6 +352,8 @@ class ScansDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self._get_v6(request, scan_id)
+        elif request.version == 'v7':
             return self._get_v6(request, scan_id)
 
         raise Http404()
@@ -367,6 +389,8 @@ class ScansDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self._patch_v6(request, scan_id)
+        elif request.version == 'v7':
             return self._patch_v6(request, scan_id)
 
         raise Http404()
@@ -419,6 +443,8 @@ class ScansValidationView(APIView):
 
         if request.version == 'v6':
             return self._post_v6(request)
+        elif request.version == 'v7':
+            return self._post_v6(request)
 
         raise Http404()
 
@@ -451,6 +477,8 @@ class StrikesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return StrikeSerializerV6
+        elif self.request.version == 'v7':
+            return StrikeSerializerV6
 
     def list(self, request):
         """Determine api version and call specific method
@@ -462,6 +490,8 @@ class StrikesView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self.list_impl(request)
+        elif request.version == 'v7':
             return self.list_impl(request)
 
         raise Http404()
@@ -498,6 +528,8 @@ class StrikesView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self.create_impl_v6(request)
+        elif request.version == 'v7':
             return self.create_impl_v6(request)
 
         raise Http404()
@@ -548,6 +580,8 @@ class StrikeDetailsView(GenericAPIView):
 
         if self.request.version == 'v6':
             return StrikeDetailsSerializerV6
+        elif self.request.version == 'v7':
+            return StrikeDetailsSerializerV6
 
     def get(self, request, strike_id):
         """Determine api version and call specific method
@@ -561,6 +595,8 @@ class StrikeDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.get_impl(request, strike_id)
+        elif request.version == 'v7':
             return self.get_impl(request, strike_id)
 
         raise Http404()
@@ -596,6 +632,8 @@ class StrikeDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.patch_impl_v6(request, strike_id)
+        elif request.version == 'v7':
             return self.patch_impl_v6(request, strike_id)
 
         raise Http404()
@@ -647,6 +685,8 @@ class StrikesValidationView(APIView):
         """
 
         if request.version == 'v6':
+            return self.post_impl_v6(request)
+        elif request.version == 'v7':
             return self.post_impl_v6(request)
 
         raise Http404()
