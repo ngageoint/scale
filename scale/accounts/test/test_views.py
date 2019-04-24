@@ -4,7 +4,6 @@ import json
 
 import django
 from django.contrib.auth.models import User
-from django.test import TestCase
 from rest_framework import status
 
 import util.rest as rest_util
@@ -114,28 +113,85 @@ class TestUserDetail(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
+        self.user = {
+            'username': 'sample',
+            'password': 'user',
+            'email': 'sample@empty.com'
+        }
+
+        user = User.objects.create_user(username='sample', password='user')
+        self.client.login(username='sample', password='user')
+        self.user_id = user.id
+
+    def test_get_user_unauthorized(self):
+        self.client.logout()
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_edit_user_unauthorized(self):
+        self.client.logout()
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.patch(url, data=self.user, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_delete_user_unauthorized(self):
+        self.client.logout()
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_get_user_self(self):
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+    def test_edit_user_self_details(self):
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.put(url, data=self.user, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+    def test_edit_user_regular_set_staff_unauthorized(self):
+        """Validate a regular user cannot promote themselves to staff user"""
+        self.user['is_staff'] = True
+
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.put(url, data=self.user, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_edit_user_staff_promote(self):
+        """Validate a staff user can promote others to staff user"""
+        self.user['is_staff'] = True
+
         rest.login_client(self.client, is_staff=True)
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.put(url, data=self.user, format='json')
 
-    def test_bad_num(self):
-        """Tests calling the view with a num of 0 (which is invalid)."""
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        json_data = {
-            'num': 0
-        }
+    def test_delete_user_self(self):
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.delete(url)
 
-        url = rest_util.get_url('/diagnostics/job/roulette/')
-        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+    def test_delete_user_other_regular_user(self):
+        user = User.objects.create_user(username='other')
 
-    def test_successful(self):
-        """Tests calling the view to create Scale Roulette jobs."""
+        url = rest_util.get_url('/accounts/users/%i/' % (user.id,))
+        response = self.client.delete(url)
 
-        json_data = {
-            'num': 10
-        }
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-        url = rest_util.get_url('/diagnostics/job/roulette/')
-        response = self.client.generic('POST', url, json.dumps(json_data), format='json')
+    def test_delete_user_other_staff_user(self):
+        rest.login_client(self.client, is_staff=True)
+        url = rest_util.get_url('/accounts/users/%i/' % (self.user_id,))
+        response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)

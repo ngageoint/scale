@@ -29,8 +29,8 @@ cache: pip
 filter_secrets: false
 
 install:
-- if [ "${RUN_TESTS}" == "true" ]; then pip install -q -r scale/pip/requirements.txt; fi
-- if [ "${BUILD_DOCS}" == "true" ]; then pip install -q -r scale/pip/docs.txt -r scale/pip/production.txt; fi
+- if [ "${RUN_TESTS}" == "true" ]; then pip install -q -U -r scale/pip/requirements.txt; fi
+- if [ "${BUILD_DOCS}" == "true" ]; then pip install -q -U -r scale/pip/docs.txt -r scale/pip/production.txt; fi
 
 script: 
 - ./travis-build.sh
