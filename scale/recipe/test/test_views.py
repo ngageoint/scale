@@ -14,7 +14,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
-from recipe.models import Recipe, RecipeNode, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
+from recipe.models import Recipe, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from util import rest
@@ -315,7 +315,7 @@ class TestCreateRecipeTypeViewV6(APITransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestRecipeTypeDetailsViewV6(TransactionTestCase):
+class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
     """Tests related to the recipe-types details endpoint"""
 
     api = 'v6'
@@ -824,7 +824,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
 
 
-class TestRecipesViewV6(TransactionTestCase):
+class TestRecipesViewV6(APITransactionTestCase):
 
     api = 'v6'
 

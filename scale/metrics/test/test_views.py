@@ -4,9 +4,8 @@ from __future__ import absolute_import
 import json
 
 import django
-from django.test import TransactionTestCase
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
@@ -35,8 +34,8 @@ class TestMetricsViewV6(APITestCase):
                 self.assertGreaterEqual(len(entry['columns']), 1)
                 self.assertFalse('choices' in entry)
 
+
 class TestMetricsViewV6(APITestCase):
-class TestMetricsViewV6(TestCase):
 
     def setUp(self):
         django.setup()
@@ -58,7 +57,7 @@ class TestMetricsViewV6(TestCase):
                 self.assertGreaterEqual(len(entry['columns']), 1)
                 self.assertFalse('choices' in entry)
 
-class TestMetricDetailsViewV6(TransactionTestCase):
+class TestMetricDetailsViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -78,7 +77,7 @@ class TestMetricDetailsViewV6(TransactionTestCase):
         self.assertGreaterEqual(len(result['columns']), 1)
         self.assertEqual(len(result['choices']), 1)
 
-class TestMetricPlotViewV6(TransactionTestCase):
+class TestMetricPlotViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()

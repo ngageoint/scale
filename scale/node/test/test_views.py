@@ -37,7 +37,7 @@ class TestNodesViewV6(APITransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
-class TestNodesViewEmptyV6(TransactionTestCase):
+class TestNodesViewEmptyV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
