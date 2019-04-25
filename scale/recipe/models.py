@@ -457,41 +457,14 @@ class RecipeManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
 
-        # TODO: remove when legacy trigger system is removed
-        definition_version = recipe.recipe_type_rev.definition['version']
-
         recipe_definition = recipe.recipe_type_rev.get_definition()
         input_data.validate(recipe_definition.input_interface)
         input_dict = None
 
-        # TODO: this code path supports passing output workspace ID in recipe data, remove when legacy trigger system is
-        # removed
-        config = None
-        if definition_version == '1.0' and recipe.recipe:
-            if 'workspace_id' in recipe.recipe.input:
-                input_dict = convert_data_to_v1_json(input_data, recipe_definition.input_interface).get_dict()
-                input_dict['workspace_id'] = recipe.recipe.input['workspace_id']
-
-                # store workspace id in config so it isn't lost
-                workspace_id = input_dict['workspace_id']
-                workspace = None
-                try:
-                    workspace = Workspace.objects.get(pk=workspace_id)
-                except Workspace.DoesNotExist:
-                    logger.exception('Could not set workspace from input data. Workspace does not exist: %d', workspace_id)
-
-                config = RecipeConfigurationV6(recipe.configuration)
-                if workspace:
-                    config.get_configuration().default_output_workspace = workspace.name
-                    config = config.get_dict()
-
         if not input_dict:
             input_dict = convert_data_to_v6_json(input_data).get_dict()
 
-        if config:
-            self.filter(id=recipe.id).update(input=input_dict, configuration=config)
-        else:
-            self.filter(id=recipe.id).update(input=input_dict)
+        self.filter(id=recipe.id).update(input=input_dict)
 
     def supersede_recipes(self, recipe_ids, when):
         """Updates the given recipes to be superseded
