@@ -6,28 +6,22 @@ import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from django.utils.timezone import now
-
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import util.rest as rest_util
-
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from messaging.manager import CommandMessageManager
-from job.models import Job, JobType
 from queue.models import Queue
-from recipe.configuration.data.exceptions import InvalidRecipeConnection, InvalidRecipeData
-from recipe.configuration.definition.exceptions import InvalidDefinition as OldInvalidDefinition
+from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.exceptions import InvalidRecipeConfiguration
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.exceptions import InvalidDiff
-from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
 from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
@@ -38,10 +32,8 @@ from recipe.serializers import (RecipeDetailsSerializerV6,
                                 RecipeTypeRevisionSerializerV6, RecipeTypeRevisionDetailsSerializerV6)
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV6
-from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from trigger.models import TriggerEvent
 from util.rest import BadParameter, title_to_name
-
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +47,6 @@ class RecipeTypesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return RecipeTypeListSerializerV6
-
 
     def list(self, request):
         """Retrieves the list of all recipe types and returns it in JSON form
@@ -86,7 +77,7 @@ class RecipeTypesView(ListCreateAPIView):
         order = ['name']
 
         recipe_types = RecipeType.objects.get_recipe_types_v6(keywords=keywords, is_active=is_active,
-                                                     is_system=is_system, order=order)
+                                                              is_system=is_system, order=order)
 
         page = self.paginate_queryset(recipe_types)
         serializer = self.get_serializer(page, many=True)
@@ -105,7 +96,6 @@ class RecipeTypesView(ListCreateAPIView):
             return self._create_v6(request)
 
         raise Http404
-
 
     def _create_v6(self, request):
         """Creates a new recipe type and returns a link to the detail URL
@@ -239,6 +229,7 @@ class RecipeTypeDetailsView(GenericAPIView):
 
         return HttpResponse(status=204)
 
+
 class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
@@ -277,6 +268,7 @@ class RecipeTypeRevisionsView(ListAPIView):
         page = self.paginate_queryset(recipe_type_revs)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
 
 class RecipeTypeRevisionDetailsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
@@ -323,6 +315,7 @@ class RecipeTypeRevisionDetailsView(ListAPIView):
         serializer = self.get_serializer(recipe_type_rev)
         return Response(serializer.data)
 
+
 class RecipeTypesValidationView(APIView):
     """This view is the endpoint for validating a new recipe type before attempting to actually create it"""
     queryset = RecipeType.objects.all()
@@ -340,7 +333,6 @@ class RecipeTypesValidationView(APIView):
             return self._post_v6(request)
 
         raise Http404
-
 
     def _post_v6(self, request):
         """Validates a new recipe type and returns any warnings discovered
@@ -414,12 +406,13 @@ class RecipesView(ListAPIView):
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         recipes = Recipe.objects.get_recipes_v6(started=started, ended=ended,
-                                             source_started=source_started, source_ended=source_ended,
-                                             source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
-                                             source_collections=source_collections, source_tasks=source_tasks,
-                                             ids=recipe_ids, type_ids=type_ids, type_names=type_names,
-                                             batch_ids=batch_ids, is_superseded=is_superseded,
-                                             is_completed=is_completed, order=order)
+                                                source_started=source_started, source_ended=source_ended,
+                                                source_sensor_classes=source_sensor_classes,
+                                                source_sensors=source_sensors,
+                                                source_collections=source_collections, source_tasks=source_tasks,
+                                                ids=recipe_ids, type_ids=type_ids, type_names=type_names,
+                                                batch_ids=batch_ids, is_superseded=is_superseded,
+                                                is_completed=is_completed, order=order)
 
         page = self.paginate_queryset(recipes)
         serializer = self.get_serializer(page, many=True)
@@ -461,7 +454,8 @@ class RecipesView(ListAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
-            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(), recipe_config=configuration)
+            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(),
+                                                                recipe_config=configuration)
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
@@ -493,7 +487,6 @@ class RecipeDetailsView(RetrieveAPIView):
 
         raise Http404()
 
-
     def _retrieve_v6(self, request, recipe_id):
         """Retrieves the details for a recipe and returns it in JSON form
 
@@ -512,6 +505,7 @@ class RecipeDetailsView(RetrieveAPIView):
 
         serializer = self.serializer_class(recipe)
         return Response(serializer.data)
+
 
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
@@ -559,8 +553,8 @@ class RecipeInputFilesView(ListAPIView):
         recipe_input = rest_util.parse_string(request, 'recipe_input', required=False)
 
         files = RecipeInputFile.objects.get_recipe_input_files_v6(recipe_id, started=started, ended=ended,
-                                                               time_field=time_field, file_name=file_name,
-                                                               recipe_input=recipe_input)
+                                                                  time_field=time_field, file_name=file_name,
+                                                                  recipe_input=recipe_input)
 
         page = self.paginate_queryset(files)
         serializer = self.get_serializer(page, many=True)

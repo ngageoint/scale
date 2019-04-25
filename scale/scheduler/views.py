@@ -10,14 +10,11 @@ from django.http.response import Http404
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
 from rest_framework import permissions
-from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from scheduler.models import Scheduler
 from scheduler.serializers import SchedulerSerializerV6
-
 
 logger = logging.getLogger(__name__)
 

@@ -19,11 +19,10 @@ class TestGetUser(APITestCase):
     def test_get_current_user_unauthorized(self):
         """Tests calling the GetUser view without being authenticated."""
 
-        self.client.logout()
         url = rest_util.get_url('/accounts/profile/')
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED, response.content)
 
     def test_get_current_user(self):
         """Tests calling the GetUser view when authenticated as a basic user."""

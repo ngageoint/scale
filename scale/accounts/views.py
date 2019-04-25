@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import generics, permissions
 from django.contrib.auth.models import User
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from accounts.serializers import UserAccountSerializer
 
 
@@ -17,6 +18,9 @@ class GetUser(APIView):
         """
         Return details of a specific user.
         """
+
+        if request.user and request.user.is_anonymous:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         serializer = UserAccountSerializer(request.user)
         return Response(serializer.data)

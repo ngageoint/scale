@@ -6,9 +6,7 @@ import logging
 
 import rest_framework.status as status
 from django.http.response import Http404
-from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -16,7 +14,6 @@ from rest_framework.views import APIView
 import util.rest as rest_util
 from ingest.models import Ingest, Scan, Strike
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
-from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.serializers import (IngestDetailsSerializerV6, IngestSerializerV6,
                                 IngestStatusSerializerV6,
@@ -84,6 +81,7 @@ class IngestsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+
 class IngestDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of an ingest."""
     queryset = Ingest.objects.all()
@@ -130,6 +128,7 @@ class IngestDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(ingest)
         return Response(serializer.data)
+
 
 class IngestsStatusView(ListAPIView):
     """This view is the endpoint for retrieving summarized ingest status."""
@@ -224,6 +223,7 @@ class ScansProcessView(GenericAPIView):
         serializer = self.get_serializer(scan)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""
     queryset = Scan.objects.all()
@@ -298,7 +298,6 @@ class ScansView(ListCreateAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
 
-        config = None
         try:
             config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
@@ -312,6 +311,7 @@ class ScansView(ListCreateAPIView):
         serializer = ScanDetailsSerializerV6(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+
 
 class ScansDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Scan process."""
@@ -444,6 +444,7 @@ class ScansValidationView(APIView):
         if not resp_dict['is_valid']:
             return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)
+
 
 class StrikesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Strike process."""
