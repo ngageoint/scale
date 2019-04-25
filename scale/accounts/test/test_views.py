@@ -19,6 +19,7 @@ class TestGetUser(APITestCase):
     def test_get_current_user_unauthorized(self):
         """Tests calling the GetUser view without being authenticated."""
 
+        self.client.logout()
         url = rest_util.get_url('/accounts/profile/')
         response = self.client.get(url)
 
