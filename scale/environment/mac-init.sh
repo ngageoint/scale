@@ -26,6 +26,7 @@ docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION po
 # Install all python dependencies
 brew install gdal
 brew install libgeoip
+brew install postgresql
 
 cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
@@ -39,7 +40,8 @@ EOF
 # Initialize virtual environment
 pip install virtualenv
 virtualenv -p $(which python2) environment/scale
-environment/scale/bin/pip install -r pip/requirements.txt
+cat pip/requirements.txt | sed 's^psycopg2^psycopg2-binary^' > pip/mac.txt
+environment/scale/bin/pip install -r pip/mac.txt
 
 # Load up database with schema migrations to date and fixtures
 environment/scale/bin/python manage.py migrate
