@@ -1,0 +1,22 @@
+accounts\.management\.commands package
+======================================
+
+Submodules
+----------
+
+accounts\.management\.commands\.scale\_superuser module
+-------------------------------------------------------
+
+.. automodule:: accounts.management.commands.scale_superuser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: accounts.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

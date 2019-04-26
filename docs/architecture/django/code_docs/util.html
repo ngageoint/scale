@@ -1106,6 +1106,22 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 
 </dd></dl>
 
+<dl class="class">
+<dt id="util.rest.ScaleAPIPermissions">
+<em class="property">class </em><code class="descclassname">util.rest.</code><code class="descname">ScaleAPIPermissions</code><a class="headerlink" href="#util.rest.ScaleAPIPermissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.permissions.BasePermission</span></code></p>
+<p>Verifies that method is permitted to be called.
+Evaluation logic is all methods must be authenticated if PUBLIC_API_READ is False
+SAFE_METHODS will be allowed publicly if PUBLIC_API_READ is True
+POST against validation methods do not require staff user.
+Unsafe methods always require staff user.</p>
+<dl class="method">
+<dt id="util.rest.ScaleAPIPermissions.has_permission">
+<code class="descname">has_permission</code><span class="sig-paren">(</span><em>request</em>, <em>view</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.ScaleAPIPermissions.has_permission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="util.rest.check_time_range">
 <code class="descclassname">util.rest.</code><code class="descname">check_time_range</code><span class="sig-paren">(</span><em>started</em>, <em>ended</em>, <em>max_duration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.check_time_range" title="Permalink to this definition">¶</a></dt>
@@ -1262,6 +1278,12 @@ when computing an absolute time stamp.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.login_client">
+<code class="descclassname">util.rest.</code><code class="descname">login_client</code><span class="sig-paren">(</span><em>client</em>, <em>is_staff=False</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.login_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a client object and creates a login session, optionally creating a staff user for unsafe methods</p>
 </dd></dl>
 
 <dl class="function">

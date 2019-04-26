@@ -733,7 +733,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestCancelJobsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestCancelJobsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestCancelJobsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestCancelJobsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestCancelJobsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -759,9 +759,43 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="job.test.test_views.TestGetAuthDisabledJobsView">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestGetAuthDisabledJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestGetAuthDisabledJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.test_views.TestGetAuthDisabledJobsView.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestGetAuthDisabledJobsView.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestGetAuthDisabledJobsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestGetAuthDisabledJobsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestGetAuthDisabledJobsView.test_success_on_post">
+<code class="descname">test_success_on_post</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestGetAuthDisabledJobsView.test_success_on_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests success when posting to the jobs view with authentication.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestGetAuthDisabledJobsView.test_successful_on_get">
+<code class="descname">test_successful_on_get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestGetAuthDisabledJobsView.test_successful_on_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully retrieving jobs without authentication.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestGetAuthDisabledJobsView.test_unathenticated_on_post">
+<code class="descname">test_unathenticated_on_post</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestGetAuthDisabledJobsView.test_unathenticated_on_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests for failure when posting to the jobs view with authentication.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="job.test.test_views.TestJobDetailsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobDetailsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobDetailsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -801,7 +835,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobExecutionDetailsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobExecutionDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionDetailsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITransactionTestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobExecutionDetailsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobExecutionDetailsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -827,7 +861,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobExecutionSpecificLogViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobExecutionSpecificLogViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionSpecificLogViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobExecutionSpecificLogViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobExecutionSpecificLogViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -883,7 +917,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobExecutionsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobExecutionsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITransactionTestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobExecutionsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobExecutionsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -925,7 +959,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobInputFilesViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobInputFilesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobInputFilesViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobInputFilesViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -971,7 +1005,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypeDetailsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypeDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypeDetailsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1023,7 +1057,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypeNamesViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypeNamesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeNamesViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypeNamesViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypeNamesViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1069,7 +1103,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypeRevisionsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypeRevisionsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeRevisionsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypeRevisionsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypeRevisionsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1109,7 +1143,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesPendingView">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesPendingView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPendingView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypesPendingView.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesPendingView.api" title="Permalink to this definition">¶</a></dt>
@@ -1131,7 +1165,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesPostViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesPostViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypesPostViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1213,7 +1247,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesRunningView">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesRunningView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypesRunningView.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView.api" title="Permalink to this definition">¶</a></dt>
@@ -1235,7 +1269,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesSystemFailuresView">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesSystemFailuresView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypesSystemFailuresView.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView.api" title="Permalink to this definition">¶</a></dt>
@@ -1257,7 +1291,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesValidationViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesValidationViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITransactionTestCase</span></code></p>
 <p>Tests related to the job-types validation endpoint</p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypesValidationViewV6.api">
@@ -1352,7 +1386,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobTypesViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1410,7 +1444,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobsPostViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsPostViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsPostViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobsPostViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobsPostViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1450,7 +1484,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestJobsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestJobsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.api" title="Permalink to this definition">¶</a></dt>
@@ -1568,7 +1602,7 @@
 <dl class="class">
 <dt id="job.test.test_views.TestRequeueJobsViewV6">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestRequeueJobsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestRequeueJobsViewV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
 <dl class="attribute">
 <dt id="job.test.test_views.TestRequeueJobsViewV6.api">
 <code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestRequeueJobsViewV6.api" title="Permalink to this definition">¶</a></dt>

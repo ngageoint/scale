@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>accounts package &mdash; Scale 6.9.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'6.9.0-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                6.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>accounts package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/accounts.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="accounts-package">
+<h1>accounts package<a class="headerlink" href="#accounts-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="accounts.management.html">accounts.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="accounts.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="accounts.management.commands.html">accounts.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="accounts.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="accounts.management.commands.html#module-accounts.management.commands.scale_superuser">accounts.management.commands.scale_superuser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="accounts.management.commands.html#module-accounts.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="accounts.management.html#module-accounts.management">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="accounts.test.html">accounts.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="accounts.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="accounts.test.html#module-accounts.test.test_views">accounts.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="accounts.test.html#module-accounts.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounts.apps">
+<span id="accounts-apps-module"></span><h2>accounts.apps module<a class="headerlink" href="#module-accounts.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="accounts.apps.AccountsConfig">
+<em class="property">class </em><code class="descclassname">accounts.apps.</code><code class="descname">AccountsConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.apps.AccountsConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="attribute">
+<dt id="accounts.apps.AccountsConfig.name">
+<code class="descname">name</code><em class="property"> = u'accounts'</em><a class="headerlink" href="#accounts.apps.AccountsConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.serializers">
+<span id="accounts-serializers-module"></span><h2>accounts.serializers module<a class="headerlink" href="#module-accounts.serializers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="accounts.serializers.UserAccountSerializer">
+<em class="property">class </em><code class="descclassname">accounts.serializers.</code><code class="descname">UserAccountSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.serializers.UserAccountSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
+<dl class="class">
+<dt id="accounts.serializers.UserAccountSerializer.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="accounts.serializers.UserAccountSerializer.Meta.fields">
+<code class="descname">fields</code><em class="property"> = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff')</em><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.serializers.UserAccountSerializer.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">User</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.serializers.UserAccountSerializer.Meta.read_only_fields">
+<code class="descname">read_only_fields</code><em class="property"> = ('id',)</em><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.Meta.read_only_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.serializers.UserAccountSerializer.Meta.write_only_fields">
+<code class="descname">write_only_fields</code><em class="property"> = ('password',)</em><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.Meta.write_only_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="accounts.serializers.UserAccountSerializer.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>validated_data</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="accounts.serializers.UserAccountSerializer.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>instance</em>, <em>validated_data</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.serializers.UserAccountSerializer.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.urls">
+<span id="accounts-urls-module"></span><h2>accounts.urls module<a class="headerlink" href="#module-accounts.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounts.views">
+<span id="accounts-views-module"></span><h2>accounts.views module<a class="headerlink" href="#module-accounts.views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="accounts.views.GetUser">
+<em class="property">class </em><code class="descclassname">accounts.views.</code><code class="descname">GetUser</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.GetUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
+<p>View to get details on the client user.</p>
+<dl class="method">
+<dt id="accounts.views.GetUser.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.GetUser.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return details of a specific user.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="accounts.views.IsOwnerOrAdmin">
+<em class="property">class </em><code class="descclassname">accounts.views.</code><code class="descname">IsOwnerOrAdmin</code><a class="headerlink" href="#accounts.views.IsOwnerOrAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.permissions.BasePermission</span></code></p>
+<p>Custom permission to only allow owners of an object to edit it.</p>
+<p>We also ensure non-staff users are not allowed to elevate their privileges</p>
+<dl class="method">
+<dt id="accounts.views.IsOwnerOrAdmin.has_object_permission">
+<code class="descname">has_object_permission</code><span class="sig-paren">(</span><em>request</em>, <em>view</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.IsOwnerOrAdmin.has_object_permission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="accounts.views.UserDetail">
+<em class="property">class </em><code class="descclassname">accounts.views.</code><code class="descname">UserDetail</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.UserDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveUpdateDestroyAPIView</span></code></p>
+<p>View to support RUD of individual user records</p>
+<ul class="simple">
+<li>Only owner of record or admin users are allowed to edit records</li>
+<li>Owners are not able to upgrade is_staff flag from false to true</li>
+</ul>
+<dl class="attribute">
+<dt id="accounts.views.UserDetail.permission_classes">
+<code class="descname">permission_classes</code><em class="property"> = (&lt;class 'accounts.views.IsOwnerOrAdmin'&gt;,)</em><a class="headerlink" href="#accounts.views.UserDetail.permission_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.views.UserDetail.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#accounts.views.UserDetail.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.views.UserDetail.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#accounts.views.UserDetail.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">UserAccountSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="accounts.views.UserList">
+<em class="property">class </em><code class="descclassname">accounts.views.</code><code class="descname">UserList</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.UserList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListCreateAPIView</span></code></p>
+<p>View to list all users in the system.</p>
+<ul class="simple">
+<li>Only admin users are able to access this view.</li>
+</ul>
+<dl class="attribute">
+<dt id="accounts.views.UserList.permission_classes">
+<code class="descname">permission_classes</code><em class="property"> = (&lt;class 'rest_framework.permissions.IsAdminUser'&gt;,)</em><a class="headerlink" href="#accounts.views.UserList.permission_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.views.UserList.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#accounts.views.UserList.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="accounts.views.UserList.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#accounts.views.UserList.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">UserAccountSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-accounts" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

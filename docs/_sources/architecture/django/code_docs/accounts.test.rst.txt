@@ -1,0 +1,22 @@
+accounts\.test package
+======================
+
+Submodules
+----------
+
+accounts\.test\.test\_views module
+----------------------------------
+
+.. automodule:: accounts.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: accounts.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

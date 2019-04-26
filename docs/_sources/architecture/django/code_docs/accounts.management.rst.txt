@@ -1,0 +1,17 @@
+accounts\.management package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    accounts.management.commands
+
+Module contents
+---------------
+
+.. automodule:: accounts.management
+    :members:
+    :undoc-members:
+    :show-inheritance:
