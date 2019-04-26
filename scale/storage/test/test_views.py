@@ -16,11 +16,14 @@ import product.test.utils as product_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
+from rest_framework.test import APITestCase
 
 from source.messages.purge_source_file import PurgeSourceFile
 from storage.models import PurgeResults, Workspace
+from util import rest
 
-class TestFilesViewV6(TestCase):
+
+class TestFilesViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -58,6 +61,8 @@ class TestFilesViewV6(TestCase):
         self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2, countries=[self.country],
                                                           source_started=self.f2_source_started,
                                                           source_ended=self.f2_source_ended)
+
+        rest.login_client(self.client)
 
 
     def test_invalid_started(self):
@@ -229,7 +234,7 @@ class TestFilesViewV6(TestCase):
             # Make sure country info is included
             self.assertEqual(entry['countries'][0], self.country.iso3)
 
-class TestFileDetailsViewV6(TestCase):
+class TestFileDetailsViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -254,6 +259,8 @@ class TestFileDetailsViewV6(TestCase):
                                                     job_exe=self.job_exe1, job_output='output_name_1', recipe=self.recipe1,
                                                     recipe_node='my-recipe', batch=self.batch1,
                                                     is_superseded=True, superseded='2017-01-01T00:00:00Z')
+
+        rest.login_client(self.client)
 
     def test_id(self):
         """Tests successfully calling the files detail view by id"""
@@ -296,8 +303,8 @@ class TestFileDetailsViewV6(TestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-class TestWorkspacesViewV6(TestCase):
 
+class TestWorkspacesViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -305,6 +312,8 @@ class TestWorkspacesViewV6(TestCase):
 
         self.workspace1 = storage_test_utils.create_workspace(name='ws1')
         self.workspace2 = storage_test_utils.create_workspace(name='ws2')
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the get all workspaces view."""
@@ -367,11 +376,14 @@ class TestWorkspacesViewV6(TestCase):
         self.assertNotIn('total_size', result['results'][0])
         self.assertNotIn('used_size', result['results'][0])
 
-class TestWorkspaceCreateViewV6(TestCase):
+
+class TestWorkspaceCreateViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_missing_configuration(self):
         """Tests calling the create Workspace view with missing configuration."""
@@ -448,7 +460,8 @@ class TestWorkspaceCreateViewV6(TestCase):
         self.assertEqual(result['is_active'], workspaces[0].is_active)
         self.assertFalse(workspaces[0].is_active)
 
-class TestWorkspaceDetailsViewV6(TestCase):
+
+class TestWorkspaceDetailsViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -462,6 +475,8 @@ class TestWorkspaceDetailsViewV6(TestCase):
         }
 
         self.workspace = storage_test_utils.create_workspace(json_config=self.config)
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
@@ -539,13 +554,16 @@ class TestWorkspaceDetailsViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestWorkspacesValidationViewV6(TestCase):
+
+class TestWorkspacesValidationViewV6(APITestCase):
     """Tests related to the workspaces validation endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests validating a new workspace."""
@@ -642,13 +660,16 @@ class TestWorkspacesValidationViewV6(TestCase):
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['name'], 'broker_type')
 
-class TestPurgeSourceFileView(TestCase):
+
+class TestPurgeSourceFileView(APITestCase):
     """Tests related to the purge source endpoint"""
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     @patch('storage.views.CommandMessageManager')
     @patch('storage.views.create_purge_source_file_message')

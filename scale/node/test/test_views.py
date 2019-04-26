@@ -1,27 +1,22 @@
 from __future__ import unicode_literals
 
 import json
-from datetime import timedelta
 
 import django
-from django.test import TransactionTestCase
-from django.utils.timezone import now
-from mock import patch
 from rest_framework import status
 
-import error.test.utils as error_test_utils
-import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-import util.rest as rest_util
-from mesos_api.api import SlaveInfo, HardwareResources
+from rest_framework.test import APITransactionTestCase
 from scheduler.models import Scheduler
+from util import rest
 
 
-
-class TestNodesViewV6(TransactionTestCase):
+class TestNodesViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()
@@ -44,10 +39,13 @@ class TestNodesViewV6(TransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
-class TestNodesViewEmptyV6(TransactionTestCase):
+
+class TestNodesViewEmptyV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_nodes_view(self):
         """ test the REST call to retrieve an empty list of nodes"""
@@ -58,10 +56,13 @@ class TestNodesViewEmptyV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 0)
 
-class TestNodeDetailsViewV6(TransactionTestCase):
+
+class TestNodeDetailsViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()
@@ -97,7 +98,7 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         }
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_node_unpause(self):
@@ -106,7 +107,7 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         json_data = {'is_paused': False, 'pause_reason': 'Test reason'}
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_node_not_found(self):
@@ -117,7 +118,7 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         }
 
         url = '/v6/nodes/9999/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -126,7 +127,7 @@ class TestNodeDetailsViewV6(TransactionTestCase):
 
         json_data = {}
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -138,7 +139,7 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         }
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -150,5 +151,5 @@ class TestNodeDetailsViewV6(TransactionTestCase):
         }
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)

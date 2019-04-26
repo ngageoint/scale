@@ -10,8 +10,11 @@ DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # Set the external URL context here
-FORCE_SCRIPT_NAME = '/scale-dev/api'
+FORCE_SCRIPT_NAME = '/'
 USE_X_FORWARDED_HOST = True
+
+# Disable this for local testing over HTTP
+SESSION_COOKIE_SECURE = False
 
 STATIC_ROOT = 'static/'
 STATIC_URL = '/scale/static/'
@@ -34,7 +37,7 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 DATABASES = {'default': dj_database_url.config(default='postgis://user:pass@localhost:5432/scale')}
 
 # Logging configuration
-LOGGING = LOG_CONSOLE_FILE_DEBUG
+LOGGING = LOG_CONSOLE_DEBUG
 
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"

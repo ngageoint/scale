@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import datetime
 import uuid
 
+from django.contrib.auth.models import AnonymousUser, User
 from django.template.defaultfilters import slugify
 import django.utils.timezone as timezone
 import rest_framework.pagination as pagination
@@ -12,11 +13,33 @@ import rest_framework.serializers as serializers
 import rest_framework.status as status
 from django.conf import settings
 from django.conf.urls import include, url
+from rest_framework import permissions
 from rest_framework.exceptions import APIException
 from rest_framework.settings import api_settings
 
 import util.parse as parse_util
 
+
+class ScaleAPIPermissions(permissions.BasePermission):
+    """
+    Verifies that method is permitted to be called.
+    Evaluation logic is all methods must be authenticated if PUBLIC_API_READ is False
+    SAFE_METHODS will be allowed publicly if PUBLIC_API_READ is True
+    POST against validation methods do not require staff user.
+    Unsafe methods always require staff user.
+    """
+
+    def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
+
+        if request.method in permissions.SAFE_METHODS or '/validation' in request.path:
+            if settings.PUBLIC_READ_API:
+                return True
+            elif request.user.is_authenticated:
+                return True
+
+        return False
 
 class DefaultPagination(pagination.PageNumberPagination):
     """Default configuration class for the paging system."""
@@ -195,7 +218,14 @@ def get_versioned_urls(apps):
 
         urls.append(url(r'^' + version + '/', include(app_urls, namespace=version)))
     return urls
-    
+
+
+def login_client(client, is_staff=False):
+    """Takes a client object and creates a login session, optionally creating a staff user for unsafe methods"""
+    User.objects.create_user(username='test', password='user', email='test@empty.com', is_staff=is_staff)
+    client.login(username='test', password='user')
+
+
 def parse_string(request, name, default_value=None, required=True, accepted_values=None):
     """Parses a string parameter from the given request.
 

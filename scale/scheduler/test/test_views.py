@@ -4,22 +4,24 @@ import datetime
 import json
 
 import django
-from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch
 from rest_framework import status
 
-import util.rest as rest_util
-from mesos_api.api import HardwareResources, MesosError
+from rest_framework.test import APITestCase
 from scheduler.models import Scheduler
 from scheduler.threads.scheduler_status import SchedulerStatusThread
+from util import rest
 from util.parse import datetime_to_string
 
-class TestSchedulerViewV6(TestCase):
+
+class TestSchedulerViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
+
         Scheduler.objects.create(id=1)
 
     def test_invalid_version(self):
@@ -58,7 +60,7 @@ class TestSchedulerViewV6(TestCase):
         }
 
         url = '/%s/scheduler/' % self.api
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_scheduler_no_fields(self):
@@ -67,7 +69,7 @@ class TestSchedulerViewV6(TestCase):
         json_data = {}
 
         url = '/%s/scheduler/' % self.api
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_update_scheduler_invalid_fields(self):
@@ -78,7 +80,7 @@ class TestSchedulerViewV6(TestCase):
         }
 
         url = '/%s/scheduler/' % self.api
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_update_scheduler_extra_fields(self):
@@ -89,15 +91,18 @@ class TestSchedulerViewV6(TestCase):
         }
 
         url = '/%s/scheduler/' % self.api
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestStatusView(TestCase):
+
+class TestStatusView(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
         Scheduler.objects.create(id=1)
+
+        rest.login_client(self.client)
 
     def test_status_empty_dict(self):
         """Test getting scheduler status with empty initialization"""
@@ -132,11 +137,13 @@ class TestStatusView(TestCase):
         self.assertDictEqual(result['vault'], {u'status': u'Secrets Not Configured', u'message': u'', u'sealed': False})
 
 
-class TestVersionView(TestCase):
+class TestVersionView(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_success(self):
         """Test getting overall version/build information successfully"""

@@ -8,11 +8,9 @@ from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
-import mesos_api.api as mesos_api
 import util.rest as rest_util
 from node.models import Node
 from node.serializers import NodeSerializer, NodeDetailsSerializer
-from scheduler.models import Scheduler
 
 logger = logging.getLogger(__name__)
 

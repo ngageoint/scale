@@ -17,9 +17,11 @@ import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from ingest.models import Scan, Strike
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
+from rest_framework.test import APITestCase
+from util import rest
 
 
-class TestIngestsViewV6(TestCase):
+class TestIngestsViewV6(APITestCase):
 
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -31,6 +33,8 @@ class TestIngestsViewV6(TestCase):
                                                        status='QUEUED')
         self.ingest2 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test2.txt',
                                                        status='INGESTED', data_type_tags=['type1', 'type2'])
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the ingests view."""
@@ -86,7 +90,7 @@ class TestIngestsViewV6(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
-class TestIngestDetailsViewV6(TestCase):
+class TestIngestDetailsViewV6(APITestCase):
     version = 'v6'
     fixtures = ['ingest_job_types.json']
 
@@ -94,6 +98,8 @@ class TestIngestDetailsViewV6(TestCase):
         django.setup()
 
         self.ingest = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED')
+
+        rest.login_client(self.client)
 
     def test_id(self):
         """Tests successfully calling the ingests view by id."""
@@ -128,6 +134,8 @@ class TestIngestStatusViewV6(TestCase):
         self.ingest4 = ingest_test_utils.create_ingest(file_name='test4.txt', status='INGESTED', strike=self.strike,
                                                        data_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
                                                        ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=utc))
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the ingest status view."""
@@ -208,7 +216,7 @@ class TestIngestStatusViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
-class TestScansViewV6(TestCase):
+class TestScansViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
@@ -216,6 +224,8 @@ class TestScansViewV6(TestCase):
 
         self.scan1 = ingest_test_utils.create_scan(name='test-1', description='test A')
         self.scan2 = ingest_test_utils.create_scan(name='test-2', description='test Z')
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the get all scans view."""
@@ -272,7 +282,7 @@ class TestScansViewV6(TestCase):
         self.assertEqual(result['results'][0]['name'], self.scan2.name)
         self.assertEqual(result['results'][1]['name'], self.scan1.name)
 
-class TestScanCreateViewV6(TestCase):
+class TestScanCreateViewV6(APITestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v6'
 
@@ -280,6 +290,8 @@ class TestScanCreateViewV6(TestCase):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_missing_configuration(self):
         """Tests calling the create Scan view with missing configuration."""
@@ -417,7 +429,8 @@ class TestScanCreateViewV6(TestCase):
         self.assertEqual(result['description'], scans[0].description)
         self.assertDictEqual(result['configuration'], scans[0].get_v6_configuration_json())
 
-class TestScanDetailsViewV6(TestCase):
+
+class TestScanDetailsViewV6(APITestCase):
 
     api = 'v6'
 
@@ -426,6 +439,8 @@ class TestScanDetailsViewV6(TestCase):
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
         self.scan = ingest_test_utils.create_scan()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_not_found(self):
         """Tests successfully calling the get Scan process details view with a model id that does not exist."""
@@ -610,12 +625,15 @@ class TestScanDetailsViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestScansValidationViewV6(TestCase):
+
+class TestScansValidationViewV6(APITestCase):
     """Tests related to the Scan process validation endpoint"""
     api ='v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
 
@@ -735,7 +753,7 @@ class TestScansValidationViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestScansProcessViewV6(TestCase):
+class TestScansProcessViewV6(APITestCase):
     fixtures = ['ingest_job_types.json']
     api = 'v6'
 
@@ -744,6 +762,8 @@ class TestScansProcessViewV6(TestCase):
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
         self.scan = ingest_test_utils.create_scan()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_not_found(self):
         """Tests a Scan process launch where the id of Scan is missing."""
@@ -826,7 +846,7 @@ class TestScansProcessViewV6(TestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['job'])
 
-class TestStrikesViewV6(TestCase):
+class TestStrikesViewV6(APITestCase):
 
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -836,6 +856,8 @@ class TestStrikesViewV6(TestCase):
 
         self.strike1 = ingest_test_utils.create_strike(name='test-1', description='test A')
         self.strike2 = ingest_test_utils.create_strike(name='test-2', description='test Z')
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the get all strikes view."""
@@ -892,7 +914,7 @@ class TestStrikesViewV6(TestCase):
         self.assertEqual(result['results'][0]['name'], self.strike2.name)
         self.assertEqual(result['results'][1]['name'], self.strike1.name)
 
-class TestStrikeCreateViewV6(TestCase):
+class TestStrikeCreateViewV6(APITestCase):
 
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -902,6 +924,8 @@ class TestStrikeCreateViewV6(TestCase):
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
         self.new_workspace = storage_test_utils.create_workspace(name='new')
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_missing_configuration(self):
         """Tests calling the create Strike view with missing configuration."""
@@ -1054,7 +1078,7 @@ class TestStrikeCreateViewV6(TestCase):
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
 
-class TestStrikeDetailsViewV6(TestCase):
+class TestStrikeDetailsViewV6(APITestCase):
 
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -1064,6 +1088,8 @@ class TestStrikeDetailsViewV6(TestCase):
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
         self.strike = ingest_test_utils.create_strike()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_not_found(self):
         """Tests successfully calling the get Strike process details view with a model id that does not exist."""
@@ -1235,13 +1261,15 @@ class TestStrikeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestStrikesValidationViewV6(TestCase):
+class TestStrikesValidationViewV6(APITestCase):
     """Tests related to the Strike process validation endpoint"""
 
     version = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
 
