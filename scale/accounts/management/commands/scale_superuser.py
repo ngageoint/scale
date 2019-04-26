@@ -1,11 +1,8 @@
-"""Defines the command line method for running the Scale Hello job"""
 from __future__ import unicode_literals
 from __future__ import print_function
 
-import os
 import uuid
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
