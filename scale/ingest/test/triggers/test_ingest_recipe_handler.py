@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import django
 import os
+from django.db import transaction
 from django.test import TransactionTestCase
 from django.utils.timezone import now
 from mock import patch
@@ -19,7 +20,6 @@ from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from job.models import Job
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
-from queue.models import Queue
 from storage.models import ScaleFile
 
 class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
@@ -104,9 +104,6 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(mock_create.call_count, 2)
         
         # Update the recipe then call ingest with revision 1
-        from django.db import transaction
-        from recipe.models import RecipeType
-        from recipe.definition.json.definition_v6 import RecipeDefinitionV6
         manifest = job_test_utils.create_seed_manifest(
             inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
@@ -127,12 +124,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_version': jt2.version,
                                                               'job_type_revision': 1}}}}
         
-        new_def = RecipeDefinitionV6(definition).get_definition()
-        
-        with transaction.atomic():
-            recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe.id)
-            # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, new_def, True)
+        recipe_test_utils.edit_recipe_type_v6(recipe_type=self.recipe, definition=definition)
         
         strike_config['recipe'] = {
             'name': self.recipe.name,
