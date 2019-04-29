@@ -17,14 +17,17 @@ from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from job.models import Job
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 from queue.models import Queue
 from storage.models import ScaleFile
-
 
 class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
     fixtures = ['ingest_job_types.json']
     def setUp(self):
         django.setup()
+        
+        add_message_backend(AMQPMessagingBackend)
 
         self.workspace = storage_test_utils.create_workspace()
         self.source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
