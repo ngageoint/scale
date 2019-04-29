@@ -1,0 +1,18 @@
+{% extends 'rest_framework/base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    {% if GEOAXIS_ENABLED %}
+        <h3>Single sign-on providers:</h3>
+        <a class="btn-geoaxis btn-social btn bg-ms btn-block" href="{% url 'social:begin' 'geoaxis' %}?{{ redirect_field_name }}={{ redirect_field_value }}">
+            <i class="fa fa-lock"></i><img src="{% static 'accounts/geoaxis.png' %}" alt="Log In with GeoAxis"/>
+        </a>
+    {% endif %}
+{% endblock %}

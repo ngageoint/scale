@@ -4,16 +4,20 @@ from __future__ import absolute_import
 import json
 
 import django
-from django.test import TestCase, TransactionTestCase
 from rest_framework import status
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
+from util import rest
 
-class TestMetricsViewV6(TestCase):
+
+class TestMetricsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the metrics view."""
@@ -30,10 +34,36 @@ class TestMetricsViewV6(TestCase):
                 self.assertGreaterEqual(len(entry['columns']), 1)
                 self.assertFalse('choices' in entry)
 
-class TestMetricDetailsViewV6(TransactionTestCase):
+
+class TestMetricsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
+
+    def test_successful(self):
+        """Tests successfully calling the metrics view."""
+
+        url = '/v6/metrics/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertGreaterEqual(len(result['results']), 1)
+        for entry in result['results']:
+            if entry['name'] == 'job-types':
+                self.assertGreaterEqual(len(entry['groups']), 1)
+                self.assertGreaterEqual(len(entry['columns']), 1)
+                self.assertFalse('choices' in entry)
+
+
+class TestMetricDetailsViewV6(APITransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        rest.login_client(self.client)
 
         job_test_utils.create_seed_job_type()
 
@@ -50,10 +80,13 @@ class TestMetricDetailsViewV6(TransactionTestCase):
         self.assertGreaterEqual(len(result['columns']), 1)
         self.assertEqual(len(result['choices']), 1)
 
-class TestMetricPlotViewV6(TransactionTestCase):
+
+class TestMetricPlotViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
         self.job_type1 = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=self.job_type1, completed_count=8, failed_count=2, total_count=10)

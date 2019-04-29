@@ -21,9 +21,6 @@ ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 ## By default install epel-release, if our base image already includes this we can set to 0
 ARG EPEL_INSTALL=1
 
-## By default build the docs
-ARG BUILD_DOCS=1
-
 # install required packages for scale execution
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
@@ -82,9 +79,11 @@ COPY dockerfiles/framework/scale/country_data.json.bz2 /opt/scale/
 # set the build number
 RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}/" /opt/scale/scale/__init__.py.template > /opt/scale/scale/__init__.py; fi'
 
-
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale/pip/docs.txt /tmp/
+
+## By default build the docs
+ARG BUILD_DOCS=1
 
 RUN if [ $BUILD_DOCS -eq 1 ]; then pip install --no-cache-dir -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi
 

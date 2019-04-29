@@ -219,7 +219,7 @@ sudo sh environment/legacy-cloud-init.sh
 
 Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
 to isolate dependencies per project.
-=======
+
 ## Deployment / Configuration
 
 As a result, of being Scale being packaged as a Docker image for distribution most of the setting that
@@ -229,6 +229,7 @@ below for reference.
 | Env Var                     | Default Value                   | Meaning                                    |
 | --------------------------- | ------------------------------- | -------------------------------------------|
 | ACCEPTED_RESOURCE_ROLE      | MESOS_ROLE                      | Resource role to accept in offers          |
+| ADMIN_PASSWORD              | None                            | Custom password for admin user             |
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
 | CONTAINER_PROCESS_OWNER     | 'nobody'                        | System user used to launch Docker tasks    |
@@ -238,9 +239,13 @@ below for reference.
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
 | FLUENTD_DOCKER_IMAGE        | 'geoint/scale-fluentd'          | Docker image for fluentd                   |
+| GEOAXIS_HOST                | 'geoaxis.gxaccess.com'          | Host address for GEOAxIS endpoints         |
+| GEOAXIS_KEY                 | None                            | GEOAxIS OAuth API Key                      |
+| GEOAXIS_SECRET              | None                            | GEOAxIS OAuth API Secret                   |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
+| PUBLIC_READ_API             | 'false'                         | Public API access for stateless calls      |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
 | DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
@@ -255,5 +260,7 @@ below for reference.
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+| SESSION_COOKIE_SECURE       | True                            | Should cookies be served only over HTTPS   |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
+| UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
 

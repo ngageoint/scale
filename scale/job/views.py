@@ -6,7 +6,6 @@ import logging
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404, HttpResponse
-from django.utils import timezone
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.manifest import SeedManifest
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
@@ -31,7 +30,6 @@ from job.job_type_serializers import (JobTypeSerializerV6, JobTypeListSerializer
                                       JobTypeFailedStatusSerializerV6, JobTypeStatusSerializerV6)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
-from node.resources.json.resources import Resources
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
 from storage.models import ScaleFile
@@ -197,6 +195,7 @@ class JobTypesView(ListCreateAPIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
+
 class JobTypeVersionsView(ListAPIView):
     """This view is the endpoint for retrieving versions of a job type."""
     queryset = JobType.objects.all()
@@ -221,6 +220,7 @@ class JobTypeVersionsView(ListAPIView):
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
 
 class JobTypeNamesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
@@ -260,7 +260,7 @@ class JobTypeNamesView(ListCreateAPIView):
         order = ['name']
 
         job_types = JobType.objects.get_job_type_names_v6(keywords=keywords, ids=ids, is_active=is_active,
-                                                     is_system=is_system, order=order)
+                                                          is_system=is_system, order=order)
 
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)
@@ -290,7 +290,8 @@ class JobTypeDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
         except NonSeedJobType as ex:
-            logger.exception('Attempting to use v6 interface for non seed image with name=%s, version=%s', name, version)
+            logger.exception('Attempting to use v6 interface for non seed image with name=%s, version=%s', name,
+                             version)
             raise BadParameter(unicode(ex))
 
         serializer = self.get_serializer(job_type)
@@ -586,7 +587,7 @@ class JobsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs_v6( started=started, ended=ended,
+        jobs = Job.objects.get_jobs_v6(started=started, ended=ended,
                                        source_started=source_started, source_ended=source_ended,
                                        source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
                                        source_collections=source_collections, source_tasks=source_tasks,
@@ -688,7 +689,8 @@ class CancelJobsView(GenericAPIView):
                 raise BadParameter('Job types argument invalid: %s' % job_types)
             existing_job_type = JobType.objects.filter(name=jt['name'], version=jt['version']).first()
             if not existing_job_type:
-                raise BadParameter('Job Type with name: %s and version: %s does not exist' % (jt['name'], jt['version']))
+                raise BadParameter(
+                    'Job Type with name: %s and version: %s does not exist' % (jt['name'], jt['version']))
             job_type_ids.append(existing_job_type.id)
 
         # Create and send message
@@ -738,7 +740,8 @@ class RequeueJobsView(GenericAPIView):
                 raise BadParameter('Job types argument invalid: %s' % job_types)
             existing_job_type = JobType.objects.filter(name=jt['name'], version=jt['version']).first()
             if not existing_job_type:
-                raise BadParameter('Job Type with name: %s and version: %s does not exist' % (jt['name'], jt['version']))
+                raise BadParameter(
+                    'Job Type with name: %s and version: %s does not exist' % (jt['name'], jt['version']))
             job_type_ids.append(existing_job_type.id)
 
         # Create and send message
@@ -878,6 +881,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
+
 
 class JobExecutionSpecificLogView(RetrieveAPIView):
     """This view is the endpoint for viewing the text of specific job execution logs"""

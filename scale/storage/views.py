@@ -12,20 +12,16 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import util.rest as rest_util
-from util.rest import BadParameter
-from util.rest import title_to_name
-
 from messaging.manager import CommandMessageManager
 from source.messages.purge_source_file import create_purge_source_file_message
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
-from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
-from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.models import PurgeResults, ScaleFile, Workspace
 from storage.serializers import ScaleFileSerializerV6, ScaleFileDetailsSerializerV6
 from storage.serializers import (WorkspaceDetailsSerializerV6, WorkspaceSerializerV6)
 from trigger.models import TriggerEvent
-
+from util.rest import BadParameter
+from util.rest import title_to_name
 
 logger = logging.getLogger(__name__)
 
@@ -199,6 +195,7 @@ class PurgeSourceFileView(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class WorkspacesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all workspaces."""
     queryset = Workspace.objects.all()
@@ -305,6 +302,7 @@ class WorkspacesView(ListCreateAPIView):
         serializer = WorkspaceDetailsSerializerV6(workspace)
         workspace_url = reverse('workspace_details_view', args=[workspace.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=workspace_url))
+
 
 class WorkspaceDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a workspace."""

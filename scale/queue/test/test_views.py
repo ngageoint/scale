@@ -16,9 +16,11 @@ import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from job.models import Job
 from queue.models import Queue
+from rest_framework.test import APITransactionTestCase, APITestCase
+from util import rest
 
 
-class TestJobLoadView(TransactionTestCase):
+class TestJobLoadView(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -78,7 +80,7 @@ class TestJobLoadView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestQueueStatusView(TransactionTestCase):
+class TestQueueStatusView(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
