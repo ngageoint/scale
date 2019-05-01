@@ -8,7 +8,7 @@ from rest_framework.generics import ListAPIView
 
 import util.rest as rest_util
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, QueueStatusSerializerV6
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializerV6
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +52,6 @@ class QueueStatusView(ListAPIView):
             return QueueStatusSerializerV6
         elif self.request.version == 'v7':
             return QueueStatusSerializerV6
-        else:
-            return QueueStatusSerializer
 
     def list(self, request):
         """Retrieves the current status of the queue and returns it in JSON form

@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from data.data.data import Data
 from job.models import JobType
 from queue.models import Queue
-from queue.serializers import QueueStatusSerializer, QueueStatusSerializerV6
+from queue.serializers import QueueStatusSerializerV6
 from recipe.models import RecipeType
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -31,8 +31,6 @@ class QueueScaleBakeView(GenericAPIView):
             return QueueStatusSerializerV6
         elif self.request.version == 'v7':
             return QueueStatusSerializerV6
-        else:
-            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method
@@ -95,8 +93,6 @@ class QueueScaleCasinoView(GenericAPIView):
             return QueueStatusSerializerV6
         elif self.request.version == 'v7':
             return QueueStatusSerializerV6
-        else:
-            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method
@@ -159,8 +155,6 @@ class QueueScaleHelloView(GenericAPIView):
             return QueueStatusSerializerV6
         elif self.request.version == 'v7':
             return QueueStatusSerializerV6
-        else:
-            return QueueStatusSerializer
 
     def post(self, request):
         """Determine api version and call specific method
@@ -276,9 +270,7 @@ class QueueScaleRouletteView(GenericAPIView):
             return QueueStatusSerializerV6
         elif self.request.version == 'v7':
             return QueueStatusSerializerV6
-        else:
-            return QueueStatusSerializer
-
+        
     def post(self, request):
         """Determine api version and call specific method
 
