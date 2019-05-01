@@ -580,6 +580,6 @@ A strike configuration JSON describes a set of configuration settings that affec
 | .name                      | String         | Required | Specifies the name of the recipe the Strike will attempt to start  |
 |                            |                |          | when the file is ingested.                                         |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .revision_num              | Integer        | Required | Specifies the revision number of the recipe the Strike will        |
+| .revision_num              | Integer        | Optional | Specifies the revision number of the recipe the Strike will        |
 |                            |                |          | attempt to start when the file is ingested.                        |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
