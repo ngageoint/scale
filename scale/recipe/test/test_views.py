@@ -1498,16 +1498,14 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    @patch('recipe.models.CommandMessageManager')
-    def test_updated_recipe(self, mock_mgr):
+        
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
+    def test_updated_recipe(self, mock_create, mock_msg_mgr):
         """Tests reprocessing a recipe that has been updated"""
-    
-        mock_mgr.return_value = MockCommandMessageManager()
         
         # Test old revision number
         json_data = {
-            
             'forced_nodes': {
                 'all': True
             },
@@ -1517,6 +1515,7 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called()
         
     def test_bad_revision_num(self):
         """Tests reprocessing a recipe with an invalid revision number"""
