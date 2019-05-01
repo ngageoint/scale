@@ -1529,6 +1529,8 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
                        }
         }
         recipe_test_utils.edit_recipe_type_v6(definition=def_v6_dict, recipe_type=self.recipe_type, auto_update=True)
+        
+        # Test latest revision number
         json_data = {
             'forced_nodes': {
                 'all': True
@@ -1539,6 +1541,7 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         
+        # Test old revision number
         json_data = {
             
             'forced_nodes': {
@@ -1550,6 +1553,20 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        
+        # Test bad revision number
+        json_data = {
+            
+            'forced_nodes': {
+                'all': True
+            },
+            'revision_num': 3
+        }
+        
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
 
 
 class TestRecipeInputFilesViewV6(APITestCase):

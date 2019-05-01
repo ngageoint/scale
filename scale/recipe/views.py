@@ -640,6 +640,8 @@ class RecipeReprocessView(GenericAPIView):
                 recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe.recipe_type.name, recipe.recipe_type.revision_num)
         except Recipe.DoesNotExist:
             raise Http404
+        except RecipeTypeRevision.DoesNotExist:
+            raise Http404
         if recipe.is_superseded:
             raise BadParameter('Cannot reprocess a superseded recipe')
 
