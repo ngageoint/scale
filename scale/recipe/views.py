@@ -47,6 +47,8 @@ class RecipeTypesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return RecipeTypeListSerializerV6
+        elif self.request.version == 'v7':
+            return RecipeTypeListSerializerV6
 
     def list(self, request):
         """Retrieves the list of all recipe types and returns it in JSON form
@@ -58,6 +60,8 @@ class RecipeTypesView(ListCreateAPIView):
         """
 
         if self.request.version == 'v6':
+            return self.list_v6(request)
+        elif self.request.version == 'v7':
             return self.list_v6(request)
 
         raise Http404
@@ -93,6 +97,8 @@ class RecipeTypesView(ListCreateAPIView):
         """
 
         if self.request.version == 'v6':
+            return self._create_v6(request)
+        elif self.request.version == 'v7':
             return self._create_v6(request)
 
         raise Http404
@@ -153,6 +159,8 @@ class RecipeTypeDetailsView(GenericAPIView):
 
         if self.request.version == 'v6':
             return self.get_v6(request, name)
+        elif self.request.version == 'v7':
+            return self.get_v6(request, name)
         else:
             raise Http404
 
@@ -186,6 +194,8 @@ class RecipeTypeDetailsView(GenericAPIView):
         """
 
         if self.request.version == 'v6':
+            return self.patch_v6(request, name)
+        elif self.request.version == 'v7':
             return self.patch_v6(request, name)
         else:
             raise Http404
@@ -249,6 +259,8 @@ class RecipeTypeRevisionsView(ListAPIView):
 
         if self.request.version == 'v6':
             return self.list_v6(request, name)
+        elif self.request.version == 'v7':
+            return self.list_v6(request, name)
         else:
             raise Http404
 
@@ -291,6 +303,8 @@ class RecipeTypeRevisionDetailsView(ListAPIView):
 
         if self.request.version == 'v6':
             return self.get_v6(request, name, revision_num)
+        elif self.request.version == 'v7':
+            return self.get_v6(request, name, revision_num)
         else:
             raise Http404
 
@@ -331,6 +345,8 @@ class RecipeTypesValidationView(APIView):
 
         if self.request.version == 'v6':
             return self._post_v6(request)
+        elif self.request.version == 'v7':
+            return self._post_v6(request)
 
         raise Http404
 
@@ -363,6 +379,8 @@ class RecipesView(ListAPIView):
 
         if self.request.version == 'v6':
             return RecipeSerializerV6
+        elif self.request.version == 'v7':
+            return RecipeSerializerV6
 
     def list(self, request):
         """Retrieves the list of all recipes and returns it in JSON form
@@ -373,6 +391,8 @@ class RecipesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
         if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
             return self._list_v6(request)
 
         raise Http404()
@@ -484,6 +504,8 @@ class RecipeDetailsView(RetrieveAPIView):
 
         if request.version == 'v6':
             return self._retrieve_v6(request, recipe_id)
+        elif request.version == 'v7':
+            return self._retrieve_v6(request, recipe_id)
 
         raise Http404()
 
@@ -516,6 +538,8 @@ class RecipeInputFilesView(ListAPIView):
 
         if self.request.version == 'v6':
             return ScaleFileSerializerV6
+        elif self.request.version == 'v7':
+            return ScaleFileSerializerV6
 
     def get(self, request, recipe_id):
         """Retrieve detailed information about the input files for a recipe
@@ -529,6 +553,8 @@ class RecipeInputFilesView(ListAPIView):
         """
 
         if request.version == 'v6':
+            return self._get_v6(request, recipe_id)
+        elif request.version == 'v7':
             return self._get_v6(request, recipe_id)
 
         raise Http404()
@@ -579,6 +605,8 @@ class RecipeReprocessView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self._post_v6(request, recipe_id)
+        elif request.version == 'v7':
             return self._post_v6(request, recipe_id)
 
         raise Http404()

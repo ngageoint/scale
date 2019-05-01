@@ -19,7 +19,6 @@ from job.data.job_data import JobData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.execution.configuration.workspace import TaskWorkspace
-from job.deprecation import JobInterfaceSunset
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
@@ -104,7 +103,7 @@ class QueuedExecutionConfigurator(object):
                 # Set output workspaces from job configuration
                 output_workspaces = {}
                 job_config = job.get_job_configuration()
-                interface = JobInterfaceSunset.create(job.job_type.manifest, do_validate=False)
+                interface = SeedManifest(job.job_type.manifest, do_validate=False)
                 for output_name in interface.get_file_output_names():
                     output_workspace = job_config.get_output_workspace(output_name)
                     if output_workspace:

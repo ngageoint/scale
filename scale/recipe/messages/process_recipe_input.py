@@ -113,9 +113,6 @@ class ProcessRecipeInput(CommandMessage):
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
 
-        # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
-        old_recipe_input_dict = dict(sub_recipe.recipe.input)
-
         # Get sub-recipe input from dependencies in the recipe
         recipe_input_data = sub_recipe.recipe.get_input_data()
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
@@ -123,9 +120,6 @@ class ProcessRecipeInput(CommandMessage):
             if node_output.node_type == 'recipe' and node_output.id == sub_recipe.id:
                 node_name = node_output.node_name
                 break
-
-        # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
-        sub_recipe.recipe.input = old_recipe_input_dict
 
         definition = sub_recipe.recipe.recipe_type_rev.get_definition()
         input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)

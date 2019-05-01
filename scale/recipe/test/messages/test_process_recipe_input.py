@@ -401,8 +401,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         # Check sub-recipe for expected input_file_size
         self.assertEqual(sub_recipe_c.input_file_size, 24469.0)
         # Check sub-recipe for expected input data
-        self.assertEqual(sub_recipe_c.input['version'], '1.0')  # Should be legacy input data with workspace ID
-        self.assertEqual(sub_recipe_c.input['workspace_id'], workspace.id)
+        self.assertEqual(sub_recipe_c.input['version'], '6')  # Should be legacy input data with workspace ID
         self.assertSetEqual(set(sub_recipe_c.get_input_data().values.keys()), {'input_a', 'input_b'})
         self.assertListEqual(sub_recipe_c.get_input_data().values['input_a'].file_ids, [file_1.id])
         self.assertListEqual(sub_recipe_c.get_input_data().values['input_b'].file_ids,

@@ -80,6 +80,8 @@ class JobTypesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return self.create_v6(request)
+        elif self.request.version == 'v7':
+            return self.create_v6(request)
         else:
             return Http404
 
@@ -826,6 +828,8 @@ class JobExecutionsView(ListAPIView):
         """
 
         if request.version == 'v6':
+            return self.list_v6(request, job_id)
+        elif request.version == 'v7':
             return self.list_v6(request, job_id)
         else:
             raise Http404

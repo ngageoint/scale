@@ -31,6 +31,8 @@ class NodesView(ListAPIView):
 
         if request.version == 'v6':
             return self.list_impl(request)
+        elif request.version == 'v7':
+            return self.list_impl(request)
 
         raise Http404()
 
@@ -74,6 +76,8 @@ class NodeDetailsView(GenericAPIView):
 
         if request.version == 'v6':
             return self.get_impl(request, node_id)
+        elif request.version == 'v7':
+            return self.get_impl(request, node_id)
 
         raise Http404()
 
@@ -106,6 +110,8 @@ class NodeDetailsView(GenericAPIView):
         """
 
         if request.version == 'v6':
+            return self.patch_v6(request, node_id)
+        elif request.version == 'v7':
             return self.patch_v6(request, node_id)
 
         raise Http404()

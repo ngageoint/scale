@@ -54,7 +54,7 @@ SCAN_CONFIGURATION_SCHEMA = {
         'recipe': {
             'type': 'object',
             'description': 'Specifies the natural key of the recipe the Scan will start when a file is ingested.',
-            'required': ['name', 'revision_num'],
+            'required': ['name'],
             'additionalProperties': False,
             'properties': {
                 'name': {

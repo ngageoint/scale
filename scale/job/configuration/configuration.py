@@ -1,7 +1,6 @@
 """Defines the class that represents a job configuration"""
 from __future__ import unicode_literals
 
-from job.deprecation import JobInterfaceSunset
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE, Volume
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6

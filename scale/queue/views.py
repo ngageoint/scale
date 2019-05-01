@@ -8,7 +8,7 @@ from rest_framework.generics import ListAPIView
 
 import util.rest as rest_util
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, QueueStatusSerializerV6
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializerV6
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +49,8 @@ class QueueStatusView(ListAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
             return QueueStatusSerializerV6
 
     def list(self, request):

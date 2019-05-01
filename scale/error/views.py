@@ -30,6 +30,8 @@ class ErrorsView(GenericAPIView):
 
         if self.request.version == 'v6':
             return self._get_v6(request)
+        elif self.request.version == 'v7':
+            return self._get_v6(request)
 
         raise Http404
 
@@ -68,9 +70,6 @@ class ErrorsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
-            raise Http404
-
         raise Http404
 
 
@@ -92,6 +91,8 @@ class ErrorDetailsView(GenericAPIView):
         """
 
         if self.request.version == 'v6':
+            return self._get_v6(request, error_id)
+        elif self.request.version == 'v7':
             return self._get_v6(request, error_id)
 
         raise Http404

@@ -40,6 +40,8 @@ class BatchesView(ListCreateAPIView):
 
         if self.request.version == 'v6':
             return BatchSerializerV6
+        elif self.request.version == 'v7':
+            return BatchSerializerV6
 
     def list(self, request):
         """Retrieves the batches and returns them in JSON form
@@ -51,6 +53,8 @@ class BatchesView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
             return self._list_v6(request)
 
         raise Http404()
@@ -65,6 +69,8 @@ class BatchesView(ListCreateAPIView):
         """
 
         if request.version == 'v6':
+            return self._create_v6(request)
+        elif request.version == 'v7':
             return self._create_v6(request)
 
         raise Http404()
@@ -149,6 +155,8 @@ class BatchDetailsView(RetrieveUpdateAPIView):
 
         if self.request.version == 'v6':
             return BatchDetailsSerializerV6
+        elif self.request.version == 'v7':
+            return BatchDetailsSerializerV6
 
     def retrieve(self, request, batch_id):
         """Retrieves the details for a batch and returns them in JSON form
@@ -162,6 +170,8 @@ class BatchDetailsView(RetrieveUpdateAPIView):
         """
 
         if request.version == 'v6':
+            return self._retrieve_v6(batch_id)
+        elif request.version == 'v7':
             return self._retrieve_v6(batch_id)
 
         raise Http404()
@@ -178,6 +188,8 @@ class BatchDetailsView(RetrieveUpdateAPIView):
         """
 
         if request.version == 'v6':
+            return self._update_v6(request, batch_id)
+        elif request.version == 'v7':
             return self._update_v6(request, batch_id)
 
         raise Http404()
@@ -249,6 +261,8 @@ class BatchesComparisonView(APIView):
 
         if request.version == 'v6':
             return self._get_v6(request, root_batch_id)
+        elif request.version == 'v7':
+            return self._get_v6(request, root_batch_id)
 
         raise Http404()
 
@@ -280,7 +294,7 @@ class BatchesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v6':
+        if request.version == 'v6' or request.version == 'v7':
             return self._post_v6(request)
 
         raise Http404()

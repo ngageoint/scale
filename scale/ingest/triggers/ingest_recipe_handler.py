@@ -10,7 +10,7 @@ from data.data.value import FileValue
 from ingest.models import IngestEvent, Scan, Strike
 from job.models import JobType
 from queue.models import Queue
-from recipe.models import RecipeType
+from recipe.models import RecipeType, RecipeTypeRevision
 from storage.models import Workspace
 from trigger.models import TriggerEvent
 
@@ -75,9 +75,12 @@ class IngestRecipeHandler(object):
         # Create the recipe handler associated with the ingest strike/scan
         source_recipe_config = source.configuration['recipe']
         recipe_name = source_recipe_config['name']
-        recipe_revision = source_recipe_config['revision_num']
+        recipe_revision = source_recipe_config['revision_num'] if 'revision_num' in source_recipe_config else None
 
-        recipe_type = RecipeType.objects.get(name=recipe_name, revision_num=recipe_revision)
+        recipe_type = RecipeType.objects.get(name=recipe_name)
+        if recipe_revision:
+            recipe_type = RecipeTypeRevision.objects.get_revision(recipe_name, recipe_revision).recipe_type
+            
         if recipe_type:
             # Assuming one input per recipe, so pull the first defined input you find
             recipe_data = Data()

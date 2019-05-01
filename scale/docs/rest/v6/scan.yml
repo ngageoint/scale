@@ -286,6 +286,6 @@ components:
               example: my-recipe
             revision_num:
               type: integer
-              description: Specifies the revision number of the recipe the Scan
-                 will attempt to start when the file is ingested.
+              description: Optional. Specifies the revision number of the recipe 
+                 the Scan will attempt to start when the file is ingested.
               example: 1
