@@ -5,6 +5,7 @@ import datetime
 import django
 import json
 
+from django.db import transaction
 import django.utils.timezone as timezone
 from django.utils.timezone import utc
 from mock import patch
@@ -14,7 +15,9 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
+from job.models import JobType
 from recipe.models import Recipe, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from util import rest
@@ -1495,6 +1498,58 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.views.create_reprocess_messages')
+    def test_updated_recipe(self, mock_create, mock_msg_mgr):
+        """Tests reprocessing a recipe that has been updated"""
+
+        # Update the job input/output names
+        manifest = copy.deepcopy(self.job_type1.manifest)
+        manifest['job']['interface']['inputs']['files'] = [{'name': 'INPUT_FILEE', 'mediaTypes': ['image/tiff'], 'required': True,
+                                            'multiple': True}]
+        job_test_utils.edit_job_type_v6(self.job_type1, manifest_dict=manifest)
+        job_type1 = JobType.objects.get(pk=self.job_type1.id)
+        
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'INPUT_FILEE', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'INPUT_FILEE': {'type': 'recipe', 'input': 'INPUT_FILEE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': job_type1.name,
+                                                          'job_type_version': job_type1.version, 
+                                                          'job_type_revision': job_type1.revision_num}},
+                                 'node_b': {'dependencies': [],
+                                            'input': {},
+                                            'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
+                                                          'recipe_type_revision': self.sub.revision_num}}
+                       }
+        }
+        recipe_test_utils.edit_recipe_type_v6(definition=def_v6_dict, recipe_type=self.recipe_type, auto_update=True)
+        json_data = {
+            'forced_nodes': {
+                'all': True
+            }
+        }
+
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        
+        json_data = {
+            
+            'forced_nodes': {
+                'all': True
+            },
+            'revision_num': 1
+        }
+        
+        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
 
 class TestRecipeInputFilesViewV6(APITestCase):
