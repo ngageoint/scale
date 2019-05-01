@@ -198,6 +198,7 @@ components:
     workspace_post:
       title: Workspace Post
       type: object
+      required: [title, configuration]
       properties:
         name:
           type: string

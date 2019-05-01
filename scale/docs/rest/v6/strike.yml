@@ -186,6 +186,7 @@ components:
     strike_post:
       title: Strike Post
       type: object
+      required: [title, configuration]
       properties:
         title:
           type: string
