@@ -1375,38 +1375,6 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data, config=self.config)
         recipe_test_utils.process_recipe_inputs([self.recipe1.id])
-        
-        # Create job with two revisions
-        def_rev_v6_dict = {'version': '6',
-                       'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
-                                            'multiple': True}],
-                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
-                       'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
-                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
-                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
-                                                          'job_type_version': self.job_type1.version, 
-                                                          'job_type_revision': 1}}
-                       }
-        }
-        self.recipe_type_revised = recipe_test_utils.create_recipe_type_v6(name='revise-me-recipe', definition=def_rev_v6_dict)
-        self.recipe_revised = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_revised, input=self.data, config=self.config)
-        recipe_test_utils.process_recipe_inputs([self.recipe_revised.id])
-
-        # Update the recipe
-        def_v6_dict = {'version': '6',
-                       'input': {'files': [{'name': 'INPUT_FILEE', 'media_types': ['image/tiff'], 'required': True,
-                                            'multiple': False}],
-                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
-                       'nodes': {'node_a': {'dependencies': [],
-                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILEE'},
-                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
-                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
-                                                          'job_type_version': self.job_type1.version, 
-                                                          'job_type_revision': 1}}
-                       }
-        }
-        recipe_test_utils.edit_recipe_type_v6(definition=def_v6_dict, recipe_type=self.recipe_type_revised, auto_update=True)
 
     @patch('recipe.views.CommandMessageManager')
     def test_all_jobs(self, mock_mgr):
@@ -1531,12 +1499,43 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    @patch('recipe.views.CommandMessageManager')
+    @patch('recipe.models.CommandMessageManager')
     def test_updated_recipe(self, mock_mgr):
         """Tests reprocessing a recipe that has been updated"""
     
         mock_mgr.return_value = MockCommandMessageManager()
+        # Create recipe with two revisions
+        def_rev_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
+                                                          'job_type_version': self.job_type1.version, 
+                                                          'job_type_revision': 1}}
+                       }
+        }
+        recipe_type_revised = recipe_test_utils.create_recipe_type_v6(name='revise-me-recipe', definition=def_rev_v6_dict)
+        recipe_revised = recipe_test_utils.create_recipe(recipe_type=recipe_type_revised, input=self.data, config=self.config)
+        recipe_test_utils.process_recipe_inputs([recipe_revised.id])
 
+        # Update the recipe
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'INPUT_FILEE', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': False}],
+                                 'json': [{'name': 'INPUT_JSON', 'type': 'string', 'required': True}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILEE'},
+                                                      'INPUT_JSON': {'type': 'recipe', 'input': 'INPUT_JSON'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
+                                                          'job_type_version': self.job_type1.version, 
+                                                          'job_type_revision': 1}}
+                       }
+        }
+        recipe_test_utils.edit_recipe_type_v6(definition=def_v6_dict, recipe_type=recipe_type_revised, auto_update=True)
+        
         # Test old revision number
         json_data = {
             
@@ -1546,7 +1545,7 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
             'revision_num': 1
         }
         
-        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe_revised.id)
+        url = '/%s/recipes/%i/reprocess/' % (self.api, recipe_revised.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         
