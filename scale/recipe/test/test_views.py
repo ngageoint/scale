@@ -16,6 +16,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 from job.models import JobType
+from job.seed.manifest import SeedManifest
 from recipe.models import Recipe, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from rest_framework import status
@@ -1499,15 +1500,16 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    @patch('recipe.views.create_reprocess_messages')
-    def test_updated_recipe(self, mock_create):
+    @patch('recipe.views.CommandMessageManager')
+    def test_updated_recipe(self, mock_mgr):
         """Tests reprocessing a recipe that has been updated"""
 
         # Update the job input/output names
         manifest = copy.deepcopy(self.job_type1.manifest)
         manifest['job']['interface']['inputs']['files'] = [{'name': 'INPUT_FILEE', 'mediaTypes': ['image/tiff'], 'required': True,
                                             'multiple': True}]
-        job_test_utils.edit_job_type_v6(self.job_type1, manifest_dict=manifest)
+        JobType.objects.edit_job_type_v6(self.job_type1.id, manifest=SeedManifest(manifest))
+        # job_test_utils.edit_job_type_v6(self.job_type1, manifest_dict=manifest)
         job_type1 = JobType.objects.get(pk=self.job_type1.id)
         
         def_v6_dict = {'version': '6',
@@ -1526,7 +1528,10 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
                                                           'recipe_type_revision': self.sub.revision_num}}
                        }
         }
-        recipe_test_utils.edit_recipe_type_v6(definition=def_v6_dict, recipe_type=self.recipe_type, auto_update=True)
+        with transaction.atomic():
+            recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe_type.id)
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, recipe_type.title, recipe_type.description, 
+                RecipeDefinitionV6(def_v6_dict).get_definition(), True)
         
         # Test latest revision number
         json_data = {
@@ -1538,7 +1543,6 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
-        mock_create.assert_called()
         
         # Test old revision number
         json_data = {
@@ -1552,7 +1556,6 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
-        mock_create.assert_called()
         
         
     def test_bad_revision_num(self):
