@@ -259,6 +259,25 @@ another.</p>
             <span class="s2">&quot;input_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dependency&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="s2">&quot;node_b&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="s2">&quot;output_1&quot;</span><span class="p">}</span>
          <span class="p">},</span>
          <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;condition&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_2&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;image/tiff&quot;</span><span class="p">],</span>
+                                                  <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                                                  <span class="s2">&quot;multiple&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">}],</span>
+                                       <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[]},</span>
+                         <span class="s2">&quot;data_filter&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;filters&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_2&quot;</span><span class="p">,</span>
+                                                      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;media-type&quot;</span><span class="p">,</span>
+                                                      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span>
+                                                      <span class="s2">&quot;values&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;image/tiff&quot;</span><span class="p">]}]}}},</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="s2">&quot;node_d&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_c&quot;</span><span class="p">,</span> <span class="s2">&quot;acceptance&quot;</span><span class="o">:</span> <span class="nx">True</span><span class="p">}],</span>
+         <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;input_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dependency&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="s2">&quot;node_c&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="s2">&quot;input_2&quot;</span><span class="p">}</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span>
             <span class="s2">&quot;recipe_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe-type-1&quot;</span><span class="p">,</span>
             <span class="s2">&quot;recipe_type_revision&quot;</span><span class="o">:</span> <span class="mi">5</span>
@@ -921,7 +940,7 @@ Location <a class="reference external" href="http://.../v6/recipe-types/my-recip
 </tr>
 <tr class="row-even"><td>title</td>
 <td>String</td>
-<td>Optional</td>
+<td>Required</td>
 <td>The human-readable name of the recipe type.</td>
 </tr>
 <tr class="row-odd"><td>description</td>

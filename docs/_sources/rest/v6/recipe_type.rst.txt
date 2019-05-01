@@ -56,6 +56,25 @@ another.
                "input_2": {"type": "dependency", "node": "node_b", "output": "output_1"}
             },
             "node_type": {
+               "node_type": "condition",
+                            "interface": {"files": [{"name": "input_2",
+                                                     "media_types": ["image/tiff"],
+                                                     "required": true,
+                                                     "multiple": true}],
+                                          "json": []},
+                            "data_filter": {"filters": [{"name": "input_2",
+                                                         "type": "media-type",
+                                                         "condition": "==",
+                                                         "values": ["image/tiff"]}]}}},
+            }
+         }
+         "node_d": {
+            "dependencies": [{"name": "node_c", "acceptance": True}],
+            "input": {
+               "input_1": {"type": "recipe", "input": "bar"},
+               "input_2": {"type": "dependency", "node": "node_c", "output": "input_2"}
+            },
+            "node_type": {
                "node_type": "recipe",
                "recipe_type_name": "recipe-type-1",
                "recipe_type_revision": 5
@@ -482,7 +501,7 @@ Location http://.../v6/recipe-types/my-recipe/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Optional | The human-readable name of the recipe type.                         |
+| title              | String            | Required | The human-readable name of the recipe type.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | description        | String            | Optional | An optional description of the recipe type.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
