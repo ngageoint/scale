@@ -1540,6 +1540,7 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called()
         
         # Test old revision number
         json_data = {
@@ -1553,10 +1554,10 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called()
         
         # Test bad revision number
         json_data = {
-            
             'forced_nodes': {
                 'all': True
             },
@@ -1566,8 +1567,7 @@ class TestRecipeReprocessViewV6(APITransactionTestCase):
         url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-        
-
+        mock_create.assert_called()
 
 class TestRecipeInputFilesViewV6(APITestCase):
 
