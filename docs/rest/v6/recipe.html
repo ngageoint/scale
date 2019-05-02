@@ -1355,7 +1355,8 @@ time filtering. Valid values are:</p>
 <p><strong>Example POST /v6/recipes/{id}/reprocess/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/recipes">http://.../v6/recipes</a>/{id}/reprocess/</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`rest_v6_recipe_json_forced_nodes`</span>
+  <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="o">:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`rest_v6_recipe_json_forced_nodes`</span><span class="p">,</span>
+  <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1395,9 +1396,15 @@ specified to force the recipe to be re-processed. A recipe that is already super
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td>revision_num</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>Specific revision of the recipe type that should be ran. The latest
+revision will be used if this parameter is not specified.</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">202 ACCEPTED</td>
 </tr>
 </tbody>
