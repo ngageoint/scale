@@ -5,7 +5,6 @@ import datetime
 import django
 import json
 
-from django.db import transaction
 import django.utils.timezone as timezone
 from django.utils.timezone import utc
 from mock import patch
@@ -15,9 +14,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
-from job.models import JobType
 from recipe.models import Recipe, RecipeType, RecipeTypeJobLink, RecipeTypeSubLink
-from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from util import rest
