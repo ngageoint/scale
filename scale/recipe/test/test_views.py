@@ -81,6 +81,7 @@ class TestRecipeTypesViewV6(APITransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 2)
+        print results
 
         self.assertIn('deprecated', results['results'][0])
 

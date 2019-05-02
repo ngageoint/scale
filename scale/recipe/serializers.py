@@ -27,6 +27,8 @@ class RecipeTypeListSerializerV6(ModelIdSerializer):
     is_active = serializers.BooleanField()
     is_system = serializers.BooleanField()
     revision_num = serializers.IntegerField()
+    job_types = serializers.JSONField(many=True)
+    sub_recipe_types = serializers.JSONField(many=True)
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
