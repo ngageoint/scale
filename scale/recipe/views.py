@@ -623,6 +623,7 @@ class RecipeReprocessView(GenericAPIView):
         """
 
         forced_nodes_json = rest_util.parse_dict(request, 'forced_nodes', required=True)
+        revision_num = rest_util.parse_dict(request, 'revision_num', required=False)
 
         try:
             forced_nodes = ForcedNodesV6(forced_nodes_json, do_validate=True)
@@ -631,8 +632,15 @@ class RecipeReprocessView(GenericAPIView):
             raise BadParameter(unicode(ex))
 
         try:
-            recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(id=recipe_id)
+            recipe = Recipe.objects.select_related('recipe_type').get(id=recipe_id)
+            if revision_num:
+                recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe.recipe_type.name, revision_num)                
+            else:
+                revision_num = recipe.recipe_type.revision_num
+                recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe.recipe_type.name, recipe.recipe_type.revision_num)
         except Recipe.DoesNotExist:
+            raise Http404
+        except RecipeTypeRevision.DoesNotExist:
             raise Http404
         if recipe.is_superseded:
             raise BadParameter('Cannot reprocess a superseded recipe')
@@ -647,8 +655,7 @@ class RecipeReprocessView(GenericAPIView):
         event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
         recipe_type_name = recipe.recipe_type.name
-        revision_num = recipe.recipe_type_rev.revision_num
-
+        
         # Execute all of the messages to perform the reprocess
         messages = create_reprocess_messages([root_recipe_id], recipe_type_name, revision_num, event.id,
                                              forced_nodes=forced_nodes.get_forced_nodes())

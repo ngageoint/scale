@@ -614,6 +614,10 @@ components:
       properties:
         forced_nodes:
           $ref: '#/components/schemas/forced_nodes'
+        revision_num:
+          type: integer
+          description: Specific revision of the recipe type that should be ran. 
+            The revision will be used if this parameter is not specified.
 
     forced_nodes:
       title: Forced Nodes
