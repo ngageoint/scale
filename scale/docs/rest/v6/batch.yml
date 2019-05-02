@@ -527,7 +527,6 @@ components:
           type: array
           items:
             type: string
-            The order of the values in each array corresponds to the order of batches in the batches array
           description: Minimum overall scale job run duration within this top level recipe for each batch |
             The order of the values in each array corresponds to the order of batches in the batches array
           example: ["PT1M12S", "PT2M12S"]
