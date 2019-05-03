@@ -378,6 +378,8 @@ Response: 200 OK
           "is_active": true,
           "is_system": false,
           "revision_num": 1,
+          "job_types": [ { "name": "my-job-type", "version": "1.0.0" }, { "name": "my-job-type2", "version": "1.0.1" } ],
+          "sub_recipe_types": ["sub-recipe-1"],
           "created": "2015-06-15T19:03:26.346Z",
           "deprecated": "2015-07-15T19:03:26.346Z",
           "last_modified": "2015-06-15T19:03:26.346Z"
@@ -442,6 +444,11 @@ Response: 200 OK
 | .is_system         | Boolean           | Whether the recipe type is a built-in system type.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .revision_num      | Integer           | The current revision number of the recipe type, incremented for each edit.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_types         | Array             | List of all job types that are referenced by this recipe type's definition     |
+|                    |                   | given as name/version pairs.                                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .sub_recipe_types  | Array             | List of all sub recipe types referenced by this recipe type's definition       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

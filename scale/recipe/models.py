@@ -1314,6 +1314,14 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.order_by(*order)
         else:
             recipe_types = recipe_types.order_by('last_modified')
+            
+        for rt in recipe_types:
+            definition = rt.get_definition()
+            jts = definition.get_job_type_keys()
+            rt.job_types = []
+            for jt in jts:
+                rt.job_types.append({'name': jt[0], 'version': jt[1]})
+            rt.sub_recipe_types = definition.get_recipe_type_names()
         return recipe_types
 
     def validate_recipe_type_v6(self, name, definition_dict):

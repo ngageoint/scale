@@ -81,7 +81,12 @@ class TestRecipeTypesViewV6(APITransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 2)
-
+        self.assertEqual(len(results['results'][0]['job_types']), 1)
+        self.assertDictEqual(results['results'][0]['job_types'][0], {'name': 'my-minimum-job', 'version': '1.0.0'})
+        self.assertEqual(len(results['results'][0]['sub_recipe_types']), 0)
+        self.assertEqual(len(results['results'][1]['job_types']), 1)
+        self.assertDictEqual(results['results'][1]['job_types'][0], {'name': self.job_type2.name, 'version': '0.1.0'})
+        self.assertEqual(results['results'][1]['sub_recipe_types'][0], self.recipe_type1.name)
         self.assertIn('deprecated', results['results'][0])
 
     def test_keyword(self):
