@@ -17,6 +17,17 @@ class RecipeTypeBaseSerializerV6(ModelIdSerializer):
     description = serializers.CharField()
     revision_num = serializers.IntegerField()
 
+class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
+    """Converts recipe type model fields to REST output."""
+    is_active = serializers.BooleanField()
+    is_system = serializers.BooleanField()
+    revision_num = serializers.IntegerField()
+    definition = None
+    job_types = None
+    sub_recipe_types = None
+    created = serializers.DateTimeField()
+    deprecated = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
 
 class RecipeTypeListSerializerV6(ModelIdSerializer):
     """List serializer for recipe types"""
@@ -27,8 +38,8 @@ class RecipeTypeListSerializerV6(ModelIdSerializer):
     is_active = serializers.BooleanField()
     is_system = serializers.BooleanField()
     revision_num = serializers.IntegerField()
-    job_types = serializers.JSONField(many=True)
-    sub_recipe_types = serializers.JSONField(many=True)
+    job_types = serializers.JSONField()
+    sub_recipe_types = serializers.JSONField()
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
@@ -49,21 +60,8 @@ class RecipeTypeRevisionSerializerV6(RecipeTypeRevisionBaseSerializerV6):
 class RecipeTypeRevisionDetailsSerializerV6(RecipeTypeRevisionSerializerV6):
     """Serializer for recipe type revisions"""
 
-    recipe_type = RecipeTypeListSerializerV6()
+    recipe_type = RecipeTypeSerializerV6()
     definition = serializers.JSONField(source='get_v6_definition_json')
-
-
-class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
-    """Converts recipe type model fields to REST output."""
-    is_active = serializers.BooleanField()
-    is_system = serializers.BooleanField()
-    revision_num = serializers.IntegerField()
-    definition = None
-    job_types = None
-    sub_recipe_types = None
-    created = serializers.DateTimeField()
-    deprecated = serializers.DateTimeField()
-    last_modified = serializers.DateTimeField()
 
 
 class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):

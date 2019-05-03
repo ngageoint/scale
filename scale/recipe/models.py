@@ -1317,7 +1317,10 @@ class RecipeTypeManager(models.Manager):
             
         for rt in recipe_types:
             definition = rt.get_definition()
-            rt.job_types = definition.get_job_type_keys()
+            jts = definition.get_job_type_keys()
+            rt.job_types = []
+            for jt in jts:
+                rt.job_types.append({'name': jt[0], 'version': jt[1]})
             rt.sub_recipe_types = definition.get_recipe_type_names()
         return recipe_types
 

@@ -359,6 +359,8 @@ Response: 200 OK
           "is_active": true,
           "is_system": false,
           "revision_num": 1,
+          "job_types": [ { "name": "my-job-type", "version": "1.0.0" }, { "name": "my-job-type2", "version": "1.0.1" } ],
+          "sub_recipe_types": ["sub-recipe-1"],
           "created": "2015-06-15T19:03:26.346Z",
           "deprecated": "2015-07-15T19:03:26.346Z",
           "last_modified": "2015-06-15T19:03:26.346Z"
@@ -389,12 +391,6 @@ Response: 200 OK
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_system          | Boolean           | Optional | Return only recipe types that are system (True) or user (False).    |
 |                    |                   |          | Defaults to all recipe types.                                       |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| show_job_types     | Boolean           | Optional | Include job type information for each returned recipe type.         |
-|                    |                   |          | Defaults to false to cut down on database calls.                    |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| show_sub_recipes   | Boolean           | Optional | Include sub recipe information for each returned recipe type.       |
-|                    |                   |          | Defaults to false to cut down on database calls.                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
@@ -430,11 +426,10 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .revision_num      | Integer           | The current revision number of the recipe type, incremented for each edit.     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_types         | Array             | List of all job_types that are referenced by this recipe type's definition     |
-|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
+| .job_types         | Array             | List of all job types that are referenced by this recipe type's definition     |
+|                    |                   | given as name/version pairs.                                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .sub_recipe_types  | Array             | List of all recipe_types that are referenced by this recipe type's definition  |
-|                    |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)                 |
+| .sub_recipe_types  | Array             | List of all sub recipe types referenced by this recipe type's definition       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

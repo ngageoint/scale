@@ -78,13 +78,10 @@ class RecipeTypesView(ListCreateAPIView):
         keywords = rest_util.parse_string_list(request, 'keyword', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_system = rest_util.parse_bool(request, 'is_system', required=False)
-        show_job_types = rest_util.parse_bool(request, 'show_job_types', required=False)
-        show_recipe_types = rest_util.parse_bool(request, 'show_recipe_types', required=False)
         order = ['name']
 
         recipe_types = RecipeType.objects.get_recipe_types_v6(keywords=keywords, is_active=is_active,
-                                                              is_system=is_system, show_job_types=show_job_types
-                                                              show_recipe_types=show_recipe_types, order=order)
+                                                              is_system=is_system, order=order)
 
         page = self.paginate_queryset(recipe_types)
         serializer = self.get_serializer(page, many=True)
