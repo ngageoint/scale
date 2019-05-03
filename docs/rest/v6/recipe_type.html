@@ -750,6 +750,8 @@ that setting.</td>
       <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
       <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
       <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span> <span class="p">},</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-type2&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.1&quot;</span> <span class="p">}</span> <span class="p">],</span>
+      <span class="s2">&quot;sub_recipe_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;sub-recipe-1&quot;</span><span class="p">],</span>
       <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
       <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-07-15T19:03:26.346Z&quot;</span><span class="p">,</span>
       <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span>
@@ -866,6 +868,15 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-odd"><td>.revision_num</td>
 <td>Integer</td>
 <td colspan="2">The current revision number of the recipe type, incremented for each edit.</td>
+</tr>
+<tr class="row-even"><td>.job_types</td>
+<td>Array</td>
+<td colspan="2">List of all job types that are referenced by this recipe type&#8217;s definition
+given as name/version pairs.</td>
+</tr>
+<tr class="row-odd"><td>.sub_recipe_types</td>
+<td>Array</td>
+<td colspan="2">List of all sub recipe types referenced by this recipe type&#8217;s definition</td>
 </tr>
 <tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
