@@ -113,7 +113,7 @@ Response: 200 OK
          "is_paused": false,
          "is_published": true,
          "icon_code": "f013",
-         "unmet_resources": []
+         "unmet_resources": "chocolate,vanilla"
        },
        "count": 19,
        "longest_queued": "1970-01-01T00:00:00.000Z",

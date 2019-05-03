@@ -40,7 +40,7 @@ Response: 200 OK
                         "is_paused": false,
                         "is_published": true,
                         "icon_code": "f013",
-                        "unmet_resources": []
+                        "unmet_resources": "chocolate,vanilla"
                     },
                     "status": "RUNNING"
                 },
@@ -165,7 +165,7 @@ Location http://.../v6/strikes/105/
                 "is_paused": false,
                 "is_published": true,
                 "icon_code": "f013",
-                "unmet_resources": []
+                "unmet_resources": "chocolate,vanilla"
             },
             "status": "RUNNING"
         },
@@ -248,7 +248,7 @@ Response: 200 OK
                "is_paused": false,
                "is_published": true,
                "icon_code": "f013",
-               "unmet_resources": []
+               "unmet_resources": "chocolate,vanilla"
            },
            "status": "RUNNING"
        },

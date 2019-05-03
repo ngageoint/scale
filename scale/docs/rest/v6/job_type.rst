@@ -253,7 +253,7 @@ Response: 200 OK
                 "max_scheduled": 1,
                 "revision_num": 1,
                 "docker_image": "my-job-1.0.0-seed:1.0.0",
-                "unmet_resources": null,
+                "unmet_resources": "chocolate,vanilla",
                 "created": "2015-03-11T00:00:00Z",
                 "deprecated": null,
                 "paused": null,
@@ -361,7 +361,7 @@ Response: 200 OK
     "max_scheduled": 1,
     "revision_num": 1,
     "docker_image": "my-job-1.0.0-seed:1.0.0",
-    "unmet_resources": null,
+    "unmet_resources": "chocolate,vanilla",
     "manifest": { ... },
     "configuration": { ... },
     "created": "2015-03-11T00:00:00Z",
@@ -459,7 +459,7 @@ Response: 200 OK
             "is_paused": false,
             "is_published": false,
             "icon_code": "f013",
-            "unmet_resources": []
+            "unmet_resources": "chocolate,vanilla"
           },
           "revision_num": 1,
           "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -533,7 +533,7 @@ Response: 200 OK
         "is_paused": false,
         "is_published": false,
         "icon_code": "f013",
-        "unmet_resources": []
+        "unmet_resources": "chocolate,vanilla"
       },
       "revision_num": 1,
       "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -735,7 +735,7 @@ Location http://.../v6/job-types/test/1.0.0/
     "max_scheduled": 1,
     "revision_num": 1,
     "docker_image": "test-1.0.0-seed:1.0.0",
-    "unmet_resources": null,
+    "unmet_resources": "chocolate,vanilla",
     "manifest": { ... },
     "configuration": { ... },
     "created": "2015-03-11T00:00:00Z",
@@ -1130,7 +1130,7 @@ Request: GET http://.../v6/job-types/status/
           "is_paused": false,
           "is_published": true,
           "icon_code": "f013",
-          "unmet_resources": []
+          "unmet_resources": "chocolate,vanilla"
         },
         "job_counts": [{
             "status": "RUNNING",
@@ -1162,7 +1162,7 @@ Request: GET http://.../v6/job-types/status/
           "is_paused": false,
           "is_published": true,
           "icon_code": "f013",
-          "unmet_resources": []
+          "unmet_resources": "chocolate,vanilla"
         },
         "job_counts": []
       }
@@ -1247,7 +1247,7 @@ Request: GET http://.../v6/job-types/pending/
         "is_paused": false,
         "is_published": true,
         "icon_code": "f013",
-        "unmet_resources": []
+        "unmet_resources": "chocolate,vanilla"
       },
       "count": 1,
       "longest_pending": "2015-09-08T15:43:15.681Z"
@@ -1310,7 +1310,7 @@ Request: GET http://.../v6/job-types/status/
         "is_paused": false,
         "is_published": true,
         "icon_code": "f013",
-        "unmet_resources": []
+        "unmet_resources": "chocolate,vanilla"
       },
       "count": 1,
       "longest_running": "2015-09-08T15:43:15.681Z"
@@ -1372,7 +1372,7 @@ Request: GET http://.../v6/job-types/system-failures/
         "is_paused": false,
         "is_published": true,
         "icon_code": "f013",
-        "unmet_resources": []
+        "unmet_resources": "chocolate,vanilla"
       },
       "error": {
         "id": 1,
