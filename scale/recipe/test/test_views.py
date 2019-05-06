@@ -342,11 +342,15 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
+            'is_active': False
         }
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+        recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
+        self.assertEqual(recipe_type.is_active, False)
 
     def test_edit_definition(self):
         """Tests editing the definition of a recipe type"""
