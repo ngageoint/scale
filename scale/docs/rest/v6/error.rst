@@ -104,7 +104,11 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .is_builtin        | Boolean           | Whether the error was loaded during the installation process.                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .should_be_retried | Boolean           | Whether jobs with this error should be retried automatically.                       |
+| .should_be_retried | Boolean           | Whether jobs with this error should be retried automatically. The following builtin |
+|                    |                   | errors are retried automatically: Unknown, Database, Database Operation, Filesystem |
+|                    |                   | I/O, Ingest Timeout, Task Launch, Docker Launch, Docker Terminated, Node Lost,      |
+|                    |                   | Resource Starvation, Launch Timeout, Pull-task Timeout, Pre-task Timeout,           |
+|                    |                   | Post-task Timeout, Timeout (System), Docker Pull Failed, Scheduler Restarted        |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -167,7 +171,11 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | is_builtin         | Boolean           | Whether the error was loaded during the installation process.                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| should_be_retried  | Boolean           | Whether jobs with this error should be retried automatically.                       |
+| should_be_retried  | Boolean           | Whether jobs with this error should be retried automatically. The following builtin |
+|                    |                   | errors are retried automatically: Unknown, Database, Database Operation, Filesystem |
+|                    |                   | I/O, Ingest Timeout, Task Launch, Docker Launch, Docker Terminated, Node Lost,      |
+|                    |                   | Resource Starvation, Launch Timeout, Pull-task Timeout, Pre-task Timeout,           |
+|                    |                   | Post-task Timeout, Timeout (System), Docker Pull Failed, Scheduler Restarted        |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+

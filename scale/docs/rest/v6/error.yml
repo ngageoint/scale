@@ -141,7 +141,12 @@ components:
           example: true
         should_be_retried:
           type: boolean
-          description: Whether jobs with this error should be retried automatically.
+          description: Whether jobs with this error should be retried automatically. |
+            The following builtin errors are retried automatically: Unknown, |
+            Database, Database Operation, Filesystem I/O, Ingest Timeout, Task Launch,|
+            Docker Launch, Docker Terminated, Node Lost, Resource Starvation, |
+            Launch Timeout, Pull-task Timeout, Pre-task Timeout, Post-task Timeout, |
+            Timeout (System), Docker Pull Failed, Scheduler Restarted
           example: true
     error_details:
       allOf:
