@@ -44,6 +44,14 @@ error\.migrations\.0005\_auto\_20180621\_2110 module
     :undoc-members:
     :show-inheritance:
 
+error\.migrations\.0006\_update\_retried module
+-----------------------------------------------
+
+.. automodule:: error.migrations.0006_update_retried
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

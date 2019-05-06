@@ -226,6 +226,7 @@
             <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type&quot;</span><span class="p">,</span>
             <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
             <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;should_be_retried&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
         <span class="p">}</span>
@@ -359,11 +360,19 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <td>Boolean</td>
 <td colspan="2">Whether the error was loaded during the installation process.</td>
 </tr>
-<tr class="row-odd"><td>.created</td>
+<tr class="row-odd"><td>.should_be_retried</td>
+<td>Boolean</td>
+<td colspan="2">Whether jobs with this error should be retried automatically. The following builtin
+errors are retried automatically: Unknown, Database, Database Operation, Filesystem
+I/O, Ingest Timeout, Task Launch, Docker Launch, Docker Terminated, Node Lost,
+Resource Starvation, Launch Timeout, Pull-task Timeout, Pre-task Timeout,
+Post-task Timeout, Timeout (System), Docker Pull Failed, Scheduler Restarted</td>
+</tr>
+<tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
@@ -384,6 +393,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
     <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type&quot;</span><span class="p">,</span>
     <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
     <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;should_be_retried&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
 <span class="p">}</span>
@@ -447,11 +457,19 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <td>Boolean</td>
 <td>Whether the error was loaded during the installation process.</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-odd"><td>should_be_retried</td>
+<td>Boolean</td>
+<td>Whether jobs with this error should be retried automatically. The following builtin
+errors are retried automatically: Unknown, Database, Database Operation, Filesystem
+I/O, Ingest Timeout, Task Launch, Docker Launch, Docker Terminated, Node Lost,
+Resource Starvation, Launch Timeout, Pull-task Timeout, Pre-task Timeout,
+Post-task Timeout, Timeout (System), Docker Pull Failed, Scheduler Restarted</td>
+</tr>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>

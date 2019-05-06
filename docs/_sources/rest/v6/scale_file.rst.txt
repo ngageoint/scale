@@ -67,7 +67,7 @@ Response: 200 OK
                     "is_paused": false,
                     "is_published": true,
                     "icon_code": "f013",
-                    "unmet_resources": []
+                    "unmet_resources": "chocolate,vanilla"
                 }, 
                 "recipe": { 
                     "id": 60 
@@ -325,7 +325,7 @@ Response: 200 OK
             "is_paused": false,
             "is_published": true,
             "icon_code": "f013",
-            "unmet_resources": []
+            "unmet_resources": "chocolate,vanilla"
         }, 
         "recipe": { 
             "id": 60 
