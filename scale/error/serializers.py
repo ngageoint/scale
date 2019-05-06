@@ -11,6 +11,7 @@ class ErrorBaseSerializerV6(ModelIdSerializer):
     job_type_name = serializers.CharField()
     category = serializers.CharField()
     is_builtin = serializers.BooleanField()
+    should_be_retried = serializers.BooleanField()
 
 
 class ErrorSerializerV6(ErrorBaseSerializerV6):

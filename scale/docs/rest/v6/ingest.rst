@@ -250,7 +250,7 @@ Response: 200 OK
                     "is_paused": false,
                     "is_published": false,
                     "icon_code": "f013",
-                    "unmet_resources": []
+                    "unmet_resources": "chocolate,vanilla"
                 }, 
                 "status": "RUNNING"
             }, 
@@ -454,7 +454,7 @@ Response: 200 OK
                             "is_paused": false,
                             "is_published": false,
                             "icon_code": "f013",
-                            "unmet_resources": []
+                            "unmet_resources": "chocolate,vanilla"
                         }, 
                         "event": { 
                             "id": 5 
