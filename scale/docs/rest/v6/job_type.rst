@@ -1380,6 +1380,7 @@ Request: GET http://.../v6/job-types/system-failures/
         "description": "The error that caused the failure is unknown.",
         "category": "SYSTEM",
         "is_builtin": true,
+        "should_be_retried": true,
         "created": "2015-03-11T00:00:00Z",
         "last_modified": "2015-03-11T00:00:00Z"
       },

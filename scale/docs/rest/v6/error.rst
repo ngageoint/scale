@@ -32,6 +32,7 @@ Response: 200 OK
                 "job_type_name": "job-type",
                 "category": "SYSTEM",
                 "is_builtin": true,
+                "should_be_retried": true,
                 "created": "2015-03-11T00:00:00Z",
                 "last_modified": "2015-03-11T00:00:00Z"
             }
@@ -103,6 +104,8 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .is_builtin        | Boolean           | Whether the error was loaded during the installation process.                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
+| .should_be_retried | Boolean           | Whether jobs with this error should be retried automatically.                       |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                                  |
@@ -129,6 +132,7 @@ Response: 200 OK
         "job_type_name": "job-type",
         "category": "SYSTEM",
         "is_builtin": true,
+        "should_be_retried": true,
         "created": "2015-03-11T00:00:00Z",
         "last_modified": "2015-03-11T00:00:00Z"
     }
@@ -162,6 +166,8 @@ Response: 200 OK
 | category           | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | is_builtin         | Boolean           | Whether the error was loaded during the installation process.                       |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
+| should_be_retried  | Boolean           | Whether jobs with this error should be retried automatically.                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+

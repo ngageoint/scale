@@ -139,6 +139,10 @@ components:
           type: boolean
           description: Whether the error was loaded during the installation process.
           example: true
+        should_be_retried:
+          type: boolean
+          description: Whether jobs with this error should be retried automatically.
+          example: true
     error_details:
       allOf:
         - ref: '#/components/schemas/error_base'
