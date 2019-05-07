@@ -192,11 +192,23 @@
             if (!requeueParams) {
                 if (vm.jobsParams) {
                     // requeue all jobs with filters
+                    var jobTypeId = null;
+                    if (!vm.jobsParams.job_type_version) {
+                        var jobType = _.filter(vm.allJobTypes, { name: vm.jobsParams.job_type_name });
+                        if (jobType.length > 0) {
+                            jobTypeId  _.map(jobType, 'id');
+                        }
+                    } else {
+                        var jobType = _.filter(vm.jobTypeValues, { name: vm.jobsParams.job_type_name, version: vm.jobsParams.job_type_version });
+                        if (jobType) {
+                            jobTypeId = _.map(jobType, 'id');
+                        }
+                    }
                     requeueParams = {
                         started: vm.jobsParams.started,
                         ended: vm.jobsParams.ended,
                         status: vm.jobsParams.status,
-                        job_type_ids: vm.jobsParams.job_type_id ? [vm.jobsParams.job_type_id] : null,
+                        job_type_ids: jobTypeId ? jobTypeId : null,
                         error_categories: vm.jobsParams.error_category ? [vm.jobsParams.error_category] : null
                     };
                 } else {
