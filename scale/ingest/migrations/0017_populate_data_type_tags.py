@@ -7,20 +7,15 @@ def populate_data_type_tags(apps, schema_editor):
     # Go through all of the ScaleFile models and convert the data_type string into an array of tags
     Ingest = apps.get_model('ingest', 'Ingest')
 
-    total_count = Ingest.objects.all().count()
+    total_count = Ingest.objects.exclude(data_type=None).count()
     if not total_count:
         return
 
     print('\nCreating new data type tags: %i' % total_count)
-    ingests = Ingest.objects.all()
+    ingests = Ingest.objects.exclude(data_type=None).iterator()
     done_count = 0
     for i in ingests:
-        tags = set()
-        if i.data_type:
-            for tag in i.data_type.split(','):
-                tags.add(tag)
-        i.data_type_tags = list(tags)
-        i.save()
+        save_data_type_tags(i)
 
         done_count += 1
         percent = (float(done_count) / float(total_count)) * 100.00
@@ -28,6 +23,11 @@ def populate_data_type_tags(apps, schema_editor):
 
     print ('Migration finished.')
 
+def save_data_type_tags(ingest):
+        tags = set()
+        if ingest.data_type:
+            ingest.data_type_tags = ingest.data_type.split(',')
+            ingest.save()
 
 class Migration(migrations.Migration):
 
