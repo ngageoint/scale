@@ -5,7 +5,7 @@ from django.db import connection, migrations
 
 def populate_data_type_tags(apps, schema_editor):
     # Go through all of the ScaleFile models and convert the data_type string into an array of tags
-    update = 'UPDATE scale_file SET data_type_tags = string_to_array(data_type,",") WHERE data_type <> \'\''
+    update = 'UPDATE scale_file SET data_type_tags = string_to_array(data_type,\',\') WHERE data_type <> \'\''
     with connection.cursor() as cursor:
         cursor.execute(update)
         count = cursor.rowcount
