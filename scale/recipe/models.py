@@ -1193,7 +1193,7 @@ class RecipeTypeManager(models.Manager):
 
         return recipe_type
 
-    def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update):
+    def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update, is_active):
         """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
         transaction. An argument of None for a field indicates that the field should not change.
 
@@ -1207,13 +1207,15 @@ class RecipeTypeManager(models.Manager):
         :type definition: :class:`recipe.definition.definition.RecipeDefinition`
         :param auto_update: If true, recipes that contain this recipe type will automatically be updated
         :type auto_update: bool
+        :param is_active: If true, make this recipe type active; if false, recipes of this type will no longer be created
+        :type is_active: bool
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If any part of the recipe
             definition violates the specification
         """
 
         from recipe.definition.exceptions import InvalidDefinition
-        from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message
+        from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message, create_activate_recipe_message
 
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
@@ -1223,6 +1225,13 @@ class RecipeTypeManager(models.Manager):
 
         if description is not None:
             recipe_type.description = description
+        
+        if is_active is not None:
+            recipe_type.is_active = is_active
+            if auto_update:
+                super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                msgs = [create_activate_recipe_message(id, recipe_type.id, is_active) for id in super_ids]
+                CommandMessageManager().send_messages(msgs)
 
         if definition:
             if isinstance(definition, RecipeDefinition):

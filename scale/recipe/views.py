@@ -215,6 +215,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
         auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
 
         # Fetch the current recipe type model
         try:
@@ -232,7 +233,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                 # Edit the recipe type
                 RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
                                                        description=description, definition=recipe_def,
-                                                       auto_update=auto_update)
+                                                       auto_update=auto_update, is_active=is_active)
         except InvalidDefinition as ex:
             logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
