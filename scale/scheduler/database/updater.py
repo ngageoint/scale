@@ -7,8 +7,10 @@ from django.db import connection, transaction
 
 from batch.configuration.configuration import BatchConfiguration
 from batch.models import Batch
+from job.deprecation import JobInterfaceSunset, JobDataSunset
 from job.execution.tasks.json.results.task_results import TaskResults
-from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, TaskUpdate
+from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobType, TaskUpdate
+from job.seed.manifest import SeedManifest
 from recipe.models import Recipe
 from util.exceptions import TerminatedCommand
 from util.parse import datetime_to_string
@@ -38,6 +40,9 @@ class DatabaseUpdater(object):
         self._total_recipe_definition = 0
         self._update_recipe_definition = 0
         self._current_recipe_definition_id = None
+        self._current_job_type_id = None
+        self._updated_job_type = 0
+        self._total_job_type = 0
 
     def update(self):
         """Runs the database update
@@ -82,6 +87,17 @@ class DatabaseUpdater(object):
             if self._updated_batch >= self._total_batch:
                 break
             self._perform_batch_field_iteration()
+            
+        # Updating legacy job type interfaces to seed manifests
+        self._perform_job_type_manifest_init()
+        while True:
+            if not self._running:
+                raise TerminatedCommand()
+
+            if self._updated_job_type >= self._total_job_type:
+                break
+            self._perform_job_type_manifest_iteration()
+
 
     def stop(self):
         """Informs the database updater to stop running
@@ -405,3 +421,130 @@ class DatabaseUpdater(object):
         self._updated_job_exe += job_exe_count
         percent = (float(self._updated_job_exe) / float(self._total_job_exe)) * 100.00
         print 'Completed %s of %s job executions (%.1f%%)' % (self._updated_job_exe, self._total_job_exe, percent)
+
+    def _perform_job_type_manifest_init(self):
+        """Performs any initialization piece of the updating job type interfaces
+        """
+
+        logger.info('Scale is now updating legacy job type interfaces to compliant seed manifests')
+        logger.info('Counting the number of job types...')
+        self._total_job_type = JobType.objects.all().count()
+        logger.info('Found %d job types that need to be done', self._total_job_type)
+
+    def _perform_job_type_manifest_iteration(self):
+        """Performs a single iteration of updating job type interfaces
+        """
+
+        # Get batch ID
+        jt_qry = JobType.objects.all()
+        if self._current_job_type_id:
+            jt_qry = jt_qry.filter(id__gt=self._current_job_type_id)
+        for jt in jt_qry.order_by('id').only('id')[:1]:
+            jt_id = jt.id
+            break
+        
+        jt = JobType.objects.get(pk=jt_id)
+        if not JobInterfaceSunset.is_seed_dict(jt.manifest):
+            jt.is_active = False
+            jt.is_paused = True
+            jt.name = 'legacy-' + jt.name
+            if not jt.manifest:
+                jt.manifest = {}
+                
+            input_files = []
+            input_json = []
+            output_files = []
+            for input in jt.manifest.get('input_data'):
+                type = jt.manifest.get('type', default='')
+                if 'file' not in type:
+                    json = {}
+                    json['name'] = input.get('name')
+                    json['type'] = 'string'
+                    json['required'] = input.get('required')
+                    input_json.append(json)
+                    continue
+                file = {}
+                file['name'] = input.get('name')
+                file['required'] = input.get('required', default=False)
+                file['partial'] = input.get('partial', default=False)
+                file['mediaTypes'] = input.get('media_types', default=[])
+                file['multiple'] = (type == 'files')
+                input_files.append(file)
+                
+            for output in jt.manifest.get('output_data'):
+                type = jt.manifest.get('type', default='')
+                file = {}
+                file['name'] = output.get('name')
+                file['required'] = output.get('required', default=False)
+                file['mediaType'] = output.get('media_type', default=[])
+                file['multiple'] = (type == 'files')
+                file['pattern'] = "*.*"
+                output_files.append(file)
+                
+            mounts = []
+            for mount in jt.manifest.get('mounts'):
+                mt = {}
+                mt['name'] = mount.get('name')
+                mt['path'] = mount.get('path')
+                mt['mode'] = mount.get('mode', default='ro')
+                mounts.append(mt)
+                
+            settings = []
+            for setting in jt.manifest.get('settings'):
+                s = {}
+                s['name'] = setting.get('name')
+                s['secret'] = setting.get('secret', default=False)
+                settings.append(s)
+            for var in jt.manifest.get('env_vars'):
+                s = {}
+                s['name'] = 'ENV_' + setting.get('name')
+                settings.append(s)
+                
+            new_manifest = {
+                'seedVersion': '1.0.0',
+                'job': {
+                    'name': jt.name,
+                    'jobVersion': jt.version,
+                    'packageVersion': '1.0.0',
+                    'title': 'Legacy Title',
+                    'description': 'legacy job type',
+                    'tags': jt.manifest.get('tags', default=[]),
+                    'maintainer': {
+                      'name': 'Legacy',
+                      'email': 'jdoe@example.com'
+                    },
+                    'timeout': 3600,
+                    'interface': {
+                      'command': jt.manifest.get('command', default=''),
+                      'inputs': {
+                        'files': input_files,
+                        'json': input_json
+                      },
+                      'outputs': {
+                        'files': output_files,
+                        'json': []
+                      },
+                      'mounts': mounts,
+                      'settings': settings
+                    },
+                    'resources': {
+                      'scalar': [
+                        { 'name': 'cpus', 'value': 1.0 },
+                        { 'name': 'mem', 'value': 1024.0 },
+                        { 'name': 'disk', 'value': 1000.0, 'inputMultiplier': 4.0 }
+                      ]
+                    },
+                    'errors': []
+                  }
+                }
+            jt.manifest = new_manifest
+            SeedManifest(jt.manifest, do_validate=True)
+            jt.save()
+            
+        
+        self._current_job_type_id = jt_id
+        self._updated_job_type += 1
+        if self._updated_job_type > self._total_job_type:
+            self._updated_job_type = self._total_job_type
+        percent = (float(self._updated_job_type) / float(self._total_job_type)) * 100.00
+        logger.info('Completed %s of %s job types (%.1f%%)', self._updated_job_type, self._total_job_type, percent)
