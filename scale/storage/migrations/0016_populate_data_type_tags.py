@@ -1,33 +1,29 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations
+from django.db import connection, migrations
 
 def populate_data_type_tags(apps, schema_editor):
     # Go through all of the ScaleFile models and convert the data_type string into an array of tags
-    ScaleFile = apps.get_model('storage', 'ScaleFile')
-
-    total_count = ScaleFile.objects.all().count()
-    if not total_count:
-        return
-
-    print('\nCreating new data type tags: %i' % total_count)
-    files = ScaleFile.objects.all()
-    done_count = 0
-    for f in files:
-        tags = set()
-        if f.data_type:
-            for tag in f.data_type.split(','):
-                tags.add(tag)
-        f.data_type_tags = list(tags)
-        f.save()
-
-        done_count += 1
-        percent = (float(done_count) / float(total_count)) * 100.00
-        print('Progress: %i/%i (%.2f%%)' % (done_count, total_count, percent))
+    update = 'UPDATE scale_file SET data_type_tags = string_to_array(data_type,\',\') WHERE data_type <> \'\''
+    with connection.cursor() as cursor:
+        cursor.execute(update)
+        count = cursor.rowcount
+        if count:
+            print('%d entries updated with data type tags' % count)
 
     print ('Migration finished.')
-
+            
+def non_null_metadata(apps, schema_editor):
+    ScaleFile = apps.get_model('storage', 'ScaleFile')
+    
+    # Capture Null values for the meta_data field
+    print('Fixing null metadata...')
+    
+    ScaleFile.objects.filter(meta_data='null').update(meta_data={})
+    ScaleFile.objects.filter(meta_data__isnull=True).update(meta_data={})
+            
+    print('Fixed null metadata')
 
 class Migration(migrations.Migration):
 
@@ -36,5 +32,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(non_null_metadata),
         migrations.RunPython(populate_data_type_tags),
     ]
