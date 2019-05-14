@@ -435,7 +435,7 @@ class DatabaseUpdater(object):
         """Performs a single iteration of updating job type interfaces
         """
 
-        # Get batch ID
+        # Get job type ID
         jt_qry = JobType.objects.all()
         if self._current_job_type_id:
             jt_qry = jt_qry.filter(id__gt=self._current_job_type_id)
@@ -508,7 +508,7 @@ class DatabaseUpdater(object):
                     'packageVersion': '1.0.0',
                     'title': 'Legacy Title',
                     'description': 'legacy job type',
-                    'tags': jt.manifest.get('tags', default=[]),
+                    'tags': [],
                     'maintainer': {
                       'name': 'Legacy',
                       'email': 'jdoe@example.com'
