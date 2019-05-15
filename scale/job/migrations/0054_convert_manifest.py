@@ -25,7 +25,7 @@ def convert_interface_to_manifest(apps, schema_editor):
         input_json = []
         output_files = []
         for input in jt.manifest.get('input_data'):
-            type = jt.manifest.get('type', default='')
+            type = input.get('type', '')
             if 'file' not in type:
                 json = {}
                 json['name'] = input.get('name')
@@ -35,18 +35,18 @@ def convert_interface_to_manifest(apps, schema_editor):
                 continue
             file = {}
             file['name'] = input.get('name')
-            file['required'] = input.get('required', default=False)
-            file['partial'] = input.get('partial', default=False)
-            file['mediaTypes'] = input.get('media_types', default=[])
+            file['required'] = input.get('required', False)
+            file['partial'] = input.get('partial', False)
+            file['mediaTypes'] = input.get('media_types', [])
             file['multiple'] = (type == 'files')
             input_files.append(file)
             
         for output in jt.manifest.get('output_data'):
-            type = jt.manifest.get('type', default='')
+            type = output.get('type', '')
             file = {}
             file['name'] = output.get('name')
-            file['required'] = output.get('required', default=False)
-            file['mediaType'] = output.get('media_type', default=[])
+            file['required'] = output.get('required', False)
+            file['mediaType'] = output.get('media_type', [])
             file['multiple'] = (type == 'files')
             file['pattern'] = "*.*"
             output_files.append(file)
@@ -56,14 +56,14 @@ def convert_interface_to_manifest(apps, schema_editor):
             mt = {}
             mt['name'] = mount.get('name')
             mt['path'] = mount.get('path')
-            mt['mode'] = mount.get('mode', default='ro')
+            mt['mode'] = mount.get('mode', 'ro')
             mounts.append(mt)
             
         settings = []
         for setting in jt.manifest.get('settings'):
             s = {}
             s['name'] = setting.get('name')
-            s['secret'] = setting.get('secret', default=False)
+            s['secret'] = setting.get('secret', False)
             settings.append(s)
         for var in jt.manifest.get('env_vars'):
             s = {}
@@ -71,7 +71,7 @@ def convert_interface_to_manifest(apps, schema_editor):
             settings.append(s)
         
         errors = []
-        ec = jt.error_mapping.get('exit_codes', default={})
+        ec = jt.error_mapping.get('exit_codes', {})
         for exit_code, error_name in ec.items():
             error = {
                 'code': int(exit_code),
@@ -98,7 +98,7 @@ def convert_interface_to_manifest(apps, schema_editor):
                 },
                 'timeout': jt.timeout,
                 'interface': {
-                  'command': jt.manifest.get('command', default=''),
+                  'command': jt.manifest.get('command', ''),
                   'inputs': {
                     'files': input_files,
                     'json': input_json
