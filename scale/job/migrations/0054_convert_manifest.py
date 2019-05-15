@@ -12,12 +12,16 @@ def convert_interface_to_manifest(apps, schema_editor):
     # Also inactivate/pause them
     JobType = apps.get_model('job', 'JobType')
 
+    unique = 0
     for jt in JobType.objects.all().iterator():
         if JobInterfaceSunset.is_seed_dict(jt.manifest):
             continue
         jt.is_active = False
         jt.is_paused = True
-        jt.name = 'legacy-' + jt.name
+        old_name_version = jt.name + ' ' + jt.version
+        jt.name = 'legacy-' + jt.name.replace('_', '-')
+        jt.version = '1.0.%d' % unique
+        unique += 1
         if not jt.manifest:
             jt.manifest = {}
             
@@ -30,12 +34,12 @@ def convert_interface_to_manifest(apps, schema_editor):
                 json = {}
                 json['name'] = input.get('name')
                 json['type'] = 'string'
-                json['required'] = input.get('required')
+                json['required'] = input.get('required', True)
                 input_json.append(json)
                 continue
             file = {}
             file['name'] = input.get('name')
-            file['required'] = input.get('required', False)
+            file['required'] = input.get('required', True)
             file['partial'] = input.get('partial', False)
             file['mediaTypes'] = input.get('media_types', [])
             file['multiple'] = (type == 'files')
@@ -45,7 +49,7 @@ def convert_interface_to_manifest(apps, schema_editor):
             type = output.get('type', '')
             file = {}
             file['name'] = output.get('name')
-            file['required'] = output.get('required', False)
+            file['required'] = output.get('required', True)
             file['mediaType'] = output.get('media_type', [])
             file['multiple'] = (type == 'files')
             file['pattern'] = "*.*"
@@ -90,7 +94,7 @@ def convert_interface_to_manifest(apps, schema_editor):
                 'packageVersion': '1.0.0',
                 'title': 'LEGACY ' + jt.title,
                 'description': jt.description,
-                'tags': [jt.category],
+                'tags': [jt.category, old_name_version],
                 'maintainer': {
                   'name': jt.author_name,
                   'email': 'jdoe@example.com',

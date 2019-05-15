@@ -443,11 +443,15 @@ class DatabaseUpdater(object):
             jt_id = jt.id
             break
         
+        unique = 0
         jt = JobType.objects.get(pk=jt_id)
         if not JobInterfaceSunset.is_seed_dict(jt.manifest):
             jt.is_active = False
             jt.is_paused = True
-            jt.name = 'legacy-' + jt.name
+            old_name_version = jt.name + ' ' + jt.version
+            jt.name = 'legacy-' + jt.name.replace('_', '-')
+            jt.version = '1.0.%d' % unique
+            unique += 1
             if not jt.manifest:
                 jt.manifest = {}
                 
@@ -460,12 +464,12 @@ class DatabaseUpdater(object):
                     json = {}
                     json['name'] = input.get('name')
                     json['type'] = 'string'
-                    json['required'] = input.get('required')
+                    json['required'] = input.get('required', True)
                     input_json.append(json)
                     continue
                 file = {}
                 file['name'] = input.get('name')
-                file['required'] = input.get('required', False)
+                file['required'] = input.get('required', True)
                 file['partial'] = input.get('partial', False)
                 file['mediaTypes'] = input.get('media_types', [])
                 file['multiple'] = (type == 'files')
@@ -475,7 +479,7 @@ class DatabaseUpdater(object):
                 type = output.get('type', '')
                 file = {}
                 file['name'] = output.get('name')
-                file['required'] = output.get('required', False)
+                file['required'] = output.get('required', True)
                 file['mediaType'] = output.get('media_type', [])
                 file['multiple'] = (type == 'files')
                 file['pattern'] = "*.*"
@@ -507,7 +511,7 @@ class DatabaseUpdater(object):
                     'jobVersion': jt.version,
                     'packageVersion': '1.0.0',
                     'title': 'Legacy Title',
-                    'description': 'legacy job type',
+                    'description': 'legacy job type: ' + old_name_version,
                     'tags': [],
                     'maintainer': {
                       'name': 'Legacy',
