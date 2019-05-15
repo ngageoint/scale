@@ -458,17 +458,20 @@ class DatabaseUpdater(object):
             input_files = []
             input_json = []
             output_files = []
+            unique_name = 0
             for input in jt.manifest.get('input_data', []):
                 type = input.get('type', '')
                 if 'file' not in type:
                     json = {}
-                    json['name'] = input.get('name')
+                    json['name'] = input.get('name') + str(unique_name)
+                    unique_name += 1
                     json['type'] = 'string'
                     json['required'] = input.get('required', True)
                     input_json.append(json)
                     continue
                 file = {}
-                file['name'] = input.get('name')
+                file['name'] = input.get('name') + str(unique_name)
+                unique_name += 1
                 file['required'] = input.get('required', True)
                 file['partial'] = input.get('partial', False)
                 file['mediaTypes'] = input.get('media_types', [])
@@ -478,7 +481,8 @@ class DatabaseUpdater(object):
             for output in jt.manifest.get('output_data', []):
                 type = output.get('type', '')
                 file = {}
-                file['name'] = output.get('name')
+                file['name'] = output.get('name') + str(unique_name)
+                unique_name += 1
                 file['required'] = output.get('required', True)
                 file['mediaType'] = output.get('media_type', [])
                 file['multiple'] = (type == 'files')
@@ -488,7 +492,8 @@ class DatabaseUpdater(object):
             mounts = []
             for mount in jt.manifest.get('mounts', []):
                 mt = {}
-                mt['name'] = mount.get('name')
+                mt['name'] = mount.get('name') + str(unique_name)
+                unique_name += 1
                 mt['path'] = mount.get('path')
                 mt['mode'] = mount.get('mode', 'ro')
                 mounts.append(mt)
@@ -496,12 +501,14 @@ class DatabaseUpdater(object):
             settings = []
             for setting in jt.manifest.get('settings', []):
                 s = {}
-                s['name'] = setting.get('name')
+                s['name'] = setting.get('name') + str(unique_name)
+                unique_name += 1
                 s['secret'] = setting.get('secret', False)
                 settings.append(s)
             for var in jt.manifest.get('env_vars', []):
                 s = {}
-                s['name'] = 'ENV_' + setting.get('name')
+                s['name'] = 'ENV_' + setting.get('name') + str(unique_name)
+                unique_name += 1
                 settings.append(s)
                 
             new_manifest = {
