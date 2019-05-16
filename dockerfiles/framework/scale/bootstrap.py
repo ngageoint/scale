@@ -16,6 +16,7 @@ APPLICATION_GROUP = os.getenv('APPLICATION_GROUP', None)
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
+DEPLOY_SILO = os.getenv('DEPLOY_SILO', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 
@@ -80,6 +81,14 @@ def run(client):
         app_name = '%s-webserver' % FRAMEWORK_NAME
         deploy_webserver(client, app_name, es_url, db_url, broker_url)
         webserver_url = 'http://%s.marathon.l4lb.thisdcos.directory:80/' % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
+
+    # Determine if Web Server should be deployed.
+    if DEPLOY_SILO.lower() == 'true':
+        app_name = '%s-silo' % FRAMEWORK_NAME
+        deploy_silo(client, app_name, db_url)
+        webserver_url = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
 
     # Determine if UI should be deployed.
     if DEPLOY_UI.lower() == 'true':
@@ -268,10 +277,6 @@ def deploy_webserver(client, app_name, es_url, db_url, broker_url):
 
     deploy_marathon_app(client, marathon)
 
-    webserver_port = get_host_port_from_healthy_app(client, app_name, 0)
-
-    return webserver_port
-
 
 def deploy_ui(client, app_name, webserver_url):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
@@ -305,9 +310,21 @@ def deploy_ui(client, app_name, webserver_url):
 
     deploy_marathon_app(client, marathon)
 
-    ui_port = get_host_port_from_healthy_app(client, app_name, 0)
 
-    return ui_port
+def deploy_silo(client, app_name, db_url):
+    if not check_app_exists(client, app_name):
+        # Load marathon template file
+        marathon = initialize_app_template('silo', app_name,
+                                           os.getenv('SILO_DOCKER_IMAGE'))
+
+        arbitrary_env = {
+            'DATABASE_URL': db_url
+        }
+        # For all environment variable that are set add to marathon json.
+        for env in arbitrary_env:
+            marathon['env'][env] = arbitrary_env[env]
+
+        deploy_marathon_app(client, marathon)
 
 
 def deploy_database(client, app_name):

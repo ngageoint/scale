@@ -1,0 +1,41 @@
+{
+    "id": "scale-template-silo",
+    "cpus": 0.5,
+    "mem": 512,
+    "disk": 0,
+    "instances": 1,
+    "container": {
+        "docker": {
+            "image": "geoint/seed-silo",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 9000,
+                    "hostPort": 0,
+                    "protocol": "tcp",
+                    "labels": {
+                        "VIP_0": "/scale-template-silo:9000"
+                    }
+                }
+            ],
+            "forcePullImage": true
+        },
+        "type": "DOCKER"
+    },
+    "env": {
+    },
+    "labels": {
+    },
+    "healthChecks": [
+        {
+            "path": "/registries",
+            "protocol": "MESOS_HTTP",
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 30,
+            "portIndex": 0,
+            "timeoutSeconds": 15,
+            "maxConsecutiveFailures": 3
+        }
+    ],
+    "uris": []
+}
