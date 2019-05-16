@@ -6,7 +6,7 @@
     "instances": 1,
     "container": {
         "docker": {
-            "image": "geoint/seed-silo",
+            "image": "geoint/seed-silo:0.5.0",
             "network": "BRIDGE",
             "portMappings": [
                 {
@@ -28,7 +28,7 @@
     },
     "healthChecks": [
         {
-            "path": "/registries",
+            "path": "/",
             "protocol": "MESOS_HTTP",
             "gracePeriodSeconds": 300,
             "intervalSeconds": 30,
