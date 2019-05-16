@@ -20,8 +20,14 @@ def convert_interface_to_manifest(apps, schema_editor):
         jt.is_paused = True
         old_name_version = jt.name + ' ' + jt.version
         jt.name = 'legacy-' + jt.name.replace('_', '-')
-        jt.version = '1.0.%d' % unique
-        unique += 1
+        
+        exists = True
+        sanity_check = 1000000
+        while exists and unique < sanity_check:
+            jt.version = '1.0.%d' % unique
+            unique += 1
+            exists = JobType.objects.filter(name=jt.name, version=jt.version).first()
+            
         if not jt.manifest:
             jt.manifest = {}
             
