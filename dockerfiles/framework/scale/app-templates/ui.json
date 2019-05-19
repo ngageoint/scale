@@ -19,7 +19,8 @@
         "type": "DOCKER"
     },
     "env": {
-        "BACKEND_URL": "http://scale-webserver.marathon.l4lb.thisdcos.directory",
+        "API_BACKEND": "http://scale-webserver.marathon.l4lb.thisdcos.directory:80/",
+        "SILO_BACKEND": "http://scale-silo.marathon.l4lb.thisdcos.directory:9000/",
         "CONTEXTS": "/service/scale",
         "DCOS_PACKAGE_FRAMEWORK_NAME": "scale",
         "SILO_URL": "/silo"
@@ -44,7 +45,7 @@
       "timeoutSeconds": 15,
       "delaySeconds": 15,
       "protocol": "MESOS_HTTP",
-      "path": "/",
+      "path": "/api/v6/version/",
       "ipProtocol": "IPv4"
     }
   ],

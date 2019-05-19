@@ -92,8 +92,8 @@ def run(client):
     # Determine if UI should be deployed.
     if DEPLOY_UI.lower() == 'true':
         app_name = '%s-ui' % FRAMEWORK_NAME
-        ui_port = deploy_ui(client, app_name, webserver_url, silo_address)
-        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), ui_port))
+        deploy_ui(client, app_name, webserver_url, silo_address)
+        print("WEBSERVER_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:80" % (subdomain_gen(app_name)))
 
     # Wait for all needed apps to be healthy
     for app_name in blocking_apps:
