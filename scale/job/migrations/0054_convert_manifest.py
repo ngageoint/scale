@@ -60,7 +60,7 @@ def convert_interface_to_manifest(apps, schema_editor):
             file = {}
             file['name'] = get_unique_name(output.get('name'))
             file['required'] = output.get('required', True)
-            file['mediaType'] = output.get('media_type', [])
+            file['mediaType'] = output.get('media_type', '')
             file['multiple'] = (type == 'files')
             file['pattern'] = "*.*"
             output_files.append(file)
