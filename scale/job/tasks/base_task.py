@@ -82,7 +82,7 @@ class Task(object):
         self._exit_code = None
 
         # These values will vary by different task subclasses
-        self._uses_docker = False
+        self._uses_docker = True
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
