@@ -103,7 +103,7 @@ class JobManager(models.Manager):
         """
 
         if not job_type_rev.job_type.is_active:
-            raise InactiveJobType("Job Type %s:%s is inactive" % (job_type_rev.job_type.name, job_type_rev.job_type.version)
+            raise InactiveJobType("Job Type %s:%s is inactive" % (job_type_rev.job_type.name, job_type_rev.job_type.version))
             
         job = Job()
         job.job_type = job_type_rev.job_type
