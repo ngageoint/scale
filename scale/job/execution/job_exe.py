@@ -70,6 +70,8 @@ class RunningJobExecution(object):
 
         # Create tasks
         for task_type in configuration.get_task_types():
+            logger.info('JobType:')
+            logger.info(job_type.__dict__)
             task = None
             if task_type == 'pull':
                 task = PullTask(agent_id, job_exe, job_type, configuration)
@@ -79,9 +81,12 @@ class RunningJobExecution(object):
                 task = MainTask(agent_id, job_exe, job_type, configuration)
             elif task_type == 'post':
                 task = PostTask(agent_id, job_exe, job_type, configuration)
+            logger.info('RunningJobExecution Task:')
+            logger.info(task.__dict__)
             self._all_tasks.append(task)
         for task in self._all_tasks:
             self._remaining_tasks.append(task)
+
 
     @property
     def current_task(self):
