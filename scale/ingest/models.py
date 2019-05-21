@@ -1142,7 +1142,7 @@ class StrikeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-strike', version='1.0')
+        return JobType.objects.get(name='scale-strike', version='1.0.0')
 
     def get_strikes(self, started=None, ended=None, names=None, order=None):
         """Returns a list of Strike processes within the given time range.
