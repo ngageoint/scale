@@ -4,7 +4,7 @@
 Adding your new job into a Scale job type
 =========================================
 
-After you have successfully tested your Docker container and inserted the job into the database, you can add the job to an existing recipe or create a brand new recipe. Recipes allow you to chain the inputs/outputs of one job to another job to create a workflow for your algorithm processing.
+After you have successfully tested your Seed job and published it to your Docker registry, you are ready to add a new job type to Scale. Once the job type is defined, you will be able to start running it by adding it to an existing recipe, or by creating a brand new recipe.
 
 
 Creating a new job type
@@ -18,9 +18,9 @@ Selecting the “Create Job Type” button will display an empty job type templa
 
 2. **General Information** is where you select an icon to be used for the job type in Scale.
 
-3. **Validate and Create** is the recipe version number. You should use semantic versioning, e.g. 1.2.3.
+3. **Validate and Create** is where you validate and confirm the job type.
 
-4. **Description** is a brief summary of the recipe and what it should create.
+4. **Description** is a brief summary of the job type and what it should create.
 
 
 Adding a trigger
