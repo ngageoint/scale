@@ -86,7 +86,7 @@ class Task(object):
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
-        self._command = 'echo "Hello Scale"'
+        self._command = None
         self._command_arguments = None
         self._running_timeout_threshold = BASE_RUNNING_TIMEOUT_THRESHOLD
         self._staging_timeout_threshold = BASE_STAGING_TIMEOUT_THRESHOLD
