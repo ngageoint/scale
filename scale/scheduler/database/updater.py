@@ -9,7 +9,7 @@ from batch.configuration.configuration import BatchConfiguration
 from batch.models import Batch
 from job.deprecation import JobInterfaceSunset, JobDataSunset
 from job.execution.tasks.json.results.task_results import TaskResults
-from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobType, TaskUpdate
+from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobType, JobTypeRevision, TaskUpdate
 from job.seed.manifest import SeedManifest
 from recipe.models import Recipe
 from util.exceptions import TerminatedCommand
@@ -554,6 +554,9 @@ class DatabaseUpdater(object):
             jt.manifest = new_manifest
             SeedManifest(jt.manifest, do_validate=True)
             jt.save()
+            for jtr in JobTypeRevision.objects.filter(job_type_id=jt.id).iterator():
+                jtr.manifest = jt.manifest
+                jtr.save()
             
         
         self._current_job_type_id = jt_id

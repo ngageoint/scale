@@ -20,6 +20,7 @@ def convert_interface_to_manifest(apps, schema_editor):
     # Go through all of the JobType models and convert legacy interfaces to Seed manifests
     # Also inactivate/pause them
     JobType = apps.get_model('job', 'JobType')
+    JobTypeRevision = apps.get_model('job', 'JobTypeRevision')
 
     unique = 0
     for jt in JobType.objects.all().iterator():
@@ -91,7 +92,7 @@ def convert_interface_to_manifest(apps, schema_editor):
         for exit_code, error_name in ec.items():
             error = {
                 'code': int(exit_code),
-                'name': error_name,
+                'name': get_unique_name(error_name),
                 'title': 'Error Name',
                 'description': 'Error Description',
                 'category': 'algorithm'
@@ -140,6 +141,9 @@ def convert_interface_to_manifest(apps, schema_editor):
         jt.manifest = new_manifest
         SeedManifest(jt.manifest, do_validate=True)
         jt.save()
+        for jtr in JobTypeRevision.objects.filter(job_type_id=jt.id).iterator():
+            jtr.manifest = jt.manifest
+            jtr.save()
 
 class Migration(migrations.Migration):
 

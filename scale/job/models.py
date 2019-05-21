@@ -23,7 +23,7 @@ from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter
 from error.models import Error
-from job.configuration.exceptions import InvalidJobConfiguration
+from job.configuration.exceptions import InvalidJobConfiguration, InactiveJobType
 from job.configuration.configuration import JobConfiguration
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.data.job_data import JobData
@@ -102,6 +102,9 @@ class JobManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
         """
 
+        if not job_type_rev.job_type.is_active:
+            raise InactiveJobType("Job Type %s:%s is inactive" % (job_type_rev.job_type.name, job_type_rev.job_type.version)
+            
         job = Job()
         job.job_type = job_type_rev.job_type
         job.job_type_rev = job_type_rev

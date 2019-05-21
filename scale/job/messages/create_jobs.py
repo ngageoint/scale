@@ -8,6 +8,7 @@ from django.db import transaction
 
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
+from job.exceptions import InactiveJobType
 from job.messages.process_job_input import create_process_job_input_messages
 from job.models import Job, JobTypeRevision
 from messaging.messages.message import CommandMessage
@@ -225,7 +226,11 @@ class CreateJobs(CommandMessage):
             self._perform_locking()
             jobs = self._find_existing_jobs()
             if not jobs:
-                jobs = self._create_jobs()
+                try:
+                    jobs = self._create_jobs()
+                except InactiveJobType as ex:
+                    logger.exception('Attempting to create a job with an inactive job type: %s. Message will not re-run.', ex)
+                    return True
 
         process_input_job_ids = []
         for job in jobs:
