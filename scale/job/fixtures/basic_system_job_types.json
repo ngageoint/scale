@@ -48,7 +48,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-clock", "1.0"],
+            "job_type": ["scale-clock", "1.0.0"],
             "revision_num": 1,
             "manifest": {
                 "seedVersion": "1.0.0",
