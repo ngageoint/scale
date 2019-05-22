@@ -1230,7 +1230,7 @@ class RecipeTypeManager(models.Manager):
             recipe_type.is_active = is_active
             if auto_update:
                 super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
-                msgs = [create_activate_recipe_message(id, recipe_type.id, is_active) for id in super_ids]
+                msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
 
         if definition:

@@ -30,13 +30,11 @@ def create_sub_update_recipe_definition_message(recipe_type_id, sub_recipe_type_
     message.sub_recipe_type_id = sub_recipe_type_id
     return message
 
-def create_activate_recipe_message(recipe_type_id, sub_recipe_type_id, is_active):
+def create_activate_recipe_message(recipe_type_id, is_active):
     """Creates a message to activate/deactivate a recipe type and any parent recipe types
 
     :param recipe_type_id: The recipe type to update
     :type recipe_type_id: int
-    :param sub_recipe_type_id: The sub recipe type
-    :type sub_recipe_type_id: int
     :param is_active: Whether the recipe type is active or inactive
     :type is_active: bool
     :return: The message
@@ -45,7 +43,6 @@ def create_activate_recipe_message(recipe_type_id, sub_recipe_type_id, is_active
 
     message = UpdateRecipeDefinition()
     message.recipe_type_id = recipe_type_id
-    message.sub_recipe_type_id = sub_recipe_type_id
     message.is_active = is_active
     return message
 
@@ -121,14 +118,12 @@ class UpdateRecipeDefinition(CommandMessage):
                 recipe_type.save()
                 parents = RecipeTypeSubLink.objects.get_recipe_type_ids([self.recipe_type_id])
                 for p in parents:
-                    # avoid infinite recursion
-                    if p != self.sub_recipe_type_id:
-                        msg = create_activate_recipe_message(p, self.recipe_type_id, self.is_active)
-                        self.new_messages.append(msg)
+                    msg = create_activate_recipe_message(p, self.is_active)
+                    self.new_messages.append(msg)
     
             definition = recipe_type.get_definition()
     
-            updated_node = True
+            updated_node = False
             if self.sub_recipe_type_id:
                 sub = RecipeType.objects.get(pk=self.sub_recipe_type_id)
                 updated_node = definition.update_recipe_nodes(recipe_type_name=sub.name,
