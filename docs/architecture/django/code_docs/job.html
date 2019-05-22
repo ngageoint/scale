@@ -472,7 +472,8 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0051_auto_20190211_1500">job.migrations.0051_auto_20190211_1500 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0052_jobtype_is_published">job.migrations.0052_jobtype_is_published module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0053_jobtype_unmet_resources">job.migrations.0053_jobtype_unmet_resources module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0054_jobtype_v5_deprecation">job.migrations.0054_jobtype_v5_deprecation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0054_convert_manifest">job.migrations.0054_convert_manifest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0055_jobtype_v5_deprecation">job.migrations.0055_jobtype_v5_deprecation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -918,6 +919,13 @@ Seed compliant interfaces.</p>
 <div class="section" id="module-job.exceptions">
 <span id="job-exceptions-module"></span><h2>job.exceptions module<a class="headerlink" href="#module-job.exceptions" title="Permalink to this headline">¶</a></h2>
 <p>Defines exceptions that can occur when interacting with jobs and job types</p>
+<dl class="exception">
+<dt id="job.exceptions.InactiveJobType">
+<em class="property">exception </em><code class="descclassname">job.exceptions.</code><code class="descname">InactiveJobType</code><a class="headerlink" href="#job.exceptions.InactiveJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that a job type is inactive</p>
+</dd></dl>
+
 <dl class="exception">
 <dt id="job.exceptions.InvalidJobField">
 <em class="property">exception </em><code class="descclassname">job.exceptions.</code><code class="descname">InvalidJobField</code><a class="headerlink" href="#job.exceptions.InvalidJobField" title="Permalink to this definition">¶</a></dt>

@@ -428,10 +428,18 @@ job\.migrations\.0053\_jobtype\_unmet\_resources module
     :undoc-members:
     :show-inheritance:
 
-job\.migrations\.0054\_jobtype\_v5\_deprecation module
+job\.migrations\.0054\_convert\_manifest module
+-----------------------------------------------
+
+.. automodule:: job.migrations.0054_convert_manifest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0055\_jobtype\_v5\_deprecation module
 ------------------------------------------------------
 
-.. automodule:: job.migrations.0054_jobtype_v5_deprecation
+.. automodule:: job.migrations.0055_jobtype_v5_deprecation
     :members:
     :undoc-members:
     :show-inheritance:
