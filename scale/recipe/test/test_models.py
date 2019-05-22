@@ -312,7 +312,8 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         subs = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
         self.assertEqual(len(subs), 0)
 
-    def test_change_to_invalid_definition(self):
+    @patch('recipe.models.CommandMessageManager')
+    def test_change_to_invalid_definition(self, mock_msg_mgr) :
         """Tests calling RecipeTypeManager.edit_recipe_type() with an invalid change to the definition"""
 
         # Create recipe_type

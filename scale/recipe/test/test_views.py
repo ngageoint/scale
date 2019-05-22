@@ -336,13 +336,16 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         del versionless['version']
         self.assertDictEqual(result['definition'], versionless)
 
-    def test_edit_simple(self):
+    @patch('recipe.models.CommandMessageManager')
+    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
+    def test_edit_simple(self, mock_create, mock_msg_mgr):
         """Tests editing only the basic attributes of a recipe type"""
 
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
-            'is_active': False
+            'is_active': False,
+            'auto_update': True
         }
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
@@ -351,6 +354,9 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.is_active, False)
+
+        # Check that create_activate_recipe_definition_message message was created and sent
+        mock_create.assert_called_with(self.recipe_type2.id, False)
 
     def test_edit_definition(self):
         """Tests editing the definition of a recipe type"""
