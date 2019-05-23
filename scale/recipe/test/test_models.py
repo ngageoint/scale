@@ -274,7 +274,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
             # Edit the recipe
             new_title = 'New title'
             new_desc = 'New description'
-            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, new_title, new_desc, None, False, True)
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=new_title, description=new_desc, definition=None, auto_update=False, is_active=True)
         recipe_type = RecipeType.objects.get(pk=recipe_type.id)
 
         # Check results
@@ -297,7 +297,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, self.sub_def, True, True)
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=None, description=None, definition=self.sub_def, auto_update=True, is_active=True)
         recipe_type = RecipeType.objects.get(pk=recipe_type.id)
 
         # Check results
@@ -328,7 +328,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
             invalid_def = RecipeDefinitionV6(definition=invalid, do_validate=False).get_definition()
             invalid_def.add_dependency('node_b', 'node_a')
             self.assertRaises(InvalidDefinition, RecipeType.objects.edit_recipe_type_v6, recipe_type.id,
-                              None, None, invalid_def, True, True)
+                              title=None, description=None, definition=invalid_def, auto_update=True, is_active=True)
 
 
 class TestRecipeTypeSubLinkManager(TransactionTestCase):

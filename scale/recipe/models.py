@@ -1197,7 +1197,7 @@ class RecipeTypeManager(models.Manager):
 
         return recipe_type
 
-    def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update, is_active):
+    def edit_recipe_type_v6(self, recipe_type_id, title=None, description=None, definition=None, auto_update=None, is_active=None):
         """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
         transaction. An argument of None for a field indicates that the field should not change.
 

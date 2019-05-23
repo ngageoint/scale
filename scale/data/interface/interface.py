@@ -48,7 +48,12 @@ class Interface(object):
             msg = 'Input \'%s\' has more than one parameter connected to it' % input_name
             raise InvalidInterfaceConnection('DUPLICATE_INPUT', msg)
 
-        new_param = output_interface.parameters[output_name].copy()
+        try:
+            new_param = output_interface.parameters[output_name].copy()
+        except KeyError:
+            msg = 'Input %s cannot be connected to output %s; no output exists with that name' % (input_name, output_name)
+            raise InvalidInterfaceConnection('MISSING_OUTPUT_NAME', msg)
+            
         new_param.name = input_name
         self.add_parameter(new_param)
 
