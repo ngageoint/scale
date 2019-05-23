@@ -17,7 +17,8 @@ from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -115,7 +116,7 @@ class StrikeConfigurationV6(object):
             raise InvalidStrikeConfiguration('Invalid Strike configuration. Strike configuration version 1.0 is no longer supported')
 
         if 'version' in self._configuration and self._configuration['version'] == '2.0':
-            self._configuration['version'] = '6'
+            self._configuration['version'] = SCHEMA_VERSION
 
         try:
             if do_validate:
@@ -124,7 +125,7 @@ class StrikeConfigurationV6(object):
             raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
 
         self._populate_default_values()
-        if self._configuration['version'] != SCHEMA_VERSION:
+        if self._configuration['version'] not in SCHEMA_VERSIONS:
             msg = 'Invalid Strike configuration: %s is an unsupported version number'
             raise InvalidStrikeConfiguration(msg % self._configuration['version'])
 

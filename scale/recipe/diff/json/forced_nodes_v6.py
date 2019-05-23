@@ -8,8 +8,8 @@ from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.forced_nodes import ForcedNodes
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 FORCED_NODES_SCHEMA = {
     'type': 'object',
@@ -73,7 +73,7 @@ def _convert_forced_nodes_to_dict(forced_nodes):
 
     nodes = []
     sub_recipes = {}
-    json_dict = {'version': '6', 'all': forced_nodes.all_nodes}
+    json_dict = {'version': SCHEMA_VERSION, 'all': forced_nodes.all_nodes}
 
     if not forced_nodes.all_nodes:
         for node_name in forced_nodes.get_forced_node_names():
@@ -112,7 +112,7 @@ class ForcedNodesV6(object):
         if 'version' not in self._forced_nodes:
             self._forced_nodes['version'] = SCHEMA_VERSION
 
-        if self._forced_nodes['version'] != SCHEMA_VERSION:
+        if self._forced_nodes['version'] not in SCHEMA_VERSIONS:
             raise InvalidDiff('%s is an unsupported version number' % self._forced_nodes['version'])
 
         try:

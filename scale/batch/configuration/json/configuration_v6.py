@@ -8,7 +8,8 @@ from batch.configuration.configuration import BatchConfiguration
 from batch.configuration.exceptions import InvalidConfiguration
 
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 BATCH_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -36,7 +37,7 @@ def convert_configuration_to_v6(configuration):
     :rtype: :class:`batch.configuration.json.configuration_v6.BatchConfigurationV6`
     """
 
-    json_dict = {'version': '6'}
+    json_dict = {'version': SCHEMA_VERSION}
     if configuration.priority is not None:
         json_dict['priority'] = configuration.priority
     return BatchConfigurationV6(configuration=json_dict, do_validate=False)
@@ -63,7 +64,7 @@ class BatchConfigurationV6(object):
         if 'version' not in self._configuration:
             self._configuration['version'] = SCHEMA_VERSION
 
-        if self._configuration['version'] != SCHEMA_VERSION:
+        if self._configuration['version'] not in SCHEMA_VERSIONS:
             msg = '%s is an unsupported version number' % self._configuration['version']
             raise InvalidConfiguration('INVALID_BATCH_CONFIGURATION', msg)
 

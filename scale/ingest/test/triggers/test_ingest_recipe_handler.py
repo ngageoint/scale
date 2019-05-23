@@ -38,7 +38,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.source_file.add_data_type_tag('type3')
         manifest = job_test_utils.create_seed_manifest(inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         self.jt1 = job_test_utils.create_seed_job_type(manifest=manifest)
-        recipe_type_def = {'version': '6',
+        recipe_type_def = {'version': '7',
                            'input': {'files': [{'name': 'INPUT_FILE',
                                                 'media_types': ['text/plain'],
                                                 'required': True,
@@ -59,7 +59,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
-            'version': '6',
+            'version': '7',
             'workspace': self.workspace.name,
             'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
@@ -107,7 +107,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         manifest = job_test_utils.create_seed_manifest(
             inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
-        definition = {'version': '6',
+        definition = {'version': '7',
                        'input': {'files': [{'name': 'INPUT_FILE',
                                             'media_types': ['text/plain'],
                                             'required': True,

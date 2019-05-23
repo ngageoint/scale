@@ -17,7 +17,8 @@ from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -129,9 +130,9 @@ class ScanConfigurationV6(object):
 
         # Convert old versions
         if 'version' in self._configuration and self._configuration['version'] == '1.0':
-            self._configuration['version'] = '6'
+            self._configuration['version'] = SCHEMA_VERSION
         if 'version' not in self._configuration:
-            self._configuration['version'] = '6'
+            self._configuration['version'] = SCHEMA_VERSION
 
         try:
             if do_validate:
@@ -140,7 +141,7 @@ class ScanConfigurationV6(object):
             raise InvalidScanConfiguration('Invalid Scan configuration: %s' % unicode(ex))
 
         self._populate_default_values()
-        if self._configuration['version'] != SCHEMA_VERSION:
+        if self._configuration['version'] not in SCHEMA_VERSIONS:
             msg = 'Invalid Scan configuration: %s is an unsupported version number'
             raise InvalidScanConfiguration(msg % self._configuration['version'])
 
@@ -202,7 +203,7 @@ class ScanConfigurationV6(object):
 
         config = configuration
         if 'version' in config and config['version'] == '1.0':
-            config['version'] = '6'
+            config['version'] = SCHEMA_VERSION
         return config
 
     def _populate_default_values(self):
@@ -217,10 +218,3 @@ class ScanConfigurationV6(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
-
-        # TODO for v6 when scan recipe config is mandatory
-        # if 'recipe' not in self._configuration:
-        #     self._configuration['recipe'] = {
-        #         'name': '',
-        #         'revision_num': ''
-        #     }
