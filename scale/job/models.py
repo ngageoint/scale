@@ -2138,7 +2138,7 @@ class JobTypeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-clock', version='1.0')
+        return JobType.objects.get(name='scale-clock', version='1.0.0')
 
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of all job types
