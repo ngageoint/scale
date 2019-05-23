@@ -23,6 +23,7 @@ from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
+from recipe.exceptions import InactiveRecipeType
 from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.serializers import (RecipeDetailsSerializerV6,
@@ -477,8 +478,10 @@ class RecipesView(ListAPIView):
         try:
             recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(),
                                                                 recipe_config=configuration)
-        except InvalidRecipeData as err:
+        except (InvalidData, InvalidRecipeData) as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+        except InactiveRecipeType as err:
+            return Response('Inactive recipe type: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         serializer = RecipeSerializerV6(recipe)
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)

@@ -23,7 +23,7 @@ from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.diff.diff import RecipeDiff
 from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
-from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
+from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError, InactiveRecipeType
 from recipe.instance.recipe import RecipeInstance
 from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
 from storage.models import ScaleFile, Workspace
@@ -96,7 +96,11 @@ class RecipeManager(models.Manager):
         :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
+        :raises :class:`recipe.exceptions.InactiveRecipeType`: If the recipe type is inactive
         """
+
+        if not recipe_type_rev.recipe_type.is_active:
+            raise InactiveRecipeType("Recipe Type %s is inactive" % recipe_type_rev.recipe_type.name)
 
         recipe = Recipe()
         recipe.recipe_type = recipe_type_rev.recipe_type

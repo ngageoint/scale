@@ -9,9 +9,12 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from data.data.data import Data
+from data.data.exceptions import InvalidData
 from job.models import JobType
 from queue.models import Queue
 from queue.serializers import QueueStatusSerializerV6
+from recipe.configuration.data.exceptions import InvalidRecipeData
+from recipe.exceptions import InactiveRecipeType
 from recipe.models import RecipeType
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -136,9 +139,14 @@ class QueueScaleCasinoView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        recipe_type = RecipeType.objects.get(name='scale-casino', revision_num='1')
-        for _ in xrange(num):
-            Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        try:
+            recipe_type = RecipeType.objects.get(name='scale-casino', revision_num='1')
+            for _ in xrange(num):
+                Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
+            message = 'Unable to create new recipe'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         return Response(status=status.HTTP_202_ACCEPTED)
 

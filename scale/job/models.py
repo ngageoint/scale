@@ -2056,7 +2056,7 @@ class JobTypeManager(models.Manager):
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
-        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message
+        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message, create_activate_recipe_message
         from recipe.models import RecipeTypeJobLink
 
         # Acquire model lock for job type
@@ -2093,6 +2093,11 @@ class JobTypeManager(models.Manager):
         if is_active and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
+            if auto_update:
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
+                CommandMessageManager().send_messages(msgs)
+                
         if is_paused and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
             job_type.is_paused = is_paused

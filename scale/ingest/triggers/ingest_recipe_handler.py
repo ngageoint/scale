@@ -47,7 +47,7 @@ class IngestRecipeHandler(object):
 
         recipe_type = RecipeType.objects.get(id=recipe_type_id)
 
-        if recipe_type:
+        if recipe_type and recipe_type.is_active:
             recipe_data = Data()
             input_name = recipe_type.get_definition().get_input_keys()[0]
             recipe_data.add_value(FileValue(input_name, [source_file.id]))
@@ -56,7 +56,7 @@ class IngestRecipeHandler(object):
             logger.info('Queuing new recipe of type %s', recipe_type.name)
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
-            logger.info('No recipe type found for id %s' % recipe_type_id)
+            logger.info('No recipe type found for id %s or recipe type is inactive' % recipe_type_id)
 
     @transaction.atomic
     def process_ingested_source_file(self, ingest_id, source, source_file, when):
@@ -81,7 +81,7 @@ class IngestRecipeHandler(object):
         if recipe_revision:
             recipe_type = RecipeTypeRevision.objects.get_revision(recipe_name, recipe_revision).recipe_type
             
-        if recipe_type:
+        if recipe_type and recipe_type.is_active:
             # Assuming one input per recipe, so pull the first defined input you find
             recipe_data = Data()
             input_name = recipe_type.get_definition().get_input_keys()[0]
@@ -92,7 +92,7 @@ class IngestRecipeHandler(object):
             logger.info('Queuing new recipe of type %s', recipe_type.name)
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
-            logger.info('No recipe type found for %s %s' % (recipe_name, recipe_revision))
+            logger.info('No recipe type found for %s %s or recipe type is inactive' % (recipe_name, recipe_revision))
 
     def _create_ingest_event(self, ingest_id, source, source_file, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and recipe type

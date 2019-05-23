@@ -14,3 +14,8 @@ class ReprocessError(Exception):
 class SupersedeError(Exception):
     """Exception indicating that a recipe cannot be superseded"""
     pass
+
+class InactiveRecipeType(Exception):
+    """Exception indicating that a recipe type is inactive
+    """
+    pass 
