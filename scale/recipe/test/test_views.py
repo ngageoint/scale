@@ -633,7 +633,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
         msg = "Node 'node_b' interface error: Input INPUT_IMAGE cannot be connected to output WRONG; no output exists with that name"
-        self.assertDictEqual(results, {'errors': [{'description': msg, 'name': 'NODE_INTERFACE'}], 'is_valid': True, 'warnings': [], 'diff': {}})
+        self.assertDictEqual(results, {'errors': [{'description': msg, 'name': 'NODE_INTERFACE'}], 'is_valid': False, 'warnings': [], 'diff': {}})
         
     def test_bad_param(self):
         """Tests validating a new recipe type with missing fields."""

@@ -397,10 +397,9 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event, recipe_config=config)
         self.assertDictEqual(created_recipe.configuration, config_dict)
 
-    def test_inactive(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_inactive(self, mock_msg_mgr):
         workspace = storage_test_utils.create_workspace()
-        strike_source_file = source_test_utils.create_source(workspace=workspace)
-        scan_source_file = source_test_utils.create_source(workspace=workspace)
         event = trigger_test_utils.create_trigger_event()
         recipetype1 = recipe_test_utils.create_recipe_type_v6(is_active=False)
 
