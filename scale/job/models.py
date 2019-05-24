@@ -1030,7 +1030,10 @@ class Job(models.Model):
         """
 
         if self.configuration:
-            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+            try:
+                return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+            except InvalidJobConfiguration as ex:
+                return { 'Invalid Job Configuration': ex }
         else:
             return None
 
@@ -2312,9 +2315,12 @@ class JobTypeManager(models.Manager):
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            configuration = job_type.get_job_configuration()
-            manifest = SeedManifest(job_type.manifest, do_validate=False)
-            configuration.remove_secret_settings(manifest)
+            try:
+                configuration = job_type.get_job_configuration()
+                manifest = SeedManifest(job_type.manifest, do_validate=False)
+                configuration.remove_secret_settings(manifest)
+            except InvalidJobConfiguration as ex:
+                job_type.configuration = JobConfigurationV6().get_configuration();
 
         return job_type
 
@@ -2776,7 +2782,10 @@ class JobType(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        try:
+            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        except InvalidJobConfiguration as ex:
+            return { 'Invalid Job Configuration': ex }
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the
