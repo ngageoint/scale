@@ -1462,7 +1462,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
         self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
         #Secrets scrubbed from configuration on return
-        self.assertEqual(result['configuration']['settings'], {})
+        self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'scale'})
 
     def test_edit_not_found(self):
         """Tests calling the get job type details view with a job name/version that does not exist."""

@@ -2319,8 +2319,9 @@ class JobTypeManager(models.Manager):
                 configuration = job_type.get_job_configuration()
                 manifest = SeedManifest(job_type.manifest, do_validate=False)
                 configuration.remove_secret_settings(manifest)
+                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
             except InvalidJobConfiguration as ex:
-                job_type.configuration = JobConfigurationV6().get_configuration();
+                job_type.configuration = JobConfigurationV6().get_dict()
 
         return job_type
 
