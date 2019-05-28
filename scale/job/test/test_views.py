@@ -1431,7 +1431,6 @@ class TestJobTypeDetailsViewV6(APITestCase):
             },
         }
 
-
         self.workspace = storage_test_utils.create_workspace()
 
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, max_scheduled=2,

@@ -2083,11 +2083,17 @@ class JobTypeManager(models.Manager):
         else:
             currentManifest = SeedManifest(job_type.manifest)
 
+        currentConfiguration = configuration
         if not configuration:
-            configuration = job_type.get_job_configuration()
-        configuration.validate(currentManifest)
-        secrets = configuration.remove_secret_settings(currentManifest)
-        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            currentConfiguration = job_type.get_job_configuration()
+        currentConfiguration.validate(currentManifest)
+
+        # Get any new secrets if we have a new and valid configuration
+        secrets = None
+        if configuration:
+            secrets = configuration.remove_secret_settings(currentManifest)
+
+        job_type.configuration = convert_config_to_v6_json(currentConfiguration).get_dict()
 
         if docker_image:
             job_type.docker_image = docker_image
