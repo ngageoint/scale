@@ -27,7 +27,7 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.configuration import JobConfiguration
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.data.job_data import JobData
-from job.exceptions import InvalidJobField
+from job.exceptions import InvalidJobField, InactiveJobType
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
@@ -102,6 +102,9 @@ class JobManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
         """
 
+        if not job_type_rev.job_type.is_active:
+            raise InactiveJobType("Job Type %s:%s is inactive" % (job_type_rev.job_type.name, job_type_rev.job_type.version))
+            
         job = Job()
         job.job_type = job_type_rev.job_type
         job.job_type_rev = job_type_rev
@@ -2149,7 +2152,7 @@ class JobTypeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-clock', version='1.0')
+        return JobType.objects.get(name='scale-clock', version='1.0.0')
 
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of all job types

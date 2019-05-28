@@ -1327,7 +1327,7 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.order_by(*order)
         else:
             recipe_types = recipe_types.order_by('last_modified')
-            
+
         for rt in recipe_types:
             definition = rt.get_definition()
             jts = definition.get_job_type_keys()
@@ -1520,6 +1520,15 @@ class RecipeType(models.Model):
         """
 
         return rest_utils.strip_schema_version(convert_recipe_definition_to_v6_json(self.get_definition()).get_dict())
+
+    def natural_key(self):
+        """Django method to define the natural key for a recipe type as the
+        recipe type name
+
+        :returns: A string representing the natural key
+        :rtype: tuple(string)
+        """
+        return (self.name,)
 
     class Meta(object):
         """meta information for the db"""

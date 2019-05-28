@@ -30,7 +30,7 @@ class TestDailyMetricsProcessor(TransactionTestCase):
 
         self.processor.process_event(event, None)
 
-        call_args = mock_Queue.objects.queue_new_job.call_args[0]
+        call_args = mock_Queue.objects.queue_new_job_v6.call_args[0]
         inputs = convert_data_to_v6_json(call_args[1])
         self.assertEqual(self.job_type, call_args[0])
         self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-09'}, u'version': u'6'}, inputs.get_dict())
@@ -45,7 +45,7 @@ class TestDailyMetricsProcessor(TransactionTestCase):
 
         self.processor.process_event(event, last)
 
-        call_args = mock_Queue.objects.queue_new_job.call_args[0]
+        call_args = mock_Queue.objects.queue_new_job_v6.call_args[0]
         self.assertEqual(self.job_type, call_args[0])
         inputs = convert_data_to_v6_json(call_args[1])
         self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-09'}, u'version': u'6'}, inputs.get_dict())
@@ -61,7 +61,7 @@ class TestDailyMetricsProcessor(TransactionTestCase):
         self.processor.process_event(event, last)
 
         i = 1
-        for call_args in mock_Queue.objects.queue_new_job.call_args_list:
+        for call_args in mock_Queue.objects.queue_new_job_v6.call_args_list:
             args = call_args[0]
             self.assertEqual(self.job_type, args[0])
             self.assertEqual(event, args[2])
@@ -75,7 +75,7 @@ class TestDailyMetricsProcessor(TransactionTestCase):
                 self.assertDictEqual({u'files': {}, u'json': {u'Day': '2015-01-09'}, u'version': u'6'}, inputs.get_dict())
             i += 1
 
-        self.assertEqual(mock_Queue.objects.queue_new_job.call_count, 3)
+        self.assertEqual(mock_Queue.objects.queue_new_job_v6.call_count, 3)
 
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
@@ -86,4 +86,4 @@ class TestDailyMetricsProcessor(TransactionTestCase):
 
         self.processor.process_event(event, last)
 
-        self.assertFalse(mock_Queue.objects.queue_new_job.called)
+        self.assertFalse(mock_Queue.objects.queue_new_job_v6.called)

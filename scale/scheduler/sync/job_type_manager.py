@@ -1,13 +1,16 @@
 """Defines the class that manages the syncing of the scheduler with the job type models"""
 from __future__ import unicode_literals
 
+import logging
 import threading
 
 from job.models import JobType
-
+from job.seed.exceptions import InvalidSeedMetadataDefinition
 
 # TODO: when we calculate duration averages for job types, create a new job type class that contains model, resources,
 # stats, etc
+logger = logging.getLogger(__name__)
+
 class JobTypeManager(object):
     """This class manages the syncing of the scheduler with the job type models. This class is thread-safe."""
 
@@ -76,8 +79,12 @@ class JobTypeManager(object):
         update_job_type_resources = []
         updated_job_types = {}
         for job_type in JobType.objects.all().iterator():
-            updated_job_types[job_type.id] = job_type
-            update_job_type_resources.append(job_type.get_resources())
+            try:
+                updated_job_types[job_type.id] = job_type
+                update_job_type_resources.append(job_type.get_resources())
+            except InvalidSeedMetadataDefinition as ex:
+                logger.info('Invalid Seed manifest for job type %s-%s, id=%d' % (job_type.name, job_type.version, job_type.id))
+                pass
 
         with self._lock:
             self._job_type_resources = update_job_type_resources
