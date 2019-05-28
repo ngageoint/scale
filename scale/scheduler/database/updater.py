@@ -35,19 +35,6 @@ class DatabaseUpdater(object):
         """
 
         self._running = True
-        self._updated_job_exe = 0
-        self._total_job_exe = 0
-        self._updated_job = 0
-        self._total_job = 0
-        self._current_recipe_id = None
-        self._updated_recipe = 0
-        self._total_recipe = 0
-        self._current_batch_id = None
-        self._updated_batch = 0
-        self._total_batch = 0
-        self._total_recipe_definition = 0
-        self._update_recipe_definition = 0
-        self._current_recipe_definition_id = None
         self._current_job_type_id = None
         self._updated_job_type = 0
         self._total_job_type = 0
@@ -55,46 +42,6 @@ class DatabaseUpdater(object):
     def update(self):
         """Runs the database update
         """
-
-        # Converting job execution models
-        self._perform_update_init()
-        while True:
-            if not self._running:
-                raise TerminatedCommand()
-
-            if self._updated_job_exe >= self._total_job_exe:
-                break
-            self._perform_update_iteration()
-
-        # Removing job execution duplicates
-        self._perform_job_exe_dup_init()
-        while True:
-            if not self._running:
-                raise TerminatedCommand()
-
-            if self._updated_job >= self._total_job:
-                break
-            self._perform_job_exe_dup_iteration()
-
-        # Populating new recipe fields in job models
-        self._perform_recipe_field_init()
-        while True:
-            if not self._running:
-                raise TerminatedCommand()
-
-            if self._updated_recipe >= self._total_recipe:
-                break
-            self._perform_recipe_field_iteration()
-
-        # Populating new batch fields in job and recipe models
-        self._perform_batch_field_init()
-        while True:
-            if not self._running:
-                raise TerminatedCommand()
-
-            if self._updated_batch >= self._total_batch:
-                break
-            self._perform_batch_field_iteration()
 
         # Updating legacy job type interfaces to seed manifests
         self._perform_job_type_manifest_init()
