@@ -15,7 +15,7 @@ then
     psql -d scale -U postgres -c "create extension postgis_topology;"
 
     export COVERAGE_FILE=$root/.coverage
-    coverage run --source='.' manage.py test
+    coverage run --source='.' manage.py test --verbosity=2
 fi
 
 if [ "${BUILD_DOCS}" == "true" ]
