@@ -21,6 +21,8 @@ def convert_interface_to_manifest(apps, schema_editor):
     # Also inactivate/pause them
     JobType = apps.get_model('job', 'JobType')
     JobTypeRevision = apps.get_model('job', 'JobTypeRevision')
+    RecipeTypeJobLink = apps.get_model('recipe', 'RecipeTypeJobLink')
+    RecipeType = apps.get_model('recipe', 'RecipeType')
 
     unique = 0
     for jt in JobType.objects.all().iterator():
@@ -28,6 +30,7 @@ def convert_interface_to_manifest(apps, schema_editor):
             continue
         jt.is_active = False
         jt.is_paused = True
+        old_name = jt.name
         old_name_version = jt.name + ' ' + jt.version
         jt.name = 'legacy-' + jt.name.replace('_', '-')
             
@@ -144,11 +147,38 @@ def convert_interface_to_manifest(apps, schema_editor):
         for jtr in JobTypeRevision.objects.filter(job_type_id=jt.id).iterator():
             jtr.manifest = jt.manifest
             jtr.save()
+            
+        
+        # Update any recipe types that reference the updated job name
+        for rtjl in RecipeTypeJobLink.objects.all().filter(job_type_id=jt.id).iterator():
+            recipe_type = RecipeType.objects.get(id=rtjl.id)
+            definition = recipe_type.definition
+            changed = False
+
+            # v6 
+            if 'nodes' in definition:
+                for node in definition['nodes']:
+                    jt_node = node['node_type']
+                    if jt_node['node_type'] == 'job' and jt_node['job_type_name'].replace('_', '-') == old_name and jt_node['job_type_version'] == jt.version:
+                        node['node_type']['job_type_name'] = jt.name
+                        changed = True
+            # v5
+            elif 'jobs' in definition:
+                for job in definition['jobs']:
+                    jt_node = job['job_type']
+                    if jt_node['name'].replace('_', '-') == old_name and jt_node['version'] == jt.version:
+                        job['job_type']['name'] = jt.name
+                        changed = True
+
+            if changed:
+                recipe_type.definition = definition
+                recipe_type.save()
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('job', '0053_jobtype_unmet_resources'),
+        ('recipe', '0037_remove_recipetype_trigger_rule')
     ]
 
     operations = [
