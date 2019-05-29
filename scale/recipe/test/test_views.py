@@ -235,7 +235,39 @@ class TestCreateRecipeTypeViewV6(APITransactionTestCase):
         back_links = RecipeTypeSubLink.objects.get_recipe_type_ids(subs)
         self.assertEqual(len(back_links), 1)
         self.assertEqual(back_links[0], recipe_type.id)
+        
+    def test_create_existing(self):
+        
+        main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
+        json_data = {
+            'title': 'Recipe Type Post Test',
+            'description': 'This is a test.',
+            'definition': main_definition
+        }
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        
+        orig_type = RecipeType.objects.filter(name='recipe-type-post-test').first()
+        
+        json_data = {
+            'title': 'Recipe Type Post Test',
+            'description': 'This is my recipe test.',
+            'definition': main_definition
+        }
+        url = '/%s/recipe-types/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
     def test_create_bad_param(self):
         """Tests creating a new recipe type with missing fields."""
 

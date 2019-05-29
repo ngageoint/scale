@@ -33,7 +33,7 @@ from recipe.serializers import (RecipeDetailsSerializerV6,
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV6
 from trigger.models import TriggerEvent
-from util.rest import BadParameter, title_to_name
+from util.rest import BadParameter, title_to_name, title_to_basename
 
 logger = logging.getLogger(__name__)
 
@@ -113,16 +113,21 @@ class RecipeTypesView(ListCreateAPIView):
         """
 
         title = rest_util.parse_string(request, 'title', required=True)
-        name = title_to_name(self.queryset, title)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=True)
 
+        basename = title_to_basename(title)
+        existing_recipes = RecipeType.objects.filter(name=basename)
+        if existing_recipes.count() > 0:
+            logger.exception('Existing recipe types found for %s - will not re-create.', basename)
+            raise BadParameter(unicode('Existing recipe types found for %s - will not re-create. Please change the title or patch the existing recipe type.' % basename))
+            
+        name = title_to_name(self.queryset, title)
         try:
             with transaction.atomic():
                 # Validate the recipe definition
-                logger.info(definition_dict)
                 recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
-
+                
                 # Create the recipe type
                 recipe_type = RecipeType.objects.create_recipe_type_v6(name, title, description, recipe_def)
         except InvalidDefinition as ex:
