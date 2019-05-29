@@ -115,13 +115,13 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
 
     return recipe_type
 
-def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=None):
+def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=True, is_active=True):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
     with transaction.atomic():
         RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=title, description=description,
                                                definition=RecipeDefinitionV6(definition).get_definition(),
-                                               auto_update=auto_update)
+                                               auto_update=auto_update, is_active=is_active)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
                   superseded_recipe=None, config=None, batch=None, save=True):

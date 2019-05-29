@@ -336,17 +336,27 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         del versionless['version']
         self.assertDictEqual(result['definition'], versionless)
 
-    def test_edit_simple(self):
+    @patch('recipe.models.CommandMessageManager')
+    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
+    def test_edit_simple(self, mock_create, mock_msg_mgr):
         """Tests editing only the basic attributes of a recipe type"""
 
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
+            'is_active': False,
+            'auto_update': True
         }
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+        recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
+        self.assertEqual(recipe_type.is_active, False)
+
+        # Check that create_activate_recipe_definition_message message was created and sent
+        mock_create.assert_called_with(self.recipe_type2.id, False)
 
     def test_edit_definition(self):
         """Tests editing the definition of a recipe type"""
@@ -599,6 +609,32 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
                             u'changes': [{u'name': u'JOB_TYPE_CHANGE', u'description': u'Job type changed from my-minimum-job to minimum-two'}]}}}
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': diff})
 
+    def test_bad_connection(self):
+        """Tests validating a new recipe type."""
+        main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_b']['input']['INPUT_IMAGE']['output'] = 'WRONG'
+
+        json_data = {
+            'definition': main_definition
+        }
+
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        msg = "Node 'node_b' interface error: Input INPUT_IMAGE cannot be connected to output WRONG; no output exists with that name"
+        self.assertDictEqual(results, {'errors': [{'description': msg, 'name': 'NODE_INTERFACE'}], 'is_valid': False, 'warnings': [], 'diff': {}})
+        
     def test_bad_param(self):
         """Tests validating a new recipe type with missing fields."""
         json_data = {
@@ -1046,6 +1082,8 @@ class TestRecipesPostViewV6(APITransactionTestCase):
                                 }
 
             self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=self.def_v6_dict)
+            
+            self.inactive_recipe_type = recipe_test_utils.create_recipe_type_v6(definition=self.def_v6_dict, is_active=False)
 
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_recipe_input_messages')
@@ -1122,6 +1160,20 @@ class TestRecipesPostViewV6(APITransactionTestCase):
         self.assertTrue('/%s/recipes/' % self.api in response['location'])
 
         mock_create.assert_called_once()
+
+    def test_inactive(self):
+
+        data = {'version': '6', 'files': {'INPUT_IMAGE': [self.source_file.id]}, 'json': {}}
+        config = {'version': '6', 'output_workspaces': {'default': self.workspace.name}}
+        json_data = {
+            "input": data,
+            "recipe_type_id": self.inactive_recipe_type.pk,
+            "configuration": config
+        }
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_bad_data(self):
 

@@ -30,6 +30,22 @@ def create_sub_update_recipe_definition_message(recipe_type_id, sub_recipe_type_
     message.sub_recipe_type_id = sub_recipe_type_id
     return message
 
+def create_activate_recipe_message(recipe_type_id, is_active):
+    """Creates a message to activate/deactivate a recipe type and any parent recipe types
+
+    :param recipe_type_id: The recipe type to update
+    :type recipe_type_id: int
+    :param is_active: Whether the recipe type is active or inactive
+    :type is_active: bool
+    :return: The message
+    :rtype: :class:`recipe.messages.update_recipe.UpdateRecipeDefinition`
+    """
+
+    message = UpdateRecipeDefinition()
+    message.recipe_type_id = recipe_type_id
+    message.is_active = is_active
+    return message
+
 
 def create_job_update_recipe_definition_message(recipe_type_id, job_type_id):
     """Creates a message to update the given recipe type to use the latest revision of the job type
@@ -59,6 +75,7 @@ class UpdateRecipeDefinition(CommandMessage):
         super(UpdateRecipeDefinition, self).__init__('update_recipe_definition')
 
         self.recipe_type_id = None
+        self.is_active = None
         self.sub_recipe_type_id = None
         self.job_type_id = None
 
@@ -68,6 +85,7 @@ class UpdateRecipeDefinition(CommandMessage):
 
         json_dict = {
             'recipe_type_id': self.recipe_type_id,
+            'is_active': self.is_active,
             'sub_recipe_type_id': self.sub_recipe_type_id,
             'job_type_id': self.job_type_id
         }
@@ -81,6 +99,7 @@ class UpdateRecipeDefinition(CommandMessage):
 
         message = UpdateRecipeDefinition()
         message.recipe_type_id = json_dict['recipe_type_id']
+        message.is_active = json_dict['is_active']
         message.sub_recipe_type_id = json_dict['sub_recipe_type_id']
         message.job_type_id = json_dict['job_type_id']
 
@@ -93,10 +112,18 @@ class UpdateRecipeDefinition(CommandMessage):
         with transaction.atomic():
             # Acquire model lock
             recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe_type_id)
+            
+            if self.is_active is not None:
+                recipe_type.is_active = self.is_active
+                recipe_type.save()
+                parents = RecipeTypeSubLink.objects.get_recipe_type_ids([self.recipe_type_id])
+                for p in parents:
+                    msg = create_activate_recipe_message(p, self.is_active)
+                    self.new_messages.append(msg)
     
             definition = recipe_type.get_definition()
     
-            updated_node = True
+            updated_node = False
             if self.sub_recipe_type_id:
                 sub = RecipeType.objects.get(pk=self.sub_recipe_type_id)
                 updated_node = definition.update_recipe_nodes(recipe_type_name=sub.name,

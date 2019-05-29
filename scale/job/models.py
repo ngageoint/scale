@@ -1033,7 +1033,10 @@ class Job(models.Model):
         """
 
         if self.configuration:
-            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+            try:
+                return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+            except InvalidJobConfiguration as ex:
+                return { 'Invalid Job Configuration': ex }
         else:
             return None
 
@@ -2059,7 +2062,7 @@ class JobTypeManager(models.Manager):
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
-        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message
+        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message, create_activate_recipe_message
         from recipe.models import RecipeTypeJobLink
 
         # Acquire model lock for job type
@@ -2083,11 +2086,17 @@ class JobTypeManager(models.Manager):
         else:
             currentManifest = SeedManifest(job_type.manifest)
 
+        currentConfiguration = configuration
         if not configuration:
-            configuration = job_type.get_job_configuration()
-        configuration.validate(currentManifest)
-        secrets = configuration.remove_secret_settings(currentManifest)
-        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            currentConfiguration = job_type.get_job_configuration()
+        currentConfiguration.validate(currentManifest)
+
+        # Get any new secrets if we have a new and valid configuration
+        secrets = None
+        if configuration:
+            secrets = configuration.remove_secret_settings(currentManifest)
+
+        job_type.configuration = convert_config_to_v6_json(currentConfiguration).get_dict()
 
         if docker_image:
             job_type.docker_image = docker_image
@@ -2096,6 +2105,11 @@ class JobTypeManager(models.Manager):
         if is_active and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
+            if auto_update:
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
+                CommandMessageManager().send_messages(msgs)
+                
         if is_paused and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
             job_type.is_paused = is_paused
@@ -2310,9 +2324,13 @@ class JobTypeManager(models.Manager):
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            configuration = job_type.get_job_configuration()
-            manifest = SeedManifest(job_type.manifest, do_validate=False)
-            configuration.remove_secret_settings(manifest)
+            try:
+                configuration = job_type.get_job_configuration()
+                manifest = SeedManifest(job_type.manifest, do_validate=False)
+                configuration.remove_secret_settings(manifest)
+                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            except InvalidJobConfiguration as ex:
+                job_type.configuration = JobConfigurationV6().get_dict()
 
         return job_type
 
@@ -2774,7 +2792,10 @@ class JobType(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        try:
+            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        except InvalidJobConfiguration as ex:
+            return { 'Invalid Job Configuration': ex }
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

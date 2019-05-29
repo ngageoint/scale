@@ -5,7 +5,8 @@ from django.test import TestCase
 
 from job.test import utils as job_test_utils
 from recipe.messages.update_recipe_definition import (create_sub_update_recipe_definition_message, 
-                                                      create_job_update_recipe_definition_message, 
+                                                      create_job_update_recipe_definition_message,
+                                                      create_activate_recipe_message,
                                                       UpdateRecipeDefinition)
 from recipe.models import RecipeType
 from recipe.test import utils as recipe_test_utils
@@ -57,6 +58,7 @@ class TestUpdateRecipeDefinition(TestCase):
         # Create message
         sub_message = create_sub_update_recipe_definition_message(self.sub.id, self.sub.id)
         job_message = create_job_update_recipe_definition_message(self.rt.id, self.jt.id)
+        active_message = create_activate_recipe_message(self.sub.id, False)
 
         # Convert message to JSON and back, and then execute
         sub_message_json_dict = sub_message.to_json()
@@ -70,6 +72,12 @@ class TestUpdateRecipeDefinition(TestCase):
         result = new_job_message.execute()
         self.assertTrue(result)
 
+        # Convert message to JSON and back, and then execute
+        active_message_json_dict = active_message.to_json()
+        new_active_message = UpdateRecipeDefinition.from_json(active_message_json_dict)
+        result = new_active_message.execute()
+        self.assertTrue(result)
+
 
     def test_execute(self):
         """Tests calling UpdateRecipeDefinition.execute() successfully"""
@@ -81,6 +89,7 @@ class TestUpdateRecipeDefinition(TestCase):
         # Create messages
         job_message = create_job_update_recipe_definition_message(self.rt.id, self.jt.id)
         job_message2 = create_job_update_recipe_definition_message(self.sub.id, self.jt2.id)
+        inactive_message = create_activate_recipe_message(self.sub.id, False)
         
         result = job_message.execute()
         self.assertTrue(result)
@@ -99,3 +108,13 @@ class TestUpdateRecipeDefinition(TestCase):
         updated_rt = RecipeType.objects.get(id=self.rt.id)
         nodes = updated_rt.get_definition().get_recipe_nodes(recipe_type_name=self.sub.name)
         self.assertEqual(nodes[0].revision_num, self.sub.revision_num + 1)
+
+        result = inactive_message.execute()
+        self.assertTrue(result)
+        #ensure we have a new message to update the parent recipe
+        self.assertEqual(len(inactive_message.new_messages), 1)
+        result = inactive_message.new_messages[0].execute()
+        self.assertTrue(result)
+
+        updated_sub = RecipeType.objects.get(id=self.sub.id)
+        self.assertEqual(updated_sub.is_active, False)
