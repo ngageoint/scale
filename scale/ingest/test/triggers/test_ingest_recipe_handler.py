@@ -54,8 +54,8 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
 
     @patch ('recipe.models.CommandMessageManager')
-    @patch('recipe.models.create_activate_recipe_message')
-    @patch('recipe.models.create_sub_update_recipe_definition_message')
+    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
+    @patch('recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message')
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_recipe_input_messages')
     def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr, mock_sub, mock_active, mock_msg_mgr2):
