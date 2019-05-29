@@ -1481,6 +1481,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipe_definition.create_activate_recipe_message">create_activate_recipe_message() (in module recipe.messages.update_recipe_definition)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch">create_batch() (in module batch.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch_job">create_batch_job() (in module batch.test.utils)</a>
@@ -5293,6 +5295,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.exceptions.InactiveJobType">InactiveJobType</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.exceptions.InactiveRecipeType">InactiveRecipeType</a>
+</li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.increase_up_to">increase_up_to() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.increment_max_tries">increment_max_tries() (job.models.JobManager method)</a>
@@ -5519,10 +5523,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestDetailsSerializerV6">IngestDetailsSerializerV6 (class in ingest.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView">IngestDetailsView (class in ingest.views)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView">IngestDetailsView (class in ingest.views)</a>
+</li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingested_count">ingested_count (metrics.models.MetricsIngest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestEvent">IngestEvent (class in ingest.models)</a>
@@ -12625,6 +12629,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.test_bad_config">test_bad_config() (recipe.test.test_views.TestRecipesPostViewV6 method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_connection">test_bad_connection() (recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_broker.TestBroker.test_bad_credentials_broker_url">test_bad_credentials_broker_url() (util.test.test_broker.TestBroker method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.test_bad_data">test_bad_data() (recipe.test.test_views.TestRecipesPostViewV6 method)</a>
@@ -13713,6 +13719,12 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/data.test.filter.html#data.test.filter.test_filter.TestDataFilter.test_in">test_in() (data.test.filter.test_filter.TestDataFilter method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_inactive">test_inactive() (queue.test.test_models.TestQueueManagerQueueNewRecipe method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesPostViewV6.test_inactive">(recipe.test.test_views.TestRecipesPostViewV6 method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_inactive_workspace">test_inactive_workspace() (storage.test.test_models.TestScaleFileManagerDeleteFiles method)</a>
 
       <ul>
@@ -14555,14 +14567,14 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_zero">test_parse_int_zero() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout">test_parse_stdout() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required">test_parse_stdout_required() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string">test_parse_string() (util.test.test_rest.TestRest method)</a>
@@ -15397,10 +15409,6 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_active">test_update_active() (node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_batch_fields">test_update_batch_fields() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_job_exe_dup">test_update_job_exe_dup() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_update_job_node">test_update_job_node() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_extra_fields">test_update_node_extra_fields() (node.test.test_views.TestNodeDetailsViewV6 method)</a>
@@ -15412,8 +15420,6 @@
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_success">test_update_node_success() (node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_unpause">test_update_node_unpause() (node.test.test_views.TestNodeDetailsViewV6 method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_recipe_fields">test_update_recipe_fields() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_update_recipe_node">test_update_recipe_node() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>

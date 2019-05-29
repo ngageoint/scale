@@ -831,6 +831,30 @@ have been updated and need to then update the recipes that contain the nodes.</p
 </dd></dl>
 
 <dl class="function">
+<dt id="recipe.messages.update_recipe_definition.create_activate_recipe_message">
+<code class="descclassname">recipe.messages.update_recipe_definition.</code><code class="descname">create_activate_recipe_message</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>is_active</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.create_activate_recipe_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to activate/deactivate a recipe type and any parent recipe types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; The recipe type to update</li>
+<li><strong>is_active</strong> (<em>bool</em>) &#8211; Whether the recipe type is active or inactive</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">recipe.messages.update_recipe.UpdateRecipeDefinition</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="recipe.messages.update_recipe_definition.create_job_update_recipe_definition_message">
 <code class="descclassname">recipe.messages.update_recipe_definition.</code><code class="descname">create_job_update_recipe_definition_message</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe_definition.create_job_update_recipe_definition_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a message to update the given recipe type to use the latest revision of the job type</p>

@@ -685,7 +685,8 @@ Request: PATCH http://.../v6/recipe-types/test/
       "title": "My Recipe",
       "description": "A simple recipe type"
       "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`},
-      "auto_update": true
+      "auto_update": true,
+      "is_active": true
     }
 
 Response: 204 No Content
@@ -710,6 +711,8 @@ Response: 204 No Content
 |                    |                   |          | (See :ref:`rest_v6_recipe_json_definition`)                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | auto_update        | Boolean           | Optional | Whether to automatically update recipes containing this type.       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Whether this recipe type is active or deprecated.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+

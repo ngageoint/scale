@@ -431,7 +431,7 @@
 
 <dl class="method">
 <dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV6.test_change_to_invalid_definition">
-<code class="descname">test_change_to_invalid_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV6.test_change_to_invalid_definition" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_to_invalid_definition</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeTypeV6.test_change_to_invalid_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with an invalid change to the definition</p>
 </dd></dl>
 
@@ -693,7 +693,7 @@
 
 <dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_simple">
-<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_simple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_simple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing only the basic attributes of a recipe type</p>
 </dd></dl>
 
@@ -777,6 +777,12 @@
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_connection">
+<code class="descname">test_bad_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new recipe type.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_job_type">
@@ -885,6 +891,11 @@
 <dl class="method">
 <dt id="recipe.test.test_views.TestRecipesPostViewV6.test_bad_data">
 <code class="descname">test_bad_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesPostViewV6.test_bad_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesPostViewV6.test_inactive">
+<code class="descname">test_inactive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesPostViewV6.test_inactive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1157,7 +1168,7 @@
 
 <dl class="function">
 <dt id="recipe.test.utils.edit_recipe_type_v6">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">edit_recipe_type_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em>, <em>auto_update=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.edit_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">edit_recipe_type_v6</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em>, <em>auto_update=True</em>, <em>is_active=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.edit_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the definition of a recipe type, including creating a new revision for unit testing</p>
 </dd></dl>
 
@@ -1218,7 +1229,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>5</em>, <em>23</em>, <em>15</em>, <em>27</em>, <em>46</em>, <em>118006</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>5</em>, <em>29</em>, <em>19</em>, <em>51</em>, <em>7</em>, <em>319269</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 

@@ -1196,7 +1196,8 @@ and <em>description</em> string fields.</td>
   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple recipe type&quot;</span>
   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span><span class="o">:</span><span class="nx">ref</span><span class="o">:</span> <span class="sb">`Recipe Definition &lt;rest_v6_recipe_json_definition&gt;`</span><span class="p">},</span>
-  <span class="s2">&quot;auto_update&quot;</span><span class="o">:</span> <span class="kc">true</span>
+  <span class="s2">&quot;auto_update&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1248,9 +1249,14 @@ and <em>description</em> string fields.</td>
 <td>Optional</td>
 <td>Whether to automatically update recipes containing this type.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td>is_active</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether this recipe type is active or deprecated.</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">204 NO CONTENT</td>
 </tr>
 </tbody>
