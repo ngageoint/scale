@@ -241,8 +241,8 @@ class JobConfiguration(object):
         """
 
         warnings = []
-        seed_outputs = {output_dict['name'] for output_dict in manifest.get_outputs()['files']}
-        seed_outputs.update({output_dict['name'] for output_dict in manifest.get_outputs()['files']})
+        seed_outputs = {output_dict['name'] for output_dict in manifest.get_output_files()}
+        seed_outputs.update({output_dict['name'] for output_dict in manifest.get_output_files()})
 
         workspace_names = set(self.output_workspaces.values())
         if self.default_output_workspace:

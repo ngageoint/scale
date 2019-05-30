@@ -38,12 +38,12 @@ class JobResults(object):
     @property
     def files(self):
         """Accessor for files in results"""
-        return convert_data_to_v6_json(self._results_data).get_dict()['files']
+        return convert_data_to_v6_json(self._results_data).get_dict().get('files', [])
 
     @property
     def json(self):
         """Accessor for json in results"""
-        return convert_data_to_v6_json(self._results_data).get_dict()['json']
+        return convert_data_to_v6_json(self._results_data).get_dict().get('json', [])
 
     def add_file_list_parameter(self, name, file_ids):
         """Adds a list of files to the job results
