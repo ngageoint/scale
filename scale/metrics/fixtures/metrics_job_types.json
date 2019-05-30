@@ -24,10 +24,10 @@
                     },
                     "timeout": 3600,
                     "interface": {
-                         "command": "scale_daily_metrics ${:Day}",
+                         "command": "scale_daily_metrics ${DAY}",
                          "inputs": {
                          	"json": [
-                         		{ "name": "Day", "type": "string", "required": true}
+                         		{ "name": "DAY", "type": "string", "required": true}
                      		]
                          }
                     },
@@ -69,10 +69,10 @@
                     },
                     "timeout": 3600,
                     "interface": {
-                         "command": "scale_daily_metrics ${:Day}",
+                         "command": "scale_daily_metrics ${DAY}",
                          "inputs": {
                          	"json": [
-                         		{ "name": "Day", "type": "string", "required": true}
+                         		{ "name": "DAY", "type": "string", "required": true}
                      		]
                          }
                     },
