@@ -84,6 +84,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         job_exe = job_test_utils.create_job_exe()
         recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
+        # TODO: Create job, recipe and job_exe after batch and set batch id appropriately
         FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         link = FileAncestryLink.objects.get(job_exe=job_exe)
