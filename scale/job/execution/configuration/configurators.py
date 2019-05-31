@@ -199,7 +199,7 @@ class QueuedExecutionConfigurator(object):
 
         # Configure Strike workspace based on current configuration
         if job.job_type.name == 'scale-strike':
-            strike_id = data.values['Strike_ID'].value
+            strike_id = data.values['STRIKE_ID'].value
             from ingest.models import Strike
             strike = Strike.objects.get(id=strike_id)
             workspace_name = strike.get_strike_configuration().get_workspace()

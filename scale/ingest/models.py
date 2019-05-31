@@ -1094,7 +1094,7 @@ class StrikeManager(models.Manager):
         strike_type = self.get_strike_job_type()
 
         job_data = Data()
-        job_data.add_value(JsonValue('Strike_ID', strike.id))
+        job_data.add_value(JsonValue('STRIKE_ID', strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job_v6(strike_type, job_data, event)

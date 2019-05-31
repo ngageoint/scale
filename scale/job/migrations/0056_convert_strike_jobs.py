@@ -9,18 +9,17 @@ def convert_strike_job_inputs(apps, schema_editor):
     strikes = Strike.objects.all().iterator()
     for strike in strikes:
         strike_job = Job.objects.get(pk=strike.job_id)
-        
-        # v5 job data
+
         changed = False
         if strike_job.input['version'] == '6':
             if 'Strike ID' in strike_job.input['json']:
-                strike_job.input['json']['Strike_ID'] = strike_job.input['json']['Strike ID']
-                del strike_job.input['json'][k]
+                strike_job.input['json']['STRIKE_ID'] = strike_job.input['json']['Strike ID']
+                del strike_job.input['json']['Strike ID']
                 changed = True
         else:
             for i_data in strike_job.input['input_data']:
                 if i_data['name'] == 'Strike ID':
-                    i_data['name'] = 'Strike_ID'
+                    i_data['name'] = 'STRIKE_ID'
                     changed = True
 
         if changed:

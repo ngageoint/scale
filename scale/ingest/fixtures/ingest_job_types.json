@@ -201,7 +201,7 @@
                          "command": "scale_strike -i ${STRIKE_ID}",
                          "inputs": {
                              "json": [
-                                 { "name": "Strike_ID", "type": "integer", "required": true}
+                                 { "name": "STRIKE_ID", "type": "integer", "required": true}
                              ]
                          }
     		         },
@@ -247,7 +247,7 @@
                          "command": "scale_strike -i ${STRIKE_ID}",
                          "inputs": {
                              "json": [
-                                 { "name": "Strike_ID", "type": "integer", "required": true}
+                                 { "name": "STRIKE_ID", "type": "integer", "required": true}
                              ]
                          }
     		         },
