@@ -1665,6 +1665,25 @@ class TestJobTypesValidationViewV6(APITransactionTestCase):
         self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
 
+    def test_empty_output_successful(self):
+        """Tests validating a new job type without outputs"""
+
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['interface']['outputs'] = {}
+
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
     def test_successful_configuration(self):
         """Tests validating a new job type with a valid configuration."""
         url = '/%s/job-types/validation/' % self.api
