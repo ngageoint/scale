@@ -5,7 +5,6 @@ import logging
 
 from django.db.models import F, Q
 
-from batch.models import BatchRecipe
 from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
