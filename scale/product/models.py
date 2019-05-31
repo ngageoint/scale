@@ -51,11 +51,7 @@ class FileAncestryLinkManager(models.Manager):
         job_recipe = Recipe.objects.get_recipe_for_job(job.id)
 
         # See if this job is in a batch
-        from batch.models import BatchJob
-        try:
-            batch_id = BatchJob.objects.get(job_id=job.id).batch_id
-        except BatchJob.DoesNotExist:
-            batch_id = None
+        batch_id = job.batch_id
 
         # Make sure all input file links are still created when no products are generated
         if not child_ids:
@@ -546,16 +542,10 @@ class ProductFileManager(models.GeoManager):
 
                 # Add batch info to product if available.
                 
-                if job_exe.batch:
-                    product.batch_id = job_exe.batch.id
-                elif job_exe.job.batch:
-                    product.batch_id = job_exe.job.batch.id
-                else:
-                    try:
-                        from batch.models import BatchJob
-                        product.batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
-                    except BatchJob.DoesNotExist:
-                        product.batch_id = None
+                if job_exe.batch_id:
+                    product.batch_id = job_exe.batch_id
+                elif job_exe.job.batch_id:
+                    product.batch_id = job_exe.job.batch_id
 
             # Allow override, if set via side-car metadata, otherwise take derived values from above
             product.source_started = entry.source_started if entry.source_started else source_started

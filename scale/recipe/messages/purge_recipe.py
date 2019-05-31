@@ -118,8 +118,7 @@ class PurgeRecipe(CommandMessage):
                                                                      trigger_id=self.trigger_id,
                                                                      source_file_id=self.source_file_id))
 
-            # Delete BatchRecipe, RecipeNode, RecipeInputFile, and Recipe
-            BatchRecipe.objects.filter(recipe=recipe).delete()
+            # Delete RecipeNode, RecipeInputFile, and Recipe
             RecipeNode.objects.filter(Q(recipe=recipe) | Q(sub_recipe=recipe)).delete()
             RecipeInputFile.objects.filter(recipe=recipe).delete()
             recipe.delete()

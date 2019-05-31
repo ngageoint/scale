@@ -17,7 +17,6 @@ import recipe.test.utils as recipe_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from batch.models import BatchRecipe, BatchJob
 from batch.test import utils as batch_test_utils
 from data.data.value import JsonValue
 from data.data.json.data_v6 import convert_data_to_v6_json
@@ -85,8 +84,6 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         job_exe = job_test_utils.create_job_exe()
         recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
-        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
-        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
         FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         link = FileAncestryLink.objects.get(job_exe=job_exe)
@@ -534,8 +531,6 @@ class TestProductFileManagerUploadFiles(TestCase):
         job_exe = job_test_utils.create_job_exe(job_type=job_type)
         recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
-        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
-        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
 
         products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
                                                        self.workspace)
