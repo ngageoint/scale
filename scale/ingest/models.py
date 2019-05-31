@@ -875,7 +875,7 @@ class ScanManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-scan', version='1.0')
+        return JobType.objects.get(name='scale-scan', version='1.0.0')
 
     def get_scans(self, started=None, ended=None, names=None, order=None):
         """Returns a list of Scan processes within the given time range.
@@ -949,8 +949,8 @@ class ScanManager(models.Manager):
         event_description = {'scan_id': scan.id}
 
         job_data = Data()
-        job_data.add_value(JsonValue('Scan_ID', scan.id))
-        job_data.add_value(JsonValue('Dry_Run', dry_run))
+        job_data.add_value(JsonValue('SCAN_ID', scan.id))
+        job_data.add_value(JsonValue('DRY_RUN', dry_run))
 
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
