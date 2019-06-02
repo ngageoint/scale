@@ -149,6 +149,8 @@ class ConditionNodeDefinition(NodeDefinition):
         self.input_interface = input_interface
         self.data_filter = data_filter
 
+        #TODO: make all filtered outputs required
+        #TODO: Add test for optional filter fields in the input becoming required and optional fields that are not filtered remaining optional
         self.output_interface = input_interface
         # if all is set to True, update all parameters to be required; if all is False, the filter could pass with some parameters not validating
         if data_filter.all:

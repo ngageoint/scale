@@ -13,7 +13,6 @@ from job.messages.create_jobs import RecipeJob
 from job.models import Job, JobTypeRevision
 from queue.messages.queued_jobs import QueuedJob
 from queue.models import Queue
-from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from recipe.messages.create_conditions import Condition
@@ -21,7 +20,6 @@ from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 import storage.test.utils as storage_test_utils
-from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
 
 NAME_COUNTER = 1
@@ -53,12 +51,28 @@ RECIPE_DEFINITION = {'version': '6',
                                                  'node_type': {'node_type': 'job', 'job_type_name': 'my-job-type',
                                                                'job_type_version': '1.0.0',
                                                                'job_type_revision': 1}},
-                                      'node_c': {'dependencies': [{'name': 'node_b', 'acceptance': True}],
+                                      'node_c': {'dependencies': [{'name': 'node_a', 'acceptance': True}],
+                                                 'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_a',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                 'node_type': {
+                                                     'node_type': 'condition',
+                                                     'interface': {'files': [ {'name': 'INPUT_IMAGE',
+                                                                               'media_types': ['image/png'],
+                                                                               'required': True,
+                                                                               'multiple': True}],
+                                                                   'json': []},
+                                                     'data_filter': {'filters': [ {'name': 'INPUT_IMAGE',
+                                                                                   'type': 'media-type',
+                                                                                   'condition': '==',
+                                                                                   'values': ['image/png']}]}
+                                                 },
+                                      'node_d': {'dependencies': [{'name': 'node_c', 'acceptance': True}],
                                                  'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
-                                                           'input_b': {'type': 'dependency', 'node': 'node_b',
+                                                           'input_b': {'type': 'dependency', 'node': 'node_c',
                                                                        'output': 'OUTPUT_IMAGE'}},
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
+                     }
 
 
 def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,
