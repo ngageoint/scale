@@ -224,9 +224,7 @@ class ProductFileManager(models.GeoManager):
         # Fetch a list of product files
         products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True)
         products = products.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
-        products = products.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
-                                  'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
-                                  'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+        products = products.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration',
                                   'job_type__manifest', 'job_type__configuration',
                                   'recipe__input', 'recipe_type__definition',
                                   'batch__definition')
