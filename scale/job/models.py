@@ -1354,7 +1354,7 @@ class JobExecutionManager(models.Manager):
         :returns: The job execution with extra related attributes.
         :rtype: :class:`job.models.JobExecution`
         """
-        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
+        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node')
         job_exe = job_exe.get(pk=job_exe_id)
 
         return job_exe

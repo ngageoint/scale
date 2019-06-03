@@ -419,12 +419,6 @@ class TestMetricsJobType(TestCase):
             job=job1, status=job1.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=utc),
-            # pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
-            # pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
-            # job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
-            # job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
-            # post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
-            # post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
             task_results=TaskResults(task_results_dict)
         )
@@ -443,12 +437,6 @@ class TestMetricsJobType(TestCase):
             job=job2, status=job2.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=utc),
-            # pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
-            # pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
-            # job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
-            # job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
-            # post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
-            # post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=utc),
             task_results=TaskResults(task_results_dict)
         )
