@@ -1665,7 +1665,7 @@ class JobExecution(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobExecutionEndManager(models.Manager):
@@ -1759,7 +1759,7 @@ class JobExecutionEnd(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_end'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobExecutionOutput(models.Model):
@@ -1802,7 +1802,7 @@ class JobExecutionOutput(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_output'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobInputFileManager(models.Manager):
