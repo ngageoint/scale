@@ -540,10 +540,10 @@ class ProductFileManager(models.GeoManager):
 
                 # Add batch info to product if available.
                 
-                if job_exe.batch_id:
-                    product.batch_id = job_exe.batch_id
-                elif job_exe.job.batch_id:
-                    product.batch_id = job_exe.job.batch_id
+            if job_exe.batch_id:
+                product.batch_id = job_exe.batch_id
+            elif job_exe.job.batch_id:
+                product.batch_id = job_exe.job.batch_id
 
             # Allow override, if set via side-car metadata, otherwise take derived values from above
             product.source_started = entry.source_started if entry.source_started else source_started

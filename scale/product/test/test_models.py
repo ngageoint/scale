@@ -82,9 +82,12 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
         parent_ids = [self.file_1.id]
         job_exe = job_test_utils.create_job_exe()
-        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
-        # TODO: Create job, recipe and job_exe after batch and set batch id appropriately
+        job_exe.batch = batch
+        job_exe.job.batch = batch
+        job_exe.job.save()
+        job_exe.save()
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         link = FileAncestryLink.objects.get(job_exe=job_exe)
@@ -530,8 +533,10 @@ class TestProductFileManagerUploadFiles(TestCase):
         manifest = job_test_utils.create_seed_manifest(name='scale-batch-creator')
         job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         job_exe = job_test_utils.create_job_exe(job_type=job_type)
-        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
+        job_exe.batch = batch
+        batch.save()
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
 
         products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
                                                        self.workspace)
