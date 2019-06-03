@@ -195,8 +195,8 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
         self.v6_recipe_def = RecipeDefinitionV6(self.main_definition).get_definition()
 
     def test_successful(self):
@@ -256,8 +256,8 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
         self.v6_recipe_def = RecipeDefinitionV6(self.main_definition).get_definition()
 
     def test_change_simple(self):

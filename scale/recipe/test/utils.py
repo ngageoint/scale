@@ -64,15 +64,13 @@ RECIPE_DEFINITION = {'version': '6',
                                                      'data_filter': {'filters': [ {'name': 'INPUT_IMAGE',
                                                                                    'type': 'media-type',
                                                                                    'condition': '==',
-                                                                                   'values': ['image/png']}]}
-                                                 },
+                                                                                   'values': ['image/png']}]} }},
                                       'node_d': {'dependencies': [{'name': 'node_c', 'acceptance': True}],
                                                  'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
                                                            'input_b': {'type': 'dependency', 'node': 'node_c',
-                                                                       'output': 'OUTPUT_IMAGE'}},
+                                                                       'output': 'INPUT_IMAGE'}},
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
-                     }
 
 
 def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,

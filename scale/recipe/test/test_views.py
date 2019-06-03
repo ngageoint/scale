@@ -64,8 +64,8 @@ class TestRecipeTypesViewV6(APITransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition,
                                                                     title="My main recipe",
@@ -329,8 +329,8 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(name='test.period', definition=self.main_definition)
 
@@ -485,8 +485,8 @@ class TestRecipeTypeRevisionsViewV6(APITransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
 
@@ -614,6 +614,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        print results
         self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
@@ -692,8 +693,8 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
 
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
-        errors = [{ u'name': u'InvalidRecipeConnection',
-                    u'description': u'Data input INPUT_IMAGE is required and data from connection is optional'}]
+        errors = [{ u'name': u'NODE_INTERFACE',
+                    u'description': u"Node 'node_b' interface error: Parameter 'INPUT_IMAGE' is required and cannot accept an optional value"}]
         self.assertDictEqual(results, {u'errors': errors, u'is_valid': False, u'warnings': [], u'diff': {}})
 
     def test_optional_output_condition(self):
