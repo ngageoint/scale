@@ -204,8 +204,8 @@ class TestCreateRecipeTypeViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         json_data = {
             'title': 'Recipe Type Post Test',
@@ -245,8 +245,8 @@ class TestCreateRecipeTypeViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         json_data = {
             'title': 'Recipe Type Post Test',
@@ -614,7 +614,6 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        print results
         self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
@@ -703,9 +702,9 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
-        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
-        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type4.name
+        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type4.version
+        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type4.revision_num
         main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
         main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
