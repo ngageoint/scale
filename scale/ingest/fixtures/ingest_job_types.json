@@ -201,7 +201,7 @@
                          "command": "scale_strike -i ${STRIKE_ID}",
                          "inputs": {
                              "json": [
-                                 { "name": "Strike_ID", "type": "integer", "required": true}
+                                 { "name": "STRIKE_ID", "type": "integer", "required": true}
                              ]
                          }
     		         },
@@ -247,7 +247,7 @@
                          "command": "scale_strike -i ${STRIKE_ID}",
                          "inputs": {
                              "json": [
-                                 { "name": "Strike_ID", "type": "integer", "required": true}
+                                 { "name": "STRIKE_ID", "type": "integer", "required": true}
                              ]
                          }
     		         },
@@ -268,7 +268,7 @@
         "pk": null,
         "fields": {
             "name": "scale-scan",
-            "version": "1.0",
+            "version": "1.0.0",
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
@@ -291,8 +291,8 @@
                          "command": "scale_scan -i ${SCAN_ID} -d ${DRY_RUN}",
                          "inputs": {
                             "json": [
-                                {"name": "Scan_ID", "type": "integer", "required": true},
-                                {"name": "Dry_Run", "type": "boolean", "required": true}
+                                {"name": "SCAN_ID", "type": "integer", "required": true},
+                                {"name": "DRY_RUN", "type": "boolean", "required": true}
                             ]
                          }
     		         },
@@ -319,7 +319,7 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-scan", "1.0"],
+            "job_type": ["scale-scan", "1.0.0"],
             "revision_num": 1,
             "manifest": {
 			     "seedVersion": "1.0.0",
@@ -338,8 +338,8 @@
                          "command": "scale_scan -i ${SCAN_ID} -d ${DRY_RUN}",
                          "inputs": {
                             "json": [
-                                {"name": "Scan_ID", "type": "integer", "required": true},
-                                {"name": "Dry_Run", "type": "boolean", "required": true}
+                                {"name": "SCAN_ID", "type": "integer", "required": true},
+                                {"name": "DRY_RUN", "type": "boolean", "required": true}
                             ]
                          }
     		         },
