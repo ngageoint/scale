@@ -212,6 +212,7 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         self.assertEqual(results_recipe_type.name, name)
         self.assertEqual(results_recipe_type.title, title)
         self.assertEqual(results_recipe_type.description, desc)
+        self.maxDiff = None
         self.assertDictEqual(results_recipe_type.definition, self.main_definition)
 
         results_recipe_type_rev = RecipeTypeRevision.objects.get(recipe_type_id=recipe_type.id, revision_num=1)
@@ -280,6 +281,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         # Check results
         self.assertEqual(recipe_type.title, new_title)
         self.assertEqual(recipe_type.description, new_desc)
+        self.maxDiff = None
         self.assertDictEqual(recipe_type.definition, self.main_definition)
         self.assertEqual(recipe_type.revision_num, 1)
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()

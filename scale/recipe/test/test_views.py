@@ -366,6 +366,7 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         versionless = copy.deepcopy(self.main_definition)
         del versionless['version']
+        self.maxDiff = None
         self.assertDictEqual(result['definition'], versionless)
 
     @patch('recipe.models.CommandMessageManager')
@@ -718,7 +719,6 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
     def test_bad_param(self):
