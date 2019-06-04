@@ -93,7 +93,7 @@ class JobResults(object):
         :type value: float or str or dict or array
         """
 
-        self.json[output_name] = value
+        self._results_data.add_value(JsonValue(output_name, value))
 
     def get_dict(self):
         """Returns the internal dictionary that represents these job results
