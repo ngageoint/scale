@@ -378,7 +378,7 @@ class TestQueuedExecutionConfigurator(TestCase):
                          'files_to_ingest': [{'filename_regex': '.*txt', 'new_workspace': workspace_2.name}]}
         from ingest.test import utils as ingest_test_utils
         strike = ingest_test_utils.create_strike(configuration=configuration)
-        strike.job.input = {'json': {'Strike_ID': str(strike.id)}}
+        strike.job.input = {'json': {'STRIKE_ID': str(strike.id)}}
         strike.job.status = 'QUEUED'
         strike.job.save()
 
