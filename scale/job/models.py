@@ -1427,33 +1427,6 @@ class JobExecution(models.Model):
     started = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    # TODO: old fields that are being nulled out, they should be removed in the future after they have been moved to the
-    # new job_exe_end and job_exe_output tables and they are no longer needed for the REST API
-    #status = models.CharField(blank=True, max_length=50, null=True, db_index=True)
-    #error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
-    #command_arguments = models.CharField(blank=True, max_length=1000, null=True)
-    #environment = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    #cpus_scheduled = models.FloatField(blank=True, null=True)
-    #mem_scheduled = models.FloatField(blank=True, null=True)
-    #disk_out_scheduled = models.FloatField(blank=True, null=True)
-    #disk_total_scheduled = models.FloatField(blank=True, null=True)
-    #pre_started = models.DateTimeField(blank=True, null=True)
-    #pre_completed = models.DateTimeField(blank=True, null=True)
-    #pre_exit_code = models.IntegerField(blank=True, null=True)
-    #job_started = models.DateTimeField(blank=True, null=True)
-    #job_completed = models.DateTimeField(blank=True, null=True)
-    #job_exit_code = models.IntegerField(blank=True, null=True)
-    #job_metrics = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    #post_started = models.DateTimeField(blank=True, null=True)
-    #post_completed = models.DateTimeField(blank=True, null=True)
-    #post_exit_code = models.IntegerField(blank=True, null=True)
-    #stdout = models.TextField(blank=True, null=True)
-    #stderr = models.TextField(blank=True, null=True)
-    #results_manifest = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    #results = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    #ended = models.DateTimeField(blank=True, db_index=True, null=True)
-    #last_modified = models.DateTimeField(blank=True, db_index=True, null=True)
-
     objects = JobExecutionManager()
 
     def create_canceled_job_exe_end_model(self, when):
