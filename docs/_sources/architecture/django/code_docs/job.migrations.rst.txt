@@ -444,6 +444,14 @@ job\.migrations\.0055\_jobtype\_v5\_deprecation module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0056\_convert\_strike\_jobs module
+---------------------------------------------------
+
+.. automodule:: job.migrations.0056_convert_strike_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

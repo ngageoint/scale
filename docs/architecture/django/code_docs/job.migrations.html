@@ -1316,6 +1316,39 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.migrations.0056_convert_strike_jobs">
+<span id="job-migrations-0056-convert-strike-jobs-module"></span><h2>job.migrations.0056_convert_strike_jobs module<a class="headerlink" href="#module-job.migrations.0056_convert_strike_jobs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0056_convert_strike_jobs.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0056_convert_strike_jobs.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0056_convert_strike_jobs.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0056_convert_strike_jobs.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0055_jobtype_v5_deprecation')]</em><a class="headerlink" href="#job.migrations.0056_convert_strike_jobs.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0056_convert_strike_jobs.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function convert_strike_job_inputs&gt;&gt;, &lt;RunPython &lt;function convert_scan_job_inputs&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0056_convert_strike_jobs.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.migrations.0056_convert_strike_jobs.convert_scan_job_inputs">
+<code class="descclassname">job.migrations.0056_convert_strike_jobs.</code><code class="descname">convert_scan_job_inputs</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0056_convert_strike_jobs.convert_scan_job_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts any pending/queued/blocked/running scan job inputs to contain the 
+new &#8216;SCAN_ID&#8217; key instead of &#8216;Scan ID&#8217;</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.migrations.0056_convert_strike_jobs.convert_strike_job_inputs">
+<code class="descclassname">job.migrations.0056_convert_strike_jobs.</code><code class="descname">convert_strike_job_inputs</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0056_convert_strike_jobs.convert_strike_job_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts any strike job inputs to contain the new &#8216;STRIKE_ID&#8217; key instead
+of &#8216;Strike ID&#8217;</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
