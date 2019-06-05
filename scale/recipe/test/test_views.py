@@ -64,8 +64,8 @@ class TestRecipeTypesViewV6(APITransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition,
                                                                     title="My main recipe",
@@ -204,8 +204,8 @@ class TestCreateRecipeTypeViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         json_data = {
             'title': 'Recipe Type Post Test',
@@ -245,8 +245,8 @@ class TestCreateRecipeTypeViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         json_data = {
             'title': 'Recipe Type Post Test',
@@ -329,8 +329,8 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(name='test.period', definition=self.main_definition)
 
@@ -366,6 +366,7 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         versionless = copy.deepcopy(self.main_definition)
         del versionless['version']
+        self.maxDiff = None
         self.assertDictEqual(result['definition'], versionless)
 
     @patch('recipe.models.CommandMessageManager')
@@ -485,8 +486,8 @@ class TestRecipeTypeRevisionsViewV6(APITransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(definition=self.main_definition)
 
@@ -578,6 +579,8 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         manifest=copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
         manifest['job']['name'] = 'minimum-two'
         self.job_type3 = job_test_utils.create_seed_job_type(manifest=manifest)
+        outputs = { 'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png', 'mediaType': 'image/png', 'required': False}]}
+        self.job_type4 = job_test_utils.create_seed_job_type(interface_outputs=outputs)
 
         self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
         self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
@@ -600,8 +603,8 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         json_data = {
             'definition': main_definition
@@ -642,7 +645,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': diff})
 
     def test_bad_connection(self):
-        """Tests validating a new recipe type."""
+        """Tests validating a new recipe type with a connection to a missing output."""
         main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
         main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
@@ -650,8 +653,8 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
         main_definition['nodes']['node_b']['input']['INPUT_IMAGE']['output'] = 'WRONG'
 
         json_data = {
@@ -666,7 +669,58 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertFalse(results['is_valid'])
         msg = "Node 'node_b' interface error: Input INPUT_IMAGE cannot be connected to output WRONG; no output exists with that name"
         self.assertDictEqual(results, {'errors': [{'description': msg, 'name': 'NODE_INTERFACE'}], 'is_valid': False, 'warnings': [], 'diff': {}})
-        
+
+    def test_optional_output(self):
+        """Tests creating a new recipe type with a required input connected to an optional output"""
+        main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type4.name
+        main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type4.version
+        main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type4.revision_num
+        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type4.name
+        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type4.version
+        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type4.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+
+        json_data = {
+            'definition': main_definition
+        }
+
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        errors = [{ u'name': u'NODE_INTERFACE',
+                    u'description': u"Node 'node_b' interface error: Parameter 'INPUT_IMAGE' is required and cannot accept an optional value"}]
+        self.assertDictEqual(results, {u'errors': errors, u'is_valid': False, u'warnings': [], u'diff': {}})
+
+    def test_optional_output_condition(self):
+        """Tests creating a new recipe type with an optional output hooked up to a condition followed by a required input"""
+        main_definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        main_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type2.name
+        main_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type2.version
+        main_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type2.revision_num
+        main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type4.name
+        main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type4.version
+        main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type4.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+
+        json_data = {
+            'definition': main_definition
+        }
+
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
+
     def test_bad_param(self):
         """Tests validating a new recipe type with missing fields."""
         json_data = {
@@ -770,8 +824,8 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
 
         json_data = {
             'definition': main_definition
