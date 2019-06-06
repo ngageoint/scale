@@ -85,7 +85,7 @@ class JobTypeManager(object):
                 updated_job_types[job_type.id] = job_type
                 update_job_type_resources.append(job_type.get_resources())
             except InvalidSeedMetadataDefinition as ex:
-                logger.info('Invalid Seed manifest for job type %s-%s, id=%d\n Exception: %s' % (job_type.name, job_type.version, job_type.id, ex))
+                logger.exception('Invalid Seed manifest for job type %s-%s, id=%d' % (job_type.name, job_type.version, job_type.id))
                 pass
 
         with self._lock:
