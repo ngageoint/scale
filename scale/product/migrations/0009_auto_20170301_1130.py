@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0008_auto_20170221_1413'),
+        ('product', '0007_fileancestrylink_batch'),
     ]
 
     operations = [

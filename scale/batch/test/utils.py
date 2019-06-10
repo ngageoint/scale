@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.definition.json.definition_v6 import BatchDefinitionV6
-from batch.models import Batch, BatchJob, BatchRecipe
+from batch.models import Batch
 from job.test import utils as job_test_utils
 from recipe.models import RecipeTypeRevision
 from recipe.test import utils as recipe_test_utils
@@ -61,39 +61,3 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
         batch.recipes_total = recipes_total
     batch.save()
     return batch
-
-def create_batch_job(batch=None, job=None, superseded_job=None):
-    """Creates a BatchJob model for unit testing
-
-    :returns: The BatchJob model
-    :rtype: :class:`batch.models.BatchJob`
-    """
-
-    if not batch:
-        batch = create_batch()
-    if not job:
-        job = job_test_utils.create_job()
-    if not superseded_job:
-        superseded_job = job_test_utils.create_job()
-
-    batch_job = BatchJob.objects.create(batch=batch, job=job, superseded_job=superseded_job)
-
-    return batch_job
-
-def create_batch_recipe(batch=None, recipe=None, superseded_recipe=None):
-    """Creates a BatchRecipe model for unit testing
-
-    :returns: The BatchRecipe model
-    :rtype: :class:`batch.models.BatchRecipe`
-    """
-
-    if not batch:
-        batch = create_batch()
-    if not recipe:
-        recipe = recipe_test_utils.create_recipe()
-    if not superseded_recipe:
-        superseded_recipe = recipe_test_utils.create_recipe()
-
-    batch_recipe = BatchRecipe.objects.create(batch=batch, recipe=recipe, superseded_recipe=superseded_recipe)
-
-    return batch_recipe

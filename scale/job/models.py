@@ -1256,7 +1256,6 @@ class JobExecutionManager(models.Manager):
         # Fetch a list of job executions
         job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
                                                              'jobexecutionend__error')
-        job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply job filtering
         job_exes = job_exes.filter(job__id=job_id)
@@ -1308,7 +1307,7 @@ class JobExecutionManager(models.Manager):
         # Fetch a list of job executions
         job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
                                                             'jobexecutionend__error', 'jobexecutionoutput')
-        job_exe = job_exe.defer('stdout', 'stderr', 'job__input', 'job__output')
+        job_exe = job_exe.defer('job__input', 'job__output')
 
         # Apply job and execution filtering
         job_exe = job_exe.get(job__id=job_id, exe_num=exe_num)
@@ -1355,7 +1354,7 @@ class JobExecutionManager(models.Manager):
         :returns: The job execution with extra related attributes.
         :rtype: :class:`job.models.JobExecution`
         """
-        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
+        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node')
         job_exe = job_exe.get(pk=job_exe_id)
 
         return job_exe
@@ -1427,33 +1426,6 @@ class JobExecution(models.Model):
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-
-    # TODO: old fields that are being nulled out, they should be removed in the future after they have been moved to the
-    # new job_exe_end and job_exe_output tables and they are no longer needed for the REST API
-    status = models.CharField(blank=True, max_length=50, null=True, db_index=True)
-    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
-    command_arguments = models.CharField(blank=True, max_length=1000, null=True)
-    environment = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    cpus_scheduled = models.FloatField(blank=True, null=True)
-    mem_scheduled = models.FloatField(blank=True, null=True)
-    disk_out_scheduled = models.FloatField(blank=True, null=True)
-    disk_total_scheduled = models.FloatField(blank=True, null=True)
-    pre_started = models.DateTimeField(blank=True, null=True)
-    pre_completed = models.DateTimeField(blank=True, null=True)
-    pre_exit_code = models.IntegerField(blank=True, null=True)
-    job_started = models.DateTimeField(blank=True, null=True)
-    job_completed = models.DateTimeField(blank=True, null=True)
-    job_exit_code = models.IntegerField(blank=True, null=True)
-    job_metrics = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    post_started = models.DateTimeField(blank=True, null=True)
-    post_completed = models.DateTimeField(blank=True, null=True)
-    post_exit_code = models.IntegerField(blank=True, null=True)
-    stdout = models.TextField(blank=True, null=True)
-    stderr = models.TextField(blank=True, null=True)
-    results_manifest = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    results = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    ended = models.DateTimeField(blank=True, db_index=True, null=True)
-    last_modified = models.DateTimeField(blank=True, db_index=True, null=True)
 
     objects = JobExecutionManager()
 
@@ -1666,7 +1638,7 @@ class JobExecution(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobExecutionEndManager(models.Manager):
@@ -1760,7 +1732,7 @@ class JobExecutionEnd(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_end'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobExecutionOutput(models.Model):
@@ -1803,7 +1775,7 @@ class JobExecutionOutput(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_output'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobInputFileManager(models.Manager):

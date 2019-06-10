@@ -13,7 +13,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from batch.exceptions import BatchError
-from batch.models import Batch, BatchRecipe
+from batch.models import Batch
 from data.data.json.data_v6 import DataV6
 from job.models import Job
 from recipe.models import Recipe, RecipeInputFile, RecipeTypeRevision

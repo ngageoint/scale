@@ -34,7 +34,7 @@ class JobTypeManager(object):
         with self._lock:
             for job_type in self._job_types.values():
                 job_type_dict = {'id': job_type.id, 'name': job_type.name, 'version': job_type.version,
-                                 'title': job_type.get_title(), 'description': job_type.get_description(),
+                                 'title': job_type.title, 'description': job_type.description,
                                  'is_system': job_type.is_system, 'icon_code': job_type.icon_code}
                 job_types_list.append(job_type_dict)
 
@@ -80,10 +80,12 @@ class JobTypeManager(object):
         updated_job_types = {}
         for job_type in JobType.objects.all().iterator():
             try:
+                job_type.title = job_type.get_title()
+                job_type.description = job_type.get_description()
                 updated_job_types[job_type.id] = job_type
                 update_job_type_resources.append(job_type.get_resources())
             except InvalidSeedMetadataDefinition as ex:
-                logger.info('Invalid Seed manifest for job type %s-%s, id=%d' % (job_type.name, job_type.version, job_type.id))
+                logger.exception('Invalid Seed manifest for job type %s-%s, id=%d' % (job_type.name, job_type.version, job_type.id))
                 pass
 
         with self._lock:

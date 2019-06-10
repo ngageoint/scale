@@ -270,6 +270,9 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     when = timezone.now()
     if not job:
         job = create_job(job_type=job_type, status=status, input_file_size=input_file_size)
+    else:
+        job.num_exes = job.num_exes + 1
+        job.save()
     job_type = job.job_type
 
     job_exe = JobExecution()
