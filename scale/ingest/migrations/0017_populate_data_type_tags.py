@@ -22,5 +22,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL('UPDATE ingest SET data_type_tags = REGEXP_SPLIT_TO_ARRAY(data_type, \',\') WHERE data_type != NULL AND data_type != \'\'')
+        migrations.RunPython(populate_data_type_tags),
     ]
