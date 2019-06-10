@@ -57,7 +57,7 @@ RECIPE_DEFINITION = {'version': '7',
                                                  'node_type': {
                                                      'node_type': 'condition',
                                                      'interface': {
-                                                         'version': '6',
+                                                         'version': '7',
                                                          'files': [ {
                                                              'name': 'INPUT_IMAGE',
                                                              'media_types': ['image/png'],
@@ -65,7 +65,7 @@ RECIPE_DEFINITION = {'version': '7',
                                                              'multiple': True}],
                                                          'json': []},
                                                      'data_filter': {
-                                                         'version': '6',
+                                                         'version': '7',
                                                          'all': True,
                                                          'filters': [ {'name': 'INPUT_IMAGE',
                                                                        'type': 'media-type',
