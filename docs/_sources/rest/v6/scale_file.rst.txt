@@ -465,10 +465,9 @@ Response: 204 NO CONTENT
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Purge Source File**                                                                                                     |
 +===========================================================================================================================+
-| Removes all records related to the given source file.  This includes records for the following models: BatchJob,          |
-| BatchRecipe, FileAncestryLink, Ingest, Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue,       |
-| Recipe, RecipeInputFile, RecipeNode, ScaleFile, and TaskUpdate. **This will also delete any product files from their      |
-| respective workspace.**                                                                                                   |
+| Removes all records related to the given source file.  This includes records for the following models: FileAncestryLink,  |
+| Ingest, Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue, Recipe, RecipeInputFile, RecipeNode, |
+| ScaleFile, and TaskUpdate. **This will also delete any product files from their respective workspace.**                   |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **POST** /files/purge-source/                                                                                             |
 +---------------------------------------------------------------------------------------------------------------------------+

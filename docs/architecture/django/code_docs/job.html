@@ -475,6 +475,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0054_convert_manifest">job.migrations.0054_convert_manifest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0055_jobtype_v5_deprecation">job.migrations.0055_jobtype_v5_deprecation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0056_convert_strike_jobs">job.migrations.0056_convert_strike_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0057_auto_20190603_1846">job.migrations.0057_auto_20190603_1846 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1210,21 +1211,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <code class="descname">batch_id</code><a class="headerlink" href="#job.models.Job.batch_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.Job.batchjob_set">
-<code class="descname">batchjob_set</code><a class="headerlink" href="#job.models.Job.batchjob_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related objects manager on the reverse side of a
-many-to-one relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
-<p>Most of the implementation is delegated to a dynamically defined manager
-class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2168,21 +2154,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.Job.superseded_by_batch">
-<code class="descname">superseded_by_batch</code><a class="headerlink" href="#job.models.Job.superseded_by_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related objects manager on the reverse side of a
-many-to-one relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
-<p>Most of the implementation is delegated to a dynamically defined manager
-class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.Job.superseded_by_job">
 <code class="descname">superseded_by_job</code><a class="headerlink" href="#job.models.Job.superseded_by_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the reverse side of a one-to-one
@@ -2330,22 +2301,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.command_arguments">
-<code class="descname">command_arguments</code><a class="headerlink" href="#job.models.JobExecution.command_arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobExecution.configuration">
 <code class="descname">configuration</code><a class="headerlink" href="#job.models.JobExecution.configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.cpus_scheduled">
-<code class="descname">cpus_scheduled</code><a class="headerlink" href="#job.models.JobExecution.cpus_scheduled" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2402,56 +2359,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.disk_out_scheduled">
-<code class="descname">disk_out_scheduled</code><a class="headerlink" href="#job.models.JobExecution.disk_out_scheduled" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.disk_total_scheduled">
-<code class="descname">disk_total_scheduled</code><a class="headerlink" href="#job.models.JobExecution.disk_total_scheduled" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobExecution.docker_image">
 <code class="descname">docker_image</code><a class="headerlink" href="#job.models.JobExecution.docker_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.ended">
-<code class="descname">ended</code><a class="headerlink" href="#job.models.JobExecution.ended" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.environment">
-<code class="descname">environment</code><a class="headerlink" href="#job.models.JobExecution.environment" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.error">
-<code class="descname">error</code><a class="headerlink" href="#job.models.JobExecution.error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related object on the forward side of a many-to-one or
-one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.error_id">
-<code class="descname">error_id</code><a class="headerlink" href="#job.models.JobExecution.error_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2636,13 +2545,6 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.job_completed">
-<code class="descname">job_completed</code><a class="headerlink" href="#job.models.JobExecution.job_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobExecution.job_exe_file_links">
 <code class="descname">job_exe_file_links</code><a class="headerlink" href="#job.models.JobExecution.job_exe_file_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -2658,29 +2560,8 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.job_exit_code">
-<code class="descname">job_exit_code</code><a class="headerlink" href="#job.models.JobExecution.job_exit_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobExecution.job_id">
 <code class="descname">job_id</code><a class="headerlink" href="#job.models.JobExecution.job_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.job_metrics">
-<code class="descname">job_metrics</code><a class="headerlink" href="#job.models.JobExecution.job_metrics" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.job_started">
-<code class="descname">job_started</code><a class="headerlink" href="#job.models.JobExecution.job_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2732,20 +2613,6 @@ relation.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.last_modified">
-<code class="descname">last_modified</code><a class="headerlink" href="#job.models.JobExecution.last_modified" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.mem_scheduled">
-<code class="descname">mem_scheduled</code><a class="headerlink" href="#job.models.JobExecution.mem_scheduled" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobExecution.node">
 <code class="descname">node</code><a class="headerlink" href="#job.models.JobExecution.node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
@@ -2789,48 +2656,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.post_completed">
-<code class="descname">post_completed</code><a class="headerlink" href="#job.models.JobExecution.post_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.post_exit_code">
-<code class="descname">post_exit_code</code><a class="headerlink" href="#job.models.JobExecution.post_exit_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.post_started">
-<code class="descname">post_started</code><a class="headerlink" href="#job.models.JobExecution.post_started" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.pre_completed">
-<code class="descname">pre_completed</code><a class="headerlink" href="#job.models.JobExecution.pre_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.pre_exit_code">
-<code class="descname">pre_exit_code</code><a class="headerlink" href="#job.models.JobExecution.pre_exit_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.pre_started">
-<code class="descname">pre_started</code><a class="headerlink" href="#job.models.JobExecution.pre_started" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobExecution.queued">
 <code class="descname">queued</code><a class="headerlink" href="#job.models.JobExecution.queued" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -2860,20 +2685,6 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.JobExecution.resources">
 <code class="descname">resources</code><a class="headerlink" href="#job.models.JobExecution.resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.results">
-<code class="descname">results</code><a class="headerlink" href="#job.models.JobExecution.results" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.results_manifest">
-<code class="descname">results_manifest</code><a class="headerlink" href="#job.models.JobExecution.results_manifest" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2915,27 +2726,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="job.models.JobExecution.started">
 <code class="descname">started</code><a class="headerlink" href="#job.models.JobExecution.started" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.status">
-<code class="descname">status</code><a class="headerlink" href="#job.models.JobExecution.status" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.stderr">
-<code class="descname">stderr</code><a class="headerlink" href="#job.models.JobExecution.stderr" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.stdout">
-<code class="descname">stdout</code><a class="headerlink" href="#job.models.JobExecution.stdout" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

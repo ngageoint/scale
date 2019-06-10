@@ -452,6 +452,14 @@ job\.migrations\.0056\_convert\_strike\_jobs module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0057\_auto\_20190603\_1846 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0057_auto_20190603_1846
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
