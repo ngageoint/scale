@@ -56,6 +56,25 @@ another.
                "input_2": {"type": "dependency", "node": "node_b", "output": "output_1"}
             },
             "node_type": {
+               "node_type": "condition",
+                            "interface": {"files": [{"name": "input_2",
+                                                     "media_types": ["image/tiff"],
+                                                     "required": true,
+                                                     "multiple": true}],
+                                          "json": []},
+                            "data_filter": {"filters": [{"name": "input_2",
+                                                         "type": "media-type",
+                                                         "condition": "==",
+                                                         "values": ["image/tiff"]}]}}},
+            }
+         }
+         "node_d": {
+            "dependencies": [{"name": "node_c", "acceptance": True}],
+            "input": {
+               "input_1": {"type": "recipe", "input": "bar"},
+               "input_2": {"type": "dependency", "node": "node_c", "output": "input_2"}
+            },
+            "node_type": {
                "node_type": "recipe",
                "recipe_type_name": "recipe-type-1",
                "recipe_type_revision": 5
@@ -359,6 +378,8 @@ Response: 200 OK
           "is_active": true,
           "is_system": false,
           "revision_num": 1,
+          "job_types": [ { "name": "my-job-type", "version": "1.0.0" }, { "name": "my-job-type2", "version": "1.0.1" } ],
+          "sub_recipe_types": ["sub-recipe-1"],
           "created": "2015-06-15T19:03:26.346Z",
           "deprecated": "2015-07-15T19:03:26.346Z",
           "last_modified": "2015-06-15T19:03:26.346Z"
@@ -424,6 +445,11 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .revision_num      | Integer           | The current revision number of the recipe type, incremented for each edit.     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_types         | Array             | List of all job types that are referenced by this recipe type's definition     |
+|                    |                   | given as name/version pairs.                                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .sub_recipe_types  | Array             | List of all sub recipe types referenced by this recipe type's definition       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .deprecated        | ISO-8601 Datetime | When the recipe type was deprecated (no longer active; previously archived).   |
@@ -482,7 +508,7 @@ Location http://.../v6/recipe-types/my-recipe/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Optional | The human-readable name of the recipe type.                         |
+| title              | String            | Required | The human-readable name of the recipe type.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | description        | String            | Optional | An optional description of the recipe type.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -659,7 +685,8 @@ Request: PATCH http://.../v6/recipe-types/test/
       "title": "My Recipe",
       "description": "A simple recipe type"
       "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`},
-      "auto_update": true
+      "auto_update": true,
+      "is_active": true
     }
 
 Response: 204 No Content
@@ -684,6 +711,8 @@ Response: 204 No Content
 |                    |                   |          | (See :ref:`rest_v6_recipe_json_definition`)                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | auto_update        | Boolean           | Optional | Whether to automatically update recipes containing this type.       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Whether this recipe type is active or deprecated.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+

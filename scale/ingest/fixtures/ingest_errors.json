@@ -8,6 +8,7 @@
             "description": "The ingest job exceeded its timeout threshold. This is likely due to excessive time uploading the source data to its workspace.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2017-01-06T00:00:00.0Z",
             "last_modified": "2017-01-06T00:00:00.0Z"
         }

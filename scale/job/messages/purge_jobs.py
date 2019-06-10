@@ -6,7 +6,6 @@ import logging
 from django.db import transaction
 from django.db.models import F
 
-from batch.models import BatchJob
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, TaskUpdate
 from messaging.messages.message import CommandMessage
 from product.models import FileAncestryLink
@@ -135,7 +134,6 @@ class PurgeJobs(CommandMessage):
             JobExecutionEnd.objects.filter(job_exe__in=job_exe_queryset).delete()
             FileAncestryLink.objects.filter(job__in=self._purge_job_ids).delete()
             job_exe_queryset.delete()
-            BatchJob.objects.filter(job__in=self._purge_job_ids).delete()
             RecipeNode.objects.filter(job__in=self._purge_job_ids).delete()
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()

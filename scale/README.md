@@ -233,25 +233,25 @@ below for reference.
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
 | CONTAINER_PROCESS_OWNER     | 'nobody'                        | System user used to launch Docker tasks    |
+| DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
 | DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
+| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | ELASTICSEARCH_DOCKER_IMAGE  | 'elasticsearch:2.4-alpine'      | Docker image for Elasticsearch             |
+| ELASTICSEARCH_URL           | None                            | Elasticsearch backend URL for log storage  |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
 | FLUENTD_DOCKER_IMAGE        | 'geoint/scale-fluentd'          | Docker image for fluentd                   |
 | GEOAXIS_HOST                | 'geoaxis.gxaccess.com'          | Host address for GEOAxIS endpoints         |
 | GEOAXIS_KEY                 | None                            | GEOAxIS OAuth API Key                      |
 | GEOAXIS_SECRET              | None                            | GEOAxIS OAuth API Secret                   |
+| LOGGING_ADDRESS             | None                            | Fluentd URL. By default set by bootstrap   |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
 | PUBLIC_READ_API             | 'false'                         | Public API access for stateless calls      |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
-| DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
-| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
-| ELASTICSEARCH_URL           | None                            | Elasticsearch backend URL for log storage  |
-| LOGGING_ADDRESS             | None                            | Fluentd URL. By default set by bootstrap   |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
@@ -261,6 +261,8 @@ below for reference.
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
 | SESSION_COOKIE_SECURE       | True                            | Should cookies be served only over HTTPS   |
+| SILO_ADDRESS                | None                            | Address to Silo, deployed if None          |
+| SILO_DOCKER_IMAGE           | 'geoint/seed-scale:0.6.0'       | Silo docker image name                     |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 | UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
 

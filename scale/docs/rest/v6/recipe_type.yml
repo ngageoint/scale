@@ -226,6 +226,25 @@ components:
         revision_num:
           type: integer
           example: 1
+        job_types:
+          type: array
+          items:
+            type: object
+            required: [name, version]
+            properties:
+              name:
+                type: string
+                example: my-job
+              version:
+                type: string
+                example: 1.0.0
+          description: List of all job types that are referenced by this recipe type's definition
+        sub_recipe_types:
+          type: array
+          items:
+            type: string
+          description: List of all recipe types that are referenced by this recipe type's definition
+          example: ["sub-recipe-1"]
         created:
           type: string
           format: date-time
@@ -562,6 +581,10 @@ components:
         auto_update:
           type: boolean
           description: Whether to automatically update recipes containing this type
+          example: true
+        is_active:
+          type: boolean
+          description: Activates/deprecates this recipe type.
           example: true
       
     recipe_type_post:

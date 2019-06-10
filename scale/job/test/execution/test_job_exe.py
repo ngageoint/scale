@@ -786,7 +786,7 @@ class TestRunningJobExecution(TransactionTestCase):
         self.assertTrue(self.running_job_exe.is_finished())
         self.assertEqual(self.running_job_exe.status, 'FAILED')
         self.assertEqual(self.running_job_exe.error_category, 'SYSTEM')
-        self.assertEqual(self.running_job_exe.error.name, 'task-launch')
+        self.assertEqual(self.running_job_exe.error.name, 'docker-task-launch')
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
     def test_post_task_launch_error(self):

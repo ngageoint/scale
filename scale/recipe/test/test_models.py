@@ -195,8 +195,8 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
         self.v6_recipe_def = RecipeDefinitionV6(self.main_definition).get_definition()
 
     def test_successful(self):
@@ -212,6 +212,7 @@ class TestRecipeTypeManagerCreateRecipeTypeV6(TransactionTestCase):
         self.assertEqual(results_recipe_type.name, name)
         self.assertEqual(results_recipe_type.title, title)
         self.assertEqual(results_recipe_type.description, desc)
+        self.maxDiff = None
         self.assertDictEqual(results_recipe_type.definition, self.main_definition)
 
         results_recipe_type_rev = RecipeTypeRevision.objects.get(recipe_type_id=recipe_type.id, revision_num=1)
@@ -256,8 +257,8 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         self.main_definition['nodes']['node_b']['node_type']['job_type_name'] = self.job_type2.name
         self.main_definition['nodes']['node_b']['node_type']['job_type_version'] = self.job_type2.version
         self.main_definition['nodes']['node_b']['node_type']['job_type_revision'] = self.job_type2.revision_num
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_name'] = self.recipe_type1.name
-        self.main_definition['nodes']['node_c']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_name'] = self.recipe_type1.name
+        self.main_definition['nodes']['node_d']['node_type']['recipe_type_revision'] = self.recipe_type1.revision_num
         self.v6_recipe_def = RecipeDefinitionV6(self.main_definition).get_definition()
 
     def test_change_simple(self):
@@ -274,12 +275,13 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
             # Edit the recipe
             new_title = 'New title'
             new_desc = 'New description'
-            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, new_title, new_desc, None, False)
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=new_title, description=new_desc, definition=None, auto_update=False, is_active=True)
         recipe_type = RecipeType.objects.get(pk=recipe_type.id)
 
         # Check results
         self.assertEqual(recipe_type.title, new_title)
         self.assertEqual(recipe_type.description, new_desc)
+        self.maxDiff = None
         self.assertDictEqual(recipe_type.definition, self.main_definition)
         self.assertEqual(recipe_type.revision_num, 1)
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
@@ -297,7 +299,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, None, None, self.sub_def, True)
+            RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=None, description=None, definition=self.sub_def, auto_update=True, is_active=True)
         recipe_type = RecipeType.objects.get(pk=recipe_type.id)
 
         # Check results
@@ -312,7 +314,8 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
         subs = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
         self.assertEqual(len(subs), 0)
 
-    def test_change_to_invalid_definition(self):
+    @patch('recipe.models.CommandMessageManager')
+    def test_change_to_invalid_definition(self, mock_msg_mgr) :
         """Tests calling RecipeTypeManager.edit_recipe_type() with an invalid change to the definition"""
 
         # Create recipe_type
@@ -327,7 +330,7 @@ class TestRecipeTypeManagerEditRecipeTypeV6(TransactionTestCase):
             invalid_def = RecipeDefinitionV6(definition=invalid, do_validate=False).get_definition()
             invalid_def.add_dependency('node_b', 'node_a')
             self.assertRaises(InvalidDefinition, RecipeType.objects.edit_recipe_type_v6, recipe_type.id,
-                              None, None, invalid_def, True)
+                              title=None, description=None, definition=invalid_def, auto_update=True, is_active=True)
 
 
 class TestRecipeTypeSubLinkManager(TransactionTestCase):

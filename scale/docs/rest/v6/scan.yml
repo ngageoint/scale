@@ -221,6 +221,7 @@ components:
     scan_post:
       title: Scan Post
       type: object
+      required: [title, configuration]
       properties:
         title:
           type: string

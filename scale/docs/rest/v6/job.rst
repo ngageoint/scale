@@ -35,7 +35,7 @@ Response: 200 OK
             "is_paused": false,
             "is_published": false,
             "icon_code": "f013",
-            "unmet_resources": []
+            "unmet_resources": "chocolate,vanilla"
           },
           "job_type_rev": {
             "id": 5,
@@ -284,7 +284,7 @@ Location http://.../v6/job/1/
           "is_paused": false,
           "is_published": false,
           "icon_code": null,
-          "unmet_resources": []
+          "unmet_resources": "chocolate,vanilla"
       },
       "status": "QUEUED",
       "job_type_rev": {
@@ -298,7 +298,7 @@ Location http://.../v6/job/1/
               "is_paused": false,
               "is_published": false,
               "icon_code": null,
-              "unmet_resources": []
+              "unmet_resources": "chocolate,vanilla"
           },
           "revision_num": 1,
           "docker_image": "fake",
@@ -438,7 +438,7 @@ Response: 200 OK
         "is_paused": false,
         "is_published": false,
         "icon_code": "f013",
-        "unmet_resources": []
+        "unmet_resources": "chocolate,vanilla"
       },
       "job_type_rev": {
         "id": 5,
@@ -526,7 +526,7 @@ Response: 200 OK
             "is_paused": false,
             "is_published": false,
             "icon_code": "f013",
-            "unmet_resources": []
+            "unmet_resources": "chocolate,vanilla"
          },
          "timeout": 1800,
          "input_file_size": 64.0,
@@ -779,7 +779,7 @@ Response: 200 OK
             "is_paused": false,
             "is_published": false,
             "icon_code": "f013",
-            "unmet_resources": []
+            "unmet_resources": "chocolate,vanilla"
           },
           "timeout": 1800,
           "input_file_size": 10
@@ -906,7 +906,7 @@ Response: 200 OK
       "is_paused": false,
       "is_published": false,
       "icon_code": "f013",
-      "unmet_resources": []
+      "unmet_resources": "chocolate,vanilla"
     },
     "timeout": 1800,
     "input_file_size": 10,

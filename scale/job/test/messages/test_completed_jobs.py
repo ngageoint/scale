@@ -20,9 +20,9 @@ class TestCompletedJobs(TransactionTestCase):
     def test_json(self):
         """Tests coverting a CompletedJobs message to and from JSON"""
 
-        job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED')
+        job_1 = job_test_utils.create_job(num_exes=0, status='QUEUED')
         job_test_utils.create_job_exe(job=job_1)
-        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING')
+        job_2 = job_test_utils.create_job(num_exes=0, status='RUNNING')
         job_test_utils.create_job_exe(job=job_2)
         job_3 = job_test_utils.create_job(num_exes=0, status='PENDING')
         job_ids = [job_1.id, job_2.id, job_3.id]
@@ -68,9 +68,9 @@ class TestCompletedJobs(TransactionTestCase):
         from recipe.test import utils as recipe_test_utils
         recipe_1 = recipe_test_utils.create_recipe()
 
-        job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED')
+        job_1 = job_test_utils.create_job(num_exes=0, status='QUEUED')
         job_test_utils.create_job_exe(job=job_1)
-        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', recipe=recipe_1)
+        job_2 = job_test_utils.create_job(num_exes=0, status='RUNNING', recipe=recipe_1)
         job_test_utils.create_job_exe(job=job_2, output=JobResults())
         job_3 = job_test_utils.create_job(num_exes=0, status='PENDING')
         job_ids = [job_1.id, job_2.id, job_3.id]

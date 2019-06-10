@@ -158,7 +158,6 @@ class JobConfigurationV6(object):
 
         if self._config['version'] not in SCHEMA_VERSIONS:
             raise InvalidJobConfiguration('INVALID_VERSION', 'Invalid configuration version: %s' % unicode(self._config['version']))
-        #     self._convert_from_v2(do_validate)
 
         self._populate_default_values()
 

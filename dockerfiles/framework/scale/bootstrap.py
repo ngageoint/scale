@@ -36,56 +36,64 @@ def dcos_login():
 
 
 def run(client):
-    elasticsearch_app_name = '%s-elasticsearch' % FRAMEWORK_NAME
-    rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
-    log_app_name = '%s-fluentd' % FRAMEWORK_NAME
-    db_app_name = '%s-db' % FRAMEWORK_NAME
-    ui_app_name = '%s-ui' % FRAMEWORK_NAME
+    silo_address = os.getenv('SILO_ADDRESS', None)
 
     blocking_apps = []
 
     # Determine if elasticsearch should be deployed. If ELASTICSEARCH_URL is unset we need to deploy it
     es_url = os.getenv('ELASTICSEARCH_URL', '')
     if not len(es_url):
-        deploy_elasticsearch(client, elasticsearch_app_name)
-        es_url = "http://%s.marathon.l4lb.thisdcos.directory:9200" % subdomain_gen(elasticsearch_app_name)
-        blocking_apps.append(elasticsearch_app_name)
+        app_name = '%s-elasticsearch' % FRAMEWORK_NAME
+        deploy_elasticsearch(client, app_name)
+        es_url = "http://%s.marathon.l4lb.thisdcos.directory:9200" % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
     print("ELASTICSEARCH_URL=%s" % (es_url))
 
     # Determine if rabbitmq should be deployed. If SCALE_BROKER_URL is unset we need to deploy it
     broker_url = os.getenv('SCALE_BROKER_URL', '')
     if not len(broker_url):
-        deploy_rabbitmq(client, rabbitmq_app_name)
-        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(rabbitmq_app_name)
+        app_name = '%s-rabbitmq' % FRAMEWORK_NAME
+        deploy_rabbitmq(client, app_name)
+        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(app_name)
         print("BROKER_URL=%s" % broker_url)
-        blocking_apps.append(rabbitmq_app_name)
+        blocking_apps.append(app_name)
 
     # Determine if db should be deployed.
     db_url = os.getenv('DATABASE_URL', '')
     if not len(db_url):
-        deploy_database(client, db_app_name)
-        db_url = "postgis://scale:scale@%s.marathon.l4lb.thisdcos.directory:5432/scale" % subdomain_gen(db_app_name)
+        app_name = '%s-db' % FRAMEWORK_NAME
+        deploy_database(client, app_name)
+        db_url = "postgis://scale:scale@%s.marathon.l4lb.thisdcos.directory:5432/scale" % subdomain_gen(app_name)
         print("DATABASE_URL=%s" % db_url)
-        blocking_apps.append(db_app_name)
+        blocking_apps.append(app_name)
 
     # Determine if fluentd should be deployed.
     if not len(LOGGING_ADDRESS):
-        deploy_fluentd(client, log_app_name, es_url)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(log_app_name))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:24220" % subdomain_gen(log_app_name))
-        blocking_apps.append(log_app_name)
+        app_name = '%s-fluentd' % FRAMEWORK_NAME
+        deploy_fluentd(client, app_name, es_url)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:24220" % subdomain_gen(app_name))
+        blocking_apps.append(app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
         deploy_webserver(client, app_name, es_url, db_url, broker_url)
         webserver_url = 'http://%s.marathon.l4lb.thisdcos.directory:80/' % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
+
+    # Determine if Web Server should be deployed.
+    if not silo_address:
+        app_name = '%s-silo' % FRAMEWORK_NAME
+        deploy_silo(client, app_name, db_url)
+        silo_address = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
 
     # Determine if UI should be deployed.
     if DEPLOY_UI.lower() == 'true':
         app_name = '%s-ui' % FRAMEWORK_NAME
-        ui_port = deploy_ui(client, app_name, webserver_url)
-        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), ui_port))
+        deploy_ui(client, app_name, webserver_url, silo_address)
+        print("WEBSERVER_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:80" % (subdomain_gen(app_name)))
 
     # Wait for all needed apps to be healthy
     for app_name in blocking_apps:
@@ -268,12 +276,8 @@ def deploy_webserver(client, app_name, es_url, db_url, broker_url):
 
     deploy_marathon_app(client, marathon)
 
-    webserver_port = get_host_port_from_healthy_app(client, app_name, 0)
 
-    return webserver_port
-
-
-def deploy_ui(client, app_name, webserver_url):
+def deploy_ui(client, app_name, webserver_url, silo_url):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -293,7 +297,8 @@ def deploy_ui(client, app_name, webserver_url):
 
     arbitrary_env = {
         'DCOS_PACKAGE_FRAMEWORK_NAME': FRAMEWORK_NAME,
-        'BACKEND_URL': webserver_url,
+        'API_BACKEND': webserver_url,
+        'SILO_BACKEND': silo_url,
         'CONTEXTS': '/service/%s' % FRAMEWORK_NAME
     }
     # For all environment variable that are set add to marathon json.
@@ -305,9 +310,21 @@ def deploy_ui(client, app_name, webserver_url):
 
     deploy_marathon_app(client, marathon)
 
-    ui_port = get_host_port_from_healthy_app(client, app_name, 0)
 
-    return ui_port
+def deploy_silo(client, app_name, db_url):
+    if not check_app_exists(client, app_name):
+        # Load marathon template file
+        marathon = initialize_app_template('silo', app_name,
+                                           os.getenv('SILO_DOCKER_IMAGE'))
+
+        arbitrary_env = {
+            'DATABASE_URL': db_url
+        }
+        # For all environment variable that are set add to marathon json.
+        for env in arbitrary_env:
+            marathon['env'][env] = arbitrary_env[env]
+
+        deploy_marathon_app(client, marathon)
 
 
 def deploy_database(client, app_name):

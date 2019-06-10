@@ -1,44 +1,29 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
-from django.db import migrations
+from django.db import connection, migrations
 
 def populate_data_type_tags(apps, schema_editor):
     # Go through all of the ScaleFile models and convert the data_type string into an array of tags
-    ScaleFile = apps.get_model('storage', 'ScaleFile')
-
-    total_count = ScaleFile.objects.exclude(data_type=None).count()
-    if not total_count:
-        return
-
-    print('\nCreating new data type tags: %i' % total_count)
-    files = ScaleFile.objects.exclude(data_type=None).iterator()
-    done_count = 0
-    for f in files:
-        save_data_type_tags(f)
-        done_count += 1
-        percent = (float(done_count) / float(total_count)) * 100.00
-        print('Progress: %i/%i (%.2f%%)' % (done_count, total_count, percent))
+    update = 'UPDATE scale_file SET data_type_tags = string_to_array(data_type,\',\') WHERE data_type <> \'\''
+    with connection.cursor() as cursor:
+        cursor.execute(update)
+        count = cursor.rowcount
+        if count:
+            print('%d entries updated with data type tags' % count)
 
     print ('Migration finished.')
-
-def save_data_type_tags(scale_file):
-    if scale_file.data_type:
-        scale_file.data_type_tags = scale_file.data_type.split(',')
-        scale_file.save()
-
-
+            
 def non_null_metadata(apps, schema_editor):
     ScaleFile = apps.get_model('storage', 'ScaleFile')
-
-    files = ScaleFile.objects.all().iterator()
-    for f in files:
-        if not f.meta_data or f.meta_data == 'null':
-            f.meta_data = json.dumps(dict)
-            f.save()
-
-    print ('Migration finished')
+    
+    # Capture Null values for the meta_data field
+    print('Fixing null metadata...')
+    
+    ScaleFile.objects.filter(meta_data='null').update(meta_data={})
+    ScaleFile.objects.filter(meta_data__isnull=True).update(meta_data={})
+            
+    print('Fixed null metadata')
 
 class Migration(migrations.Migration):
 

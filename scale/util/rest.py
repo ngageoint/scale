@@ -549,9 +549,7 @@ def title_to_name(queryset, title):
     :raises :class:`Exception`: If unable to generate a unique name.
     """
 
-    name = slugify(title)
-    name = name.replace('_', '-')
-    name = name[:30]
+    name = title_to_basename(title)
     basename = name
     
     index = 0
@@ -561,6 +559,23 @@ def title_to_name(queryset, title):
             raise Exception('Unable to find a unique name. Exiting to prevent infinite loop.')
         
     return name
+    
+def title_to_basename(title):
+    """Generates an identifying basename for a model from a human readable title
+
+    :param title: The title to convert
+    :type title: string
+    :returns: The generated identifying name.
+    :rtype: string
+    """
+    
+    name = slugify(title)
+    name = name.replace('_', '-')
+    name = name[:30]
+    basename = name
+    
+    return basename
+    
     
 def strip_schema_version(json_dict):
     """Returns the given JSON dict after stripping its schema version out

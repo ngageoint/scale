@@ -1,13 +1,16 @@
 """Defines the class that manages the syncing of the scheduler with the job type models"""
 from __future__ import unicode_literals
 
+import logging
 import threading
 
 from job.models import JobType
-
+from job.seed.exceptions import InvalidSeedMetadataDefinition
 
 # TODO: when we calculate duration averages for job types, create a new job type class that contains model, resources,
 # stats, etc
+logger = logging.getLogger(__name__)
+
 class JobTypeManager(object):
     """This class manages the syncing of the scheduler with the job type models. This class is thread-safe."""
 
@@ -31,7 +34,7 @@ class JobTypeManager(object):
         with self._lock:
             for job_type in self._job_types.values():
                 job_type_dict = {'id': job_type.id, 'name': job_type.name, 'version': job_type.version,
-                                 'title': job_type.get_title(), 'description': job_type.get_description(),
+                                 'title': job_type.title, 'description': job_type.description,
                                  'is_system': job_type.is_system, 'icon_code': job_type.icon_code}
                 job_types_list.append(job_type_dict)
 
@@ -76,8 +79,14 @@ class JobTypeManager(object):
         update_job_type_resources = []
         updated_job_types = {}
         for job_type in JobType.objects.all().iterator():
-            updated_job_types[job_type.id] = job_type
-            update_job_type_resources.append(job_type.get_resources())
+            try:
+                job_type.title = job_type.get_title()
+                job_type.description = job_type.get_description()
+                updated_job_types[job_type.id] = job_type
+                update_job_type_resources.append(job_type.get_resources())
+            except InvalidSeedMetadataDefinition as ex:
+                logger.exception('Invalid Seed manifest for job type %s-%s, id=%d' % (job_type.name, job_type.version, job_type.id))
+                pass
 
         with self._lock:
             self._job_type_resources = update_job_type_resources

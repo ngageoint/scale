@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('job', '0053_jobtype_unmet_resources'),
+        ('job', '0054_convert_manifest'),
     ]
 
     operations = [

@@ -13,7 +13,6 @@ from job.messages.create_jobs import RecipeJob
 from job.models import Job, JobTypeRevision
 from queue.messages.queued_jobs import QueuedJob
 from queue.models import Queue
-from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
 from recipe.messages.create_conditions import Condition
@@ -21,7 +20,6 @@ from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 import storage.test.utils as storage_test_utils
-from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
 
 NAME_COUNTER = 1
@@ -54,9 +52,29 @@ RECIPE_DEFINITION = {'version': '7',
                                                                'job_type_version': '1.0.0',
                                                                'job_type_revision': 1}},
                                       'node_c': {'dependencies': [{'name': 'node_b', 'acceptance': True}],
+                                                 'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_b',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                 'node_type': {
+                                                     'node_type': 'condition',
+                                                     'interface': {
+                                                         'version': '6',
+                                                         'files': [ {
+                                                             'name': 'INPUT_IMAGE',
+                                                             'media_types': ['image/png'],
+                                                             'required': False,
+                                                             'multiple': True}],
+                                                         'json': []},
+                                                     'data_filter': {
+                                                         'version': '6',
+                                                         'all': True,
+                                                         'filters': [ {'name': 'INPUT_IMAGE',
+                                                                       'type': 'media-type',
+                                                                       'condition': '==',
+                                                                       'values': ['image/png']}]} }},
+                                      'node_d': {'dependencies': [{'name': 'node_c', 'acceptance': True}],
                                                  'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
-                                                           'input_b': {'type': 'dependency', 'node': 'node_b',
-                                                                       'output': 'OUTPUT_IMAGE'}},
+                                                           'input_b': {'type': 'dependency', 'node': 'node_c',
+                                                                       'output': 'INPUT_IMAGE'}},
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
 
@@ -115,13 +133,13 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
 
     return recipe_type
 
-def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=None):
+def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=True, is_active=True):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
     with transaction.atomic():
         RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=title, description=description,
                                                definition=RecipeDefinitionV6(definition).get_definition(),
-                                               auto_update=auto_update)
+                                               auto_update=auto_update, is_active=is_active)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
                   superseded_recipe=None, config=None, batch=None, save=True):
