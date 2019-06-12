@@ -56,7 +56,7 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
             logger.info('Queuing new recipe of type %s', recipe_type.name)
-            CommandMessageManager().send_messages(create_recipes_messages(recipe_type, recipe_type.revision_num,
+            CommandMessageManager().send_messages(create_recipes_messages(recipe_type.name, recipe_type.revision_num,
                                                                           recipe_data, event.id, ingest_event.id))
             # Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
@@ -94,7 +94,7 @@ class IngestRecipeHandler(object):
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
             logger.info('Queuing new recipe of type %s', recipe_type.name)
-            CommandMessageManager().send_messages(create_recipes_messages(recipe_type, recipe_type.revision_num,
+            CommandMessageManager().send_messages(create_recipes_messages(recipe_type.name, recipe_type.revision_num,
                                                                           recipe_data, event.id, ingest_event.id))
             # Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:

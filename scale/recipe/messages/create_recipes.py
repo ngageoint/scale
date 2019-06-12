@@ -17,6 +17,7 @@ from recipe.exceptions import InactiveRecipeType
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes_messages
 from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, RecipeTypeRevision
 
 
@@ -75,9 +76,7 @@ def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_i
     message.ingest_event_id = ingest_event_id
     message.configuration = configuration
     message.batch_id = batch_id
-
-    if message:
-        messages.append(message)
+    messages.append(message)
 
     return messages
 
@@ -462,9 +461,12 @@ class CreateRecipes(CommandMessage):
 
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.recipe_type_rev_num)
 
+        config = None
+        if self.configuration:
+            config = RecipeConfigurationV6(self.configuration)
         recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=self.event_id,
-                                                 ingest_id=self.ingest_event_id, input_data=self.recipe_input,
-                                                 batch_id=self.batch_id, recipe_config=self.configuration)
+                                                 ingest_id=self.ingest_event_id, input_data=self.recipe_input_data,
+                                                 batch_id=self.batch_id, recipe_config=config)
         recipes = []
         if recipe:
             recipes.append(recipe)

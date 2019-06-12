@@ -20,6 +20,7 @@ from ingest.triggers.ingest_recipe_handler import IngestRecipeHandler
 from job.models import Job
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
+from recipe.models import Recipe
 from storage.models import ScaleFile
 
 class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
@@ -52,13 +53,10 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         self.recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
 
-
-    @patch ('recipe.models.CommandMessageManager')
-    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
-    @patch('recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message')
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_recipe_input_messages')
-    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr, mock_sub, mock_active, mock_msg_mgr2):
+    
+    @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
+    @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
+    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
@@ -81,6 +79,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
+        mock_msg_mgr.assert_called_once()
         mock_create.assert_called_once()
 
         # Create scan
@@ -102,21 +101,22 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
         scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
 
-        # Call method to test
+        # # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
+        self.assertEqual(mock_msg_mgr.call_count, 2)
         self.assertEqual(mock_create.call_count, 2)
         
-        # Update the recipe then call ingest with revision 1
+        # # Update the recipe then call ingest with revision 1
         manifest = job_test_utils.create_seed_manifest(
             inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
         definition = {'version': '6',
-                       'input': {'files': [{'name': 'INPUT_FILE',
+                      'input': {'files': [{'name': 'INPUT_FILE',
                                             'media_types': ['text/plain'],
                                             'required': True,
                                             'multiple': True}],
                                 'json': []},
-                       'nodes': {'node_a': {'dependencies': [],
+                      'nodes': {'node_a': {'dependencies': [],
                                                 'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
                                                 'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
                                                               'job_type_version': self.jt1.version,
@@ -139,17 +139,19 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
+        self.assertEqual(mock_msg_mgr.call_count, 3)
         self.assertEqual(mock_create.call_count, 3)
         
 
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_recipe_input_messages')
+    @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
+    @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
     def test_successful_manual_kickoff(self, mock_create, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
-
+        
         ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
 
         # Call method to test
         IngestRecipeHandler().process_manual_ingested_source_file(ingest.id, self.source_file, now(), recipe_type.id)
+        mock_msg_mgr.assert_called_once()
         mock_create.assert_called_once()
