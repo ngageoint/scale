@@ -24,7 +24,7 @@ from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.json.forced_nodes_v6 import ForcedNodesV6
 from recipe.exceptions import InactiveRecipeType
-from recipe.messages.create_recipes import create_reprocess_messages
+from recipe.messages.create_recipes import create_reprocess_messages, create_recipes_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType, RecipeTypeRevision
 from recipe.serializers import (RecipeDetailsSerializerV6,
                                 RecipeSerializerV6,
@@ -481,8 +481,13 @@ class RecipesView(ListAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
-            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(),
-                                                                recipe_config=configuration)
+            description = {'user': 'Anonymous'}
+            event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
+            messages = create_recipes_messages(recipe_type, recipe_type.revision_num, recipeData.get_data(),
+                                               event.id, None, configuration)
+            CommandMessageManager().send_messages(messages)
+            # recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(),
+            #                                                     recipe_config=configuration)
         except (InvalidData, InvalidRecipeData) as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
         except InactiveRecipeType as err:
