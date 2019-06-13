@@ -6,6 +6,7 @@ import logging
 from django.db import transaction
 
 from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue
 from ingest.models import IngestEvent, Scan, Strike
 from job.models import JobType
@@ -56,8 +57,10 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
             logger.info('Queuing new recipe of type %s', recipe_type.name)
-            CommandMessageManager().send_messages(create_recipes_messages(recipe_type.name, recipe_type.revision_num,
-                                                                          recipe_data, event.id, ingest_event.id))
+            messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
+                                               convert_data_to_v6_json(recipe_data).get_dict(), 
+                                               event.id, ingest_event.id)
+            CommandMessageManager().send_messages(messages)
             # Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for id %s or recipe type is inactive' % recipe_type_id)
@@ -94,8 +97,10 @@ class IngestRecipeHandler(object):
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
             logger.info('Queuing new recipe of type %s', recipe_type.name)
-            CommandMessageManager().send_messages(create_recipes_messages(recipe_type.name, recipe_type.revision_num,
-                                                                          recipe_data, event.id, ingest_event.id))
+            messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
+                                               convert_data_to_v6_json(recipe_data).get_dict(), 
+                                               event.id, ingest_event.id)
+            CommandMessageManager().send_messages(messages)
             # Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
         else:
             logger.info('No recipe type found for %s %s or recipe type is inactive' % (recipe_name, recipe_revision))

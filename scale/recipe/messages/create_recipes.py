@@ -7,6 +7,7 @@ from collections import namedtuple
 from django.db import transaction
 from django.utils.timezone import now
 
+from data.data.json.data_v6 import DataV6
 from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
@@ -71,7 +72,7 @@ def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_i
     message.create_recipes_type = NEW_RECIPE_TYPE
     message.recipe_type_name = recipe_type_name
     message.recipe_type_rev_num = revision_num
-    message.recipe_data = recipe_data
+    message.recipe_input_data = recipe_data
     message.event_id = event_id
     message.ingest_event_id = ingest_event_id
     message.configuration = configuration
@@ -193,6 +194,7 @@ class CreateRecipes(CommandMessage):
         self.ingest_event_id = None
         self.recipe_input_data = None
         self.configuration = None
+        self.new_recipes = []
 
         # Fields applicable for creating new and reprocessing
         self.recipe_type_name = None
@@ -240,13 +242,12 @@ class CreateRecipes(CommandMessage):
         :return: True if more recipes can fit, False otherwise
         :rtype: bool
         """
-
-        if self.create_recipes_type == REPROCESS_TYPE:
+        if self.create_recipes_type == NEW_RECIPE_TYPE:
+            return len(self.new_recipes) < MAX_NUM
+        elif self.create_recipes_type == REPROCESS_TYPE:
             return len(self.root_recipe_ids) < MAX_NUM
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
             return len(self.sub_recipes) < MAX_NUM
-        elif self.create_recipes_type == NEW_RECIPE_TYPE:
-            return len(self.new_recipes) < MAX_NUM
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
@@ -265,6 +266,7 @@ class CreateRecipes(CommandMessage):
             json_dict['recipe_type_name'] = self.recipe_type_name
             json_dict['recipe_type_rev_num'] = self.recipe_type_rev_num
             json_dict['recipe_configuration'] = self.configuration
+            json_dict['new_recipes'] = self.new_recipes
         elif self.create_recipes_type == REPROCESS_TYPE:
             json_dict['recipe_type_name'] = self.recipe_type_name
             json_dict['recipe_type_rev_num'] = self.recipe_type_rev_num
@@ -303,6 +305,7 @@ class CreateRecipes(CommandMessage):
             message.recipe_type_name = json_dict['recipe_type_name']
             message.recipe_type_rev_num = json_dict['recipe_type_rev_num']
             message.configuration = json_dict['recipe_configuration']
+            message.new_recipes = json_dict['new_recipes']
         elif message.create_recipes_type == REPROCESS_TYPE:
             message.recipe_type_name = json_dict['recipe_type_name']
             message.recipe_type_rev_num = json_dict['recipe_type_rev_num']
@@ -441,7 +444,7 @@ class CreateRecipes(CommandMessage):
 
         if self.create_recipes_type == NEW_RECIPE_TYPE:
             recipes = self._create_new_recipes()
-        if self.create_recipes_type == REPROCESS_TYPE:
+        elif self.create_recipes_type == REPROCESS_TYPE:
             recipes = self._create_recipes_for_reprocess()
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
             recipes = self._create_subrecipes()
@@ -464,9 +467,13 @@ class CreateRecipes(CommandMessage):
         config = None
         if self.configuration:
             config = RecipeConfigurationV6(self.configuration)
-        recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=self.event_id,
-                                                 ingest_id=self.ingest_event_id, input_data=self.recipe_input_data,
+        with transaction.atomic():
+            recipe_input_data = DataV6(self.recipe_input_data).get_data()
+            recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=self.event_id,
+                                                 ingest_id=self.ingest_event_id, input_data=recipe_input_data,
                                                  batch_id=self.batch_id, recipe_config=config)
+            recipe.save()
+            
         recipes = []
         if recipe:
             recipes.append(recipe)
@@ -607,6 +614,7 @@ class CreateRecipes(CommandMessage):
         :rtype: list
         """
 
+        recipes = []
         if self.create_recipes_type == REPROCESS_TYPE:
             qry = Recipe.objects.select_related('superseded_recipe')
             recipes = qry.filter(root_superseded_recipe_id__in=self.root_recipe_ids, event_id=self.event_id)
