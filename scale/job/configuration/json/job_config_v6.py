@@ -155,7 +155,11 @@ class JobConfigurationV6(object):
 
         if 'version' not in self._config:
             self._config['version'] = SCHEMA_VERSION
-
+        
+        if self._config['version'] == '2.0':
+            # v2 and v6 are identical
+            self._config['version'] = SCHEMA_VERSION
+            
         if self._config['version'] not in SCHEMA_VERSIONS:
             raise InvalidJobConfiguration('INVALID_VERSION', 'Invalid configuration version: %s' % unicode(self._config['version']))
 
