@@ -61,7 +61,7 @@ class IngestRecipeHandler(object):
                                                convert_data_to_v6_json(recipe_data).get_dict(), 
                                                event.id, ingest_event.id)
             CommandMessageManager().send_messages(messages)
-            # Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
+            
         else:
             logger.info('No recipe type found for id %s or recipe type is inactive' % recipe_type_id)
 
@@ -101,7 +101,7 @@ class IngestRecipeHandler(object):
                                                convert_data_to_v6_json(recipe_data).get_dict(), 
                                                event.id, ingest_event.id)
             CommandMessageManager().send_messages(messages)
-            # Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
+            
         else:
             logger.info('No recipe type found for %s %s or recipe type is inactive' % (recipe_name, recipe_revision))
 

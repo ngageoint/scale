@@ -54,13 +54,13 @@ def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_i
     :param revision_num: The revision number of the recipe type
     :type revision_num: int
     :param recipe_data: The input data for the recipe
-    :type recipe_data: :ref:`data.data.data.Data`
+    :type recipe_data: dict
     :param event_id: The event ID
     :type event_id: int
     :param ingest_event_id: The ingest event id
     :type ingest_event_id: int
     :param configuration: The configuration of the recipe
-    :type configuration:
+    :type configuration: dict
     :param batch_id: The batch ID
     :type: batch_id: int
     :return: The list of messages
@@ -473,12 +473,11 @@ class CreateRecipes(CommandMessage):
                                                  ingest_id=self.ingest_event_id, input_data=recipe_input_data,
                                                  batch_id=self.batch_id, recipe_config=config)
             recipe.save()
+            self.new_recipes.append(recipe.id)
             
         recipes = []
         if recipe:
             recipes.append(recipe)
-
-        Recipe.objects.bulk_create(recipes)
 
         return recipes
 
