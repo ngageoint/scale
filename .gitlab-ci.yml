@@ -32,6 +32,7 @@ fluentd:
   script:
     - ./build-support.sh ${FLUENTD_IMAGE} fluentd
   only:
+    - master
     - tags
 
 scale:
@@ -47,4 +48,5 @@ vault:
   script:
     - ./build-support.sh ${ALPINE_IMAGE} vault
   only:
+    - master
     - tags
