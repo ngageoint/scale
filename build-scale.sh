@@ -17,6 +17,7 @@ then
         --build-arg IMAGE=${CENTOS_IMAGE} \
         --build-arg BUILDNUM=${CI_BUILD_REF:0:8} \
         --build-arg GOSU_URL=${GOSU_URL} \
+        -t ${CI_BUILD_REF:0:8} \
         -t ${IMAGE_URL} .
 
     export SCALE_VERSION=$(docker run --entrypoint /bin/bash ${IMAGE_URL} -c 'python -c "import scale; print(scale.__docker_version__)"')
@@ -24,6 +25,7 @@ then
 
     docker push ${IMAGE_URL}
     docker push ${IMAGE_URL}:${SCALE_VERSION}
+    docker push ${IMAGE_URL}:${CI_BUILD_REF:0:8}
 else
     docker login -u ${DOCKER_USER} -p "${DOCKER_PASS}" ${REGISTRY}
 
