@@ -12,6 +12,7 @@ then
     docker pull ${IMAGE_URL} || true
 
     docker build \
+        -t ${IMAGE_URL} \
         -t ${IMAGE_URL}:${CI_BUILD_REF:0:8} \
         --label VERSION=${CI_BUILD_REF:0:8} \
         --build-arg VAULT_ZIP=${VAULT_ZIP} \
