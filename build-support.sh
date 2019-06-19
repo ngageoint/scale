@@ -20,7 +20,7 @@ then
         dockerfiles/${COMPONENT}
 
     docker push ${IMAGE_URL}
-    docker push ${IMAGE_URL}:${CI_BUILD_TAG}
+    docker push ${IMAGE_URL}:${CI_BUILD_REF:0:8}
 else
     docker login -u ${DOCKER_USER} -p "${DOCKER_PASS}" ${REGISTRY}
 
