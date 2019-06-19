@@ -12,7 +12,7 @@ then
     docker pull ${IMAGE_URL} || true
     docker build \
         --cache-from ${IMAGE_URL} \
-        --label VERSION=${CI_BUILD_TAG} \
+        --label VERSION=${CI_BUILD_REF:0:8} \
         --build-arg EPEL_INSTALL=${EPEL_INSTALL} \
         --build-arg IMAGE=${CENTOS_IMAGE} \
         --build-arg BUILDNUM=${CI_BUILD_REF:0:8} \

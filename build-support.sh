@@ -12,8 +12,8 @@ then
     docker pull ${IMAGE_URL} || true
 
     docker build \
-        -t ${IMAGE_URL}:${CI_BUILD_TAG} \
-        --label VERSION=${CI_BUILD_TAG} \
+        -t ${IMAGE_URL}:${CI_BUILD_REF:0:8} \
+        --label VERSION=${CI_BUILD_REF:0:8} \
         --build-arg VAULT_ZIP=${VAULT_ZIP} \
         --build-arg IMAGE=${BASE_IMAGE} \
         dockerfiles/${COMPONENT}
