@@ -21,10 +21,7 @@
     "env": {
         "API_BACKEND": "http://scale-webserver.marathon.l4lb.thisdcos.directory:80/",
         "SILO_BACKEND": "http://scale-silo.marathon.l4lb.thisdcos.directory:9000/",
-        "CONTEXTS": "/service/scale",
-        "DCOS_PACKAGE_FRAMEWORK_NAME": "scale",
-        "SILO_URL": "/silo"
-
+        "CONTEXTS": "/service/scale"
     },
     "labels": {
         "HAPROXY_GROUP": "internal,external",
