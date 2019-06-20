@@ -41,6 +41,41 @@
             },
             "created": "2017-11-13T00:00:00.0Z"
         }
+    },
+    {
+        "model": "recipe.RecipeType",
+        "pk": null,
+        "fields": {
+            "name": "scale-hello",
+            "title": "Scale Hello",
+            "description": "Runs the Scale Hello job.",
+            "is_system": true,
+            "is_active": true,
+            "definition": {
+                "version": "6",
+                "input_data": [],
+                "nodes": {"hello-1": {"dependencies":[], "input":{},
+                                      "node_type": {"node_type": "job", "job_type_name": "scale-hello", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "revision_num": 1,
+            "created": "2018-06-20T08:00:00.0Z",
+            "last_modified": "2018-06-20T08:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeTypeRevision",
+        "pk": null,
+        "fields": {
+            "recipe_type": ["scale-hello"],
+            "revision_num": 1,
+            "definition": {
+                "version": "6",
+                "input_data": [],
+                "nodes": {"hello-1": {"dependencies":[], "input":{},
+                                      "node_type": {"node_type": "job", "job_type_name": "scale-hello", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "created": "2018-06-20T08:00:00.0Z"
+        }
     }
 
 ]
