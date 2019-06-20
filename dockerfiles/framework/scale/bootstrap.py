@@ -327,13 +327,13 @@ def deploy_silo(client, app_name, db_url):
                                            os.getenv('SILO_DOCKER_IMAGE'))
 
         env_map = {
-            'SILO_ADMIN_PASSWORD': 'ADMIN_PASSWORD'
+            'ADMIN_PASSWORD': 'SILO_ADMIN_PASSWORD'
         }
 
         apply_set_envs(marathon, env_map)
 
         arbitrary_env = {
-            'DATABASE_URL': db_url
+            'DATABASE_URL': db_url.replace('postgis', 'postgres') + '?sslmode=disable'
         }
         # For all environment variable that are set add to marathon json.
         for env in arbitrary_env:
