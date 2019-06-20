@@ -261,8 +261,9 @@ below for reference.
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
 | SESSION_COOKIE_SECURE       | True                            | Should cookies be served only over HTTPS   |
-| SILO_ADDRESS                | None                            | Address to Silo, deployed if None          |
 | SILO_DOCKER_IMAGE           | 'geoint/seed-scale:0.6.0'       | Silo docker image name                     |
+| SILO_HUB_ORG                | 'geointseed'                    | Docker Hub public org to scan              |
+| SILO_URL                    | None                            | Address to Silo, deployed if None          |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 | UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
 
