@@ -18,9 +18,6 @@ LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
-SILO_ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'spicy-pickles17!')
-SILO_HUB_ORG = os.getenv('SILO_HUB_ORG', 'geointseed')
-SILO_URL = os.getenv('SILO_URL')
 
 
 def dcos_login():
@@ -39,6 +36,10 @@ def dcos_login():
 
 
 def run(client):
+    silo_admin_password = os.getenv('ADMIN_PASSWORD', 'spicy-pickles17!')
+    silo_hub_org = os.getenv('SILO_HUB_ORG', 'geointseed')
+    silo_url = os.getenv('SILO_URL', '')
+
     blocking_apps = []
 
     # Determine if elasticsearch should be deployed. If ELASTICSEARCH_URL is unset we need to deploy it
@@ -85,17 +86,17 @@ def run(client):
 
     # Determine if Web Server should be deployed.
     scan_silo = False
-    if not SILO_URL:
+    if not len(silo_url):
         app_name = '%s-silo' % FRAMEWORK_NAME
         deploy_silo(client, app_name, db_url)
-        SILO_URL = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
+        silo_url = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
         blocking_apps.append(app_name)
         scan_silo = True
 
     # Determine if UI should be deployed.
     if DEPLOY_UI.lower() == 'true':
         app_name = '%s-ui' % FRAMEWORK_NAME
-        deploy_ui(client, app_name, webserver_url, SILO_URL)
+        deploy_ui(client, app_name, webserver_url, silo_url)
         print("WEBSERVER_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:80" % (subdomain_gen(app_name)))
 
     # Wait for all needed apps to be healthy
@@ -105,15 +106,15 @@ def run(client):
     # If we deployed Silo, attempt to configure a scan.
     if scan_silo:
         # Grab access token to Silo
-        result = requests.post('{}login'.format(SILO_URL),
-                               json={'username': 'admin', 'password': SILO_ADMIN_PASSWORD})
+        result = requests.post('{}login'.format(silo_url),
+                               json={'username': 'admin', 'password': silo_admin_password})
         token = 'token {}'.format(result.json()['token'])
         # Add the registry org
-        requests.post('{}registries/add'.format(SILO_URL),
-                      json={'name': SILO_HUB_ORG, 'url': 'https://hub.docker.com', 'org': SILO_HUB_ORG},
+        requests.post('{}registries/add'.format(silo_url),
+                      json={'name': silo_hub_org, 'url': 'https://hub.docker.com', 'org': silo_hub_org},
                       headers={'Authorization': token})
         # Trigger scan of registry org
-        requests.get('{}registries/scan'.format(SILO_URL),
+        requests.get('{}registries/scan'.format(silo_url),
                      headers={'Authorization': token})
 
 
