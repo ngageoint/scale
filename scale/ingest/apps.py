@@ -37,3 +37,8 @@ class IngestConfig(AppConfig):
         # Register monitor types
         factory.add_scanner_type(DirScanner)
         factory.add_scanner_type(S3Scanner)
+        
+        # Register messages
+        from ingest.messages.create_ingest_jobs import CreateIngest
+        from messaging.messages.factory import add_message_type
+        add_message_type(CreateIngest)

@@ -56,7 +56,6 @@ class IngestRecipeHandler(object):
             recipe_data.add_value(FileValue(input_name, [source_file.id]))
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
-            logger.info('Queuing new recipe of type %s', recipe_type.name)
             messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
                                                convert_data_to_v6_json(recipe_data).get_dict(), 
                                                event.id, ingest_event.id)
@@ -96,7 +95,6 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(source, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
-            logger.info('Queuing new recipe of type %s', recipe_type.name)
             messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
                                                convert_data_to_v6_json(recipe_data).get_dict(), 
                                                event.id, ingest_event.id)
@@ -118,15 +116,18 @@ class IngestRecipeHandler(object):
         :rtype: :class:`ingest.models.IngestEvent`
         """
 
+        event = None
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
-        if type(source) is Strike:
-            return IngestEvent.objects.create_strike_ingest_event(ingest_id, source, description, when)
-        elif type(source) is Scan:
-            return IngestEvent.objects.create_scan_ingest_event(ingest_id, source, description, when)
-        elif ingest_id:
-            return IngestEvent.objects.create_manual_ingest_event(ingest_id, description, when)
-        else:
-            logger.info('No valid source event for source file %s', source_file.file_name)
+        with transaction.atomic():
+            if type(source) is Strike:
+                event = IngestEvent.objects.create_strike_ingest_event(ingest_id, source, description, when)
+            elif type(source) is Scan:
+                event = IngestEvent.objects.create_scan_ingest_event(ingest_id, source, description, when)
+            elif ingest_id:
+                event = IngestEvent.objects.create_manual_ingest_event(ingest_id, description, when)
+            else:
+                logger.info('No valid source event for source file %s', source_file.file_name)
+        return event
 
     def _create_trigger_event(self, source, source_file, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and recipe type
@@ -144,10 +145,15 @@ class IngestRecipeHandler(object):
 
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
         event_type = ''
+        
         if type(source) is Strike:
             event_type = 'STRIKE_INGEST'
         elif type(source) is Scan:
             event_type = 'SCAN_INGEST'
         else:
             event_type = 'MANUAL_INGEST'
-        return TriggerEvent.objects.create_trigger_event(event_type, None, description, when)
+        
+        event = None
+        with transaction.atomic():
+            event = TriggerEvent.objects.create_trigger_event(event_type, None, description, when)
+        return event
