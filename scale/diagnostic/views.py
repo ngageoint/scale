@@ -77,9 +77,14 @@ class QueueScaleBakeView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-bake', version='1.0.0')
-        for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user_v6(job_type, {})
+        try:
+            recipe_type = RecipeType.objects.get(name='scale-bake', revision_num='1')
+            for _ in xrange(num):
+                Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
+            message = 'Unable to create new recipe'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -206,9 +211,14 @@ class QueueScaleHelloView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-hello', version='1.0.0')
-        for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user_v6(job_type, {})
+        try:
+            recipe_type = RecipeType.objects.get(name='scale-hello', revision_num='1')
+            for _ in xrange(num):
+                Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
+            message = 'Unable to create new recipe'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -259,9 +269,14 @@ class QueueScaleCountView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-count', version='1.0')
-        for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user_v6(job_type, {})
+        try:
+            recipe_type = RecipeType.objects.get(name='scale-count', revision_num='1')
+            for _ in xrange(num):
+                Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
+            message = 'Unable to create new recipe'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -319,8 +334,13 @@ class QueueScaleRouletteView(GenericAPIView):
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously
-        job_type = JobType.objects.get(name='scale-roulette', version='1.0.0')
-        for _ in xrange(num):
-            Queue.objects.queue_new_job_for_user_v6(job_type, {})
+        try:
+            recipe_type = RecipeType.objects.get(name='scale-roulette', revision_num='1')
+            for _ in xrange(num):
+                Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
+            message = 'Unable to create new recipe'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         return Response(status=status.HTTP_202_ACCEPTED)
