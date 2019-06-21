@@ -6,7 +6,7 @@
     "instances": 1,
     "container": {
         "docker": {
-            "image": "geoint/seed-silo:0.7.0",
+            "image": "geoint/seed-silo:0.8.0",
             "network": "BRIDGE",
             "portMappings": [
                 {
