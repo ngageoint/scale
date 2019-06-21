@@ -1195,7 +1195,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return self.status == 'COMPLETED' and self.has_output()
+        return self.status == 'COMPLETED'
 
     def set_input(self, job_input):
         """Validates and sets the input for this job model. No database update is applied. This job should have its
