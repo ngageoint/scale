@@ -368,7 +368,9 @@ class QueueManager(models.Manager):
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
 
-        # No lock needed for this job since it doesn't exist outside this transaction yet
+        self.queue_jobs([job])
+        job = Job.objects.get_details(job.id)
+        
         return job
 
     # TODO: once Django user auth is used, have the user information passed into here

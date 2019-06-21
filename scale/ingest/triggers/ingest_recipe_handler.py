@@ -32,7 +32,6 @@ class IngestRecipeHandler(object):
 
         super(IngestRecipeHandler, self).__init__()
 
-    @transaction.atomic
     def process_manual_ingested_source_file(self, ingest_id, source_file, when, recipe_type_id):
         """Processes a manual ingest where a strike or scan is not involved. All database
         changes are made in an atomic transaction
@@ -64,7 +63,6 @@ class IngestRecipeHandler(object):
         else:
             logger.info('No recipe type found for id %s or recipe type is inactive' % recipe_type_id)
 
-    @transaction.atomic
     def process_ingested_source_file(self, ingest_id, source, source_file, when):
         """Processes the given ingested source file by kicking off its recipe.
         All database changes are made in an atomic transaction.

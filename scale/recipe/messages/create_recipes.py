@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import time
 from collections import namedtuple
 
 from django.db import transaction
@@ -22,7 +23,7 @@ from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, RecipeTypeRevision
 
 
-REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
+REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipescl
 SUB_RECIPE_TYPE = 'sub-recipes'  # Message type for creating sub-recipes of another recipe
 NEW_RECIPE_TYPE = 'new-recipe'  # Message type for creating a new recipe of a recipe type
 
@@ -467,6 +468,22 @@ class CreateRecipes(CommandMessage):
         config = None
         if self.configuration:
             config = RecipeConfigurationV6(self.configuration)
+            
+        # wait max of 5 seconds for events to save
+        tries = 0
+        while tries < 500:
+            time.sleep(.01)
+            tries += 1
+            try:
+                from trigger.models import TriggerEvent
+                from ingest.models import IngestEvent
+                event = TriggerEvent.objects.get(id=self.event_id)
+                ingest_event = IngestEvent.objects.get(id=self.ingest_event_id)
+                if event and ingest_event:
+                    break;
+            except TriggerEvent.DoesNotExist, IngestEvent.DoesNotExist:
+                pass
+            
         with transaction.atomic():
             recipe_input_data = DataV6(self.recipe_input_data).get_data()
             recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=self.event_id,

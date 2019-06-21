@@ -302,12 +302,11 @@ class IngestManager(models.Manager):
         for ingest in ingests:
             logger.debug('Creating ingest task for %s', ingest.file_name)
             
-            workspace = ingest.workspace.name
-            new_workspace = ingest.new_workspace.name if ingest.new_workspace else None
             if scan_id:
-                messages.append(create_scan_ingest_job_message(ingest.id, workspace, new_workspace, scan_id, ingest.file_name))
+                # TODO: Need to make sure scans work
+                messages.append(create_scan_ingest_job_message(ingest.id, scan_id, ingest.file_name))
             elif strike_id:
-                messages.append(create_strike_ingest_job_message(ingest.id, workspace, new_workspace, strike_id))
+                messages.append(create_strike_ingest_job_message(ingest.id, strike_id))
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 

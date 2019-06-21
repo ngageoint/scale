@@ -81,7 +81,13 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
         mock_msg_mgr.assert_called_once()
         mock_create.assert_called_once()
-
+        
+         # Verify ingest event and trigger event objects were created
+        from ingest.models import IngestEvent
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]['type'], 'STRIKE')
+        
         # Create scan
         scan_config = {
             'workspace': self.workspace.name,
@@ -105,12 +111,13 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
         self.assertEqual(mock_msg_mgr.call_count, 2)
         self.assertEqual(mock_create.call_count, 2)
-
-        # Verify ingest event and trigger event objects were created
-        events = IngestEvent.objects.all()
-        self.assertEqual(len(events), 1)
         
-        # # Update the recipe then call ingest with revision 1
+        # Verify events were created
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 2)
+        self.assertEqual(events[1]['type'], 'SCAN')
+        
+        # Update the recipe then call ingest with revision 1
         manifest = job_test_utils.create_seed_manifest(
             inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
@@ -145,6 +152,11 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
         self.assertEqual(mock_msg_mgr.call_count, 3)
         self.assertEqual(mock_create.call_count, 3)
+        
+        # Verify events were created
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 3)
+        self.assertEqual(events[2]['type'], 'STRIKE')
         
 
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')

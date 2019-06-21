@@ -3,11 +3,14 @@ from __future__ import unicode_literals
 
 import logging
 from django.db import transaction
+
 from django.utils.timezone import now
 
 from data.data.data import Data
 from data.data.value import JsonValue
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
+from job.models import Job
+from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from queue.models import Queue
 from trigger.models import TriggerEvent
@@ -21,11 +24,12 @@ SCAN_JOB_TYPE = 'scan_job' # Message type for creating scan jobs
 # type is less than 25 KiB long and that each message can be processed quickly.
 MAX_NUM = 100
 
-def create_scan_ingest_job_message(ingest_id, workspace_name, new_workspace_name, scan_id, file_name):
+def create_scan_ingest_job_message(ingest_id, scan_id, file_name):
     """Creates a message to create the ingest job for a scan
     
     :param ingest_id: ID of the ingest
     :type ingest_id: int
+    :param workspace_name: The workspace of the ingest
     :param scan_id: The ID of the scan
     :type scan_id: int
     :param file_name: The name of the input file
@@ -34,14 +38,12 @@ def create_scan_ingest_job_message(ingest_id, workspace_name, new_workspace_name
     message = CreateIngest()
     message.create_ingest_type = SCAN_JOB_TYPE
     message.ingest_id = ingest_id
-    message.workspace = workspace_name
-    message.new_workspace = new_workspace_name
     message.scan_id = scan_id
-    message.ingest_file_name = file_name
+    message.file_name = file_name
     
     return message
     
-def create_strike_ingest_job_message(ingest_id, workspace_name, new_workspace_name, strike_id):
+def create_strike_ingest_job_message(ingest_id, strike_id):
     """Creates a message to create the ingest job for a strike
     
     :param ingest_id: ID of the ingest
@@ -52,8 +54,6 @@ def create_strike_ingest_job_message(ingest_id, workspace_name, new_workspace_na
     message = CreateIngest()
     message.create_ingest_type = STRIKE_JOB_TYPE
     message.ingest_id = ingest_id
-    message.workspace = workspace_name
-    message.new_workspace = new_workspace_name
     message.strike_id = strike_id
     
     return message
@@ -71,12 +71,10 @@ class CreateIngest(CommandMessage):
         # Fields applicable to all message types
         self.create_ingest_type = None
         self.ingest_id = None
-        self.workspace = None
-        self.new_workspace = None
         
         # Fields applicable to scan message types
         self.scan_id = None
-        self.ingest_file_name = None
+        self.file_name = None
         
         # Fields applicable to strike message types
         self.strike_id = None
@@ -87,6 +85,8 @@ class CreateIngest(CommandMessage):
         :return: True if more jobs can fit, False otherwise
         :rtype: bool
         """
+        
+        # TODO: what should go here?
         return True
         
     def to_json(self):
@@ -94,18 +94,14 @@ class CreateIngest(CommandMessage):
         """
         json_dict = {
             'create_ingest_type': self.create_ingest_type, 
-            'ingest_id': self.ingest_id,
-            'workspace': self.workspace
+            'ingest_id': self.ingest_id
         }
-        
-        if self.new_workspace:
-            json_dict['new_workspace'] = self.new_workspace
         
         if self.create_ingest_type == STRIKE_JOB_TYPE:
             json_dict['strike_id'] = self.strike_id
         elif self.create_ingest_type == SCAN_JOB_TYPE:
             json_dict['scan_id'] = self.scan_id
-            json_dict['ingest_file_name'] = self.ingest_file_name
+            json_dict['file_name'] = self.file_name
         
         return json_dict    
         
@@ -115,17 +111,14 @@ class CreateIngest(CommandMessage):
         """
         
         message = CreateIngest()
-        message.ingest_id = json_dict['ingest_id']
         message.create_ingest_type = json_dict['create_ingest_type']
-        message.workspace = json_dict['workspace']
+        message.ingest_id = json_dict['ingest_id']
         
-        if 'new_workspace' in json_dict:
-            message.new_workspace = json_dict['new_workspace']
         if message.create_ingest_type == STRIKE_JOB_TYPE:
             message.strike_id = json_dict['strike_id']
         elif message.create_ingest_type == SCAN_JOB_TYPE:
             message.scan_id = json_dict['scan_id']
-            message.ingest_file_name = json_dict['ingest_file_name']
+            message.file_name = json_dict['file_name']
         
         return message
         
@@ -133,7 +126,6 @@ class CreateIngest(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
         from ingest.models import Ingest
-        from job.models import Job, JobTypeRevision
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         
         # Grab the ingest object
@@ -142,37 +134,30 @@ class CreateIngest(CommandMessage):
         when = ingest.transfer_ended if ingest.transfer_ended else now()
         desc = {'file_name': ingest.file_name}
 
+        event = None
         ingest_id = ingest.id
         with transaction.atomic():
             # Create the appropriate triggerevent
-            event = None
             if self.create_ingest_type == STRIKE_JOB_TYPE:
                 desc['strike_id'] = self.strike_id
                 event =  TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
             elif self.create_ingest_type == SCAN_JOB_TYPE:
-                ingest_id = Ingest.objects.get(scan_id=self.scan_id, file_name=self.ingest_file_name).id
+                ingest_id = Ingest.objects.get(scan_id=self.scan_id, file_name=self.file_name).id
                 event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
             
         data = Data()
         data.add_value(JsonValue('ingest_id', ingest_id))
-        data.add_value(JsonValue('workspace', self.workspace))
-        if self.new_workspace:
-            data.add_value(JsonValue('new_workspace', self.new_workspace))
+        data.add_value(JsonValue('workspace', ingest.workspace.name))
+        if ingest.new_workspace:
+            data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
 
         ingest_job = None
-        job_type_rev = JobTypeRevision.objects.get_revision(ingest_job_type.name, ingest_job_type.version,
-                                                                ingest_job_type.revision_num)
         with transaction.atomic():
-            ingest_job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data)
-            ingest_job.save()
-        ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
-        ingest.job = ingest_job
-        ingest.status = 'QUEUED'
-        ingest.save()
-        
-        from job.messages.process_job_input import create_process_job_input_messages
-        from job.models import Job
-        Queue.objects.queue_jobs([ingest_job])
+            ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
+
         job = Job.objects.get_details(ingest_job.id)
         self.new_messages.extend(create_process_job_input_messages([job.pk]))
         

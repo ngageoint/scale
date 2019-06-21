@@ -178,7 +178,7 @@ class Monitor(object):
 
         # Rule match case
         if ingest.is_there_rule_match(self._file_handler, self._workspaces):
-            # save the updates to file_path and file_size
+            # save the updates to file_path and file_size and start the tasks
             ingest.save()
             Ingest.objects.start_ingest_tasks([ingest], strike_id=self.strike_id)
         # No rule match

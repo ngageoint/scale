@@ -98,8 +98,6 @@ class TestCreateIngest(TestCase):
         message = CreateIngest()
         message.create_ingest_type = STRIKE_JOB_TYPE
         message.ingest_id = self.ingest.id
-        message.workspace = self.workspace_1.name
-        message.new_workspace = self.workspace_2.name
         message.strike_id = self.strike.id
 
         # Convert message to JSON and back, and then execute
@@ -114,8 +112,7 @@ class TestCreateIngest(TestCase):
 
     def test_execute(self):
         """Tests executing a CreateIngest message """
-        message = create_strike_ingest_job_message(self.ingest.id, self.workspace_1.name, self.workspace_2.name,
-                                                   self.strike.id)
+        message = create_strike_ingest_job_message(self.ingest.id, self.strike.id)
         result = message.execute()
         self.assertTrue(result)
         self.assertEqual(len(message.new_messages), 1)
