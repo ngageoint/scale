@@ -101,10 +101,14 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
         scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
 
-        # # Call method to test
+        # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
         self.assertEqual(mock_msg_mgr.call_count, 2)
         self.assertEqual(mock_create.call_count, 2)
+
+        # Verify ingest event and trigger event objects were created
+        events = IngestEvent.objects.all()
+        self.assertEqual(len(events), 1)
         
         # # Update the recipe then call ingest with revision 1
         manifest = job_test_utils.create_seed_manifest(

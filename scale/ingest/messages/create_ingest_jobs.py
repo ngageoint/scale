@@ -133,6 +133,7 @@ class CreateIngest(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
         from ingest.models import Ingest
+        from job.models import Job, JobTypeRevision
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         
         # Grab the ingest object
@@ -140,12 +141,12 @@ class CreateIngest(CommandMessage):
         
         when = ingest.transfer_ended if ingest.transfer_ended else now()
         desc = {'file_name': ingest.file_name}
-        
+
+        ingest_id = ingest.id
         with transaction.atomic():
             # Create the appropriate triggerevent
             event = None
             if self.create_ingest_type == STRIKE_JOB_TYPE:
-                ingest_id = ingest.id
                 desc['strike_id'] = self.strike_id
                 event =  TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
             elif self.create_ingest_type == SCAN_JOB_TYPE:
@@ -157,7 +158,13 @@ class CreateIngest(CommandMessage):
         data.add_value(JsonValue('workspace', self.workspace))
         if self.new_workspace:
             data.add_value(JsonValue('new_workspace', self.new_workspace))
-            
+
+        ingest_job = None
+        job_type_rev = JobTypeRevision.objects.get_revision(ingest_job_type.name, ingest_job_type.version,
+                                                                ingest_job_type.revision_num)
+        with transaction.atomic():
+            ingest_job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data)
+            ingest_job.save()
         ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
         ingest.job = ingest_job
         ingest.status = 'QUEUED'

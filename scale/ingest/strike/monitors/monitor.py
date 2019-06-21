@@ -157,10 +157,9 @@ class Monitor(object):
         logger.info('%s has finished transferring to %s, total of %s copied', ingest.file_name, ingest.workspace.name,
                     file_size_to_string(bytes_transferred))
 
-    @transaction.atomic
     def _process_ingest(self, ingest, file_path, file_size):
         """Processes the ingest file by applying the Strike configuration rules. This method will update the ingest
-        model in the database and create an ingest task (if applicable) in an atomic transaction. This method should
+        model in the database and create the ingest task message (if applicable). This method should
         either be called immediately after Ingest.objects.create_ingest() or after _complete_transfer().
 
         :param ingest: The ingest model
@@ -179,8 +178,8 @@ class Monitor(object):
 
         # Rule match case
         if ingest.is_there_rule_match(self._file_handler, self._workspaces):
-            if not ingest.id:
-                ingest.save()
+            # save the updates to file_path and file_size
+            ingest.save()
             Ingest.objects.start_ingest_tasks([ingest], strike_id=self.strike_id)
         # No rule match
         else:
