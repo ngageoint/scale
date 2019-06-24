@@ -53,8 +53,8 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         self.recipe = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
 
-    
-    @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
+        
+    @patch('queue.models.CommandMessageManager')
     @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
     def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
@@ -109,7 +109,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
-        self.assertEqual(mock_msg_mgr.call_count, 2)
+        self.assertEqual(mock_msg_mgr.call_count, 1)
         self.assertEqual(mock_create.call_count, 2)
         
         # Verify events were created
@@ -150,7 +150,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
-        self.assertEqual(mock_msg_mgr.call_count, 3)
+        self.assertEqual(mock_msg_mgr.call_count,2)
         self.assertEqual(mock_create.call_count, 3)
         
         # Verify events were created
