@@ -107,7 +107,7 @@ DEBUG = False
 
 # authentication toggle, to be used for testing
 AUTHENTICATION_ENABLED = get_env_boolean('AUTHENTICATION_ENABLED', True)
-print AUTHENTICATION_ENABLED
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
@@ -193,7 +193,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 if AUTHENTICATION_ENABLED:
-    print "auth enabled"
+
     REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework.authentication.SessionAuthentication',
@@ -221,7 +221,7 @@ if AUTHENTICATION_ENABLED:
         'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     }
 else:
-    print "auth disabled"
+
     REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': (
         ),
