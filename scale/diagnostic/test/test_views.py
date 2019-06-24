@@ -14,7 +14,7 @@ from util import rest
 
 class TestQueueScaleBakeView(APITransactionTestCase):
 
-    fixtures = ['diagnostic_job_types.json']
+    fixtures = ['diagnostic_job_types.json', 'diagnostic_recipe_types.json']
 
     def setUp(self):
         django.setup()
@@ -83,7 +83,7 @@ class TestQueueScaleCasinoView(APITransactionTestCase):
 
 class TestQueueScaleHelloView(APITransactionTestCase):
 
-    fixtures = ['diagnostic_job_types.json']
+    fixtures = ['diagnostic_job_types.json', 'diagnostic_recipe_types.json']
 
     def setUp(self):
         django.setup()
@@ -118,7 +118,7 @@ class TestQueueScaleHelloView(APITransactionTestCase):
 
 class TestQueueScaleRouletteView(APITransactionTestCase):
 
-    fixtures = ['diagnostic_job_types.json']
+    fixtures = ['diagnostic_job_types.json', 'diagnostic_recipe_types.json']
 
     def setUp(self):
         django.setup()
