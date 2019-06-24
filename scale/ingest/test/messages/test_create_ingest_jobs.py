@@ -15,15 +15,18 @@ from ingest.messages.create_ingest_jobs import create_strike_ingest_job_message,
 from ingest.models import Ingest, Strike, Scan
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 from storage.models import ScaleFile
 
 
 class TestCreateIngest(TestCase):
     
-    fixtures = ['ingest_job_types.json']
+    fixtures = ['ingest_job_types']
     
     def setUp(self):
         django.setup()
+        add_message_backend(AMQPMessagingBackend)
 
         self.workspace_1 = storage_test_utils.create_workspace()
         self.workspace_2 = storage_test_utils.create_workspace()
@@ -92,7 +95,8 @@ class TestCreateIngest(TestCase):
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
         self.scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
         
-    def test_json_create(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_json_create(self, mock_msg_mgr):
         """Tests converting a CreateIngest message to and from json
         """
 
@@ -124,7 +128,8 @@ class TestCreateIngest(TestCase):
         queue = Queue.objects.get(job_id=job.id)
         self.assertEqual(queue.job_id, job.id)
 
-    def test_execute(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_execute(self, mock_msg_mgr):
         """Tests executing a CreateIngest message """
         message = create_strike_ingest_job_message(self.ingest.id, self.strike.id)
         result = message.execute()
