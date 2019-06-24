@@ -382,7 +382,7 @@ class RecipeDefinition(object):
         while unmarked_set:
             node_name = unmarked_set.pop()
             node = self.graph[node_name]
-            self._topological_order_visit(node, results, perm_set, temp_set)
+            results = self._topological_order_visit(node, results, perm_set, temp_set)
             unmarked_set = set(self.graph.keys()) - perm_set
 
         self._topological_order = results
@@ -398,6 +398,8 @@ class RecipeDefinition(object):
         :type perm_set: set
         :param temp_set: A temporary set of visited nodes (node names)
         :type temp_set: set
+        :returns: A list of nodes in topological order
+        :rtype: list
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition contains a circular
             dependency
@@ -414,3 +416,5 @@ class RecipeDefinition(object):
             perm_set.add(node.name)
             temp_set.remove(node.name)
             results.insert(0, node.name)
+
+        return results
