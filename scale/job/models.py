@@ -1507,7 +1507,8 @@ class JobExecution(models.Model):
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
         """
 
-        if self.status == 'QUEUED':
+        # If job_exe has not started
+        if not self.started:
             return None, timezone.now()
 
         if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERSION.startswith('2.'):
