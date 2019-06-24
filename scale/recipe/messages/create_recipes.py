@@ -469,18 +469,15 @@ class CreateRecipes(CommandMessage):
         config = None
         if self.configuration:
             config = RecipeConfigurationV6(self.configuration)
-            
+        
         # wait max of 5 seconds for events to save
         from trigger.models import TriggerEvent
         event = sleep(TriggerEvent, self.event_id)
-        if not event:
-            logger.exception('Trigger event %d does not exist - returning mesage to queue ' % self.event_id)
-            return False
-            
+
         from ingest.models import IngestEvent
         ingest_event = sleep(IngestEvent, self.ingest_event_id)
-        if not ingest_event:
-            logger.exception('Ingest Event %d does not exist - returning message to queue.' % self.ingest_event_id)
+        if not event or not ingest_event:
+            logger.exception('TriggerEvent %d or Ingest Event %d does not exist - returning message to queue.' % (self.event_id, self.ingest_event_id))
             return False
             
         with transaction.atomic():

@@ -85,6 +85,11 @@ class IngestRecipeHandler(object):
         if recipe_revision:
             recipe_type = RecipeTypeRevision.objects.get_revision(recipe_name, recipe_revision).recipe_type
             
+        if len(recipe_type.get_definition().get_input_keys()) == 0:
+            logger.info('No inputs defined for recipe %s. Recipe will not be ran.' % recipe_name)
+            return
+        
+            
         if recipe_type and recipe_type.is_active:
             # Assuming one input per recipe, so pull the first defined input you find
             recipe_data = Data()
@@ -93,6 +98,7 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(source, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
+            # This can cause a race condition with a slow DB.
             messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
                                                convert_data_to_v6_json(recipe_data).get_dict(), 
                                                event.id, ingest_event.id)

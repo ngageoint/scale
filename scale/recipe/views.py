@@ -481,13 +481,8 @@ class RecipesView(ListAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
-            description = {'user': 'Anonymous'}
-            event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
-            messages = create_recipes_messages(recipe_type, recipe_type.revision_num, recipeData.get_data(),
-                                               event.id, None, configuration)
-            CommandMessageManager().send_messages(messages)
-            # recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(),
-            #                                                     recipe_config=configuration)
+            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data(),
+                                                                recipe_config=configuration)
         except (InvalidData, InvalidRecipeData) as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
         except InactiveRecipeType as err:
