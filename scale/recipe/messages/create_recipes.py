@@ -21,6 +21,7 @@ from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes
 from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, RecipeTypeRevision
+from util.database import sleep
 
 
 REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipescl
@@ -470,19 +471,17 @@ class CreateRecipes(CommandMessage):
             config = RecipeConfigurationV6(self.configuration)
             
         # wait max of 5 seconds for events to save
-        tries = 0
-        while tries < 500:
-            time.sleep(.01)
-            tries += 1
-            try:
-                from trigger.models import TriggerEvent
-                from ingest.models import IngestEvent
-                event = TriggerEvent.objects.get(id=self.event_id)
-                ingest_event = IngestEvent.objects.get(id=self.ingest_event_id)
-                if event and ingest_event:
-                    break;
-            except TriggerEvent.DoesNotExist, IngestEvent.DoesNotExist:
-                pass
+        from trigger.models import TriggerEvent
+        event = sleep(TriggerEvent, self.event_id)
+        if not event:
+            logger.exception('Trigger event %d does not exist - returning mesage to queue ' % self.event_id)
+            return False
+            
+        from ingest.models import IngestEvent
+        ingest_event = sleep(IngestEvent, self.ingest_event_id)
+        if not ingest_event:
+            logger.exception('Ingest Event %d does not exist - returning message to queue.' % self.ingest_event_id)
+            return False
             
         with transaction.atomic():
             recipe_input_data = DataV6(self.recipe_input_data).get_data()

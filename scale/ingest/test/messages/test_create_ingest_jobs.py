@@ -9,10 +9,10 @@ import job.test.utils as job_test_utils
 import ingest.test.utils as ingest_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-
+from job.models import Job
 from ingest.messages.create_ingest_jobs import create_strike_ingest_job_message, \
                                                create_scan_ingest_job_message, CreateIngest, STRIKE_JOB_TYPE
-from ingest.models import Strike, Scan
+from ingest.models import Ingest, Strike, Scan
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from messaging.backends.amqp import AMQPMessagingBackend
@@ -38,7 +38,11 @@ class TestCreateIngest(TestCase):
         self.source_file.add_data_type_tag('type2')
         self.source_file.add_data_type_tag('type3')
 
-        self.ingest = ingest_test_utils.create_ingest(source_file=self.source_file, new_workspace=self.workspace_2)
+        self.ingest = Ingest.objects.create(file_name='input_file', file_size=10, status='TRANSFERRING', 
+                                            bytes_transferred=10, transfer_started=now(), media_type='text/plain',
+                                            ingest_started=now(), data_started=now(), 
+                                            workspace=self.workspace_1, new_workspace=self.workspace_2, 
+                                            data_type_tags=['type1'], source_file=self.source_file)
 
         manifest = job_test_utils.create_seed_manifest(inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         self.jt1 = job_test_utils.create_seed_job_type(manifest=manifest)
@@ -106,19 +110,46 @@ class TestCreateIngest(TestCase):
         result = new_message.execute()
 
         self.assertTrue(result)
-        self.assertEqual(len(new_message.new_messages), 1)
-        self.assertTrue(new_message.new_messages[0].type, 'process_job_input')
-
+        # Verify the ingest job has been created
+        job = Job.objects.all().last()
+        self.assertEqual(job.job_type.name, 'scale-ingest')
+        job_data = job.get_input_data()
+        for value in job_data.values:
+            if value == 'ingest_id':
+                self.assertEqual(job_data.values[value].value, self.ingest.id)
+            elif value == 'workspace':
+                self.assertEqual(job_data.values[value].value, self.workspace_1.name)
+            elif value == 'new_workspace':
+                self.assertEqual(job_data.values[value].value, self.workspace_2.name)
+            
+        # Verify job has been queueud
+        from queue.models import Queue
+        queue = Queue.objects.get(job_id=job.id)
+        self.assertEqual(queue.job_id, job.id)
 
     def test_execute(self):
         """Tests executing a CreateIngest message """
         message = create_strike_ingest_job_message(self.ingest.id, self.strike.id)
         result = message.execute()
         self.assertTrue(result)
-        self.assertEqual(len(message.new_messages), 1)
-        new_message = message.new_messages[0]
-        self.assertTrue(new_message.type, 'process_job_input')
-
+        
+         # Verify the ingest job has been created
+        job = Job.objects.all().last()
+        self.assertEqual(job.job_type.name, 'scale-ingest')
+        job_data = job.get_input_data()
+        for value in job_data.values:
+            if value == 'ingest_id':
+                self.assertEqual(job_data.values[value].value, self.ingest.id)
+            elif value == 'workspace':
+                self.assertEqual(job_data.values[value].value, self.workspace_1.name)
+            elif value == 'new_workspace':
+                self.assertEqual(job_data.values[value].value, self.workspace_2.name)
+            
+        # Verify job has been queueud
+        from queue.models import Queue
+        queue = Queue.objects.get(job_id=job.id)
+        self.assertEqual(queue.job_id, job.id)
+        
         # TODO test scan ingest job
         # message = create_scan_ingest_job_message(self.ingest.id, self.workspace_1.name, self.workspace_2.name,
         #                                            self.scan.id, self.source_file.file_name)

@@ -10,7 +10,6 @@ from data.data.data import Data
 from data.data.value import JsonValue
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.models import Job
-from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from queue.models import Queue
 from trigger.models import TriggerEvent
@@ -157,9 +156,6 @@ class CreateIngest(CommandMessage):
             ingest.job = ingest_job
             ingest.status = 'QUEUED'
             ingest.save()
-
-        job = Job.objects.get_details(ingest_job.id)
-        self.new_messages.extend(create_process_job_input_messages([job.pk]))
         
         return True
  

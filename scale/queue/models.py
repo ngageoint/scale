@@ -367,7 +367,11 @@ class QueueManager(models.Manager):
                 job.save()
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
-
+        
+        # Send message to start processing job input (done outside the transaction to hope the job exists)
+        CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
+        
+        # queue and return the job
         self.queue_jobs([job])
         job = Job.objects.get_details(job.id)
         
