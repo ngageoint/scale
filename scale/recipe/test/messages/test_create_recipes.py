@@ -15,6 +15,8 @@ from ingest.models import IngestEvent, Strike
 import ingest.test.utils as ingest_test_utils
 from job.models import Job, JobType, JobTypeRevision
 from job.test import utils as job_test_utils
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.diff.forced_nodes import ForcedNodes
@@ -34,8 +36,10 @@ class TestCreateRecipes(TestCase):
     
     def setUp(self):
         django.setup()
+        add_message_backend(AMQPMessagingBackend)
         
-    def test_json_create_new(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_json_create_new(self, mock_msg_mgr):
         """Test converting a CreateRecipes message to and from JSON when creating new"""
         workspace = storage_test_utils.create_workspace()
         source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
