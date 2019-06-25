@@ -27,7 +27,7 @@ VERSION_COUNTER = 1
 TITLE_COUNTER = 1
 DESCRIPTION_COUNTER = 1
 
-SUB_RECIPE_DEFINITION = {'version': '6',
+SUB_RECIPE_DEFINITION = {'version': '7',
                    'input': {'files': [],
                              'json': []},
                    'nodes': {'node_a': {'dependencies': [],
@@ -36,7 +36,7 @@ SUB_RECIPE_DEFINITION = {'version': '6',
                                                       'job_type_version': '1.0.0',
                                                       'job_type_revision': 1}}}}
 
-RECIPE_DEFINITION = {'version': '6',
+RECIPE_DEFINITION = {'version': '7',
                             'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
                                                  'multiple': False}],
                                       'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
@@ -57,7 +57,7 @@ RECIPE_DEFINITION = {'version': '6',
                                                  'node_type': {
                                                      'node_type': 'condition',
                                                      'interface': {
-                                                         'version': '6',
+                                                         'version': '7',
                                                          'files': [ {
                                                              'name': 'INPUT_IMAGE',
                                                              'media_types': ['image/png'],
@@ -65,7 +65,7 @@ RECIPE_DEFINITION = {'version': '6',
                                                              'multiple': True}],
                                                          'json': []},
                                                      'data_filter': {
-                                                         'version': '6',
+                                                         'version': '7',
                                                          'all': True,
                                                          'filters': [ {'name': 'INPUT_IMAGE',
                                                                        'type': 'media-type',
@@ -109,7 +109,7 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
 
     if not definition:
         definition = {
-            'version': '6',
+            'version': '7',
             'input': {},
             'nodes': {}}
 

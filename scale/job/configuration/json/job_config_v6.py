@@ -10,8 +10,8 @@ from job.configuration.mount import HostMountConfig, VolumeMountConfig
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 JOB_CONFIG_SCHEMA = {
     'type': 'object',
@@ -155,12 +155,12 @@ class JobConfigurationV6(object):
 
         if 'version' not in self._config:
             self._config['version'] = SCHEMA_VERSION
-
+        
         if self._config['version'] == '2.0':
             # v2 and v6 are identical
             self._config['version'] = SCHEMA_VERSION
-        
-        if self._config['version'] != SCHEMA_VERSION:
+            
+        if self._config['version'] not in SCHEMA_VERSIONS:
             raise InvalidJobConfiguration('INVALID_VERSION', 'Invalid configuration version: %s' % unicode(self._config['version']))
 
         self._populate_default_values()

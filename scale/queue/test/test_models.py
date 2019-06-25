@@ -389,7 +389,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         data = Data()
         data.add_value(FileValue('input_a', [123]))
 
-        config_dict = {'version': '6',
+        config_dict = {'version': '7',
                        'output_workspaces': {'default': workspace.name},
                        'priority': 999}
         config = RecipeConfigurationV6(config_dict).get_configuration()
@@ -435,7 +435,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        config_dict = {'version': '6',
+        config_dict = {'version': '7',
                        'output_workspaces': {'default': workspace.name},
                        'priority': 999}
         config = RecipeConfigurationV6(config_dict).get_configuration()

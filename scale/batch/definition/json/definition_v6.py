@@ -9,7 +9,8 @@ from batch.definition.exceptions import InvalidDefinition
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
 
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 BATCH_DEFINITION_SCHEMA = {
     'type': 'object',
@@ -54,7 +55,7 @@ def convert_definition_to_v6(definition):
     :rtype: :class:`batch.definition.json.definition_v6.BatchDefinitionV6`
     """
 
-    json_dict = {'version': '6'}
+    json_dict = {'version': SCHEMA_VERSION}
     if definition.root_batch_id is not None:
         prev_batch_dict = {'root_batch_id': definition.root_batch_id}
         if definition.forced_nodes:
@@ -84,7 +85,7 @@ class BatchDefinitionV6(object):
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION
 
-        if self._definition['version'] != SCHEMA_VERSION:
+        if self._definition['version'] not in SCHEMA_VERSIONS:
             msg = '%s is an unsupported version number' % self._definition['version']
             raise InvalidDefinition('INVALID_BATCH_DEFINITION', msg)
 

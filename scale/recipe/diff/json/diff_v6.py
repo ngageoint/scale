@@ -7,8 +7,8 @@ from jsonschema.exceptions import ValidationError
 from recipe.diff.exceptions import InvalidDiff
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 RECIPE_DIFF_SCHEMA = {
     'type': 'object',
@@ -227,7 +227,7 @@ def convert_diff_to_v6(graph_diff):
 
     reasons = []
     nodes = {}
-    json_dict = {'version': '6', 'can_be_reprocessed': graph_diff.can_be_reprocessed, 'reasons': reasons,
+    json_dict = {'version': SCHEMA_VERSION, 'can_be_reprocessed': graph_diff.can_be_reprocessed, 'reasons': reasons,
                  'nodes': nodes}
 
     if not graph_diff.can_be_reprocessed:
@@ -337,7 +337,7 @@ class RecipeDiffV6(object):
         if 'version' not in self._diff:
             self._diff['version'] = SCHEMA_VERSION
 
-        if self._diff['version'] != SCHEMA_VERSION:
+        if self._diff['version'] not in SCHEMA_VERSIONS:
             raise InvalidDiff('%s is an unsupported version number' % self._diff['version'])
 
         self._populate_default_values()

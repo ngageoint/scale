@@ -8,7 +8,8 @@ from data.filter.filter import DataFilter
 from data.filter.exceptions import InvalidDataFilter
 
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 
 DATA_FILTER_SCHEMA = {
@@ -115,7 +116,7 @@ class DataFilterV6(object):
         if 'version' not in self._data_filter:
             self._data_filter['version'] = SCHEMA_VERSION
             
-        if self._data_filter['version'] != SCHEMA_VERSION:
+        if self._data_filter['version'] not in SCHEMA_VERSIONS:
             msg = '%s is an unsupported version number'
             raise InvalidDataFilter('INVALID_VERSION', msg % self._data_filter['version'])
 
