@@ -36,7 +36,9 @@ def dcos_login():
 
 
 def run(client):
-    silo_address = os.getenv('SILO_ADDRESS', None)
+    silo_admin_password = os.getenv('ADMIN_PASSWORD', 'spicy-pickles17!')
+    silo_hub_org = os.getenv('SILO_HUB_ORG', 'geointseed')
+    silo_url = os.getenv('SILO_URL', '')
 
     blocking_apps = []
 
@@ -83,21 +85,37 @@ def run(client):
         blocking_apps.append(app_name)
 
     # Determine if Web Server should be deployed.
-    if not silo_address:
+    scan_silo = False
+    if not len(silo_url):
         app_name = '%s-silo' % FRAMEWORK_NAME
         deploy_silo(client, app_name, db_url)
-        silo_address = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
+        silo_url = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
         blocking_apps.append(app_name)
+        scan_silo = True
 
     # Determine if UI should be deployed.
     if DEPLOY_UI.lower() == 'true':
         app_name = '%s-ui' % FRAMEWORK_NAME
-        deploy_ui(client, app_name, webserver_url, silo_address)
+        deploy_ui(client, app_name, webserver_url, silo_url)
         print("WEBSERVER_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:80" % (subdomain_gen(app_name)))
 
     # Wait for all needed apps to be healthy
     for app_name in blocking_apps:
         get_host_port_from_healthy_app(client, app_name, 0)
+
+    # If we deployed Silo, attempt to configure a scan.
+    if scan_silo:
+        # Grab access token to Silo
+        result = requests.post('{}login'.format(silo_url),
+                               json={'username': 'admin', 'password': silo_admin_password})
+        token = 'token {}'.format(result.json()['token'])
+        # Add the registry org
+        requests.post('{}registries/add'.format(silo_url),
+                      json={'name': silo_hub_org, 'url': 'https://hub.docker.com', 'org': silo_hub_org},
+                      headers={'Authorization': token})
+        # Trigger scan of registry org
+        requests.get('{}registries/scan'.format(silo_url),
+                     headers={'Authorization': token})
 
 
 def subdomain_gen(app_name):
@@ -287,16 +305,7 @@ def deploy_ui(client, app_name, webserver_url, silo_url):
     marathon = initialize_app_template('ui', app_name, os.getenv(
         'UI_DOCKER_IMAGE', ui_docker_img_default))
 
-    vhost = os.getenv('SCALE_VHOST')
-
-    env_map = {
-        'SILO_URL': 'SILO_URL',
-    }
-
-    apply_set_envs(marathon, env_map)
-
     arbitrary_env = {
-        'DCOS_PACKAGE_FRAMEWORK_NAME': FRAMEWORK_NAME,
         'API_BACKEND': webserver_url,
         'SILO_BACKEND': silo_url,
         'CONTEXTS': '/service/%s' % FRAMEWORK_NAME
@@ -306,7 +315,7 @@ def deploy_ui(client, app_name, webserver_url, silo_url):
         marathon['env'][env] = arbitrary_env[env]
 
     marathon['labels']['DCOS_SERVICE_NAME'] = FRAMEWORK_NAME
-    marathon['labels']['HAPROXY_0_VHOST'] = vhost
+    marathon['labels']['HAPROXY_0_VHOST'] = os.getenv('SCALE_VHOST')
 
     deploy_marathon_app(client, marathon)
 
@@ -317,8 +326,14 @@ def deploy_silo(client, app_name, db_url):
         marathon = initialize_app_template('silo', app_name,
                                            os.getenv('SILO_DOCKER_IMAGE'))
 
+        env_map = {
+            'ADMIN_PASSWORD': 'SILO_ADMIN_PASSWORD'
+        }
+
+        apply_set_envs(marathon, env_map)
+
         arbitrary_env = {
-            'DATABASE_URL': db_url
+            'DATABASE_URL': db_url.replace('postgis', 'postgres') + '?sslmode=disable'
         }
         # For all environment variable that are set add to marathon json.
         for env in arbitrary_env:
