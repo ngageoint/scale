@@ -24,7 +24,7 @@ from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, Recipe
 from util.database import sleep
 
 
-REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipescl
+REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
 SUB_RECIPE_TYPE = 'sub-recipes'  # Message type for creating sub-recipes of another recipe
 NEW_RECIPE_TYPE = 'new-recipe'  # Message type for creating a new recipe of a recipe type
 

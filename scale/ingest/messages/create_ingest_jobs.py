@@ -150,7 +150,6 @@ class CreateIngest(CommandMessage):
         if ingest.new_workspace:
             data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
 
-        ingest_job = None
         with transaction.atomic():
             ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
             ingest.job = ingest_job
