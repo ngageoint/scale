@@ -83,6 +83,7 @@ class RunningJobExecution(object):
         for task in self._all_tasks:
             self._remaining_tasks.append(task)
 
+
     @property
     def current_task(self):
         """Returns the currently running task of the job execution, or None if no task is currently running

@@ -23,7 +23,7 @@ from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.diff.diff import RecipeDiff
 from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
-from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
+from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError, InactiveRecipeType
 from recipe.instance.recipe import RecipeInstance
 from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
 from storage.models import ScaleFile, Workspace
@@ -96,7 +96,11 @@ class RecipeManager(models.Manager):
         :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
+        :raises :class:`recipe.exceptions.InactiveRecipeType`: If the recipe type is inactive
         """
+
+        if not recipe_type_rev.recipe_type.is_active:
+            raise InactiveRecipeType("Recipe Type %s is inactive" % recipe_type_rev.recipe_type.name)
 
         recipe = Recipe()
         recipe.recipe_type = recipe_type_rev.recipe_type
@@ -1193,7 +1197,7 @@ class RecipeTypeManager(models.Manager):
 
         return recipe_type
 
-    def edit_recipe_type_v6(self, recipe_type_id, title, description, definition, auto_update):
+    def edit_recipe_type_v6(self, recipe_type_id, title=None, description=None, definition=None, auto_update=None, is_active=None):
         """Edits the given recipe type and saves the changes in the database.  All database changes occur in an atomic
         transaction. An argument of None for a field indicates that the field should not change.
 
@@ -1207,13 +1211,15 @@ class RecipeTypeManager(models.Manager):
         :type definition: :class:`recipe.definition.definition.RecipeDefinition`
         :param auto_update: If true, recipes that contain this recipe type will automatically be updated
         :type auto_update: bool
+        :param is_active: If true, make this recipe type active; if false, recipes of this type will no longer be created
+        :type is_active: bool
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If any part of the recipe
             definition violates the specification
         """
 
         from recipe.definition.exceptions import InvalidDefinition
-        from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message
+        from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message, create_activate_recipe_message
 
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
@@ -1223,6 +1229,13 @@ class RecipeTypeManager(models.Manager):
 
         if description is not None:
             recipe_type.description = description
+        
+        if is_active is not None:
+            recipe_type.is_active = is_active
+            if auto_update:
+                super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
+                CommandMessageManager().send_messages(msgs)
 
         if definition:
             if isinstance(definition, RecipeDefinition):
@@ -1314,6 +1327,14 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.order_by(*order)
         else:
             recipe_types = recipe_types.order_by('last_modified')
+
+        for rt in recipe_types:
+            definition = rt.get_definition()
+            jts = definition.get_job_type_keys()
+            rt.job_types = []
+            for jt in jts:
+                rt.job_types.append({'name': jt[0], 'version': jt[1]})
+            rt.sub_recipe_types = definition.get_recipe_type_names()
         return recipe_types
 
     def validate_recipe_type_v6(self, name, definition_dict):
@@ -1499,6 +1520,15 @@ class RecipeType(models.Model):
         """
 
         return rest_utils.strip_schema_version(convert_recipe_definition_to_v6_json(self.get_definition()).get_dict())
+
+    def natural_key(self):
+        """Django method to define the natural key for a recipe type as the
+        recipe type name
+
+        :returns: A string representing the natural key
+        :rtype: tuple(string)
+        """
+        return (self.name,)
 
     class Meta(object):
         """meta information for the db"""

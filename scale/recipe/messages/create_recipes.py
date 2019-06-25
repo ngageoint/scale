@@ -13,10 +13,11 @@ from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.diff.diff import RecipeDiff
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
+from recipe.exceptions import InactiveRecipeType
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes_messages
 from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
-from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeTypeRevision
+from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, RecipeTypeRevision
 
 
 REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
@@ -268,7 +269,11 @@ class CreateRecipes(CommandMessage):
             self._perform_locking()
             recipes = self._find_existing_recipes()
             if not recipes:
-                recipes = self._create_recipes()
+                try:
+                    recipes = self._create_recipes()
+                except InactiveRecipeType as ex:
+                    logger.exception('Attempting to create a recipe with an inactive recipe type: %s. Message will not re-run.', ex)
+                    return True
 
         self._create_messages(recipes)
 
@@ -392,6 +397,10 @@ class CreateRecipes(CommandMessage):
         :rtype: list
         """
 
+        rt = RecipeType.objects.get(name=self.recipe_type_name)
+        if not rt.is_active:
+            raise InactiveRecipeType("Recipe Type %s is inactive" % rt.name)
+            
         recipes = []
 
         # Supersede recipes that are being reprocessed
@@ -422,7 +431,7 @@ class CreateRecipes(CommandMessage):
                                                              superseded_recipe=superseded_recipe,
                                                              copy_superseded_input=True)
                     recipes.append(recipe)
-                except InvalidData:
+                except (InvalidData, InactiveRecipeType) as ex:
                     cannot_reprocess_count += 1
             else:
                 cannot_reprocess_count += 1

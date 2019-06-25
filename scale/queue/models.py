@@ -423,6 +423,7 @@ class QueueManager(models.Manager):
         :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
+        :raises :class:`recipe.exceptions.InactiveRecipeType`: If the recipe type is inactive
         """
 
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)

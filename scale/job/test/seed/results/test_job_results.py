@@ -7,8 +7,8 @@ import os
 from django.test import TransactionTestCase
 from job.configuration.results.exceptions import OutputCaptureError
 from job.seed.results.job_results import JobResults
-from job.seed.types import SeedOutputFiles
-from mock import patch
+from job.seed.types import SeedOutputFiles, SeedOutputJson
+from mock import patch, mock_open
 from product.types import ProductFileMetadata
 
 
@@ -25,6 +25,22 @@ class TestSeedJobResults(TransactionTestCase):
             "multiple": False,
             "required": True
         }
+
+        outputs_json_interface = [
+            {
+                'name': 'INPUT_SIZE',
+                'type': 'integer'
+            },
+            {
+                'name': 'MISSING_KEY',
+                'type': 'string',
+                'required': False
+            }
+        ]
+
+        self.seed_outputs_json = [SeedOutputJson(x) for x in outputs_json_interface]
+
+        self.outputs_json_dict = {'INPUT_FILE_NAME': '/my/file', 'INPUT_SIZE': 50}
 
     @patch('job.seed.types.SeedOutputFiles.get_files')
     def test_capture_output_files_missing(self, get_files):
@@ -99,6 +115,9 @@ class TestSeedJobResults(TransactionTestCase):
                                                                     source_collection='12345A',
                                                                     source_task='Calibration').__dict__)
 
+    def test_capture_output_json(self):
+        results = JobResults()
+        with patch("__builtin__.open", mock_open(read_data=json.dumps(self.outputs_json_dict))):
+            results._capture_output_json(self.seed_outputs_json)
 
-
-
+        self.assertDictEqual(results.get_dict(), {'files': {}, 'json': {'INPUT_SIZE': 50}, 'version': '7'})

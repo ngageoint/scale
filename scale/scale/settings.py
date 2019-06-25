@@ -204,7 +204,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES':
         ('util.rest.ScaleAPIPermissions',),
     'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework.filters.DjangoFilterBackend',
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'util.rest.DefaultPagination',
     'DEFAULT_RENDERER_CLASSES': (

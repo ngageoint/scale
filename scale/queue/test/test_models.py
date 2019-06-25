@@ -27,6 +27,7 @@ from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.definition.definition import RecipeDefinition
 from recipe.models import Recipe
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
+from recipe.exceptions import InactiveRecipeType
 
 
 class TestJobLoadManager(TestCase):
@@ -388,13 +389,29 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         data = Data()
         data.add_value(FileValue('input_a', [123]))
 
-        config_dict = {'version': '6',
+        config_dict = {'version': '7',
                        'output_workspaces': {'default': workspace.name},
                        'priority': 999}
         config = RecipeConfigurationV6(config_dict).get_configuration()
 
         created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event, recipe_config=config)
         self.assertDictEqual(created_recipe.configuration, config_dict)
+
+    @patch('queue.models.CommandMessageManager')
+    def test_inactive(self, mock_msg_mgr):
+        workspace = storage_test_utils.create_workspace()
+        event = trigger_test_utils.create_trigger_event()
+        recipetype1 = recipe_test_utils.create_recipe_type_v6(is_active=False)
+
+        data = Data()
+        data.add_value(FileValue('input_a', [123]))
+
+        config_dict = {'version': '6',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
+
+        self.assertRaises(InactiveRecipeType, Queue.objects.queue_new_recipe_v6, recipetype1, data, event, recipe_config=config)
 
     @patch('queue.models.CommandMessageManager')
     def test_successful_ingest(self, mock_msg_mgr):
@@ -418,7 +435,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        config_dict = {'version': '6',
+        config_dict = {'version': '7',
                        'output_workspaces': {'default': workspace.name},
                        'priority': 999}
         config = RecipeConfigurationV6(config_dict).get_configuration()

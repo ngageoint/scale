@@ -27,7 +27,7 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.configuration import JobConfiguration
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.data.job_data import JobData
-from job.exceptions import InvalidJobField
+from job.exceptions import InvalidJobField, InactiveJobType
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
@@ -102,6 +102,9 @@ class JobManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
         """
 
+        if not job_type_rev.job_type.is_active:
+            raise InactiveJobType("Job Type %s:%s is inactive" % (job_type_rev.job_type.name, job_type_rev.job_type.version))
+            
         job = Job()
         job.job_type = job_type_rev.job_type
         job.job_type_rev = job_type_rev
@@ -1030,7 +1033,10 @@ class Job(models.Model):
         """
 
         if self.configuration:
-            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+            try:
+                return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+            except InvalidJobConfiguration as ex:
+                return { 'Invalid Job Configuration': ex }
         else:
             return None
 
@@ -1250,7 +1256,6 @@ class JobExecutionManager(models.Manager):
         # Fetch a list of job executions
         job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
                                                              'jobexecutionend__error')
-        job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply job filtering
         job_exes = job_exes.filter(job__id=job_id)
@@ -1302,7 +1307,7 @@ class JobExecutionManager(models.Manager):
         # Fetch a list of job executions
         job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
                                                             'jobexecutionend__error', 'jobexecutionoutput')
-        job_exe = job_exe.defer('stdout', 'stderr', 'job__input', 'job__output')
+        job_exe = job_exe.defer('job__input', 'job__output')
 
         # Apply job and execution filtering
         job_exe = job_exe.get(job__id=job_id, exe_num=exe_num)
@@ -1349,7 +1354,7 @@ class JobExecutionManager(models.Manager):
         :returns: The job execution with extra related attributes.
         :rtype: :class:`job.models.JobExecution`
         """
-        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
+        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node')
         job_exe = job_exe.get(pk=job_exe_id)
 
         return job_exe
@@ -1421,33 +1426,6 @@ class JobExecution(models.Model):
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-
-    # TODO: old fields that are being nulled out, they should be removed in the future after they have been moved to the
-    # new job_exe_end and job_exe_output tables and they are no longer needed for the REST API
-    status = models.CharField(blank=True, max_length=50, null=True, db_index=True)
-    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
-    command_arguments = models.CharField(blank=True, max_length=1000, null=True)
-    environment = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    cpus_scheduled = models.FloatField(blank=True, null=True)
-    mem_scheduled = models.FloatField(blank=True, null=True)
-    disk_out_scheduled = models.FloatField(blank=True, null=True)
-    disk_total_scheduled = models.FloatField(blank=True, null=True)
-    pre_started = models.DateTimeField(blank=True, null=True)
-    pre_completed = models.DateTimeField(blank=True, null=True)
-    pre_exit_code = models.IntegerField(blank=True, null=True)
-    job_started = models.DateTimeField(blank=True, null=True)
-    job_completed = models.DateTimeField(blank=True, null=True)
-    job_exit_code = models.IntegerField(blank=True, null=True)
-    job_metrics = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    post_started = models.DateTimeField(blank=True, null=True)
-    post_completed = models.DateTimeField(blank=True, null=True)
-    post_exit_code = models.IntegerField(blank=True, null=True)
-    stdout = models.TextField(blank=True, null=True)
-    stderr = models.TextField(blank=True, null=True)
-    results_manifest = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    results = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    ended = models.DateTimeField(blank=True, db_index=True, null=True)
-    last_modified = models.DateTimeField(blank=True, db_index=True, null=True)
 
     objects = JobExecutionManager()
 
@@ -1660,7 +1638,7 @@ class JobExecution(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobExecutionEndManager(models.Manager):
@@ -1754,7 +1732,7 @@ class JobExecutionEnd(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_end'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobExecutionOutput(models.Model):
@@ -1797,7 +1775,7 @@ class JobExecutionOutput(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_output'
-        index_together = ['job', 'exe_num']
+        unique_together = ['job', 'exe_num']
 
 
 class JobInputFileManager(models.Manager):
@@ -2056,7 +2034,7 @@ class JobTypeManager(models.Manager):
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
-        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message
+        from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message, create_activate_recipe_message
         from recipe.models import RecipeTypeJobLink
 
         # Acquire model lock for job type
@@ -2080,11 +2058,17 @@ class JobTypeManager(models.Manager):
         else:
             currentManifest = SeedManifest(job_type.manifest)
 
+        currentConfiguration = configuration
         if not configuration:
-            configuration = job_type.get_job_configuration()
-        configuration.validate(currentManifest)
-        secrets = configuration.remove_secret_settings(currentManifest)
-        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            currentConfiguration = job_type.get_job_configuration()
+        currentConfiguration.validate(currentManifest)
+
+        # Get any new secrets if we have a new and valid configuration
+        secrets = None
+        if configuration:
+            secrets = configuration.remove_secret_settings(currentManifest)
+
+        job_type.configuration = convert_config_to_v6_json(currentConfiguration).get_dict()
 
         if docker_image:
             job_type.docker_image = docker_image
@@ -2093,6 +2077,11 @@ class JobTypeManager(models.Manager):
         if is_active and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
+            if auto_update:
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
+                CommandMessageManager().send_messages(msgs)
+                
         if is_paused and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
             job_type.is_paused = is_paused
@@ -2135,7 +2124,7 @@ class JobTypeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-clock', version='1.0')
+        return JobType.objects.get(name='scale-clock', version='1.0.0')
 
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of all job types
@@ -2307,9 +2296,13 @@ class JobTypeManager(models.Manager):
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            configuration = job_type.get_job_configuration()
-            manifest = SeedManifest(job_type.manifest, do_validate=False)
-            configuration.remove_secret_settings(manifest)
+            try:
+                configuration = job_type.get_job_configuration()
+                manifest = SeedManifest(job_type.manifest, do_validate=False)
+                configuration.remove_secret_settings(manifest)
+                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            except InvalidJobConfiguration as ex:
+                job_type.configuration = JobConfigurationV6().get_dict()
 
         return job_type
 
@@ -2771,7 +2764,10 @@ class JobType(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        try:
+            return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
+        except InvalidJobConfiguration as ex:
+            return { 'Invalid Job Configuration': ex }
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

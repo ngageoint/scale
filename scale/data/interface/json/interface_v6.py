@@ -9,8 +9,8 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 INTERFACE_SCHEMA = {
     'type': 'object',
@@ -103,7 +103,7 @@ def convert_interface_to_v6_json(interface):
             json_dict = {'name': parameter.name, 'type': parameter.json_type, 'required': parameter.required}
             json.append(json_dict)
 
-    interface_dict = {'version': '6', 'files': files, 'json': json}
+    interface_dict = {'version': SCHEMA_VERSION, 'files': files, 'json': json}
 
     return InterfaceV6(interface=interface_dict, do_validate=False)
 
@@ -129,7 +129,7 @@ class InterfaceV6(object):
         if 'version' not in self._interface:
             self._interface['version'] = SCHEMA_VERSION
 
-        if self._interface['version'] != SCHEMA_VERSION:
+        if self._interface['version'] not in SCHEMA_VERSIONS:
             msg = '%s is an unsupported version number'
             raise InvalidInterface('INVALID_VERSION', msg % self._interface['version'])
 

@@ -65,13 +65,16 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_revision': 1}}}}
         self.recipe_v7 = recipe_test_utils.create_recipe_type_v6(name='test-recipe-v7', definition=v7_recipe_type_def)
 
+    @patch ('recipe.models.CommandMessageManager')
+    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
+    @patch('recipe.messages.update_recipe_definition.create_sub_update_recipe_definition_message')
     @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_recipe_input_messages')
-    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
+    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr, mock_sub, mock_active, mock_msg_mgr2):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
-            'version': '6',
+            'version': '7',
             'workspace': self.workspace.name,
             'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
@@ -119,7 +122,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         manifest = job_test_utils.create_seed_manifest(
             inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
-        definition = {'version': '6',
+        definition = {'version': '7',
                        'input': {'files': [{'name': 'INPUT_FILE',
                                             'media_types': ['text/plain'],
                                             'required': True,

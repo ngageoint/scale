@@ -1396,7 +1396,6 @@ class TestJobTypesPostViewV6(APITestCase):
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
 
-        recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         mock_create.assert_called_with(self.recipe_type1.id, job_type.id)
 
 
@@ -1428,9 +1427,9 @@ class TestJobTypeDetailsViewV6(APITestCase):
             'output_workspaces': {'default': self.output_workspace.name},
             'settings': {
                 'DB_HOST': 'scale',
+                'DB_PASS': 'secret'
             },
         }
-
 
         self.workspace = storage_test_utils.create_workspace()
 
@@ -1461,6 +1460,8 @@ class TestJobTypeDetailsViewV6(APITestCase):
         self.assertIsNotNone(result['manifest'])
         self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
+        #Secrets scrubbed from configuration on return
+        self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'scale'})
 
     def test_edit_not_found(self):
         """Tests calling the get job type details view with a job name/version that does not exist."""
@@ -1650,6 +1651,25 @@ class TestJobTypesValidationViewV6(APITransactionTestCase):
         """Tests validating a new job type."""
 
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
+    def test_empty_output_successful(self):
+        """Tests validating a new job type without outputs"""
+
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['interface']['outputs'] = {}
 
         json_data = {
             'manifest': manifest,
