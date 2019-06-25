@@ -86,7 +86,7 @@ class IngestRecipeHandler(object):
             recipe_type = RecipeTypeRevision.objects.get_revision(recipe_name, recipe_revision).recipe_type
             
         if len(recipe_type.get_definition().get_input_keys()) == 0:
-            logger.info('No inputs defined for recipe %s. Recipe will not be ran.' % recipe_name)
+            logger.info('No inputs defined for recipe %s. Recipe will not be run.' % recipe_name)
             return
         
             
