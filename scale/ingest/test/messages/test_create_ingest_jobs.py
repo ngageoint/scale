@@ -95,9 +95,10 @@ class TestCreateIngest(TestCase):
         scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
         self.scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
         
-    @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_job_input_messages')
-    def test_json_create(self, mock_create, mock_msg_mgr):
+    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.messages.create_ingest_jobs.create_strike_ingest_job_message')
+    def test_json_create(self, mock_create, mock_msg_mgr, mock_process):
         """Tests converting a CreateIngest message to and from json
         """
 
@@ -129,9 +130,10 @@ class TestCreateIngest(TestCase):
         queue = Queue.objects.get(job_id=job.id)
         self.assertEqual(queue.job_id, job.id)
 
-    @patch('queue.models.CommandMessageManager')
     @patch('queue.models.create_process_job_input_messages')
-    def test_execute(self, mock_create, mock_msg_mgr):
+    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.messages.create_ingest_jobs.create_strike_ingest_job_message')
+    def test_execute(self, mock_create, mock_msg_mgr, mock_process):
         """Tests executing a CreateIngest message """
         message = create_strike_ingest_job_message(self.ingest.id, self.strike.id)
         result = message.execute()
