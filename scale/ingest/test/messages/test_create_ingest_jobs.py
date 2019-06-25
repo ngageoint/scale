@@ -4,9 +4,9 @@ import os
 import django
 from django.test import TestCase
 from django.utils.timezone import now
+from mock import patch
 
 import job.test.utils as job_test_utils
-import ingest.test.utils as ingest_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from job.models import Job

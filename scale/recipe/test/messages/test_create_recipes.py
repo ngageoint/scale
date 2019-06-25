@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 from django.utils.timezone import now
+from mock import patch
 
 from batch.test import utils as batch_test_utils
 from data.data.data import Data
