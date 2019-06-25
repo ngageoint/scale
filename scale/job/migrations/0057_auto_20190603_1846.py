@@ -108,18 +108,6 @@ class Migration(migrations.Migration):
             model_name='jobexecution',
             name='stdout',
         ),
-        migrations.AlterUniqueTogether(
-            name='jobexecution',
-            unique_together=set([('job', 'exe_num')]),
-        ),
-        migrations.AlterUniqueTogether(
-            name='jobexecutionend',
-            unique_together=set([('job', 'exe_num')]),
-        ),
-        migrations.AlterUniqueTogether(
-            name='jobexecutionoutput',
-            unique_together=set([('job', 'exe_num')]),
-        ),
         migrations.AlterIndexTogether(
             name='jobexecution',
             index_together=set([]),
@@ -131,5 +119,17 @@ class Migration(migrations.Migration):
         migrations.AlterIndexTogether(
             name='jobexecutionoutput',
             index_together=set([]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='jobexecution',
+            unique_together=set([('job', 'exe_num')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='jobexecutionend',
+            unique_together=set([('job', 'exe_num')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='jobexecutionoutput',
+            unique_together=set([('job', 'exe_num')]),
         ),
     ]
