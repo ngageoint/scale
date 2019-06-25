@@ -108,7 +108,7 @@ class NodeInstance(object):
                     needs_to_be_created = False
                     self.children_can_be_created = False
                     break
-                if parent_node.is_accepted() != self.parental_acceptance[name]:
+                if self.parental_acceptance[name] and not parent_node.is_accepted():
                     needs_to_be_created = False
                     self.children_can_be_created = False
                     break

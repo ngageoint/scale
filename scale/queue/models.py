@@ -366,6 +366,8 @@ class QueueManager(models.Manager):
                 job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data,
                                                 job_config=job_configuration)
                 job.save()
+                
+                # This can cause a race condition with a slow DB.
                 CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
@@ -437,6 +439,14 @@ class QueueManager(models.Manager):
             recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=event_pk, ingest_id=ingest_event_pk, input_data=recipe_input,
                                                      recipe_config=recipe_config, batch_id=batch_id, superseded_recipe=superseded_recipe)
             recipe.save()
+            
+            # If root_recipe_id is allowed to be None moving forword then a recipe will never complete.
+            # The recipe pk is only accessible once the recipe is saved (L#442).
+            if not recipe.recipe_id and not recipe.root_recipe_id:
+                recipe.root_recipe_id = recipe.pk
+                recipe.save()
+
+            # This can cause a race condition with a slow DB.
             CommandMessageManager().send_messages(create_process_recipe_input_messages([recipe.pk]))
 
         return recipe
