@@ -1195,7 +1195,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return self.status == 'COMPLETED' and self.has_output()
+        return self.status == 'COMPLETED'
 
     def set_input(self, job_input):
         """Validates and sets the input for this job model. No database update is applied. This job should have its
@@ -1507,7 +1507,8 @@ class JobExecution(models.Model):
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
         """
 
-        if self.status == 'QUEUED':
+        # If job_exe has not started
+        if not self.started:
             return None, timezone.now()
 
         if settings.ELASTICSEARCH_VERSION and settings.ELASTICSEARCH_VERSION.startswith('2.'):
