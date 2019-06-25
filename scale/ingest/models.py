@@ -14,6 +14,7 @@ from django.utils.timezone import now
 
 from data.data.data import Data
 from data.data.value import JsonValue
+from ingest.messages.create_ingest_jobs import create_scan_ingest_job_message, create_strike_ingest_job_message
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
@@ -22,6 +23,7 @@ from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.models import JobType
+from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
 from storage.media_type import get_media_type
@@ -283,7 +285,6 @@ class IngestManager(models.Manager):
         groups = self._group_by_time(ingests, use_ingest_time)
         return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
 
-    @transaction.atomic
     def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
         """Starts a batch of tasks for the given scan in an atomic transaction.
 
@@ -296,44 +297,22 @@ class IngestManager(models.Manager):
         :param strike_id: ID of Strike that generated ingest
         :type strike_id: int
         """
-
-        # Create new ingest job and mark ingest as QUEUED
-        ingest_job_type = Ingest.objects.get_ingest_job_type()
-
+        
+        messages = []
         for ingest in ingests:
             logger.debug('Creating ingest task for %s', ingest.file_name)
-
-            when = ingest.transfer_ended if ingest.transfer_ended else now()
-            desc = {'file_name': ingest.file_name}
-
+            
             if scan_id:
-                # Use result from query to get ingest ID
-                # We need to find the id of each ingest that was created.
-                # Using scan_id and file_name together as a unique composite key
-                ingest_id = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name).id
-
-                desc['scan_id'] = scan_id
-                event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+                # TODO: Need to make sure scans work
+                messages.append(create_scan_ingest_job_message(ingest.id, scan_id, ingest.file_name))
             elif strike_id:
-                ingest_id = ingest.id
-                desc['strike_id'] = strike_id
-                event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
+                messages.append(create_strike_ingest_job_message(ingest.id, strike_id))
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 
-            data = Data()
-            data.add_value(JsonValue('ingest_id', ingest_id))
-            data.add_value(JsonValue('workspace', ingest.workspace.name))
-            if ingest.new_workspace:
-                data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
-
-            ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
-
-            ingest.job = ingest_job
-            ingest.status = 'QUEUED'
-            ingest.save()
-
-            logger.debug('Successfully created ingest task for %s', ingest.file_name)
+        CommandMessageManager().send_messages(messages)
+            
+        logger.debug('Successfully created ingest task for %s', ingest.file_name)
 
     def _group_by_time(self, ingests, use_ingest_time):
         """Groups the given ingests by hourly time slots.

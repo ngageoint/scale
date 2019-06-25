@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 import django
+from django.db import transaction
 from django.test import TestCase
 from django.utils.timezone import now
 from mock import patch, MagicMock
@@ -30,6 +31,19 @@ from storage.container import get_workspace_volume_path
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
 
+
+class MockCommandMessageManager():
+
+    def send_messages(self, commands):
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []
 
 class TestQueuedExecutionConfigurator(TestCase):
 
@@ -318,7 +332,26 @@ class TestQueuedExecutionConfigurator(TestCase):
         from ingest.test import utils as ingest_test_utils
         scan = ingest_test_utils.create_scan()
         ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace_1, new_workspace=workspace_2)
-        Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
+
+        # start ingest_tasks (can't call method due to using command messages)
+        when = ingest.transfer_ended if ingest.transfer_ended else now()
+        desc = {'file_name': ingest.file_name, 'scan_id': scan.id}
+        
+        from trigger.models import TriggerEvent
+        from data.data.value import JsonValue
+        event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+        data = Data()
+        data.add_value(JsonValue('ingest_id', ingest.id))
+        data.add_value(JsonValue('workspace', ingest.workspace.name))
+        if ingest.new_workspace:
+            data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
+            
+        from queue.models import Queue
+        with transaction.atomic():
+            ingest_job = Queue.objects.queue_new_job_v6(Ingest.objects.get_ingest_job_type(), data, event)
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
         expected_env_vars = {'INGEST_ID': str(ingest.id), 'WORKSPACE': workspace_1.name,
@@ -347,7 +380,26 @@ class TestQueuedExecutionConfigurator(TestCase):
         from ingest.test import utils as ingest_test_utils
         scan = ingest_test_utils.create_scan()
         ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace_1)
-        Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
+       
+        # start ingest_tasks (can't call method due to using command messages)
+        when = ingest.transfer_ended if ingest.transfer_ended else now()
+        desc = {'file_name': ingest.file_name, 'scan_id': scan.id}
+        
+        from trigger.models import TriggerEvent
+        from data.data.value import JsonValue
+        event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+        data = Data()
+        data.add_value(JsonValue('ingest_id', ingest.id))
+        data.add_value(JsonValue('workspace', ingest.workspace.name))
+        if ingest.new_workspace:
+            data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
+            
+        from queue.models import Queue
+        with transaction.atomic():
+            ingest_job = Queue.objects.queue_new_job_v6(Ingest.objects.get_ingest_job_type(), data, event)
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
         expected_env_vars = {'INGEST_ID': str(ingest.id), 'WORKSPACE': workspace_1.name}
@@ -434,7 +486,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         django.setup()
 
         add_message_backend(AMQPMessagingBackend)
-
+        
     @patch('queue.models.CommandMessageManager')
     def test_configure_scheduled_job_ingest(self, mock_msg_mgr):
         """Tests successfully calling configure_scheduled_job() on an ingest job"""
@@ -452,13 +504,32 @@ class TestScheduledExecutionConfigurator(TestCase):
         scan = ingest_test_utils.create_scan()
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace, new_workspace=new_workspace)
-        Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
 
+        # start ingest_tasks (can't call method due to using command messages)
+        when = ingest.transfer_ended if ingest.transfer_ended else now()
+        desc = {'file_name': ingest.file_name, 'scan_id': scan.id}
+        
+        from trigger.models import TriggerEvent
+        from data.data.value import JsonValue
+        event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+        data = Data()
+        data.add_value(JsonValue('ingest_id', ingest.id))
+        data.add_value(JsonValue('workspace', ingest.workspace.name))
+        if ingest.new_workspace:
+            data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
+            
+        from queue.models import Queue
+        with transaction.atomic():
+            ingest_job = Queue.objects.queue_new_job_v6(Ingest.objects.get_ingest_job_type(), data, event)
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
+            
         job = ingest.job
         resources = job.get_resources()
+        
         # Get job info off of the queue
         from queue.job_exe import QueuedJobExecution
-        from queue.models import Queue
         queue = Queue.objects.get(job_id=job.id)
         queued_job_exe = QueuedJobExecution(queue)
         queued_job_exe.scheduled('agent_1', node.id, resources)

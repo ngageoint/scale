@@ -359,24 +359,23 @@ class QueueManager(models.Manager):
 
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
-
         try:
             job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
             with transaction.atomic():
                 job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, input_data=data,
                                                 job_config=job_configuration)
                 job.save()
-                
-                # This can cause a race condition with a slow DB.
-                CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
-
-
-        # No lock needed for this job since it doesn't exist outside this transaction yet
+        
+        # Send message to start processing job input (done outside the transaction to hope the job exists)
+        # This can cause a race condition with a slow DB.
+        CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
+        
+        # queue and return the job
         self.queue_jobs([job])
         job = Job.objects.get_details(job.id)
-
+        
         return job
 
     # TODO: once Django user auth is used, have the user information passed into here

@@ -6,10 +6,13 @@ import logging
 from django.db import transaction
 
 from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue
 from ingest.models import IngestEvent, Scan, Strike
 from job.models import JobType
+from messaging.manager import CommandMessageManager
 from queue.models import Queue
+from recipe.messages.create_recipes import create_recipes_messages
 from recipe.models import RecipeType, RecipeTypeRevision
 from storage.models import Workspace
 from trigger.models import TriggerEvent
@@ -29,7 +32,6 @@ class IngestRecipeHandler(object):
 
         super(IngestRecipeHandler, self).__init__()
 
-    @transaction.atomic
     def process_manual_ingested_source_file(self, ingest_id, source_file, when, recipe_type_id):
         """Processes a manual ingest where a strike or scan is not involved. All database
         changes are made in an atomic transaction
@@ -53,12 +55,14 @@ class IngestRecipeHandler(object):
             recipe_data.add_value(FileValue(input_name, [source_file.id]))
             event = self._create_trigger_event(None, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
-            logger.info('Queuing new recipe of type %s', recipe_type.name)
-            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
+            messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
+                                               convert_data_to_v6_json(recipe_data).get_dict(), 
+                                               event.id, ingest_event.id)
+            CommandMessageManager().send_messages(messages)
+            
         else:
             logger.info('No recipe type found for id %s or recipe type is inactive' % recipe_type_id)
 
-    @transaction.atomic
     def process_ingested_source_file(self, ingest_id, source, source_file, when):
         """Processes the given ingested source file by kicking off its recipe.
         All database changes are made in an atomic transaction.
@@ -81,6 +85,11 @@ class IngestRecipeHandler(object):
         if recipe_revision:
             recipe_type = RecipeTypeRevision.objects.get_revision(recipe_name, recipe_revision).recipe_type
             
+        if len(recipe_type.get_definition().get_input_keys()) == 0:
+            logger.info('No inputs defined for recipe %s. Recipe will not be run.' % recipe_name)
+            return
+        
+            
         if recipe_type and recipe_type.is_active:
             # Assuming one input per recipe, so pull the first defined input you find
             recipe_data = Data()
@@ -89,8 +98,12 @@ class IngestRecipeHandler(object):
             event = self._create_trigger_event(source, source_file, when)
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
-            logger.info('Queuing new recipe of type %s', recipe_type.name)
-            Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
+            # This can cause a race condition with a slow DB.
+            messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
+                                               convert_data_to_v6_json(recipe_data).get_dict(), 
+                                               event.id, ingest_event.id)
+            CommandMessageManager().send_messages(messages)
+            
         else:
             logger.info('No recipe type found for %s %s or recipe type is inactive' % (recipe_name, recipe_revision))
 
@@ -107,15 +120,18 @@ class IngestRecipeHandler(object):
         :rtype: :class:`ingest.models.IngestEvent`
         """
 
+        event = None
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
-        if type(source) is Strike:
-            return IngestEvent.objects.create_strike_ingest_event(ingest_id, source, description, when)
-        elif type(source) is Scan:
-            return IngestEvent.objects.create_scan_ingest_event(ingest_id, source, description, when)
-        elif ingest_id:
-            return IngestEvent.objects.create_manual_ingest_event(ingest_id, description, when)
-        else:
-            logger.info('No valid source event for source file %s', source_file.file_name)
+        with transaction.atomic():
+            if type(source) is Strike:
+                event = IngestEvent.objects.create_strike_ingest_event(ingest_id, source, description, when)
+            elif type(source) is Scan:
+                event = IngestEvent.objects.create_scan_ingest_event(ingest_id, source, description, when)
+            elif ingest_id:
+                event = IngestEvent.objects.create_manual_ingest_event(ingest_id, description, when)
+            else:
+                logger.info('No valid source event for source file %s', source_file.file_name)
+        return event
 
     def _create_trigger_event(self, source, source_file, when):
         """Creates in the database and returns a trigger event model for the given ingested source file and recipe type
@@ -133,10 +149,15 @@ class IngestRecipeHandler(object):
 
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
         event_type = ''
+        
         if type(source) is Strike:
             event_type = 'STRIKE_INGEST'
         elif type(source) is Scan:
             event_type = 'SCAN_INGEST'
         else:
             event_type = 'MANUAL_INGEST'
-        return TriggerEvent.objects.create_trigger_event(event_type, None, description, when)
+        
+        event = None
+        with transaction.atomic():
+            event = TriggerEvent.objects.create_trigger_event(event_type, None, description, when)
+        return event
