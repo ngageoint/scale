@@ -192,54 +192,42 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'util.rest.DefaultPagination',
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.AdminRenderer',
+    ),
+    'ALLOWED_VERSIONS': ('v6', 'v7'),
+    'DEFAULT_VERSION': 'v6',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+}
+
 if AUTHENTICATION_ENABLED:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (        
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
 
-    REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework.authentication.SessionAuthentication',
-            'rest_framework.authentication.TokenAuthentication',
+        ###############
+        # Social Auth #
+        ###############
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    )
+    
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = (
+        'util.rest.ScaleAPIPermissions',
+    )
 
-            ###############
-            # Social Auth #
-            ###############
-            'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-            'rest_framework_social_oauth2.authentication.SocialAuthentication',
-        ),
-        'DEFAULT_PERMISSION_CLASSES': 
-            ('util.rest.ScaleAPIPermissions',),
-        'DEFAULT_FILTER_BACKENDS': (
-            'django_filters.rest_framework.DjangoFilterBackend',
-        ),
-        'DEFAULT_PAGINATION_CLASS': 'util.rest.DefaultPagination',
-        'DEFAULT_RENDERER_CLASSES': (
-            'rest_framework.renderers.JSONRenderer',
-            'rest_framework.renderers.BrowsableAPIRenderer',
-            'rest_framework.renderers.AdminRenderer',
-        ),
-        'ALLOWED_VERSIONS': ('v6', 'v7'),
-        'DEFAULT_VERSION': 'v6',
-        'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    }
 else:
-
-    REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': (
-        ),
-        'DEFAULT_PERMISSION_CLASSES': (),
-        'DEFAULT_FILTER_BACKENDS': (
-            'django_filters.rest_framework.DjangoFilterBackend',
-        ),
-        'DEFAULT_PAGINATION_CLASS': 'util.rest.DefaultPagination',
-        'DEFAULT_RENDERER_CLASSES': (
-            'rest_framework.renderers.JSONRenderer',
-            'rest_framework.renderers.BrowsableAPIRenderer',
-            'rest_framework.renderers.AdminRenderer',
-        ),
-        'ALLOWED_VERSIONS': ('v6', 'v7'),
-        'DEFAULT_VERSION': 'v6',
-        'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-        'UNAUTHENTICATED_USER': None,
-    }
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = ()
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ()
+    REST_FRAMEWORK['UNAUTHENTICATED_USER'] = None
 
 ROOT_URLCONF = 'scale.urls'
 

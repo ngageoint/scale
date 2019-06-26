@@ -265,4 +265,4 @@ below for reference.
 | SILO_DOCKER_IMAGE           | 'geoint/seed-scale:0.6.0'       | Silo docker image name                     |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 | UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
-| AUTHENTICATION_ENABLED      | True                            | Set to False on webeserver to disable auth |
+| AUTHENTICATION_ENABLED      | True                            | Set to False on webserver to disable auth  |
