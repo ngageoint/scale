@@ -266,4 +266,4 @@ below for reference.
 | SILO_URL                    | None                            | Address to Silo, deployed if None          |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 | UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
-
+| AUTHENTICATION_ENABLED      | True                            | Set to False on webserver to disable auth  |
