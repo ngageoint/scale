@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import copy
 import json
 from datetime import timedelta
 
@@ -22,6 +23,19 @@ from util import rest
 from util.parse import datetime_to_string, duration_to_string
 
 
+class MockCommandMessageManager():
+
+    def send_messages(self, commands):
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []
+
 class TestBatchesViewV6(APITransactionTestCase):
 
     def setUp(self):
@@ -34,6 +48,16 @@ class TestBatchesViewV6(APITransactionTestCase):
 
         self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
         self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2, is_creation_done=True)
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type3 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+        self.batch_3 = batch_test_utils.create_batch(recipe_type=self.recipe_type_3, is_creation_done=True)
 
     def test_invalid_version(self):
         """Tests calling the batches view with an invalid REST API version"""
@@ -224,6 +248,39 @@ class TestBatchesViewV6(APITransactionTestCase):
         # Check correct recipe estimation count
         self.assertEqual(result['recipes_estimated'], 777)
 
+    @patch('batch.views.CommandMessageManager')
+    def test_create_priority(self, mock_msg_mgr):
+        """Tests creating a new batch successfully and having the priority of created jobs set properly"""
+
+        mock_msg_mgr.return_value = MockCommandMessageManager()
+
+        Batch.objects.filter(id=self.batch_3.id).update(is_creation_done=True, recipes_total=1)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': self.recipe_type_3.id,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': self.batch_3.root_batch_id
+                }
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+
+        # Check location header
+        self.assertTrue('/v6/batches/%d/' % new_batch_id in response['Location'])
+        # Check correct root batch ID in new batch
+        self.assertEqual(result['root_batch']['id'], self.batch_3.root_batch_id)
+        # Check correct recipe estimation count
+        self.assertEqual(result['recipes_estimated'], 1)
 
 class TestBatchDetailsViewV6(APITestCase):
 
