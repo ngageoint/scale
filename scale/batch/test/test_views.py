@@ -56,7 +56,7 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
         self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
 
-        self.recipe_type3 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+        self.recipe_type_3 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
         self.batch_3 = batch_test_utils.create_batch(recipe_type=self.recipe_type_3, is_creation_done=True)
 
     def test_invalid_version(self):
@@ -74,7 +74,7 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(len(result['results']), 6)
 
     def test_recipe_type_id(self):
         """Tests successfully calling the batches view filtered by recipe type identifier"""
@@ -129,11 +129,13 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
-        self.assertEqual(result['results'][0]['id'], self.batch_2.id)
-        self.assertEqual(result['results'][1]['id'], self.batch_2.superseded_batch_id)
-        self.assertEqual(result['results'][2]['id'], self.batch_1.id)
-        self.assertEqual(result['results'][3]['id'], self.batch_1.superseded_batch_id)
+        self.assertEqual(len(result['results']), 6)
+        self.assertEqual(result['results'][0]['id'], self.batch_3.id)
+        self.assertEqual(result['results'][1]['id'], self.batch_3.superseded_batch_id)
+        self.assertEqual(result['results'][2]['id'], self.batch_2.id)
+        self.assertEqual(result['results'][3]['id'], self.batch_2.superseded_batch_id)
+        self.assertEqual(result['results'][4]['id'], self.batch_1.id)
+        self.assertEqual(result['results'][5]['id'], self.batch_1.superseded_batch_id)
 
     def test_create_invalid_version(self):
         """Tests creating a new batch with an invalid REST API version"""

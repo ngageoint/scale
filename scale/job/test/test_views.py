@@ -1929,6 +1929,39 @@ class TestJobTypesValidationViewV6(APITransactionTestCase):
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['name'], 'NONSTANDARD_RESOURCE')
 
+    def test_empty_media(self):
+        """Tests validating a new job type with media types not specified"""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['interface']['inputs']['files'][0]['mediaTypes'] = []
+        config = copy.deepcopy(self.configuration)
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        del manifest['job']['interface']['inputs']['files'][0]['mediaTypes']
+        config = copy.deepcopy(self.configuration)
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+        
 class TestJobTypesPendingView(APITestCase):
 
     api = 'v6'
