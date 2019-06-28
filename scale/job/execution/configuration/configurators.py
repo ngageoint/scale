@@ -343,8 +343,9 @@ class ScheduledExecutionConfigurator(object):
         job_type_version_label = DockerParameter('label', 'scale-job-type-version={}'.format(job_type.version))
         main_label = DockerParameter('label', 'scale-task-type=main')
         if nvidia_docker_label:
+            nvidia_runtime_param = DockerParameter('runtime', 'nvidia')
             config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
-                                                    job_execution_id_label, main_label, nvidia_docker_label])
+                                                    job_execution_id_label, main_label, nvidia_docker_label, nvidia_runtime_param])
         else:
             config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
                                                     job_execution_id_label, main_label])
