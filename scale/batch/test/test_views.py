@@ -16,6 +16,7 @@ from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
+from queue.models import Queue
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.models import RecipeType
 from rest_framework.test import APITestCase, APITransactionTestCase
@@ -267,7 +268,7 @@ class TestBatchesViewV6(APITransactionTestCase):
                 }
             },
             'configuration': {
-                'priority': 100
+                'priority': 101
             }
         }
 
@@ -283,6 +284,11 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.assertEqual(result['root_batch']['id'], self.batch_3.root_batch_id)
         # Check correct recipe estimation count
         self.assertEqual(result['recipes_estimated'], 1)
+
+        queues = Queue.objects.filter(batch_id=self.batch_3.id)
+        self.assertEqual(len(queues), 1)
+        for q in queues:
+            self.assertEqual(q.priority, 101)
 
 class TestBatchDetailsViewV6(APITestCase):
 
