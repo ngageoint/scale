@@ -11,13 +11,11 @@ from rest_framework import status
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import batch.test.utils as batch_test_utils
-import storage.test.utils as storage_test_utils
 from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
 from queue.models import Queue
-from recipe.diff.forced_nodes import ForcedNodes
 from recipe.models import RecipeType
 from rest_framework.test import APITestCase, APITransactionTestCase
 from util import rest
@@ -59,6 +57,7 @@ class TestBatchesViewV6(APITransactionTestCase):
 
         self.recipe_type_3 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
         self.batch_3 = batch_test_utils.create_batch(recipe_type=self.recipe_type_3, is_creation_done=True)
+        recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, batch=self.batch_3)
 
     def test_invalid_version(self):
         """Tests calling the batches view with an invalid REST API version"""
@@ -285,7 +284,7 @@ class TestBatchesViewV6(APITransactionTestCase):
         # Check correct recipe estimation count
         self.assertEqual(result['recipes_estimated'], 1)
 
-        queues = Queue.objects.filter(batch_id=self.batch_3.id)
+        queues = Queue.objects.filter(batch_id=new_batch_id)
         self.assertEqual(len(queues), 1)
         for q in queues:
             self.assertEqual(q.priority, 101)
