@@ -407,7 +407,7 @@ def deploy_fluentd(client, app_name, es_url):
     localhost:5000/geoint/scale
     geoint/scale:5.9.2
 
-    The most problematic is the 2nd case as we previously we improperly identifying
+    The most problematic is the 2nd case as we previously were improperly identifying
     the port colon as the tag colon.
     """
 
@@ -431,7 +431,7 @@ def deploy_fluentd(client, app_name, es_url):
         'FLUENTD_TEMPLATE_URI': 'TEMPLATE_URI'
     }
     apply_set_envs(marathon, env_map)
-    deploy_marathon_app(client, marathon)
+    deploy_marathon_app(client, marathon, retries=10)
 
 
 if __name__ == '__main__':
