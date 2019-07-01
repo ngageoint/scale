@@ -88,8 +88,7 @@ class IngestRecipeHandler(object):
         if len(recipe_type.get_definition().get_input_keys()) == 0:
             logger.info('No inputs defined for recipe %s. Recipe will not be run.' % recipe_name)
             return
-        
-            
+
         if recipe_type and recipe_type.is_active:
             # Assuming one input per recipe, so pull the first defined input you find
             recipe_data = Data()
@@ -157,7 +156,6 @@ class IngestRecipeHandler(object):
         else:
             event_type = 'MANUAL_INGEST'
         
-        event = None
         with transaction.atomic():
             event = TriggerEvent.objects.create_trigger_event(event_type, None, description, when)
         return event

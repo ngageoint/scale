@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 
 import logging
 from django.db import transaction
-
 from django.utils.timezone import now
 
 from data.data.data import Data
 from data.data.value import JsonValue
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.models import Job
+from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from queue.models import Queue
 from trigger.models import TriggerEvent
@@ -142,6 +142,7 @@ class CreateIngest(CommandMessage):
                 event =  TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
             elif self.create_ingest_type == SCAN_JOB_TYPE:
                 ingest_id = Ingest.objects.get(scan_id=self.scan_id, file_name=self.file_name).id
+                desc['scan_id'] = self.scan_id
                 event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
             
         data = Data()
@@ -150,11 +151,17 @@ class CreateIngest(CommandMessage):
         if ingest.new_workspace:
             data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
 
+        ingest_job = None
         with transaction.atomic():
             ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
             ingest.job = ingest_job
             ingest.status = 'QUEUED'
             ingest.save()
+            
+        # Send message to start processing job input (done outside the transaction to hope the job exists)
+        # This can cause a race condition with a slow DB.
+        job = Job.objects.get_details(ingest_job.id)
+        self.new_messages.extend(create_process_job_input_messages([job.pk]))
         
         return True
  

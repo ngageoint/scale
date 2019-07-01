@@ -368,10 +368,6 @@ class QueueManager(models.Manager):
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
         
-        # Send message to start processing job input (done outside the transaction to hope the job exists)
-        # This can cause a race condition with a slow DB.
-        CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
-        
         # queue and return the job
         self.queue_jobs([job])
         job = Job.objects.get_details(job.id)

@@ -17,7 +17,6 @@ def sleep(the_model, the_id):
         time.sleep(.01)
         tries += 1
         try:
-            
             the_result = the_model.objects.get(id=the_id)
             if the_result:
                 return True

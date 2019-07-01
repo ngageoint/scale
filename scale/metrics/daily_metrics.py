@@ -8,7 +8,9 @@ import django.utils.timezone as timezone
 from data.data.data import Data
 from data.data.value import JsonValue
 from job.clock import ClockEventError, ClockEventProcessor
+from job.messages.process_job_input import create_process_job_input_messages
 from job.models import JobType
+from messaging.manager import CommandMessageManager
 from queue.models import Queue
 
 logger = logging.getLogger(__name__)
@@ -41,4 +43,5 @@ class DailyMetricsProcessor(ClockEventProcessor):
         for day in days:
             job_data = Data()
             job_data.add_value(JsonValue('DAY', day.strftime('%Y-%m-%d')))
-            Queue.objects.queue_new_job_v6(job_type, job_data, event)
+            job = Queue.objects.queue_new_job_v6(job_type, job_data, event)
+            CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))

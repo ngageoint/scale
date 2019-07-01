@@ -21,15 +21,16 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.exceptions import InvalidJobField, NonSeedJobType
-from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
-from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
-                             JobExecutionDetailsSerializerV6)
 from job.job_type_serializers import (JobTypeSerializerV6, JobTypeListSerializerV6, JobTypeRevisionSerializerV6,
                                       JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV6,
                                       JobTypePendingStatusSerializerV6, JobTypeRunningStatusSerializerV6,
                                       JobTypeFailedStatusSerializerV6, JobTypeStatusSerializerV6)
-from messaging.manager import CommandMessageManager
+from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
+from job.messages.process_job_input import create_process_job_input_messages
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
+from job.serializers import (JobSerializerV6, JobDetailsSerializerV6, JobExecutionSerializerV6,
+                             JobExecutionDetailsSerializerV6)
+from messaging.manager import CommandMessageManager
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
 from storage.models import ScaleFile
@@ -639,6 +640,7 @@ class JobsView(ListAPIView):
         try:
             job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(),
                                                              job_configuration=configuration)
+            CommandMessageManager().send_messages(create_process_job_input_messages([job_id]))
         except InvalidData as err:
             logger.exception('Invalid job data.')
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)

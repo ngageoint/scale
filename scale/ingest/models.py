@@ -23,6 +23,7 @@ from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.models import JobType
+from job.messages.process_job_input import create_process_job_input_messages
 from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -934,14 +935,18 @@ class ScanManager(models.Manager):
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
 
+        job_pk = None
         if dry_run:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
             scan.dry_run_job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
+            job_pk = scan.dry_run_job.pk
         else:
             event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
             scan.job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
+            job_pk = scan.job.pk
 
         scan.save()
+        CommandMessageManager().send_messages(create_process_job_input_messages([job_pk]))
 
         return scan
 
@@ -1078,6 +1083,7 @@ class StrikeManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job_v6(strike_type, job_data, event)
         strike.save()
+        CommandMessageManager().send_messages(create_process_job_input_messages([strike.job.pk]))
 
         return strike
 
