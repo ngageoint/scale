@@ -1,0 +1,552 @@
+{
+	"info": {
+		"name": "Deployment Test Fresh",
+		"description": "End-to-end full system test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate auth token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cde97730-3efa-4575-8c54-557b67acf8f5",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response includes token\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"token\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "{{SCALE_USERNAME}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{SCALE_PASSWORD}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/api-token-auth/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"api-token-auth",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check user profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8a1af4f1-b5d8-4a63-97f3-08c2932ef392",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Expected admin first name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.first_name).to.eql(\"Admin\");",
+							"});",
+							"pm.test(\"Expected admin last name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.last_name).to.eql(\"User\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/accounts/profile/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"accounts",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Input Workspace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8728154-1996-4ca8-bac2-0faa4267cf6b",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Workspace is active\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.is_active).to.eql(true);",
+							"});",
+							"pm.test(\"Workspace name checks out\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"testing-host-input\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testing-host-input\",\n    \"title\": \"Testing Host Input\",\n    \"description\": \"Testing Host Input\",\n    \"is_active\": true,\n    \"configuration\": {\n        \"broker\": {\n            \"host_path\": \"/dfs/testing/input\",\n            \"type\": \"host\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/workspaces/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"workspaces",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Output Workspace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fe2750c0-6225-4cf3-a7e4-46235135f9ac",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Workspace is active\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.is_active).to.eql(true);",
+							"});",
+							"pm.test(\"Workspace name checks out\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"testing-host-output\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testing-host-output\",\n    \"title\": \"Testing Host Output\",\n    \"description\": \"Testing Host Output\",\n    \"is_active\": true,\n    \"configuration\": {\n        \"broker\": {\n            \"host_path\": \"/dfs/testing/output\",\n            \"type\": \"host\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/workspaces/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"workspaces",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Image Flipper Job Type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ffb160bb-1431-4d8e-8131-06c657aa696f",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Job Type name is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql('flip-image');",
+							"});",
+							"pm.test(\"Docker image is consistent with spec\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.docker_image).to.include(jsonData.manifest.job.name + '-' + jsonData.manifest.job.jobVersion + '-seed:' + jsonData.manifest.job.packageVersion);",
+							"});",
+							"pm.test(\"Default output workspace configured\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.configuration.output_workspaces.default).to.eql(\"testing-host-output\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"icon_code\": \"f2b9\",\n    \"docker_image\": \"geointseed/flip-image-1.0.0-seed:1.0.0\",\n    \"manifest\": {\n        \"seedVersion\": \"1.0.0\",\n        \"job\": {\n            \"name\": \"flip-image\",\n            \"jobVersion\": \"1.0.0\",\n            \"packageVersion\": \"1.0.0\",\n            \"title\": \"Image Flipper\",\n            \"description\": \"Reads an image file and flips it vertically.\",\n            \"tags\": [\n                \"png\",\n                \"image processing\"\n            ],\n            \"maintainer\": {\n                \"name\": \"John Doe\",\n                \"organization\": \"E-corp\",\n                \"email\": \"jdoe@example.com\",\n                \"url\": \"http://www.example.com\",\n                \"phone\": \"666-555-4321\"\n            },\n            \"timeout\": 3600,\n            \"interface\": {\n                \"command\": \"sh /wrapper.sh\",\n                \"inputs\": {\n                    \"files\": [\n                        {\n                            \"name\": \"INPUT_FILE\",\n                            \"mediaTypes\": [\n                                \"application/octet-stream\"\n                            ],\n                            \"multiple\": false,\n                            \"partial\": false,\n                            \"required\": true\n                        }\n                    ]\n                },\n                \"outputs\": {\n                    \"files\": [\n                        {\n                            \"name\": \"flipped_image\",\n                            \"mediaType\": \"application/octet-stream\",\n                            \"multiple\": false,\n                            \"pattern\": \"flipped_*\",\n                            \"required\": true\n                        }\n                    ]\n                }\n            },\n            \"resources\": {\n                \"scalar\": [\n                    {\n                        \"name\": \"cpus\",\n                        \"value\": 0.25,\n                        \"inputMultiplier\": 0\n                    },\n                    {\n                        \"name\": \"mem\",\n                        \"value\": 128,\n                        \"inputMultiplier\": 0\n                    }\n                ]\n            },\n            \"errors\": [\n                {\n                    \"code\": 1,\n                    \"name\": \"not-image\",\n                    \"title\": \"Not an image\",\n                    \"description\": \"Requires a JPEG image to process.\",\n                    \"category\": \"data\"\n                }\n            ]\n        }\n    },\n    \"configuration\": {\n        \"output_workspaces\": {\n            \"default\": \"testing-host-output\"\n        },\n        \"priority\": 1\n    }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/job-types/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"job-types",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Gray Scaler Job Type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "305d04f8-80ba-47a8-8bb0-040c0c6cbcac",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Job Type name is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql('grayscale-image');",
+							"});",
+							"pm.test(\"Docker image is consistent with spec\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.docker_image).to.include(jsonData.manifest.job.name + '-' + jsonData.manifest.job.jobVersion + '-seed:' + jsonData.manifest.job.packageVersion);",
+							"});",
+							"pm.test(\"Default output workspace configured\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.configuration.output_workspaces.default).to.eql(\"testing-host-output\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"icon_code\": \"f042\",\n    \"docker_image\": \"geointseed/grayscale-image-1.0.0-seed:1.0.0\",\n    \"manifest\": {\n        \"seedVersion\": \"1.0.0\",\n        \"job\": {\n            \"name\": \"grayscale-image\",\n            \"jobVersion\": \"1.0.0\",\n            \"packageVersion\": \"1.0.0\",\n            \"title\": \"Image Grayscaler\",\n            \"description\": \"Reads an image file and turns it grayscale.\",\n            \"tags\": [\n                \"png\",\n                \"image processing\"\n            ],\n            \"maintainer\": {\n                \"name\": \"John Doe\",\n                \"organization\": \"E-corp\",\n                \"email\": \"jdoe@example.com\",\n                \"url\": \"http://www.example.com\",\n                \"phone\": \"666-555-4321\"\n            },\n            \"timeout\": 3600,\n            \"interface\": {\n                \"command\": \"sh /wrapper.sh\",\n                \"inputs\": {\n                    \"files\": [\n                        {\n                            \"name\": \"INPUT_FILE\",\n                            \"mediaTypes\": [\n                                \"application/octet-stream\"\n                            ],\n                            \"multiple\": false,\n                            \"partial\": false,\n                            \"required\": true\n                        }\n                    ]\n                },\n                \"outputs\": {\n                    \"files\": [\n                        {\n                            \"name\": \"grayscale-image\",\n                            \"mediaType\": \"application/octet-stream\",\n                            \"multiple\": false,\n                            \"pattern\": \"grayscaled_*\",\n                            \"required\": true\n                        }\n                    ]\n                }\n            },\n            \"resources\": {\n                \"scalar\": [\n                    {\n                        \"name\": \"cpus\",\n                        \"value\": 0.25,\n                        \"inputMultiplier\": 0\n                    },\n                    {\n                        \"name\": \"mem\",\n                        \"value\": 128,\n                        \"inputMultiplier\": 0\n                    }\n                ]\n            },\n            \"errors\": [\n                {\n                    \"code\": 1,\n                    \"name\": \"not-image\",\n                    \"title\": \"Not an image\",\n                    \"description\": \"Requires a JPEG image to process.\",\n                    \"category\": \"data\"\n                }\n            ]\n        }\n    },\n    \"configuration\": {\n        \"output_workspaces\": {\n            \"default\": \"testing-host-output\"\n        },\n        \"priority\": 100\n    }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/job-types/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"job-types",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Image Processing Recipe Type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11363f03-872a-402e-af69-6a54c69ea91c",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Recipe Type name is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql('image-stuff');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Image Stuff\",\n    \"description\": \"Flip and greyscale images\",\n    \"definition\": {\n        \"input\": {\n            \"files\": [\n                {\n                    \"name\": \"INPUT_FILE\",\n                    \"required\": true,\n                    \"media_types\": [\n                        \"application/octet-stream\"\n                    ]\n                }\n            ],\n            \"json\": []\n        },\n        \"nodes\": {\n            \"flip-image\": {\n                \"dependencies\": [],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"recipe\",\n                        \"input\": \"INPUT_FILE\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"flip-image\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            },\n            \"grayscale-image\": {\n                \"dependencies\": [\n                    {\n                        \"name\": \"flip-image\",\n                        \"acceptance\": false\n                    }\n                ],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"dependency\",\n                        \"node\": \"flip-image\",\n                        \"output\": \"flipped_image\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"grayscale-image\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            }\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/recipe-types/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"recipe-types",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Scan seed-input Workspace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8992e1cb-8657-46a8-8dbe-f0069cf0f3b4",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"scan-id\", jsonData.id);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"pm.test(\"Workspace configured for scan\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.configuration.workspace).to.eql(\"testing-host-input\");",
+							"});",
+							"",
+							"pm.test(\"Recipe Type configured for scan\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.configuration.recipe.name).to.eql(\"image-stuff\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Scan host input workspace\",\n  \"description\": \"This is my Scan process for detecting my favorite local host workspace!\",\n  \"configuration\": {\n    \"version\": \"1.0\",\n    \"workspace\": \"testing-host-input\",\n    \"recipe\": {\n    \t\"name\": \"image-stuff\",\n    \t\"revision_num\": 1\n    },\n    \"scanner\": {\n      \"type\": \"dir\"\n    },\n    \"recursive\": true,\n    \"files_to_ingest\": [{\n      \"filename_regex\": \".*\"\n    }]\n  }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/scans/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"scans",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Scan seed-input Workspace Launch",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4f46e00-bb24-4654-bb78-aca899301fa8",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"pm.test(\"Scan job queued successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.job.status).to.eql(\"QUEUED\");",
+							"});",
+							"",
+							"pm.test(\"Scan job queued successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.configuration.workspace).to.eql(\"testing-host-input\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/scans/{{scan-id}}/process/?ingest=true",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"scans",
+						"{{scan-id}}",
+						"process",
+						""
+					],
+					"query": [
+						{
+							"key": "ingest",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "66572308-bf62-459c-aab9-80fa799e89e7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "60e431a8-5b36-4f38-96c8-a91462bd8162",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "36d1d1c3-d2f3-4e69-9dca-4afbcf1bb80e",
+			"key": "token",
+			"value": "updated by generate auth token",
+			"type": "string"
+		}
+	]
+}
