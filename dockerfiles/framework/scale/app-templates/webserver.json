@@ -34,8 +34,8 @@
     "labels": {
         "HAPROXY_GROUP": "internal,external",
         "HAPROXY_0_VHOST": "api-scale.marathon.mesos",
-        "HAPROXY_0_BACKEND_HTTP_OPTIONS": "http-request set-header X-HAPROXY 1\nrspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\nrspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n",
-        "HAPROXY_0_BACKEND_REDIRECT_HTTP_TO_HTTPS": "true"
+        "HAPROXY_0_BACKEND_HTTP_OPTIONS": "http-request add-header X-Forwarded-Proto https if { ssl_fc }\nhttp-request set-header X-HAPROXY 1\nrspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\nrspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n",
+        "HAPROXY_0_REDIRECT_TO_HTTPS": "true"
     },
     "healthChecks": [
         {

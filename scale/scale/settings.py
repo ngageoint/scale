@@ -105,6 +105,9 @@ X_FRAME_OPTIONS = 'DENY'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# authentication toggle, to be used for testing
+AUTHENTICATION_ENABLED = get_env_boolean('AUTHENTICATION_ENABLED', True)
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
@@ -191,18 +194,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-
-        ###############
-        # Social Auth #
-        ###############
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES':
-        ('util.rest.ScaleAPIPermissions',),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
@@ -216,6 +207,27 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSION': 'v6',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
+
+if AUTHENTICATION_ENABLED:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (        
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
+        ###############
+        # Social Auth #
+        ###############
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    )
+    
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = (
+        'util.rest.ScaleAPIPermissions',
+    )
+
+else:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = ()
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ()
+    REST_FRAMEWORK['UNAUTHENTICATED_USER'] = None
 
 ROOT_URLCONF = 'scale.urls'
 

@@ -9,7 +9,8 @@ from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
 
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 WORKSPACE_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -67,7 +68,7 @@ class WorkspaceConfigurationV6(object):
         if 'version' not in self._config:
             self._config['version'] = SCHEMA_VERSION
 
-        if self._config['version'] != SCHEMA_VERSION:
+        if self._config['version'] not in SCHEMA_VERSIONS:
             self._convert_from_v1(do_validate)
 
         self._populate_default_values()
