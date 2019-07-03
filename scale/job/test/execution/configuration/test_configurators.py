@@ -417,7 +417,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_configure_queued_job_strike(self, mock_msg_mgr):
         """Tests successfully calling configure_queued_job() on a Strike job"""
 
@@ -450,7 +450,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_configure_queued_job_scan(self, mock_msg_mgr):
         """Tests successfully calling configure_queued_job() on a Scan job"""
 
