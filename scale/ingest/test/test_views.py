@@ -977,7 +977,7 @@ class TestStrikeCreateViewV6(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
         """Tests calling the create Strike view successfully."""
 
@@ -1018,7 +1018,7 @@ class TestStrikeCreateViewV6(APITestCase):
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_successful_v6(self, mock_msg_mgr):
         """Tests creating strike with recipe configuration"""
 
