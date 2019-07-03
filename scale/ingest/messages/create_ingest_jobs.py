@@ -23,7 +23,7 @@ SCAN_JOB_TYPE = 'scan_job' # Message type for creating scan jobs
 # type is less than 25 KiB long and that each message can be processed quickly.
 MAX_NUM = 100
 
-def create_scan_ingest_job_message(ingest_id, scan_id, file_name):
+def create_scan_ingest_job_message(ingest_id, scan_id):
     """Creates a message to create the ingest job for a scan
     
     :param ingest_id: ID of the ingest
@@ -31,14 +31,11 @@ def create_scan_ingest_job_message(ingest_id, scan_id, file_name):
     :param workspace_name: The workspace of the ingest
     :param scan_id: The ID of the scan
     :type scan_id: int
-    :param file_name: The name of the input file
-    :type file_name: string
     """
     message = CreateIngest()
     message.create_ingest_type = SCAN_JOB_TYPE
     message.ingest_id = ingest_id
     message.scan_id = scan_id
-    message.file_name = file_name
     
     return message
     
@@ -73,20 +70,9 @@ class CreateIngest(CommandMessage):
         
         # Fields applicable to scan message types
         self.scan_id = None
-        self.file_name = None
         
         # Fields applicable to strike message types
         self.strike_id = None
-        
-    def can_fit_more(self):
-        """Indicates whether more jobs can fit in this message
-
-        :return: True if more jobs can fit, False otherwise
-        :rtype: bool
-        """
-        
-        # TODO: what should go here?
-        return True
         
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
@@ -100,7 +86,6 @@ class CreateIngest(CommandMessage):
             json_dict['strike_id'] = self.strike_id
         elif self.create_ingest_type == SCAN_JOB_TYPE:
             json_dict['scan_id'] = self.scan_id
-            json_dict['file_name'] = self.file_name
         
         return json_dict    
         
@@ -117,7 +102,6 @@ class CreateIngest(CommandMessage):
             message.strike_id = json_dict['strike_id']
         elif message.create_ingest_type == SCAN_JOB_TYPE:
             message.scan_id = json_dict['scan_id']
-            message.file_name = json_dict['file_name']
         
         return message
         
@@ -141,7 +125,7 @@ class CreateIngest(CommandMessage):
                 desc['strike_id'] = self.strike_id
                 event =  TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
             elif self.create_ingest_type == SCAN_JOB_TYPE:
-                ingest_id = Ingest.objects.get(scan_id=self.scan_id, file_name=self.file_name).id
+                ingest_id = Ingest.objects.get(scan_id=self.scan_id, file_name=ingest.file_name).id
                 desc['scan_id'] = self.scan_id
                 event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
             
@@ -161,7 +145,7 @@ class CreateIngest(CommandMessage):
         # Send message to start processing job input (done outside the transaction to hope the job exists)
         # This can cause a race condition with a slow DB.
         job = Job.objects.get_details(ingest_job.id)
-        self.new_messages.extend(create_process_job_input_messages([job.pk]))
+        self.new_messages.extend(create_process_job_input_messages([job.id]))
         
         return True
  

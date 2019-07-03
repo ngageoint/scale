@@ -21,7 +21,6 @@ from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes
 from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
 from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, RecipeTypeRevision
-from util.database import sleep
 
 
 REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
@@ -47,8 +46,8 @@ _RecipePair = namedtuple('_RecipePair', ['superseded_recipe', 'new_recipe'])
 logger = logging.getLogger(__name__)
 
 
-def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_id, ingest_event_id, configuration=None,
-                            batch_id=None):
+def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_id, ingest_event_id, 
+                            configuration=None, batch_id=None):
     """Creates messages to create the recipe
 
     :param recipe_type_name: The new recipe type name
@@ -237,7 +236,6 @@ class CreateRecipes(CommandMessage):
         if self.create_recipes_type == SUB_RECIPE_TYPE:
             self.sub_recipes.append(sub_recipe)
 
-
     def can_fit_more(self):
         """Indicates whether more recipes can fit in this message
 
@@ -263,7 +261,8 @@ class CreateRecipes(CommandMessage):
             json_dict['forced_nodes'] = convert_forced_nodes_to_v6(self.forced_nodes).get_dict()
 
         if self.create_recipes_type == NEW_RECIPE_TYPE:
-            json_dict['ingest_event_id'] = self.ingest_event_id
+            if self.ingest_event_id:
+                json_dict['ingest_event_id'] = self.ingest_event_id
             json_dict['recipe_input_data'] = self.recipe_input_data
             json_dict['recipe_type_name'] = self.recipe_type_name
             json_dict['recipe_type_rev_num'] = self.recipe_type_rev_num
@@ -302,7 +301,8 @@ class CreateRecipes(CommandMessage):
             message.forced_nodes = ForcedNodesV6(json_dict['forced_nodes']).get_forced_nodes()
 
         if message.create_recipes_type == NEW_RECIPE_TYPE:
-            message.ingest_event_id = json_dict['ingest_event_id']
+            if message.ingest_event_id: 
+                message.ingest_event_id = json_dict['ingest_event_id']
             message.recipe_input_data = json_dict['recipe_input_data']
             message.recipe_type_name = json_dict['recipe_type_name']
             message.recipe_type_rev_num = json_dict['recipe_type_rev_num']
@@ -469,16 +469,6 @@ class CreateRecipes(CommandMessage):
         config = None
         if self.configuration:
             config = RecipeConfigurationV6(self.configuration)
-        
-        # wait max of 5 seconds for events to save
-        from trigger.models import TriggerEvent
-        event = sleep(TriggerEvent, self.event_id)
-
-        from ingest.models import IngestEvent
-        ingest_event = sleep(IngestEvent, self.ingest_event_id)
-        if not event or not ingest_event:
-            logger.exception('TriggerEvent %d or Ingest Event %d does not exist - returning message to queue.' % (self.event_id, self.ingest_event_id))
-            return False
             
         with transaction.atomic():
             recipe_input_data = DataV6(self.recipe_input_data).get_data()

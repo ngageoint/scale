@@ -305,7 +305,7 @@ class IngestManager(models.Manager):
             
             if scan_id:
                 # TODO: Need to make sure scans work
-                messages.append(create_scan_ingest_job_message(ingest.id, scan_id, ingest.file_name))
+                messages.append(create_scan_ingest_job_message(ingest.id, scan_id))
             elif strike_id:
                 messages.append(create_strike_ingest_job_message(ingest.id, strike_id))
             else:
@@ -935,18 +935,18 @@ class ScanManager(models.Manager):
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
 
-        job_pk = None
+        job_id = None
         if dry_run:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
             scan.dry_run_job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
-            job_pk = scan.dry_run_job.pk
+            job_id = scan.dry_run_job.id
         else:
             event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
             scan.job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
-            job_pk = scan.job.pk
+            job_id = scan.job.id
 
         scan.save()
-        CommandMessageManager().send_messages(create_process_job_input_messages([job_pk]))
+        CommandMessageManager().send_messages(create_process_job_input_messages([job_id]))
 
         return scan
 
@@ -1083,7 +1083,7 @@ class StrikeManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job_v6(strike_type, job_data, event)
         strike.save()
-        CommandMessageManager().send_messages(create_process_job_input_messages([strike.job.pk]))
+        CommandMessageManager().send_messages(create_process_job_input_messages([strike.job.id]))
 
         return strike
 

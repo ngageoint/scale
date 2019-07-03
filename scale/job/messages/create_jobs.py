@@ -28,7 +28,6 @@ MAX_NUM = 100
 RecipeJob = namedtuple('RecipeJob', ['job_type_name', 'job_type_version', 'job_type_rev_num', 'node_name',
                                      'process_input'])
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -184,6 +183,8 @@ class CreateJobs(CommandMessage):
                                     'process_input': recipe_job.process_input})
             json_dict['recipe_jobs'] = recipe_jobs
             json_dict['recipe_config'] = self.recipe_config
+            if self.ingest_event_id:
+                json_dict['ingest_event_id'] = self.ingest_event_id
 
         return json_dict
 
@@ -215,6 +216,8 @@ class CreateJobs(CommandMessage):
                 message.add_recipe_job(recipe_job)
             if 'recipe_config' in json_dict:
                 message.recipe_config = json_dict['recipe_config']
+            if 'ingest_event_id' in json_dict:
+                message.ingest_event_id = json_dict['ingest_event_id']
 
         return message
 
@@ -319,9 +322,9 @@ class CreateJobs(CommandMessage):
                 config = revision.job_type.get_job_configuration()
                 config.merge_recipe_config(self.recipe_config)
             superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
-            job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id, root_recipe_id=self.root_recipe_id,
-                                            recipe_id=self.recipe_id, batch_id=self.batch_id,
-                                            superseded_job=superseded_job, job_config=config)
+            job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id, 
+                                            root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id, 
+                                            batch_id=self.batch_id, superseded_job=superseded_job, job_config=config)
             recipe_jobs[node_name] = job
 
         Job.objects.bulk_create(recipe_jobs.values())
@@ -376,3 +379,4 @@ class CreateJobs(CommandMessage):
         elif self.create_jobs_type == RECIPE_TYPE:
             from recipe.models import Recipe
             Recipe.objects.get_locked_recipe(self.recipe_id)
+            TriggerEvent.objects.get_locked_event(self.event_id)

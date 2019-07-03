@@ -153,7 +153,7 @@ class TestCreateIngest(TestCase):
         
         # TODO test scan ingest job
         # message = create_scan_ingest_job_message(self.ingest.id, self.workspace_1.name, self.workspace_2.name,
-        #                                            self.scan.id, self.source_file.file_name)
+        #                                            self.scan.id)
         # result = message.execute()
         # self.assertTrue(result)
         # self.assertEqual(len(message.new_messages), 1)

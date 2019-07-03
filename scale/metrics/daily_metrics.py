@@ -44,4 +44,4 @@ class DailyMetricsProcessor(ClockEventProcessor):
             job_data = Data()
             job_data.add_value(JsonValue('DAY', day.strftime('%Y-%m-%d')))
             job = Queue.objects.queue_new_job_v6(job_type, job_data, event)
-            CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
+            CommandMessageManager().send_messages(create_process_job_input_messages([job.id]))
