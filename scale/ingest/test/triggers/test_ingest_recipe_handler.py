@@ -66,12 +66,9 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_revision': 1}}}}
         self.recipe_v7 = recipe_test_utils.create_recipe_type_v6(name='test-recipe-v7', definition=v7_recipe_type_def)
 
-    @patch('recipe.messages.create_recipes.create_update_recipe_metrics_messages')
-    @patch('recipe.messages.create_recipes.create_process_recipe_input_messages')
-    @patch('recipe.messages.create_recipes.create_supersede_recipe_nodes_messages')
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
     @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
-    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr, mock_supersede, mock_processs_input, mock_update_metrics):
+    def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
