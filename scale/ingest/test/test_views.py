@@ -784,7 +784,7 @@ class TestScansProcessViewV6(APITestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_ingest_process(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for an ingest Scan."""
 
