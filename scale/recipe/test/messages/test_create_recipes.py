@@ -16,8 +16,6 @@ from ingest.models import IngestEvent, Strike
 import ingest.test.utils as ingest_test_utils
 from job.models import Job, JobType, JobTypeRevision
 from job.test import utils as job_test_utils
-from messaging.backends.amqp import AMQPMessagingBackend
-from messaging.backends.factory import add_message_backend
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.diff.forced_nodes import ForcedNodes
@@ -37,11 +35,8 @@ class TestCreateRecipes(TestCase):
     
     def setUp(self):
         django.setup()
-        add_message_backend(AMQPMessagingBackend)
         
-    @patch('queue.models.CommandMessageManager')
-    def test_json_create_new(self, mock_msg_mgr):
-        """Test converting a CreateRecipes message to and from JSON when creating new"""
+    def test_json_create_new(self):
         workspace = storage_test_utils.create_workspace()
         source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
                                                media_type='text/plain', file_size=10, data_type_tags=['type1'],
@@ -59,53 +54,34 @@ class TestCreateRecipes(TestCase):
                                                 'node_type': {'node_type': 'job', 'job_type_name': jt1.name,
                                                               'job_type_version': jt1.version,
                                                               'job_type_revision': 1}}}}
-
-        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
-        
-        strike_config = {
-            'version': '6',
-            'workspace': workspace.name,
-            'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
-            'files_to_ingest': [{
-                'filename_regex': 'input_file',
-                'data_types': ['image_type'],
-                'new_workspace': workspace.name,
-                'new_file_path': 'my/path'
-            }],
-            'recipe': {
-                'name': recipe_type.name
-            },
-        }
-        config = StrikeConfigurationV6(strike_config).get_configuration()
-        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
-        ingest = ingest_test_utils.create_ingest(source_file=source_file)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(name='recipe-type', definition=recipe_type_def)
         
         recipe_data = Data()
-        input_name = recipe_type.get_definition().get_input_keys()[0]
-        recipe_data.add_value(FileValue(input_name, [source_file.id]))
+        recipe_data.add_value(FileValue('INPUT_FILE', [source_file.id]))
         recipe_data_dict = convert_data_to_v6_json(recipe_data).get_dict()
         
-        event = TriggerEvent.objects.create_trigger_event('STRIKE_INGEST', None, 
-            {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}, now())
-        ingest_event = IngestEvent.objects.create_strike_ingest_event(ingest.id, strike, 
-            {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}, now())
-            
-        message = create_recipes_messages(recipe_type.name, recipe_type.revision_num, recipe_data_dict, event.id, ingest_event.id)[0]
+        event = trigger_test_utils.create_trigger_event(trigger_type='STRIKE_TRANSFER', 
+            description={'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name})
+        ingest_event =  ingest_test_utils.create_strike_ingest_event(source_file=source_file, 
+            description={'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name})
+        
+        message = create_recipes_messages('recipe-type', 1, recipe_data_dict, event.id, ingest_event.id)[0]
         message_json_dict = message.to_json()
         new_message = CreateRecipes.from_json(message_json_dict)
+        
+        self.assertEqual(message.create_recipes_type, 'new-recipe')
+        self.assertEqual(message.recipe_type_name, 'recipe-type')
+        self.assertEqual(message.recipe_type_rev_num, 1)
+        self.assertEqual(message.event_id, event.id)
+        self.assertEqual(message.ingest_event_id, ingest_event.id)
+        
         result = new_message.execute()
         self.assertTrue(result)
-        
-        # Verify the new message has a process recipe input message
         self.assertTrue(len(new_message.new_recipes), 1)
         self.assertEqual(len(new_message.new_messages), 1)
         msg = new_message.new_messages[0]
         self.assertEqual(msg.type, 'process_recipe_input')
         self.assertEqual(msg.recipe_id, new_message.new_recipes[0])
-        
-        new_recipe = Recipe.objects.get(pk=new_message.new_recipes[0])
-        self.assertEqual(new_recipe.recipe_type, recipe_type)
-        self.assertDictEqual(new_recipe.input, recipe_data_dict)
         
     def test_json_reprocess(self):
         """Tests converting a CreateRecipes message to and from JSON when re-processing"""
