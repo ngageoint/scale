@@ -10,7 +10,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from job.models import Job
-from ingest.messages.create_ingest_jobs import CreateIngest
+from ingest.messages.create_ingest_jobs import create_strike_ingest_job_message, CreateIngest
 from ingest.models import Ingest, Strike, Scan
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
@@ -103,18 +103,17 @@ class TestCreateIngest(TestCase):
         # scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
         # self.scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
         
-    
-    @patch('queue.models.CommandMessageManager')
-    def test_json_create_strike(self, mock_msg_mgr):
+
+    def test_json_create_strike(self):
         """Tests converting a CreateIngest message to and from json
         """
         
-        mock_msg_mgr.return_value = MockCommandMessageManager()
+        message = create_strike_ingest_job_message(self.ingest.id, self.strike.id)
         
-        message = CreateIngest()
-        message.create_ingest_type = 'strike_job'
-        message.ingest_id = self.ingest.id
-        message.strike_id = self.strike.id
+        # message = CreateIngest()
+        # message.create_ingest_type = 'strike_job'
+        # message.ingest_id = self.ingest.id
+        # message.strike_id = self.strike.id
 
         # Convert message to JSON and back, and then execute
         message_dict = message.to_json()
@@ -134,10 +133,6 @@ class TestCreateIngest(TestCase):
             elif value == 'new_workspace':
                 self.assertEqual(job_data.values[value].value, self.workspace_2.name)
             
-        # Verify job has been queueud
-        from queue.models import Queue
-        queue = Queue.objects.get(job_id=job.id)
-        self.assertEqual(queue.job_id, job.id)
 
     # @patch('queue.models.create_process_job_input_messages')
     # @patch('queue.models.CommandMessageManager')
