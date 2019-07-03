@@ -2,8 +2,13 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
+from django.utils.timezone import now
+
+import storage.test.utils as storage_test_utils
 
 from ingest.messages.create_ingest_jobs import CreateIngest
+from ingest.models import Ingest
+from storage.models import ScaleFile
 
 class TestCreateIngest(TestCase):
     
@@ -46,10 +51,21 @@ class TestCreateIngest(TestCase):
         """Tests executing a CreateIngest message
         """
         
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_2 = storage_test_utils.create_workspace()
+        source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
+                                               media_type='text/plain', file_size=10, data_type_tags=['type1'],
+                                               file_path='the_path', workspace=workspace_1)
+        ingest = Ingest.objects.create(file_name='input_file', file_size=10, status='TRANSFERRING', 
+                                            bytes_transferred=10, transfer_started=now(), media_type='text/plain',
+                                            ingest_started=now(), data_started=now(), 
+                                            workspace=workspace_1, new_workspace=workspace_2, 
+                                            data_type_tags=['type1'], source_file=source_file)
+        
         message = CreateIngest()
         message.create_ingest_type = 'strike_job'
         message.strike_id = 1
-        message.ingest_id = 1
+        message.ingest_id = ingest.id
         
         result = message.execute()
         

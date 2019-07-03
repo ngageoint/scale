@@ -772,7 +772,7 @@ class TestScansProcessViewV6(APITestCase):
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_dry_run_process(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for a dry run Scan."""
 
