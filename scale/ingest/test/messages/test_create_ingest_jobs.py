@@ -10,14 +10,24 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from job.models import Job
-from ingest.messages.create_ingest_jobs import create_strike_ingest_job_message, \
-                                               create_scan_ingest_job_message,  \
-                                               CreateIngest, STRIKE_JOB_TYPE
+from ingest.messages.create_ingest_jobs import CreateIngest
 from ingest.models import Ingest, Strike, Scan
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from storage.models import ScaleFile
 
+class MockCommandMessageManager():
+
+     def send_messages(self, commands):
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []
 
 class TestCreateIngest(TestCase):
     
@@ -26,25 +36,21 @@ class TestCreateIngest(TestCase):
     def setUp(self):
         django.setup()
         
-    
-    def test_json_create(self):
-        """Tests converting a CreateIngest message to and from json
-        """
-        workspace_1 = storage_test_utils.create_workspace()
-        workspace_2 = storage_test_utils.create_workspace()
-        source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
+        self.workspace_1 = storage_test_utils.create_workspace()
+        self.workspace_2 = storage_test_utils.create_workspace()
+        self.source_file = ScaleFile.objects.create(file_name='input_file', file_type='SOURCE',
                                                media_type='text/plain', file_size=10, data_type_tags=['type1'],
-                                               file_path='the_path', workspace=workspace_1)
+                                               file_path='the_path', workspace=self.workspace_1)
 
-        source_file.add_data_type_tag('type1')
-        source_file.add_data_type_tag('type2')
-        source_file.add_data_type_tag('type3')
+        self.source_file.add_data_type_tag('type1')
+        self.source_file.add_data_type_tag('type2')
+        self.source_file.add_data_type_tag('type3')
 
-        ingest = Ingest.objects.create(file_name='input_file', file_size=10, status='TRANSFERRING', 
+        self.ingest = Ingest.objects.create(file_name='input_file', file_size=10, status='TRANSFERRING', 
                                             bytes_transferred=10, transfer_started=now(), media_type='text/plain',
                                             ingest_started=now(), data_started=now(), 
-                                            workspace=workspace_1, new_workspace=workspace_2, 
-                                            data_type_tags=['type1'], source_file=source_file)
+                                            workspace=self.workspace_1, new_workspace=self.workspace_2, 
+                                            data_type_tags=['type1'], source_file=self.source_file)
 
         manifest = job_test_utils.create_seed_manifest(inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt1 = job_test_utils.create_seed_job_type(manifest=manifest)
@@ -60,27 +66,27 @@ class TestCreateIngest(TestCase):
                                                               'job_type_version': jt1.version,
                                                               'job_type_revision': 1}}}}
 
-        recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
+        self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='test-recipe', definition=recipe_type_def)
 
         strike_config = {
             'version': '6',
-            'workspace': workspace_1.name,
+            'workspace': self.workspace_1.name,
             'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
                 'filename_regex': 'input_file',
                 'data_types': ['image_type'],
-                'new_workspace': workspace_2.name,
+                'new_workspace': self.workspace_2.name,
                 'new_file_path': 'my/path'
             }],
             'recipe': {
-                'name': recipe_type.name
+                'name': self.recipe_type.name
             },
         }
         config = StrikeConfigurationV6(strike_config).get_configuration()
-        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
+        self.strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
 
         # scan_config = {
-        #     'workspace': workspace_1.name,
+        #     'workspace': self.workspace_1.name,
         #     'scanner': {
         #         'type': 'dir'
         #     },
@@ -88,42 +94,50 @@ class TestCreateIngest(TestCase):
         #         'filename_regex': 'input_file',
         #         'data_types': ['type1'],
         #         'new_file_path': os.path.join('my', 'path'),
-        #         'new_workspace': workspace_2.name,
+        #         'new_workspace': self.workspace_2.name,
         #     }],
         #     'recipe': {
-        #         'name': recipe_type.name,
+        #         'name': self.recipe_type.name,
         #     },
         # }
         # scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
-        # scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
-
+        # self.scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
+        
+    
+    @patch('queue.models.CommandMessageManager')
+    def test_json_create_strike(self, mock_msg_mgr):
+        """Tests converting a CreateIngest message to and from json
+        """
+        
+        mock_msg_mgr.return_value = MockCommandMessageManager()
+        
         message = CreateIngest()
-        message.create_ingest_type = STRIKE_JOB_TYPE
-        message.ingest_id = ingest.id
-        message.strike_id = strike.id
+        message.create_ingest_type = 'strike_job'
+        message.ingest_id = self.ingest.id
+        message.strike_id = self.strike.id
 
         # Convert message to JSON and back, and then execute
         message_dict = message.to_json()
         new_message = CreateIngest.from_json(message_dict)
-        # result = new_message.execute()
+        result = new_message.execute()
 
-        # self.assertTrue(result)
+        self.assertTrue(result)
         # Verify the ingest job has been created
-        # job = Job.objects.all().last()
-        # self.assertEqual(job.job_type.name, 'scale-ingest')
-        # job_data = job.get_input_data()
-        # for value in job_data.values:
-        #     if value == 'ingest_id':
-        #         self.assertEqual(job_data.values[value].value, ingest.id)
-        #     elif value == 'workspace':
-        #         self.assertEqual(job_data.values[value].value, workspace_1.name)
-        #     elif value == 'new_workspace':
-        #         self.assertEqual(job_data.values[value].value, workspace_2.name)
+        job = Job.objects.all().last()
+        self.assertEqual(job.job_type.name, 'scale-ingest')
+        job_data = job.get_input_data()
+        for value in job_data.values:
+            if value == 'ingest_id':
+                self.assertEqual(job_data.values[value].value, self.ingest.id)
+            elif value == 'workspace':
+                self.assertEqual(job_data.values[value].value, self.workspace_1.name)
+            elif value == 'new_workspace':
+                self.assertEqual(job_data.values[value].value, self.workspace_2.name)
             
         # Verify job has been queueud
-        # from queue.models import Queue
-        # queue = Queue.objects.get(job_id=job.id)
-        # self.assertEqual(queue.job_id, job.id)
+        from queue.models import Queue
+        queue = Queue.objects.get(job_id=job.id)
+        self.assertEqual(queue.job_id, job.id)
 
     # @patch('queue.models.create_process_job_input_messages')
     # @patch('queue.models.CommandMessageManager')
