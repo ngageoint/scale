@@ -816,7 +816,7 @@ class TestScansProcessViewV6(APITestCase):
         response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.content)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_dry_run_process_reprocess(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
 
@@ -832,7 +832,7 @@ class TestScansProcessViewV6(APITestCase):
         self.assertIsNotNone(result['dry_run_job'])
         self.assertNotEqual(result['dry_run_job']['id'], old_job_id)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_ingest_after_dry_run(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for an ingest Scan. following dry run"""
 
