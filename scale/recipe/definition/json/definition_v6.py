@@ -18,8 +18,8 @@ from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, R
 from util.rest import strip_schema_version
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 RECIPE_DEFINITION_SCHEMA = {
     'type': 'object',
@@ -262,7 +262,7 @@ class RecipeDefinitionV6(object):
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION
 
-        if self._definition['version'] != SCHEMA_VERSION:
+        if self._definition['version'] not in SCHEMA_VERSIONS:
             self._convert_from_v1()
 
         self._populate_default_values()

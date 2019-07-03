@@ -9,8 +9,8 @@ from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 from recipe.configuration.configuration import DEFAULT_PRIORITY, RecipeConfiguration
 from recipe.configuration.exceptions import InvalidRecipeConfiguration
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 RECIPE_CONFIG_SCHEMA = {
     'type': 'object',
@@ -155,7 +155,7 @@ class RecipeConfigurationV6(object):
         if 'version' not in self._config:
             self._config['version'] = SCHEMA_VERSION
 
-        if self._config['version'] != SCHEMA_VERSION:
+        if self._config['version'] not in SCHEMA_VERSIONS:
             msg = '%s is an unsupported version number'
             raise InvalidRecipeConfiguration('INVALID_VERSION', msg % self._config['version'])
 

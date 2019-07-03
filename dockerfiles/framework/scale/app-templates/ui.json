@@ -21,10 +21,7 @@
     "env": {
         "API_BACKEND": "http://scale-webserver.marathon.l4lb.thisdcos.directory:80/",
         "SILO_BACKEND": "http://scale-silo.marathon.l4lb.thisdcos.directory:9000/",
-        "CONTEXTS": "/service/scale",
-        "DCOS_PACKAGE_FRAMEWORK_NAME": "scale",
-        "SILO_URL": "/silo"
-
+        "CONTEXTS": "/service/scale"
     },
     "labels": {
         "HAPROXY_GROUP": "internal,external",
@@ -33,8 +30,8 @@
         "DCOS_SERVICE_PORT_INDEX": "0",
         "DCOS_SERVICE_REWRITE_REQUEST_URLS": "false",
         "HAPROXY_0_VHOST": "scale.marathon.mesos",
-        "HAPROXY_0_BACKEND_HTTP_OPTIONS": "rspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\nrspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n",
-        "HAPROXY_0_BACKEND_REDIRECT_HTTP_TO_HTTPS": "true"
+        "HAPROXY_0_BACKEND_HTTP_OPTIONS": "http-request add-header X-Forwarded-Proto https if { ssl_fc }\nhttp-request set-header X-HAPROXY 1\nrspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\nrspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n",
+        "HAPROXY_0_REDIRECT_TO_HTTPS": "true"
     },
   "healthChecks": [
     {

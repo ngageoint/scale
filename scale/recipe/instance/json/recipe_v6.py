@@ -8,8 +8,8 @@ from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, R
 from recipe.instance.exceptions import InvalidRecipe
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 RECIPE_INSTANCE_SCHEMA = {
     'type': 'object',
@@ -261,7 +261,7 @@ class RecipeInstanceV6(object):
         if 'version' not in self._json:
             self._json['version'] = SCHEMA_VERSION
 
-        if self._json['version'] != SCHEMA_VERSION:
+        if self._json['version'] not in SCHEMA_VERSIONS:
             raise InvalidRecipe('%s is an unsupported version number' % self._json['version'])
 
         self._populate_default_values()

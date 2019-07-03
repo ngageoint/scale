@@ -14,6 +14,7 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 # Set the external URL context here, default to using SCRIPT_NAME passed by reverse proxy.
 FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', None)
 USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Ensure backend uses HTTPS for auth callbacks
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
