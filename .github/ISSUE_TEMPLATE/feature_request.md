@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Paint Point? Please describe.**
+**Pain Point? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
 **Desired Solution**
