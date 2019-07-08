@@ -126,6 +126,57 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(mock_msg_mgr_tr.call_count, 2)
         self.assertEqual(mock_create.call_count, 2)
         
+        # Call method to test
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
+        self.assertEqual(mock_msg_mgr_tr.call_count, 2)
+        self.assertEqual(mock_create.call_count, 2)
+        
+        # Verify events were created
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 2)
+        self.assertEqual(events[1]['type'], 'SCAN')
+        
+        # Update the recipe then call ingest with revision 1
+        manifest = job_test_utils.create_seed_manifest(
+            inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
+        jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
+        definition = {'version': '7',
+                      'input': {'files': [{'name': 'INPUT_FILE',
+                                            'media_types': ['text/plain'],
+                                            'required': True,
+                                            'multiple': True}],
+                                'json': []},
+                      'nodes': {'node_a': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': self.jt1.name,
+                                                              'job_type_version': self.jt1.version,
+                                                              'job_type_revision': 1}},
+                                'node_b': {'dependencies': [],
+                                                'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                                'node_type': {'node_type': 'job', 'job_type_name': jt2.name,
+                                                              'job_type_version': jt2.version,
+                                                              'job_type_revision': 1}}}}
+        
+        recipe_test_utils.edit_recipe_type_v6(recipe_type=self.recipe, definition=definition)
+        
+        strike_config['recipe'] = {
+            'name': self.recipe.name,
+            'revision_num': 1,
+        }
+        config = StrikeConfigurationV6(strike_config).get_configuration()
+        strike = Strike.objects.create_strike('my_name_2', 'my_title_2', 'my_description_2', config)
+        ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
+
+        # Call method to test
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
+        self.assertEqual(mock_msg_mgr_tr.call_count, 3)
+        self.assertEqual(mock_create.call_count, 3)
+        
+        # Verify events were created
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 3)
+        self.assertEqual(events[2]['type'], 'STRIKE')
+        
 
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
     @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
