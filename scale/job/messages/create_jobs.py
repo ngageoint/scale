@@ -80,7 +80,7 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
             message.recipe_id = recipe.id
             message.root_recipe_id = recipe.root_superseded_recipe_id
             message.event_id = recipe.event_id
-            message.ingest_event_id = recipe.ingest_event
+            message.ingest_event_id = recipe.ingest_event_id
             message.superseded_recipe_id = recipe.superseded_recipe_id
             message.batch_id = recipe.batch_id
             message.recipe_config = recipe.configuration
@@ -91,7 +91,7 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
             message.recipe_id = recipe.id
             message.root_recipe_id = recipe.root_superseded_recipe_id
             message.event_id = recipe.event_id
-            message.ingest_event_id = recipe.ingest_event
+            message.ingest_event_id = recipe.ingest_event_id
             message.superseded_recipe_id = recipe.superseded_recipe_id
             message.batch_id = recipe.batch_id
             message.recipe_config = recipe.configuration
