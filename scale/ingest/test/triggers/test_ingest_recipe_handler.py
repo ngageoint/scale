@@ -131,7 +131,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(len(events), 2)
         self.assertEqual(events[1]['type'], 'SCAN')
         
-        Update the recipe then call ingest with revision 1
+        # Update the recipe then call ingest with revision 1
         manifest = job_test_utils.create_seed_manifest(
             inputs_files=[{'name': 'INPUT_FILE', 'media_types': ['text/plain'], 'required': True, 'multiple': True}], inputs_json=[])
         jt2 = job_test_utils.create_seed_job_type(manifest=manifest)
