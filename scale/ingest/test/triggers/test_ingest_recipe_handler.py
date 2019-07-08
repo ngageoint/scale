@@ -92,8 +92,6 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
         mock_msg_mgr.assert_called_once()
-        mock_create.assert_called_once()
-     
         
 
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
