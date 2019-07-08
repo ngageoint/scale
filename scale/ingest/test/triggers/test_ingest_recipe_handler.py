@@ -89,9 +89,10 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
         ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
 
-        pass       
-        
-        
+        # Call method to test
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
+        mock_msg_mgr.assert_called_once()
+        mock_create.assert_called_once()
      
         
 
