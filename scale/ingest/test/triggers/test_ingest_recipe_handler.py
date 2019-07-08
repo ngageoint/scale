@@ -155,23 +155,23 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         
         recipe_test_utils.edit_recipe_type_v6(recipe_type=self.recipe, definition=definition)
         
-        # strike_config['recipe'] = {
-        #     'name': self.recipe.name,
-        #     'revision_num': 1,
-        # }
-        # config = StrikeConfigurationV6(strike_config).get_configuration()
-        # strike = Strike.objects.create_strike('my_name_2', 'my_title_2', 'my_description_2', config)
-        # ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
+        strike_config['recipe'] = {
+            'name': self.recipe.name,
+            'revision_num': 1,
+        }
+        config = StrikeConfigurationV6(strike_config).get_configuration()
+        strike = Strike.objects.create_strike('my_name_2', 'my_title_2', 'my_description_2', config)
+        ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
 
-        # # Call method to test
-        # IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
-        # self.assertEqual(mock_msg_mgr_tr.call_count, 3)
-        # self.assertEqual(mock_create.call_count, 3)
+        # Call method to test
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
+        self.assertEqual(mock_msg_mgr_tr.call_count, 3)
+        self.assertEqual(mock_create.call_count, 3)
         
-        # # Verify events were created
-        # events = IngestEvent.objects.all().values()
-        # self.assertEqual(len(events), 3)
-        # self.assertEqual(events[2]['type'], 'STRIKE')
+        # Verify events were created
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 3)
+        self.assertEqual(events[2]['type'], 'STRIKE')
         
 
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
