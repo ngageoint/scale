@@ -126,11 +126,6 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(mock_msg_mgr_tr.call_count, 2)
         self.assertEqual(mock_create.call_count, 2)
         
-        # Call method to test
-        IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
-        self.assertEqual(mock_msg_mgr_tr.call_count, 2)
-        self.assertEqual(mock_create.call_count, 2)
-        
         # Verify events were created
         events = IngestEvent.objects.all().values()
         self.assertEqual(len(events), 2)
