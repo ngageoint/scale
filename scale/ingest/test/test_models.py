@@ -81,7 +81,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         self.workspace = storage_test_utils.create_workspace()
         self.recipe = recipe_test_utils.create_recipe_type_v6()
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_successful_v6(self, mock_msg_mgr):
         """Tests calling StrikeManager.create_strike successfully with v6 config"""
 
