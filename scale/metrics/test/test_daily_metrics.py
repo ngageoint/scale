@@ -22,9 +22,10 @@ class TestDailyMetricsProcessor(TransactionTestCase):
         self.job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         self.processor = DailyMetricsProcessor()
 
+    @patch('metrics.daily_metrics.CommandMessageManager')
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
-    def test_process_event_first(self, mock_Queue):
+    def test_process_event_first(self, mock_Queue, mock_msg_mgr):
         """Tests processing an event that was never triggered before."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=utc))
 
