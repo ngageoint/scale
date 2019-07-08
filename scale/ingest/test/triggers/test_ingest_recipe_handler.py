@@ -96,6 +96,36 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         mock_msg_mgr_tr.assert_called_once()
         mock_create.assert_called_once()
         
+        # Verify ingest event and trigger event objects were created
+        from ingest.models import IngestEvent
+        events = IngestEvent.objects.all().values()
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]['type'], 'STRIKE')
+        
+        # Create scan
+        scan_config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': 'input_file',
+                'data_types': ['type1'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.workspace.name,
+            }],
+            'recipe': {
+                'name': self.recipe_v7.name,
+            },
+        }
+        scan_configuration = ScanConfigurationV6(scan_config).get_configuration()
+        scan = Scan.objects.create_scan('my_name', 'my_title', 'my_description', scan_configuration)
+
+        # Call method to test
+        IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
+        self.assertEqual(mock_msg_mgr_tr.call_count, 2)
+        self.assertEqual(mock_create.call_count, 2)
+        
 
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
     @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
