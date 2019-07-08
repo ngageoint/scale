@@ -66,7 +66,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_revision': 1}}}}
         self.recipe_v7 = recipe_test_utils.create_recipe_type_v6(name='test-recipe-v7', definition=v7_recipe_type_def)
 
-    @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
+    @patch('queue.models.CommandMessageManager')
     @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
     def test_successful_recipe_kickoff(self, mock_create, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
@@ -82,7 +82,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                 'new_file_path': 'my/path'
             }],
             'recipe': {
-                'name': self.recipe.name
+                'name': self.recipe_v7.name
             },
         }
         config = StrikeConfigurationV6(strike_config).get_configuration()
