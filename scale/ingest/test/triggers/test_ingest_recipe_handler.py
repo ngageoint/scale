@@ -67,8 +67,10 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.recipe_v7 = recipe_test_utils.create_recipe_type_v6(name='test-recipe-v7', definition=v7_recipe_type_def)
 
 
+    
+    @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
     @patch('ingest.models.CommandMessageManager')
-    def test_successful_recipe_kickoff(self, mock_msg_mgr):
+    def test_successful_recipe_kickoff(self, mock_msg_mgr, mock_create):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
@@ -92,6 +94,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
         mock_msg_mgr.assert_called_once()
+        mock_create.assert_called_once()
         
 
     @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
