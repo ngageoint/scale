@@ -10,7 +10,6 @@ from data.data.exceptions import InvalidData
 from job.messages.cancel_jobs import create_cancel_jobs_messages
 from job.models import Job
 from messaging.messages.message import CommandMessage
-# from util.database import sleep
 
 
 logger = logging.getLogger(__name__)
@@ -70,18 +69,6 @@ class ProcessJobInput(CommandMessage):
         """
 
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
-
-        # wait max of 5 seconds for events to save
-        # job = sleep(Job, self.job_id)
-        
-        # if not job:
-        #     if self.tries < MAX_TRIES:
-        #         logger.warning('Job %d does not exist. Maximum tries exceeded. Message will not re-run.', self.job_id)
-        #         return True
-        #     else:
-        #         self.tries += 1
-        #         logger.warning('Job %d does not exist - throwing message back on queue to try again.', self.job_id)
-        #         return False
 
         try:
             job = Job.objects.get_job_with_interfaces(self.job_id)

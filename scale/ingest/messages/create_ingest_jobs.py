@@ -19,16 +19,11 @@ logger = logging.getLogger(__name__)
 STRIKE_JOB_TYPE = 'strike_job' # Message type for creating strike jobs
 SCAN_JOB_TYPE = 'scan_job' # Message type for creating scan jobs
 
-# This is the maximum number of jobs models that can fit in one message. This maximum ensures that every message of this
-# type is less than 25 KiB long and that each message can be processed quickly.
-MAX_NUM = 100
-
 def create_scan_ingest_job_message(ingest_id, scan_id):
     """Creates a message to create the ingest job for a scan
     
     :param ingest_id: ID of the ingest
     :type ingest_id: int
-    :param workspace_name: The workspace of the ingest
     :param scan_id: The ID of the scan
     :type scan_id: int
     """
