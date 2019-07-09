@@ -315,6 +315,16 @@
 <div class="section" id="module-batch.test.test_views">
 <span id="batch-test-test-views-module"></span><h2>batch.test.test_views module<a class="headerlink" href="#module-batch.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="batch.test.test_views.MockCommandMessageManager">
+<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">MockCommandMessageManager</code><a class="headerlink" href="#batch.test.test_views.MockCommandMessageManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="batch.test.test_views.MockCommandMessageManager.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>commands</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.MockCommandMessageManager.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="batch.test.test_views.TestBatchDetailsViewV6">
 <em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.test.APITestCase</span></code></p>
@@ -491,6 +501,12 @@
 <dt id="batch.test.test_views.TestBatchesViewV6.test_create_invalid_version">
 <code class="descname">test_create_invalid_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV6.test_create_invalid_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new batch with an invalid REST API version</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesViewV6.test_create_priority">
+<code class="descname">test_create_priority</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesViewV6.test_create_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new batch successfully and having the priority of created jobs set properly</p>
 </dd></dl>
 
 <dl class="method">
