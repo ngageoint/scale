@@ -538,10 +538,11 @@ class JobTypesStatusView(ListAPIView):
         """
 
         # Get a list of all job type status counts
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
 
-        job_type_statuses = JobType.objects.get_status(started=started, ended=ended)
+        job_type_statuses = JobType.objects.get_status(is_active=is_active, started=started, ended=ended)
 
         page = self.paginate_queryset(job_type_statuses)
         serializer = self.get_serializer(page, many=True)

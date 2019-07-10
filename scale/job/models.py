@@ -2332,7 +2332,7 @@ class JobTypeManager(models.Manager):
             results.append(counts)
         return results
 
-    def get_status(self, started, ended=None):
+    def get_status(self, started, ended=None, is_active=None):
         """Returns a list of job types with counts broken down by job status.
 
         Note that all running job types are counted regardless of date/time filters.
@@ -2341,12 +2341,16 @@ class JobTypeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query job types updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
         :returns: The list of job types with supplemented statistics.
         :rtype: [:class:`job.models.JobTypeStatus`]
         """
 
         # Build a mapping of all job type identifier -> status model
         job_types = JobType.objects.all().defer('manifest').order_by('last_modified')
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
         status_dict = {job_type.id: JobTypeStatus(job_type, []) for job_type in job_types}
 
         # Build up the filters based on inputs and all running jobs
