@@ -14,8 +14,6 @@ from messaging.messages.message import CommandMessage
 
 logger = logging.getLogger(__name__)
 
-# MAX_TRIES = 5 # Maximum number of tries before giving up on the job
-
 def create_process_job_input_messages(job_ids):
     """Creates messages to process the input for the given jobs
 
