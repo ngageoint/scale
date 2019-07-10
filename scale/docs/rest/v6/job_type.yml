@@ -429,6 +429,9 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_active:
+          type: boolean
+          example: true
         is_paused:
           type: boolean
           example: false
