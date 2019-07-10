@@ -86,8 +86,8 @@ class TestGetAuthDisabledJobsView(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_job_input_messages')
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_process_job_input_messages')
     def test_unathenticated_on_post(self, mock_create, mock_msg_mgr):
         """Tests for failure when posting to the jobs view with authentication."""
 
@@ -95,8 +95,8 @@ class TestGetAuthDisabledJobsView(APITestCase):
         response = self.client.post(url, data=self.json_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_job_input_messages')
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_process_job_input_messages')
     def test_success_on_post(self, mock_create, mock_msg_mgr):
         """Tests success when posting to the jobs view with authentication."""
 
@@ -113,7 +113,6 @@ class TestGetAuthDisabledJobsView(APITestCase):
         # Response should be new v6 job detail response
         self.assertEqual(result['execution'], None)
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
-        mock_create.assert_called_once()
 
 
 class TestJobsViewV6(APITestCase):
@@ -466,8 +465,8 @@ class TestJobsPostViewV6(APITestCase):
 
         rest.login_client(self.client, is_staff=True)
 
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_job_input_messages')
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_process_job_input_messages')
     def test_successful(self, mock_create, mock_msg_mgr):
         """Tests successfully calling POST jobs view to queue a new job"""
 
@@ -491,8 +490,8 @@ class TestJobsPostViewV6(APITestCase):
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
         mock_create.assert_called_once()
 
-    @patch('queue.models.CommandMessageManager')
-    @patch('queue.models.create_process_job_input_messages')
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_process_job_input_messages')
     def test_successful_configuration(self, mock_create, mock_msg_mgr):
         """Tests successfully calling POST jobs view to queue a new job with a job type configuration"""
 

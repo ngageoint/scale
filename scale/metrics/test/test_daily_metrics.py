@@ -22,9 +22,10 @@ class TestDailyMetricsProcessor(TransactionTestCase):
         self.job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         self.processor = DailyMetricsProcessor()
 
+    @patch('metrics.daily_metrics.CommandMessageManager')
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
-    def test_process_event_first(self, mock_Queue):
+    def test_process_event_first(self, mock_Queue, mock_msg_mgr):
         """Tests processing an event that was never triggered before."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=utc))
 
@@ -36,9 +37,10 @@ class TestDailyMetricsProcessor(TransactionTestCase):
         self.assertDictEqual({u'files': {}, u'json': {u'DAY': '2015-01-09'}, u'version': u'7'}, inputs.get_dict())
         self.assertEqual(event, call_args[2])
 
+    @patch('metrics.daily_metrics.CommandMessageManager')
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
-    def test_process_event_last(self, mock_Queue):
+    def test_process_event_last(self, mock_Queue, mock_msg_mgr):
         """Tests processing an event that was triggered before."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, second=9, tzinfo=utc))
         last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, 12, second=10, tzinfo=utc))
@@ -51,9 +53,10 @@ class TestDailyMetricsProcessor(TransactionTestCase):
         self.assertDictEqual({u'files': {}, u'json': {u'DAY': '2015-01-09'}, u'version': u'7'}, inputs.get_dict())
         self.assertEqual(event, call_args[2])
 
+    @patch('metrics.daily_metrics.CommandMessageManager')
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
-    def test_process_event_range(self, mock_Queue):
+    def test_process_event_range(self, mock_Queue, mock_msg_mgr):
         """Tests processing an event that requires catching up for a range of previous days."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=utc))
         last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 7, 12, tzinfo=utc))
@@ -77,9 +80,10 @@ class TestDailyMetricsProcessor(TransactionTestCase):
 
         self.assertEqual(mock_Queue.objects.queue_new_job_v6.call_count, 3)
 
+    @patch('metrics.daily_metrics.CommandMessageManager')
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
-    def test_process_event_duplicate(self, mock_Queue):
+    def test_process_event_duplicate(self, mock_Queue, mock_msg_mgr):
         """Tests processing an event that was previously handled."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=utc))
         last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=utc))

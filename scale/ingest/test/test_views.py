@@ -772,7 +772,7 @@ class TestScansProcessViewV6(APITestCase):
         response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_dry_run_process(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for a dry run Scan."""
 
@@ -784,7 +784,7 @@ class TestScansProcessViewV6(APITestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertIsNotNone(result['dry_run_job'])
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_ingest_process(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for an ingest Scan."""
 
@@ -816,7 +816,7 @@ class TestScansProcessViewV6(APITestCase):
         response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.content)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_dry_run_process_reprocess(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
 
@@ -832,7 +832,7 @@ class TestScansProcessViewV6(APITestCase):
         self.assertIsNotNone(result['dry_run_job'])
         self.assertNotEqual(result['dry_run_job']['id'], old_job_id)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_ingest_after_dry_run(self, mock_msg_mgr):
         """Tests successfully calling the Scan process view for an ingest Scan. following dry run"""
 
@@ -977,7 +977,7 @@ class TestStrikeCreateViewV6(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
         """Tests calling the create Strike view successfully."""
 
@@ -1018,7 +1018,7 @@ class TestStrikeCreateViewV6(APITestCase):
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
 
-    @patch('queue.models.CommandMessageManager')
+    @patch('ingest.models.CommandMessageManager')
     def test_successful_v6(self, mock_msg_mgr):
         """Tests creating strike with recipe configuration"""
 

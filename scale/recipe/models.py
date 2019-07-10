@@ -157,8 +157,12 @@ class RecipeManager(models.Manager):
         :returns: The recipe model
         :rtype: :class:`recipe.models.Recipe`
         """
-
-        return self.get_locked_recipes([recipe_id])[0]
+        
+        locked_recipes = self.get_locked_recipes([recipe_id])
+        if len(locked_recipes) > 0:
+            return locked_recipes[0]
+        
+        return None
 
     def get_locked_recipes(self, recipe_ids):
         """Locks and returns the recipe models for the given IDs with no related fields. Caller must be within an atomic
