@@ -252,6 +252,12 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.management.html#module-ingest.management">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.messages.html">ingest.messages package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.messages.html#module-ingest.messages.create_ingest_jobs">ingest.messages.create_ingest_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.messages.html#module-ingest.messages">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.migrations.html">ingest.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0001_initial">ingest.migrations.0001_initial module</a></li>
@@ -343,6 +349,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.test.html">ingest.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.messages.html">ingest.test.messages package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.messages.html#module-ingest.test.messages.test_create_ingest_jobs">ingest.test.messages.test_create_ingest_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.messages.html#module-ingest.test.messages">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.test.scan.html">ingest.test.scan package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="ingest.test.scan.configuration.html">ingest.test.scan.configuration package</a><ul>
@@ -1417,7 +1429,7 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 
 <dl class="method">
 <dt id="ingest.models.IngestManager.start_ingest_tasks">
-<code class="descname">start_ingest_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.start_ingest_tasks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">start_ingest_tasks</code><span class="sig-paren">(</span><em>ingests</em>, <em>scan_id=None</em>, <em>strike_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.start_ingest_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts a batch of tasks for the given scan in an atomic transaction.</p>
 <p>One of scan_id or strike_id must be set.</p>
 <table class="docutils field-list" frame="void" rules="none">

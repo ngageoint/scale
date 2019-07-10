@@ -51,6 +51,14 @@ util\.command module
     :undoc-members:
     :show-inheritance:
 
+util\.database module
+---------------------
+
+.. automodule:: util.database
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.dcos module
 -----------------
 

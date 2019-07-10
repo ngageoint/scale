@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.triggers package &mdash; Scale 6.9.0-snapshot documentation</title>
+  <title>ingest.messages package &mdash; Scale 6.9.0-snapshot documentation</title>
   
 
   
@@ -46,8 +46,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="job package" href="job.html" />
-    <link rel="prev" title="ingest.test.triggers package" href="ingest.test.triggers.html" />
+    <link rel="next" title="ingest.migrations package" href="ingest.migrations.html" />
+    <link rel="prev" title="ingest.management.commands package" href="ingest.management.commands.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -207,13 +207,13 @@
         
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
         
-      <li>ingest.triggers package</li>
+      <li>ingest.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/ingest.triggers.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/ingest.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -226,32 +226,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ingest-triggers-package">
-<h1>ingest.triggers package<a class="headerlink" href="#ingest-triggers-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="ingest-messages-package">
+<h1>ingest.messages package<a class="headerlink" href="#ingest-messages-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ingest.triggers.ingest_recipe_handler">
-<span id="ingest-triggers-ingest-recipe-handler-module"></span><h2>ingest.triggers.ingest_recipe_handler module<a class="headerlink" href="#module-ingest.triggers.ingest_recipe_handler" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that handles ingest trigger rules</p>
+<div class="section" id="module-ingest.messages.create_ingest_jobs">
+<span id="ingest-messages-create-ingest-jobs-module"></span><h2>ingest.messages.create_ingest_jobs module<a class="headerlink" href="#module-ingest.messages.create_ingest_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that creates job models</p>
 <dl class="class">
-<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler">
-<em class="property">class </em><code class="descclassname">ingest.triggers.ingest_recipe_handler.</code><code class="descname">IngestRecipeHandler</code><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Handles ingest trigger rules</p>
+<dt id="ingest.messages.create_ingest_jobs.CreateIngest">
+<em class="property">class </em><code class="descclassname">ingest.messages.create_ingest_jobs.</code><code class="descname">CreateIngest</code><a class="headerlink" href="#ingest.messages.create_ingest_jobs.CreateIngest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that creates the ingest job</p>
 <dl class="method">
-<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file">
-<code class="descname">process_ingested_source_file</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>source</em>, <em>source_file</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes the given ingested source file by kicking off its recipe.
-All database changes are made in an atomic transaction.</p>
+<dt id="ingest.messages.create_ingest_jobs.CreateIngest.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.messages.create_ingest_jobs.CreateIngest.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ingest.messages.create_ingest_jobs.CreateIngest.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.messages.create_ingest_jobs.CreateIngest.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.messages.create_ingest_jobs.CreateIngest.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.messages.create_ingest_jobs.CreateIngest.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ingest.messages.create_ingest_jobs.create_scan_ingest_job_message">
+<code class="descclassname">ingest.messages.create_ingest_jobs.</code><code class="descname">create_scan_ingest_job_message</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.messages.create_ingest_jobs.create_scan_ingest_job_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to create the ingest job for a scan</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>source</strong> &#8211; The strike that triggered the ingest</li>
-<li><strong>source_file</strong> (<a class="reference internal" href="source.html#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>) &#8211; The source file that was ingested</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the source file was ingested</li>
+<li><strong>ingest_id</strong> (<em>int</em>) &#8211; ID of the ingest</li>
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; The ID of the scan</li>
 </ul>
 </td>
 </tr>
@@ -259,33 +277,27 @@ All database changes are made in an atomic transaction.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file">
-<code class="descname">process_manual_ingested_source_file</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>source_file</em>, <em>when</em>, <em>recipe_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes a manual ingest where a strike or scan is not involved. All database
-changes are made in an atomic transaction</p>
+<dl class="function">
+<dt id="ingest.messages.create_ingest_jobs.create_strike_ingest_job_message">
+<code class="descclassname">ingest.messages.create_ingest_jobs.</code><code class="descname">create_strike_ingest_job_message</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.messages.create_ingest_jobs.create_strike_ingest_job_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to create the ingest job for a strike</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ingest_id</strong> (<em>int</em>) &#8211; </li>
-<li><strong>source_file</strong> (<a class="reference internal" href="source.html#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>) &#8211; The source file that was ingested</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the source file was ingested</li>
-<li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; id of the Recipe type to kick off</li>
+<li><strong>ingest_id</strong> (<em>int</em>) &#8211; ID of the ingest</li>
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; The ID of the strike</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
 </dd></dl>
 
 </div>
-<div class="section" id="module-ingest.triggers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.triggers" title="Permalink to this headline">¶</a></h2>
-<p>Triggers (see trigger app) related to ingest</p>
+<div class="section" id="module-ingest.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -297,10 +309,10 @@ changes are made in an atomic transaction</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.html" class="btn btn-neutral float-right" title="job package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.migrations.html" class="btn btn-neutral float-right" title="ingest.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.test.triggers.html" class="btn btn-neutral float-left" title="ingest.test.triggers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.management.commands.html" class="btn btn-neutral float-left" title="ingest.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -434,6 +434,38 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="recipe.messages.create_recipes.create_recipes_messages">
+<code class="descclassname">recipe.messages.create_recipes.</code><code class="descname">create_recipes_messages</code><span class="sig-paren">(</span><em>recipe_type_name</em>, <em>revision_num</em>, <em>recipe_data</em>, <em>event_id</em>, <em>ingest_event_id</em>, <em>configuration=None</em>, <em>batch_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_recipes.create_recipes_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to create the recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_name</strong> (<em>string</em>) &#8211; The new recipe type name</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number of the recipe type</li>
+<li><strong>recipe_data</strong> (<em>dict</em>) &#8211; The input data for the recipe</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID</li>
+<li><strong>ingest_event_id</strong> (<em>int</em>) &#8211; The ingest event id</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The configuration of the recipe</li>
+<li><strong>batch_id</strong> &#8211; The batch ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first">batch_id: int</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="recipe.messages.create_recipes.create_reprocess_messages">
 <code class="descclassname">recipe.messages.create_recipes.</code><code class="descname">create_reprocess_messages</code><span class="sig-paren">(</span><em>root_recipe_ids</em>, <em>recipe_type_name</em>, <em>revision_num</em>, <em>event_id</em>, <em>batch_id=None</em>, <em>forced_nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_recipes.create_reprocess_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to reprocess the given recipes</p>
