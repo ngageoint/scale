@@ -2061,7 +2061,6 @@ class TestJobTypesStatusView(APITestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 4)
-        print result['results']
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
         self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
         
@@ -2076,6 +2075,33 @@ class TestJobTypesStatusView(APITestCase):
         self.assertEqual(len(result['results']), 3)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
         self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
+        
+    def test_date_range(self):
+        """Tests successfully filtering the job types status view by start/end."""
+
+        url = '/%s/job-types/status/?started=%s&ended=%s' % ( self.api,
+                                                                 '2015-01-01T00:00:00Z',
+                                                                 '2015-01-02T00:00:00Z')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        
+    def test_active_and_date_range(self):
+        """Tests successfully filtering the job types status view by is_active and start/end."""
+
+        url = '/%s/job-types/status/?is_active=true&started=%s&ended=%s' % ( self.api,
+                                                                 '2016-01-01T00:00:00Z',
+                                                                 '2016-01-02T00:00:00Z')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+        self.assertEqual(len(result['results'][0]['job_counts']), 0)
+
 
 class TestJobExecutionsViewV6(APITransactionTestCase):
 
