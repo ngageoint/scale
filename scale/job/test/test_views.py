@@ -2047,20 +2047,35 @@ class TestJobTypesStatusView(APITestCase):
         self.error.save()
         self.job3 = job_test_utils.create_job(status='FAILED', error=self.error)
 
-        self.old_job_type = job_test_utils.create_seed_job_type(is_active=False)
+        self.old_job_type = job_test_utils.create_seed_job_type()
         self.job4 = job_test_utils.create_job(job_type=self.old_job_type)
+        self.old_job_type.is_active = False
+        self.old_job_type.save()
 
     def test_successful(self):
-        """Tests successfully calling the system failures view."""
+        """Tests successfully calling the job types status view."""
 
         url = '/%s/job-types/status/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['job_type']['name'], self.job.job_type.name)
-        self.assertEqual(result['results'][0]['count'], 1)
+        self.assertEqual(len(result['results']), 4)
+        print result['results']
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+        self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
+        
+    def test_active(self):
+        """Tests successfully filtering the job types status view by is_active."""
+
+        url = '/%s/job-types/status/?is_active=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+        self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
 
 class TestJobExecutionsViewV6(APITransactionTestCase):
 

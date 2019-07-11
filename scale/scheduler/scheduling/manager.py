@@ -382,13 +382,13 @@ class SchedulingManager(object):
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
                 jt.unmet_resources = ','.join(invalid_resources)
-                jt.save()
+                jt.save(update_fields=["unmet_resources"])
                 continue
             else:
                 # reset unmet_resources flag
                 jt.unmet_resources = None
                 scheduler_mgr.warning_inactive(warning)
-                jt.save()
+                jt.save(update_fields=["unmet_resources"])
             
             # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id

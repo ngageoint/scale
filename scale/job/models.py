@@ -2348,9 +2348,12 @@ class JobTypeManager(models.Manager):
         """
 
         # Build a mapping of all job type identifier -> status model
-        job_types = JobType.objects.all().defer('manifest').order_by('last_modified')
+        job_types = JobType.objects.all()
         if is_active is not None:
             job_types = job_types.filter(is_active=is_active)
+            
+        job_types = job_types.defer('manifest').order_by('last_modified')
+        
         status_dict = {job_type.id: JobTypeStatus(job_type, []) for job_type in job_types}
 
         # Build up the filters based on inputs and all running jobs
@@ -2367,6 +2370,8 @@ class JobTypeManager(models.Manager):
 
         # Collect the status and counts by job type
         for count_dict in count_dicts:
+            if count_dict['job_type__id'] not in status_dict:
+                continue
             status = status_dict[count_dict['job_type__id']]
             counts = JobTypeStatusCounts(count_dict['status'], count_dict['count'],
                                          count_dict['most_recent'], count_dict['error__category'])
