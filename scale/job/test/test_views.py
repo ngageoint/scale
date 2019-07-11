@@ -2032,6 +2032,36 @@ class TestJobTypesSystemFailuresView(APITestCase):
         self.assertEqual(result['results'][0]['count'], 1)
 
 
+class TestJobTypesStatusView(APITestCase):
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.job1 = job_test_utils.create_job(status='PENDING')
+
+        self.job2 = job_test_utils.create_job(status='RUNNING')
+
+        self.error = Error(name='Test Error', description='test')
+        self.error.save()
+        self.job3 = job_test_utils.create_job(status='FAILED', error=self.error)
+
+        self.old_job_type = job_test_utils.create_seed_job_type(is_active=False)
+        self.job4 = job_test_utils.create_job(job_type=self.old_job_type)
+
+    def test_successful(self):
+        """Tests successfully calling the system failures view."""
+
+        url = '/%s/job-types/status/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job.job_type.name)
+        self.assertEqual(result['results'][0]['count'], 1)
+
 class TestJobExecutionsViewV6(APITransactionTestCase):
 
     api = 'v6'
