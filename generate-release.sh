@@ -15,7 +15,7 @@ if [[ "${verstring}x" == "x" ]]
 then
     echo Missing version parameter!
     echo Usage:
-    echo   ./generate-release.sh [-f] 6 0 0
+    echo   ./generate-release.sh [-f] 7 0 0
     exit 1
 fi
 
