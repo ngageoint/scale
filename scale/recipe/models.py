@@ -1385,7 +1385,6 @@ class RecipeTypeManager(models.Manager):
                 if not diff.can_be_reprocessed:
                     msg = 'This recipe cannot be reprocessed after updating.'
                     warnings.append(ValidationWarning('REPROCESS_WARNING',msg))
-                    is_valid = False
                 json = convert_recipe_diff_to_v6_json(diff)
                 diff = rest_utils.strip_schema_version(json.get_dict())
 
