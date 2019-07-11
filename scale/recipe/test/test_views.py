@@ -773,7 +773,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertFalse(results['is_valid'])
+        self.assertTrue(results['is_valid'])
         diff = {u'can_be_reprocessed': False,
                 u'reasons': [{u'name': u'INPUT_CHANGE', u'description': u"Input interface has changed: Parameter 'INPUT_IMAGE' is required"}],
                 u'nodes': { u'node_a': { u'status': u'CHANGED', u'reprocess_new_node': False, u'force_reprocess': False, u'dependencies': [],
@@ -786,7 +786,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
 
         warnings = [{u'name': u'REPROCESS_WARNING', u'description': u"This recipe cannot be reprocessed after updating."}]
         self.maxDiff = None
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': False, u'warnings': warnings, u'diff': diff})
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': diff})
 
     def test_recipe_not_found_warning(self):
         """Tests validating a recipe definition against a recipe-type that doesn't exist"""
