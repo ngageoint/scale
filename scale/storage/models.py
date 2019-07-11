@@ -1036,7 +1036,7 @@ class Workspace(models.Model):
 
     name = models.CharField(db_index=True, max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.CharField(blank=True, max_length=500)
+    description = models.CharField(blank=True, null=True, max_length=500)
     base_url = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
