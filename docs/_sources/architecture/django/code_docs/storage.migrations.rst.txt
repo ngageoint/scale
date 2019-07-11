@@ -148,6 +148,14 @@ storage\.migrations\.0018\_remove\_scalefile\_is\_operational module
     :undoc-members:
     :show-inheritance:
 
+storage\.migrations\.0019\_optional\_description module
+-------------------------------------------------------
+
+.. automodule:: storage.migrations.0019_optional_description
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
