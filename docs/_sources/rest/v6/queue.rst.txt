@@ -110,6 +110,7 @@ Response: 200 OK
          "version": "1.0",
          "title": "Scale Ingest",
          "description": "Ingests a source file into a workspace",
+         "is_active": true,
          "is_paused": false,
          "is_published": true,
          "icon_code": "f013",

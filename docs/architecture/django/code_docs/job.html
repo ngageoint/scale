@@ -5018,7 +5018,7 @@ count of associated jobs and the longest running job.</p>
 
 <dl class="method">
 <dt id="job.models.JobTypeManager.get_status">
-<code class="descname">get_status</code><span class="sig-paren">(</span><em>started</em>, <em>ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_status</code><span class="sig-paren">(</span><em>started</em>, <em>ended=None</em>, <em>is_active=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of job types with counts broken down by job status.</p>
 <p>Note that all running job types are counted regardless of date/time filters.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -5028,6 +5028,7 @@ count of associated jobs and the longest running job.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
+<li><strong>is_active</strong> (<em>bool</em>) &#8211; Query job types that are actively available for use.</li>
 </ul>
 </td>
 </tr>
