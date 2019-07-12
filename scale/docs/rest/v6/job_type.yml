@@ -299,6 +299,11 @@ paths:
           description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
+          name: is_active
+          schema:
+            type: boolean
+          description: if provided, only return job types with a least one version that matches is_active
+        - in: query
           name: started
           schema:
             type: string
@@ -429,6 +434,9 @@ components:
         icon_code:
           type: string
           example: f186 
+        is_active:
+          type: boolean
+          example: true
         is_paused:
           type: boolean
           example: false

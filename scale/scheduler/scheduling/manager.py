@@ -382,12 +382,13 @@ class SchedulingManager(object):
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
                 jt.unmet_resources = ','.join(invalid_resources)
-                jt.save()
+                jt.save(update_fields=["unmet_resources"])
                 continue
             else:
                 # reset unmet_resources flag
                 jt.unmet_resources = None
-                jt.save()
+                scheduler_mgr.warning_inactive(warning)
+                jt.save(update_fields=["unmet_resources"])
             
             # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id
@@ -545,14 +546,6 @@ class SchedulingManager(object):
         # Could not schedule job execution, reserve a node to run this execution if possible
         if best_reservation_node:
             del nodes[best_reservation_node.node_id]
-
-        # No nodes could reserve this
-        if best_reservation_score is None:
-            name = INVALID_RESOURCES.name + job_exe._queue.job_type.name
-            title = INVALID_RESOURCES.title % job_exe._queue.job_type.name
-            resource_names = [r.name for r in job_exe.required_resources.resources]
-            description = INVALID_RESOURCES.description % resource_names
-            scheduler_mgr.warning_active(SchedulerWarning(name=name, title=title, description=None), description)
 
         return False
 

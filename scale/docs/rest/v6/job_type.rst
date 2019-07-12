@@ -456,6 +456,7 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
+            "is_active": true,
             "is_paused": false,
             "is_published": false,
             "icon_code": "f013",
@@ -530,6 +531,7 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "My first job",
         "description": "My very first job",
+        "is_active": true,
         "is_paused": false,
         "is_published": false,
         "icon_code": "f013",
@@ -756,7 +758,7 @@ Location http://.../v6/job-types/test/1.0.0/
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
-+-------------------------+---------------- --+------- --+----------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
@@ -1127,6 +1129,7 @@ Request: GET http://.../v6/job-types/status/
           "version": "1.0",
           "title": "Scale Ingest",
           "description": "Ingests a source file into a workspace",
+          "is_active": true,
           "is_paused": false,
           "is_published": true,
           "icon_code": "f013",
@@ -1159,6 +1162,7 @@ Request: GET http://.../v6/job-types/status/
           "version": "1.0",
           "title": "Scale Clock",
           "description": "Monitors a directory for incoming files to ingest",
+          "is_active": true,
           "is_paused": false,
           "is_published": true,
           "icon_code": "f013",
@@ -1183,6 +1187,9 @@ Request: GET http://.../v6/job-types/status/
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Return only job types with one version that matches is_active flag. |
+|                    |                   |          | Defaults to all job types.                                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
@@ -1244,6 +1251,7 @@ Request: GET http://.../v6/job-types/pending/
         "version": "1.0",
         "title": "Scale Clock",
         "description": "",
+        "is_active": true,
         "is_paused": false,
         "is_published": true,
         "icon_code": "f013",
@@ -1307,6 +1315,7 @@ Request: GET http://.../v6/job-types/status/
         "version": "1.0",
         "title": "Scale Clock",
         "description": "",
+        "is_active": true,
         "is_paused": false,
         "is_published": true,
         "icon_code": "f013",
@@ -1369,6 +1378,7 @@ Request: GET http://.../v6/job-types/system-failures/
         "version": "1.0",
         "title": "Scale Clock",
         "description": "",
+        "is_active": true,
         "is_paused": false,
         "is_published": true,
         "icon_code": "f013",

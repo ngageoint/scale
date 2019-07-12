@@ -2031,6 +2031,77 @@ class TestJobTypesSystemFailuresView(APITestCase):
         self.assertEqual(result['results'][0]['count'], 1)
 
 
+class TestJobTypesStatusView(APITestCase):
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.job1 = job_test_utils.create_job(status='PENDING')
+
+        self.job2 = job_test_utils.create_job(status='RUNNING')
+
+        self.error = Error(name='Test Error', description='test')
+        self.error.save()
+        self.job3 = job_test_utils.create_job(status='FAILED', error=self.error)
+
+        self.old_job_type = job_test_utils.create_seed_job_type()
+        self.job4 = job_test_utils.create_job(job_type=self.old_job_type)
+        self.old_job_type.is_active = False
+        self.old_job_type.save()
+
+    def test_successful(self):
+        """Tests successfully calling the job types status view."""
+
+        url = '/%s/job-types/status/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+        self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
+        
+    def test_active(self):
+        """Tests successfully filtering the job types status view by is_active."""
+
+        url = '/%s/job-types/status/?is_active=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+        self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
+        
+    def test_date_range(self):
+        """Tests successfully filtering the job types status view by start/end."""
+
+        url = '/%s/job-types/status/?started=%s&ended=%s' % ( self.api,
+                                                                 '2015-01-01T00:00:00Z',
+                                                                 '2015-01-02T00:00:00Z')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        
+    def test_active_and_date_range(self):
+        """Tests successfully filtering the job types status view by is_active and start/end."""
+
+        url = '/%s/job-types/status/?is_active=true&started=%s&ended=%s' % ( self.api,
+                                                                 '2016-01-01T00:00:00Z',
+                                                                 '2016-01-02T00:00:00Z')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+        self.assertEqual(len(result['results'][0]['job_counts']), 0)
+
+
 class TestJobExecutionsViewV6(APITransactionTestCase):
 
     api = 'v6'
