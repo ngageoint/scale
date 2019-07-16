@@ -304,8 +304,8 @@ def deploy_ui(client, app_name, webserver_url, silo_url):
         'UI_DOCKER_IMAGE', ui_docker_img_default))
 
     arbitrary_env = {
-        'API_BACKEND': webserver_url,
-        'SILO_BACKEND': silo_url,
+        'API_URL': webserver_url,
+        'SILO_URL': silo_url,
         'CONTEXTS': '/service/%s' % FRAMEWORK_NAME
     }
     # For all environment variable that are set add to marathon json.

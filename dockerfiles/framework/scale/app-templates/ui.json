@@ -19,8 +19,8 @@
         "type": "DOCKER"
     },
     "env": {
-        "API_BACKEND": "http://scale-webserver.marathon.l4lb.thisdcos.directory:80/",
-        "SILO_BACKEND": "http://scale-silo.marathon.l4lb.thisdcos.directory:9000/",
+        "API_URL": "http://scale-webserver.marathon.l4lb.thisdcos.directory:80/",
+        "SILO_URL": "http://scale-silo.marathon.l4lb.thisdcos.directory:9000/",
         "CONTEXTS": "/service/scale"
     },
     "labels": {
