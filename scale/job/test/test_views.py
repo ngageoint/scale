@@ -25,7 +25,6 @@ from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import Job, JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
-from recipe.models import RecipeType
 from util import rest
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
@@ -487,6 +486,7 @@ class TestJobsPostViewV6(APITestCase):
 
         #Response should be new v6 job detail response
         self.assertEqual(result['execution'], None)
+        self.assertEqual(result['max_tries'], 3)
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
         mock_create.assert_called_once()
 
@@ -620,6 +620,7 @@ class TestJobDetailsViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
+        self.assertEqual(result['max_tries'], 3)
         self.assertEqual(result['job_type']['name'], self.job.job_type.name)
         self.assertEqual(result['job_type_rev']['job_type']['name'], self.job.job_type.name)
 
