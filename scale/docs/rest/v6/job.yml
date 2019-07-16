@@ -526,7 +526,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/job'
         - type: object
-          properties:      
+          properties:
+          max_tries:
+            type: integer
+            description: Number of times this job will automatically be retried in case of an error.
+            example: 3
           job_type_rev:
             $ref: '#/components/schemas/job_type_revision_detail'
           superseded_by_job:

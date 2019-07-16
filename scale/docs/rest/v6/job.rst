@@ -503,6 +503,7 @@ Response: 200 OK
         }      
       },
       "error": null,
+      "max_tries": 3,
       "num_exes": 1,
       "execution": {
         "id": 3,
@@ -629,6 +630,8 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | error              | JSON Object       | The error that is associated with the job.                                     |
 |                    |                   | (See :ref:`Error Details <rest_v6_error_details>`)                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| max_tries          | Integer           | Number of times this a job of this type will be automatically retried.         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | num_exes           | Integer           | The number of executions this job has had.                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

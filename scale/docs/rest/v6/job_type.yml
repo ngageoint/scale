@@ -509,6 +509,10 @@ components:
         max_scheduled:
           type: integer
           example: 1
+        max_tries:
+          type: integer
+          description: Number of times a job of this type will automatically be retried in case of an error.
+          example: 3
         revision_num:
           type: integer
           example: 1
