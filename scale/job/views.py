@@ -142,6 +142,10 @@ class JobTypesView(ListCreateAPIView):
 
         name = manifest_dict['job']['name']
         version = manifest_dict['job']['jobVersion']
+        
+        if name == 'validation':
+            logger.exception('Unable to create job type named "validation"')
+            raise BadParameter(unicode('Unable to create job type named "validation"'))
 
         existing_job_type = JobType.objects.filter(name=name, version=version).first()
         if not existing_job_type:

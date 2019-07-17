@@ -46,6 +46,7 @@ class JobSerializerV6(JobBaseSerializerV6):
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
     node = NodeBaseSerializer()
     error = ErrorBaseSerializerV6()
+    max_tries = serializers.IntegerField()
     num_exes = serializers.IntegerField()
     input_file_size = serializers.FloatField()
 

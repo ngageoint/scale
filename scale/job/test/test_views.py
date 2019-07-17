@@ -25,7 +25,6 @@ from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import Job, JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
-from recipe.models import RecipeType
 from util import rest
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
@@ -487,6 +486,7 @@ class TestJobsPostViewV6(APITestCase):
 
         #Response should be new v6 job detail response
         self.assertEqual(result['execution'], None)
+        self.assertEqual(result['max_tries'], 3)
         self.assertTrue('/%s/jobs/' % self.api in response['location'])
         mock_create.assert_called_once()
 
@@ -620,6 +620,7 @@ class TestJobDetailsViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
+        self.assertEqual(result['max_tries'], 3)
         self.assertEqual(result['job_type']['name'], self.job.job_type.name)
         self.assertEqual(result['job_type_rev']['job_type']['name'], self.job.job_type.name)
 
@@ -1396,6 +1397,24 @@ class TestJobTypesPostViewV6(APITestCase):
         self.assertIsNotNone(results['configuration']['settings'])
 
         mock_create.assert_called_with(self.recipe_type1.id, job_type.id)
+        
+    def test_create_seed_validation(self):
+        """Tests creating a job type with the name 'validation'."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'validation'
+
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestJobTypeDetailsViewV6(APITestCase):

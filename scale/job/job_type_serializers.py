@@ -38,6 +38,7 @@ class JobTypeSerializerV6(JobTypeBaseSerializerV6):
     is_paused = serializers.BooleanField()
     is_system = serializers.BooleanField()
     max_scheduled = serializers.IntegerField()
+    max_tries = serializers.IntegerField()
     revision_num = serializers.IntegerField()
     docker_image = serializers.CharField()
     unmet_resources = serializers.CharField()
