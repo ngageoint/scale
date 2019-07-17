@@ -848,6 +848,7 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
     <span class="p">}</span>
   <span class="p">},</span>
   <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
   <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="s2">&quot;execution&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
@@ -1015,78 +1016,82 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <td>The error that is associated with the job.
 (See <a class="reference internal" href="error.html#rest-v6-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>num_exes</td>
+<tr class="row-odd"><td>max_tries</td>
+<td>Integer</td>
+<td>Number of times this job will be automatically retried after an error.</td>
+</tr>
+<tr class="row-even"><td>num_exes</td>
 <td>Integer</td>
 <td>The number of executions this job has had.</td>
 </tr>
-<tr class="row-even"><td>execution</td>
+<tr class="row-odd"><td>execution</td>
 <td>JSON Object</td>
 <td>The most recent execution of the job.
 (See <a class="reference internal" href="#rest-v6-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>input</td>
+<tr class="row-even"><td>input</td>
 <td>JSON Object</td>
 <td>The input data for the job.
 (See <a class="reference internal" href="data.html#rest-v6-data-data"><span class="std std-ref">Data</span></a>)</td>
 </tr>
-<tr class="row-even"><td>input_file_size</td>
+<tr class="row-odd"><td>input_file_size</td>
 <td>Decimal</td>
 <td>The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-odd"><td>output</td>
+<tr class="row-even"><td>output</td>
 <td>JSON Object</td>
 <td>The output data for the job.
 (See <a class="reference internal" href="data.html#rest-v6-data-data"><span class="std std-ref">Data</span></a>)</td>
 </tr>
-<tr class="row-even"><td>source_started</td>
+<tr class="row-odd"><td>source_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When collection of the source file started.</td>
 </tr>
-<tr class="row-odd"><td>source_ended</td>
+<tr class="row-even"><td>source_ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When collection of the source file ended.</td>
 </tr>
-<tr class="row-even"><td>source_sensor_class</td>
+<tr class="row-odd"><td>source_sensor_class</td>
 <td>String</td>
 <td>The class of sensor used to produce the source file.</td>
 </tr>
-<tr class="row-odd"><td>source_sensor</td>
+<tr class="row-even"><td>source_sensor</td>
 <td>String</td>
 <td>The specific identifier of the sensor used to produce the source file.</td>
 </tr>
-<tr class="row-even"><td>source_collection</td>
+<tr class="row-odd"><td>source_collection</td>
 <td>String</td>
 <td>The collection of the source file.</td>
 </tr>
-<tr class="row-odd"><td>source_task</td>
+<tr class="row-even"><td>source_task</td>
 <td>String</td>
 <td>The task that produced the source file.</td>
 </tr>
-<tr class="row-even"><td>created</td>
+<tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>queued</td>
+<tr class="row-even"><td>queued</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-even"><td>started</td>
+<tr class="row-odd"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job started running.</td>
 </tr>
-<tr class="row-odd"><td>ended</td>
+<tr class="row-even"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-even"><td>last_status_change</td>
+<tr class="row-odd"><td>last_status_change</td>
 <td>ISO-8601 Datetime</td>
 <td>When the status of the job was last changed.</td>
 </tr>
-<tr class="row-odd"><td>superseded</td>
+<tr class="row-even"><td>superseded</td>
 <td>ISO-8601 Datetime</td>
 <td>When the the job became superseded by another job.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>

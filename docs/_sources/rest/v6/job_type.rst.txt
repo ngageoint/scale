@@ -359,6 +359,7 @@ Response: 200 OK
     "is_paused": false,
     "is_system": false,
     "max_scheduled": 1,
+    "max_tries": 3,
     "revision_num": 1,
     "docker_image": "my-job-1.0.0-seed:1.0.0",
     "unmet_resources": "chocolate,vanilla",
@@ -409,6 +410,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | max_scheduled            | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
 |                          |                   | same time. May be null.                                                  |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| max_tries                | Integer           | Number of times a job will be automatically retried afer an error.       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | revision_num             | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -735,6 +738,7 @@ Location http://.../v6/job-types/test/1.0.0/
     "is_paused": false,
     "is_system": false,
     "max_scheduled": 1,
+    "max_tries": 3,
     "revision_num": 1,
     "docker_image": "test-1.0.0-seed:1.0.0",
     "unmet_resources": "chocolate,vanilla",
