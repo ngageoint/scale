@@ -1397,6 +1397,24 @@ class TestJobTypesPostViewV6(APITestCase):
         self.assertIsNotNone(results['configuration']['settings'])
 
         mock_create.assert_called_with(self.recipe_type1.id, job_type.id)
+        
+    def test_create_seed_validation(self):
+        """Tests creating a job type with the name 'validation'."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'validation'
+
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_published': True,
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestJobTypeDetailsViewV6(APITestCase):

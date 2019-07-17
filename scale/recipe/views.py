@@ -118,6 +118,10 @@ class RecipeTypesView(ListCreateAPIView):
         definition_dict = rest_util.parse_dict(request, 'definition', required=True)
 
         basename = title_to_basename(title)
+        if basename == 'validation':
+            logger.exception('Unable to create recipe type named "validation"')
+            raise BadParameter(unicode('Unable to create recipe type named "validation"'))
+            
         existing_recipes = RecipeType.objects.filter(name=basename)
         if existing_recipes.count() > 0:
             logger.exception('Existing recipe types found for %s - will not re-create.', basename)
