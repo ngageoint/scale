@@ -411,7 +411,7 @@ Response: 200 OK
 | max_scheduled            | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
 |                          |                   | same time. May be null.                                                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| max_tries                | Integer           | Number of times this a job of this type will be automatically retried.   |
+| max_tries                | Integer           | Number of times a job will be automatically retried afer an error.       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | revision_num             | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
