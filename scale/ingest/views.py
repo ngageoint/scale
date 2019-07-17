@@ -467,8 +467,6 @@ class ScansValidationView(APIView):
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
 
-        if not resp_dict['is_valid']:
-            return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)
 
 
@@ -711,6 +709,4 @@ class StrikesValidationView(APIView):
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
 
-        if not resp_dict['is_valid']:
-            return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)
