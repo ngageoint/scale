@@ -337,7 +337,10 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        return self.get_job().get('resources', {'scalar': []})['scalar']
+        resources = self.get_job().get('resources', {'scalar': []})['scalar']
+        for r in resources:
+            r['name'] = r['name'].lower()
+        return resources
 
     def get_mounts(self):
         """Gets the mounts defined the Seed job
