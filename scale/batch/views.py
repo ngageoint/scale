@@ -327,9 +327,9 @@ class BatchesValidationView(APIView):
             definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
             configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()
         except InvalidDefinition as ex:
-            errors.append(ex.error)
+            errors.append(ex.error.to_dict())
         except InvalidConfiguration as ex:
-            errors.append(ex.error)
+            errors.append(ex.error.to_dict())
         
         if errors:
             return Response(resp_dict)

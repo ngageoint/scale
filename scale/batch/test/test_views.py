@@ -721,7 +721,11 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
 
         url = '/v6/batches/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_BATCH_CONFIGURATION')
+        self.assertEqual(results['is_valid'], False)
 
     def test_create_invalid_configuration(self):
         """Tests creating a new batch with an invalid configuration"""
@@ -741,7 +745,11 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
 
         url = '/v6/batches/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_BATCH_CONFIGURATION')
+        self.assertEqual(results['is_valid'], False)
 
     def test_create_invalid_prev_batch(self):
         """Tests creating a new batch with an invalid previous batch"""
