@@ -751,7 +751,11 @@ class TestScansValidationViewV6(APITestCase):
         url = '/%s/scans/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertDictEqual(results, {u'errors': [{u'description': u'Unknown workspace name: BAD',
+                                                    u'name': u'INVALID_SCAN_CONFIGURATION'}], u'is_valid': False, u'warnings': []})
 
 class TestScansProcessViewV6(APITestCase):
     fixtures = ['ingest_job_types.json']
@@ -1412,4 +1416,8 @@ class TestStrikesValidationViewV6(APITestCase):
         url = '/%s/strikes/validation/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_STRIKE_CONFIGURATION')
+        self.assertEqual(results['is_valid'], False)

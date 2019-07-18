@@ -311,6 +311,11 @@ class BatchesValidationView(APIView):
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         definition_dict = rest_util.parse_dict(request, 'definition')
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        
+        errors = []
+        resp_dict = {'is_valid': False, 'errors': errors,
+                     'warnings': [],
+                     'recipes_estimated': None, 'recipe_type': None}
 
         # Make sure the recipe type exists
         try:
@@ -322,9 +327,12 @@ class BatchesValidationView(APIView):
             definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
             configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()
         except InvalidDefinition as ex:
-            raise BadParameter(unicode(ex))
+            errors.append(ex.error.to_dict())
         except InvalidConfiguration as ex:
-            raise BadParameter(unicode(ex))
+            errors.append(ex.error.to_dict())
+        
+        if errors:
+            return Response(resp_dict)
 
         # Validate the batch
         validation = Batch.objects.validate_batch_v6(recipe_type, definition, configuration=configuration)

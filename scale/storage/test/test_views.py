@@ -628,7 +628,11 @@ class TestWorkspacesValidationViewV6(APITestCase):
         url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_CONFIGURATION')
+        self.assertEqual(results['is_valid'], False)
 
     def test_warnings(self):
         """Tests validating a new workspace where the broker type is changed."""
