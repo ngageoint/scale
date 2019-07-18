@@ -724,7 +724,7 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(results['errors'][0]['name'], u'INVALID_BATCH_CONFIGURATION')
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_BATCH_DEFINITION')
         self.assertEqual(results['is_valid'], False)
 
     def test_create_invalid_configuration(self):
