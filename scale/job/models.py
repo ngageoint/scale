@@ -38,6 +38,7 @@ from messaging.manager import CommandMessageManager
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
+from scheduler.sync.job_type_manager import job_type_mgr
 from storage.models import ScaleFile
 from util import rest as rest_utils
 from util.validation import ValidationWarning
@@ -2092,6 +2093,7 @@ class JobTypeManager(models.Manager):
             job_type.max_scheduled = max_scheduled
 
         job_type.save()
+        job_type_mgr.sync_with_database()
 
         # Save any secrets to Vault
         if secrets:
