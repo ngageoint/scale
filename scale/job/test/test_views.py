@@ -574,6 +574,9 @@ class TestJobDetailsViewV6(APITestCase):
         self.job_type = job_test_utils.create_seed_job_type()
         self.job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results, status='RUNNING')
 
+        self.job_type2 = job_test_utils.create_seed_job_type(manifest=job_test_utils.COMPLETE_MANIFEST)
+        self.job2 = job_test_utils.create_job(job_type=self.job_type2)
+
         # Attempt to stage related models
         self.job_exe = job_test_utils.create_job_exe(job=self.job)
 
@@ -654,6 +657,16 @@ class TestJobDetailsViewV6(APITestCase):
         self.assertEqual(result['resources']['resources']['cpus'], 1.0)
         self.assertEqual(result['resources']['resources']['mem'], 128.0)
         self.assertEqual(result['resources']['resources']['disk'], 10.0)
+
+        url = '/%s/jobs/%i/' % (self.api, self.job2.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertEqual(result['resources']['resources']['cpus'], 1.0)
+        self.assertEqual(result['resources']['resources']['mem'], 1024.0)
+        self.assertEqual(result['resources']['resources']['disk'], 1040.0)
 
     def test_superseded(self):
         """Tests successfully calling the job details view for superseded jobs."""

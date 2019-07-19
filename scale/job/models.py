@@ -1130,14 +1130,14 @@ class Job(models.Model):
                 value_required = max(initial_value, MIN_RESOURCE.get(resource['name'], 0.0))
                 scalar_resources.append(ScalarResource(resource['name'], value_required))
 
-            if scalar_resources:
-                resources.increase_up_to(NodeResources(scalar_resources))
+        if scalar_resources:
+            resources.increase_up_to(NodeResources(scalar_resources))
 
-            # We have to ensure shared memory is not a required NodeResource, otherwise scheduling cannot occur
-            resources.remove_resource('sharedmem')
+        # We have to ensure shared memory is not a required NodeResource, otherwise scheduling cannot occur
+        resources.remove_resource('sharedmem')
 
-            # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
-            resources.increase_up_to(NodeResources([Disk(input_file_size)]))
+        # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
+        resources.increase_up_to(NodeResources([Disk(input_file_size)]))
 
         return resources
 
@@ -2092,6 +2092,8 @@ class JobTypeManager(models.Manager):
             job_type.max_scheduled = max_scheduled
 
         job_type.save()
+        from scheduler.sync.job_type_manager import job_type_mgr
+        job_type_mgr.sync_with_database()
 
         # Save any secrets to Vault
         if secrets:
@@ -2749,12 +2751,12 @@ class JobType(models.Model):
             # Ensure resource meets minimums set
             seed_resources[name] = max(x['value'], MIN_RESOURCE.get(name, 0.0))
 
-            # Ensure all standard resource minimums are satisfied
-            for resource in MIN_RESOURCE:
-                if resource not in seed_resources:
-                    seed_resources[resource] = MIN_RESOURCE[resource]
+        # Ensure all standard resource minimums are satisfied
+        for resource in MIN_RESOURCE:
+            if resource not in seed_resources:
+                seed_resources[resource] = MIN_RESOURCE[resource]
 
-            resources = Resources({'resources': seed_resources}).get_node_resources()
+        resources = Resources({'resources': seed_resources}).get_node_resources()
 
         return resources
 
