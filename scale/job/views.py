@@ -113,6 +113,13 @@ class JobTypesView(ListCreateAPIView):
         # If editing an existing job type, automatically update recipes containing said job type
         auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
 
+        # Optional setting job type active if editing existing job
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
+        
+        # Optional setting job type to paused if editing an existing job
+        is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
+        
+
         manifest = None
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
@@ -135,7 +142,7 @@ class JobTypesView(ListCreateAPIView):
 
         # Check for invalid fields
         fields = {'icon_code', 'is_published', 'max_scheduled', 'docker_image', 'configuration', 'manifest',
-                  'auto_update'}
+                  'auto_update', 'is_active', 'is_paused'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
@@ -173,8 +180,8 @@ class JobTypesView(ListCreateAPIView):
         else:
             try:
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
-                                                 docker_image=docker_image, icon_code=icon_code, is_active=None,
-                                                 is_paused=None, max_scheduled=max_scheduled,
+                                                 docker_image=docker_image, icon_code=icon_code, is_active=is_active,
+                                                 is_paused=is_paused, max_scheduled=max_scheduled,
                                                  is_published=is_published, configuration=configuration,
                                                  auto_update=auto_update)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
@@ -319,6 +326,20 @@ class JobTypeDetailsView(GenericAPIView):
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
         max_scheduled = rest_util.parse_int(request, 'max_scheduled', required=False)
+        
+        docker_image = rest_util.parse_string(request, 'docker_image', required=False)
+        
+        # Validate the manifest
+        manifest_dict = rest_util.parse_dict(request, 'manifest', required=False)
+        manifest = None
+        if manifest_dict:
+            try:
+                manifest = SeedManifest(manifest_dict, do_validate=True)
+            except InvalidSeedManifestDefinition as ex:
+                message = 'Seed Manifest invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+        
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
@@ -343,8 +364,8 @@ class JobTypeDetailsView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Edit the job type
-                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None, is_published=is_published,
-                                                 docker_image=None, icon_code=icon_code, is_active=is_active,
+                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=manifest, is_published=is_published,
+                                                 docker_image=docker_image, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
                                                  configuration=configuration, auto_update=auto_update)
         except (InvalidJobField, InvalidSecretsConfiguration, ValueError,
