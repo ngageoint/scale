@@ -778,6 +778,11 @@ Location http://.../v6/job-types/test/1.0.0/
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | auto_update             | Boolean           | Optional | Whether to automatically update recipes containing this type.  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_active               | Boolean           | Optional | Whether this job type is active or deprecated.                 |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_paused               | Boolean           | Optional | Whether the job type is paused (while paused no jobs of this   |
+|                         |                   |          | type will be scheduled off of the queue).                      |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
@@ -1036,6 +1041,11 @@ Response: 204 No Content
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| docker_image            | String            | Optional | The Docker image containing the code to run for this job.      |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| manifest                | String            | Optional | Seed manifest describing Job, interface and requirements.      |
+|                         |                   |          | (See :ref:`architecture_seed_manifest_spec`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | configuration           | JSON Object       | Optional | JSON description of the configuration for running the job      |
 |                         |                   |          | (See :ref:`rest_v6_job_type_configuration`)                    |

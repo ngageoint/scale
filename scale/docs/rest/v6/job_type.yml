@@ -735,6 +735,11 @@ components:
           example: 1
         configuration:
           $ref: '#/components/schemas/job_type_config'
+        docker_image:
+          type: string
+          example: "my-job-1.0.0-seed:1.0.0"
+        manifest:
+          $ref: '../../../job/seed/schema/seed.manifest.schema.json'
       
     job_type_post:
       title: Job Type Create/Edit
@@ -744,6 +749,12 @@ components:
           type: string
           example: f186 
         is_published:
+          type: boolean
+          example: true
+        is_active:
+          type: boolean
+          example: true
+        is_paused:
           type: boolean
           example: true
         max_scheduled:
