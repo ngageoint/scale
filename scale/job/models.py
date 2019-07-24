@@ -2075,7 +2075,7 @@ class JobTypeManager(models.Manager):
             job_type.docker_image = docker_image
         if icon_code:
             job_type.icon_code = icon_code
-        if is_active and job_type.is_active != is_active:
+        if is_active is not None and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
             if auto_update:
@@ -2083,7 +2083,7 @@ class JobTypeManager(models.Manager):
                 msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
                 
-        if is_paused and job_type.is_paused != is_paused:
+        if is_paused is not None and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
             job_type.is_paused = is_paused
         if is_published:

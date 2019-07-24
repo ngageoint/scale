@@ -118,7 +118,6 @@ class JobTypesView(ListCreateAPIView):
         
         # Optional setting job type to paused if editing an existing job
         is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
-        
 
         manifest = None
         try:
@@ -339,6 +338,15 @@ class JobTypeDetailsView(GenericAPIView):
                 message = 'Seed Manifest invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
+
+            # validate manifest name/version matches job type
+            manifest_name = manifest.get_name()
+            if name != manifest_name:
+                raise BadParameter('Manifest name %s does not match current Job Type name %s.' % (manifest_name, name))
+            
+            manifest_version = manifest.get_job_version()
+            if manifest_version != version:
+                raise BadParameter('Manifest version %s does not match current Job Type version %s.' % (manifest_version, version))
         
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
@@ -356,7 +364,7 @@ class JobTypeDetailsView(GenericAPIView):
             raise Http404
 
         # Check for invalid fields
-        fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
+        fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration', 'manifest', 'docker_image'}
         for key, value in request.data.iteritems():
             if key not in fields:
                 raise InvalidJobField
