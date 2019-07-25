@@ -6,6 +6,8 @@ import datetime
 import logging
 import sys
 
+import django.utils.timezone as timezone
+
 logger = logging.getLogger(__name__)
 
 
@@ -196,9 +198,9 @@ class MetricsPlotValue(object):
     :keyword total: The total values of all records contributing to this plot value.
     :type total: int
     """
-    def __init__(self, choice_id, date, value=0, count=0, total=0):
+    def __init__(self, choice_id, datetime, value=0, count=0, total=0):
         self.id = choice_id
-        self.date = date
+        self.datetime = datetime
         self.value = value
         self.count = count
         self.total = total
@@ -279,19 +281,19 @@ class MetricsPlotData(object):
         plot_data.max_y = max(plot_data.max_y or 0, entry_val)
 
         # Update the bounds for the x-axis
-        entry_date = entry[date_field]
-        plot_data.min_x = min(plot_data.min_x or datetime.date.max, entry_date)
-        plot_data.max_x = max(plot_data.max_x or datetime.date.min, entry_date)
+        entry_date = entry[date_field].replace(tzinfo=timezone.utc)
+        plot_data.min_x = min(plot_data.min_x or datetime.datetime.max.replace(tzinfo=timezone.utc), entry_date)
+        plot_data.max_x = max(plot_data.max_x or datetime.datetime.min.replace(tzinfo=timezone.utc), entry_date)
 
         # Append a new value for the given entry
         if choice_ids:
-            plot_value = MetricsPlotValue(choice_id=entry[choice_field], date=entry_date, value=entry_val)
+            plot_value = MetricsPlotValue(choice_id=entry[choice_field], datetime=entry_date, value=entry_val)
             plot_data.values.append(plot_value)
             return plot_value
 
         # Aggregate values across entries when no choice filters are used
-        if not plot_data.values or plot_data.values[-1].date != entry_date:
-            plot_data.values.append(MetricsPlotValue(choice_id=None, date=entry_date))
+        if not plot_data.values or plot_data.values[-1].datetime != entry_date:
+            plot_data.values.append(MetricsPlotValue(choice_id=None, datetime=entry_date))
         plot_value = plot_data.values[-1]
         plot_value.count += 1
         plot_value.total += entry_val
