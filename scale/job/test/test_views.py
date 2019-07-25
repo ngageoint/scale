@@ -1386,6 +1386,7 @@ class TestJobTypesPostViewV6(APITestCase):
             'icon_code': 'BEEF',
             'is_published': True,
             'max_scheduled': 1,
+            'is_active': False,
             'docker_image': 'my-job-1.0.0-seed:1.0.1',
             'manifest': manifest,
             'configuration': self.configuration,
@@ -1404,6 +1405,7 @@ class TestJobTypesPostViewV6(APITestCase):
         self.assertEqual(results['version'], job_type.version)
         self.assertEqual(results['title'], job_type.get_title())
         self.assertEqual(results['is_published'], job_type.is_published)
+        self.assertFalse(results['is_active'])
         self.assertEqual(results['revision_num'], job_type.revision_num)
         self.assertEqual(results['revision_num'], 2)
         self.assertIsNotNone(results['configuration']['mounts'])
@@ -1538,6 +1540,40 @@ class TestJobTypeDetailsViewV6(APITestCase):
         }
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+    def test_edit_manifest(self):
+        """Tests editing the manifest of a job type"""
+        
+        manifest = copy.deepcopy(self.manifest)
+        manifest['job']['interface']['command'] = ''
+        
+        json_data = {
+            'manifest': manifest,
+        }
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+        # mismatch name
+        manifest = copy.deepcopy(self.manifest)
+        manifest['job']['name'] = 'new-name'
+        json_data = {
+            'manifest': manifest,
+        }
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+        # mismatch version
+        manifest = copy.deepcopy(self.manifest)
+        manifest['job']['jobVersion'] = '1.2.3'
+        json_data = {
+            'manifest': manifest,
+        }
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_edit_bad_configuration(self):
         """Tests passing an invalid configuration of a job type to the patch interface"""
