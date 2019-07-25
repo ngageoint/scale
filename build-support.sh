@@ -24,7 +24,7 @@ then
 else
     docker login -u ${DOCKER_USER} -p "${DOCKER_PASS}" ${REGISTRY}
 
-    export IMAGE_URL=${REGISTRY}/${DOCKER_ORG}/${IMAGE_PREFIX}
+    export IMAGE_URL=${REGISTRY}/${DOCKER_ORG}/${IMAGE_PREFIX}-${COMPONENT}
     docker pull ${IMAGE_URL} || true
 
     docker build \
