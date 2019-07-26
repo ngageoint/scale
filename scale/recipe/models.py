@@ -1238,9 +1238,10 @@ class RecipeTypeManager(models.Manager):
         
         if is_active is not None:
             recipe_type.is_active = is_active
-            super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
-            msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
-            CommandMessageManager().send_messages(msgs)
+            if is_active == False:
+                super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
+                CommandMessageManager().send_messages(msgs)
 
         if definition:
             if isinstance(definition, RecipeDefinition):

@@ -2078,9 +2078,10 @@ class JobTypeManager(models.Manager):
         if is_active is not None and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
-            recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
-            msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
-            CommandMessageManager().send_messages(msgs)
+            if is_active == False:
+                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
+                CommandMessageManager().send_messages(msgs)
                 
         if is_paused is not None and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
