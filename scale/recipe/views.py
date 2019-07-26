@@ -233,6 +233,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
+        rt = None
         try:
             with transaction.atomic():
                 # Validate the recipe definition
@@ -241,15 +242,15 @@ class RecipeTypeDetailsView(GenericAPIView):
                     recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
+                rt = RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
                                                        description=description, definition=recipe_def,
                                                        auto_update=auto_update, is_active=is_active)
         except InvalidDefinition as ex:
             logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
-        return HttpResponse(status=204)
-
+        serializer = self.get_serializer(rt)
+        return Response(serializer.data)
 
 class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""

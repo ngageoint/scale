@@ -2075,11 +2075,15 @@ class JobTypeManager(models.Manager):
             job_type.docker_image = docker_image
         if icon_code:
             job_type.icon_code = icon_code
+        deprecated_warning = ""
         if is_active is not None and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
             if is_active == False:
                 recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                if recipe_ids:
+                    deprecated_warning = "Recipes were deprecated as a result of deprecating this job type. " \
+                                         "Look at the recipe_types field for recipes that may need to be updated."
                 msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
                 
@@ -2095,6 +2099,8 @@ class JobTypeManager(models.Manager):
         from scheduler.sync.job_type_manager import job_type_mgr
         job_type_mgr.sync_with_database()
 
+        job_type.deprecated_warning = deprecated_warning
+
         # Save any secrets to Vault
         if secrets:
             self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
@@ -2107,6 +2113,8 @@ class JobTypeManager(models.Manager):
                 recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
                 msgs = [create_job_update_recipe_definition_message(id, job_type.id) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
+
+        return job_type
 
     def get_by_natural_key(self, name, version):
         """Django method to retrieve a job type for the given natural key

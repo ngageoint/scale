@@ -363,6 +363,7 @@ class JobTypeDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
+        jt = None
         # Check for invalid fields
         fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration', 'manifest', 'docker_image'}
         for key, value in request.data.iteritems():
@@ -372,7 +373,7 @@ class JobTypeDetailsView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Edit the job type
-                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=manifest, is_published=is_published,
+                jt = JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=manifest, is_published=is_published,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
                                                  configuration=configuration, auto_update=auto_update)
@@ -381,7 +382,8 @@ class JobTypeDetailsView(GenericAPIView):
             logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
 
-        return HttpResponse(status=204)
+        serializer = self.get_serializer(jt)
+        return Response(serializer.data)
 
 
 class JobTypeRevisionsView(ListAPIView):

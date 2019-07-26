@@ -1236,10 +1236,14 @@ class RecipeTypeManager(models.Manager):
         if description is not None:
             recipe_type.description = description
         
+        deprecated_warning = ""
         if is_active is not None:
             recipe_type.is_active = is_active
             if is_active == False:
                 super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                if super_ids:
+                    deprecated_warning = "Recipes were deprecated as a result of deprecating this recipe. " \
+                                         "Look at the super_recipe_types field for recipes that may need to be updated."
                 msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
 
@@ -1253,6 +1257,7 @@ class RecipeTypeManager(models.Manager):
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         recipe_type.save()
+        recipe_type.deprecated_warning = deprecated_warning
 
         if definition:
             # Create new revision of the recipe type for new definition
@@ -1265,6 +1270,8 @@ class RecipeTypeManager(models.Manager):
                 super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
                 msgs = [create_sub_update_recipe_definition_message(id, recipe_type.id) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
+
+        return recipe_type
 
     def get_by_natural_key(self, name):
         """Django method to retrieve a recipe type for the given natural key
