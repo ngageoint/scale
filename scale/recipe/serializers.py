@@ -25,6 +25,7 @@ class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
     definition = None
     job_types = None
     sub_recipe_types = None
+    super_recipe_types = None
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
@@ -40,6 +41,7 @@ class RecipeTypeListSerializerV6(ModelIdSerializer):
     revision_num = serializers.IntegerField()
     job_types = serializers.JSONField()
     sub_recipe_types = serializers.JSONField()
+    super_recipe_types = serializers.JSONField()
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()

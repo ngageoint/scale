@@ -61,6 +61,7 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
     manifest = serializers.JSONField(default=dict)
     configuration = serializers.JSONField(source='get_v6_configuration_json')
+    recipe_types = serializers.JSONField()
 
 
 class JobTypeStatusSerializer(serializers.Serializer):

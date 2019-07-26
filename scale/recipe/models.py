@@ -396,6 +396,8 @@ class RecipeManager(models.Manager):
         recipe.job_types = JobType.objects.all().filter(id__in=jt_ids)
         sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe.recipe_type.id])
         recipe.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
+        super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe.recipe_type.id])
+        recipe.super_recipe_types = RecipeType.objects.all().filter(id__in=super_ids)
         return recipe
 
     def process_recipe_input(self, recipe):
@@ -1236,10 +1238,9 @@ class RecipeTypeManager(models.Manager):
         
         if is_active is not None:
             recipe_type.is_active = is_active
-            if auto_update:
-                super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
-                msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
-                CommandMessageManager().send_messages(msgs)
+            super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+            msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
+            CommandMessageManager().send_messages(msgs)
 
         if definition:
             if isinstance(definition, RecipeDefinition):

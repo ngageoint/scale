@@ -2078,10 +2078,9 @@ class JobTypeManager(models.Manager):
         if is_active is not None and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
-            if auto_update:
-                recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
-                msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
-                CommandMessageManager().send_messages(msgs)
+            recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+            msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
+            CommandMessageManager().send_messages(msgs)
                 
         if is_paused is not None and job_type.is_paused != is_paused:
             job_type.paused = timezone.now() if is_paused else None
@@ -2294,8 +2293,13 @@ class JobTypeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
+        from recipe.models import RecipeType, RecipeTypeJobLink
+
         # Attempt to get the job type
         job_type = JobType.objects.all().get(name=name, version=version)
+
+        recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+        job_type.recipe_types = RecipeType.objects.all().filter(id__in=recipe_ids)
 
         # Scrub configuration for secrets
         if job_type.configuration:
