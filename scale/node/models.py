@@ -6,6 +6,8 @@ import logging
 from django.db import models, transaction
 from django.utils.timezone import now
 
+from job.models import JobExecution
+
 logger = logging.getLogger(__name__)
 
 
@@ -75,6 +77,16 @@ class NodeManager(models.Manager):
         else:
             nodes = nodes.order_by('last_modified')
         return nodes
+
+    def get_nodes_with_no_job_exes(self):
+        """Returns a list of nodes that are active but not currently running a job_exes.
+
+        :returns: The list of nodes with no job_exes
+        :rtype: list
+        """
+
+        job_exes = JobExecution.objects.get_job_exes(statuses=['RUNNING'])
+        return Nodes.objects.filter(is_active=True).exclude(id__in=job_exes)
 
     def get_scheduler_nodes(self, hostnames):
         """Returns a list of all nodes that either have one of the given host names or is active.
