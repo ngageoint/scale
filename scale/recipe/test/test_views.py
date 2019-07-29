@@ -833,7 +833,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        warnings = [{u'name': u'RECIPE_TYPE_NOT_FOUND', u'description': u"Unable to find an existing recipe type with name: not-a-name"}]
+        warnings = []
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
 
 
@@ -863,6 +863,64 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         warnings = [{u'name': u'MISMATCHED_MEDIA_TYPES', u'description': u"Parameter 'INPUT_IMAGE' might not accept [image/tiff]"}]
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
 
+    def test_missmatched_recipe_name(self):
+        """Tests validating a recipe with different names in the path and defintion"""
+        new_definition = {'version': '6',
+                          'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                               'multiple': False}]},
+                          'nodes': {'node_a': {'dependencies': [],
+                                               'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                               'node_type': {'node_type': 'job', 'job_type_name': self.job_type2.name,
+                                                             'job_type_version': self.job_type2.version,
+                                                             'job_type_revision': self.job_type2.revision_num}}}}
+
+        json_data = {
+            'name': 'wrong-name',
+            'definition': new_definition
+        }
+
+        url = '/%s/recipe-types/right-name/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_validate_existing_recipe(self):
+        """Tests validating an existing recipe with its name in the path and defintion"""
+        new_definition = {'version': '6',
+                          'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                               'multiple': False}]},
+                          'nodes': {'node_a': {'dependencies': [],
+                                               'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                               'node_type': {'node_type': 'job', 'job_type_name': self.job_type2.name,
+                                                             'job_type_version': self.job_type2.version,
+                                                             'job_type_revision': self.job_type2.revision_num}}}}
+
+        json_data = {
+            'name': 'right-name',
+            'definition': new_definition
+        }
+
+        url = '/%s/recipe-types/right-name/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+    def test_validate_existing_recipe_no_name(self):
+        """Tests validating an existing recipe with its name only in the path"""
+        new_definition = {'version': '6',
+                          'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                               'multiple': False}]},
+                          'nodes': {'node_a': {'dependencies': [],
+                                               'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                               'node_type': {'node_type': 'job', 'job_type_name': self.job_type2.name,
+                                                             'job_type_version': self.job_type2.version,
+                                                             'job_type_revision': self.job_type2.revision_num}}}}
+
+        json_data = {
+            'definition': new_definition
+        }
+
+        url = '/%s/recipe-types/right-name/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
 class TestRecipesViewV6(APITransactionTestCase):
 
