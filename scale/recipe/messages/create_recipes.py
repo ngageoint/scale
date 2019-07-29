@@ -2,25 +2,31 @@
 from __future__ import unicode_literals
 
 import logging
+import time
 from collections import namedtuple
 
 from django.db import transaction
 from django.utils.timezone import now
 
+from data.data.json.data_v6 import DataV6
 from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.diff.diff import RecipeDiff
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
+from recipe.exceptions import InactiveRecipeType
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes_messages
 from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
-from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeTypeRevision
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
+from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeType, RecipeTypeRevision
 
 
 REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
 SUB_RECIPE_TYPE = 'sub-recipes'  # Message type for creating sub-recipes of another recipe
+NEW_RECIPE_TYPE = 'new-recipe'  # Message type for creating a new recipe of a recipe type
+
 # TODO: when data sets have been implemented, create a message type for creating recipes from data set members
 
 # This is the maximum number of recipe models that can fit in one message. This maximum ensures that every message of
@@ -39,6 +45,42 @@ _RecipePair = namedtuple('_RecipePair', ['superseded_recipe', 'new_recipe'])
 
 logger = logging.getLogger(__name__)
 
+
+def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_id, ingest_event_id, 
+                            configuration=None, batch_id=None):
+    """Creates messages to create the recipe
+
+    :param recipe_type_name: The new recipe type name
+    :type recipe_type_name: string
+    :param revision_num: The revision number of the recipe type
+    :type revision_num: int
+    :param recipe_data: The input data for the recipe
+    :type recipe_data: dict
+    :param event_id: The event ID
+    :type event_id: int
+    :param ingest_event_id: The ingest event id
+    :type ingest_event_id: int
+    :param configuration: The configuration of the recipe
+    :type configuration: dict
+    :param batch_id: The batch ID
+    :type: batch_id: int
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+    message = CreateRecipes()
+    message.create_recipes_type = NEW_RECIPE_TYPE
+    message.recipe_type_name = recipe_type_name
+    message.recipe_type_rev_num = revision_num
+    message.recipe_input_data = recipe_data
+    message.event_id = event_id
+    message.ingest_event_id = ingest_event_id
+    message.configuration = configuration
+    message.batch_id = batch_id
+    messages.append(message)
+
+    return messages
 
 def create_reprocess_messages(root_recipe_ids, recipe_type_name, revision_num, event_id, batch_id=None,
                               forced_nodes=None):
@@ -74,6 +116,7 @@ def create_reprocess_messages(root_recipe_ids, recipe_type_name, revision_num, e
             message.forced_nodes = forced_nodes
         elif not message.can_fit_more():
             messages.append(message)
+            message = CreateRecipes()
             message.create_recipes_type = REPROCESS_TYPE
             message.recipe_type_name = recipe_type_name
             message.recipe_type_rev_num = revision_num
@@ -148,9 +191,17 @@ class CreateRecipes(CommandMessage):
         # The message type for how to create the recipes
         self.create_recipes_type = None
 
-        # Fields applicable for reprocessing
+        # Fields applicable for creating a new recipe
+        self.ingest_event_id = None
+        self.recipe_input_data = None
+        self.configuration = None
+        self.new_recipes = []
+
+        # Fields applicable for creating new and reprocessing
         self.recipe_type_name = None
         self.recipe_type_rev_num = None
+
+        # Fields applicable for reprocessing
         self.root_recipe_ids = []
         self._superseded_recipes = []
 
@@ -191,8 +242,9 @@ class CreateRecipes(CommandMessage):
         :return: True if more recipes can fit, False otherwise
         :rtype: bool
         """
-
-        if self.create_recipes_type == REPROCESS_TYPE:
+        if self.create_recipes_type == NEW_RECIPE_TYPE:
+            return len(self.new_recipes) < MAX_NUM
+        elif self.create_recipes_type == REPROCESS_TYPE:
             return len(self.root_recipe_ids) < MAX_NUM
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
             return len(self.sub_recipes) < MAX_NUM
@@ -208,7 +260,15 @@ class CreateRecipes(CommandMessage):
         if self.forced_nodes:
             json_dict['forced_nodes'] = convert_forced_nodes_to_v6(self.forced_nodes).get_dict()
 
-        if self.create_recipes_type == REPROCESS_TYPE:
+        if self.create_recipes_type == NEW_RECIPE_TYPE:
+            if self.ingest_event_id:
+                json_dict['ingest_event_id'] = self.ingest_event_id
+            json_dict['recipe_input_data'] = self.recipe_input_data
+            json_dict['recipe_type_name'] = self.recipe_type_name
+            json_dict['recipe_type_rev_num'] = self.recipe_type_rev_num
+            json_dict['recipe_configuration'] = self.configuration
+            json_dict['new_recipes'] = self.new_recipes
+        elif self.create_recipes_type == REPROCESS_TYPE:
             json_dict['recipe_type_name'] = self.recipe_type_name
             json_dict['recipe_type_rev_num'] = self.recipe_type_rev_num
             json_dict['root_recipe_ids'] = self.root_recipe_ids
@@ -240,7 +300,15 @@ class CreateRecipes(CommandMessage):
         if 'forced_nodes' in json_dict:
             message.forced_nodes = ForcedNodesV6(json_dict['forced_nodes']).get_forced_nodes()
 
-        if message.create_recipes_type == REPROCESS_TYPE:
+        if message.create_recipes_type == NEW_RECIPE_TYPE:
+            if message.ingest_event_id: 
+                message.ingest_event_id = json_dict['ingest_event_id']
+            message.recipe_input_data = json_dict['recipe_input_data']
+            message.recipe_type_name = json_dict['recipe_type_name']
+            message.recipe_type_rev_num = json_dict['recipe_type_rev_num']
+            message.configuration = json_dict['recipe_configuration']
+            message.new_recipes = json_dict['new_recipes']
+        elif message.create_recipes_type == REPROCESS_TYPE:
             message.recipe_type_name = json_dict['recipe_type_name']
             message.recipe_type_rev_num = json_dict['recipe_type_rev_num']
             message.root_recipe_ids = json_dict['root_recipe_ids']
@@ -262,12 +330,15 @@ class CreateRecipes(CommandMessage):
         """
 
         self._when = now()
-
         with transaction.atomic():
             self._perform_locking()
             recipes = self._find_existing_recipes()
             if not recipes:
-                recipes = self._create_recipes()
+                try:
+                    recipes = self._create_recipes()
+                except InactiveRecipeType as ex:
+                    logger.exception('Attempting to create a recipe with an inactive recipe type: %s. Message will not re-run.', ex)
+                    return True
 
         self._create_messages(recipes)
 
@@ -343,7 +414,7 @@ class CreateRecipes(CommandMessage):
                 forced_nodes_by_id.update({recipe_id: recipe_diff.diff.forced_nodes for recipe_id in ids})
 
         # Send messages to further process/update the new recipes
-        if self.create_recipes_type == REPROCESS_TYPE:
+        if self.create_recipes_type == NEW_RECIPE_TYPE or self.create_recipes_type == REPROCESS_TYPE:
             msgs = create_process_recipe_input_messages([r.id for r in new_recipes], forced_nodes=self.forced_nodes)
             self.new_messages.extend(msgs)
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
@@ -373,7 +444,9 @@ class CreateRecipes(CommandMessage):
         :rtype: list
         """
 
-        if self.create_recipes_type == REPROCESS_TYPE:
+        if self.create_recipes_type == NEW_RECIPE_TYPE:
+            recipes = self._create_new_recipes()
+        elif self.create_recipes_type == REPROCESS_TYPE:
             recipes = self._create_recipes_for_reprocess()
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
             recipes = self._create_subrecipes()
@@ -384,6 +457,33 @@ class CreateRecipes(CommandMessage):
 
         return recipes
 
+    def _create_new_recipes(self):
+        """Creates the recipe models for a new recipe run
+        """
+        rt = RecipeType.objects.get(name=self.recipe_type_name)
+        if not rt.is_active:
+            raise InactiveRecipeType("Recipe Type %s is inactive" % rt.name)
+
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.recipe_type_rev_num)
+
+        config = None
+        if self.configuration:
+            config = RecipeConfigurationV6(self.configuration)
+            
+        with transaction.atomic():
+            recipe_input_data = DataV6(self.recipe_input_data).get_data()
+            recipe = Recipe.objects.create_recipe_v6(recipe_type_rev=recipe_type_rev, event_id=self.event_id,
+                                                 ingest_id=self.ingest_event_id, input_data=recipe_input_data,
+                                                 batch_id=self.batch_id, recipe_config=config)
+            recipe.save()
+            self.new_recipes.append(recipe.id)
+            
+        recipes = []
+        if recipe:
+            recipes.append(recipe)
+
+        return recipes
+
     def _create_recipes_for_reprocess(self):
         """Creates the recipe models for a reprocess
 
@@ -391,6 +491,10 @@ class CreateRecipes(CommandMessage):
         :rtype: list
         """
 
+        rt = RecipeType.objects.get(name=self.recipe_type_name)
+        if not rt.is_active:
+            raise InactiveRecipeType("Recipe Type %s is inactive" % rt.name)
+            
         recipes = []
 
         # Supersede recipes that are being reprocessed
@@ -421,7 +525,7 @@ class CreateRecipes(CommandMessage):
                                                              superseded_recipe=superseded_recipe,
                                                              copy_superseded_input=True)
                     recipes.append(recipe)
-                except InvalidData:
+                except (InvalidData, InactiveRecipeType) as ex:
                     cannot_reprocess_count += 1
             else:
                 cannot_reprocess_count += 1
@@ -512,6 +616,7 @@ class CreateRecipes(CommandMessage):
         :rtype: list
         """
 
+        recipes = []
         if self.create_recipes_type == REPROCESS_TYPE:
             qry = Recipe.objects.select_related('superseded_recipe')
             recipes = qry.filter(root_superseded_recipe_id__in=self.root_recipe_ids, event_id=self.event_id)

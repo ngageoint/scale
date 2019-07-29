@@ -43,12 +43,7 @@ class SystemTask(Task):
         """Adds the necessary Docker parameters to this task to provide the Scale database connection settings
         """
 
-        db = settings.DATABASES['default']
-        db_params = [DockerParameter('env', 'SCALE_DB_NAME=%s' % db['NAME']),
-                     DockerParameter('env', 'SCALE_DB_USER=%s' % db['USER']),
-                     DockerParameter('env', 'SCALE_DB_PASS=%s' % db['PASSWORD']),
-                     DockerParameter('env', 'SCALE_DB_HOST=%s' % db['HOST']),
-                     DockerParameter('env', 'SCALE_DB_PORT=%s' % db['PORT'])]
+        db_params = [DockerParameter('env', 'DATABASE_URL=%s' % settings.DATABASE_URL)]
 
         self._docker_params.extend(db_params)
 

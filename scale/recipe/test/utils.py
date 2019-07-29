@@ -8,24 +8,18 @@ import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
 from batch.models import Batch
 from data.data.exceptions import InvalidData
+from job.configuration.json.job_config_v6 import JobConfigurationV6
 from job.messages.create_jobs import RecipeJob
 from job.models import Job, JobTypeRevision
 from queue.messages.queued_jobs import QueuedJob
 from queue.models import Queue
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
-from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
-from recipe.handlers.graph import RecipeGraph
-from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.messages.create_conditions import Condition
 from recipe.messages.create_recipes import SubRecipe
 from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
-from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
-from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
 
 NAME_COUNTER = 1
@@ -33,11 +27,7 @@ VERSION_COUNTER = 1
 TITLE_COUNTER = 1
 DESCRIPTION_COUNTER = 1
 
-
-MOCK_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_TYPE'
-MOCK_ERROR_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_ERROR_TYPE'
-
-SUB_RECIPE_DEFINITION = {'version': '6',
+SUB_RECIPE_DEFINITION = {'version': '7',
                    'input': {'files': [],
                              'json': []},
                    'nodes': {'node_a': {'dependencies': [],
@@ -46,7 +36,7 @@ SUB_RECIPE_DEFINITION = {'version': '6',
                                                       'job_type_version': '1.0.0',
                                                       'job_type_revision': 1}}}}
 
-RECIPE_DEFINITION = {'version': '6',
+RECIPE_DEFINITION = {'version': '7',
                             'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
                                                  'multiple': False}],
                                       'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
@@ -55,128 +45,39 @@ RECIPE_DEFINITION = {'version': '6',
                                                  'node_type': {'node_type': 'job', 'job_type_name': 'my-job-type',
                                                                'job_type_version': '1.0.0',
                                                                'job_type_revision': 1}},
-                                      'node_b': {'dependencies': [{'name': 'node_a'}],
+                                      'node_b': {'dependencies': [{'name': 'node_a', 'acceptance': True}],
                                                  'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_a',
                                                                            'output': 'OUTPUT_IMAGE'}},
                                                  'node_type': {'node_type': 'job', 'job_type_name': 'my-job-type',
                                                                'job_type_version': '1.0.0',
                                                                'job_type_revision': 1}},
-                                      'node_c': {'dependencies': [{'name': 'node_b'}],
+                                      'node_c': {'dependencies': [{'name': 'node_b', 'acceptance': True}],
+                                                 'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_b',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                 'node_type': {
+                                                     'node_type': 'condition',
+                                                     'interface': {
+                                                         'version': '7',
+                                                         'files': [ {
+                                                             'name': 'INPUT_IMAGE',
+                                                             'media_types': ['image/png'],
+                                                             'required': False,
+                                                             'multiple': True}],
+                                                         'json': []},
+                                                     'data_filter': {
+                                                         'version': '7',
+                                                         'all': True,
+                                                         'filters': [ {'name': 'INPUT_IMAGE',
+                                                                       'type': 'media-type',
+                                                                       'condition': '==',
+                                                                       'values': ['image/png']}]} }},
+                                      'node_d': {'dependencies': [{'name': 'node_c', 'acceptance': True}],
                                                  'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
-                                                           'input_b': {'type': 'dependency', 'node': 'node_b',
-                                                                       'output': 'OUTPUT_IMAGE'}},
+                                                           'input_b': {'type': 'dependency', 'node': 'node_c',
+                                                                       'output': 'INPUT_IMAGE'}},
                                                  'node_type': {'node_type': 'recipe', 'recipe_type_name': 'sub-recipe',
                                                                'recipe_type_revision': 1}}}}
 
-class MockTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    """Mock trigger rule configuration for testing
-    """
-
-    def __init__(self, trigger_rule_type, configuration):
-        super(MockTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
-
-    def validate(self):
-        pass
-
-    def validate_trigger_for_job(self, job_interface):
-        return []
-
-    def validate_trigger_for_recipe(self, recipe_definition):
-        return []
-
-
-class MockErrorTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    """Mock error trigger rule configuration for testing
-    """
-
-    def __init__(self, trigger_rule_type, configuration):
-        super(MockErrorTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
-
-    def validate(self):
-        pass
-
-    def validate_trigger_for_job(self, job_interface):
-        return []
-
-    def validate_trigger_for_recipe(self, recipe_definition):
-        raise InvalidRecipeConnection('Error!')
-
-
-class MockTriggerRuleHandler(TriggerRuleHandler):
-    """Mock trigger rule handler for testing
-    """
-
-    def __init__(self):
-        super(MockTriggerRuleHandler, self).__init__(MOCK_TYPE)
-
-    def create_configuration(self, config_dict):
-        return MockTriggerRuleConfiguration(MOCK_TYPE, config_dict)
-
-
-class MockErrorTriggerRuleHandler(TriggerRuleHandler):
-    """Mock error trigger rule handler for testing
-    """
-
-    def __init__(self):
-        super(MockErrorTriggerRuleHandler, self).__init__(MOCK_ERROR_TYPE)
-
-    def create_configuration(self, config_dict):
-        return MockErrorTriggerRuleConfiguration(MOCK_ERROR_TYPE, config_dict)
-
-
-register_trigger_rule_handler(MockTriggerRuleHandler())
-register_trigger_rule_handler(MockErrorTriggerRuleHandler())
-
-
-def create_recipe_type_v5(name=None, version=None, title=None, description=None, definition=None, trigger_rule=None):
-    """Creates a recipe type for unit testing
-
-    :returns: The RecipeType model
-    :rtype: :class:`recipe.models.RecipeType`
-    """
-
-    if not name:
-        global NAME_COUNTER
-        name = 'test-recipe-type-%i' % NAME_COUNTER
-        NAME_COUNTER += 1
-
-    if not version:
-        global VERSION_COUNTER
-        version = '%i.0.0' % VERSION_COUNTER
-        VERSION_COUNTER += 1
-
-    if not title:
-        global TITLE_COUNTER
-        title = 'Test Recipe Type %i' % TITLE_COUNTER
-        TITLE_COUNTER += 1
-
-    if not description:
-        global DESCRIPTION_COUNTER
-        description = 'Test Description %i' % DESCRIPTION_COUNTER
-        DESCRIPTION_COUNTER += 1
-
-    if not definition:
-        definition = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [],
-        }
-
-    if not trigger_rule:
-        trigger_rule = trigger_test_utils.create_trigger_rule()
-
-    recipe_type = RecipeType()
-    recipe_type.name = name
-    recipe_type.version = version
-    recipe_type.title = title
-    recipe_type.description = description
-    recipe_type.definition = definition
-    recipe_type.trigger_rule = trigger_rule
-    recipe_type.save()
-
-    RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
-
-    return recipe_type
 
 def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None, is_active=None,
                           is_system=None):
@@ -208,10 +109,9 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
 
     if not definition:
         definition = {
-            'version': '6',
+            'version': '7',
             'input': {},
             'nodes': {}}
-
 
     recipe_type = RecipeType()
     recipe_type.name = name
@@ -223,6 +123,7 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
         recipe_type.is_active = is_active
     if is_system is not None:
         recipe_type.is_system = is_system
+
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
@@ -232,25 +133,16 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
 
     return recipe_type
 
-
-def edit_recipe_type_v5(recipe_type, definition):
-    """Updates the definition of a recipe type, including creating a new revision for unit testing
-    """
-    with transaction.atomic():
-        RecipeType.objects.edit_recipe_type_v5(recipe_type_id=recipe_type.id, title=None, description=None,
-                                               definition=RecipeDefinition(definition), trigger_rule=None,
-                                               remove_trigger_rule=False)
-
-def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=None):
+def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=None, auto_update=True, is_active=True):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
     with transaction.atomic():
         RecipeType.objects.edit_recipe_type_v6(recipe_type.id, title=title, description=description,
                                                definition=RecipeDefinitionV6(definition).get_definition(),
-                                               auto_update=auto_update)
+                                               auto_update=auto_update, is_active=is_active)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
-                  superseded_recipe=None, batch=None, save=True):
+                  superseded_recipe=None, config=None, batch=None, save=True):
     """Creates a recipe for unit testing
 
     :returns: The recipe model
@@ -258,7 +150,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     """
 
     if not recipe_type:
-        recipe_type = create_recipe_type_v5()
+        recipe_type = create_recipe_type_v6()
     if not input:
         input = {}
     if not event:
@@ -274,6 +166,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     recipe.is_superseded = is_superseded
     recipe.superseded = superseded
     recipe.batch = batch
+    recipe.configuration = config
     if superseded_recipe:
         root_id = superseded_recipe.root_superseded_recipe_id
         if root_id is None:
@@ -508,9 +401,10 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
         tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
         revision = revs_by_tuple[tup]
         superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
-        job = Job.objects.create_job_v6(revision, recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
+        job_config = JobConfigurationV6(recipe_model.configuration).get_configuration() if recipe_model.configuration else None
+        job = Job.objects.create_job_v6(revision, event_id=recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
                                         recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
-                                        superseded_job=superseded_job)
+                                        superseded_job=superseded_job, job_config=job_config)
         recipe_jobs_map[node_name] = job
 
     Job.objects.bulk_create(recipe_jobs_map.values())
@@ -526,13 +420,13 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
         process_input = recipe_model.id and recipe_job.process_input
         if job.has_input() or process_input:
             process_input_job_ids.append(job.id)
-            
+
     process_job_inputs(process_input_job_ids)
     update_recipe_metrics([recipe_model.id])
 
 def process_job_inputs(process_input_job_ids):
     """Mimics effect of create_process_job_input_messages for unit testing"""
-    
+
     queued_jobs = []
     for job_id in process_input_job_ids:
         job = Job.objects.get_job_with_interfaces(job_id)
@@ -557,9 +451,9 @@ def process_job_inputs(process_input_job_ids):
         # queue the job
         if job.num_exes == 0:
             queued_jobs.append(QueuedJob(job.id, 0))
-            
+
     queue_jobs(queued_jobs)
-            
+
 def generate_job_input_data_from_recipe(job):
     """Generates the job's input data from its recipe dependencies and validates and sets the input data on the job
 
@@ -591,7 +485,7 @@ def generate_job_input_data_from_recipe(job):
 
 def queue_jobs(queued_jobs, requeue=False, priority=None):
     """Mimics effect of create_queued_jobs_messages for unit testing"""
-    
+
     job_ids = []
     for queued_job in queued_jobs:
         job_ids.append(queued_job.job_id)
@@ -619,7 +513,7 @@ def queue_jobs(queued_jobs, requeue=False, priority=None):
 
 def update_recipe_metrics(recipe_ids=[], job_ids=None):
     """Mimics effects of create_update_recipe_metrics_messages methods for unit testing"""
-    
+
     if job_ids:
         recipe_ids.extend(Recipe.objects.get_recipe_ids_for_jobs(job_ids))
     if recipe_ids:
@@ -822,32 +716,8 @@ def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, su
 
     return recipe_node
 
-
-def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_recipe=None, delta=None,
-                          superseded_jobs=None):
-    """Creates a recipe along with its declared jobs for unit testing
-
-    :returns: The recipe handler with created recipe and jobs
-    :rtype: :class:`recipe.handlers.handler.RecipeHandler`
-    """
-
-    if not recipe_type:
-        recipe_type = create_recipe_type_v5()
-    if not data:
-        data = {}
-    if not isinstance(data, LegacyRecipeData):
-        data = LegacyRecipeData(data)
-    if not event:
-        event = trigger_test_utils.create_trigger_event()
-    if superseded_recipe and not delta:
-        delta = RecipeGraphDelta(RecipeGraph(), RecipeGraph())
-
-    return Recipe.objects.create_recipe_old(recipe_type, data, event, superseded_recipe=superseded_recipe,
-                                            delta=delta, superseded_jobs=superseded_jobs)
-
-
 def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
-                      file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type='',
+                      file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type_tags=[],
                       last_modified=None, source_started=None, source_ended=None):
     """Creates a Scale file and recipe input file model for unit testing
 
@@ -862,7 +732,7 @@ def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name
     if not input_file:
         input_file = storage_test_utils.create_file(file_name=file_name, media_type=media_type, file_size=file_size,
                                                     file_path=file_path, workspace=workspace, countries=countries,
-                                                    is_deleted=is_deleted, data_type=data_type,
+                                                    is_deleted=is_deleted, data_type_tags=data_type_tags,
                                                     last_modified=last_modified, source_started=source_started,
                                                     source_ended=source_ended)
 

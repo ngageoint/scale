@@ -18,8 +18,8 @@ from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, R
 from util.rest import strip_schema_version
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 RECIPE_DEFINITION_SCHEMA = {
     'type': 'object',
@@ -49,6 +49,10 @@ RECIPE_DEFINITION_SCHEMA = {
                 'name': {
                     'description': 'The name of the recipe node',
                     'type': 'string',
+                },
+                'acceptance': {
+                    'description': 'Whether this node should run when the parent node is accepted or when it is not accepted (such as when the parent is an if/else condition node). Defaults to true.',
+                    'type': 'boolean',
                 },
             },
         },
@@ -208,7 +212,10 @@ def convert_node_to_v6_json(node):
     :rtype: dict
     """
 
-    dependencies = [{'name': name} for name in node.parents.keys()]
+    dependencies = []
+    for name in node.parents.keys():
+        acceptance = node.parental_acceptance[name] if name in node.parental_acceptance else True
+        dependencies.append({'name': name, 'acceptance': acceptance})
 
     input_dict = {}
     for connection in node.connections.values():
@@ -255,7 +262,7 @@ class RecipeDefinitionV6(object):
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION
 
-        if self._definition['version'] != SCHEMA_VERSION:
+        if self._definition['version'] not in SCHEMA_VERSIONS:
             self._convert_from_v1()
 
         self._populate_default_values()
@@ -294,7 +301,8 @@ class RecipeDefinitionV6(object):
         # Now add dependencies and connections
         for node_name, node_dict in self._definition['nodes'].items():
             for dependency_dict in node_dict['dependencies']:
-                definition.add_dependency(dependency_dict['name'], node_name)
+                acceptance = dependency_dict['acceptance'] if ('acceptance' in dependency_dict) else True
+                definition.add_dependency(dependency_dict['name'], node_name, acceptance)
             for conn_name, conn_dict in node_dict['input'].items():
                 if conn_dict['type'] == 'recipe':
                     definition.add_recipe_input_connection(node_name, conn_name, conn_dict['input'])
@@ -335,7 +343,7 @@ class RecipeDefinitionV6(object):
             name = input_data_dict['name']
             if input_data_dict['type'] in ['file', 'files']:
                 file_input_dict = {'name': name, 'required': input_data_dict['required'],
-                                   'multiple': input_data_dict['type'] == 'files'}
+                                  'multiple': input_data_dict['type'] == 'files'}
                 if 'media_types' in input_data_dict:
                     file_input_dict['media_types'] = input_data_dict['media_types']
                 files.append(file_input_dict)
@@ -380,9 +388,15 @@ class RecipeDefinitionV6(object):
 
         if 'input' not in self._definition:
             self._definition['input'] = {}
+        # if 'input_conditon' not in self._definition:
+        #     self._definition['input_conditon'] = {}
         if 'nodes' not in self._definition:
             self._definition['nodes'] = {}
 
         # Populate defaults for input interface
         interface_json = InterfaceV6(self._definition['input'], do_validate=False)
         self._definition['input'] = strip_schema_version(interface_json.get_dict())
+
+        # Populate default values for input_condition interface
+        # filter_json = DataFilterV6(self._definition['input_condition'], do_validate=False)
+        # self._definition['input_condition'] = strip_schema_version(filter_json.get_dict())

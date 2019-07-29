@@ -21,13 +21,6 @@ ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 ## By default install epel-release, if our base image already includes this we can set to 0
 ARG EPEL_INSTALL=1
 
-## By default build the docs
-ARG BUILD_DOCS=1
-
-# setup the scale user and sudo so mounts, etc. work properly
-RUN useradd --uid 7498 -M -d /opt/scale scale
-#COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
-
 # install required packages for scale execution
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
@@ -52,6 +45,9 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gcc \
          wget \
          python-devel \
+         postgresql-devel \
+ # Remove warnings about psycopg2-binary on every job launch
+ && pip install -U --no-binary :all: psycopg2\<3 \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
@@ -59,7 +55,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && rm -f /etc/httpd/conf.d/*.conf \
  && rm -rf /usr/share/httpd \
  && rm -rf /usr/share/{anaconda,backgrounds,kde4,plymouth,wallpapers}/* \
- && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
+ && sed -i 's^User apache^User nobody^g' /etc/httpd/conf/httpd.conf \
  # Patch access logs to show originating IP instead of reverse proxy.
  && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
  && sed -ri \
@@ -69,7 +65,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum -y history undo last \
- && rm -rf /var/cache/yum 
+ && rm -rf /var/cache/yum ~/.cache/pip
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
@@ -85,32 +81,24 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale/pip/docs.txt /tmp/
-COPY scale-ui /tmp/ui
 
-RUN yum install -y nodejs \
- && cd /tmp/ui \
- && tar xf node_modules.tar.gz \
- && tar xf bower_components.tar.gz \
- && npm install \
- && node node_modules/gulp/bin/gulp.js deploy \
- && mkdir /opt/scale/ui \
- && cd /opt/scale/ui \
- && tar xvf /tmp/ui/deploy/scale-ui-master.tar.gz \
- && if [ $BUILD_DOCS -eq 1 ]; then pip install -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi \
- && yum -y history undo last \
- && rm -rf /var/cache/yum \
- && rm -fr /tmp/*
+## By default build the docs
+ARG BUILD_DOCS=1
+
+RUN if [ $BUILD_DOCS -eq 1 ]; then pip install --no-cache-dir -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi
+
+# Copy UI assets
+COPY scale-ui /opt/scale/ui
 
 WORKDIR /opt/scale
 
-
 # setup ownership and permissions. create some needed directories
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
- && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
+ && chown -R nobody:nobody /opt/scale /var/log/scale /var/lib/scale-metrics /scale /var/run/httpd \
  && chmod 777 /scale/output_data \
  && chmod a+x entryPoint.sh
-# Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
-#USER 7498
+
+USER nobody
 
 # finish the build
 RUN python manage.py collectstatic --noinput --settings=

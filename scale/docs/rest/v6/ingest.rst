@@ -43,7 +43,7 @@ Response: 200 OK
                 "transfer_ended": "2015-09-10T14:48:08.956Z", 
                 "media_type": "text/plain", 
                 "file_size": 1234, 
-                "data_type": [], 
+                "data_type_tags": [], 
                 "file_path": "the/current/path/file_name.txt", 
                 "workspace": { 
                     "id": 1, 
@@ -187,7 +187,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_size         | Integer           | The size of the file in bytes.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_type         | Array             | A list of string data type "tags" for the file.                                |
+| .data_type_tags    | Array             | A list of string data type "tags" for the file.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_path         | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -247,8 +247,11 @@ Response: 200 OK
                     "version": "1.0.0",
                     "title": "Scale Strike", 
                     "description": "Monitors a directory for incoming files to ingest", 
-                    "revision_num": 1,
-                    "icon_code": "f013" 
+                    "is_active": true,
+                    "is_paused": false,
+                    "is_published": false,
+                    "icon_code": "f013",
+                    "unmet_resources": "chocolate,vanilla"
                 }, 
                 "status": "RUNNING"
             }, 
@@ -274,7 +277,7 @@ Response: 200 OK
         "transfer_ended": "2015-09-10T14:48:08.956Z", 
         "media_type": "text/plain", 
         "file_size": 1234, 
-        "data_type": [], 
+        "data_type_tags": [], 
         "file_path": "the/current/path/file_name.txt", 
         "workspace": { 
             "id": 1, 
@@ -325,7 +328,7 @@ Response: 200 OK
             "file_name": "file_name.txt", 
             "media_type": "text/plain", 
             "file_size": 1234, 
-            "data_type": [], 
+            "data_type_tags": [], 
             "is_deleted": false, 
             "uuid": "c8928d9183fc99122948e7840ec9a0fd", 
             "url": "http://host.com/file_name.txt", 
@@ -387,7 +390,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | file_size          | Integer           | The size of the file in bytes.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_type          | Array             | A list of string data type "tags" for the file.                                |
+| data_type_tags     | Array             | A list of string data type "tags" for the file.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | file_path          | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -449,8 +452,11 @@ Response: 200 OK
                             "version": "1.0.0",
                             "title": "Scale Strike", 
                             "description": "Monitors a directory for incoming source files to ingest", 
-                            "revision_num": 1,
-                            "icon_code": "f013" 
+                            "is_active": true,
+                            "is_paused": false,
+                            "is_published": false,
+                            "icon_code": "f013",
+                            "unmet_resources": "chocolate,vanilla"
                         }, 
                         "event": { 
                             "id": 5 

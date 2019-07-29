@@ -9,9 +9,9 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from ingest.handlers.file_handler import FileHandler
-from ingest.handlers.file_rule import FileRule
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.monitors import factory
+from recipe.models import RecipeType, RecipeTypeRevision
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class StrikeConfiguration(object):
         """
 
         self.configuration = {}
-        
+
         self.file_handler = FileHandler()
 
     def get_dict(self):
@@ -65,6 +65,15 @@ class StrikeConfiguration(object):
         """
 
         return self.configuration['workspace']
+
+    def get_recipe(self):
+        """Returns the recipe type for this Strike configuration
+
+        :returns: The recipe type name and version
+        :rtype: (string, string)
+        """
+        if 'recipe' in self.configuration['recipe']:
+            return (self.configuration['recipe']['name'], self.configuration['recipe']['revision_num'])
 
     def load_monitor_configuration(self, monitor):
         """Loads the configuration into the given monitor
@@ -100,6 +109,25 @@ class StrikeConfiguration(object):
         monitor_type = self.configuration['monitor']['type']
         if monitor_type not in factory.get_monitor_types():
             raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
+
+        if 'recipe' in self.configuration:
+            recipe_name = self.configuration['recipe']['name'] if 'name' in self.configuration['recipe'] else None
+            revision_num = self.configuration['recipe']['revision_num'] if 'revision_num' in self.configuration['recipe'] else None
+
+            if not recipe_name:
+                msg = 'Recipe Type name is not defined'
+                raise InvalidStrikeConfiguration(msg)
+
+            if RecipeType.objects.filter(name=recipe_name).count() == 0:
+                msg = 'Recipe Type %s does not exist'
+                raise InvalidStrikeConfiguration(msg % recipe_name)
+            
+            if revision_num:
+                rt = RecipeType.objects.get(name=recipe_name)
+                if RecipeTypeRevision.objects.filter(recipe_type=rt, revision_num=revision_num).count() == 0:
+                    msg = 'Recipe Type revision number %s does not exist for recipe type %s'
+                    raise InvalidStrikeConfiguration(msg % (revision_num, recipe_name))
+
 
         monitored_workspace_name = self.configuration['workspace']
         workspace_names = {monitored_workspace_name}

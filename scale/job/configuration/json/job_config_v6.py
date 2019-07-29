@@ -6,13 +6,12 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration import DEFAULT_PRIORITY, JobConfiguration
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.configuration.mount import HostMountConfig, VolumeMountConfig
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 JOB_CONFIG_SCHEMA = {
     'type': 'object',
@@ -156,9 +155,13 @@ class JobConfigurationV6(object):
 
         if 'version' not in self._config:
             self._config['version'] = SCHEMA_VERSION
-
-        if self._config['version'] != SCHEMA_VERSION:
-            self._convert_from_v2(do_validate)
+        
+        if self._config['version'] == '2.0':
+            # v2 and v6 are identical
+            self._config['version'] = SCHEMA_VERSION
+            
+        if self._config['version'] not in SCHEMA_VERSIONS:
+            raise InvalidJobConfiguration('INVALID_VERSION', 'Invalid configuration version: %s' % unicode(self._config['version']))
 
         self._populate_default_values()
 
@@ -174,7 +177,6 @@ class JobConfigurationV6(object):
         :returns: The job configuration
         :rtype: :class:`job.configuration.configuration.JobConfiguration`:
         """
-
         config = JobConfiguration()
 
         for name, mount_dict in self._config['mounts'].items():
@@ -204,24 +206,6 @@ class JobConfigurationV6(object):
         """
 
         return self._config
-
-    def _convert_from_v2(self, do_validate):
-        """Converts the JSON dict from v2 to the current version
-
-        :param do_validate: Whether to perform validation on the JSON schema
-        :type do_validate: bool
-
-        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
-        """
-
-        v2_json_dict = JobConfigurationV2(self._config, do_validate=do_validate).get_dict()
-
-        # Only the version needs changed when going from v2 to v6
-        if 'version' in v2_json_dict:
-            del v2_json_dict['version']
-        v2_json_dict['version'] = SCHEMA_VERSION
-
-        self._data = v2_json_dict
 
     def _populate_default_values(self):
         """Populates any missing required values with defaults

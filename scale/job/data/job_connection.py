@@ -110,9 +110,8 @@ class SeedJobConnection(object):
 
     def validate_properties(self, property_names):
         """Validates the given property names to make sure all properties exist if they are required.
-
-        :param property_names: Dict of property names mapped to a bool indicating if they are required
-        :type property_names: dict of str -> bool
+        :param files: List of file inputs
+        :type files: [:class:`job.seed.types.SeedInputFiles`]
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -120,7 +119,7 @@ class SeedJobConnection(object):
         """
 
         warnings = []
-        for name in property_names:
-            if name not in self.properties and property_names[name]:
-                raise InvalidConnection('Property %s is required and was not provided' % name)
+        for prop in property_names:
+            if prop.name not in self.properties and prop.required:
+                raise InvalidConnection('Property %s is required and was not provided' % prop.name)
         return warnings

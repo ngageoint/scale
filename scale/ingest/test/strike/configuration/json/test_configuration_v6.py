@@ -5,6 +5,7 @@ import os
 import django
 from django.test import TestCase
 
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
@@ -16,7 +17,7 @@ class TestStrikeConfigurationV6(TestCase):
 
     def setUp(self):
         django.setup()
-        
+
         self.workspace = storage_test_utils.create_workspace()
         self.new_workspace = storage_test_utils.create_workspace()
         self.inactive_workspace = storage_test_utils.create_workspace(is_active=False)
@@ -92,6 +93,22 @@ class TestStrikeConfigurationV6(TestCase):
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
 
+    def test_bad_recipe(self):
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': ''
+            }],
+            'recipe': {
+                'name': 'recipe',
+            },
+        }
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
+
     def test_absolute_workspace_path(self):
         """Tests calling StrikeConfigurationV6 constructor with absolute new_file_path."""
 
@@ -124,9 +141,13 @@ class TestStrikeConfigurationV6(TestCase):
                 'new_file_path': os.path.join('my', 'path'),
                 'new_workspace': self.workspace.name,
             }],
+            'recipe': {
+                'name': 'test-recipe',
+                'revision_num': 1,
+            },
         }
         # No exception is success
-        StrikeConfigurationV6(config)
+        StrikeConfigurationV6(config, do_validate=True)
 
     def test_validate_bad_monitor_type(self):
         """Tests calling StrikeConfigurationV6.validate() with a bad monitor type"""
@@ -179,7 +200,7 @@ class TestStrikeConfigurationV6(TestCase):
 
         configuration = StrikeConfigurationV6(config).get_configuration()
         self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
-        
+
     def test_validate_workspace_not_active(self):
         """Tests calling StrikeConfigurationV6.validate() with a new workspace that is not active"""
 
@@ -197,10 +218,11 @@ class TestStrikeConfigurationV6(TestCase):
 
         configuration = StrikeConfigurationV6(config).get_configuration()
         self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
-        
+
     def test_validate_successful_all(self):
         """Tests calling StrikeConfiguration.validate() successfully with all information"""
 
+        recipe = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
         config = {
             'workspace': self.workspace.name,
             'monitor': {
@@ -213,51 +235,11 @@ class TestStrikeConfigurationV6(TestCase):
                 'new_file_path': os.path.join('my', 'path'),
                 'new_workspace': self.new_workspace.name,
             }],
+            'recipe': {
+                'name': recipe.name,
+                'revision_num': recipe.revision_num
+            },
         }
 
         # No exception is success
         StrikeConfigurationV6(config).get_configuration().validate()
-
-    def test_conversion_from_1_0(self):
-        """Tests calling StrikeConfigurationV6.validate() after converting from schema version 1.0"""
-
-        old_config = {
-            'version': '1.0',
-            'transfer_suffix': '_tmp',
-            'mount': 'host:/my/path',
-            'files_to_ingest': [{
-                'filename_regex': '.*txt',
-                'data_types': ['one', 'two'],
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.new_workspace.name,
-            }],
-        }
-
-        strike_config = StrikeConfigurationV6(old_config).get_configuration()
-        strike_config.validate()
-
-        auto_workspace = Workspace.objects.get(name__contains='auto')
-        new_config = {
-            'version': '6',
-            'workspace': auto_workspace.name,
-            'monitor': {
-                'type': 'dir-watcher',
-                'transfer_suffix': '_tmp'
-            },
-            'files_to_ingest': [{
-                'filename_regex': '.*txt',
-                'data_types': ['one', 'two'],
-                'new_file_path': os.path.join('my', 'path'),
-                'new_workspace': self.new_workspace.name,
-            }]
-        }
-        self.assertDictEqual(strike_config.configuration, new_config)
-
-        auto_workspace_config = {
-            'version': '1.0',
-            'broker': {
-                'type': 'host',
-                'host_path': '/my/path'
-            }
-        }
-        self.assertDictEqual(auto_workspace.json_config, auto_workspace_config)

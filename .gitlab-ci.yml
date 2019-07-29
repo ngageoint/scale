@@ -10,11 +10,12 @@
 # DOCKER_IMAGE
 # DIND_IMAGE
 # GOSU_URL
-# LOGSTASH_IMAGE
+# FLUENTD_IMAGE
 # REGISTRY
 # VAULT_ZIP
 
 variables:
+  GIT_DEPTH: "1"
   IMAGE_PREFIX: "scale"
   EPEL_INSTALL: "0"
 
@@ -26,11 +27,12 @@ services:
 stages:
   - package
 
-logstash:
+fluentd:
   stage: package
   script:
-    - ./build-support.sh ${LOGSTASH_IMAGE} logstash
+    - ./build-support.sh ${FLUENTD_IMAGE} fluentd
   only:
+    - master
     - tags
 
 scale:
@@ -46,4 +48,5 @@ vault:
   script:
     - ./build-support.sh ${ALPINE_IMAGE} vault
   only:
+    - master
     - tags

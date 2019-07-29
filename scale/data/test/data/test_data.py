@@ -57,6 +57,11 @@ class TestData(TestCase):
             data.add_value_from_output_data('input_1', 'output_1', output_data)
         self.assertEqual(context.exception.error.name, 'DUPLICATE_VALUE')
 
+        # Missing parameter
+        with self.assertRaises(InvalidData) as context:
+            data.add_value_from_output_data('input_1', 'output_3', output_data)
+        self.assertEqual(context.exception.error.name, 'MISSING_VALUE')
+        
     def test_validate(self):
         """Tests calling Data.validate()"""
 

@@ -6,15 +6,6 @@ root=$(dirname $0)
 cd $root
 root=`pwd`
 
-# DISABLED as no unit tests exist for UI. Add NodeJS 6 to build dependencies
-#wget https://raw.githubusercontent.com/creationix/nvm/v0.31.0/nvm.sh -O ~/.nvm/nvm.sh
-#source ~/.nvm/nvm.sh
-#nvm install 6
-
-cd $root/scale-ui
-./travis-build.sh
-
-
 if [ "${RUN_TESTS}" == "true" ]
 then
     cd $root/scale

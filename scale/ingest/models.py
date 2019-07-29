@@ -12,20 +12,22 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 from django.utils.timezone import now
 
+from data.data.data import Data
+from data.data.value import JsonValue
+from ingest.messages.create_ingest_jobs import create_scan_ingest_job_message, create_strike_ingest_job_message
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
-from job.configuration.data.job_data import JobData
 from job.models import JobType
+from job.messages.process_job_input import create_process_job_input_messages
+from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
 from storage.media_type import get_media_type
-from storage.models import VALID_TAG_PATTERN
 from trigger.models import TriggerEvent
 from util.file_size import file_size_to_string
 from util import rest as rest_utils
@@ -83,6 +85,8 @@ class IngestManager(models.Manager):
         :type file_name: string
         :param workspace:
         :type workspace: string
+        :param recipe: The name of the recipe to kick off after ingest
+        :type recipe: string
         :param scan_id:
         :type scan_id: int
         :param strike_id:
@@ -168,7 +172,7 @@ class IngestManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-ingest', version='1.0')
+        return JobType.objects.get(name='scale-ingest', version='1.0.0')
 
     def get_ingests(self, started=None, ended=None, statuses=None, scan_ids=None, strike_ids=None, file_name=None,
                     order=None):
@@ -234,6 +238,15 @@ class IngestManager(models.Manager):
 
         return ingest
 
+    def get_recipe_source_config(self, ingest_id):
+        """Returns the strike/scan recipe configuration for the given ingest id"""
+
+        ingest = Ingest.objects.get(pk=ingest_id)
+        if ingest.strike:
+            return Strike.objects.get(pk=ingest.strike.id).get_configuration()['recipe']
+        else:
+            return Scan.objects.get(pk=ingest.scan.id).get_configuration()['recipe']
+
     def get_status(self, started=None, ended=None, use_ingest_time=False):
         """Returns ingest status information within the given time range grouped by strike process.
 
@@ -273,7 +286,6 @@ class IngestManager(models.Manager):
         groups = self._group_by_time(ingests, use_ingest_time)
         return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
 
-    @transaction.atomic
     def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
         """Starts a batch of tasks for the given scan in an atomic transaction.
 
@@ -286,45 +298,22 @@ class IngestManager(models.Manager):
         :param strike_id: ID of Strike that generated ingest
         :type strike_id: int
         """
-
-        # Create new ingest job and mark ingest as QUEUED
-        ingest_job_type = Ingest.objects.get_ingest_job_type()
-
+        
+        messages = []
         for ingest in ingests:
             logger.debug('Creating ingest task for %s', ingest.file_name)
-
-            when = ingest.transfer_ended if ingest.transfer_ended else now()
-            desc = {'file_name': ingest.file_name}
-
+            
             if scan_id:
-                # Use result from query to get ingest ID
-                # We need to find the id of each ingest that was created.
-                # Using scan_id and file_name together as a unique composite key
-                ingest_id = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name).id
-
-                desc['scan_id'] = scan_id
-                event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+                # TODO: Need to make sure scans work
+                messages.append(create_scan_ingest_job_message(ingest.id, scan_id))
             elif strike_id:
-                ingest_id = ingest.id
-                desc['strike_id'] = strike_id
-                event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
+                messages.append(create_strike_ingest_job_message(ingest.id, strike_id))
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 
-            # TODO: What is our way forward with ingest jobs? Move to system task or Seed Job Type?
-            data = JobData()
-            data.add_property_input('ingest_id', str(ingest_id))
-            data.add_property_input('workspace', ingest.workspace.name)
-            if ingest.new_workspace:
-                data.add_property_input('new_workspace', ingest.new_workspace.name)
-
-            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
-
-            ingest.job = ingest_job
-            ingest.status = 'QUEUED'
-            ingest.save()
-
-            logger.debug('Successfully created ingest task for %s', ingest.file_name)
+        CommandMessageManager().send_messages(messages)
+            
+        logger.debug('Successfully created ingest task for %s', ingest.file_name)
 
     def _group_by_time(self, ingests, use_ingest_time):
         """Groups the given ingests by hourly time slots.
@@ -448,8 +437,8 @@ class Ingest(models.Model):
     :type media_type: :class:`django.db.models.CharField`
     :keyword file_size: The size of the file in bytes
     :type file_size: :class:`django.db.models.BigIntegerField`
-    :keyword data_type: A comma-separated string listing the data type "tags" for the file
-    :type data_type: :class:`django.db.models.TextField`
+    :keyword data_type_tags: An array of data type "tags" for the file
+    :type data_type_tags: :class:`django.db.models.ArrayField`
 
     :keyword file_path: The relative path for where the file is stored in the workspace
     :type file_path: :class:`django.db.models.CharField`
@@ -500,7 +489,7 @@ class Ingest(models.Model):
 
     media_type = models.CharField(max_length=250, blank=True)
     file_size = models.BigIntegerField(blank=True, null=True)
-    data_type = models.TextField(blank=True)
+    data_type_tags = django.contrib.postgres.fields.ArrayField(models.CharField(max_length=250, blank=True), default=list)
 
     file_path = models.CharField(max_length=1000, blank=True)
     workspace = models.ForeignKey('storage.Workspace', blank=True, null=True, related_name='+')
@@ -521,16 +510,12 @@ class Ingest(models.Model):
     objects = IngestManager()
 
     def add_data_type_tag(self, tag):
-        """Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
-        spaces.
+        """Adds a new data type tag to the file.
 
         :param tag: The data type tag to add
         :type tag: string
-        :raises InvalidDataTypeTag: If the given tag is invalid
         """
 
-        if not VALID_TAG_PATTERN.match(tag):
-            raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
 
         tags = self.get_data_type_tags()
         tags.add(tag)
@@ -543,11 +528,7 @@ class Ingest(models.Model):
         :rtype: set of string
         """
 
-        tags = set()
-        if self.data_type:
-            for tag in self.data_type.split(','):
-                tags.add(tag)
-        return tags
+        return set(self.data_type_tags)
 
     def add_file(self, file_name, workspace, scan_id=None, strike_id=None):
         """Add file source metadata to ingest record
@@ -629,11 +610,170 @@ class Ingest(models.Model):
         :type tags: set of string
         """
 
-        self.data_type = ','.join(tags)
+        self.data_type_tags = list(tags)
+
+    def get_ingest_source_event(self):
+        """Returns the event that triggered the ingest
+        strike or scan
+        """
+
+        if self.strike:
+            return self.strike
+        elif self.scan:
+            return self.scan
+        else:
+            logger.info('No source strike or scan for ingest %s' % self.id)
+
+    def get_recipe_name(self):
+        """Returns the """
+
+        configuration = None
+        if self.strike:
+            configuration = self.strike.get_v6_configuration_json()
+        elif self.scan:
+            configuration = self.scan.get_v6_configuration_json()
+
+        if 'recipe' in configuration:
+            return configuration['recipe']['name']
+        else:
+            return None
 
     class Meta(object):
         """meta information for database"""
         db_table = 'ingest'
+
+
+class IngestEventManager(models.Manager):
+    """Manages the IngestEvent model"""
+
+    STRIKE_TYPE = 'STRIKE'
+    SCAN_TYPE = 'SCAN'
+    MANUAL_TYPE = 'MANUAL'
+
+    def create_manual_ingest_event(self, ingest_id, description, occurred):
+        """Creates a new ingest event and returns the event model.
+
+        :param ingest_id: The ingest that triggered the strike
+        :type ingest_id:
+        :param description: The JSON description of the event as a dict
+        :type description: dict
+        :param occurred: When the event occurred
+        :type occurred: :class:`datetime.datetime`
+        :returns: The new trigger event
+        :rtype: :class:`ingest.models.IngestEvent`
+        """
+
+        if ingest_id is None:
+             raise Exception('Ingest event must have a valid ingest')
+
+        event = IngestEvent()
+        event.type = IngestEventManager.MANUAL_TYPE
+        event.ingest_id = ingest_id
+        event.description = description
+        event.occurred = occurred
+        event.save()
+
+        return event
+
+    def create_strike_ingest_event(self, ingest_id, strike, description, occurred):
+        """Creates a new ingest event and returns the event model. The given strike model must have already
+        been saved in the database (it must have an ID). The returned ingest event model will be saved in the database.
+
+        :param ingest_id: The ingest that triggered the strike
+        :type ingest_id:
+        :param strike: The scan that triggered the event
+        :type strike: :class:`ingest.models.Strike`
+        :param description: The JSON description of the event as a dict
+        :type description: dict
+        :param occurred: When the event occurred
+        :type occurred: :class:`datetime.datetime`
+        :returns: The new trigger event
+        :rtype: :class:`ingest.models.IngestEvent`
+        """
+
+        if strike is None:
+            raise Exception('Ingest event must have a valid Strike')
+        if description is None:
+            raise Exception('Ingest event must have a JSON description')
+        if occurred is None:
+            raise Exception('Trigger event must have a timestamp')
+        if ingest_id is None:
+             raise Exception('Ingest event must have a valid ingest')
+
+        event = IngestEvent()
+        event.type = IngestEventManager.STRIKE_TYPE
+        event.ingest_id = ingest_id
+        event.strike = strike
+        event.description = description
+        event.occurred = occurred
+        event.save()
+
+        return event
+
+    def create_scan_ingest_event(self, ingest_id, scan, description, occurred):
+        """Creates a new ingest event and returns the event model. The given scan model must have already
+        been saved in the database (it must have an ID). The returned ingest event model will be saved in the database.
+
+        :param ingest_id: The ingest that triggered the scan
+        :type ingest_id:
+        :param scan: The scan that triggered the event
+        :type scan: :class:`ingest.models.Scan`
+        :param description: The JSON description of the event as a dict
+        :type description: dict
+        :param occurred: When the event occurred
+        :type occurred: :class:`datetime.datetime`
+        :returns: The new trigger event
+        :rtype: :class:`ingest.models.IngestEvent`
+        """
+
+        if scan is None:
+            raise Exception('Ingest event must have a valid Scan')
+        if description is None:
+            raise Exception('Ingest event must have a JSON description')
+        if occurred is None:
+            raise Exception('Trigger event must have a timestamp')
+        if ingest_id is None:
+             raise Exception('Ingest event must have a valid ingest')
+
+        event = IngestEvent()
+        event.type = IngestEventManager.SCAN_TYPE
+        event.ingest_id = ingest_id
+        event.scan = scan
+        event.description = description
+        event.occurred = occurred
+        event.save()
+
+        return event
+
+class IngestEvent(models.Model):
+    """Represents an ingest event that triggered a recipe
+
+    :keyword type: The type of ingest that occurred (strike/scan)
+    :type type: :class:`django.db.models.CharField`
+    :keyword ingest: The ingest that occurred
+    :type ingest: :class:`django.db.models.ForeignKey`
+    :keyword strike: The strike that triggered this event, possibly None (some events are not triggered by rules)
+    :type strike: :class:`django.db.models.ForeignKey`
+    :keyword scan: The scan that triggered this event, possibly None (some events are not triggered by rules)
+    :type scan: :class:`django.db.models.ForeignKey`
+    :keyword description: JSON description of the event. This will contain fields specific to the type of the trigger
+        that occurred.
+    :type description: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword occurred: When the event occurred
+    :type occurred: :class:`django.db.models.DateTimeField`
+    """
+    type = models.CharField(db_index=True, max_length=50)
+    ingest = models.ForeignKey('ingest.Ingest', blank=True, null=True, on_delete=models.PROTECT)
+    strike = models.ForeignKey('ingest.Strike', blank=True, null=True, on_delete=models.PROTECT)
+    scan = models.ForeignKey('ingest.Scan', blank=True, null=True, on_delete=models.PROTECT)
+    description = django.contrib.postgres.fields.JSONField(default=dict)
+    occurred = models.DateTimeField(db_index=True)
+
+    objects = IngestEventManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'ingest_event'
 
 ScanValidation = namedtuple('ScanValidation', ['is_valid', 'errors', 'warnings'])
 
@@ -643,7 +783,7 @@ class ScanManager(models.Manager):
 
     @transaction.atomic
     def create_scan(self, name, title, description, configuration):
-        """Creates a new Scan process with the given configuration and returns 
+        """Creates a new Scan process with the given configuration and returns
         the new Scan model. All changes to the database will occur in an atomic transaction.
 
         :param name: The identifying name of this Scan process
@@ -692,7 +832,7 @@ class ScanManager(models.Manager):
         """
 
         scan = Scan.objects.select_for_update().get(pk=scan_id)
-        
+
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
 
@@ -715,7 +855,7 @@ class ScanManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-scan', version='1.0')
+        return JobType.objects.get(name='scale-scan', version='1.0.0')
 
     def get_scans(self, started=None, ended=None, names=None, order=None):
         """Returns a list of Scan processes within the given time range.
@@ -786,25 +926,30 @@ class ScanManager(models.Manager):
         scan = Scan.objects.select_for_update().get(pk=scan_id)
         scan_type = self.get_scan_job_type()
 
-        job_data = JobData()
-        job_data.add_property_input('Scan ID', str(scan.id))
-        job_data.add_property_input('Dry Run', str(dry_run))
         event_description = {'scan_id': scan.id}
+
+        job_data = Data()
+        job_data.add_value(JsonValue('SCAN_ID', scan.id))
+        job_data.add_value(JsonValue('DRY_RUN', dry_run))
 
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
 
+        job_id = None
         if dry_run:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
-            scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
+            scan.dry_run_job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
+            job_id = scan.dry_run_job.id
         else:
             event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
-            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+            scan.job = Queue.objects.queue_new_job_v6(scan_type, job_data, event)
+            job_id = scan.job.id
 
         scan.save()
- 
+        CommandMessageManager().send_messages(create_process_job_input_messages([job_id]))
+
         return scan
-        
+
     def validate_scan_v6(self, configuration):
         """Validates the given configuration for creating a new scan process
 
@@ -879,15 +1024,6 @@ class Scan(models.Model):
 
         return ScanConfigurationV6(self.configuration).get_configuration()
 
-    def get_v1_configuration_json(self):
-        """Returns the scan configuration in v1 of the JSON schema
-
-        :returns: The scan configuration in v1 of the JSON schema
-        :rtype: dict
-        """
-
-        return self.configuration
-
     def get_v6_configuration_json(self):
         """Returns the scan configuration in v6 of the JSON schema
 
@@ -940,12 +1076,14 @@ class StrikeManager(models.Manager):
         strike.save()
 
         strike_type = self.get_strike_job_type()
-        job_data = JobData()
-        job_data.add_property_input('Strike ID', unicode(strike.id))
+
+        job_data = Data()
+        job_data.add_value(JsonValue('STRIKE_ID', strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
+        strike.job = Queue.objects.queue_new_job_v6(strike_type, job_data, event)
         strike.save()
+        CommandMessageManager().send_messages(create_process_job_input_messages([strike.job.id]))
 
         return strike
 
@@ -989,7 +1127,7 @@ class StrikeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
-        return JobType.objects.get(name='scale-strike', version='1.0')
+        return JobType.objects.get(name='scale-strike', version='1.0.0')
 
     def get_strikes(self, started=None, ended=None, names=None, order=None):
         """Returns a list of Strike processes within the given time range.
@@ -1036,7 +1174,7 @@ class StrikeManager(models.Manager):
         """
 
         return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
-        
+
     def validate_strike_v6(self, configuration):
         """Validates the given configuration for creating a new strike process
 
@@ -1102,15 +1240,6 @@ class Strike(models.Model):
 
         return StrikeConfigurationV6(self.configuration).get_configuration()
 
-    def get_v5_strike_configuration_as_dict(self):
-        """Returns the v5 configuration for this Strike process as a dict
-
-        :returns: The configuration for this Strike process
-        :rtype: dict
-        """
-
-        return StrikeConfigurationV2(self.configuration).get_configuration().get_dict()
-        
     def get_v6_configuration_json(self):
         """Returns the batch configuration in v6 of the JSON schema
 

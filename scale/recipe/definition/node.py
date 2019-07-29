@@ -1,6 +1,8 @@
 """Defines the classes for representing nodes within a recipe definition"""
 from __future__ import unicode_literals
 
+import copy
+
 from abc import ABCMeta
 
 from data.data.data import Data
@@ -30,6 +32,7 @@ class NodeDefinition(object):
         self.connections = {}  # {Input name: InputConnection}
         self.children = {}  # {Name: Node}
         self.allows_child_creation = True  # Indicates whether children of this node can be created immediately
+        self.parental_acceptance = {} # Flags used to define whether this node should created based on parents' acceptance states
 
     def add_connection(self, connection):
         """Adds a connection that connects a parameter to one of this node's inputs
@@ -50,14 +53,17 @@ class NodeDefinition(object):
             msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
             raise InvalidDefinition('NODE_INTERFACE', msg)
 
-    def add_dependency(self, node):
+    def add_dependency(self, node, acceptance=True):
         """Adds a dependency that this node has on the given node
 
         :param node: The dependency node to add
-        :type node: :class:`recipe.definition.node.NodeDefinition`
+        :type node: :class:`recipe.definition.node.NodeDefinition`.
+        :param acceptance: Whether this node should run when the parent is accepted or when it is not accepted
+        :type acceptance: bool
         """
 
         self.parents[node.name] = node
+        self.parental_acceptance[node.name] = acceptance
         node.children[self.name] = self
 
     def generate_input_data(self, recipe_input_data, node_outputs):
@@ -145,7 +151,7 @@ class ConditionNodeDefinition(NodeDefinition):
         self.input_interface = input_interface
         self.data_filter = data_filter
 
-        self.output_interface = input_interface
+        self.output_interface = copy.deepcopy(input_interface)
         # if all is set to True, update all parameters to be required; if all is False, the filter could pass with some parameters not validating
         if data_filter.all:
             for f in data_filter.filter_list:

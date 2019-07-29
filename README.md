@@ -42,12 +42,12 @@ are available to a wider audience or are restricted to a private workspace for t
 Scale Dependencies
 ==================
 Scale requires several external components to run as intended. PostgreSQL is used to store all internal system state
-and must be accessible to both the scheduler and web server processes. Logstash along with Elasticsearch are used to
+and must be accessible to both the scheduler and web server processes. Fluentd along with Elasticsearch are used to
 collect and store all algorithm logs. A message broker is required for in-flight storage of internal Scale messages
 and must be accessible to all system components. The following versions of these services are required to support Scale:
 
-- Elasticsearch 2.4
-- Logstash 2.4
+- Elasticsearch 6.6.2
+- Fluentd 1.4
 - PostgreSQL 9.4+
 - PostGIS 2.0+
 - Message Broker (RabbitMQ 3.6+ or Amazon SQS)

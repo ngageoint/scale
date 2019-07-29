@@ -5,8 +5,10 @@ from __future__ import unicode_literals
 from job.execution.tasks.exe_task import JobExecutionTask
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Gpus
+from node.resources.gpu_manager import GPUManager
 
 import logging
+import math
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +54,9 @@ class SchedulingNode(object):
         self._remaining_resources.add(self._offered_resources)
         self._task_resources = resource_set.task_resources
         self._watermark_resources = resource_set.watermark_resources
+        if int(resource_set.offered_resources.gpus) > 0:
+            GPUManager.define_node_gpus(self.node_id, int(resource_set.offered_resources.gpus))
+
 
     def accept_job_exe_next_task(self, job_exe, waiting_tasks):
         """Asks the node if it can accept the next task for the given job execution. If the next task is waiting on
@@ -97,23 +102,16 @@ class SchedulingNode(object):
 
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
-            # If the job execution requires GPUs, we are going to consume ALL of the available GPU node resources
-            # TODO: Once we are capable of proper GPU isolation with UCR we can remove this logic
-            if resources.gpus > 0:
-                # If other GPU tasks are present, cowardly abandon attempt to schedule
-                # We are doing this to avoid any contention for un-isolated GPU cores
-                if self._task_resources.gpus > 0:
-                    return False
 
-                original_gpus = resources.gpus
-                resources.increase_up_to(NodeResources([Gpus(self._remaining_resources.gpus)]))
-                logger.info('GPU resource required by Job Execution. '
-                            'Greedy resource logic scaling up from %i to %s GPUs.' %
-                            (original_gpus, resources.gpus))
+            if resources.gpus > 0:
+                if not GPUManager.reserve_gpus_for_job(self.node_id, int(resources.gpus)):
+                    return False
+                    
             self._allocated_queued_job_exes.append(job_exe)
             self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
             job_exe.scheduled(self.agent_id, self.node_id, resources)
+
             return True
 
         return False

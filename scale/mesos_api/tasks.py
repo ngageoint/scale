@@ -67,6 +67,8 @@ def _create_base_task(task):
 def _create_command_task(task):
     """Creates and returns a command-line Mesos task from a Scale task
 
+    These MUST be run as root to allow interfacing to the Docker CLI
+
     :param task: The task
     :type task: :class:`job.tasks.base_task.Task`
     :returns: The command-line Mesos task
@@ -79,12 +81,15 @@ def _create_command_task(task):
         command += ' ' + task.command_arguments
 
     mesos_task['command']['value'] = command
+    mesos_task['command']['user'] = 'root'
 
     return mesos_task
 
 
 def _create_docker_task(task):
     """Creates and returns a Dockerized Mesos task from a Scale task
+
+    These tasks SHOULD run as non-root user without sudo rights to prevent privilege escalation attacks
 
     :param task: The task
     :type task: :class:`job.tasks.base_task.Task`
@@ -95,6 +100,7 @@ def _create_docker_task(task):
     mesos_task = _create_base_task(task)
     mesos_task['command']['shell'] = False
     mesos_task['command']['arguments'] = [x for x in task.command_arguments.split(" ")]
+    mesos_task['command']['user'] = settings.CONTAINER_PROCESS_OWNER
 
     mesos_task['container'] = {
         'type': CONTAINER_TYPE_DOCKER,

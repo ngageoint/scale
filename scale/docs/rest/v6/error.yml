@@ -21,6 +21,18 @@ paths:
           description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
           name: is_builtin
           schema:
             type: boolean
@@ -40,6 +52,14 @@ paths:
           schema:
             type: string
           description: if provided, only return errors matching the given category
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: "One or more fields to use when ordering the results. |
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+                        Nested objects require a delimiter (ex: order=source_file__created) |
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
           description: 200 response
@@ -118,6 +138,15 @@ components:
         is_builtin:
           type: boolean
           description: Whether the error was loaded during the installation process.
+          example: true
+        should_be_retried:
+          type: boolean
+          description: Whether jobs with this error should be retried automatically. |
+            The following builtin errors are retried automatically: Unknown, |
+            Database, Database Operation, Filesystem I/O, Ingest Timeout, Task Launch,|
+            Docker Launch, Docker Terminated, Node Lost, Resource Starvation, |
+            Launch Timeout, Pull-task Timeout, Pre-task Timeout, Post-task Timeout, |
+            Timeout (System), Docker Pull Failed, Scheduler Restarted
           example: true
     error_details:
       allOf:

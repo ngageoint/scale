@@ -1,0 +1,21 @@
+{
+	"id": "f5eb4cac-e508-4815-8be6-e67ba7d86b62",
+	"name": "AIS Public Omega",
+	"values": [
+		{
+			"key": "SCALE_BASE",
+			"value": "https://scale.omega.aisohio.net/api",
+			"enabled": true
+		},
+		{
+			"key": "SCALE_USERNAME",
+			"value": "admin",
+			"enabled": true
+		},
+		{
+			"key": "SCALE_PASSWORD",
+			"value": "admin",
+			"enabled": true
+		}
+	]
+}

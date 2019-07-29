@@ -30,8 +30,8 @@ class TestTotalJobExeMetrics(TestCase):
         # First block of job executions
         end_time_1 = now() - FinishedJobExeMetricsOverTime.BLOCK_LENGTH - FinishedJobExeMetricsOverTime.BLOCK_LENGTH
         node_model_1 = node_test_utils.create_node()
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
         job_exe_model_1 = job_test_utils.create_job_exe(job_type=job_type_1, status='COMPLETED', ended=end_time_1,
                                                         node=node_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(job_type=job_type_1, status='COMPLETED', ended=end_time_1,
@@ -129,8 +129,8 @@ class TestTotalJobExeMetrics(TestCase):
 
         node_model_1 = node_test_utils.create_node()
         node_model_2 = node_test_utils.create_node()
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
         job_exe_1 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_1)
         job_exe_2 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_1)
         job_exe_3 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_1)

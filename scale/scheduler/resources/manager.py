@@ -67,6 +67,20 @@ class ResourceManager(object):
 
         return allocated_offers
 
+    def decline_offers(self):
+        """Directs all agents to remove offers that have not been allocated and return them to be declined by the scheduler.
+
+        :returns: list of offers to decline
+        :rtype: list
+        """
+
+        declined = []
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                declined.extend(agent_resources.decline_offers())
+
+        return declined
+
     def clear(self):
         """Clears all offer data from the manager. This method is intended for testing only.
         """
@@ -133,6 +147,28 @@ class ResourceManager(object):
         status_dict['num_offers'] = num_offers
         status_dict['resources'] = resources_dict
 
+    def get_max_available_resources(self):
+        """Gets the maximum available resources across all agents
+
+        :returns: A copy of these resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        max_resources = NodeResources()
+        for agent in self._agent_resources.values():
+            agent_max = agent.get_max_resources()
+            if not agent_max:
+                continue
+            for resource in agent_max.resources:
+                if resource.name in max_resources._resources:
+                    x = max_resources._resources[resource.name].value
+                    y = resource.value
+                    max_resources._resources[resource.name].value = max(x, y)
+                else:
+                    max_resources._resources[resource.name] = resource.copy()
+
+        return max_resources
+                
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline
 

@@ -31,6 +31,7 @@ Response: 200 OK
                     "name": "Products" 
                 }, 
                 "file_name": "my_file.kml", 
+                "data_type_tags": [],
                 "media_type": "application/vnd.google-earth.kml+xml", 
                 "file_size": 100, 
                 "is_deleted": false, 
@@ -63,8 +64,11 @@ Response: 200 OK
                     "version": "1.0.0",
                     "title": "KML Footprint", 
                     "description": "Creates a KML file.",
-                    "revision_num": 1, 
-                    "icon_code": "f0ac" 
+                    "is_active": true,
+                    "is_paused": false,
+                    "is_published": true,
+                    "icon_code": "f013",
+                    "unmet_resources": "chocolate,vanilla"
                 }, 
                 "recipe": { 
                     "id": 60 
@@ -195,9 +199,13 @@ Response: 200 OK
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_name           | String            | The name of the file.                                                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_type_tags      | Array             | A list of string data type "tags" for the file.                                |
++----------------------+-------------------+--------------------------------------------------------------------------------+
 | .media_type          | String            | The IANA media type of the file.                                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_size           | Integer           | The size of the file in bytes.                                                 |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_path           | String            | The relative path of the file in the workspace.                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_deleted          | Boolean           | Whether the file has been deleted.                                             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -281,6 +289,7 @@ Response: 200 OK
             "name": "Products" 
         }, 
         "file_name": "my_file2.png", 
+        "data_type_tags": [],
         "media_type": "image/png", 
         "file_size": 50, 
         "is_deleted": false, 
@@ -314,8 +323,11 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "PNG Filter", 
             "description": "Filters PNG images into a new PNG image", 
-            "revision_num": 1, 
-            "icon_code": "f0ac" 
+            "is_active": true,
+            "is_paused": false,
+            "is_published": true,
+            "icon_code": "f013",
+            "unmet_resources": "chocolate,vanilla"
         }, 
         "recipe": { 
             "id": 60 
@@ -361,9 +373,13 @@ Response: 200 OK
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | file_name            | String            | The name of the file.                                                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
+| data_type_tags       | Array             | A list of string data type "tags" for the file.                                |
++----------------------+-------------------+--------------------------------------------------------------------------------+
 | media_type           | String            | The IANA media type of the file.                                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | file_size            | Integer           | The size of the file in bytes.                                                 |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| file_path            | String            | The relative path of the file in the workspace.                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | is_deleted           | Boolean           | Whether the file has been deleted.                                             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -451,10 +467,9 @@ Response: 204 NO CONTENT
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Purge Source File**                                                                                                     |
 +===========================================================================================================================+
-| Removes all records related to the given source file.  This includes records for the following models: BatchJob,          |
-| BatchRecipe, FileAncestryLink, Ingest, Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue,       |
-| Recipe, RecipeInputFile, RecipeNode, ScaleFile, and TaskUpdate. **This will also delete any product files from their      |
-| respective workspace.**                                                                                                   |
+| Removes all records related to the given source file.  This includes records for the following models: FileAncestryLink,  |
+| Ingest, Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue, Recipe, RecipeInputFile, RecipeNode, |
+| ScaleFile, and TaskUpdate. **This will also delete any product files from their respective workspace.**                   |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **POST** /files/purge-source/                                                                                             |
 +---------------------------------------------------------------------------------------------------------------------------+

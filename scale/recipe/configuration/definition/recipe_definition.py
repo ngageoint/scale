@@ -76,7 +76,6 @@ RECIPE_DEFINITION_SCHEMA = {
                 },
             },
         },
-
         'job_item': {
             'type': 'object',
             'required': [

@@ -251,13 +251,15 @@ components:
             of the filter parameters described above are fields within the model. The list
             of choices allow clients to restrict filtering to only valid combinations. Each
             choice model is specific to a metrics type and so the actual fields vary.
-    choice: #TODO: Update to reflect open-ended nature of this field
+    choice: 
       title: Choice
       type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier
+      additionalProperties:
+        oneOf:
+        - $ref: './error.yml/#/components/schemas/error_base'
+        - $ref: './job_type.yml/#/components/schemas/job_type_base'
+        - $ref: './strike.yml/#/components/schemas/strike_base'
+
     metrics_plot:
       title: Metrics Plot Data
       type: object

@@ -431,6 +431,15 @@ class JobInterface(object):
 
         return self.get_dict().get('settings', [])
 
+    def needs_input_metadata(self):
+        """Whether this job needs an input metadata manifest input
+
+        :return: true if this interface has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.definition['input_data']
+
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
         """Stores the files and deletes any working directories
 
@@ -535,6 +544,7 @@ class JobInterface(object):
         :param job_environment: The job environment
         :type job_environment: dict
         """
+
         retrieve_files_dict = self._create_retrieve_files_dict()
         job_data.setup_job_dir(retrieve_files_dict)
 
@@ -664,7 +674,7 @@ class JobInterface(object):
 
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
-        
+
         :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
         """
         if self.definition['output_data'] and not exe_configuration.get_output_workspace_names():

@@ -219,7 +219,7 @@ sudo sh environment/legacy-cloud-init.sh
 
 Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
 to isolate dependencies per project.
-=======
+
 ## Deployment / Configuration
 
 As a result, of being Scale being packaged as a Docker image for distribution most of the setting that
@@ -229,28 +229,29 @@ below for reference.
 | Env Var                     | Default Value                   | Meaning                                    |
 | --------------------------- | ------------------------------- | -------------------------------------------|
 | ACCEPTED_RESOURCE_ROLE      | MESOS_ROLE                      | Resource role to accept in offers          |
+| ADMIN_PASSWORD              | None                            | Custom password for admin user             |
 | APPLICATION_GROUP           | None                            | Optional Marathon application group        |
 | CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
+| CONTAINER_PROCESS_OWNER     | 'nobody'                        | System user used to launch Docker tasks    |
+| DATABASE_URL                | sqlite://db.sqlite3             | PostGIS url as defined by dj-database-url  |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
 | DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
+| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
+| ELASTICSEARCH_DOCKER_IMAGE  | 'elasticsearch:5-alpine'        | Docker image for Elasticsearch             |
+| ELASTICSEARCH_URL           | None                            | Elasticsearch backend URL for log storage  |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
-| LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
+| FLUENTD_DOCKER_IMAGE        | 'geoint/scale-fluentd'          | Docker image for fluentd                   |
+| GEOAXIS_HOST                | 'geoaxis.gxaccess.com'          | Host address for GEOAxIS endpoints         |
+| GEOAXIS_KEY                 | None                            | GEOAxIS OAuth API Key                      |
+| GEOAXIS_SECRET              | None                            | GEOAxIS OAuth API Secret                   |
+| LOGGING_ADDRESS             | None                            | Fluentd URL. By default set by bootstrap   |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
+| PUBLIC_READ_API             | 'false'                         | Public API access for stateless calls      |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
-| SCALE_DB_URL                | use link to `db` or 'localhost' | database host name                         |
-| SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
-| SCALE_DB_PASS               | 'scale'                         | database login password                    |
-| SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
-| SCALE_DB_USER               | 'scale'                         | database login name                        |
-| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
-| SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
-| SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
-| SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
-| SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
@@ -259,5 +260,10 @@ below for reference.
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+| SESSION_COOKIE_SECURE       | True                            | Should cookies be served only over HTTPS   |
+| SILO_DOCKER_IMAGE           | 'geoint/seed-silo:0.8.0'        | Silo docker image name                     |
+| SILO_HUB_ORG                | 'geointseed'                    | Docker Hub public org to scan              |
+| SILO_URL                    | None                            | Address to Silo, deployed if None          |
 | SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
-
+| UI_DOCKER_IMAGE             | 'geoint/scale-ui'               | Docker image for Scale UI                  |
+| AUTHENTICATION_ENABLED      | True                            | Set to False on webserver to disable auth  |

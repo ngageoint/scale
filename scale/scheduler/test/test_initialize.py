@@ -3,9 +3,12 @@ from __future__ import unicode_literals
 import django
 
 from django.test.testcases import TransactionTestCase
+from mock import patch
 
 from job.models import Job, JobType
 from scheduler.initialize import initialize_system
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 
 
 class TestInitializeSystem(TransactionTestCase):
@@ -15,7 +18,10 @@ class TestInitializeSystem(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-    def test_create_clock_job(self):
+        add_message_backend(AMQPMessagingBackend)
+
+    @patch('scheduler.initialize.CommandMessageManager')
+    def test_create_clock_job(self, mock_msg_mgr):
         """Tests creating the Scale clock job"""
 
         clock_job_type = JobType.objects.get_clock_job_type()

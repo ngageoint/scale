@@ -50,6 +50,7 @@ class SeedManifest(object):
         try:
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
+                self.validate_resources()
         except ValidationError as validation_error:
             raise InvalidSeedManifestDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
 
@@ -57,6 +58,7 @@ class SeedManifest(object):
 
         self._check_for_name_collisions()
         self._check_mount_name_uniqueness()
+        self._check_error_name_uniqueness()
 
         self._validate_mount_paths()
         # self._create_validation_dicts()
@@ -93,6 +95,16 @@ class SeedManifest(object):
 
         for file_output_name in self.get_file_output_names():
             job_data.add_file_output({'name':file_output_name, 'workspace_id': workspace_id})
+
+    def validate_resources(self):
+        """verifies GPUs are whole numbers"""
+
+        resources = self.get_scalar_resources()
+        for item in resources:
+            if item['name'] == "gpus":
+                if isinstance(item['value'], float):
+                    if not float.is_integer(item['value']):
+                        raise ValidationError("gpu resource not set to whole number")
 
     def get_name(self):
         """Gets the Job name
@@ -217,7 +229,7 @@ class SeedManifest(object):
                 if 'partial' in file_dict:
                     del file_dict['partial']
                 if 'mediaTypes' in file_dict:
-                    file_dict['media_types'] = file_dict['mediaTypes'] 
+                    file_dict['media_types'] = file_dict['mediaTypes']
                     del file_dict['mediaTypes']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
@@ -241,7 +253,7 @@ class SeedManifest(object):
                 if 'key' in json_dict:
                     del json_dict['key']
         return InterfaceV6(interface=output_dict, do_validate=False).get_interface()
-        
+
     def get_inputs(self):
         """Gets the inputs defined in the interface
 
@@ -325,7 +337,10 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        return self.get_job().get('resources', {'scalar': []})['scalar']
+        resources = self.get_job().get('resources', {'scalar': []})['scalar']
+        for r in resources:
+            r['name'] = r['name'].lower()
+        return resources
 
     def get_mounts(self):
         """Gets the mounts defined the Seed job
@@ -354,7 +369,6 @@ class SeedManifest(object):
 
         job_type_name = self.get_name()
         mapping = JobErrorMapping(job_type_name)
-
         for error_dict in self.get_errors():
             exit_code = error_dict['code']
             error_name = error_dict['name']
@@ -396,12 +410,22 @@ class SeedManifest(object):
             names.append(output_file['name'])
         return names
 
+    def needs_input_metadata(self):
+        """Whether this manifest has an input metadata manifest input
+
+        :return: true if this manifest has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.get_input_files()
+
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
         :type job_data: :class:`job.data.job_data.JobData`
         """
+
         job_data.setup_job_dir(self.get_input_files())
 
     def validate_connection(self, job_conn):
@@ -423,11 +447,11 @@ class SeedManifest(object):
         if len(self.get_output_files()) and not job_conn.has_workspace():
             raise InvalidConnection('No workspace provided for output files')
         return warnings
-        
+
     def validate_workspace_for_outputs(self, exe_config):
         """Validates the given job's output workspaces
         :param exe_config: The job configuration
-        
+
         :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
         """
         if len(self.get_output_files()) and not exe_config.get_output_workspace_names():
@@ -504,6 +528,18 @@ class SeedManifest(object):
 
         if len(mounts) != len(set(mounts)):
             raise InvalidSeedManifestDefinition('DUPLICATE_MOUNT_NAMES','Mount names must be unique.')
+
+    def _check_error_name_uniqueness(self):
+        """Ensures all the error names are unique, and throws a
+        :class:`job.seed.exceptions.InvalidInterfaceDefinition` if they are not unique
+        """
+
+        errors = []
+        for error in self.get_errors():
+            errors.append(error['name'])
+
+        if len(errors) != len(set(errors)):
+            raise InvalidSeedManifestDefinition('DUPLICATE_ERROR_NAMES','Error names must be unique.')
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):

@@ -8,12 +8,16 @@ import elasticsearch
 SECRET_KEY = os.environ.get('SCALE_SECRET_KEY', INSECURE_DEFAULT_KEY)
 
 # Use the following lines to enable developer/debug mode.
-DEBUG = os.environ.get('DJANGO_DEBUG', 'false').lower() in ('yes', 'true', 't', '1')
+DEBUG = get_env_boolean('DJANGO_DEBUG')
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # Set the external URL context here, default to using SCRIPT_NAME passed by reverse proxy.
 FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', None)
 USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Ensure backend uses HTTPS for auth callbacks
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 ALLOWED_HOSTS = ['*']
 override_hosts = os.environ.get('SCALE_ALLOWED_HOSTS')
@@ -29,60 +33,25 @@ SECRET = os.getenv('SECRET')
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/service/%s/static/' % FRAMEWORK_NAME)
 
-LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
-LOGGING_HEALTH_ADDRESS = os.environ.get('SCALE_LOGGING_HEALTH_ADDRESS', LOGGING_HEALTH_ADDRESS)
-ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS', ELASTICSEARCH_URLS)
-ELASTICSEARCH_VERSION = os.environ.get('SCALE_ELASTICSEARCH_VERSION', "2.4")
-ELASTICSEARCH_LB = os.environ.get('SCALE_ELASTICSEARCH_LB', 'true').lower() in ['true', '1', 't']
-if ELASTICSEARCH_URLS:
-    if ELASTICSEARCH_LB:
-        ELASTICSEARCH = elasticsearch.Elasticsearch(
-            ELASTICSEARCH_URLS.split(','),
-            # disable all sniffing
-            sniff_on_start=False,
-            # refresh nodes after a node fails to respond
-            sniff_on_connection_fail=False
-        )
-    else:
-        ELASTICSEARCH = elasticsearch.Elasticsearch(
-            ELASTICSEARCH_URLS.split(','),
-            # sniff before doing anything
-            sniff_on_start=True,
-            # refresh nodes after a node fails to respond
-            sniff_on_connection_fail=True,
-            # and also every 60 seconds
-            sniffer_timeout=60
-        )
+LOGGING_ADDRESS = os.environ.get('LOGGING_ADDRESS', LOGGING_ADDRESS)
+LOGGING_HEALTH_ADDRESS = os.environ.get('LOGGING_HEALTH_ADDRESS', LOGGING_HEALTH_ADDRESS)
+if ELASTICSEARCH_URL:
+    ELASTICSEARCH = elasticsearch.Elasticsearch(
+        [ELASTICSEARCH_URL],
+        # disable all sniffing
+        sniff_on_start=False,
+        # refresh nodes after a node fails to respond
+        sniff_on_connection_fail=False,
+        # dont verify SSL certificates presently
+        verify_certs=False
+    )
+
+    ELASTICSEARCH_VERSION = ELASTICSEARCH.info()['version']['number']
+
 
 # Broker URL for connection to messaging backend. Bootstrap must populate.
 BROKER_URL = os.environ.get('SCALE_BROKER_URL', BROKER_URL)
 QUEUE_NAME = os.environ.get('SCALE_QUEUE_NAME', QUEUE_NAME)
-
-DB_HOST = os.environ.get('SCALE_DB_HOST', '')
-if DB_HOST == '':
-        DB_HOST = os.environ.get('DB_PORT_5432_TCP_ADDR', '')
-DB_PORT = os.environ.get('SCALE_DB_PORT', '')
-if DB_PORT == '':
-        DB_PORT = os.environ.get('DB_PORT_5432_TCP_PORT', '5432')
-
-if DB_HOST != '':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': os.environ.get('SCALE_DB_NAME', 'scale'),
-            'USER': os.environ.get('SCALE_DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('SCALE_DB_PASS', 'postgres'),
-            'HOST': DB_HOST,
-            'PORT': DB_PORT,
-        },
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
 
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
@@ -110,7 +79,7 @@ if MARATHON_PASSED_IMAGE:
 CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)
 
 # Logging configuration
-LOGGING_LEVEL = os.environ.get('SYSTEM_LOGGING_LEVEL', '')
+LOGGING_LEVEL = os.environ.get('SYSTEM_LOGGING_LEVEL', 'INFO').upper()
 
 if LOGGING_LEVEL == "DEBUG":
     LOGGING = LOG_CONSOLE_DEBUG

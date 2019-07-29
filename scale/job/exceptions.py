@@ -12,3 +12,8 @@ class NonSeedJobType(Exception):
     """Exception indicating that a job type is not a seed job type
     """
     pass
+
+class InactiveJobType(Exception):
+    """Exception indicating that a job type is inactive
+    """
+    pass

@@ -21,12 +21,12 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
         self.file_name_1 = 'my_file.txt'
         self.media_type_1 = 'text/plain'
         self.source_file_1 = ScaleFile.objects.create(file_name=self.file_name_1, file_type='SOURCE',
-                                                      media_type=self.media_type_1, file_size=10, data_type='Dummy',
+                                                      media_type=self.media_type_1, file_size=10, data_type_tags=['Dummy'],
                                                       file_path='the_path', workspace=self.workspace)
         self.file_name_2 = 'my_file.json'
         self.media_type_2 = 'application/json'
         self.source_file_2 = ScaleFile.objects.create(file_name=self.file_name_2, file_type='SOURCE',
-                                                      media_type=self.media_type_2, file_size=10, data_type='Dummy',
+                                                      media_type=self.media_type_2, file_size=10, data_type_tags=['Dummy'],
                                                       file_path='the_path', workspace=self.workspace)
 
         self.extra_source_file_id = 99999
@@ -46,11 +46,11 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
         parse_results = {self.file_name_1: (geo_json, started, None, [], None),
                          self.file_name_2: (None, None, ended, [], None),
                          'FILE_WITH_NO_SOURCE_FILE_MODEL': (None, None, None, None, None)}
-        
+
         SourceDataFileParseSaver().save_parse_results(parse_results, file_ids)
-        
+
         calls = [call(self.source_file_1.id, geo_json, started, None, [], None),
-                 call(self.source_file_2.id, None, None, ended, [], None)]
-        
+                 call(self.source_file_2.id, None,    None,    ended, [], None)]
+
         self.assertEqual(mock_save.call_count, 2)
         mock_save.assert_has_calls(calls, any_order=True)

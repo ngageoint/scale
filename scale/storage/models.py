@@ -28,9 +28,6 @@ from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
-# Allow alphanumerics, dashes, underscores, and spaces
-VALID_TAG_PATTERN = re.compile('^[a-zA-Z0-9\\-_ ]+$')
-
 
 class CountryDataManager(models.Manager):
     """Provides additional methods for handling country data
@@ -170,7 +167,7 @@ class PurgeResults(models.Model):
     :type num_recipes_deleted: :class:`django.db.models.PositiveIntegerField`
     :keyword num_products_deleted: The number of products deleted as part of the purge process
     :type num_products_deleted: :class:`django.db.models.PositiveIntegerField`
-    :keyword purge_started: The datetime that the purge process began 
+    :keyword purge_started: The datetime that the purge process began
     :type purge_started: :class:`django.db.models.DateTimeField`
     :keyword purge_completed: The datetime that the purge process completed
     :type purge_completed: :class:`django.db.models.DateTimeField`
@@ -274,8 +271,8 @@ class ScaleFileManager(models.Manager):
         scale_file = ScaleFile.objects.get(pk=file_id)
 
         return scale_file
-        
-    def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
+
+    def filter_files_v6(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
 
         :param started: Query Scale files updated after this amount of time.
@@ -318,11 +315,11 @@ class ScaleFileManager(models.Manager):
 
         files = files.order_by('last_modified')
         return files
-        
+
     def filter_files(self, data_started=None, data_ended=None, source_started=None, source_ended=None,
                         source_sensor_classes=None, source_sensors=None, source_collections=None,
                         source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
-                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None, 
+                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
                         recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
@@ -379,12 +376,9 @@ class ScaleFileManager(models.Manager):
         # Fetch a list of product files
         files = ScaleFile.objects.all()
         files = files.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
-        files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
-                                  'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
-                                  'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                  'job_type__manifest', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
-                                  'batch__definition')
+        files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration', 
+                                  'job_type__manifest', 'job_type__configuration', 'recipe__input',
+                                  'recipe_type__definition', 'batch__definition')
         files = files.prefetch_related('countries')
 
         # Apply time range filtering
@@ -555,8 +549,8 @@ class ScaleFile(models.Model):
     :type media_type: :class:`django.db.models.CharField`
     :keyword file_size: The size of the file in bytes
     :type file_size: :class:`django.db.models.BigIntegerField`
-    :keyword data_type: A comma-separated string listing the data type "tags" for the file
-    :type data_type: :class:`django.db.models.TextField`
+    :keyword data_type_tags: An array of data type "tags" for the file
+    :type data_type_tags: :class:`django.db.models.ArrayField`
     :keyword file_path: The relative path of the file in its workspace
     :type file_path: :class:`django.db.models.CharField`
     :keyword workspace: The workspace that stores this file
@@ -622,9 +616,6 @@ class ScaleFile(models.Model):
     :type source_collection: :class:`django.db.models.CharField`
     :keyword source_task: The task that produced the source file.
     :type source_task: :class:`django.db.models.CharField`
-    :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
-        is still in a research & development (R&D) phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
     :keyword has_been_published: Whether this product has ever been published. A product becomes published when its job
         execution completes successfully. A product that has been published will appear in the API call to retrieve
         product updates.
@@ -653,7 +644,7 @@ class ScaleFile(models.Model):
     file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50, db_index=True)
     media_type = models.CharField(max_length=250)
     file_size = models.BigIntegerField()
-    data_type = models.TextField(blank=True)
+    data_type_tags = django.contrib.postgres.fields.ArrayField(models.CharField(max_length=250, blank=True), default=list)
     file_path = models.CharField(max_length=1000)
     workspace = models.ForeignKey('storage.Workspace', on_delete=models.PROTECT)
     is_deleted = models.BooleanField(default=False)
@@ -695,7 +686,6 @@ class ScaleFile(models.Model):
     recipe_node = models.CharField(null=True, blank=True, max_length=250)
     recipe_type = models.ForeignKey('recipe.RecipeType', blank=True, null=True, on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
-    is_operational = models.BooleanField(default=True)
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
     is_superseded = models.BooleanField(default=False)
@@ -729,16 +719,11 @@ class ScaleFile(models.Model):
         return self.uuid
 
     def add_data_type_tag(self, tag):
-        """Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
-        spaces.
+        """Adds a new data type tag to the file.
 
         :param tag: The data type tag to add
         :type tag: string
-        :raises InvalidDataTypeTag: If the given tag is invalid
         """
-
-        if not VALID_TAG_PATTERN.match(tag):
-            raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
 
         tags = self.get_data_type_tags()
         tags.add(tag)
@@ -751,13 +736,9 @@ class ScaleFile(models.Model):
         :rtype: {string}
         """
 
-        tags = set()
-        if self.data_type:
-            for tag in self.data_type.split(','):
-                tags.add(tag)
-        return tags
+        return set(self.data_type_tags)
 
-    def set_basic_fields(self, file_name, file_size, media_type=None, data_type=None):
+    def set_basic_fields(self, file_name, file_size, media_type=None, data_type_tags=None):
         """Sets the basic fields for the Scale file
 
         :param file_name: The name of the file
@@ -776,8 +757,8 @@ class ScaleFile(models.Model):
         self.file_name = file_name
         self.file_size = file_size
         self.media_type = media_type
-        if data_type:
-            for tag in data_type:
+        if data_type_tags:
+            for tag in data_type_tags:
                 self.add_data_type_tag(tag)
 
     def set_countries(self):
@@ -810,7 +791,7 @@ class ScaleFile(models.Model):
         :type tags: {string}
         """
 
-        self.data_type = ','.join(tags)
+        self.data_type_tags = list(tags)
 
     def _get_url(self):
         """Gets the absolute URL used to download this file.
@@ -978,41 +959,6 @@ class WorkspaceManager(models.Manager):
             workspaces = workspaces.order_by('last_modified')
         return workspaces
 
-    def validate_workspace_v5(self, name, json_config):
-        """Validates a new workspace prior to attempting a save
-
-        :param name: The identifying name of a Workspace to validate
-        :type name: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
-        :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`storage.configuration.workspace_configuration.ValidationWarning`]
-
-        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
-        """
-        warnings = []
-
-        # Validate the configuration, no exception is success
-        config = WorkspaceConfigurationV1(json_config, do_validate=True).get_configuration()
-
-        # Check for issues when changing an existing workspace configuration
-        try:
-            workspace = Workspace.objects.get(name=name)
-
-            # Assign to short names in the interest of single-line conditional
-            old_conf = workspace.json_config
-            new_conf = json_config
-
-            if new_conf['broker'] and old_conf['broker'] and new_conf['broker']['type'] != old_conf['broker']['type']:
-                warnings.append(ValidationWarning('broker_type',
-                                                  'Changing the broker type may disrupt queued/running jobs.'))
-        except Workspace.DoesNotExist:
-            pass
-
-        # Add broker-specific warnings
-        warnings.extend(config.validate_broker())
-        return warnings
-        
     def validate_workspace_v6(self, name, configuration):
         """Validates a new workspace prior to attempting a save
 
@@ -1023,11 +969,11 @@ class WorkspaceManager(models.Manager):
         :returns: The workspace validation.
         :rtype: :class:`storage.models.WorkspaceValidation`
         """
-        
+
         is_valid = True
         errors = []
         warnings = []
-        
+
         config = None
 
         # Validate the configuration, no exception is success
@@ -1090,7 +1036,7 @@ class Workspace(models.Model):
 
     name = models.CharField(db_index=True, max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.CharField(blank=True, max_length=500)
+    description = models.CharField(blank=True, null=True, max_length=500)
     base_url = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
@@ -1102,14 +1048,6 @@ class Workspace(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = WorkspaceManager()
-
-    #TODO remove with v5
-    @property
-    def zero_size(self):
-        """hack to get a zero value returned for removed total_size and used_size fields
-        """
-
-        return 0
 
     @property
     def volume(self):
@@ -1133,7 +1071,7 @@ class Workspace(models.Model):
 
         return get_workspace_volume_path(self.name)
 
-    def delete_files(self, files):
+    def delete_files(self, files, update_model=True):
         """Deletes the given files using the workspace's broker and saves the ScaleFile model changes in the database.
         If this workspace's broker uses a container volume, the workspace expects this volume file system to already be
         mounted at workspace_volume_path or an exception will be raised.
@@ -1145,7 +1083,7 @@ class Workspace(models.Model):
         """
 
         volume_path = self._get_volume_path()
-        self.get_broker().delete_files(volume_path, files)
+        self.get_broker().delete_files(volume_path, files, update_model)
 
     def download_files(self, file_downloads):
         """Downloads the given files to the given local file system paths using the workspace's broker. If this

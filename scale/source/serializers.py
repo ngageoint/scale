@@ -2,10 +2,10 @@
 import rest_framework.fields as fields
 import rest_framework.serializers as serializers
 
-from storage.serializers import ScaleFileSerializerV5
+from storage.serializers import ScaleFileSerializerV6
 
 
-class SourceFileBaseSerializer(ScaleFileSerializerV5):
+class SourceFileBaseSerializer(ScaleFileSerializerV6):
     """Converts source file model fields to REST output"""
     is_parsed = serializers.BooleanField()
     parsed = serializers.DateTimeField()

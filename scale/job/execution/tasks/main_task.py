@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 
 from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
-
 
 JOB_TYPE_TIMEOUT_ERRORS = {}  # {Job type name: error name}
 
@@ -31,14 +31,11 @@ class MainTask(JobExecutionTask):
 
         # Set base task fields
         self._is_system = job_type.is_system
-        self._uses_docker = job_type.uses_docker
-        if self._uses_docker:
-            if self._is_system:
-                self._docker_image = self._create_scale_image_name()
-            else:
-                self._docker_image = job_exe.docker_image
-            self._docker_params = configuration.get_docker_params('main')
-            self._is_docker_privileged = job_type.docker_privileged
+        if self._is_system:
+            self._docker_image = self._create_scale_image_name()
+        else:
+            self._docker_image = job_exe.docker_image
+        self._docker_params = configuration.get_docker_params('main')
         self._command_arguments = configuration.get_args('main')
         if job_type.is_long_running:
             self._running_timeout_threshold = None

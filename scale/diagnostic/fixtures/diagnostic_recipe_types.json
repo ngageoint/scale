@@ -4,17 +4,19 @@
         "pk": null,
         "fields": {
             "name": "scale-casino",
-            "version": "1.0",
             "title": "Scale Casino",
             "description": "Chains together multiple Scale Roulette jobs. This recipe type can be useful for testing Scale's handling of recipes in the presence of job failures.",
             "is_system": true,
             "is_active": true,
             "definition": {
-                 "version": "1.0",
+                 "version": "6",
                  "input_data": [],
-                 "jobs": [{"name": "roulette-1", "job_type": {"name": "scale-roulette", "version": "1.0"}},
-                          {"name": "roulette-2", "job_type": {"name": "scale-roulette", "version": "1.0"}, "dependencies": [{"name": "roulette-1"}]},
-                          {"name": "roulette-3", "job_type": {"name": "scale-roulette", "version": "1.0"}, "dependencies": [{"name": "roulette-2"}]}]
+                 "nodes": {"roulette-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "roulette-2": {"dependencies":[{"name": "roulette-1"}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "roulette-3": {"dependencies":[{"name": "roulette-2"}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}}}
             },
             "revision_num": 1,
             "created": "2017-11-13T00:00:00.0Z",
@@ -25,16 +27,160 @@
         "model": "recipe.RecipeTypeRevision",
         "pk": null,
         "fields": {
-            "recipe_type": ["scale-casino", "1.0"],
+            "recipe_type": ["scale-casino"],
             "revision_num": 1,
             "definition": {
-                 "version": "1.0",
+                 "version": "6",
                  "input_data": [],
-                 "jobs": [{"name": "roulette-1", "job_type": {"name": "scale-roulette", "version": "1.0"}},
-                          {"name": "roulette-2", "job_type": {"name": "scale-roulette", "version": "1.0"}, "dependencies": [{"name": "roulette-1"}]},
-                          {"name": "roulette-3", "job_type": {"name": "scale-roulette", "version": "1.0"}, "dependencies": [{"name": "roulette-2"}]}]
+                 "nodes": {"roulette-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "roulette-2": {"dependencies":[{"name": "roulette-1"}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "roulette-3": {"dependencies":[{"name": "roulette-2"}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "created": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeType",
+        "pk": null,
+        "fields": {
+            "name": "scale-hello",
+            "title": "Scale Hello",
+            "description": "Runs the Scale Hello job. This recipe type can be useful for testing Scale's handling of simple jobs.",
+            "is_system": true,
+            "is_active": true,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"hello-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-hello", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "revision_num": 1,
+            "created": "2017-11-13T00:00:00.0Z",
+            "last_modified": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeTypeRevision",
+        "pk": null,
+        "fields": {
+            "recipe_type": ["scale-hello"],
+            "revision_num": 1,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"hello-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-hello", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "created": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeType",
+        "pk": null,
+        "fields": {
+            "name": "scale-count",
+            "title": "Scale Count",
+            "description": "Runs the Scale Count job. This recipe type can be useful for testing Scale's log outputs.",
+            "is_system": true,
+            "is_active": true,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"count-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-count", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "revision_num": 1,
+            "created": "2017-11-13T00:00:00.0Z",
+            "last_modified": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeTypeRevision",
+        "pk": null,
+        "fields": {
+            "recipe_type": ["scale-count"],
+            "revision_num": 1,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"count-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-count", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "created": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeType",
+        "pk": null,
+        "fields": {
+            "name": "scale-bake",
+            "title": "Scale Bake",
+            "description": "Runs the Scale Count job. This recipe type can be useful for testing Scale's handling of long running jobs.",
+            "is_system": true,
+            "is_active": true,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"bake-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-bake", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "revision_num": 1,
+            "created": "2017-11-13T00:00:00.0Z",
+            "last_modified": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeTypeRevision",
+        "pk": null,
+        "fields": {
+            "recipe_type": ["scale-bake"],
+            "revision_num": 1,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"bake-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-bake", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "created": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeType",
+        "pk": null,
+        "fields": {
+            "name": "scale-roulette",
+            "title": "Scale Roulette",
+            "description": "Runs the Scale Roulette job. This recipe type can be useful for testing Scale's handling of jobs that fail.",
+            "is_system": true,
+            "is_active": true,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"roulette-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}}}
+            },
+            "revision_num": 1,
+            "created": "2017-11-13T00:00:00.0Z",
+            "last_modified": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "recipe.RecipeTypeRevision",
+        "pk": null,
+        "fields": {
+            "recipe_type": ["scale-roulette"],
+            "revision_num": 1,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"roulette-1": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-roulette", "job_type_version": "1.0.0", "job_type_revision": 1}}}
             },
             "created": "2017-11-13T00:00:00.0Z"
         }
     }
+
 ]

@@ -24,20 +24,7 @@ TIME_ZONE = 'UTC'
 
 SECRET_KEY = "0fnk28edjh"
 
-# The template database to use when creating your new database.
-# By using your own template that already includes the postgis extension,
-# you can avoid needing to run the unit tests as a PostgreSQL superuser.
-#POSTGIS_TEMPLATE = 'scale'
-
-DATABASES = {
-   'default': {
-      'ENGINE': 'django.contrib.gis.db.backends.postgis',
-      'NAME': 'scale',
-      'USER': 'postgres',
-      'PASSWORD': '',
-      'HOST': 'localhost',
-   },
-}
+DATABASES = {'default': dj_database_url.config(default='postgis://postgres:@localhost:5432/scale')}
 
 # Master settings
 MESOS_MASTER = 'zk://localhost:2181/mesos'

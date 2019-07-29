@@ -4,16 +4,21 @@
 # Main requirements
 boto3>=1.4.0,<2
 cryptography>=2.3,<3
+dj-database-url
 Django>=1.11.0,<1.12.0
-djangorestframework>=3.6.2,<3.7.0
+djangorestframework>=3.9.1,<3.10.0
+django-filter>=1.1,<2
+django-geoaxis>=0.0.2,<1
+django-oauth-toolkit>=1.1.3,<1.2
+django-rest-framework-social-oauth2
 elasticsearch>=6.3.0,<7
 jsonschema>=2.3,<3
 kombu>=4.0.2,<5
-psycopg2>=2.7.1,<3
-PyJWT>=1.6.1,<2
 marathon>=0.11.0,<1
 mesoshttp>=0.3.0,<0.4
+psycopg2>=2.7.1,<3
+PyJWT>=1.6.1,<2
 pytz
 requests>=2.8.1,<3
 semver>=2.8.1,<2.9.0
-urllib3==1.23
+urllib3>=1.24.2,<1.25

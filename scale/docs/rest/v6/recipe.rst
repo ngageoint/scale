@@ -795,7 +795,8 @@ Request: POST http://.../v6/recipes/{id}/reprocess/
 .. code-block:: javascript
 
   {
-    "forced_nodes": :ref:`rest_v6_recipe_json_forced_nodes`
+    "forced_nodes": :ref:`rest_v6_recipe_json_forced_nodes`,
+    "revision_num": 1
   }
 
 Response: 202 ACCEPTED
@@ -814,6 +815,9 @@ Response: 202 ACCEPTED
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | forced_nodes       | JSON Object       | Required | Set of recipe nodes that should be forced to re-process             |
 |                    |                   |          | See :ref:`Recipe Forced Nodes <rest_v6_recipe_json_forced_nodes>`   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| revision_num       | JSON Object       | Optional | Specific revision of the recipe type that should be ran. The latest |
+|                    |                   |          | revision will be used if this parameter is not specified.           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+

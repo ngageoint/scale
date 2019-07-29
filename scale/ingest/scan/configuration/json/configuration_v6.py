@@ -17,7 +17,8 @@ from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -50,6 +51,22 @@ SCAN_CONFIGURATION_SCHEMA = {
         },
         'recursive': {
             'type': 'boolean'
+        },
+        'recipe': {
+            'type': 'object',
+            'description': 'Specifies the natural key of the recipe the Scan will start when a file is ingested.',
+            'required': ['name'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'description': 'Specifies the name of the recipe.',
+                },
+                'revision_num': {
+                    'type': 'integer',
+                    'description': 'Specifies the revision number of the recipe.'
+                },
+            },
         },
     },
     'definitions': {
@@ -113,9 +130,9 @@ class ScanConfigurationV6(object):
 
         # Convert old versions
         if 'version' in self._configuration and self._configuration['version'] == '1.0':
-            self._configuration['version'] = '6'
+            self._configuration['version'] = SCHEMA_VERSION
         if 'version' not in self._configuration:
-            self._configuration['version'] = '6'
+            self._configuration['version'] = SCHEMA_VERSION
 
         try:
             if do_validate:
@@ -124,7 +141,7 @@ class ScanConfigurationV6(object):
             raise InvalidScanConfiguration('Invalid Scan configuration: %s' % unicode(ex))
 
         self._populate_default_values()
-        if self._configuration['version'] != SCHEMA_VERSION:
+        if self._configuration['version'] not in SCHEMA_VERSIONS:
             msg = 'Invalid Scan configuration: %s is an unsupported version number'
             raise InvalidScanConfiguration(msg % self._configuration['version'])
 
@@ -147,6 +164,7 @@ class ScanConfigurationV6(object):
             rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
 
+
     def get_configuration(self):
         """Returns the scan configuration represented by this JSON
 
@@ -155,15 +173,16 @@ class ScanConfigurationV6(object):
         """
 
         config = ScanConfiguration()
-        
+
         config.scanner_type     = self._configuration['scanner']['type']
         config.scanner_config   = self._configuration['scanner']
         config.recursive        = self._configuration['recursive']
         config.file_handler     = self._file_handler
         config.workspace        = self._configuration['workspace']
+        config.config_dict      = self._configuration
 
         return config
-        
+
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
 
@@ -184,7 +203,7 @@ class ScanConfigurationV6(object):
 
         config = configuration
         if 'version' in config and config['version'] == '1.0':
-            config['version'] = '6'
+            config['version'] = SCHEMA_VERSION
         return config
 
     def _populate_default_values(self):

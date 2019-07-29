@@ -284,21 +284,28 @@ class TestRecipeDefinition(TestCase):
         data_filter = DataFilter(filter_list=[{'name': 'cond_param', 'type': 'integer', 'condition': '>', 'values': [0]}])
         definition.add_condition_node('B', condition_interface, data_filter)
         definition.add_recipe_node('C', 'recipe_type_1', 1)
+        definition.add_job_node('D', 'job_type_1', '1.0', 1)
         definition.add_dependency('A', 'B')
         definition.add_dependency('B', 'C')
+        definition.add_dependency('B', 'D', False) # else condition of B condition node
         definition.add_recipe_input_connection('A', 'a_input_1', 'recipe_input_1')
         definition.add_dependency_input_connection('B', 'cond_param', 'A', 'a_output_1')
         definition.add_dependency_input_connection('C', 'c_input_1', 'A', 'a_output_1')
         definition.add_dependency_input_connection('C', 'c_input_2', 'B', 'cond_param')
+        definition.add_dependency_input_connection('D', 'd_input_1', 'A', 'a_output_1')
         job_input_interface = Interface()
         job_input_interface.add_parameter(JsonParameter('a_input_1', 'integer'))
+        job2_input_interface = Interface()
+        job2_input_interface.add_parameter(JsonParameter('d_input_1', 'integer'))
         job_output_interface = Interface()
         job_output_interface.add_parameter(JsonParameter('a_output_1', 'integer'))
+        job2_output_interface = Interface()
+        job2_output_interface.add_parameter(JsonParameter('d_output_1', 'integer'))
         recipe_input_interface = Interface()
         recipe_input_interface.add_parameter(JsonParameter('c_input_1', 'integer'))
         recipe_input_interface.add_parameter(JsonParameter('c_input_2', 'integer'))
-        input_interfaces = {'A': job_input_interface, 'C': recipe_input_interface}
-        output_interfaces = {'A': job_output_interface, 'C': Interface()}
+        input_interfaces = {'A': job_input_interface, 'C': recipe_input_interface, 'D': job2_input_interface}
+        output_interfaces = {'A': job_output_interface, 'C': Interface(), 'D': job2_output_interface}
 
         warnings = definition.validate(input_interfaces, output_interfaces)
         self.assertListEqual(warnings, [])

@@ -295,7 +295,7 @@ class TestNode(TestCase):
         self.assertTrue(NodeConditions.BAD_DAEMON_ERR.name in node._conditions._active_errors)
 
     def test_handle_failed_health_task_bad_logstash(self):
-        """Tests handling a failed health task where logstash is unreachable"""
+        """Tests handling a failed health task where Fluentd is unreachable"""
 
         when = now()
         node = Node(self.node_agent, self.node, self.scheduler)

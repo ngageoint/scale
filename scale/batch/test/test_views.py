@@ -1,264 +1,63 @@
 from __future__ import unicode_literals
 
+import copy
 import json
 from datetime import timedelta
 
 import django
-from django.test import TestCase, TransactionTestCase
 from mock import patch
 from rest_framework import status
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import batch.test.utils as batch_test_utils
-import storage.test.utils as storage_test_utils
 from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
-from recipe.diff.forced_nodes import ForcedNodes
+from queue.models import Queue
 from recipe.models import RecipeType
+from rest_framework.test import APITestCase, APITransactionTestCase
+from util import rest
 from util.parse import datetime_to_string, duration_to_string
 
 
-class TestBatchesViewV5(TestCase):
+class MockCommandMessageManager():
 
-    fixtures = ['batch_job_types.json']
+    def send_messages(self, commands):
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []
 
-    def setUp(self):
-        django.setup()
-
-        self.recipe_type1 = recipe_test_utils.create_recipe_type_v5(name='test1', version='1.0')
-        self.batch1 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type1, status='SUBMITTED')
-
-        self.recipe_type2 = recipe_test_utils.create_recipe_type_v5(name='test2', version='1.0')
-        self.batch2 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type2, status='CREATED')
-
-    def test_successful(self):
-        """Tests successfully calling the batches view."""
-
-        url = '/v5/batches/'
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
-        for entry in result['results']:
-            expected = None
-            if entry['id'] == self.batch1.id:
-                expected = self.batch1
-            elif entry['id'] == self.batch2.id:
-                expected = self.batch2
-            else:
-                self.fail('Found unexpected result: %s' % entry['id'])
-            self.assertEqual(entry['recipe_type']['id'], expected.recipe_type.id)
-
-    def test_status(self):
-        """Tests successfully calling the batches view filtered by status."""
-
-        url = '/v5/batches/?status=SUBMITTED'
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['recipe_type']['id'], self.batch1.recipe_type.id)
-
-    def test_recipe_type_id(self):
-        """Tests successfully calling the batches view filtered by recipe type identifier."""
-
-        url = '/v5/batches/?recipe_type_id=%s' % self.batch1.recipe_type.id
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['recipe_type']['id'], self.batch1.recipe_type.id)
-
-    def test_recipe_type_name(self):
-        """Tests successfully calling the batches view filtered by recipe type name."""
-
-        url = '/v5/batches/?recipe_type_name=%s' % self.batch1.recipe_type.name
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['recipe_type']['name'], self.batch1.recipe_type.name)
-
-    def test_order_by(self):
-        """Tests successfully calling the batches view with sorting."""
-
-        recipe_type1b = recipe_test_utils.create_recipe_type_v5(name='2test2', version='2.0')
-        batch_test_utils.create_batch_old(recipe_type=recipe_type1b)
-
-        recipe_type1c = recipe_test_utils.create_recipe_type_v5(name='1test1', version='3.0')
-        batch_test_utils.create_batch_old(recipe_type=recipe_type1c)
-
-        url = '/v5/batches/?order=recipe_type__name&order=-recipe_type__version'
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
-        self.assertEqual(result['results'][0]['recipe_type']['id'], recipe_type1c.id)
-        self.assertEqual(result['results'][1]['recipe_type']['id'], recipe_type1b.id)
-        self.assertEqual(result['results'][2]['recipe_type']['id'], self.recipe_type1.id)
-        self.assertEqual(result['results'][3]['recipe_type']['id'], self.recipe_type2.id)
-
-    def test_create(self):
-        """Tests creating a new batch."""
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-title-test',
-            'description': 'batch-description-test',
-            'definition': {
-                'version': '1.0',
-                'all_jobs': True,
-            },
-        }
-
-        url = '/v5/batches/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        batch = Batch.objects.filter(title='batch-title-test').first()
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], batch.id)
-        self.assertEqual(result['title'], 'batch-title-test')
-        self.assertEqual(result['description'], 'batch-description-test')
-        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
-        self.assertIsNotNone(result['event'])
-        self.assertIsNotNone(result['creator_job'])
-        self.assertIsNotNone(result['definition'])
-
-    def test_create_trigger_true(self):
-        """Tests creating a new batch using the default trigger rule."""
-        storage_test_utils.create_file(media_type='text/plain')
-
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-title-test',
-            'description': 'batch-description-test',
-            'definition': {
-                'version': '1.0',
-                'trigger_rule': True,
-            },
-        }
-
-        url = '/v5/batches/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        batch = Batch.objects.filter(title='batch-title-test').first()
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], batch.id)
-        self.assertEqual(result['title'], 'batch-title-test')
-        self.assertEqual(result['description'], 'batch-description-test')
-        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
-        self.assertIsNotNone(result['event'])
-        self.assertIsNotNone(result['creator_job'])
-        self.assertIsNotNone(result['definition'])
-
-    def test_create_trigger_custom(self):
-        """Tests creating a new batch using a custom trigger rule."""
-        workspace = storage_test_utils.create_workspace()
-        storage_test_utils.create_file(media_type='text/plain', data_type='test', workspace=workspace)
-
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-title-test',
-            'description': 'batch-description-test',
-            'definition': {
-                'version': '1.0',
-                'trigger_rule': {
-                    'condition': {
-                        'media_type': 'text/custom',
-                        'data_types': ['test'],
-                    },
-                    'data': {
-                        'input_data_name': 'Recipe Input',
-                        'workspace_name': workspace.name,
-                    },
-                },
-            },
-        }
-
-        url = '/v5/batches/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        batch = Batch.objects.filter(title='batch-title-test').first()
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], batch.id)
-        self.assertEqual(result['title'], 'batch-title-test')
-        self.assertEqual(result['description'], 'batch-description-test')
-        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
-        self.assertIsNotNone(result['event'])
-        self.assertIsNotNone(result['creator_job'])
-        self.assertIsNotNone(result['definition'])
-
-    def test_create_missing_param(self):
-        """Tests creating a batch with missing fields."""
-        json_data = {
-            'title': 'batch-test',
-        }
-
-        url = '/v5/batches/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_create_bad_param(self):
-        """Tests creating a batch with invalid type fields."""
-        json_data = {
-            'recipe_type_id': 'BAD',
-            'title': 'batch-test',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'all_jobs': True,
-            },
-        }
-
-        url = '/v5/batches/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_create_bad_definition(self):
-        """Tests creating a new batch with an invalid definition."""
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-test',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'date_range': {
-                    'type': 'BAD',
-                },
-            },
-        }
-
-        url = '/v5/batches/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-
-class TestBatchesViewV6(TransactionTestCase):
+class TestBatchesViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
 
         self.recipe_type_2 = recipe_test_utils.create_recipe_type_v6()
         self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2, is_creation_done=True)
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
+
+        self.sub_definition = copy.deepcopy(recipe_test_utils.SUB_RECIPE_DEFINITION)
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_name'] = self.job_type1.name
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_version'] = self.job_type1.version
+        self.sub_definition['nodes']['node_a']['node_type']['job_type_revision'] = self.job_type1.revision_num
+
+        self.recipe_type_3 = recipe_test_utils.create_recipe_type_v6(definition=self.sub_definition)
+        self.batch_3 = batch_test_utils.create_batch(recipe_type=self.recipe_type_3, is_creation_done=True)
+        recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, batch=self.batch_3)
 
     def test_invalid_version(self):
         """Tests calling the batches view with an invalid REST API version"""
@@ -275,7 +74,7 @@ class TestBatchesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(len(result['results']), 6)
 
     def test_recipe_type_id(self):
         """Tests successfully calling the batches view filtered by recipe type identifier"""
@@ -330,11 +129,13 @@ class TestBatchesViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 4)
-        self.assertEqual(result['results'][0]['id'], self.batch_2.id)
-        self.assertEqual(result['results'][1]['id'], self.batch_2.superseded_batch_id)
-        self.assertEqual(result['results'][2]['id'], self.batch_1.id)
-        self.assertEqual(result['results'][3]['id'], self.batch_1.superseded_batch_id)
+        self.assertEqual(len(result['results']), 6)
+        self.assertEqual(result['results'][0]['id'], self.batch_3.id)
+        self.assertEqual(result['results'][1]['id'], self.batch_3.superseded_batch_id)
+        self.assertEqual(result['results'][2]['id'], self.batch_2.id)
+        self.assertEqual(result['results'][3]['id'], self.batch_2.superseded_batch_id)
+        self.assertEqual(result['results'][4]['id'], self.batch_1.id)
+        self.assertEqual(result['results'][5]['id'], self.batch_1.superseded_batch_id)
 
     def test_create_invalid_version(self):
         """Tests creating a new batch with an invalid REST API version"""
@@ -449,75 +250,53 @@ class TestBatchesViewV6(TransactionTestCase):
         # Check correct recipe estimation count
         self.assertEqual(result['recipes_estimated'], 777)
 
+    @patch('batch.views.CommandMessageManager')
+    def test_create_priority(self, mock_msg_mgr):
+        """Tests creating a new batch successfully and having the priority of created jobs set properly"""
 
-class TestBatchDetailsViewV5(TestCase):
+        mock_msg_mgr.return_value = MockCommandMessageManager()
+
+        Batch.objects.filter(id=self.batch_3.id).update(is_creation_done=True, recipes_total=1)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': self.recipe_type_3.id,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': self.batch_3.root_batch_id
+                }
+            },
+            'configuration': {
+                'priority': 101
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+
+        # Check location header
+        self.assertTrue('/v6/batches/%d/' % new_batch_id in response['Location'])
+        # Check correct root batch ID in new batch
+        self.assertEqual(result['root_batch']['id'], self.batch_3.root_batch_id)
+        # Check correct recipe estimation count
+        self.assertEqual(result['recipes_estimated'], 1)
+
+        queues = Queue.objects.filter(batch_id=new_batch_id)
+        self.assertEqual(len(queues), 1)
+        for q in queues:
+            self.assertEqual(q.priority, 101)
+
+class TestBatchDetailsViewV6(APITestCase):
 
     fixtures = ['batch_job_types.json']
 
     def setUp(self):
         django.setup()
 
-        self.recipe_type = recipe_test_utils.create_recipe_type_v5()
-        self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
-
-    def test_not_found(self):
-        """Tests successfully calling the v5 batch details view with a batch id that does not exist"""
-
-        url = '/v5/batches/100000/'
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
-    def test_successful(self):
-        """Tests successfully calling the v5 batch details view"""
-
-        url = '/v5/batches/%d/' % self.batch.id
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.batch.id)
-        self.assertEqual(result['title'], self.batch.title)
-        self.assertEqual(result['description'], self.batch.description)
-        self.assertEqual(result['status'], self.batch.status)
-
-        self.assertEqual(result['recipe_type']['id'], self.recipe_type.id)
-        self.assertIsNotNone(result['event'])
-        self.assertIsNotNone(result['creator_job'])
-        self.assertIsNotNone(result['definition'])
-
-    def test_successful_with_new_batch(self):
-        """Tests successfully calling the v5 batch details view with a new (v6) batch"""
-
-        recipe_type = recipe_test_utils.create_recipe_type_v5()
-        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=10)
-        definition = BatchDefinition()
-        definition.root_batch_id = prev_batch.root_batch_id
-        definition.forced_nodes = ForcedNodes()
-        definition.forced_nodes.add_node('job_a')
-        definition.forced_nodes.add_node('job_b')
-        new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition, recipes_total=10)
-
-        url = '/v5/batches/%d/' % new_batch.id
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], new_batch.id)
-        self.assertEqual(result['title'], new_batch.title)
-        self.assertEqual(result['description'], new_batch.description)
-        self.assertEqual(result['created_count'], 10)
-        self.assertEqual(result['total_count'], 10)
-        self.assertDictEqual(result['definition'], {'version': '1.0', 'job_names': ['job_a', 'job_b'],
-                                                    'all_jobs': False})
-
-
-class TestBatchDetailsViewV6(TestCase):
-
-    fixtures = ['batch_job_types.json']
-
-    def setUp(self):
-        django.setup()
+        rest.login_client(self.client, is_staff=True)
 
     def test_invalid_version(self):
         """Tests calling the v6 batch details view with an invalid version"""
@@ -539,9 +318,25 @@ class TestBatchDetailsViewV6(TestCase):
     def test_successful(self):
         """Tests successfully calling the v6 batch details view"""
 
-        job_type = job_test_utils.create_job_type()
-        recipe_definition_dict = {'jobs': [{'name': 'job_a', 'job_type': {'name': job_type.name,
-                                                                          'version': job_type.version}}]}
+        job_type = job_test_utils.create_seed_job_type()
+
+        recipe_definition_dict = {
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type.name,
+                        'job_type_version': job_type.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
+        }
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_definition_dict)
         configuration = BatchConfiguration()
         configuration.priority = 100
@@ -558,23 +353,6 @@ class TestBatchDetailsViewV6(TestCase):
         self.assertEqual(result['recipe_type']['id'], batch.recipe_type.id)
         self.assertDictEqual(result['definition'], batch.get_v6_definition_json())
         self.assertDictEqual(result['configuration'], batch.get_v6_configuration_json())
-
-    def test_successful_with_old_batch(self):
-        """Tests successfully calling the v6 batch details view with an old-style batch"""
-
-        batch = batch_test_utils.create_batch_old()
-
-        url = '/v6/batches/%d/' % batch.id
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], batch.id)
-        self.assertEqual(result['title'], batch.title)
-        self.assertEqual(result['description'], batch.description)
-        self.assertEqual(result['recipe_type']['id'], batch.recipe_type.id)
-        self.assertDictEqual(result['definition'], {})
-        self.assertDictEqual(result['configuration'], {})
 
     def test_edit_invalid_version(self):
         """Tests editing a batch with an invalid REST API version"""
@@ -665,10 +443,12 @@ class TestBatchDetailsViewV6(TestCase):
         self.assertEqual(response.status_code, 405, response.content)
 
 
-class TestBatchesComparisonViewV6(TestCase):
+class TestBatchesComparisonViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_invalid_version(self):
         """Tests calling the v6 batch comparison view with an invalid version"""
@@ -696,45 +476,66 @@ class TestBatchesComparisonViewV6(TestCase):
     def test_successful(self, mock_msg_mgr):
         """Tests successfully calling the v6 batch comparison view"""
 
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
-        job_type_3 = job_test_utils.create_job_type()
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
+        job_type_3 = job_test_utils.create_seed_job_type()
 
         rt_definition_1 = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'job_a',
-                'job_type': {
-                    'name': job_type_1.name,
-                    'version': job_type_1.version,
-                }
-            }, {
-                'name': 'job_b',
-                'job_type': {
-                    'name': job_type_2.name,
-                    'version': job_type_2.version,
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_1.name,
+                        'job_type_version': job_type_1.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{'name': 'job_a'}]
-            }],
+                'job_b': {
+                    'dependencies': [{'name': 'job_a'}],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'job_a',
+                    'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_2.name,
+                        'job_type_version': job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
         }
+
         rt_definition_2 = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'job_c',
-                'job_type': {
-                    'name': job_type_3.name,
-                    'version': job_type_3.version,
-                }
-            }, {
-                'name': 'job_b',
-                'job_type': {
-                    'name': job_type_2.name,
-                    'version': job_type_2.version,
+            'version': '6',
+            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True, 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'job_c': {
+                    'dependencies': [],
+                    'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_3.name,
+                        'job_type_version': job_type_3.version,
+                        'job_type_revision': 1,
+                    }
                 },
-                'dependencies': [{'name': 'job_c'}]
-            }],
+                'job_b': {
+                    'dependencies': [{'name': 'job_c'}],
+                    'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'job_c',
+                    'output': 'OUTPUT_IMAGE'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': job_type_2.name,
+                        'job_type_version': job_type_2.version,
+                        'job_type_revision': 1,
+                    }
+                }
+            }
         }
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=rt_definition_1)
 
@@ -862,145 +663,12 @@ class TestBatchesComparisonViewV6(TestCase):
         self.assertDictEqual(result, expected_result)
 
 
-class TestBatchesValidationViewV5(TestCase):
-
-    fixtures = ['batch_job_types.json']
+class TestBatchesValidationViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
 
-        self.recipe_type1 = recipe_test_utils.create_recipe_type_v5(name='test1', version='1.0')
-        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
-
-    def test_successful(self):
-        """Tests validating a batch definition."""
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-title-test',
-            'description': 'batch-description-test',
-            'definition': {
-                'version': '1.0',
-                'all_jobs': True,
-            },
-        }
-
-        url = '/v5/batches/validation/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['file_count'], 0)
-        self.assertEqual(result['recipe_count'], 1)
-        self.assertEqual(len(result['warnings']), 0)
-
-    def test_successful_trigger_true(self):
-        """Tests validating a batch definition using the default trigger rule."""
-        storage_test_utils.create_file(media_type='text/plain')
-
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-title-test',
-            'description': 'batch-description-test',
-            'definition': {
-                'version': '1.0',
-                'trigger_rule': True,
-            },
-        }
-
-        url = '/v5/batches/validation/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['file_count'], 1)
-        self.assertEqual(result['recipe_count'], 0)
-        self.assertEqual(len(result['warnings']), 0)
-
-    def test_successful_trigger_custom(self):
-        """Tests validating a batch definition with a custom trigger rule."""
-        workspace = storage_test_utils.create_workspace()
-        storage_test_utils.create_file(media_type='text/plain', data_type='test', workspace=workspace)
-
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-title-test',
-            'description': 'batch-description-test',
-            'definition': {
-                'version': '1.0',
-                'trigger_rule': {
-                    'condition': {
-                        'media_type': 'text/custom',
-                        'data_types': ['test'],
-                    },
-                    'data': {
-                        'input_data_name': 'Recipe Input',
-                        'workspace_name': workspace.name,
-                    },
-                },
-            },
-        }
-
-        url = '/v5/batches/validation/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['file_count'], 1)
-        self.assertEqual(result['recipe_count'], 0)
-        self.assertEqual(len(result['warnings']), 0)
-
-    def test_missing_param(self):
-        """Tests validating a batch with missing fields."""
-        json_data = {
-            'title': 'batch-test',
-        }
-
-        url = '/v5/batches/validation/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_bad_param(self):
-        """Tests validating a batch with invalid type fields."""
-        json_data = {
-            'recipe_type_id': 'BAD',
-            'title': 'batch-test',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'all_jobs': True,
-            },
-        }
-
-        url = '/v5/batches/validation/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_bad_definition(self):
-        """Tests validating a new batch with an invalid definition."""
-        json_data = {
-            'recipe_type_id': self.recipe_type1.id,
-            'title': 'batch-test',
-            'description': 'This is a test.',
-            'definition': {
-                'version': '1.0',
-                'date_range': {
-                    'type': 'BAD',
-                },
-            },
-        }
-
-        url = '/v5/batches/validation/'
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-
-class TestBatchesValidationViewV6(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
+        rest.login_client(self.client)
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
@@ -1053,7 +721,11 @@ class TestBatchesValidationViewV6(TransactionTestCase):
 
         url = '/v6/batches/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_BATCH_DEFINITION')
+        self.assertEqual(results['is_valid'], False)
 
     def test_create_invalid_configuration(self):
         """Tests creating a new batch with an invalid configuration"""
@@ -1073,7 +745,11 @@ class TestBatchesValidationViewV6(TransactionTestCase):
 
         url = '/v6/batches/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['errors'][0]['name'], u'INVALID_BATCH_CONFIGURATION')
+        self.assertEqual(results['is_valid'], False)
 
     def test_create_invalid_prev_batch(self):
         """Tests creating a new batch with an invalid previous batch"""

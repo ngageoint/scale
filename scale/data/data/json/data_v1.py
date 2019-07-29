@@ -3,16 +3,19 @@ from __future__ import unicode_literals
 
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue, JsonValue
+from data.interface.interface import Interface
 
 
 DEFAULT_VERSION = '1.0'
 
 
-def convert_data_to_v1_json(data):
+def convert_data_to_v1_json(data, interface):
     """Returns the v1 data JSON for the given data
 
     :param data: The data
     :type data: :class:`data.data.data.Data`
+    :param interface: Interface to determine if we want to specify a single file directory or a single file
+    :type interface: :class:`data.interface.interface.Interface`
     :returns: The v1 data JSON
     :rtype: :class:`data.data.json.data_v1.DataV1`
     """
@@ -21,7 +24,10 @@ def convert_data_to_v1_json(data):
 
     for value in data.values.values():
         if isinstance(value, FileValue):
-            if len(value.file_ids) > 1:
+            multiple = False
+            if interface and value.name in interface.parameters:
+                multiple = interface.parameters[value.name].multiple
+            if len(value.file_ids) > 1 or multiple:
                 input_data.append({'name': value.name, 'file_ids': value.file_ids})
             elif len(value.file_ids) == 1:
                 input_data.append({'name': value.name, 'file_id': value.file_ids[0]})

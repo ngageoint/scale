@@ -2,11 +2,14 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase, TransactionTestCase
+from mock import patch
 
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.models import Ingest, Strike
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
 from storage.exceptions import InvalidDataTypeTag
 
 
@@ -28,13 +31,18 @@ class TestIngestAddDataTypeTag(TestCase):
 
         self.assertSetEqual(tags, correct_set)
 
-    def test_invalid(self):
-        """Tests calling add_data_type_tag() with invalid tags"""
+    def test_same_tag(self):
+        """Tests calling add_data_type_tag() with the same tag twice"""
 
         ingest = Ingest()
+        ingest.add_data_type_tag('Hello1')
+        ingest.add_data_type_tag('Hello1')
+        tags = ingest.get_data_type_tags()
 
-        self.assertRaises(InvalidDataTypeTag, ingest.add_data_type_tag, 'my.invalid.tag')
-        self.assertRaises(InvalidDataTypeTag, ingest.add_data_type_tag, 'my\invalid\tag!')
+        correct_set = set()
+        correct_set.add('Hello1')
+
+        self.assertSetEqual(tags, correct_set)
 
 
 class TestIngestGetDataTypeTags(TestCase):
@@ -44,7 +52,7 @@ class TestIngestGetDataTypeTags(TestCase):
     def test_tags(self):
         """Tests calling get_data_type_tags() with tags"""
 
-        ingest = Ingest(data_type='A,B,c')
+        ingest = Ingest(data_type_tags=['A','B','c'])
         tags = ingest.get_data_type_tags()
 
         correct_set = set()
@@ -68,40 +76,29 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+        add_message_backend(AMQPMessagingBackend)
 
         self.workspace = storage_test_utils.create_workspace()
+        self.recipe = recipe_test_utils.create_recipe_type_v6()
 
-    def test_successful(self):
-        """Tests calling StrikeManager.create_strike() successfully"""
-
-        config = {
-            'version': '1.0',
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': 'foo',
-                'workspace_path': 'my/path',
-                'workspace_name': self.workspace.name,
-            }]
-        }
-
-        config = StrikeConfigurationV2(config).get_configuration()
-        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
-        self.assertEqual(strike.job.status, 'QUEUED')
-        
-    def test_successful_v6(self):
+    @patch('ingest.models.CommandMessageManager')
+    def test_successful_v6(self, mock_msg_mgr):
         """Tests calling StrikeManager.create_strike successfully with v6 config"""
 
         config = {
             'version': '6',
-            'workspace': self.workspace.name, 
+            'workspace': self.workspace.name,
             'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
                 'filename_regex': 'foo',
                 'data_types': ['test1','test2'],
                 'new_workspace': self.workspace.name,
                 'new_file_path': 'my/path'
-            }]
+            }],
+            'recipe': {
+                'name': self.recipe.name,
+                'revision_num': self.recipe.revision_num
+            },
         }
 
         config = StrikeConfigurationV6(config).get_configuration()

@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 from job.tasks.health_task import HealthTask
 from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
+from util.active_warnings import ActiveError, ActiveWarning
 from util.parse import datetime_to_string
 
 CLEANUP_WARN_THRESHOLD = datetime.timedelta(hours=3)
@@ -21,39 +22,6 @@ NodeWarning = namedtuple('NodeWarning', ['name', 'title', 'description'])
 WARNING_NAME_COUNTER = 1
 
 
-class ActiveError(object):
-    """This class represents an active error for a node."""
-
-    def __init__(self, error):
-        """Constructor
-
-        :param error: The node error
-        :type error: :class:`scheduler.node.conditions.NodeError`
-        """
-
-        self.error = error
-        self.started = None
-        self.last_updated = None
-
-
-class ActiveWarning(object):
-    """This class represents an active warning for a node."""
-
-    def __init__(self, warning, description=None):
-        """Constructor
-
-        :param warning: The node warning
-        :type warning: :class:`scheduler.node.conditions.NodeWarning`
-        :param description: A specific description that overrides the general description
-        :type description: string
-        """
-
-        self.warning = warning
-        self.description = description
-        self.started = None
-        self.last_updated = None
-
-
 class NodeConditions(object):
     """This class represents the set of current conditions that apply to a node."""
 
@@ -61,8 +29,8 @@ class NodeConditions(object):
     BAD_DAEMON_ERR = NodeError(name='BAD_DAEMON', title='Docker Not Responding',
                                description='The Docker daemon on this node is not responding.', daemon_bad=True,
                                pull_bad=True)
-    BAD_LOGSTASH_ERR = NodeError(name='BAD_LOGSTASH', title='Logstash Not Responding',
-                                 description='The Scale logstash is not responding to this node.', daemon_bad=False,
+    BAD_LOGSTASH_ERR = NodeError(name='BAD_LOGSTASH', title='Fluentd Not Responding',
+                                 description='The Scale fluentd is not responding to this node.', daemon_bad=False,
                                  pull_bad=False)
     CLEANUP_ERR = NodeError(name='CLEANUP', title='Cleanup Failure',
                             description='The node failed to clean up some Scale Docker containers and volumes.',
@@ -202,7 +170,7 @@ class NodeConditions(object):
             logger.warning('Low Docker disk space on host %s', self._hostname)
             self._error_active(NodeConditions.LOW_DOCKER_SPACE_ERR)
         elif task_update.exit_code == HealthTask.BAD_LOGSTASH_CODE:
-            logger.warning('Logstash not responding on host %s', self._hostname)
+            logger.warning('Fluentd not responding on host %s', self._hostname)
             self._error_active(NodeConditions.BAD_LOGSTASH_ERR)
         else:
             logger.error('Unknown health check exit code %s on host %s', str(task_update.exit_code), self._hostname)

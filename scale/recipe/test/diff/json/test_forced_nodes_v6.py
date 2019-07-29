@@ -8,13 +8,10 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.models import JobType
 from job.test import utils as job_test_utils
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as OldRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.exceptions import InvalidDiff
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
-from recipe.handlers.graph import RecipeGraph
-from recipe.handlers.graph_delta import RecipeGraphDelta
 
 
 class TestForcedNodesV6(TestCase):
@@ -27,7 +24,7 @@ class TestForcedNodesV6(TestCase):
 
         empty = ForcedNodes()
         v6 = convert_forced_nodes_to_v6(empty)
-        self.assertDictEqual(v6.get_dict(), {'version': '6', 'all': False})
+        self.assertDictEqual(v6.get_dict(), {'version': '7', 'all': False})
 
     def test_convert_forced_nodes_to_v6_full(self):
         """Tests calling convert_forced_nodes_to_v6() with a full diff with all types (deleted, new, changed, etc) of nodes"""
@@ -40,12 +37,12 @@ class TestForcedNodesV6(TestCase):
         top_forced_nodes.add_subrecipe('D', recipe_d_forced_nodes)
         v6 = convert_forced_nodes_to_v6(top_forced_nodes)
         full = {
-            'version': '6',
+            'version': '7',
             'all': False,
             'nodes': [u'C', u'D'],
             'sub_recipes': {
                 'D': {
-                    'version': '6',
+                    'version': '7',
                     'all': False,
                     'nodes': ['1', '2']}}}
         self.assertDictEqual(v6.get_dict(), full)
@@ -84,7 +81,7 @@ class TestForcedNodesV6(TestCase):
         """Tests calling ForcedNodesV6() with no args"""
 
         min = ForcedNodesV6()
-        self.assertDictEqual(min.get_dict(), {'version': '6', 'all': False})
+        self.assertDictEqual(min.get_dict(), {'version': '7', 'all': False})
 
     def test_full_json(self):
         """Tests calling ForcedNodesV6() with full valid json"""

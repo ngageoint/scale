@@ -33,15 +33,19 @@ class NodeInstance(object):
         self.blocks_child_nodes = False  # Whether this node blocks child nodes from running
         self.is_original = is_original  # Whether this node is the original version (not copied from superseded recipe)
         self.is_real_node = True  # Flag used to "hide" placeholders
+        self.parental_acceptance = {} # Flags used to define whether this node should created based on parents' acceptance states
 
-    def add_dependency(self, node):
+    def add_dependency(self, node, acceptance=True):
         """Adds a dependency that this node has on the given node
 
         :param node: The dependency node to add
         :type node: :class:`recipe.instance.node.NodeInstance`
+        :param acceptance: Whether this node should run when the parent is accepted or when it is not accepted
+        :type acceptance: bool
         """
 
         self.parents[node.name] = node
+        self.parental_acceptance[node.name] = acceptance
         node.children[self.name] = self
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
@@ -68,6 +72,15 @@ class NodeInstance(object):
 
         return False
 
+    def is_accepted(self):
+        """Indicates whether this node is accepted.  Used for evaluating condition nodes
+
+        :returns: True if this node is accepted, false otherwise. Will always return true except for condition nodes
+        :rtype: bool
+        """
+
+        return True
+        
     def is_ready_for_children(self):
         """Indicates whether this node is ready for its children to process
 
@@ -89,8 +102,13 @@ class NodeInstance(object):
 
         if needs_to_be_created:
             # If any of this node's parents cannot be created yet, then this node cannot be created yet
-            for parent_node in self.parents.values():
+            for name in self.parents:
+                parent_node = self.parents[name]
                 if not parent_node.children_can_be_created:
+                    needs_to_be_created = False
+                    self.children_can_be_created = False
+                    break
+                if self.parental_acceptance[name] and not parent_node.is_accepted():
                     needs_to_be_created = False
                     self.children_can_be_created = False
                     break
@@ -136,6 +154,15 @@ class ConditionNodeInstance(NodeInstance):
         """
 
         return self.condition.is_processed
+        
+    def is_accepted(self):
+        """Indicates whether this node is accepted.  Used for evaluating condition nodes
+
+        :returns: True if the condition for this node is accepted, false otherwise.
+        :rtype: bool
+        """
+
+        return self.condition.is_accepted
 
     def is_ready_for_children(self):
         """See :meth:`recipe.instance.node.NodeInstance.is_ready_for_children`
@@ -150,8 +177,9 @@ class ConditionNodeInstance(NodeInstance):
         # Check parent nodes
         needs_to_be_created = super(ConditionNodeInstance, self).needs_to_be_created()
 
-        # Children can be created once the condition has been processed and accepted
-        self.children_can_be_created = self.condition.is_processed and self.condition.is_accepted
+        # Children can be created once the condition has been processed
+        # We need to check later which children to create depending on the condition passing/failing
+        self.children_can_be_created = self.condition.is_processed
 
         return needs_to_be_created
 
@@ -255,6 +283,9 @@ class JobNodeInstance(NodeInstance):
         """See :meth:`recipe.instance.node.NodeInstance.needs_to_process_input`
         """
 
+        if self.job.status not in ['PENDING', 'BLOCKED']:
+            return False
+            
         # Check parent nodes
         can_process_input = super(JobNodeInstance, self).needs_to_process_input()
 

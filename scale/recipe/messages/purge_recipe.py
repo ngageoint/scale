@@ -5,7 +5,6 @@ import logging
 
 from django.db.models import F, Q
 
-from batch.models import BatchRecipe
 from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
@@ -88,7 +87,6 @@ class PurgeRecipe(CommandMessage):
         recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
         recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {Node_Name: Node}
         parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
-
         if recipe_nodes:
             # Kick off a delete_files job for leaf node jobs
             leaf_jobs = [node for node in recipe_nodes.values() if node.node_type == JobNodeDefinition.NODE_TYPE]
@@ -119,8 +117,7 @@ class PurgeRecipe(CommandMessage):
                                                                      trigger_id=self.trigger_id,
                                                                      source_file_id=self.source_file_id))
 
-            # Delete BatchRecipe, RecipeNode, RecipeInputFile, and Recipe
-            BatchRecipe.objects.filter(recipe=recipe).delete()
+            # Delete RecipeNode, RecipeInputFile, and Recipe
             RecipeNode.objects.filter(Q(recipe=recipe) | Q(sub_recipe=recipe)).delete()
             RecipeInputFile.objects.filter(recipe=recipe).delete()
             recipe.delete()

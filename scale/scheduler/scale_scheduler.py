@@ -21,6 +21,7 @@ from mesos_api.tasks import RESOURCE_TYPE_SCALAR
 from mesoshttp.client import MesosClient
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
+from node.resources.gpu_manager import GPUManager
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
 from scheduler.manager import scheduler_mgr
@@ -236,13 +237,17 @@ class ScaleScheduler(object):
         total_resources = NodeResources()
         skipped_roles = set()
         for offer in offers:
-            offer = from_mesos_offer(offer)
-            offer_id = offer.id.value
-            agent_id = offer.agent_id.value
-            framework_id = offer.framework_id.value
-            hostname = offer.hostname
+            # ignore offers while we're paused
+            if scheduler_mgr.config.is_paused:
+                offer.decline()
+                continue
+            scale_offer = from_mesos_offer(offer)
+            offer_id = scale_offer.id.value
+            agent_id = scale_offer.agent_id.value
+            framework_id = scale_offer.framework_id.value
+            hostname = scale_offer.hostname
             resource_list = []
-            for resource in offer.resources:
+            for resource in scale_offer.resources:
                 # Only accept resource that are of SCALAR type and have a role matching our accept list
                 if resource.type == RESOURCE_TYPE_SCALAR:
                     if resource.role in settings.ACCEPTED_RESOURCE_ROLE:
@@ -251,15 +256,16 @@ class ScaleScheduler(object):
                         resource_list.append(ScalarResource(resource.name, resource.scalar.value))
                     else:
                         skipped_roles.add(resource.role)
+                        offer.decline()
 
-            logger.info("Number of resources: %i" % len(resource_list))
+            logger.debug("Number of resources: %i" % len(resource_list))
 
             # Only register agent, if offers are being received
             if len(resource_list) > 0:
                 resources = NodeResources(resource_list)
                 total_resources.add(resources)
                 agents[agent_id] = Agent(agent_id, hostname)
-                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+                resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started, offer))
 
         logger.debug("Offer analysis complete with %i resource offers." % len(resource_offers))
 
@@ -351,8 +357,11 @@ class ScaleScheduler(object):
             try:
                 job_exe = job_exe_mgr.handle_task_update(task_update)
                 if job_exe and job_exe.is_finished():
+                    logger.info("job_exe with job id %s and node id %s is finished", job_exe.job_id, job_exe.node_id)
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
+                    GPUManager.release_gpus(job_exe.node_id, job_exe.job_id)
+
             except Exception:
                 cluster_id = JobExecution.parse_cluster_id(task_id)
                 logger.exception('Error handling status update for job execution: %s', cluster_id)

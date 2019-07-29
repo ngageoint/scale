@@ -17,12 +17,11 @@ from job.messages.running_jobs import create_running_job_messages
 from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
-from mesos_api.offers import create_simple_offer
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
-from scheduler.manager import scheduler_mgr
+from scheduler.manager import scheduler_mgr, SchedulerWarning
 from scheduler.node.manager import node_mgr
 from scheduler.resources.agent import ResourceSet
 from scheduler.resources.manager import resource_mgr
@@ -46,6 +45,16 @@ TASK_SHORTAGE_WAIT_COUNT = 10
 
 logger = logging.getLogger(__name__)
 
+
+# Warnings
+INVALID_RESOURCES = SchedulerWarning(name='INVALID_RESOURCES', title='Invalid Resources for %s',
+                                     description='Cluster does not have one or more of the following resources: %s.')
+INSUFFICIENT_RESOURCES = SchedulerWarning(name='INSUFFICIENT_RESOURCES', title='Insufficient Resources for %s',
+                                     description='No node has enough of this resource for the job type: %s.')
+WAITING_SYSTEM_TASKS = SchedulerWarning(name='WAITING_SYSTEM_TASKS', title='Waiting System Tasks',
+                                     description='No new jobs scheduled due to waiting system tasks')
+UNKNOWN_JOB_TYPE = SchedulerWarning(name='UNKNOWN_JOB_TYPE', title='Unknown Job Type',
+                                     description='A job is queued with a job type %d that is not in the data base')
 
 class SchedulingManager(object):
     """This class manages all scheduling. This class is NOT thread-safe and should only be used within the scheduling
@@ -92,14 +101,16 @@ class SchedulingManager(object):
             job_exe_count = self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits,
                                                         job_type_resources, workspaces)
         else:
-            # TODO: this is a good place for a scheduler warning in the status JSON
             logger.warning('No new jobs scheduled due to waiting system tasks')
+            scheduler_mgr.warning_active(WAITING_SYSTEM_TASKS)
 
         if framework_id != scheduler_mgr.framework_id:
             logger.warning('Scheduler framework ID changed, skipping task launch')
             return 0
 
         self._allocate_offers(nodes)
+        declined = resource_mgr.decline_offers()
+        self._decline_offers(declined)
         task_count, offer_count = self._launch_tasks(client, nodes)
         scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
@@ -170,6 +181,21 @@ class SchedulingManager(object):
 
         return ignore_job_type_ids
 
+    def _decline_offers(self, offers):
+        """Declines offers that have not been allocated
+
+        :param offers: The Mesos offers
+        :type offers: :class:`mesoshttp.offers.Offer`
+        """
+
+        for offer in offers:
+            if offer.mesos_offer:
+                offer.mesos_offer.decline()
+            else:
+                logger.debug("Trying to decline offer without original mesos_offer object")
+        
+        logger.debug("Declined %d offers" % len(offers))
+
     def _launch_tasks(self, client, nodes):
         """Launches all of the tasks that have been scheduled on the given nodes
 
@@ -204,8 +230,7 @@ class SchedulingManager(object):
             for offer in offers:
                 total_offer_count += 1
                 total_offer_resources.add(offer.resources)
-                mesos_offer = create_simple_offer(offer.id)
-                mesos_offers.append(mesos_offer)
+                mesos_offers.append(offer.mesos_offer)
             tasks = node.allocated_tasks
             for task in tasks:
                 total_task_resources.add(task.get_resources())
@@ -313,6 +338,7 @@ class SchedulingManager(object):
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
+        max_cluster_resources = resource_mgr.get_max_available_resources()
         for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             job_exe = QueuedJobExecution(queue)
             
@@ -325,9 +351,52 @@ class SchedulingManager(object):
             if not nodes:
                 break
 
+            jt = job_type_mgr.get_job_type(queue.job_type.id)
+            name = INVALID_RESOURCES.name + jt.name
+            title = INVALID_RESOURCES.title % jt.name
+            warning = SchedulerWarning(name=name, title=title, description=None)
+            if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
+                # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
+                continue
+            
+            invalid_resources = []
+            insufficient_resources = []
+            # get resource names offered and compare to job type resources
+            for resource in job_exe.required_resources.resources:
+                # skip sharedmem
+                if resource.name.lower() == 'sharedmem':
+                    continue
+                if resource.name not in max_cluster_resources._resources:
+                    # resource does not exist in cluster
+                    invalid_resources.append(resource.name)
+                elif resource.value > max_cluster_resources._resources[resource.name].value:
+                    # resource exceeds the max available from any node
+                    insufficient_resources.append(resource.name)
+
+            if invalid_resources:
+                description = INVALID_RESOURCES.description % invalid_resources
+                scheduler_mgr.warning_active(warning, description)
+
+            if insufficient_resources:
+                description = INSUFFICIENT_RESOURCES.description % insufficient_resources
+                scheduler_mgr.warning_active(warning, description)
+
+
+            if invalid_resources or insufficient_resources:
+                invalid_resources.extend(insufficient_resources)
+                jt.unmet_resources = ','.join(invalid_resources)
+                jt.save(update_fields=["unmet_resources"])
+                continue
+            else:
+                # reset unmet_resources flag
+                jt.unmet_resources = None
+                scheduler_mgr.warning_inactive(warning)
+                jt.save(update_fields=["unmet_resources"])
+            
             # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id
             if job_type_id not in job_types:
+                scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE, description=UNKNOWN_JOB_TYPE.description % job_type_id)
                 continue
 
             workspace_names = job_exe.configuration.get_input_workspace_names()

@@ -9,35 +9,35 @@ These services allow for the management of job types within Scale.
 
 The services will be replaced as the new v6 job type services are created:
 
-.. _rest_v6_job_type_list:
+.. _rest_v6_job_type_name_list:
 
 v6 Job Type Names
 -----------------
 
-**Example GET /v6/job-types/ API call**
+**Example GET /v6/job-type-names/ API call**
 
-Request: GET http://.../v6/job-types/
+Request: GET http://.../v6/job-type-names/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
-        "count": 1, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
+ .. code-block:: javascript
+
+    {
+        "count": 1,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
                 "name": "my-job",
-                "title": "My Job", 
-                "description": "A simple job type", 
-                "icon_code": "f013", 
-                "versions": ["1.0.0"], 
-                "latest_version": "1.0.0" 
+                "title": "My Job",
+                "description": "A simple job type",
+                "icon_code": "f013",
+                "versions": ["1.0.0"],
+                "latest_version": "1.0.0"
             }
-        ] 
-    } 
-    
+        ]
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Type Names**                                                                                                      |
 +=========================================================================================================================+
@@ -52,7 +52,7 @@ Response: 200 OK
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
+| keyword            | String            | Optional | Performs a like search on name and tags                             |
 |                    |                   |          | Duplicate to search for multiple keywords.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | id                 | Integer           | Optional | Return only job types with one version has a matching id.           |
@@ -92,9 +92,133 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .icon_code               | String            | A font-awesome icon code for the latest version of this job type.        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .versions                | Array             | List of versions of this job type.                                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .latest_version          | String            | The latest version of this job type.                                     |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+
+.. _rest_v6_job_type_list:
+
+v6 Job Type List
+----------------
+
+**Example GET /v6/job-types/ API call**
+
+Request: GET http://.../v6/job-types/
+
+Response: 200 OK
+
+ .. code-block:: javascript
+
+    {
+        "count": 2,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 3,
+                "name": "my-job",
+                "version": "1.0.0"
+                "title": "My Job",
+                "description": "A simple job type",
+                "icon_code": "f013",
+                "is_published": true,
+                "is_active": true,
+                "is_paused": false,
+                "is_system": false,
+                "max_scheduled": 1,
+                "revision_num": 1,
+                "docker_image": "my-job-1.0.0-seed:1.0.0",
+                "created": "2015-03-11T00:00:00Z",
+                "deprecated": null,
+                "paused": null,
+                "last_modified": "2015-03-11T00:00:00Z"
+            },
+            ...
+        ]
+    }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Retrieve Job Types**                                                                                                  |
++=========================================================================================================================+
+| Returns a list of job types                                                                                             |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/                                                                                                  |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| keyword            | String            | Optional | Performs a like search on name and tags                             |
+|                    |                   |          | Duplicate to search for multiple keywords.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| id                 | Integer           | Optional | Return only job types with a matching id.                           |
+|                    |                   |          | Duplicate to search for multiple ids.                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Return only job types that match the is_active flag.                |
+|                    |                   |          | Defaults to all job types.                                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_system          | Boolean           | Optional | Return only job types that are system (True) or user (False).       |
+|                    |                   |          | Defaults to all job types.                                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| order              | String            | Optional | One or more fields to use when ordering the results.                |
+|                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
+|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------------+----------------------------------------------------------------------------------------------+
+| **Status**               | 200 OK                                                                                       |
++--------------------------+----------------------------------------------------------------------------------------------+
+| **Content Type**         | *application/json*                                                                           |
++--------------------------+----------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| count                    | Integer           | The total number of results that match the query parameters.             |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| next                     | URL               | A URL to the next page of results.                                       |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| previous                 | URL               | A URL to the previous page of results.                                   |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| results                  | Array             | List of result JSON objects that match the query parameters.             |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .name                    | String            | The name of the job type.                                                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .version                 | String            | The version number for this version of the job type.                     |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .title                   | String            | The human readable display name for this version of the job type.        |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .description             | String            | A longer description of this version of the job type.                    |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .icon_code               | String            | A font-awesome icon code to use when representing this job type version. |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_active               | Boolean           | Whether this job type is active or deprecated.                           |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_paused               | Boolean           | Whether the job type is paused (while paused no jobs of this type will   |
+|                          |                   | be scheduled off of the queue).                                          |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_system               | Boolean           | Whether this is a system type.                                           |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .max_scheduled           | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
+|                          |                   | same time. May be null.                                                  |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .revision_num            | Integer           | The number of versions of this job type.                                 |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .docker_image            | String            | The Docker image containing the code to run for this job.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .deprecated              | ISO-8601 Datetime | When the job type was last deprecated (archived).                        |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .paused                  | ISO-8601 Datetime | When the job type was last paused.                                       |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .last_modified           | ISO-8601 Datetime | When the associated database model was last saved.                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 
 .. _rest_v6_job_type_versions:
@@ -108,35 +232,37 @@ Request: GET http://.../v6/job-types/{name}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
-        "count": 2, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 3, 
+ .. code-block:: javascript
+
+    {
+        "count": 2,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 3,
                 "name": "my-job",
-                "version": "1.0.0" 
-                "title": "My Job", 
-                "description": "A simple job type", 
-                "icon_code": "f013", 
-                "is_active": true, 
-                "is_paused": false, 
-                "is_system": false, 
-                "max_scheduled": 1, 
-                "revision_num": 1, 
-                "docker_image": "my-job-1.0.0-seed:1.0.0", 
-                "created": "2015-03-11T00:00:00Z", 
-                "deprecated": null, 
-                "paused": null, 
-                "last_modified": "2015-03-11T00:00:00Z" 
-            }, 
-            ... 
-        ] 
-    } 
-    
+                "version": "1.0.0"
+                "title": "My Job",
+                "description": "A simple job type",
+                "icon_code": "f013",
+                "is_published": true,
+                "is_active": true,
+                "is_paused": false,
+                "is_system": false,
+                "max_scheduled": 1,
+                "revision_num": 1,
+                "docker_image": "my-job-1.0.0-seed:1.0.0",
+                "unmet_resources": "chocolate,vanilla",
+                "created": "2015-03-11T00:00:00Z",
+                "deprecated": null,
+                "paused": null,
+                "last_modified": "2015-03-11T00:00:00Z"
+            },
+            ...
+        ]
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Versions**                                                                                          |
 +=========================================================================================================================+
@@ -181,6 +307,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .icon_code               | String            | A font-awesome icon code to use when representing this job type version. |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_published            | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_active               | Boolean           | Whether this job type is active or deprecated.                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_paused               | Boolean           | Whether the job type is paused (while paused no jobs of this type will   |
@@ -194,6 +322,8 @@ Response: 200 OK
 | .revision_num            | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .unmet_resources         | String            | Resources required by this job type that are not present.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -215,29 +345,32 @@ Request: GET http://.../v6/job-types/{name}/{version}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
-    { 
-		"id": 3, 
-		"name": "my-job", 
-		"version": "1.0.0" 
-		"title": "My Job", 
-		"description": "A simple job type", 
-		"icon_code": "f013", 
-		"is_active": true, 
-		"is_paused": false, 
-		"is_system": false, 
-		"max_scheduled": 1, 
-		"revision_num": 1, 
-		"docker_image": "my-job-1.0.0-seed:1.0.0", 
-		"manifest": { ... }, 
-		"configuration": { ... },
-		"created": "2015-03-11T00:00:00Z", 
-		"deprecated": null, 
-		"paused": null, 
-		"last_modified": "2015-03-11T00:00:00Z" 
-    } 
-    
+ .. code-block:: javascript
+
+    {
+    "id": 3,
+    "name": "my-job",
+    "version": "1.0.0"
+    "title": "My Job",
+    "description": "A simple job type",
+    "icon_code": "f013",
+    "is_published", true,
+    "is_active": true,
+    "is_paused": false,
+    "is_system": false,
+    "max_scheduled": 1,
+    "max_tries": 3,
+    "revision_num": 1,
+    "docker_image": "my-job-1.0.0-seed:1.0.0",
+    "unmet_resources": "chocolate,vanilla",
+    "manifest": { ... },
+    "configuration": { ... },
+    "created": "2015-03-11T00:00:00Z",
+    "deprecated": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Details**                                                                                           |
 +=========================================================================================================================+
@@ -266,6 +399,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | icon_code                | String            | A font-awesome icon code to use when representing this job type version. |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| is_published             | Boolean           | Whether this job type publishes its output.                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | is_active                | Boolean           | Whether this job type is active or deprecated.                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | is_paused                | Boolean           | Whether the job type is paused (while paused no jobs of this type will   |
@@ -276,12 +411,16 @@ Response: 200 OK
 | max_scheduled            | Integer           | Maximum  number of jobs of this type that may be scheduled to run at the |
 |                          |                   | same time. May be null.                                                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| max_tries                | Integer           | Number of times a job will be automatically retried afer an error.       |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | revision_num             | Integer           | The number of versions of this job type.                                 |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| unmet_resources          | String            | Resources required by this job type that are not present.                |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | manifest                 | String            | Seed manifest describing Job, interface and requirements.                |
-|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
+|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | configuration            | JSON Object       | JSON description of the configuration for running the job                |
 |                          |                   | (See :ref:`rest_v6_job_type_configuration`)                              |
@@ -306,8 +445,8 @@ Request: GET http://.../v6/job-types/{name}/{version}/revisions/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
+ .. code-block:: javascript
+
     {
       "count": 1,
       "next": null,
@@ -320,7 +459,11 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
-            "icon_code": "012F"
+            "is_active": true,
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f013",
+            "unmet_resources": "chocolate,vanilla"
           },
           "revision_num": 1,
           "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -328,7 +471,7 @@ Response: 200 OK
         }
       ]
     }
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Revisions**                                                                                         |
 +=========================================================================================================================+
@@ -382,8 +525,8 @@ Request: GET http://.../v6/job-types/{name}/{version}/revisions/{revision_num}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
- 
+ .. code-block:: javascript
+
     {
       "id": 3,
       "job_type": {
@@ -391,14 +534,18 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "My first job",
         "description": "My very first job",
-        "icon_code": "012F"
+        "is_active": true,
+        "is_paused": false,
+        "is_published": false,
+        "icon_code": "f013",
+        "unmet_resources": "chocolate,vanilla"
       },
       "revision_num": 1,
       "docker_image": "my-job-1.0.0-seed:1.0.0",
       "manifest": "",
       "created": "2015-03-11T00:00:00Z"
     }
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Retrieve Job Type Revision Details**                                                                                  |
 +=========================================================================================================================+
@@ -424,7 +571,7 @@ Response: 200 OK
 | docker_image             | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | manifest                 | String            | Seed manifest describing Job, interface and requirements.                |
-|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
+|                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | created                  | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -439,7 +586,7 @@ v6 Add Seed Image
 Request: POST http://.../v6/job-types/
 
  .. code-block:: javascript
- 
+
      {
       "icon_code": "f1c5",
       "max_scheduled": 1,
@@ -572,33 +719,36 @@ Request: POST http://.../v6/job-types/
       },
       "auto_update": true
     }
-    
+
 Response: 201 CREATED
 Headers:
 Location http://.../v6/job-types/test/1.0.0/
 
- .. code-block:: javascript  
- 
-    { 
-		"id": 3, 
-		"name": "test", 
-		"version": "1.0.0" 
-		"title": "Job to demonstrate job type APIs", 
-		"description": "Reads input file and spit out specified number of bytes as output", 
-		"icon_code": "f1c5", 
-		"is_active": true, 
-		"is_paused": false, 
-		"is_system": false, 
-		"max_scheduled": 1, 
-		"revision_num": 1, 
-		"docker_image": "test-1.0.0-seed:1.0.0", 
-		"manifest": { ... }, 
-		"configuration": { ... },
-		"created": "2015-03-11T00:00:00Z", 
-		"deprecated": null, 
-		"paused": null, 
-		"last_modified": "2015-03-11T00:00:00Z" 
-    } 
+ .. code-block:: javascript
+
+    {
+    "id": 3,
+    "name": "test",
+    "version": "1.0.0"
+    "title": "Job to demonstrate job type APIs",
+    "description": "Reads input file and spit out specified number of bytes as output",
+    "icon_code": "f1c5",
+    "is_published": true,
+    "is_active": true,
+    "is_paused": false,
+    "is_system": false,
+    "max_scheduled": 1,
+    "max_tries": 3,
+    "revision_num": 1,
+    "docker_image": "test-1.0.0-seed:1.0.0",
+    "unmet_resources": "chocolate,vanilla",
+    "manifest": { ... },
+    "configuration": { ... },
+    "created": "2015-03-11T00:00:00Z",
+    "deprecated": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Add Seed Image**                                                                                                      |
@@ -613,6 +763,8 @@ Location http://.../v6/job-types/test/1.0.0/
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -625,6 +777,11 @@ Location http://.../v6/job-types/test/1.0.0/
 |                         |                   |          | (See :ref:`architecture_seed_manifest_spec`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | auto_update             | Boolean           | Optional | Whether to automatically update recipes containing this type.  |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_active               | Boolean           | Optional | Whether this job type is active or deprecated.                 |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_paused               | Boolean           | Optional | Whether the job type is paused (while paused no jobs of this   |
+|                         |                   |          | type will be scheduled off of the queue).                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -647,7 +804,7 @@ v6 Validate Job Type
 Request: POST http://.../v6/job-types/validation/
 
  .. code-block:: javascript
- 
+
      {
       "configuration": {
         "mounts": {
@@ -776,7 +933,7 @@ Request: POST http://.../v6/job-types/validation/
         }
       }
     }
-    
+
 Response: 200 OK
 
 .. code-block:: javascript
@@ -786,7 +943,7 @@ Response: 200 OK
       "errors": [],
       "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}]
    }
-   
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Validate Job Type**                                                                                                   |
 +=========================================================================================================================+
@@ -834,9 +991,10 @@ v6 Edit Job Type
 Request: PATCH http://.../v6/job-types/test/1.0.0/
 
  .. code-block:: javascript
- 
+
     {
       "icon_code": "012F",
+      "is_published": true,
       "is_active": true,
       "is_paused": false,
       "max_scheduled": 1,
@@ -865,7 +1023,7 @@ Response: 204 No Content
 +=========================================================================================================================+
 | Edits an existing job type with the associated fields                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **PATCH** /job-types/{name}/{version}/                                                                                  |
+| **PATCH** /v6/job-types/{name}/{version}/                                                                               |
 |           Where {name} is the name of the job type and {version} is its version                                         |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **Content Type**        | *application/json*                                                                            |
@@ -874,6 +1032,8 @@ Response: 204 No Content
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | icon_code               | String            | Optional | A font-awesome icon code to use when displaying this job type. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| is_published            | Boolean           | Optional | Whether this job type publishes its output. Defaults to False. |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_active               | Boolean           | Optional | Whether this job type is active or deprecated.                 |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_paused               | Boolean           | Optional | Whether the job type is paused (while paused no jobs of this   |
@@ -881,6 +1041,11 @@ Response: 204 No Content
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| docker_image            | String            | Optional | The Docker image containing the code to run for this job.      |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| manifest                | String            | Optional | Seed manifest describing Job, interface and requirements.      |
+|                         |                   |          | (See :ref:`architecture_seed_manifest_spec`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | configuration           | JSON Object       | Optional | JSON description of the configuration for running the job      |
 |                         |                   |          | (See :ref:`rest_v6_job_type_configuration`)                    |
@@ -956,3 +1121,331 @@ A job type configuration JSON describes a set of configuration settings that aff
 |                            |                |          | the job's Seed manifest and each value is the value to provide for |
 |                            |                |          | that setting.                                                      |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
+
+.. _rest_v6_job_type_status:
+
+v6 Job Type Status
+------------------
+
+**Example GET /v6/job-types/status/ API call**
+
+Request: GET http://.../v6/job-types/status/
+
+.. code-block:: javascript
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+        "job_type": {
+          "id": 1,
+          "name": "scale-ingest",
+          "version": "1.0",
+          "title": "Scale Ingest",
+          "description": "Ingests a source file into a workspace",
+          "is_active": true,
+          "is_paused": false,
+          "is_published": true,
+          "icon_code": "f013",
+          "unmet_resources": "chocolate,vanilla"
+        },
+        "job_counts": [{
+            "status": "RUNNING",
+            "count": 1,
+            "most_recent": "2015-08-31T22:09:12.674Z",
+            "category": null
+          },
+          {
+            "status": "FAILED",
+            "count": 2,
+            "most_recent": "2015-08-31T19:28:30.799Z",
+            "category": "SYSTEM"
+          },
+          {
+            "status": "COMPLETED",
+            "count": 57,
+            "most_recent": "2015-08-31T21:51:40.900Z",
+            "category": null
+          }
+        ],
+      },
+      {
+        "job_type": {
+          "id": 3,
+          "name": "scale-clock",
+          "version": "1.0",
+          "title": "Scale Clock",
+          "description": "Monitors a directory for incoming files to ingest",
+          "is_active": true,
+          "is_paused": false,
+          "is_published": true,
+          "icon_code": "f013",
+          "unmet_resources": "chocolate,vanilla"
+        },
+        "job_counts": []
+      }
+    ]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Types Status**                                                                                                    |
++=========================================================================================================================+
+| Returns a list of overall job type statistics, based on counts of jobs organized by status.                             |
+| Note that all jobs with a status of RUNNING are included regardless of date/time filters.                               |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/status/                                                                                           |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Return only job types with one version that matches is_active flag. |
+|                    |                   |          | Defaults to all job types.                                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
+|                    |                   |          | Defaults to the past 3 hours.                                       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the statistics.                           |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_counts        | Array             | A list of recent job counts for the job type, grouped by status.               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..status           | String            | The type of job status the count represents.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..count            | Integer           | The number of jobs with that status.                                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..most_recent      | ISO-8601 Datetime | The date/time when a job was last in that status.                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..category         | String            | The category of the status, which is only used by a FAILED status.             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_job_type_pending:
+
+v6 Job Types Pending
+--------------------
+
+**Example GET /v6/job-types/pending/ API call**
+
+Request: GET http://.../v6/job-types/pending/
+
+.. code-block:: javascript
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+      "job_type": {
+        "id": 3,
+        "name": "scale-clock",
+        "version": "1.0",
+        "title": "Scale Clock",
+        "description": "",
+        "is_active": true,
+        "is_paused": false,
+        "is_published": true,
+        "icon_code": "f013",
+        "unmet_resources": "chocolate,vanilla"
+      },
+      "count": 1,
+      "longest_pending": "2015-09-08T15:43:15.681Z"
+    }]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Types Pending**                                                                                                   |
++=========================================================================================================================+
+| Returns counts of job types that are pending, ordered by the longest pending job.                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/pending/                                                                                          |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the count.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .count             | Integer           | The number of jobs of this type that are currently pending.                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .longest_pending   | ISO-8601 Datetime | The queue start time of the job of this type that has been pending the longest.|
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+
+.. _rest_v6_job_type_running:
+
+v6 Job Types Running
+--------------------
+
+**Example GET /v6/job-types/running/ API call**
+
+Request: GET http://.../v6/job-types/status/
+
+.. code-block:: javascript
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+      "job_type": {
+        "id": 3,
+        "name": "scale-clock",
+        "version": "1.0",
+        "title": "Scale Clock",
+        "description": "",
+        "is_active": true,
+        "is_paused": false,
+        "is_published": true,
+        "icon_code": "f013",
+        "unmet_resources": "chocolate,vanilla"
+      },
+      "count": 1,
+      "longest_running": "2015-09-08T15:43:15.681Z"
+    }]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Types Running**                                                                                                   |
++=========================================================================================================================+
+| Returns counts of job types that are running, ordered by the longest running job.                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/running/                                                                                          |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the count.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .count             | Integer           | The number of jobs of this type that are currently running.                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .longest_running   | ISO-8601 Datetime | The run start time of the job of this type that has been running the longest.  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_job_type_system_failures:
+
+v6 Job Type System Failures
+---------------------------
+
+**Example GET /v6/job-types/system-failures/ API call**
+
+Request: GET http://.../v6/job-types/system-failures/
+
+.. code-block:: javascript
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [{
+      "job_type": {
+        "id": 3,
+        "name": "scale-clock",
+        "version": "1.0",
+        "title": "Scale Clock",
+        "description": "",
+        "is_active": true,
+        "is_paused": false,
+        "is_published": true,
+        "icon_code": "f013",
+        "unmet_resources": "chocolate,vanilla"
+      },
+      "error": {
+        "id": 1,
+        "name": "Unknown",
+        "description": "The error that caused the failure is unknown.",
+        "category": "SYSTEM",
+        "is_builtin": true,
+        "should_be_retried": true,
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z"
+      },
+      "count": 38,
+      "first_error": "2015-08-28T23:29:28.719Z",
+      "last_error": "2015-09-08T16:27:42.243Z"
+    }]
+  }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Job Type System Failures**                                                                                            |
++=========================================================================================================================+
+| Returns counts of job types that have a critical system failure error, ordered by last error.                           |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/job-types/system-failures/                                                                                  |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The job type that is associated with the count.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .count             | Integer           | The number of jobs of this type that have an error.                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .error             | JSON Object       | The error that is associated with the count.                                   |
+|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .first_error       | ISO-8601 Datetime | When this error first occurred for a job of this type.                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .last_error        | ISO-8601 Datetime | When this error most recently occurred for a job of this type.                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+

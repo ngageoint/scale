@@ -10,8 +10,8 @@ from data.data.json.data_v1 import DataV1
 from data.data.value import FileValue, JsonValue
 
 
-SCHEMA_VERSION = '6'
-
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 DATA_SCHEMA = {
     'type': 'object',
@@ -86,7 +86,7 @@ class DataV6(object):
         if 'version' not in self._data:
             self._data['version'] = SCHEMA_VERSION
 
-        if self._data['version'] != SCHEMA_VERSION:
+        if self._data['version'] not in SCHEMA_VERSIONS:
             self._convert_from_v1()
 
         self._populate_default_values()

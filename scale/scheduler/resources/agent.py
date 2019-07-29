@@ -154,6 +154,29 @@ class AgentResources(object):
         node_dict['resources'] = resources_dict
         return num_offers
 
+    def decline_offers(self):
+        """Removes offers that haven't been allocated
+        and returns them for the scheduler to decline them.
+
+        :returns: list of declined offers
+        :rtype: list
+        """
+        
+        # Decline old offers
+        declined_offers = []
+        declined_ids = []
+        for offer in self._offers.values():
+            declined_offers.append(offer)
+            declined_ids.append(offer.id)
+                
+        for id in declined_ids:
+            if id in self._offers:
+                del self._offers[id]
+
+        self._update_resources()
+        
+        return declined_offers
+        
     def has_total_resources(self):
         """Indicates whether this agent knows its total resources or not
 
@@ -219,6 +242,15 @@ class AgentResources(object):
             shortage_resources.round_values()
         self._shortage_resources = shortage_resources
 
+    def get_max_resources(self):
+        """Gets the maximum resources for the agent
+        
+        :returns: The maximum resources for an agent
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        return self._total_resources if self._total_resources else self._watermark_resources
+
     def set_total(self, total_resources):
         """Sets the total resources for the agent
 
@@ -226,7 +258,7 @@ class AgentResources(object):
         :type total_resources: :class:`node.resources.node_resources.NodeResources`
         """
 
-        self._total_resources = total_resources
+        self._total_resources = total_resources.copy()
 
     def _update_resources(self, tasks=None):
         """Updates the agent's resources from its current offers and tasks

@@ -8,6 +8,7 @@ from django.db import transaction
 
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
+from job.exceptions import InactiveJobType
 from job.messages.process_job_input import create_process_job_input_messages
 from job.models import Job, JobTypeRevision
 from messaging.messages.message import CommandMessage
@@ -26,7 +27,6 @@ MAX_NUM = 100
 # Tuple for specifying each job to create for RECIPE_TYPE messages
 RecipeJob = namedtuple('RecipeJob', ['job_type_name', 'job_type_version', 'job_type_rev_num', 'node_name',
                                      'process_input'])
-
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +80,7 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
             message.recipe_id = recipe.id
             message.root_recipe_id = recipe.root_superseded_recipe_id
             message.event_id = recipe.event_id
+            message.ingest_event_id = recipe.ingest_event_id
             message.superseded_recipe_id = recipe.superseded_recipe_id
             message.batch_id = recipe.batch_id
             message.recipe_config = recipe.configuration
@@ -90,6 +91,7 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
             message.recipe_id = recipe.id
             message.root_recipe_id = recipe.root_superseded_recipe_id
             message.event_id = recipe.event_id
+            message.ingest_event_id = recipe.ingest_event_id
             message.superseded_recipe_id = recipe.superseded_recipe_id
             message.batch_id = recipe.batch_id
             message.recipe_config = recipe.configuration
@@ -112,6 +114,7 @@ class CreateJobs(CommandMessage):
 
         # Fields applicable to all message types
         self.event_id = None
+        self.ingest_event_id = None
 
         # The message type for how to create the jobs
         self.create_jobs_type = None
@@ -180,6 +183,8 @@ class CreateJobs(CommandMessage):
                                     'process_input': recipe_job.process_input})
             json_dict['recipe_jobs'] = recipe_jobs
             json_dict['recipe_config'] = self.recipe_config
+            if self.ingest_event_id:
+                json_dict['ingest_event_id'] = self.ingest_event_id
 
         return json_dict
 
@@ -211,6 +216,8 @@ class CreateJobs(CommandMessage):
                 message.add_recipe_job(recipe_job)
             if 'recipe_config' in json_dict:
                 message.recipe_config = json_dict['recipe_config']
+            if 'ingest_event_id' in json_dict:
+                message.ingest_event_id = json_dict['ingest_event_id']
 
         return message
 
@@ -222,7 +229,11 @@ class CreateJobs(CommandMessage):
             self._perform_locking()
             jobs = self._find_existing_jobs()
             if not jobs:
-                jobs = self._create_jobs()
+                try:
+                    jobs = self._create_jobs()
+                except InactiveJobType as ex:
+                    logger.exception('Attempting to create a job with an inactive job type: %s. Message will not re-run.', ex)
+                    return True
 
         process_input_job_ids = []
         for job in jobs:
@@ -251,7 +262,7 @@ class CreateJobs(CommandMessage):
                                                             self.job_type_rev_num)
 
         try:
-            job = Job.objects.create_job_v6(job_type_rev, self.event_id, input_data=self.input_data)
+            job = Job.objects.create_job_v6(job_type_rev, event_id=self.event_id, input_data=self.input_data)
             job.save()
         except InvalidData:
             msg = 'Job of type (%s, %s, %d) was given invalid input data. Message will not re-run.'
@@ -311,9 +322,9 @@ class CreateJobs(CommandMessage):
                 config = revision.job_type.get_job_configuration()
                 config.merge_recipe_config(self.recipe_config)
             superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
-            job = Job.objects.create_job_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
-                                            recipe_id=self.recipe_id, batch_id=self.batch_id,
-                                            superseded_job=superseded_job, job_config=config)
+            job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id, 
+                                            root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id, 
+                                            batch_id=self.batch_id, superseded_job=superseded_job, job_config=config)
             recipe_jobs[node_name] = job
 
         Job.objects.bulk_create(recipe_jobs.values())
@@ -368,3 +379,4 @@ class CreateJobs(CommandMessage):
         elif self.create_jobs_type == RECIPE_TYPE:
             from recipe.models import Recipe
             Recipe.objects.get_locked_recipe(self.recipe_id)
+            TriggerEvent.objects.get_locked_event(self.event_id)

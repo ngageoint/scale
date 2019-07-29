@@ -31,43 +31,22 @@ class TestRecipeDefinitionGetGraph(TestCase):
     def setUp(self):
         django.setup()
 
-        self.input_name_1 = 'Test Input 1'
-        self.output_name_1 = 'Test Output 1'
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_1,
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': self.output_name_1,
-                'type': 'files',
-                'media_type': 'image/png',
-            }],
-        }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        self.input_name_1 = 'Test_Input_1'
+        self.output_name_1 = 'Test_Output_1'
+
+        inputs = [{'name': self.input_name_1,'mediaTypes': ['text/plain']}]
+        outputs = [{'name': self.output_name_1, 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, outputs_files=outputs)
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
         self.job_1 = job_test_utils.create_job(job_type=self.job_type_1)
 
-        self.input_name_2 = 'Test Input 2'
-        self.output_name_2 = 'Test Output 2'
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_2,
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': self.output_name_2,
-                'type': 'file',
-            }],
-        }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        self.input_name_2 = 'Test_Input_2'
+        self.output_name_2 = 'Test_Output_2'
+
+        inputs = [{'name': self.input_name_2,'mediaTypes':  ['image/png', 'image/tiff']}]
+        outputs = [{'name': self.output_name_2, 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, outputs_files=outputs)
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
         self.job_2 = job_test_utils.create_job(job_type=self.job_type_2)
         self.file_1 = storage_test_utils.create_file(media_type='text/plain')
 
@@ -120,8 +99,8 @@ class TestRecipeDefinitionGetJobTypes(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
-        self.job_type2 = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_seed_job_type()
+        self.job_type2 = job_test_utils.create_seed_job_type()
 
     def test_get_job_types_one(self):
         """Tests getting a job type from the definition."""
@@ -217,8 +196,8 @@ class TestRecipeDefinitionGetJobTypeKeys(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
-        self.job_type2 = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_seed_job_type()
+        self.job_type2 = job_test_utils.create_seed_job_type()
 
     def test_get_job_type_keys_one(self):
         """Tests getting a job type key from the definition."""
@@ -316,8 +295,8 @@ class TestRecipeDefinitionGetJobTypeMap(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
-        self.job_type2 = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_seed_job_type()
+        self.job_type2 = job_test_utils.create_seed_job_type()
 
     def test_successful_new_recipe(self):
         """Tests calling RecipeDefinition.get_job_type_map() successfully."""
@@ -365,8 +344,8 @@ class TestRecipeDefinitionInit(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
-        self.job_type2 = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_seed_job_type()
+        self.job_type2 = job_test_utils.create_seed_job_type()
 
     def test_init_bare_min(self):
         """Tests calling RecipeDefinition constructor with bare minimum JSON."""
@@ -459,8 +438,8 @@ class TestRecipeDefinitionInit(TestCase):
     def test_init_cyclic_dependency(self):
         """Tests calling RecipeDefinition constructor with a cyclic dependency."""
 
-        job_type3 = job_test_utils.create_job_type()
-        job_type4 = job_test_utils.create_job_type()
+        job_type3 = job_test_utils.create_seed_job_type()
+        job_type4 = job_test_utils.create_seed_job_type()
 
         definition = {
             'version': '1.0',
@@ -690,56 +669,29 @@ class TestRecipeDefinitionValidateData(TestCase):
     def setUp(self):
         django.setup()
 
-        self.input_name_1 = 'Test Input 1'
-        self.output_name_1 = 'Test Output 1'
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_1,
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': self.output_name_1,
-                'type': 'files',
-                'media_type': 'image/png',
-            }],
-        }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        self.input_name_1 = 'Test_Input_1'
+        self.output_name_1 = 'Test_Output_1'
 
-        self.input_name_2 = 'Test Input 2'
-        self.output_name_2 = 'Test Output 2'
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_2,
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': self.output_name_2,
-                'type': 'file',
-            }],
-        }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        inputs = [{'name': self.input_name_1, 'mediaTypes': ['text/plain']}]
+        outputs = [{'name': self.output_name_1, 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, inputs_json=[], outputs_files=outputs, outputs_json=[])
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
 
-        self.input_name_3 = 'Test Input 3'
-        self.output_name_3 = 'Test Output 3'
-        interface_3 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_3,
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-        }
-        self.job_type_3 = job_test_utils.create_job_type(interface=interface_3)
+        self.input_name_2 = 'Test_Input_2'
+        self.output_name_2 = 'Test_Output_2'
+
+        inputs = [{'name': self.input_name_2, 'mediaTypes': ['image/png', 'image/tiff']}]
+        outputs = [{'name': self.output_name_2, 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, inputs_json=[], outputs_files=outputs, outputs_json=[])
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
+
+
+        self.input_name_3 = 'Test_Input_3'
+        self.output_name_3 = 'Test_Output_3'
+
+        inputs = [{'name': self.input_name_3, 'mediaTypes': ['text/plain']}]
+        manifest_3 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, inputs_json=[], outputs_files=[], outputs_json=[])
+        self.job_type_3 = job_test_utils.create_seed_job_type(manifest=manifest_3)
 
         self.file_1 = storage_test_utils.create_file(media_type='text/plain')
 
@@ -892,44 +844,21 @@ class TestRecipeDefinitionValidateJobInterfaces(TestCase):
     def setUp(self):
         django.setup()
 
-        self.input_name_1 = 'Test Input 1'
-        self.output_name_1 = 'Test Output 1'
+        self.input_name_1 = 'Test_Input_1'
+        self.output_name_1 = 'Test_Output_1'
 
-        interface_1 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_1,
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': self.output_name_1,
-                'type': 'files',
-                'media_type': 'image/png',
-            }],
-        }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        inputs = [{'name': self.input_name_1, 'mediaTypes': ['text/plain']}]
+        outputs = [{'name': self.output_name_1, 'mediaType': 'image/png', 'pattern': '*_.png'}]
+        manifest_1 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, inputs_json=[], outputs_files=outputs)
+        self.job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest_1)
 
-        self.input_name_2 = 'Test Input 2'
-        self.output_name_2 = 'Test Output 2'
+        self.input_name_2 = 'Test_Input_2'
+        self.output_name_2 = 'Test_Output_2'
 
-        interface_2 = {
-            'version': '1.0',
-            'command': 'my_cmd',
-            'command_arguments': 'args',
-            'input_data': [{
-                'name': self.input_name_2,
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': self.output_name_2,
-                'type': 'file',
-            }],
-        }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        inputs = [{'name': self.input_name_2, 'mediaTypes': ['image/png', 'image/tiff']}]
+        outputs = [{'name': self.output_name_2, 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest_2 = job_test_utils.create_seed_manifest(command='my_cmd args', inputs_files=inputs, inputs_json=[], outputs_files=outputs)
+        self.job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest_2)
 
     def test_invalid_job_type(self):
         """Tests calling RecipeDefinition.validate_job_interfaces() with an invalid job type."""

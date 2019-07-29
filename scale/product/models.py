@@ -51,11 +51,7 @@ class FileAncestryLinkManager(models.Manager):
         job_recipe = Recipe.objects.get_recipe_for_job(job.id)
 
         # See if this job is in a batch
-        from batch.models import BatchJob
-        try:
-            batch_id = BatchJob.objects.get(job_id=job.id).batch_id
-        except BatchJob.DoesNotExist:
-            batch_id = None
+        batch_id = job.batch_id
 
         # Make sure all input file links are still created when no products are generated
         if not child_ids:
@@ -181,10 +177,10 @@ class ProductFileManager(models.GeoManager):
     """Provides additional methods for handling product files
     """
 
-    def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                        job_type_categories=None, job_ids=None, is_operational=None, is_published=None, 
-                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, 
-                        recipe_job=None, batch_ids=None, order=None):
+    def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None,
+                        job_type_names=None, job_ids=None, is_published=None,
+                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None,
+                        recipe_type_ids=None, recipe_job=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
@@ -203,8 +199,6 @@ class ProductFileManager(models.GeoManager):
         :type job_type_categories: list[str]
         :keyword job_ids: Query product files produced by a given job id
         :type job_ids: list[int]
-        :param is_operational: Query product files flagged as operational or R&D only.
-        :type is_operational: bool
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query product files that have/have not been superseded.
@@ -230,11 +224,9 @@ class ProductFileManager(models.GeoManager):
         # Fetch a list of product files
         products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True)
         products = products.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
-        products = products.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
-                                  'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
-                                  'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                  'job_type__manifest', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
+        products = products.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration',
+                                  'job_type__manifest', 'job_type__configuration',
+                                  'recipe__input', 'recipe_type__definition',
                                   'batch__definition')
         products = products.prefetch_related('countries')
 
@@ -258,12 +250,8 @@ class ProductFileManager(models.GeoManager):
             products = products.filter(job_type_id__in=job_type_ids)
         if job_type_names:
             products = products.filter(job_type__name__in=job_type_names)
-        if job_type_categories:
-            products = products.filter(job_type__category__in=job_type_categories)
         if job_ids:
             products = products.filter(job_id__in=job_type_ids)
-        if is_operational is not None:
-            products = products.filter(job_type__is_operational=is_operational)
         if is_published is not None:
             products = products.filter(is_published=is_published)
         if is_superseded is not None:
@@ -289,9 +277,9 @@ class ProductFileManager(models.GeoManager):
 
         return products
 
-    def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                     job_type_categories=None, job_ids=None, is_operational=None, is_published=None,
-                     file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
+    def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None,
+                     job_type_names=None, job_ids=None, is_published=None, file_name=None,
+                     job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
                      batch_ids=None, order=None):
         """Returns a list of product files within the given time range.
 
@@ -305,12 +293,8 @@ class ProductFileManager(models.GeoManager):
         :type job_type_ids: list[int]
         :param job_type_names: Query product files produced by jobs with the given type name.
         :type job_type_names: list[str]
-        :param job_type_categories: Query product files produced by jobs with the given type category.
-        :type job_type_categories: list[str]
         :keyword job_ids: Query product files produced by a given job id
         :type job_ids: list[int]
-        :param is_operational: Query product files flagged as operational or R&D only.
-        :type is_operational: bool
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param file_name: Query product files with the given file name.
@@ -332,13 +316,12 @@ class ProductFileManager(models.GeoManager):
         """
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
-                                    job_type_names=job_type_names, job_type_categories=job_type_categories,
-                                    job_ids=job_ids, is_operational=is_operational, is_published=is_published,
+                                    job_type_names=job_type_names, job_ids=job_ids, is_published=is_published,
                                     is_superseded=False, file_name=file_name, job_output=job_output,
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
 
-    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
+    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None,
                             file_name=None, order=None):
         """Returns a query for the list of sources that produced the given product file ID.
 
@@ -379,44 +362,6 @@ class ProductFileManager(models.GeoManager):
         """
 
         return ScaleFile.objects.all().select_related('workspace').get(pk=product_id, file_type='PRODUCT')
-
-    # TODO: remove when REST API v5 is removed
-    def get_details_v5(self, product_id):
-        """Gets additional details for the given product model based on related model attributes.
-
-        :param product_id: The unique identifier of the product.
-        :type product_id: int
-        :returns: The product with extra related attributes: sources, ancestor/descendant products.
-        :rtype: :class:`storage.models.ScaleFile`
-
-        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
-        """
-
-        # Attempt to fetch the requested product
-        product = ScaleFile.objects.all().select_related('workspace')
-        product = product.get(pk=product_id, file_type='PRODUCT')
-
-        # Attempt to fetch all ancestor files
-        sources = []
-        products = []
-        ancestors = ScaleFile.objects.filter(descendants__descendant_id=product.id)
-        ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
-        ancestors = ancestors.prefetch_related('countries').order_by('created')
-        for ancestor in ancestors:
-            if ancestor.file_type == 'SOURCE':
-                sources.append(ancestor)
-            elif ancestor.file_type == 'PRODUCT':
-                products.append(ancestor)
-        product.sources = sources
-        product.ancestor_products = products
-
-        # Attempt to fetch all descendant products
-        descendants = ScaleFile.objects.filter(ancestors__ancestor_id=product.id)
-        descendants = descendants.select_related('job_type', 'workspace').defer('workspace__json_config')
-        descendants = descendants.prefetch_related('countries').order_by('created')
-        product.descendant_products = descendants
-
-        return product
 
     def populate_source_ancestors(self, products):
         """Populates each of the given products with its source file ancestors in a field called "source_files"
@@ -527,6 +472,7 @@ class ProductFileManager(models.GeoManager):
         input_file_uuids = [f['uuid'] for f in input_files]
 
         # Get property names and values as strings
+        #properties = job_exe.job.get_input_data()
         properties = job_exe.job.get_job_data().get_all_properties()
 
         # Product UUID will be based in part on input data (UUIDs of input files and name/value pairs of input
@@ -536,7 +482,6 @@ class ProductFileManager(models.GeoManager):
 
         # Determine if any input files are non-operational products
         input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
-        input_products_operational = all([f.is_operational for f in input_products])
 
         source_started = job_exe.job.source_started
         source_ended = job_exe.job.source_ended
@@ -562,7 +507,7 @@ class ProductFileManager(models.GeoManager):
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
-            product.is_operational = input_products_operational and job_exe.job.job_type.is_operational
+
             file_name = os.path.basename(entry.local_path)
             file_size = os.path.getsize(entry.local_path)
             product.set_basic_fields(file_name, file_size, entry.media_type)
@@ -594,11 +539,11 @@ class ProductFileManager(models.GeoManager):
                 product.recipe_node = job_recipe.node_name
 
                 # Add batch info to product if available.
-                try:
-                    from batch.models import BatchJob
-                    product.batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
-                except BatchJob.DoesNotExist:
-                    product.batch_id = None
+                
+            if job_exe.batch_id:
+                product.batch_id = job_exe.batch_id
+            elif job_exe.job.batch_id:
+                product.batch_id = job_exe.job.batch_id
 
             # Allow override, if set via side-car metadata, otherwise take derived values from above
             product.source_started = entry.source_started if entry.source_started else source_started

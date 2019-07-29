@@ -14,17 +14,16 @@ from mesoshttp.acs import DCOSServiceAuth
 
 APPLICATION_GROUP = os.getenv('APPLICATION_GROUP', None)
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
-SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
-SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
+LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
+DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 
 
 def dcos_login():
-    # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS EE clusters.
-    servers = os.getenv('MARATHON_SERVERS', 'https://marathon.mesos/marathon,'
-                                            'http://marathon.mesos:8080,https://marathon.mesos:8443,'
-                                            'http://marathon.mesos,https://marathon.mesos').split(',')
+    # Defaults servers for both DCOS 1.10+ CE and EE.
+    servers = os.getenv('MARATHON_SERVERS',
+                        'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
 
     if SERVICE_SECRET:
         print('Attempting token auth to Marathon...')
@@ -37,66 +36,86 @@ def dcos_login():
 
 
 def run(client):
-    es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS')
-    es_lb = os.getenv('SCALE_ELASTICSEARCH_LB', 'true')
-    es_ver = os.getenv('SCALE_ELASTICSEARCH_VERSION', '2.4')
+    silo_admin_password = os.getenv('ADMIN_PASSWORD', 'spicy-pickles17!')
+    silo_hub_org = os.getenv('SILO_HUB_ORG', 'geointseed')
+    silo_url = os.getenv('SILO_URL', '')
 
-    # if SCALE_ELASTICSEARCH_URLS is not set, assume we are running within DCOS and attempt to query Elastic scheduler
-    # Also default es_lb to false in this case
-    if not es_urls or not len(es_urls.strip()):
-        es_urls = get_elasticsearch_urls()
-        es_lb = 'false'
+    blocking_apps = []
 
-    print("ELASTICSEARCH_URLS=" + es_urls)
-    print("ELASTICSEARCH_LB=" + es_lb)
-    print("ELASTICSEARCH_VERSION=" + es_ver)
-    rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
-    log_app_name = '%s-logstash' % FRAMEWORK_NAME
-    db_app_name = '%s-db' % FRAMEWORK_NAME
+    # Determine if elasticsearch should be deployed. If ELASTICSEARCH_URL is unset we need to deploy it
+    es_url = os.getenv('ELASTICSEARCH_URL', '')
+    if not len(es_url):
+        app_name = '%s-elasticsearch' % FRAMEWORK_NAME
+        deploy_elasticsearch(client, app_name)
+        es_url = "http://%s.marathon.l4lb.thisdcos.directory:9200" % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
+    print("ELASTICSEARCH_URL=%s" % (es_url))
 
     # Determine if rabbitmq should be deployed. If SCALE_BROKER_URL is unset we need to deploy it
     broker_url = os.getenv('SCALE_BROKER_URL', '')
     if not len(broker_url):
-        deploy_rabbitmq(client, rabbitmq_app_name)
+        app_name = '%s-rabbitmq' % FRAMEWORK_NAME
+        deploy_rabbitmq(client, app_name)
+        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(app_name)
+        print("BROKER_URL=%s" % broker_url)
+        blocking_apps.append(app_name)
 
     # Determine if db should be deployed.
-    db_host = os.getenv('SCALE_DB_HOST', '')
-    db_port = os.getenv('SCALE_DB_PORT', '')
-    if not len(db_host):
-        deploy_database(client, db_app_name)
+    db_url = os.getenv('DATABASE_URL', '')
+    if not len(db_url):
+        app_name = '%s-db' % FRAMEWORK_NAME
+        deploy_database(client, app_name)
+        db_url = "postgis://scale:scale@%s.marathon.l4lb.thisdcos.directory:5432/scale" % subdomain_gen(app_name)
+        print("DATABASE_URL=%s" % db_url)
+        blocking_apps.append(app_name)
 
-    blocking_apps = []
-
-    # Determine if Logstash should be deployed.
-    if not len(SCALE_LOGGING_ADDRESS):
-        deploy_logstash(client, log_app_name, es_urls, es_lb)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % subdomain_gen(log_app_name))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % subdomain_gen(log_app_name))
-        blocking_apps.append(log_app_name)
-
-    # Determine if RabbitMQ should be deployed.
-    if not len(broker_url):
-        broker_url = 'amqp://guest:guest@%s.marathon.l4lb.thisdcos.directory:5672//' % subdomain_gen(rabbitmq_app_name)
-        print("BROKER_URL=%s" % broker_url)
-        blocking_apps.append(rabbitmq_app_name)
-
-    # Determine if Postgres should be deployed.
-    if not len(db_host):
-        db_port = '5432'
-        db_host = "%s.marathon.l4lb.thisdcos.directory" % subdomain_gen(db_app_name)
-        print("DB_HOST=%s" % db_host)
-        print("DB_PORT=%s" % db_port)
-        blocking_apps.append(db_app_name)
+    # Determine if fluentd should be deployed.
+    if not len(LOGGING_ADDRESS):
+        app_name = '%s-fluentd' % FRAMEWORK_NAME
+        deploy_fluentd(client, app_name, es_url)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:24220" % subdomain_gen(app_name))
+        blocking_apps.append(app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver)
-        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (subdomain_gen(app_name), webserver_port))
+        deploy_webserver(client, app_name, es_url, db_url, broker_url)
+        webserver_url = 'http://%s.marathon.l4lb.thisdcos.directory:80/' % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
+
+    # Determine if Web Server should be deployed.
+    scan_silo = False
+    if not len(silo_url):
+        app_name = '%s-silo' % FRAMEWORK_NAME
+        deploy_silo(client, app_name, db_url)
+        silo_url = 'http://%s.marathon.l4lb.thisdcos.directory:9000/' % subdomain_gen(app_name)
+        blocking_apps.append(app_name)
+        scan_silo = True
+
+    # Determine if UI should be deployed.
+    if DEPLOY_UI.lower() == 'true':
+        app_name = '%s-ui' % FRAMEWORK_NAME
+        deploy_ui(client, app_name, webserver_url, silo_url)
+        print("WEBSERVER_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:80" % (subdomain_gen(app_name)))
 
     # Wait for all needed apps to be healthy
     for app_name in blocking_apps:
         get_host_port_from_healthy_app(client, app_name, 0)
+
+    # If we deployed Silo, attempt to configure a scan.
+    if scan_silo:
+        # Grab access token to Silo
+        result = requests.post('{}login'.format(silo_url),
+                               json={'username': 'admin', 'password': silo_admin_password})
+        token = 'token {}'.format(result.json()['token'])
+        # Add the registry org
+        requests.post('{}registries/add'.format(silo_url),
+                      json={'name': silo_hub_org, 'url': 'https://hub.docker.com', 'org': silo_hub_org},
+                      headers={'Authorization': token})
+        # Trigger scan of registry org
+        requests.get('{}registries/scan'.format(silo_url),
+                     headers={'Authorization': token})
 
 
 def subdomain_gen(app_name):
@@ -136,7 +155,11 @@ def deploy_marathon_app(client, marathon_json, sleep_secs=10, retries=3):
     attempt = 0
     while attempt < retries:
         try:
-            response = client.create_app(app_id, marathon_app)
+            try:
+                client.get_app(app_id)
+                response = client.update_app(app_id, marathon_app)
+            except NotFoundError:
+                response = client.create_app(app_id, marathon_app)
             print(response, file=sys.stderr)
             print('Deployment succeeded.')
             break
@@ -217,10 +240,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver):
-    # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
-    delete_marathon_app(client, app_name)
-
+def deploy_webserver(client, app_name, es_url, db_url, broker_url):
     # Load marathon template file
     marathon = initialize_app_template('webserver', app_name,
                                        os.getenv('MARATHON_APP_DOCKER_IMAGE'))
@@ -245,10 +265,10 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
     env_map = {
         'SCALE_ALLOWED_HOSTS': 'SCALE_ALLOWED_HOSTS',
         'SCALE_SECRET_KEY': 'SCALE_SECRET_KEY',
-        'SCALE_DB_NAME': 'SCALE_DB_NAME',
-        'SCALE_DB_PASS': 'SCALE_DB_PASS',
-        'SCALE_DB_USER': 'SCALE_DB_USER',
-        'SCALE_QUEUE_NAME': 'SCALE_QUEUE_NAME'
+        'SCALE_QUEUE_NAME': 'SCALE_QUEUE_NAME',
+        'GEOAXIS_HOST': 'GEOAXIS_HOST',
+        'GEOAXIS_KEY': 'GEOAXIS_KEY',
+        'GEOAXIS_SECRET': 'GEOAXIS_SECRET'
     }
     apply_set_envs(marathon, env_map)
 
@@ -257,14 +277,11 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
         'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
         'SCALE_BROKER_URL': broker_url,
-        'SCALE_DB_HOST': db_host,
-        'SCALE_DB_PORT': str(db_port),
+        'DATABASE_URL': db_url,
         'SCALE_STATIC_URL': '/service/%s/static/' % FRAMEWORK_NAME,
         'SCALE_WEBSERVER_CPU': str(cpu),
         'SCALE_WEBSERVER_MEMORY': str(memory),
-        'SCALE_ELASTICSEARCH_URLS': es_urls,
-        'SCALE_ELASTICSEARCH_LB': es_lb,
-        'SCALE_ELASTICSEARCH_VERSION': es_ver,
+        'ELASTICSEARCH_URL': es_url,
         'SECRETS_SSL_WARNINGS': str(secrets_ssl_warn),
         'SECRETS_TOKEN': str(secrets_token),
         'SECRETS_URL': str(secrets_url),
@@ -274,14 +291,53 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
     for env in arbitrary_env:
         marathon['env'][env] = arbitrary_env[env]
 
-    marathon['labels']['DCOS_SERVICE_NAME'] = FRAMEWORK_NAME
-    marathon['labels']['HAPROXY_0_VHOST'] = vhost
+    marathon['labels']['HAPROXY_0_VHOST'] = 'api-' + vhost
 
     deploy_marathon_app(client, marathon)
 
-    webserver_port = get_host_port_from_healthy_app(client, app_name, 0)
 
-    return webserver_port
+def deploy_ui(client, app_name, webserver_url, silo_url):
+    ui_docker_img_default = build_image_from_suffix('ui')
+
+    # Load marathon template file
+    marathon = initialize_app_template('ui', app_name, os.getenv(
+        'UI_DOCKER_IMAGE', ui_docker_img_default))
+
+    arbitrary_env = {
+        'API_URL': webserver_url,
+        'SILO_URL': silo_url,
+        'CONTEXTS': '/service/%s' % FRAMEWORK_NAME
+    }
+    # For all environment variable that are set add to marathon json.
+    for env in arbitrary_env:
+        marathon['env'][env] = arbitrary_env[env]
+
+    marathon['labels']['DCOS_SERVICE_NAME'] = FRAMEWORK_NAME
+    marathon['labels']['HAPROXY_0_VHOST'] = os.getenv('SCALE_VHOST')
+
+    deploy_marathon_app(client, marathon)
+
+
+def deploy_silo(client, app_name, db_url):
+    if not check_app_exists(client, app_name):
+        # Load marathon template file
+        marathon = initialize_app_template('silo', app_name,
+                                           os.getenv('SILO_DOCKER_IMAGE'))
+
+        env_map = {
+            'ADMIN_PASSWORD': 'SILO_ADMIN_PASSWORD'
+        }
+
+        apply_set_envs(marathon, env_map)
+
+        arbitrary_env = {
+            'DATABASE_URL': db_url.replace('postgis', 'postgres') + '?sslmode=disable'
+        }
+        # For all environment variable that are set add to marathon json.
+        for env in arbitrary_env:
+            marathon['env'][env] = arbitrary_env[env]
+
+        deploy_marathon_app(client, marathon)
 
 
 def deploy_database(client, app_name):
@@ -297,25 +353,14 @@ def deploy_database(client, app_name):
             marathon['container']['volumes'] = [
                 {"containerPath": "/var/lib/pgsql/data", "hostPath": DB_HOST_VOL, "mode": "RW"}]
 
-        env_map = {
-            'SCALE_DB_NAME': 'POSTGRES_DB',
-            'SCALE_DB_USER': 'POSTGRES_USER',
-            'SCALE_DB_PASS': 'POSTGRES_PASSWORD'
-        }
+        env_map = {}
         apply_set_envs(marathon, env_map)
 
         deploy_marathon_app(client, marathon)
 
 
-def get_elasticsearch_urls():
-    response = requests.get('http://elasticsearch.marathon.mesos:31105/v1/tasks')
-    endpoints = ['http://%s' % x['http_address'] for x in json.loads(response.text)]
-    es_urls = ','.join(endpoints)
-    return es_urls
-
-
 def deploy_rabbitmq(client, app_name):
-    # Check if scale-db is already running
+    # Check if rabbitmq is already running
     if not check_app_exists(client, app_name):
         # Load marathon template file
         marathon = initialize_app_template('rabbitmq',
@@ -325,34 +370,59 @@ def deploy_rabbitmq(client, app_name):
         deploy_marathon_app(client, marathon)
 
 
-def deploy_logstash(client, app_name, es_urls, es_lb):
-    # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
-    delete_marathon_app(client, app_name)
+def deploy_elasticsearch(client, app_name):
+    # Check if elasticsearch is already running
+    if not check_app_exists(client, app_name):
+        # Load marathon template file
+        marathon = initialize_app_template('elasticsearch',
+                                           app_name,
+                                           os.getenv('ELASTICSEARCH_DOCKER_IMAGE'))
 
-    #default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-logstash:tag
+        deploy_marathon_app(client, marathon)
+
+
+def build_image_from_suffix(suffix):
+    # default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-fluentd:tag
     marathon_img_default = os.getenv('MARATHON_APP_DOCKER_IMAGE')
-    if marathon_img_default.endswith(':'):
-        logstash_docker_img_default = marathon_img_default.replace(':', '-logstash:')
-    else:
-        logstash_docker_img_default = marathon_img_default + '-logstash'
+
+    docker_img_default = marathon_img_default + '-' + suffix
+    if ':' in marathon_img_default:
+        # Grab parts to ensure we replace on tag not port
+        parts = marathon_img_default.split('/')
+        last_index = len(parts) - 1
+        if ':' in parts[last_index]:
+            replacement = parts[last_index].replace(':', '-' + suffix + ':')
+            docker_img_default = marathon_img_default.replace(parts[last_index], replacement)
+
+    return docker_img_default
+
+
+def deploy_fluentd(client, app_name, es_url):
+    """
+    Logic must handle 3 deployment cases when FLUENTD_DOCKER_IMAGE is unset:
+
+    localhost:5000/geoint/scale:5.9.2
+    localhost:5000/geoint/scale
+    geoint/scale:5.9.2
+
+    The most problematic is the 2nd case as we previously were improperly identifying
+    the port colon as the tag colon.
+    """
+    fluentd_docker_img_default = build_image_from_suffix('fluentd')
 
     # Load marathon template file
-    marathon = initialize_app_template('logstash', app_name, os.getenv(
-        'LOGSTASH_DOCKER_IMAGE', logstash_docker_img_default))
+    marathon = initialize_app_template('fluentd', app_name, os.getenv(
+        'FLUENTD_DOCKER_IMAGE', fluentd_docker_img_default))
 
     arbitrary_env = {
-        'ELASTICSEARCH_LB': es_lb,
-        'ELASTICSEARCH_URLS': es_urls,
+        'ELASTICSEARCH_URL': es_url,
     }
     # For all environment variable that are set add to marathon json.
     for env in arbitrary_env:
         marathon['env'][env] = arbitrary_env[env]
 
     env_map = {
-
-        'LOGSTASH_WATCHDOG_SLEEP_TIME': 'SLEEP_TIME',
-        'LOGSTASH_TEMPLATE_URI': 'TEMPLATE_URI',
-        'LOGSTASH_DEBUG': 'LOGSTASH_DEBUG'
+        'FLUENTD_TEMPLATE_URI': 'TEMPLATE_URI'
     }
     apply_set_envs(marathon, env_map)
     deploy_marathon_app(client, marathon)

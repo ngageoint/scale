@@ -25,7 +25,6 @@ class RecipeInstance(object):
         :param recipe_nodes: The list of RecipeNode models with related fields populated
         :type recipe_nodes: list
         """
-
         self._definition = definition
         self.recipe_model = recipe_model
         self.graph = {}  # {Name: Node}
@@ -47,7 +46,7 @@ class RecipeInstance(object):
                 node = DummyNodeInstance(node_definition)
             self.graph[node.name] = node
             for parent_name in node_definition.parents.keys():
-                node.add_dependency(self.graph[parent_name])
+                node.add_dependency(self.graph[parent_name], node_definition.parental_acceptance[parent_name])
 
     def get_jobs_to_update(self):
         """Returns the jobs within this recipe that should be updated to a new status (either BLOCKED or PENDING)

@@ -32,6 +32,7 @@ Response: 200 OK
                 "job_type_name": "job-type",
                 "category": "SYSTEM",
                 "is_builtin": true,
+                "should_be_retried": true,
                 "created": "2015-03-11T00:00:00Z",
                 "last_modified": "2015-03-11T00:00:00Z"
             }
@@ -51,6 +52,14 @@ Response: 200 OK
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | page_size          | Integer           | Optional | The size of the page to use for pagination of results.                   |
 |                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                        |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                                    |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.            |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | is_builtin         | Boolean           | Optional | Return only errors matching the is_builtin flag                          |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
@@ -95,6 +104,12 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .is_builtin        | Boolean           | Whether the error was loaded during the installation process.                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
+| .should_be_retried | Boolean           | Whether jobs with this error should be retried automatically. The following builtin |
+|                    |                   | errors are retried automatically: Unknown, Database, Database Operation, Filesystem |
+|                    |                   | I/O, Ingest Timeout, Task Launch, Docker Launch, Docker Terminated, Node Lost,      |
+|                    |                   | Resource Starvation, Launch Timeout, Pull-task Timeout, Pre-task Timeout,           |
+|                    |                   | Post-task Timeout, Timeout (System), Docker Pull Failed, Scheduler Restarted        |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                                  |
@@ -121,6 +136,7 @@ Response: 200 OK
         "job_type_name": "job-type",
         "category": "SYSTEM",
         "is_builtin": true,
+        "should_be_retried": true,
         "created": "2015-03-11T00:00:00Z",
         "last_modified": "2015-03-11T00:00:00Z"
     }
@@ -154,6 +170,12 @@ Response: 200 OK
 | category           | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | is_builtin         | Boolean           | Whether the error was loaded during the installation process.                       |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
+| should_be_retried  | Boolean           | Whether jobs with this error should be retried automatically. The following builtin |
+|                    |                   | errors are retried automatically: Unknown, Database, Database Operation, Filesystem |
+|                    |                   | I/O, Ingest Timeout, Task Launch, Docker Launch, Docker Terminated, Node Lost,      |
+|                    |                   | Resource Starvation, Launch Timeout, Pull-task Timeout, Pre-task Timeout,           |
+|                    |                   | Post-task Timeout, Timeout (System), Docker Pull Failed, Scheduler Restarted        |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+

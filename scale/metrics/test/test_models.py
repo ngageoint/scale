@@ -403,7 +403,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_stats(self):
         """Tests calculating individual statistics for a metrics entry."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         task_results_dict = {'version': '1.0',
                              'tasks': [{'task_id': '1', 'type': 'pre', 'was_launched': True,
@@ -419,12 +419,6 @@ class TestMetricsJobType(TestCase):
             job=job1, status=job1.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=utc),
-            # pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
-            # pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
-            # job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
-            # job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
-            # post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
-            # post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
             task_results=TaskResults(task_results_dict)
         )
@@ -443,12 +437,6 @@ class TestMetricsJobType(TestCase):
             job=job2, status=job2.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=utc),
-            # pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
-            # pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
-            # job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
-            # job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
-            # post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
-            # post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=utc),
             task_results=TaskResults(task_results_dict)
         )
@@ -519,7 +507,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_stats_partial(self):
         """Tests individual statistics are null when information is unavailable."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
@@ -571,7 +559,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_negative_times(self):
         """Tests calculating times when machine clocks are out of sync."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job, status=job.status,
@@ -599,7 +587,7 @@ class TestMetricsJobType(TestCase):
 
     def test_get_metrics_type_choices(self):
         """Tests getting the metrics type with choices."""
-        job_test_utils.create_job_type()
+        job_test_utils.create_seed_job_type()
         metrics_type = MetricsJobType.objects.get_metrics_type(include_choices=True)
 
         self.assertEqual(metrics_type.name, 'job-types')
@@ -615,7 +603,7 @@ class TestMetricsJobType(TestCase):
 
     def test_get_plot_data_filtered(self):
         """Tests getting the metrics plot data with filters."""
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 1), completed_count=1)
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 20), completed_count=1)
         metrics_test_utils.create_job_type(occurred=datetime.date(2015, 1, 1), completed_count=1)

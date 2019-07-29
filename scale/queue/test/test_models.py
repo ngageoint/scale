@@ -8,8 +8,8 @@ from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
 from mock import patch
 
+import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
-import product.test.utils as product_test_utils
 import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
@@ -18,16 +18,16 @@ import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
 from data.data.data import Data
 from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.value import FileValue
+from data.data.json.data_v6 import DataV6
 from job.configuration.data.job_data import JobData
-
 from job.data.job_data import JobData as JobDataV6
-from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
-from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
-from recipe.models import Recipe, RecipeNode
-from data.data.json.data_v6 import DataV6
+from recipe.definition.definition import RecipeDefinition
+from recipe.models import Recipe
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
+from recipe.exceptions import InactiveRecipeType
 
 
 class TestJobLoadManager(TestCase):
@@ -46,7 +46,7 @@ class TestJobLoadManager(TestCase):
     def test_calculate_status(self):
         """Tests calculating job load filtering by status."""
 
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type, status='PENDING')
         job_test_utils.create_job(job_type=job_type, status='BLOCKED')
         job_test_utils.create_job(job_type=job_type, status='QUEUED')
@@ -69,14 +69,14 @@ class TestJobLoadManager(TestCase):
     def test_calculate_job_type(self):
         """Tests calculating job load grouping by job type."""
 
-        job_type1 = job_test_utils.create_job_type()
+        job_type1 = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type1, status='PENDING')
 
-        job_type2 = job_test_utils.create_job_type()
+        job_type2 = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type2, status='QUEUED')
         job_test_utils.create_job(job_type=job_type2, status='QUEUED')
 
-        job_type3 = job_test_utils.create_job_type()
+        job_type3 = job_test_utils.create_seed_job_type()
         job_test_utils.create_job(job_type=job_type3, status='RUNNING')
         job_test_utils.create_job(job_type=job_type3, status='RUNNING')
         job_test_utils.create_job(job_type=job_type3, status='RUNNING')
@@ -149,164 +149,14 @@ class TestQueueManager(TransactionTestCase):
                 self.assertEqual(queue.id, queue_1.id)
 
 
-class TestQueueManagerHandleJobCancellation(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-    def test_successful_with_pending_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a pending job."""
-
-        # Create the job
-        job = job_test_utils.create_job(status='PENDING')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_successful_with_blocked_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job."""
-
-        # Create the job
-        job = job_test_utils.create_job(status='BLOCKED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_successful_with_queued_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a queued job."""
-
-        # Queue the job
-        job = job_test_utils.create_job(input=JobData().get_dict(), num_exes=0, status='PENDING')
-        Queue.objects.queue_jobs([job])
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled and queue model is marked canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-        self.assertTrue(Queue.objects.get(job_id=job.id).is_canceled)
-
-    def test_successful_with_running_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a running job."""
-
-        # Create the running job
-        job = job_test_utils.create_job(status='RUNNING')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_successful_with_failed_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() successfully with a failed job."""
-
-        # Create the failed job
-        job = job_test_utils.create_job(status='FAILED')
-        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
-        time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, exe_num=2, status='FAILED')
-        time.sleep(0.001)
-        job_exe_3 = job_test_utils.create_job_exe(job=job, status='FAILED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-    def test_exception_with_completed_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() with a completed job."""
-
-        # Create the completed job
-        job = job_test_utils.create_job(status='COMPLETED')
-        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
-        time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, exe_num=2, status='COMPLETED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is still completed
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'COMPLETED')
-
-    def test_exception_with_canceled_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() with a canceled job."""
-
-        # Create the canceled job
-        job = job_test_utils.create_job(status='CANCELED')
-        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
-        time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, exe_num=2, status='CANCELED')
-
-        # Call method to test
-        Queue.objects.handle_job_cancellation(job.id, now())
-
-        # Make sure job is still canceled
-        final_job = Job.objects.get(pk=job.id)
-        self.assertEqual(final_job.status, 'CANCELED')
-
-
 class TestQueueManagerQueueNewJob(TransactionTestCase):
 
     def setUp(self):
         django.setup()
 
-    def test_successful_legacy(self):
-        """Tests calling QueueManager.queue_new_job() successfully with a legacy job type"""
-
-        workspace = storage_test_utils.create_workspace()
-        source_file = source_test_utils.create_source(workspace=workspace)
-        event = trigger_test_utils.create_trigger_event()
-
-        interface = {
-            'version': '1.0',
-            'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'input_a',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]
-        }
-        job_type = job_test_utils.create_job_type(interface=interface)
-
-        data_dict = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'input_a',
-                'file_id': source_file.id,
-            }],
-            'output_data': [{
-                'name': 'output_a',
-                'workspace_id': workspace.id
-            }]
-        }
-        data = JobData(data_dict)
-
-        job = Queue.objects.queue_new_job(job_type, data, event)
-        self.assertEqual(job.status, 'QUEUED')
-
     @patch('queue.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
-        """Tests calling QueueManager.queue_new_job() successfully with a Seed job type"""
+        """Tests calling QueueManager.queue_new_job_v6() successfully with a Seed job type"""
 
         workspace = storage_test_utils.create_workspace()
         source_file = source_test_utils.create_source(workspace=workspace)
@@ -357,7 +207,7 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
 
 class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
-    fixtures = ['basic_system_job_types.json']
+    fixtures = ['basic_system_job_types.json', 'ingest_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -367,98 +217,216 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.event = trigger_test_utils.create_trigger_event()
 
         interface_1 = {
-            'version': '1.0',
             'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]
+            'inputs': {
+                'files': [{
+                    'name': 'Test_Input_1',
+                    'mediaTypes': ['text/plain'],
+                }]
+            },
+            'outputs': {
+                'files': [{
+                    'name': 'Test_Output_1',
+                    'pattern': 'outfile*.png',
+                    'mediaType': 'image/png',
+                }]
+            }
         }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        self.job_type_1 = job_test_utils.create_seed_job_type(interface=interface_1)
 
         interface_2 = {
-            'version': '1.0',
             'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]
+            'inputs': {
+                'files': [{
+                    'name': 'Test_Input_2',
+                    'mediaTypes': ['image/png', 'image/tiff'],
+                }]
+            },
+            'outputs': {
+                'files': [{
+                    'name': 'Test_Output_2',
+                    'pattern': 'outfile*.png',
+                    'mediaType': 'image/png'
+                }]
+            }
         }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        self.job_type_2 = job_test_utils.create_seed_job_type(interface=interface_2)
 
         definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
                 },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': self.job_type_2.name,
-                    'version': self.job_type_2.version,
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
+        }
+        definition = {
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
                 },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': 'Test Output 1',
-                        'input': 'Test Input 2',
-                    }]
-                }]
-            }]
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
+        }
+        definition = {
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
+                },
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
+        }
+        definition = {
+            'version': '6',
+            'input': {'files': [{'name': 'Recipe_Input', 'media_types': ['text/plain']}]},
+            'nodes': {
+                'job-1': {
+                    'dependencies': [],
+                    'input': { 'Test_Input_1': {'type': 'recipe', 'input': 'Recipe_Input'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_1.name,
+                        'job_type_version': self.job_type_1.version,
+                        'job_type_revision': self.job_type_1.revision_num
+                    }
+                },
+                'job-2': {
+                    'dependencies': [{'name': 'job-1'}],
+                    'input': { 'Test_Input_2': {'type': 'dependency', 'node': 'job-1', 'output': 'Test_Output_1'}},
+                    'node_type': {
+                        'node_type': 'job',
+                        'job_type_name': self.job_type_2.name,
+                        'job_type_version': self.job_type_2.version,
+                        'job_type_revision': self.job_type_2.revision_num
+                    }
+                }
+            }
         }
 
         recipe_definition = RecipeDefinition(definition)
-        recipe_definition.validate_job_interfaces()
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
 
-        data = {
+        workspace = storage_test_utils.create_workspace()
+        strike_source_file = source_test_utils.create_source(workspace=workspace)
+        scan_source_file = source_test_utils.create_source(workspace=workspace)
+
+        data_dict = {
             'version': '1.0',
             'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': source_file.id,
+                'name': 'INPUT_IMAGE',
+                'file_id': strike_source_file.id,
             }],
-            'workspace_id': workspace.id,
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
         }
-        self.data = LegacyRecipeData(data)
+        self.data = JobDataV6(data_dict)
 
     @patch('queue.models.CommandMessageManager')
     def test_successful(self, mock_msg_mgr):
         workspace = storage_test_utils.create_workspace()
-        source_file = source_test_utils.create_source(workspace=workspace)
+        strike_source_file = source_test_utils.create_source(workspace=workspace)
+        scan_source_file = source_test_utils.create_source(workspace=workspace)
         event = trigger_test_utils.create_trigger_event()
         recipetype1 = recipe_test_utils.create_recipe_type_v6()
- 
+
+        data = Data()
+        data.add_value(FileValue('input_a', [123]))
+
+        config_dict = {'version': '7',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
+
+        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data, event, recipe_config=config)
+        self.assertDictEqual(created_recipe.configuration, config_dict)
+
+    @patch('queue.models.CommandMessageManager')
+    def test_inactive(self, mock_msg_mgr):
+        workspace = storage_test_utils.create_workspace()
+        event = trigger_test_utils.create_trigger_event()
+        recipetype1 = recipe_test_utils.create_recipe_type_v6(is_active=False)
+
+        data = Data()
+        data.add_value(FileValue('input_a', [123]))
+
+        config_dict = {'version': '6',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
+
+        self.assertRaises(InactiveRecipeType, Queue.objects.queue_new_recipe_v6, recipetype1, data, event, recipe_config=config)
+
+    @patch('queue.models.CommandMessageManager')
+    def test_successful_ingest(self, mock_msg_mgr):
+        workspace = storage_test_utils.create_workspace()
+        strike_source_file = source_test_utils.create_source(workspace=workspace)
+        strike_event = ingest_test_utils.create_strike_ingest_event(source_file=strike_source_file)
+        scan_source_file = source_test_utils.create_source(workspace=workspace)
+        scan_event = ingest_test_utils.create_scan_ingest_event(source_file=scan_source_file)
+
+        recipetype1 = recipe_test_utils.create_recipe_type_v6()
         data_dict = {
             'version': '1.0',
             'input_data': [{
-                'name': 'input_a',
-                'file_id': source_file.id,
+                'name': 'INPUT_IMAGE',
+                'file_id': strike_source_file.id,
             }],
             'output_data': [{
                 'name': 'output_a',
@@ -467,37 +435,30 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         data = JobDataV6(data_dict)
 
-        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event)
+        config_dict = {'version': '7',
+                       'output_workspaces': {'default': workspace.name},
+                       'priority': 999}
+        config = RecipeConfigurationV6(config_dict).get_configuration()
 
-    def test_successful_legacy(self):
-        """Tests calling QueueManager.queue_new_recipe() successfully."""
+        created_strike_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, strike_event, recipe_config=config)
 
-        recipe = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        self.assertDictEqual(created_strike_recipe.configuration, config_dict)
 
-        # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 1')
-        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
-        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_IMAGE',
+                'file_id': scan_source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobDataV6(data_dict)
+        created_scan_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, None, scan_event, recipe_config=config)
 
-        recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 2')
-        self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
-        self.assertEqual(recipe_job_2.job.status, 'PENDING')
-
-        recipe = Recipe.objects.get(pk=recipe.id)
-        self.assertIsNone(recipe.completed)
-
-    def test_successful_priority(self):
-        """Tests calling QueueManager.queue_new_recipe() successfully with an override priority."""
-
-        recipe = Queue.objects.queue_new_recipe(recipe_type=self.recipe_type, data=self.data, event=self.event,
-                                                priority=1111)
-
-        # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 1')
-        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
-        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
-        self.assertEqual(recipe_job_1.job.priority, 1111)
-
+        self.assertDictEqual(created_scan_recipe.configuration, config_dict)
 
 class TestQueueManagerRequeueJobs(TransactionTestCase):
 
@@ -506,17 +467,21 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
 
         data_dict = convert_data_to_v6_json(Data()).get_dict()
         self.new_priority = 200
+        self.standalone_queued_job = job_test_utils.create_job(status='QUEUED', input=data_dict, num_exes=3,
+                                                               priority=100)
+        Queue.objects.queue_jobs([self.standalone_queued_job], requeue=True)
         self.standalone_failed_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=3,
                                                                priority=100)
+
         self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=1)
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
                                                                  priority=100)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED', input=data_dict,)
-        Job.objects.supersede_jobs_old([self.standalone_superseded_job], now())
+        Job.objects.supersede_jobs([self.standalone_superseded_job.id], now())
 
-        # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
-        job_type_a_1 = job_test_utils.create_job_type()
-        job_type_a_2 = job_test_utils.create_job_type()
+        # Create recipe for re-queueing a job that should now be PENDING (and its dependencies)
+        job_type_a_1 = job_test_utils.create_seed_job_type()
+        job_type_a_2 = job_test_utils.create_seed_job_type()
         definition_a = {
             'version': '1.0',
             'input_data': [],
@@ -550,10 +515,10 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
 
-        # Create recipe for re-queing a job that should now be BLOCKED (and its dependencies)
-        job_type_b_1 = job_test_utils.create_job_type()
-        job_type_b_2 = job_test_utils.create_job_type()
-        job_type_b_3 = job_test_utils.create_job_type()
+        # Create recipe for re-queueing a job that should now be BLOCKED (and its dependencies)
+        job_type_b_1 = job_test_utils.create_seed_job_type()
+        job_type_b_2 = job_test_utils.create_seed_job_type()
+        job_type_b_3 = job_test_utils.create_seed_job_type()
         definition_b = {
             'version': '1.0',
             'input_data': [],
@@ -601,12 +566,26 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
 
         # Job IDs to re-queue
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
-                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id]
+                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id,
+                        self.standalone_queued_job.id]
 
-    def test_successful(self):
+
+    @patch('queue.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
-        Queue.objects.requeue_jobs(self.job_ids, self.new_priority)
+        status = Queue.objects.get_queue_status()
+        self.assertEqual(status[0].count, 1)
+
+        from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
+        messages = []
+        messages.append(create_requeue_jobs_bulk_message(job_ids=self.job_ids))
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                self.fail('Requeue failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
 
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')
@@ -635,3 +614,13 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.assertEqual(job_b_2.status, 'BLOCKED')
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
+
+        # check queue status
+        status = Queue.objects.get_queue_status()
+        sum = 0
+        for s in status:
+            sum += s.count
+        self.assertEqual(sum, 5)
+
+        canceled = Queue.objects.filter(is_canceled=True)
+        self.assertEqual(len(canceled), 1)

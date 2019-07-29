@@ -152,7 +152,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/file_list'
   /files/{id}/:
@@ -170,7 +170,7 @@ paths:
         '200':
           description: 200 response
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/file_details'
   /files/purge-source/:
@@ -178,14 +178,13 @@ paths:
       operationId: _rest_v6_purge_source
       summary: Purge Source File
       description: Removes all records related to the given source file. This includes records for the
-       following models - BatchJob, BatchRecipe, FileAncestryLink, Ingest, Job, JobExecution,
-       JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue, Recipe, RecipeInputFile, RecipeNode,
-       ScaleFile, and TaskUpdate. **This will also delete any product files from their respective
-       workspace.**  
+       following models - FileAncestryLink, Ingest, Job, JobExecution, JobExecutionEnd, 
+       JobExecutionOutput, JobInputFile, Queue, Recipe, RecipeInputFile, RecipeNode, ScaleFile, and 
+       TaskUpdate. **This will also delete any product files from their respective workspace.**
       requestBody:
         required: true
         content:
-          application/json: 
+          application/json:
             schema:
               title: Purge File Request
               type: object
@@ -208,7 +207,7 @@ components:
       properties:
         count:
           type: integer
-          description: The total number of results that match the query parameters 
+          description: The total number of results that match the query parameters
           example: 10
         next:
           type: string
@@ -232,7 +231,7 @@ components:
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         workspace:
           $ref: './workspace.yml#/components/schemas/workspace_base'
@@ -250,13 +249,13 @@ components:
           example: application/vnd.google-earth.kml+xml
         file_size:
           type: integer
-          description: The size of the file in bytes.  
+          description: The size of the file in bytes.
           example: 1234
-        data_type:
+        data_type_tags:
           type: array
           style: simple
           items:
-            type: string  
+            type: string
           description: A list of string data type "tags" for the file.
         is_deleted:
           type: boolean
@@ -299,7 +298,7 @@ components:
           type: array
           style: simple
           items:
-            type: string  
+            type: string
           description: A list of zero or more strings with the ISO3 country codes for countries
             contained in the geographic boundary of this file.
         last_modified:
@@ -310,12 +309,12 @@ components:
         source_started:
           type: string
           format: date-time
-          description: When collection of the underlying source file started. 
+          description: When collection of the underlying source file started.
           example: 2015-09-10T15:24:53.987Z
         source_ended:
           type: string
           format: date-time
-          description: When collection of the underlying source file ended. 
+          description: When collection of the underlying source file ended.
           example: 2015-09-10T15:24:53.987Z
         source_sensor_class:
           type: string
@@ -340,7 +339,7 @@ components:
           example: 2015-09-10T15:24:53.987Z
         job_output:
           type: string
-          description: The name of the output from the job related to this file. 
+          description: The name of the output from the job related to this file.
           example: output_name_1
         job_type:
           $ref: './job_type.yml#/components/schemas/job_type'
@@ -348,7 +347,7 @@ components:
           $ref: './recipe.yml#/components/schemas/recipe'
         recipe_node:
           type: string
-          description: The recipe node that produced this file. 
+          description: The recipe node that produced this file.
           example: kml-footprint
         recipe_type:
           $ref: './recipe_type.yml#/components/schemas/recipe_type'
@@ -365,16 +364,16 @@ components:
           example: 2015-09-10T15:24:53.987Z
       required:
       - id
-      
+
     file_details:
       allOf:
         - ref: '#/components/schemas/file'
         - title: File Details
         - type: object
-          properties:      
+          properties:
             meta_data:
               $ref: '#/components/schemas/metadata'
-            
+
     metadata:
       title: Metadata
       type: object
@@ -396,13 +395,13 @@ components:
           propertyName: type
           mapping:
             Geometry: '#/definitions/Geometry'
-  		      Point2D: '#/definitions/Point2D'
+            Point2D: '#/definitions/Point2D'
             Point: '#/definitions/Point'
             LineString: '#/definitions/LineString'
-  		      Polygon: '#/definitions/Polygon'
+            Polygon: '#/definitions/Polygon'
             MultiPoint: '#/definitions/MultiPoint'
             LineString: '#/definitions/LineString'
-  		      MultiLineString: '#/definitions/MultiLineString'
+            MultiLineString: '#/definitions/MultiLineString'
             MultiPolygon: '#/definitions/MultiPolygon'
             GeometryCollection: '#/definitions/GeometryCollection'
             Feature: '#/definitions/Feature'
@@ -444,14 +443,14 @@ definitions:
         maxItems: 4
         items:
           type: number
-  
+
   Point2D:
     type: array
     maxItems: 2
     minItems: 2
     items:
       type: number
-  
+
   Point:
     type: object
     description: GeoJSon geometry
@@ -462,7 +461,7 @@ definitions:
       - properties:
           coordinates:
             $ref: '#/definitions/Point2D'
-    
+
   LineString:
     type: object
     description: GeoJSon geometry
@@ -491,7 +490,7 @@ definitions:
               type: array
               items:
                 $ref: '#/definitions/Point2D'
-      
+
   MultiPoint:
     type: object
     description: GeoJSon geometry
@@ -504,14 +503,14 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/Point2D'
-            
+
   MultiLineString:
     type: object
     description:GeoJSon geometry
     externalDocs:
       url: http://geojson.org/geojson-spec.html#id6
     allOf:
-      - $ref: "#/definitions/Geometry"   
+      - $ref: "#/definitions/Geometry"
       - properties:
           coordinates:
             type: array
@@ -519,7 +518,7 @@ definitions:
               type: array
               items:
                 $ref: '#/definitions/Point2D'
-      
+
   MultiPolygon:
     type: object
     description:GeoJSon geometry
@@ -536,7 +535,7 @@ definitions:
                 type: array
                 items:
                   $ref: '#/definitions/Point2D'
-      
+
   GeometryCollection:
     type: object
     description:GeoJSon geometry collection
@@ -550,7 +549,7 @@ definitions:
         type: string
         enum:
         - GeometryCollection
-        description: 
+        description:
       geometries:
         type: array
         items:
@@ -570,12 +569,12 @@ definitions:
         type: string
         enum:
         - Feature
-        description: 
+        description:
       properties:
         type: object
         additionalProperties: true
         nullable: true
-      geometry:  
+      geometry:
         oneOf:
         - $ref: '#/definitions/Geometry'
         - $ref: '#/definitions/Point2D'
@@ -614,8 +613,8 @@ definitions:
         type: string
         enum:
         - FeatureCollection
-        description: 
-      features: 
+        description:
+      features:
         type: array
         items:
           $ref: '#/definitions/Feature'

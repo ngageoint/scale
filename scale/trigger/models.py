@@ -144,7 +144,8 @@ class TriggerRuleManager(models.Manager):
 
         return self.get(name=name)
 
-
+# TODO 1514: Address when/if we switch the clock from using trigger rules
+# The daily metrics and queue/fixtures scale-job-load jobs run off clock triggers
 class TriggerRule(models.Model):
     """Represents a rule that, when triggered, creates a trigger event
 

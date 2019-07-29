@@ -36,13 +36,15 @@ class RecipeDefinition(object):
 
         self._add_node(ConditionNodeDefinition(name, input_interface, data_filter))
 
-    def add_dependency(self, parent_name, child_name):
+    def add_dependency(self, parent_name, child_name, acceptance=True):
         """Adds a dependency that one node has upon another node
 
         :param parent_name: The name of the parent node
         :type parent_name: string
         :param child_name: The name of the child node
         :type child_name: string
+        :param acceptance: Whether the child node should run when the parent is accepted or when it is not accepted
+        :type acceptance: bool
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If either node is unknown
         """
@@ -54,7 +56,7 @@ class RecipeDefinition(object):
 
         child_node = self.graph[child_name]
         parent_node = self.graph[parent_name]
-        child_node.add_dependency(parent_node)
+        child_node.add_dependency(parent_node, acceptance)
 
         self._topological_order = None  # Invalidate cache
 
@@ -101,6 +103,11 @@ class RecipeDefinition(object):
 
         self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
+    def get_input_keys(self):
+        """Returns the input keys to this recipe"""
+
+        return self.input_interface.parameters.keys()
+
     def get_job_type_keys(self):
         """Gets the natural keys of the job types contained in this RecipeDefinition
 
@@ -115,7 +122,7 @@ class RecipeDefinition(object):
             if node.node_type == JobNodeDefinition.NODE_TYPE:
                 key = JobTypeKey(name=node.job_type_name, version=node.job_type_version)
                 keys.append(key)
-                        
+
         return set(keys)
 
     def get_job_nodes(self, job_type_name, job_type_version):
@@ -161,7 +168,7 @@ class RecipeDefinition(object):
                     else:
                         node.revision_num = revision_num
                         found = True
-                        
+
         return found
 
     def add_recipe_input_connection(self, node_name, node_input_name, recipe_input_name):
@@ -205,13 +212,13 @@ class RecipeDefinition(object):
         :returns: set of RecipeType names
         :rtype: set[string]
         """
-        
+
         names = []
         for node_name in self.get_topological_order():
             node = self.graph[node_name]
             if node.node_type == RecipeNodeDefinition.NODE_TYPE:
                 names.append(node.recipe_type_name)
-                        
+
         return set(names)
 
     def get_recipe_nodes(self, recipe_type_name):
@@ -254,7 +261,7 @@ class RecipeDefinition(object):
                     else:
                         node.revision_num = revision_num
                         found = True
-                        
+
         return found
 
     def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):
@@ -289,6 +296,15 @@ class RecipeDefinition(object):
 
         return self._topological_order
 
+
+    # TODO: Delete when legacy job types go away
+    def validate_job_interfaces(self):
+        """Placeholder so v5 job types can validate with v6 recipe definitions.  V6 definitions are tied to a specific
+        job type revision so a v5 edit cannot cause incompatibility. The recipe definition needs to be updated manually
+        to use the new revision and connections will be tested then.
+        """
+
+        return True
 
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition
@@ -366,7 +382,7 @@ class RecipeDefinition(object):
         while unmarked_set:
             node_name = unmarked_set.pop()
             node = self.graph[node_name]
-            self._topological_order_visit(node, results, perm_set, temp_set)
+            results = self._topological_order_visit(node, results, perm_set, temp_set)
             unmarked_set = set(self.graph.keys()) - perm_set
 
         self._topological_order = results
@@ -382,6 +398,8 @@ class RecipeDefinition(object):
         :type perm_set: set
         :param temp_set: A temporary set of visited nodes (node names)
         :type temp_set: set
+        :returns: A list of nodes in topological order
+        :rtype: list
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition contains a circular
             dependency
@@ -398,3 +416,5 @@ class RecipeDefinition(object):
             perm_set.add(node.name)
             temp_set.remove(node.name)
             results.insert(0, node.name)
+
+        return results

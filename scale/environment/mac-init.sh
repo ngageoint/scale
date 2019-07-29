@@ -26,6 +26,7 @@ docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION po
 # Install all python dependencies
 brew install gdal
 brew install libgeoip
+brew install postgresql
 
 cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
@@ -33,23 +34,14 @@ BROKER_URL = 'amqp://guest:guest@localhost:${SCALE_MESSAGE_PORT}//'
 
 POSTGIS_TEMPLATE = 'template_postgis'
 
-# Example settings for using PostgreSQL database with PostGIS.
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'scale',
-        'USER': 'scale',
-        'PASSWORD': 'scale',
-        'HOST': 'localhost',
-        'PORT': '${SCALE_DB_PORT}',
-        'TEST': {'NAME': 'test_scale'},
-    },
-}
+DATABASES = {'default': dj_database_url.config(default='postgis://scale:scale@localhost:${SCALE_DB_PORT}/scale')}
 EOF
 
 # Initialize virtual environment
+pip install virtualenv
 virtualenv -p $(which python2) environment/scale
-environment/scale/bin/pip install -r pip/requirements.txt
+cat pip/requirements.txt | sed 's^psycopg2^psycopg2-binary^' > pip/mac.txt
+environment/scale/bin/pip install -r pip/mac.txt
 
 # Load up database with schema migrations to date and fixtures
 environment/scale/bin/python manage.py migrate

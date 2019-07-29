@@ -17,10 +17,11 @@ import recipe.test.utils as recipe_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from batch.models import BatchRecipe, BatchJob
 from batch.test import utils as batch_test_utils
+from data.data.value import JsonValue
+from data.data.json.data_v6 import convert_data_to_v6_json
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
-from job.models import Job, JobManager
+from job.models import Job, JobManager, JobTypeRevision
 from product.models import FileAncestryLink, ProductFile
 from product.types import ProductFileMetadata
 from recipe.models import RecipeManager
@@ -81,10 +82,12 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
         parent_ids = [self.file_1.id]
         job_exe = job_test_utils.create_job_exe()
-        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
-        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
-        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
+        job_exe.batch = batch
+        job_exe.job.batch = batch
+        job_exe.job.save()
+        job_exe.save()
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         link = FileAncestryLink.objects.get(job_exe=job_exe)
@@ -212,18 +215,19 @@ class TestProductFileManager(TestCase):
         job_exe_1 = job_test_utils.create_job_exe()
         product_1_a = prod_test_utils.create_product(job_exe=job_exe_1, has_been_published=True, is_published=True)
         product_1_b = prod_test_utils.create_product(job_exe=job_exe_1, has_been_published=True, is_published=True)
-        job_type = job_test_utils.create_job_type()
+        job_type = job_test_utils.create_seed_job_type()
         event = trigger_test_utils.create_trigger_event()
-        job_2 = Job.objects.create_job_old(job_type=job_type, event_id=event.id, superseded_job=job_exe_1.job)
+        job_type_rev = JobTypeRevision.objects.get_by_natural_key(job_type, job_type.revision_num)
+        job_2 = Job.objects.create_job_v6(job_type_rev, event_id=event.id, superseded_job=job_exe_1.job)
         job_2.save()
         job_exe_2 = job_test_utils.create_job_exe(job=job_2)
-        Job.objects.supersede_jobs_old([job_exe_1.job], now())
+        Job.objects.supersede_jobs([job_exe_1.job.id], now())
         product_2_a = prod_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
         product_2_b = prod_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
-        job_3 = Job.objects.create_job_old(job_type=job_type, event_id=event.id, superseded_job=job_exe_2.job)
+        job_3 = Job.objects.create_job_v6(job_type_rev, event_id=event.id, superseded_job=job_exe_2.job)
         job_3.save()
         job_exe_3 = job_test_utils.create_job_exe(job=job_3)
-        Job.objects.supersede_jobs_old([job_2], now())
+        Job.objects.supersede_jobs([job_2.id], now())
         product_3_a = prod_test_utils.create_product(job_exe=job_exe_3)
         product_3_b = prod_test_utils.create_product(job_exe=job_exe_3)
 
@@ -420,33 +424,35 @@ class TestProductFileManagerUploadFiles(TestCase):
 
         self.source_file = source_test_utils.create_source(file_name='input1.txt', workspace=self.workspace)
 
-        self.job_exe = job_test_utils.create_job_exe()
-        data = self.job_exe.job.get_job_data()
-        data.add_property_input('property1', 'value1')
-        data.add_property_input('property2', 'value2')
-        self.job_exe.job.input = data.get_dict()
+        inputs_json=[
+            {'name': 'property1', 'type': 'string'},
+            {'name': 'property2', 'type': 'string'}
+        ]
+        manifest = job_test_utils.create_seed_manifest(inputs_json=inputs_json, command='my_command')
+        manifest['job']['interface']['inputs']['files'] = []
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.job_exe = job_test_utils.create_job_exe(job_type=job_type)
+        data = self.job_exe.job.get_input_data()
+        data.add_value(JsonValue('property1', 'value1'))
+        data.add_value(JsonValue('property2', 'value2'))
+        self.job_exe.job.input = convert_data_to_v6_json(data).get_dict()
         self.job_exe.job.source_sensor_class = 'classA'
         self.job_exe.job.source_sensor = '1'
         self.job_exe.job.source_collection = '12345'
         self.job_exe.job.source_task = 'my-task'
         self.job_exe.job.save()
         self.job_exe_no = job_test_utils.create_job_exe()
-        with transaction.atomic():
-            self.job_exe_no.job.is_operational = False
-            self.job_exe_no.job.job_type.is_operational = False
-            self.job_exe_no.job.save()
-            self.job_exe_no.job.job_type.save()
 
         self.local_path_1 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt')
         self.local_path_2 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/2/file.json')
         self.local_path_3 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/3/file.h5')
 
         self.files = [
-            ProductFileMetadata(output_name='output_name_1', local_path=self.local_path_1, 
+            ProductFileMetadata(output_name='output_name_1', local_path=self.local_path_1,
             remote_path='remote/1/file.txt'),
-            ProductFileMetadata(output_name='output_name_2', local_path=self.local_path_2, 
+            ProductFileMetadata(output_name='output_name_2', local_path=self.local_path_2,
             media_type='application/x-custom-json', remote_path='remote/2/file.json',
-            source_sensor_class='classB', source_sensor='2', source_collection='12346', 
+            source_sensor_class='classB', source_sensor='2', source_collection='12346',
             source_task='my-task-2'),
         ]
         self.files_no = [
@@ -466,9 +472,9 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(self.job_exe.job_type.name, products[0].meta_data['job_name'])
         self.assertEqual(self.job_exe.job_type.version, products[0].meta_data['job_version'])
         self.assertEqual(products[0].url, products[0].meta_data['url'])
-        self.assertIsNone(products[0].meta_data.get('package_version'))
+        self.assertEqual(products[0].meta_data.get('package_version'), '1.0.0')
         self.assertIsNotNone(products[0].uuid)
-        self.assertTrue(products[0].is_operational)
+
         self.assertEqual(products[0].source_sensor_class, 'classA')
         self.assertEqual(products[0].source_sensor, '1')
         self.assertEqual(products[0].source_collection, '12345')
@@ -482,25 +488,15 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(self.job_exe.job_type.name, products[1].meta_data['job_name'])
         self.assertEqual(self.job_exe.job_type.version, products[1].meta_data['job_version'])
         self.assertEqual(products[1].url, products[1].meta_data['url'])
-        self.assertIsNone(products[1].meta_data.get('package_version'))
+        self.assertEqual(products[1].meta_data.get('package_version'), '1.0.0')
         self.assertIsNotNone(products[1].uuid)
-        self.assertTrue(products[1].is_operational)
+
         self.assertEqual(products[1].source_sensor_class, 'classB')
         self.assertEqual(products[1].source_sensor, '2')
         self.assertEqual(products[1].source_collection, '12346')
         self.assertEqual(products[1].source_task, 'my-task-2')
 
         self.assertNotEqual(products[0].uuid, products[1].uuid)
-
-    @patch('storage.models.os.path.getsize', lambda path: 100)
-    def test_non_operational_product(self):
-        """Tests calling ProductFileManager.upload_files() with a non-operational input file"""
-        products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
-                                                       self.workspace)
-        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
-                                                    self.job_exe, self.workspace)
-        self.assertFalse(products[0].is_operational)
-        self.assertFalse(products[1].is_operational)
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_geo_metadata(self):
@@ -534,12 +530,13 @@ class TestProductFileManagerUploadFiles(TestCase):
     def test_batch_link(self):
         """Tests calling ProductFileManager.upload_files() successfully when associated with a batch"""
 
-        job_type = job_test_utils.create_job_type(name='scale-batch-creator')
+        manifest = job_test_utils.create_seed_manifest(name='scale-batch-creator')
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
         job_exe = job_test_utils.create_job_exe(job_type=job_type)
-        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
         batch = batch_test_utils.create_batch()
-        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
-        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
+        job_exe.batch = batch
+        batch.save()
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
 
         products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
                                                        self.workspace)
@@ -624,19 +621,28 @@ class TestProductFileManagerUploadFiles(TestCase):
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid_use_properties(self):
         """Tests setting UUIDs on products with different property values."""
-        job_type = job_test_utils.create_job_type()
+
+        inputs_json=[
+            {'name': 'property1', 'type': 'string'},
+            {'name': 'property2', 'type': 'string'}
+        ]
+
+        manifest = job_test_utils.create_seed_manifest(name='test-job', inputs_json=inputs_json, command='my_command')
+        manifest['job']['interface']['inputs']['files'] = []
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+
         job1 = job_test_utils.create_job(job_type=job_type)
         job_exe1 = job_test_utils.create_job_exe(job=job1)
-        data1 = job_exe1.job.get_job_data()
-        data1.add_property_input('property1', 'value1')
-        data1.add_property_input('property2', 'value2')
-        job_exe1.job.input = data1.get_dict()
+        data1 = job_exe1.job.get_input_data()
+        data1.add_value(JsonValue('property1', 'value1'))
+        data1.add_value(JsonValue('property2', 'value2'))
+        job_exe1.job.input = convert_data_to_v6_json(data1).get_dict()
         job2 = job_test_utils.create_job(job_type=job_type)
         job_exe2 = job_test_utils.create_job_exe(job=job2)
-        data2 = job_exe2.job.get_job_data()
-        data2.add_property_input('property1', 'diffvalue1')
-        data2.add_property_input('property2', 'value2')
-        job_exe2.job.input = data2.get_dict()
+        data2 = job_exe2.job.get_input_data()
+        data2.add_value(JsonValue('property1', 'diffvalue1'))
+        data2.add_value(JsonValue('property2', 'value2'))
+        job_exe2.job.input = convert_data_to_v6_json(data2).get_dict()
 
         products1 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe1, self.workspace)
         products2 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe2, self.workspace)

@@ -10,6 +10,7 @@ from data.data.value import FileValue, JsonValue
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.test import utils as job_test_utils
+from recipe.configuration.json.recipe_config_v6 import RecipeConfigurationV6
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
@@ -172,7 +173,7 @@ class TestProcessRecipeInput(TransactionTestCase):
                 }
             }
         }
-        job_type_a = job_test_utils.create_job_type(interface=manifest_a)
+        job_type_a = job_test_utils.create_seed_job_type(manifest=manifest_a)
         output_data_a = Data()
         output_data_a.add_value(FileValue('output_a', [file_1.id]))
         output_data_a_dict = convert_data_to_v6_json(output_data_a).get_dict()
@@ -198,7 +199,7 @@ class TestProcessRecipeInput(TransactionTestCase):
                 }
             }
         }
-        job_type_b = job_test_utils.create_job_type(interface=manifest_b)
+        job_type_b = job_test_utils.create_seed_job_type(manifest=manifest_b)
         output_data_b = Data()
         output_data_b.add_value(FileValue('output_b', [file_2.id, file_3.id, file_4.id]))
         output_data_b_dict = convert_data_to_v6_json(output_data_b).get_dict()
@@ -318,7 +319,8 @@ class TestProcessRecipeInput(TransactionTestCase):
                 }
             }
         }
-        job_type_a = job_test_utils.create_job_type(interface=manifest_a)
+
+        job_type_a = job_test_utils.create_seed_job_type(manifest=manifest_a)
         output_data_a = Data()
         output_data_a.add_value(FileValue('output_a', [file_1.id]))
         output_data_a_dict = convert_data_to_v6_json(output_data_a).get_dict()
@@ -344,7 +346,7 @@ class TestProcessRecipeInput(TransactionTestCase):
                 }
             }
         }
-        job_type_b = job_test_utils.create_job_type(interface=manifest_b)
+        job_type_b = job_test_utils.create_seed_job_type(manifest=manifest_b)
         output_data_b = Data()
         output_data_b.add_value(FileValue('output_b', [file_2.id, file_3.id, file_4.id]))
         output_data_b_dict = convert_data_to_v6_json(output_data_b).get_dict()
@@ -399,8 +401,7 @@ class TestProcessRecipeInput(TransactionTestCase):
         # Check sub-recipe for expected input_file_size
         self.assertEqual(sub_recipe_c.input_file_size, 24469.0)
         # Check sub-recipe for expected input data
-        self.assertEqual(sub_recipe_c.input['version'], '1.0')  # Should be legacy input data with workspace ID
-        self.assertEqual(sub_recipe_c.input['workspace_id'], workspace.id)
+        self.assertEqual(sub_recipe_c.input['version'], '7')  # Should be legacy input data with workspace ID
         self.assertSetEqual(set(sub_recipe_c.get_input_data().values.keys()), {'input_a', 'input_b'})
         self.assertListEqual(sub_recipe_c.get_input_data().values['input_a'].file_ids, [file_1.id])
         self.assertListEqual(sub_recipe_c.get_input_data().values['input_b'].file_ids,

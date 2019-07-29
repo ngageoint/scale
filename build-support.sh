@@ -4,15 +4,36 @@ set -e
 BASE_IMAGE=$1
 COMPONENT=$2
 
-docker login -u ${DOCKER_USER} -p "${DOCKER_PASS}" ${REGISTRY}
+if [[ "${CI_BUILD_TAG}x" == "x" ]]
+then
+    docker login -u ${DOCKER_DEV_USER} -p "${DOCKER_DEV_PASS}" ${REGISTRY}
 
-IMAGE_URL=${REGISTRY}/${DOCKER_ORG}/${IMAGE_PREFIX}-${COMPONENT}
-docker pull ${IMAGE_URL} || true
+    export IMAGE_URL=${REGISTRY}/${DOCKER_DEV_ORG}/${IMAGE_PREFIX}-${COMPONENT}
+    docker pull ${IMAGE_URL} || true
 
-docker build \
-    -t ${IMAGE_URL}:${CI_BUILD_TAG} \
-    --build-arg VAULT_ZIP=${VAULT_ZIP} \
-    --build-arg IMAGE=${BASE_IMAGE} \
-    dockerfiles/${COMPONENT}
-docker push ${IMAGE_URL}:${CI_BUILD_TAG}
+    docker build \
+        -t ${IMAGE_URL} \
+        -t ${IMAGE_URL}:${CI_BUILD_REF:0:8} \
+        --label VERSION=${CI_BUILD_REF:0:8} \
+        --build-arg VAULT_ZIP=${VAULT_ZIP} \
+        --build-arg IMAGE=${BASE_IMAGE} \
+        dockerfiles/${COMPONENT}
 
+    docker push ${IMAGE_URL}
+    docker push ${IMAGE_URL}:${CI_BUILD_REF:0:8}
+else
+    docker login -u ${DOCKER_USER} -p "${DOCKER_PASS}" ${REGISTRY}
+
+    export IMAGE_URL=${REGISTRY}/${DOCKER_ORG}/${IMAGE_PREFIX}-${COMPONENT}
+    docker pull ${IMAGE_URL} || true
+
+    docker build \
+        -t ${IMAGE_URL}:${CI_BUILD_TAG} \
+        --label VERSION=${CI_BUILD_TAG} \
+        --build-arg VAULT_ZIP=${VAULT_ZIP} \
+        --build-arg IMAGE=${BASE_IMAGE} \
+        dockerfiles/${COMPONENT}
+
+    docker push ${IMAGE_URL}
+    docker push ${IMAGE_URL}:${CI_BUILD_TAG}
+fi
