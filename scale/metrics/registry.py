@@ -293,7 +293,9 @@ class MetricsPlotData(object):
 
         # Aggregate values across entries when no choice filters are used
         # Check if values are within an hour of each other
-        if not plot_data.values or abs(plot_data.values[-1].datetime - entry_date) > datetime.timedelta(hours=1):
+        if not plot_data.values or \
+            plot_data.values[-1].datetime.date() != entry_date.date() or \
+            plot_data.values[-1].datetime.hour != entry_date.hour:
             plot_data.values.append(MetricsPlotValue(choice_id=None, datetime=entry_date))
         plot_value = plot_data.values[-1]
         plot_value.count += 1
