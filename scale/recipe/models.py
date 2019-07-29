@@ -1341,13 +1341,15 @@ class RecipeTypeManager(models.Manager):
             rt.sub_recipe_types = definition.get_recipe_type_names()
         return recipe_types
 
-    def validate_recipe_type_v6(self, name, definition_dict):
+    def validate_recipe_type_v6(self, name, definition_dict, new_recipe_type):
         """Validates a recipe type prior to attempting a save
 
         :param name: The optional system name of a recipe type being updated
         :type name: str
         :param definition_dict: The definition for running a recipe of this type
         :type definition_dict: dict
+        :param new_recipe_type: Defines whether this is a new recipe or not
+        :type new_recipe_type: bool
         :returns: The recipe type validation.
         :rtype: :class:`recipe.models.RecipeTypeValidation`
         """
@@ -1381,7 +1383,6 @@ class RecipeTypeManager(models.Manager):
                 logger.info(message)
                 pass
 
-
             try:
                 recipe_type = RecipeType.objects.all().get(name=name)
                 old_definition = recipe_type.get_definition()
@@ -1393,7 +1394,7 @@ class RecipeTypeManager(models.Manager):
                 diff = rest_utils.strip_schema_version(json.get_dict())
 
             except RecipeType.DoesNotExist as ex:
-                if name:
+                if name and not new_recipe_type:
                     msg = 'Unable to find an existing recipe type with name: %s' % name
                     warnings.append(ValidationWarning('RECIPE_TYPE_NOT_FOUND', msg))
                 pass

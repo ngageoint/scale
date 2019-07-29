@@ -345,36 +345,51 @@ class RecipeTypesValidationView(APIView):
     """This view is the endpoint for validating a new recipe type before attempting to actually create it"""
     queryset = RecipeType.objects.all()
 
-    def post(self, request):
+    def post(self, request, name=""):
         """Validates a new recipe type and returns any warnings discovered
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
         if self.request.version == 'v6':
-            return self._post_v6(request)
+            return self._post_v6(request, name)
         elif self.request.version == 'v7':
-            return self._post_v6(request)
+            return self._post_v6(request, name)
 
         raise Http404
 
-    def _post_v6(self, request):
+    def _post_v6(self, request, name):
         """Validates a new recipe type and returns any warnings discovered
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the recipe type
+        :type name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
-        name = rest_util.parse_string(request, 'name', required=False)
+        if not name:
+            new_recipe_type = True
+            name = rest_util.parse_string(request, 'name', required=False)
+        else:
+            new_recipe_type = False
+            definition_name = rest_util.parse_string(request, 'name', required=False)
+            if definition_name and definition_name != name:
+                msg = """The recipe_type name found is the path does not match the name found in the
+                         provided recipe_type defintiion. Path name: %s  Defintion name: %s""" % (name, definition_name)
+                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+
         definition_dict = rest_util.parse_dict(request, 'definition')
 
         # Validate the recipe definition
-        validation = RecipeType.objects.validate_recipe_type_v6(name=name, definition_dict=definition_dict)
+        validation = RecipeType.objects.validate_recipe_type_v6(name=name, definition_dict=definition_dict,
+                                                                new_recipe_type=new_recipe_type)
 
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings], 'diff': validation.diff}
