@@ -9,6 +9,8 @@ from collections import namedtuple
 import django.contrib.postgres.fields
 from django.db import models, transaction
 
+from data.data.exceptions import InvalidData
+from data.data.value import FileValue
 from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6, convert_member_definition_to_v6_json, DataSetMemberDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
@@ -174,7 +176,7 @@ class DataSetManager(models.Manager):
         return datasets
 
     def validate_dataset_v6(self, name, version, definition, title=None, description=None):
-        """Validates the given datast definiton
+        """Validates the given dataset definiton
 
         :param definition: The dataset definition
         :type definition: dict
@@ -384,13 +386,13 @@ class DataSet(models.Model):
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
 
-    def create_dataset_member_v6(self, dataset, member_definition):
+    def create_dataset_member_v6(self, dataset, data):
         """Creates a dataset member
 
         :param dataset: The dataset the member is a part of
         :type version: :class:`dataset.models.DataSet`
-        :param member_definition: Parameter definition of the dataset
-        :type definition: :class:`dataset.definition.definition.DataSetMemberDefinition`
+        :param data: Data definition of the dataset member
+        :type data: :class:`data.data.data.Data`
 
         :returns: The new dataset member
         :rtype: :class:`dataset.models.DataSetMember`
@@ -401,13 +403,20 @@ class DataSetMemberManager(models.Manager):
         if not dataset:
             raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset provided for dataset member')
 
-        if not member_definition:
-            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset member definition provided')
+        if not data:
+            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No data description provided')
+
+        try:
+            dataset.get_definition().validate(data)
+        except InvalidData as ex:
+            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'Data does not match dataset parameters: %s' % ex)
 
         dataset_member = DataSetMember()
         dataset_member.dataset = dataset
-        dataset_member.definition = member_definition.get_dict()
+        dataset_member.data = convert_data_to_v6_json(data).get_dict()
         dataset_member.save()
+
+        DataSetFileManager.objects.create_dataset_files(dataset, data)
 
         return dataset_member
 
@@ -418,6 +427,7 @@ class DataSetMemberManager(models.Manager):
         :rtype: QuerySet<DataSetMember>
         """
         return self.all().filter(dataset=dataset)
+
 
 """
 DataSetMember
@@ -435,14 +445,14 @@ class DataSetMember(models.Model):
 
     :keyword dataset: Refers to dataset member belongs to
     :type dataset: :class:`django.db.models.ForeignKey`
-    :keyword definition: JSON description of the data in this DataSetMember.
-    :type definition: :class: `django.contrib.postgres.fields.JSONField(default=dict)
+    :keyword data: JSON description of the data in this DataSetMember.
+    :type data: :class: `django.contrib.postgres.fields.JSONField(default=dict)
     :keyword created: Created Time
     :type created: datetime
     """
 
     dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
-    definition = django.contrib.postgres.fields.JSONField(default=dict)
+    data = django.contrib.postgres.fields.JSONField(default=dict)
     created = models.DateTimeField(auto_now_add=True)
 
     objects = DataSetMemberManager()
@@ -477,6 +487,19 @@ class DataSetMember(models.Model):
 
 class DataSetFileManager(models.Manager):
     """Manages the datasetfile model"""
+
+    def create_dataset_files(self, dataset, data):
+        """Creates dataset files for the given dataset and data"""
+
+        for i in data.values.keys():
+            v = data.values[i]
+            if type(v) is FileValue:
+                for id in v.file_ids:
+                    file = DataSetFile()
+                    file.dataset = dataset
+                    file.scale_file = id
+                    file.parameter_name = i
+                    file.save()
 
     def get_dataset_files(self, dataset_id):
         """Returns the dataset files associated with the given dataset_id
@@ -516,3 +539,7 @@ class DataSetFile(models.Model):
     parameter_name = models.CharField(db_index=True, max_length=50)
     objects = DataSetFileManager
 
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'data_set_file'
+        unique_together = ("dataset", "scale_file")

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='DataSetMember',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('definition', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ('data', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dataset.DataSet')),
             ],

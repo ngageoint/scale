@@ -11,24 +11,6 @@ from dataset.definition.definition import DataSetDefinition, DataSetMemberDefini
 
 SCHEMA_VERSION = '6'
 
-# TODO: Delete dataset memeber schema?  A dataset member should really just be a data object with appropriate values for each parameter in the dataset.
-DATASET_MEMBER_SCHEMA = {
-    'type': 'object',
-    'required': ['version', 'name', 'input'],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'The version of the dataset member definition schema',
-            'type': 'string',
-        },
-        'name': {
-            'description': 'The name of the parameter this member matches',
-            'type': 'string',
-        },
-        'input': INTERFACE_SCHEMA,
-    },
-}
-
 DATASET_DEFINITION_SCHEMA = {
     'type': 'object',
     'required': ['version', 'parameters'],
@@ -41,11 +23,6 @@ DATASET_DEFINITION_SCHEMA = {
         'global_parameters': INTERFACE_SCHEMA,
         'global_data': DATA_SCHEMA,
         'parameters': INTERFACE_SCHEMA,
-        'data': {
-            'description': 'Bundles of data matching the dataset parameters',
-            'type': 'array',
-            'items': DATA_SCHEMA,
-        },
     },
 }
 
@@ -67,24 +44,6 @@ def convert_definition_to_v6_json(definition):
     }
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
-
-def convert_member_definition_to_v6_json(definition):
-    """
-    Converts the the v6 dataset member definition JSON for the given definition
-
-    :param definition: The dataset member definition
-    :type definition: :class:`??`
-    :returns: The v6 dataset member definition JSON
-    :rtype: :class:`dataset.DataSetMemberDefinition
-    """
-
-    def_dict = {
-        'version': SCHEMA_VERSION,
-        'name': definition['name'],
-        'input': definition['input']
-    }
-
-    return DataSetMemberDefinitionV6(definition=def_dict, do_validate=False).get_dict()
 
 class DataSetDefinitionV6(object):
     """
@@ -154,47 +113,3 @@ class DataSetDefinitionV6(object):
 
         if len(names) != len(set(names)):
             raise InvalidDataSetDefinition('NAME_COLLISION_ERROR','Parameter names must be unique.' )
-                                                
-# TODO: Delete?
-class DataSetMemberDefinitionV6(object):
-    """
-    Represents the definition of a DataSet object
-
-    :keyword definition: The definition of the data set member
-    :type description: dict
-    :keyword do_validate: Whether to perform validation on the JSON schema
-    :type do_validate: bool
-    """
-    def __init__(self, definition=None, do_validate=False):
-        """Constructor
-        """
-
-        if not definition:
-            definition = {}
-        self._definition = definition
-
-        if 'version' not in self._definition:
-            self._definition['version'] = SCHEMA_VERSION
-
-        self._populate_default_values()
-
-        try:
-            if do_validate:
-                validate(definition, DATASET_MEMBER_SCHEMA)
-        except ValidationError as validation_error:
-            raise InvalidDataSetMemberDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
-
-    def get_dict(self):
-        """Returns the dict of the definition
-        """
-
-        return self._definition
-
-    def get_member_definition(self):
-        """Returns the DataSetMemberDefinitio"""
-
-        return DataSetMemberDefinition(definition=self.get_dict())
-
-    def _populate_default_values(self):
-        """Populates any missing required valudes with defaults
-        """

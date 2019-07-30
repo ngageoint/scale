@@ -85,6 +85,9 @@ class DataSetDefinition(object):
             return self.global_parameters[parameter_name]
         return None
 
+    def validate_data(self, data):
+        return data.validate(self.parameters)
+
     def validate(self):
         """Validates the dataset definition
 
