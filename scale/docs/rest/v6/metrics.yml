@@ -319,10 +319,10 @@ components:
           type: integer
           description: The unique identifier of the related choice model for this data value.
             This field is omitted when there are no choice filters or only 1 specified.
-        date:
+        datetime:
           type: string
           format: date-time
-          description: The date when the plot value occurred. 
+          description: The datetime when the plot value occurred. 
         value:
           type: integer
           description: The statistic value that was calculated for the date. 
