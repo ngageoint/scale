@@ -9,12 +9,12 @@ from collections import namedtuple
 import django.contrib.postgres.fields
 from django.db import models, transaction
 
-from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue
 from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
-from dataset.exceptions import InvalidDataSetDefinition
+from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from dataset.dataset_serializers import DataSetFilesSerializerV6, DataSetMemberSerializerV6
 from storage.models import ScaleFile
 from util import rest as rest_utils
@@ -384,6 +384,10 @@ class DataSet(models.Model):
         serializer = DataSetFilesSerializerV6(files, many=True)
         return serializer.data
 
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'data_set'
+
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
 
@@ -458,8 +462,8 @@ class DataSetMember(models.Model):
 
     objects = DataSetMemberManager()
 
-    def get_definition(self):
-        """Returns the dataset member definition
+    def get_dataset_definition(self):
+        """Returns the dataset definition
 
         :returns: The dataset member definition in v6
         :rtype: :class:`dataset.DataSetMemberDefinition`
@@ -468,23 +472,29 @@ class DataSetMember(models.Model):
         if isinstance(self.definition, basestring):
             self.definition = {}
 
-        return DataSetMemberDefinition(definition=self.definition)
+        return self.dataset.get_definition()
 
-    def get_definition_json(self):
-        """Returns the dataset member definition in JSON format
-        :returns: the dataset member definition in JSON
-        :rtype: dict
-        """
-        return self.definition
+    def get_data(self):
+        """Returns the data for this datasetmember
 
-    def get_v6_definition_json(self):
-        """Returns the dataset member definition in V6 JSON format
-
-        :returns: The dataset member definition in v6 of the JSON Schema
-        :rtype: dict
+        :returns: The data for this datasetmember
+        :rtype: :class:`data.data.data.Data`
         """
 
-        return rest_utils.strip_schema_version(convert_member_definition_to_v6_json(self.get_definition_json()))
+        return DataV6(data=self.data, do_validate=False).get_data()
+
+    def get_v6_data_json(self):
+        """Returns the data for this datasetmember as v6 json with the version stripped
+
+        :returns: The v6 JSON output data dict for this datasetmember
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_data()).get_dict())
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'data_set_member'
 
 class DataSetFileManager(models.Manager):
     """Manages the datasetfile model"""

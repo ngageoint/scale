@@ -15,6 +15,19 @@ class InvalidDataSet(ValidationException):
 
         super(InvalidDataSet, self).__init__(name, description)
 
+class InvalidDataSetMember(ValidationException):
+    """Exception indicating the dataset is invalid
+    """
+
+    def __init__(self, name, description):
+        """Constructor
+
+        :param description: The description of the error
+        :type description: string
+        """
+
+        super(InvalidDataSetMember, self).__init__(name, description)
+
 class InvalidDataSetDefinition(ValidationException):
     """Exception indicating that a dataset definition was given an invalid value
     """
