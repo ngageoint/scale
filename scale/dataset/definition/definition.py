@@ -1,6 +1,7 @@
 """Defines the class that represents a dataset"""
 from __future__ import unicode_literals
 
+from data.data.json.data_v6 import DataV6
 from data.interface.interface import Interface
 from data.interface.json.interface_v6 import InterfaceV6
 from data.interface.parameter import Parameter
@@ -27,7 +28,8 @@ class DataSetDefinition(object):
         if 'parameters' in self._definition:
             self.parameters = InterfaceV6(definition['parameters']).get_interface()
             self.param_names = self.parameters.parameters.keys()
-        self.global_parameters = {}
+
+        self.global_parameters = None
         if 'global_parameters' in self._definition:
             self.global_parameters = InterfaceV6(definition['global_parameters']).get_interface()
             keys = self.global_parameters.parameters.keys()
@@ -37,6 +39,9 @@ class DataSetDefinition(object):
                     'Invalid dataset definition: Names must be unique. %s defined more than once' % dupes)
             self.param_names.update(keys)
 
+        self.global_data = None
+        if 'global_data' in self._definition:
+            self.global_data = DataV6(definition['global_data']).get_data()
 
     def get_dict(self):
         """Returns the internal dictionary that represents this datasets definition
@@ -85,17 +90,35 @@ class DataSetDefinition(object):
             return self.global_parameters[parameter_name]
         return None
 
+    def get_parameters(self):
+        """Retrieves the list of parameter keys from the dataset definition
+
+        :returns: The list of parameter keys
+        :rtype: [str]
+        """
+        names = self.parameters.keys()
+        names.extend(self.global_parameters.keys())
+        return names
+
     def validate_data(self, data):
         return data.validate(self.parameters)
 
-    def validate(self):
+    def validate(self, data=None):
         """Validates the dataset definition
 
         :returns: A list of warnings discovered during validation
         :rtype: :class:[`util.validation.ValidationWarning`]
         """
         # validate definition parameters
-        return self._validate_parameters()
+        warnings = self._validate_parameters()
+
+        if self.global_data:
+            warnings.append(self.global_data.validate(self.global_parameters))
+
+        if data:
+            warnings.append(self.validate_data(data))
+
+        return warnings
 
 
     def _validate_parameters(self):
@@ -110,58 +133,3 @@ class DataSetDefinition(object):
             warnings.extend(parameter.validate)
 
         return warnings
-
-class DataSetMemberDefinition(object):
-    """Represents a dataset member
-    """
-
-    def __init__(self, definition=None):
-        """Constructor
-
-        :param name: Name of the dataset member
-        :type name: string
-        :param interface_dict:
-        """
-        self._definition = definition
-
-        if 'name' in definition:
-            self.param_name = definition['name']
-
-        if 'input' in definition:
-            self.interface = InterfaceV6(interface=definition['input']).get_interface()
-
-    def add_input(self, input_param):
-        """Adds an input
-
-        :param input_param: The input parameter
-        :type input_param: :class:`data.interface.parameter.Parameter`
-        """
-
-        self.interface.add_parameter(input_param)
-
-    def get_interface(self):
-        """Returns the input interface for this member
-
-        :returns: The input interface object for this member
-        :rtype: :class:`data.interface.interface.Interface`
-        """
-
-        return self.interface
-
-    def get_dict(self):
-        """Returns the underlying dictionary of this member definition
-        :returns: the dataset member definition
-        :rtype: dict
-        """
-        return self._definition
-
-    def validate(self):
-        """Validates this dataset member definition
-
-        :param member_definition:
-        :param_type
-        :returns: List of warnings found with the interface
-        :rtype: [:class:`util.validation.ValidationWarning`]
-        """
-
-        return self.interface.validate()

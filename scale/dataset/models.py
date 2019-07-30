@@ -9,11 +9,12 @@ from collections import namedtuple
 import django.contrib.postgres.fields
 from django.db import models, transaction
 
+from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue
-from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
-from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6, convert_member_definition_to_v6_json, DataSetMemberDefinitionV6
-from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
+from dataset.definition.definition import DataSetDefinition
+from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
+from dataset.exceptions import InvalidDataSetDefinition
 from dataset.dataset_serializers import DataSetFilesSerializerV6, DataSetMemberSerializerV6
 from storage.models import ScaleFile
 from util import rest as rest_utils

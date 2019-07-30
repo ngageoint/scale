@@ -5,9 +5,9 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from data.data.json.data_v6 import DATA_SCHEMA, DataV6
-from data.interface.json.interface_v6 import INTERFACE_SCHEMA
-from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMemberDefinition, InvalidDataSetFileDefinition
-from dataset.definition.definition import DataSetDefinition, DataSetMemberDefinition
+from data.interface.json.interface_v6 import INTERFACE_SCHEMA, InterfaceV6
+from dataset.exceptions import InvalidDataSetDefinition
+from dataset.definition.definition import DataSetDefinition
 
 SCHEMA_VERSION = '6'
 
@@ -39,8 +39,7 @@ def convert_definition_to_v6_json(definition):
         'version': SCHEMA_VERSION,
         'global_parameters': definition['global_parameters'],
         'global_data': definition['global_data'],
-        'parameters': definition['parameters'],
-        'data': definition['data']
+        'parameters': definition['parameters']
     }
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
@@ -73,11 +72,8 @@ class DataSetDefinitionV6(object):
             if do_validate:
                 validate(self._definition, DATASET_DEFINITION_SCHEMA)
                 dd = self.get_definition()
-                gd = DataV6(data=definition['global_data'], do_validate=True)
-                members = []
-                for dm in definition['data']:
-                    members.append(DataV6(data=dm, do_validate=True))
-                dd.validate(global_member=gd, members=members )
+                gd = DataV6(data=definition['global_data'], do_validate=True).get_data()
+                dd.validate(data=gd)
         except ValidationError as ex:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', 'Error validating against schema: %s' % unicode(ex))
 
@@ -99,6 +95,9 @@ class DataSetDefinitionV6(object):
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values
         """
+
+        if 'parameter' not in self._definition:
+            self._definition['parameter'] = InterfaceV6().get_dict()
 
     def _check_for_name_collisions(self):
         """Ensures all global and regular parameter names are unique, and throws a
