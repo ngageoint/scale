@@ -631,6 +631,7 @@ class JobsView(ListAPIView):
                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
                                        error_categories=error_categories, error_ids=error_ids,
                                        is_superseded=is_superseded, order=order)
+        jobs = jobs.select_related('job_type_rev__job_type').defer(None)
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
 
