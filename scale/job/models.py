@@ -2036,7 +2036,11 @@ class JobTypeManager(models.Manager):
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
         from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message, create_activate_recipe_message
-        from recipe.models import RecipeTypeJobLink
+        from recipe.models import RecipeTypeJobLink, RecipeType
+        
+        is_valid = True
+        errors = []
+        warnings = []
 
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
@@ -2075,15 +2079,16 @@ class JobTypeManager(models.Manager):
             job_type.docker_image = docker_image
         if icon_code:
             job_type.icon_code = icon_code
-        deprecated_warning = ""
         if is_active is not None and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
             if is_active == False:
                 recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
                 if recipe_ids:
-                    deprecated_warning = "Recipes were deprecated as a result of deprecating this job type. " \
-                                         "Look at the recipe_types field for recipes that may need to be updated."
+                    recipe_names = RecipeType.objects.filter(id__in=recipe_ids).values_list('name', flat=True)
+                    recipe_names = list(recipe_names)
+                    warn = "The following recipes were deprecated as a result of deprecating this job type: %s " % recipe_names
+                    warnings.append(ValidationWarning('DEPRECATED_RECIPES',warn))
                 msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
                 
@@ -2099,8 +2104,6 @@ class JobTypeManager(models.Manager):
         from scheduler.sync.job_type_manager import job_type_mgr
         job_type_mgr.sync_with_database()
 
-        job_type.deprecated_warning = deprecated_warning
-
         # Save any secrets to Vault
         if secrets:
             self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
@@ -2114,7 +2117,7 @@ class JobTypeManager(models.Manager):
                 msgs = [create_job_update_recipe_definition_message(id, job_type.id) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
 
-        return job_type
+        return JobTypeValidation(is_valid, errors, warnings)
 
     def get_by_natural_key(self, name, version):
         """Django method to retrieve a job type for the given natural key
@@ -2289,7 +2292,7 @@ class JobTypeManager(models.Manager):
 
         return job_types
 
-    def get_details_v6(self, name, version):
+    def get_details_v6(self, name, version, id=None):
         """Returns the job type for the given name and version with all detail fields included.
 
         The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.
@@ -2305,7 +2308,10 @@ class JobTypeManager(models.Manager):
         from recipe.models import RecipeType, RecipeTypeJobLink
 
         # Attempt to get the job type
-        job_type = JobType.objects.all().get(name=name, version=version)
+        if id:
+            job_type = JobType.objects.all().get(id=id)
+        else:
+            job_type = JobType.objects.all().get(name=name, version=version)
 
         recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
         job_type.recipe_types = RecipeType.objects.all().filter(id__in=recipe_ids)

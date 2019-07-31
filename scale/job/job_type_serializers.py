@@ -62,7 +62,6 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     manifest = serializers.JSONField(default=dict)
     configuration = serializers.JSONField(source='get_v6_configuration_json')
     recipe_types = serializers.JSONField()
-    deprecated_warning = serializers.CharField()
 
 
 class JobTypeStatusSerializer(serializers.Serializer):
