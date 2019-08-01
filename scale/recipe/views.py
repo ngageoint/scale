@@ -242,15 +242,16 @@ class RecipeTypeDetailsView(GenericAPIView):
                     recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
 
                 # Edit the recipe type
-                rt = RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
+                validation = RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
                                                        description=description, definition=recipe_def,
                                                        auto_update=auto_update, is_active=is_active)
         except InvalidDefinition as ex:
             logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
-        serializer = self.get_serializer(rt)
-        return Response(serializer.data)
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings], 'diff': validation.diff}
+        return Response(resp_dict)
 
 class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""

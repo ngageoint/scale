@@ -406,7 +406,12 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_RECIPES')
         
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.is_active, False)
@@ -425,7 +430,11 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.revision_num, 2)
@@ -448,7 +457,11 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.revision_num, 2)
