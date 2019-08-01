@@ -1241,7 +1241,6 @@ class RecipeTypeManager(models.Manager):
         if description is not None:
             recipe_type.description = description
         
-        deprecated_warning = ""
         if is_active is not None:
             recipe_type.is_active = is_active
             if is_active == False:
@@ -1264,7 +1263,6 @@ class RecipeTypeManager(models.Manager):
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         recipe_type.save()
-        recipe_type.deprecated_warning = deprecated_warning
 
         if definition:
             # Create new revision of the recipe type for new definition
@@ -1309,7 +1307,7 @@ class RecipeTypeManager(models.Manager):
         jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         recipe_type.job_types = []
         for id in jt_ids:
-            jt = JobType.objects.all().get_details_v6("", "", id=id)
+            jt = JobType.objects.get_details_v6("", "", id=id)
             recipe_type.job_types.append(jt)
             
         sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])

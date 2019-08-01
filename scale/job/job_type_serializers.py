@@ -59,9 +59,10 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
 
 class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
+    from recipe.serializers import RecipeTypeSerializerV6
     manifest = serializers.JSONField(default=dict)
     configuration = serializers.JSONField(source='get_v6_configuration_json')
-    recipe_types = serializers.JSONField()
+    recipe_types = RecipeTypeSerializerV6(many=True)
 
 
 class JobTypeStatusSerializer(serializers.Serializer):

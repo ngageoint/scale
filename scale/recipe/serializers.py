@@ -72,7 +72,7 @@ class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
     definition = serializers.JSONField(source='get_v6_definition_json')
     job_types = JobTypeDetailsSerializerV6(many=True)
     sub_recipe_types = RecipeTypeSerializerV6(many=True)
-    deprecated_warning = serializers.CharField()
+    super_recipe_types = RecipeTypeSerializerV6(many=True)
 
 
 class RecipeTypeRevisionBaseSerializer(ModelIdSerializer):
