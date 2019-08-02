@@ -538,10 +538,10 @@ v6 Validate Recipe Type
 Request: POST http://.../v6/recipe-types/validation/
 
  .. code-block:: javascript
- 
+
    {
       "name": "my-recipe-type",
-      "definition": { :ref: `Recipe Definition <rest_v6_recipe_json_definition>` }
+      "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`}
    }
     
 Response: 200 OK
@@ -684,7 +684,7 @@ v6 Edit Recipe Type
 Request: PATCH http://.../v6/recipe-types/test/
 
  .. code-block:: javascript
- 
+
     {
       "title": "My Recipe",
       "description": "A simple recipe type"
@@ -870,7 +870,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_type        | String            | The recipe type for this revision. (See :ref:`<rest_v6_recipe_type_list>`)     |
+| recipe_type        | String            | The recipe type for this revision. (See :ref:`rest_v6_recipe_type_list`)       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | revision_num       | Integer           | The revision number for this revision of the recipe type.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

@@ -192,10 +192,10 @@ Response: 200 OK
 | results              | Array             | List of result JSON objects that match the query parameters.                   |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                  | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                      |                   | (See :ref:`Product Details <rest_product_details>`)                            |
+|                      |                   | (See :ref:`File Details <rest_v6_file_details>`)                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .workspace           | JSON Object       | The workspace that has stored the product.                                     |
-|                      |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                      |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_name           | String            | The name of the file.                                                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -243,26 +243,26 @@ Response: 200 OK
 | .source_task         | String            | The task that produced the source file.                                        |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job                 | JSON Object       | The job instance that generated the file.                                      |
-|                      |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                      |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_exe             | JSON Object       | The specific job execution that generated the file.                            |
-|                      |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
+|                      |                   | (See :ref:`Job Execution Details <rest_v6_job_execution_details>`)             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_output          | String            | The name of the output from the job related to this file.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type            | JSON Object       | The type of job that generated the file.                                       |
-|                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                      |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .recipe              | JSON Object       | The recipe instance that generated the file.                                   |
-|                      |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
+|                      |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                           |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .recipe_node         | String            | The recipe node that produced this file.                                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .recipe_type         | JSON Object       | The type of recipe that generated the file.                                    |
-|                      |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
+|                      |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .batch               | JSON Object       | The batch instance that generated the file.                                    |
-|                      |                   | (See :ref:`Batch Details <rest_batch_details>`)                                |
+|                      |                   | (See :ref:`Batch Details <rest_v6_batch_details>`)                             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_superseded       | Boolean           | Whether this file has been replaced and is now obsolete.                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -369,7 +369,7 @@ Response: 200 OK
 | id                   | Integer           | The unique identifier of the model.                                            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | workspace            | JSON Object       | The workspace that has stored the product file.                                |
-|                      |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                      |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | file_name            | String            | The name of the file.                                                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -420,23 +420,23 @@ Response: 200 OK
 | source_task          | String            | The task that produced the source file.                                        |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job                  | JSON Object       | The job that created the file.                                                 |
-|                      |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                      |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job_exe              | JSON Object       | The job execution that created the file.                                       |
-|                      |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
+|                      |                   | (See :ref:`Job Execution Details <rest_v6_job_execution_details>`)             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job_output           | String            | The name of the output from the job related to this file.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type             | JSON Object       | The type of job that created the file.                                         |
-|                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                      |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | recipe               | JSON Object       | The recipe instance that generated the file.                                   |
-|                      |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
+|                      |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                           |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | recipe_node          | String            | The recipe node that produced this file.                                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | recipe_type          | JSON Object       | The type of recipe that generated the file.                                    |
-|                      |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
+|                      |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | batch                | JSON Object       | The batch instance that generated the file.                                    |
 +----------------------+-------------------+--------------------------------------------------------------------------------+

@@ -301,7 +301,7 @@ Response: 201 CREATED
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Body**           | JSON containing the details of the newly queued recipe                                             |
-|                    | see :ref:`Recipe Details <rest_v6_recipe_details`>                                                 |
+|                    | see :ref:`Recipe Details <rest_v6_recipe_details>`                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_recipe_list:

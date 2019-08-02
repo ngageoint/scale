@@ -1257,7 +1257,7 @@ Request: GET http://.../v6/job-types/status/
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The job type that is associated with the statistics.                           |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_counts        | Array             | A list of recent job counts for the job type, grouped by status.               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1326,7 +1326,7 @@ Request: GET http://.../v6/job-types/pending/
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The job type that is associated with the count.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .count             | Integer           | The number of jobs of this type that are currently pending.                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1390,7 +1390,7 @@ Request: GET http://.../v6/job-types/status/
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The job type that is associated with the count.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .count             | Integer           | The number of jobs of this type that are currently running.                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1464,12 +1464,12 @@ Request: GET http://.../v6/job-types/system-failures/
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The job type that is associated with the count.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .count             | Integer           | The number of jobs of this type that have an error.                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .error             | JSON Object       | The error that is associated with the count.                                   |
-|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
+|                    |                   | (See :ref:`Error Details <rest_v6_error_details>`)                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .first_error       | ISO-8601 Datetime | When this error first occurred for a job of this type.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
