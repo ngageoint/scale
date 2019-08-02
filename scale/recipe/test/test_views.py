@@ -384,6 +384,8 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         self.assertEqual(len(result['sub_recipe_types']), 1)
         for entry in result['sub_recipe_types']:
             self.assertTrue(entry['id'], [self.recipe_type1.id])
+            
+        self.assertEqual(len(result['super_recipe_types']), 0)
 
         self.assertIn('deprecated', result)
 
@@ -391,6 +393,17 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         del versionless['version']
         self.maxDiff = None
         self.assertDictEqual(result['definition'], versionless)
+
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['job_types']), 1)
+        self.assertEqual(result['job_types'][0]['id'], self.job_type1.id)
+        
+        self.assertEqual(len(result['super_recipe_types']), 1)
+        self.assertEqual(result['super_recipe_types'][0]['id'], self.recipe_type2.id)
 
     @patch('recipe.models.CommandMessageManager')
     @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')

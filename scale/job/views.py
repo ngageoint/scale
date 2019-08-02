@@ -179,7 +179,7 @@ class JobTypesView(ListCreateAPIView):
                 
             # Fetch the full job type with details
             try:
-                job_type = JobType.objects.get_details_v6(name, version)
+                job_type = JobType.objects.get_details_v6(name=name, version=version)
             except JobType.DoesNotExist:
                 raise Http404
     
@@ -303,7 +303,7 @@ class JobTypeDetailsView(GenericAPIView):
         """
 
         try:
-            job_type = JobType.objects.get_details_v6(name, version)
+            job_type = JobType.objects.get_details_v6(name=name, version=version)
         except JobType.DoesNotExist:
             raise Http404
         except NonSeedJobType as ex:

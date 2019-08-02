@@ -2292,7 +2292,7 @@ class JobTypeManager(models.Manager):
 
         return job_types
 
-    def get_details_v6(self, name, version, id=None):
+    def get_details_v6(self, name=None, version=None, id=None):
         """Returns the job type for the given name and version with all detail fields included.
 
         The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.

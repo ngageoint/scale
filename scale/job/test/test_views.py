@@ -1174,8 +1174,9 @@ class TestJobTypesPostViewV6(APITestCase):
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
 
         job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
-        self.assertEqual(job_type.docker_iamge, 'my-job-1.0.0-seed:1.0.1')
-        self.assertDictEqual(job_type.manifest, manifest)
+        self.assertEqual(job_type.docker_image, 'my-job-1.0.0-seed:1.0.1')
+        self.maxDiff = None
+        self.assertEqual(job_type.manifest['job']['packageVersion'], '1.0.1')
         self.assertEqual(job_type.max_scheduled, 1)
         self.assertEqual(job_type.is_published, True)
 
@@ -1191,14 +1192,14 @@ class TestJobTypesPostViewV6(APITestCase):
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_20O_OK, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
         
         job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
-        self.assertEqual(job_type.docker_iamge, 'my-job-1.0.0-seed:1.0.2')
+        self.assertEqual(job_type.docker_image, 'my-job-1.0.0-seed:1.0.2')
 
     def test_create_seed_secrets(self):
         """Tests creating a new seed job type with secrets."""
@@ -1390,22 +1391,24 @@ class TestJobTypesPostViewV6(APITestCase):
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertTrue('/%s/job-types/my-minimum-job/1.0.0/' % self.api in response['location'])
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_RECIPES')
 
         job_type = JobType.objects.filter(name='my-minimum-job', version='1.0.0').first()
 
         results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['name'], job_type.name)
-        self.assertEqual(results['version'], job_type.version)
-        self.assertEqual(results['title'], job_type.get_title())
-        self.assertEqual(results['is_published'], job_type.is_published)
-        self.assertFalse(results['is_active'])
-        self.assertEqual(results['revision_num'], job_type.revision_num)
-        self.assertEqual(results['revision_num'], 2)
-        self.assertIsNotNone(results['configuration']['mounts'])
-        self.assertIsNotNone(results['configuration']['settings'])
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_RECIPES')
+        
+        self.assertEqual(True, job_type.is_published)
+        self.assertFalse(job_type.is_active)
+        self.assertEqual(job_type.docker_image, 'my-job-1.0.0-seed:1.0.1')
+        self.assertEqual(2, job_type.revision_num)
 
         mock_create.assert_called_with(self.recipe_type1.id, job_type.id)
         
@@ -1505,6 +1508,14 @@ class TestJobTypeDetailsViewV6(APITestCase):
         self.assertEqual(result['max_scheduled'], 2)
         #Secrets scrubbed from configuration on return
         self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'scale'})
+        self.assertEqual(len(result['recipe_types']), 0)
+        
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type1.name, self.job_type1.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['recipe_types']), 1)
+        self.assertEqual(result['recipe_types'][0]['id'], self.recipe_type1.id)
 
     def test_edit_not_found(self):
         """Tests calling the get job type details view with a job name/version that does not exist."""

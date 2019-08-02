@@ -1307,7 +1307,7 @@ class RecipeTypeManager(models.Manager):
         jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
         recipe_type.job_types = []
         for id in jt_ids:
-            jt = JobType.objects.get_details_v6("", "", id=id)
+            jt = JobType.objects.get_details_v6(id=id)
             recipe_type.job_types.append(jt)
             
         sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
