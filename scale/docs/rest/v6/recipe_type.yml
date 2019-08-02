@@ -101,8 +101,12 @@ paths:
             type: string
           description: name of an existing recipe type
       responses:
-        '204':
-          description: 204 no content
+        '200':
+          description: The 200 OK response indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/recipe_type_validation'
           
   /recipe-types/{name}/revisions/:
     get:
@@ -330,6 +334,11 @@ components:
               items:
                 $ref: '#/components/schemas/recipe_type'
               description: List of Sub Recipe Types in this recipe type
+            super_recipe_types:
+              type: array
+              items:
+                $ref: '#/components/schemas/recipe_type'
+              description: List of Recipe Types this recipe type is a member of
 
 
     recipe_type_revisions:

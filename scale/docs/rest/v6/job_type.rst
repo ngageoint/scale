@@ -365,6 +365,7 @@ Response: 200 OK
     "unmet_resources": "chocolate,vanilla",
     "manifest": { ... },
     "configuration": { ... },
+    "recipe_types": [:ref:`Recipe Type Details <rest_v6_recipe_type_details>`],
     "created": "2015-03-11T00:00:00Z",
     "deprecated": null,
     "paused": null,
@@ -424,6 +425,9 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | configuration            | JSON Object       | JSON description of the configuration for running the job                |
 |                          |                   | (See :ref:`rest_v6_job_type_configuration`)                              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| recipe_types             | JSON Object       | List of all recipe_types that this job type is a member of               |
+|                          |                   | (See :ref:`rest_v6_recipe_type_configuration`)                           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | created                  | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -1016,7 +1020,15 @@ Request: PATCH http://.../v6/job-types/test/1.0.0/
       }
     }
 
-Response: 204 No Content
+Response: 200 OK
+
+.. code-block:: javascript
+
+   {
+      "is_valid": true,
+      "errors": [],
+      "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}]
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Job Type**                                                                                                       |
@@ -1052,8 +1064,22 @@ Response: 204 No Content
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 204 No Content                                                                                     |
+| **Status**         | 200 OK                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+---------------------+------------------------------------------------------------------------------+
+| is_valid           | Boolean           | Indicates if the given fields were valid for editing the job type. If this     |
+|                    |                   | is true, then the job type was successfully edited.                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
+|                    |                   | with *name* and *description* string fields.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| warnings           | Array             | Lists any warnings found. Warnings are useful to present to the user, but do   |
+|                    |                   | not cause *is_valid* to be false. The warnings are JSON objects with *name*    |
+|                    |                   | and *description* string fields.                                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
 
 .. _rest_v6_job_type_configuration:
