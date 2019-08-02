@@ -1548,7 +1548,9 @@ class TestJobTypeDetailsViewV6(APITestCase):
         self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
         
-    def test_edit_warnings(self):
+    @patch('job.views.CommandMessageManager')
+    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
+    def test_edit_warnings(self, mock_create, mock_msg_mgr):
         """Tests deprecating a job type and getting warnings"""
 
         url = '/%s/job-types/%s/%s/' % (self.api, self.job_type1.name, self.job_type1.version)
