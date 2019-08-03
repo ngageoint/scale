@@ -1530,7 +1530,9 @@ class TestJobTypeDetailsViewV6(APITestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    def test_edit_simple(self):
+    @patch('job.views.CommandMessageManager')
+    @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
+    def test_edit_simple(self, mock_create, mock_msg_mgr):
         """Tests editing only the basic attributes of a job type"""
 
         url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
