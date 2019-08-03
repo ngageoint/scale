@@ -1530,7 +1530,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    @patch('job.views.CommandMessageManager')
+    @patch('job.models.CommandMessageManager')
     @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
     def test_edit_simple(self, mock_create, mock_msg_mgr):
         """Tests editing only the basic attributes of a job type"""
@@ -1550,7 +1550,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
         self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
         
-    @patch('job.views.CommandMessageManager')
+    @patch('job.models.CommandMessageManager')
     @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
     def test_edit_warnings(self, mock_create, mock_msg_mgr):
         """Tests deprecating a job type and getting warnings"""
