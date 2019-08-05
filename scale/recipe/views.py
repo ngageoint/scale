@@ -233,7 +233,6 @@ class RecipeTypeDetailsView(GenericAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
-        rt = None
         try:
             with transaction.atomic():
                 # Validate the recipe definition

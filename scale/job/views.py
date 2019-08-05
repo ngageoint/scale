@@ -369,7 +369,6 @@ class JobTypeDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        jt = None
         # Check for invalid fields
         fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration', 'manifest', 'docker_image'}
         for key, value in request.data.iteritems():
