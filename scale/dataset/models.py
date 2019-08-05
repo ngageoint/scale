@@ -225,7 +225,7 @@ class DataSet(models.Model):
 
         if isinstance(self.definition, basestring):
             self.definition = {}
-        return DataSetDefinition(definition=self.definition)
+        return DataSetDefinitionV6(definition=self.definition).get_definition()
 
     def get_v6_definition_json(self):
         """Returns the dataset definition in v6 of the JSON schema
@@ -234,7 +234,7 @@ class DataSet(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_definition_to_v6_json(self.get_dataset_definition()).get_dict())
+        return rest_utils.strip_schema_version(convert_definition_to_v6_json(self.get_definition()).get_dict())
 
     def get_dataset_definition(self):
         """Returns the dataset definition
@@ -323,7 +323,7 @@ class DataSetMemberManager(models.Manager):
             raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset provided for dataset member')
 
         if not data:
-            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No data description provided')
+            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No data provided')
 
         try:
             dataset.get_definition().validate(data)

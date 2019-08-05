@@ -127,35 +127,27 @@ class TestDataSetPostView(APITestCase):
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertTrue('/%s/data-sets/my-new-dataset/1.0.0/' % self.api in response['location'])
+        result = json.loads(response.content)
+        new_dataset_id = result['id']
+        self.assertTrue('/%s/data-sets/%d/' % (self.api, new_dataset_id) in response['location'])
 
-        dataset = DataSet.objects.filter(name='my-new-dataset').first()
-        self.assertEqual(dataset.name, json_data['name'])
-        self.assertEqual(dataset.title, json_data['title'])
-        self.assertEqual(dataset.version, json_data['version'])
+        self.assertEqual(result['title'], json_data['title'])
+        self.assertEqual(result['description'], json_data['description'])
 
-        # update the dataset
+        # create another dataset
         json_data_2 = {
-            'name': 'my-new-dataset',
-            'version': '1.0.0',
-            'title': 'My Dataset',
-            'description': 'An updated test dataset',
-            'definition': {
-                'parameters': [
-                   {
-                       'name': 'param-1',
-                       'param_type': 'global',
-                   },
-                ],
-            },
+            'title': 'My Dataset 2',
+            'description': 'Another test dataset',
+            'definition': copy.deepcopy(dataset_test_utils.DATASET_DEFINITION),
         }
         response = self.client.generic('POST', url, json.dumps(json_data_2), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertTrue('/%s/data-sets/my-new-dataset/1.0.0/' % self.api in response['location'])
+        result = json.loads(response.content)
+        new_dataset_id = result['id']
+        self.assertTrue('/%s/data-sets/%d/' % (self.api, new_dataset_id) in response['location'])
 
-        # check the dataset was updated
-        dataset = DataSet.objects.filter(name='my-new-dataset').first()
-        self.assertEqual(dataset.description, json_data_2['description'])
+        self.assertEqual(result['title'], json_data_2['title'])
+        self.assertEqual(result['description'], json_data_2['description'])
 
 
 """Tests the v6/data-sets/<dataset_id> and v6/datsets/<dataset_name> endpoints"""
@@ -171,23 +163,23 @@ class TestDatasetDetailsView(APITestCase):
         self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
                                                   last_modified=now())
         # Create files
-        self.src_file_a = ScaleFile.objects.create(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
+        self.src_file_a = storage_utils.create_file(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
-        self.src_file_b = ScaleFile.objects.create(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
+        self.src_file_b = storage_utils.create_file(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
-        self.src_file_c = ScaleFile.objects.create(file_name='input_c.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
+        self.src_file_c = storage_utils.create_file(file_name='input_c.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
-        self.src_file_b2 = ScaleFile.objects.create(file_name='input_b2.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
+        self.src_file_b2 = storage_utils.create_file(file_name='input_b2.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
-        self.src_file_e = ScaleFile.objects.create(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
+        self.src_file_e = storage_utils.create_file(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
-        self.src_file_f = ScaleFile.objects.create(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
+        self.src_file_f = storage_utils.create_file(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
 
         # Create datasets

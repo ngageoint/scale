@@ -19,17 +19,16 @@ class DataSetDefinition(object):
         :type defintion: dict
         """
 
-        # self.name = name
         if not definition:
             definition = {}
         self._definition = definition
         self.param_names = set()
         self.parameters = {}
         if 'parameters' in self._definition:
-            self.parameters = InterfaceV6(definition['parameters']).get_interface()
-            self.param_names = self.parameters.parameters.keys()
+            self.parameters = InterfaceV6(interface=definition['parameters']).get_interface()
+            self.param_names = set(self.parameters.parameters.keys())
 
-        self.global_parameters = None
+        self.global_parameters = {}
         if 'global_parameters' in self._definition:
             self.global_parameters = InterfaceV6(definition['global_parameters']).get_interface()
             keys = self.global_parameters.parameters.keys()
@@ -39,7 +38,7 @@ class DataSetDefinition(object):
                     'Invalid dataset definition: Names must be unique. %s defined more than once' % dupes)
             self.param_names.update(keys)
 
-        self.global_data = None
+        self.global_data = {}
         if 'global_data' in self._definition:
             self.global_data = DataV6(definition['global_data']).get_data()
 

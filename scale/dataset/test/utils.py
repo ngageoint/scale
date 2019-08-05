@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from datetime import datetime
 
 import storage.test.utils as storage_utils
+from data.data.json.data_v6 import DataV6
 
 from dataset.models import DataSet, DataSetMember
 from dataset.definition.definition import DataSetDefinition
@@ -14,10 +15,13 @@ DATASET_VERSION_COUNTER = 1
 
 DATASET_MEMBER_NAME_COUNTER = 1
 
+DATA_DEFINITION = {'version': '6', 'files': {'input_e': [1234], 'input_f': [1235, 1236]},
+                                            'json': {'input_g': 999, 'input_h': {'greeting': 'hello'}}}
+
 DATASET_DEFINITION = {'version': '6',
-                      'global_parameters': {'version': '6', 'files': {'input_a': [1234], 'input_b': [1235, 1236]},
-                                            'json': {'input_c': 999, 'input_d': {'hello'}}},
-                      'global_data': {'version': '6', 'files': [{'name': 'input_a'},
+                      'global_data': {'version': '6', 'files': {'input_a': [1234], 'input_b': [1235, 1236]},
+                                            'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}},
+                      'global_parameters': {'version': '6', 'files': [{'name': 'input_a'},
                                                                 {'name': 'input_b', 'media_types': ['application/json'],
                                                                  'required': False, 'multiple': True}],
                                       'json': [{'name': 'input_c', 'type': 'integer'},
@@ -73,11 +77,12 @@ def create_dataset_member(dataset=None, data=None, created=None):
 
     if not data:
         file = storage_utils.create_file()
-        data = {
+        data_dict = {
             'version': '6',
             'files': {'input_a': [file.id]},
             'json': {'input_c': 999, 'input_d': {'hello'}}
         }
+        data = DataV6(data=data).get_data()
 
     if not created:
         created=datetime.now()

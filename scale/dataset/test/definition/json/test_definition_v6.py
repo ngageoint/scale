@@ -22,11 +22,11 @@ class TestDataV6(TestCase):
 
         # Try interface with nothing set
         definition = DataSetDefinitionV6()
-        json = convert_definition_to_v6_json(definition)
+        json = convert_definition_to_v6_json(definition.get_definition())
         DataSetDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
 
         # Try data with a variety of values
-        definition = DataSetDefinition()
+        definition = DataSetDefinition(definition={})
         file_param = FileParameter('input_1', ['application/json'])
         json_param = JsonParameter('input_2', 'integer')
         file_param2 = FileParameter('input_3', ['application/json'])
@@ -48,7 +48,7 @@ class TestDataV6(TestCase):
         # Invalid version
         definition = {'version': 'BAD'}
         with self.assertRaises(InvalidDataSetDefinition) as context:
-            DataSetDefinitionV6(definition, do_validate=True)
+            DataSetDefinitionV6(definition=definition, do_validate=True)
         self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')
 
         # Valid v6 dataset
@@ -66,8 +66,15 @@ class TestDataV6(TestCase):
                      'json': [{'name': 'input_g', 'type': 'integer'},
                               {'name': 'input_h', 'type': 'object', 'required': False}]}
 
-        dataset = {'version': '6', 'global_parameters': gp, 'global_data': gd, 'parameters': param}
+        dataset['parameters'] = param
 
         with self.assertRaises(InvalidDataSetDefinition) as context:
             dataset2 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_dataset()
             self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')
+
+        # Global param/data mismatch
+        dataset = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
+        del dataset['global_data']['files']['input_a']
+        with self.assertRaises(InvalidData) as context:
+            dataset3 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_dataset()
+        self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')

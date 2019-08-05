@@ -16,6 +16,7 @@ from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsS
 from dataset.exceptions import InvalidDataSetDefinition
 from dataset.models import DataSet
 from dataset.definition.definition import DataSetDefinition
+from dataset.definition.json.definition_v6 import DataSetDefinitionV6
 import util.rest as rest_util
 from util.rest import BadParameter
 
@@ -97,7 +98,7 @@ class DataSetView(ListCreateAPIView):
 
         # validate the definition
         try:
-            dataset_def = DataSetDefinition(definition)
+            dataset_def = DataSetDefinitionV6(definition=definition).get_definition()
         except InvalidDataSetDefinition as ex:
             message = 'DataSet definition is invalid'
             logger.exception(message)
@@ -156,7 +157,7 @@ class DataSetDetailsView(GenericAPIView):
         """
 
         try:
-            dataset = DataSet.objects.get_dataset_id_v6(dataset_id)
+            dataset = DataSet.objects.get_details_v6(dataset_id)
         except DataSet.DoesNotExist:
             raise Http404
 

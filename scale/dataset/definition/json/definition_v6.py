@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from data.data.json.data_v6 import DATA_SCHEMA, DataV6
-from data.interface.json.interface_v6 import INTERFACE_SCHEMA, InterfaceV6
+from data.data.exceptions import InvalidData
+from data.data.json.data_v6 import DATA_SCHEMA, DataV6, convert_data_to_v6_json
+from data.interface.json.interface_v6 import INTERFACE_SCHEMA, InterfaceV6, convert_interface_to_v6_json
 from dataset.exceptions import InvalidDataSetDefinition
 from dataset.definition.definition import DataSetDefinition
 
@@ -30,17 +31,26 @@ def convert_definition_to_v6_json(definition):
     """Returns the v6 dataset definition JSON for the given definition
 
     :param definition: The dataset definition
-    :type definition: :class:`??`
+    :type definition: :class:`dataset.definition.DataSetDefinition'
     :returns: The v6 dataset definition JSON
-    :rtype: :class:`dataset.DataSetDefinition
+    :rtype: :class:`dataset.json.DataSetDefinitionV6
     """
 
     def_dict = {
-        'version': SCHEMA_VERSION,
-        'global_parameters': definition['global_parameters'],
-        'global_data': definition['global_data'],
-        'parameters': definition['parameters']
+        'version': SCHEMA_VERSION
     }
+
+    if definition.parameters:
+        interface_dict = convert_interface_to_v6_json(definition.parameters).get_dict()
+        def_dict['parameters'] = interface_dict
+
+    if definition.global_parameters:
+        interface_dict = convert_interface_to_v6_json(definition.global_parameters).get_dict()
+        def_dict['global_parameters'] = interface_dict
+
+    if definition.global_data:
+        data_dict = convert_data_to_v6_json(definition.global_data).get_dict()
+        def_dict['global_data'] = data_dict
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
 
@@ -65,17 +75,20 @@ class DataSetDefinitionV6(object):
             self._definition['version'] = SCHEMA_VERSION
 
         self._populate_default_values()
-        
-        self._check_for_name_collisions()
 
         try:
             if do_validate:
                 validate(self._definition, DATASET_DEFINITION_SCHEMA)
-                dd = self.get_definition()
-                gd = DataV6(data=definition['global_data'], do_validate=True).get_data()
-                dd.validate(data=gd)
+                if 'global_data' in definition:
+                    dd = self.get_definition()
+                    gd = DataV6(data=definition['global_data'], do_validate=True).get_data()
+                    dd.validate(data=gd)
         except ValidationError as ex:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', 'Error validating against schema: %s' % unicode(ex))
+        except InvalidData as ex:
+            raise InvalidDataSetDefinition('INVALID_GLOBAL_DATA', 'Error validating global data: %s' % unicode(ex))
+
+        self._check_for_name_collisions()
 
     def get_definition(self):
         """Returns the definition
@@ -96,8 +109,11 @@ class DataSetDefinitionV6(object):
         """Populates any missing JSON fields that have default values
         """
 
-        if 'parameter' not in self._definition:
-            self._definition['parameter'] = InterfaceV6().get_dict()
+        if 'parameters' not in self._definition:
+            self._definition['parameters'] = InterfaceV6().get_dict()
+
+        if 'global_parameters' not in self._definition:
+            self._definition['global_parameters'] = InterfaceV6().get_dict()
 
     def _check_for_name_collisions(self):
         """Ensures all global and regular parameter names are unique, and throws a
@@ -106,9 +122,15 @@ class DataSetDefinitionV6(object):
 
         names = []
 
-        names.extend(self._definition['parameters'])
-        
-        names += [global_param['name'] for global_param in self._definition['global_parameters']]
+        for file_dict in self._definition['parameters']['files']:
+            names.append(file_dict['name'])
+        for json_dict in self._definition['parameters']['json']:
+            names.append(json_dict['name'])
+
+        for file_dict in self._definition['global_parameters']['files']:
+            names.append(file_dict['name'])
+        for json_dict in self._definition['global_parameters']['json']:
+            names.append(json_dict['name'])
 
         if len(names) != len(set(names)):
             raise InvalidDataSetDefinition('NAME_COLLISION_ERROR','Parameter names must be unique.' )
