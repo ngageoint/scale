@@ -17,6 +17,7 @@ from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
 from queue.models import Queue
 from recipe.models import RecipeType
+from recipe.messages.create_recipes import SubRecipe
 from rest_framework.test import APITestCase, APITransactionTestCase
 from util import rest
 from util.parse import datetime_to_string, duration_to_string
@@ -211,6 +212,104 @@ class TestBatchesViewV6(APITransactionTestCase):
         url = '/v6/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+    
+    @patch('batch.views.create_batch_recipes_message')
+    def test_create_new_batch(self, mock_create):
+        """Tests successfully creating a new batch"""
+        
+        msg = CreateBatchRecipes()
+        mock_create.return_value = msg
+        
+        recipe_type_4 = recipe_test_utils.create_recipe_type_v6()
+        recipe_test_utils.create_recipe(recipe_type=recipe_type_4)
+        recipe_test_utils.create_recipe(recipe_type=recipe_type_4)
+        
+        json_data = {
+            'title': 'Batch Title',
+            'description': 'Batch Description',
+            'recipe_type_id': recipe_type_4.id,
+            'definition': {
+                'dataset': 1,
+                'forced_nodes': {
+                    'all': True,
+                },
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+    
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+        self.assertIsNotNone(new_batch_id)
+        self.assertEqual(result['recipes_estimated'], 2)
+        
+        # Create recipe of recipes
+        recipe_type_5 = recipe_test_utils.create_recipe_type_v6()
+        recipe_test_utils.create_recipe(recipe_type=recipe_type_5)
+        recipe_type_6 = recipe_test_utils.create_recipe_type_v6()
+        recipe_test_utils.create_recipe(recipe_type=recipe_type_6)
+        
+        recipe_def = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        del recipe_def['nodes']['node_a']
+        del recipe_def['nodes']['node_b']
+        del recipe_def['nodes']['node_c']
+        recipe_def['nodes']['node_d'] = {'dependencies': [],
+                                                 'input': {'input_a': {'type': 'recipe', 'input': 'bar'}},
+                                                 'node_type': {'node_type': 'recipe', 'recipe_type_name': recipe_type_5.name,
+                                                               'recipe_type_revision':  recipe_type_5.revision_num}}
+        recipe_def['nodes']['node_e'] = {'dependencies': [],
+                                                 'input': {'input_a': {'type': 'recipe', 'input': 'bar'}},
+                                                 'node_type': {'node_type': 'recipe', 'recipe_type_name': recipe_type_6.name,
+                                                               'recipe_type_revision':  recipe_type_6.revision_num}}
+        recipe_type_7 = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+        
+        recipe1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_7)
+        subs = []
+        subs.append(SubRecipe(recipe_type_5.name, recipe_type_5.revision_num, 'node_d', True))
+        subs.append(SubRecipe(recipe_type_6.name, recipe_type_6.revision_num, 'node_e', True))
+        recipe_test_utils.create_subrecipes(recipe1, subs)
+        
+        recipe2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_7)
+        recipe_test_utils.create_subrecipes(recipe2, subs)
+        
+        recipe3 = recipe_test_utils.create_recipe(recipe_type=recipe_type_7)
+        recipe_test_utils.create_subrecipes(recipe3, subs)
+        
+        recipe4 = recipe_test_utils.create_recipe(recipe_type=recipe_type_7)
+        recipe_test_utils.create_subrecipes(recipe4, subs)
+        
+        json_data = {
+            'title': 'Batch Title',
+            'description': 'Batch Description',
+            'recipe_type_id': recipe_type_7.id,
+            'definition': {
+                'dataset': 1,
+                'forced_nodes': {
+                    'all': True,
+                },
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+    
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+        self.assertIsNotNone(new_batch_id)
+        import pdb; pdb.set_trace()
+        
+        # Verify all recipes (including sub-recipes) were created: 
+        # 4 base recipes, each with two sub-recipes
+        self.assertEqual(result['recipes_estimated'], 12)
+        
 
     @patch('batch.views.CommandMessageManager')
     @patch('batch.views.create_batch_recipes_message')

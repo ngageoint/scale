@@ -11,7 +11,7 @@ class BatchDefinition(object):
     def __init__(self):
         """Constructor
         """
-
+        self.dataset = None
         self.root_batch_id = None
         self.forced_nodes = None
 
@@ -32,6 +32,7 @@ class BatchDefinition(object):
         :raises :class:`batch.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """
 
+        # Re-processing a previous batch
         if self.root_batch_id:
             if batch.recipe_type_id != batch.superseded_batch.recipe_type_id:
                 raise InvalidDefinition('MISMATCHED_RECIPE_TYPE',
@@ -48,6 +49,8 @@ class BatchDefinition(object):
                 self.prev_batch_diff.set_force_reprocess(self.forced_nodes)
             if not self.prev_batch_diff.can_be_reprocessed:
                 raise InvalidDefinition('PREV_BATCH_NO_REPROCESS', 'Previous batch cannot be reprocessed')
+        # New batch
+        
 
         self._estimate_recipe_total(batch)
         if not self.estimated_recipes:
@@ -62,8 +65,8 @@ class BatchDefinition(object):
         :param batch: The batch model
         :type batch: :class:`batch.models.Batch`
         """
-
+        
+        from batch.models import Batch
         self.estimated_recipes = 0
+        self.estimated_recipes += Batch.objects.calculate_estimated_recipes(batch, self)
 
-        if batch.superseded_batch:
-            self.estimated_recipes += batch.superseded_batch.recipes_total

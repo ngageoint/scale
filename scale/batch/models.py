@@ -20,7 +20,7 @@ from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
-from recipe.models import Recipe, RecipeTypeRevision
+from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 from util import parse as parse_utils
@@ -100,6 +100,29 @@ class BatchManager(models.Manager):
             BatchMetrics.objects.bulk_create(batch_metrics_models)
 
         return batch
+        
+    def calculate_estimated_recipes(self, batch, definition):
+        """Calculates the estimated number of recipes that will be created for this batch. 
+        This number is calculated by:
+        1. The number of existing recipes for the specific recipe type that are 
+           not currently superseded
+        2. The number of sub-recipes in the recipe
+           These should be filtered if not changed/marked for re-run
+        """
+        if batch.superseded_batch:
+            return batch.superseded_batch.recipes_total
+        
+        import pdb; pdb.set_trace()
+        recipes = Recipe.objects.get_recipes_v6(type_ids=[batch.recipe_type_id], is_superseded=False)
+        
+        if not (definition.forced_nodes and definition.forced_nodes.all_nodes):
+            recipes = recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
+            
+        estimated_recipes = len(recipes)
+        for recipe in recipes:
+            estimated_recipes += len(RecipeNode.objects.get_subrecipes(recipe.id))
+        
+        return estimated_recipes
 
     def get_batch_from_root(self, root_batch_id):
         """Returns the latest (non-superseded) batch model with the given root batch ID. The returned model
@@ -540,6 +563,7 @@ class Batch(models.Model):
         :returns: The batch definition in v6 of the JSON schema
         :rtype: dict
         """
+        # import pdb; pdb.set_trace()
 
         # Handle batches with old (pre-v6) definitions
         if 'version' in self.definition and self.definition['version'] == '1.0':
