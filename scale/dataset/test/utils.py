@@ -14,6 +14,20 @@ DATASET_VERSION_COUNTER = 1
 
 DATASET_MEMBER_NAME_COUNTER = 1
 
+DATASET_DEFINITION = {'version': '6',
+                      'global_parameters': {'version': '6', 'files': {'input_a': [1234], 'input_b': [1235, 1236]},
+                                            'json': {'input_c': 999, 'input_d': {'hello'}}},
+                      'global_data': {'version': '6', 'files': [{'name': 'input_a'},
+                                                                {'name': 'input_b', 'media_types': ['application/json'],
+                                                                 'required': False, 'multiple': True}],
+                                      'json': [{'name': 'input_c', 'type': 'integer'},
+                                               {'name': 'input_d', 'type': 'object', 'required': False}]},
+                      'parameters': {'version': '6', 'files': [{'name': 'input_e'},
+                                                               {'name': 'input_f', 'media_types': ['application/json'],
+                                                                'required': False, 'multiple': True}],
+                                     'json': [{'name': 'input_g', 'type': 'integer'},
+                                              {'name': 'input_h', 'type': 'object', 'required': False}]}}
+
 def create_dataset(name=None, title=None, description=None, version=None,
     created=None, definition=None):
     """Creates a dataset model for unit testing

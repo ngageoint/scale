@@ -89,10 +89,8 @@ class DataSetView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        name = rest_util.parse_string(request, 'name', required=False)
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
-        version = rest_util.parse_string(request, 'version', required=False)
         definition = rest_util.parse_dict(request, 'definition', required=True)
 
         # validate the definition
@@ -103,28 +101,19 @@ class DataSetView(ListCreateAPIView):
             logger.exception(message)
             raise BadParameter('%s: %s' % (message, unicode(ex)))
 
-        existing_dataset = DataSet.objects.filter(name=name, version=version).first()
-        if not existing_dataset:
-            try:
-                dataset = DataSet.objects.create_dataset_v6(version, dataset_def, name=name, title=title, description=description)
-            except Exception as ex:
-                message = 'Unable to create new dataset'
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
-        else:
-            try:
-                DataSet.objects.edit_dataset_v6(existing_dataset.id, definition, title=title, description=description)
-            except Exception as ex:
-                message = 'Unable to edit dataset: %i' % existing_dataset.id
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+        try:
+            dataset = DataSet.objects.create_dataset_v6(dataset_def, title=title, description=description)
+        except Exception as ex:
+            message = 'Unable to create new dataset'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         try:
-            dataset = DataSet.objects.get_details_v6(name, version)
+            dataset = DataSet.objects.get_details_v6(dataset.id)
         except DataSet.DoesNotExist:
             raise Http404
 
-        url = reverse('dataset_details_view', args=[dataset.name, dataset.version], request=request)
+        url = reverse('dataset_details_view', args=[dataset.id], request=request)
         serializer = DataSetDetailsSerializerV6(dataset)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
@@ -136,112 +125,43 @@ class DataSetDetailsView(GenericAPIView):
 
     serializer_class = DataSetDetailsSerializerV6
 
-    def get(self, request, name=None, version=None, dataset_id=None):
+    def get(self, request, dataset_id):
         """
         Retrieves the details for a data set and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param dataset_version: The version of the dataset
-        :type version: string
+        :param dataset_id: The dataset id
+        :type dataset_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
         if self.request.version == 'v6':
-            return self.get_v6(request, name=name, version=version, dataset_id=dataset_id)
+            return self.get_v6(request, dataset_id=dataset_id)
         else:
             raise Http404
 
-    def get_v6(self, request, name=None, version=None, dataset_id=None):
+    def get_v6(self, request, dataset_id):
         """Retrieves the details for a dataset version and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
+        :param dataset_id: The dataset id
+        :type dataset_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        dataset = None
+
         try:
-            if dataset_id:
-                dataset = DataSet.objects.get_dataset_id_v6(dataset_id)
-            else:
-                dataset = DataSet.objects.get_details_v6(name, version)
+            dataset = DataSet.objects.get_dataset_id_v6(dataset_id)
         except DataSet.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(dataset)
         return Response(serializer.data)
 
-
-    def patch(self, request, name=None, version=None, dataset_id=None):
-        """Edits an existing dataset and returns the updated details
-
-        :param request: the HTTP PATCH request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        if self.request.version == 'v6':
-            return self.patch_v6(request, name=name, version=version, dataset_id=dataset_id)
-        else:
-            raise Http404
-
-    # TODO
-    def patch_v6(self, request, name=None, version=None, dataset_id=None):
-        """Edits an existing dataset and returns the updated details
-
-        :param request: the HTTP PATCH request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        # validate the dataset configuration
-        dataset_dict = rest_util.parse_dict(request, 'definition', required=False)
-
-        try:
-            if dataset_dict:
-                definition = DataSetDefinition(dataset_dict).get_dict()
-        except InvalidDataSetDefinition as ex:
-            raise BadParameter('DataSet definition invalid: %s' % unicode(ex))
-
-        # fetch the current dataset model
-        dataset = None
-        try:
-            if dataset_id:
-                dataset = DataSet.objects.get(pk=dataset_id)
-            else:
-                dataset = DataSet.objects.get(name=name, version=version)
-        except DataSet.DoesNotExist:
-            raise Http404
-
-        # Edit the dataset
-        try:
-            with transaction.atomic():
-                DataSet.objects.edit_dataset_v6(dataset_id=dataset.id, definition=dataset_dict)
-        except (ValueError, InvalidDataSetDefinition) as ex:
-            logger.exception('Unable to update dataset: %i', dataset.id)
-            raise BadParameter(unicode(ex))
-
-        return HttpResponse(status=204)
-
-    def post(self, request, name=None, version=None, dataset_id=None):
+    def post(self, request, dataset_id):
         """ Adds a datsetmember to the dataset
 
         :param request: the HTTP request
@@ -253,7 +173,7 @@ class DataSetDetailsView(GenericAPIView):
         """
 
         if self.request.version == 'v6':
-            return self.post_v6(request, name=name, version=version, dataset_id=dataset_id)
+            return self.post_v6(request, dataset_id=dataset_id)
         else:
             raise Http404 # no datasets before v6
 
@@ -272,44 +192,6 @@ class DataSetDetailsView(GenericAPIView):
 
         return Response({'message': 'To Be implemented'})
 
-class DataSetVersionsView(ListCreateAPIView):
-    """This view is the endpoint for retrieving the details of a specific dataset by version"""
-    queryset = DataSet.objects.all()
-
-    serializer_class = DataSetDetailsSerializerV6
-
-    def list(self, request, name):
-        """Determines api version and call specific method
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-        if self.request.version == 'v6':
-            return self.list_v6(request, name)
-        else:
-            raise Http404
-
-    def list_v6(self, request, name):
-        """Retrieves the list of versions for a dataset with the given name and return them in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-        order = ['-version']
-
-        datasets = DataSet.objects.get_dataset_versions_v6(name, order)
-
-        page = self.paginate_queryset(datasets)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
 
 class DataSetValidationView(APIView):
     """This view is the endpoint for validating a new dataset before attempting to create it"""
@@ -339,8 +221,6 @@ class DataSetValidationView(APIView):
         """
 
         # Validate the minimum info is present:
-        name = rest_util.parse_string(request, 'name', required=True)
-        version = rest_util.parse_string(request, 'version', required=True)
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
 
@@ -348,7 +228,7 @@ class DataSetValidationView(APIView):
         definition_dict = rest_util.parse_dict(request, 'definition', required=True)
 
         # Validate the dataset'
-        validation = DataSet.objects.validate_dataset_v6(name, version, definition_dict, title=title, description=description)
+        validation = DataSet.objects.validate_dataset_v6(definition_dict, title=title, description=description)
 
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}

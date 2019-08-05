@@ -7,10 +7,10 @@ import json
 import time
 
 import django
-from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc, now
-from mock import patch
 from rest_framework import status
+from rest_framework.test import APITestCase, APITransactionTestCase
+from util import rest
 
 from dataset.models import DataSet
 import dataset.test.utils as dataset_test_utils
@@ -18,11 +18,13 @@ import storage.test.utils as storage_utils
 from storage.models import ScaleFile, Workspace
 
 """Tests the v6/data-sets/ endpoint"""
-class TestDatasetViews(TestCase):
+class TestDatasetViews(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.dataset = dataset_test_utils.create_dataset(name='test-dataset-1',
             title="Test Dataset 1", description="Test Dataset Number 1", version='1.0.0')
@@ -94,12 +96,14 @@ class TestDatasetViews(TestCase):
         self.assertEqual(len(result['results']), 2)
 
 """Tests the v6/data-sets POST calls """
-class TestDataSetPostView(TestCase):
+class TestDataSetPostView(APITestCase):
     """Tests the v6/dataset/ POST API call"""
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_invalid_definition(self):
         """Tests successfully calling POST with an invalid definition."""
@@ -164,11 +168,13 @@ class TestDataSetPostView(TestCase):
 
 
 """Tests the v6/data-sets/<dataset_id> and v6/datsets/<dataset_name> endpoints"""
-class TestDatasetDetailsView(TestCase):
+class TestDatasetDetailsView(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         # Create workspace
         self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
@@ -330,11 +336,13 @@ class TestDatasetDetailsView(TestCase):
         self.assertEqual(result['description'], self.dataset2.description)
 
 
-class TestDataSetValidationView(TestCase):
+class TestDataSetValidationView(APITestCase):
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_validate_successful(self):
         """Tests successfully validating a new dataset using the v6/data-sets/validation API

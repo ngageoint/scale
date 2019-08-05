@@ -8,6 +8,7 @@ from collections import namedtuple
 
 import django.contrib.postgres.fields
 from django.db import models, transaction
+from django.db.models import Q
 
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
@@ -40,15 +41,11 @@ class DataSetManager(models.Manager):
     """Provides additional methods for handling datasets"""
 
     @transaction.atomic
-    def create_dataset_v6(self, version, definition, name=None, title=None, description=None):
+    def create_dataset_v6(self, definition, title=None, description=None):
         """Creates and returns a new dataset for the given name/title/description/definition/version??
 
-        :param version: Version of the dataset
-        :type version: string
         :param definition: Parameter definition of the dataset
         :type definition: :class:`dataset.definition.definition.DataSetDefinition`
-        :param name: unique name of the dataset
-        :type name: string
         :param title: Optional title of the dataset
         :type title: string
         :param description: Optional description of the dataset
@@ -65,11 +62,7 @@ class DataSetManager(models.Manager):
 
         dataset = DataSet()
 
-        dataset.name = name
-        dataset.version = version
-        dataset.version_array = dataset.get_dataset_version_array(dataset.version)
         dataset.title = title
-        dataset.version = version
         dataset.description = description
         dataset.definition = definition.get_dict()
 
@@ -77,36 +70,7 @@ class DataSetManager(models.Manager):
 
         return dataset
 
-    # TODO
-    @transaction.atomic
-    def edit_dataset_v6(self, dataset_id, definition=None, title=None, description=None):
-        """Handles updating the given datset
-
-        :param dataset_id: The unique identifier of the dataset to edit
-        :type dataset_id: int
-        :param definition: The DataSetDefinition
-        :type: :class:`dataset.definition.DataSetDefinition`
-        :param title: The title of the dataset
-        :type title: string
-        :param description: The description of the DataSet
-        :type description: string
-        :raises :class:`dataset.exceptions.InvalidDataSetField`: If a given dataset field has an invalid value
-        """
-
-        # Aquire model lock for dataset
-        dataset = DataSet.objects.select_for_update().get(pk=dataset_id)
-
-        # Update parameters
-        if title:
-            dataset.title = title
-        if description:
-            dataset.description = description
-        if definition:
-            dataset.definition = definition
-
-        dataset.save()
-
-    def get_dataset_id_v6(self, dataset_id):
+    def get_details_v6(self, dataset_id):
         """Gets additional details for the given dataset id
 
         :returns: The full dataset for the given id
@@ -115,40 +79,25 @@ class DataSetManager(models.Manager):
 
         return DataSet.objects.get(pk=dataset_id)
 
-    def get_dataset_versions_v6(self, dataset_name, order):
-        """Gets all versions of the given dataset_name"""
-
-        return self.filter_datasets(dataset_names=[dataset_name], order=order)
-
-    def get_details_v6(self, name, version):
-        """Returns the dataset for the given name and version
-
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
-        :returns: The dataset with all detail fields incuded
-        :rtype: :class:`dataset.models.DataSet`
-        """
-        return DataSet.objects.all().get(name=name, version=version)
-
-    def get_datasets_v6(self, created_time=None, dataset_ids=None, dataset_names=None, order=None):
+    def get_datasets_v6(self, started=None, ended=None, dataset_ids=None, keywords=None, order=None):
         """Handles retrieving datasets - possibly filtered and ordered
 
         :returns: The list of datasets that match the given filters
         :rtype: [:class:`dataset.models.DataSet`]
         """
-        return self.filter_datasets(created_time=created_time, dataset_ids=dataset_ids, dataset_names=dataset_names, order=order)
+        return self.filter_datasets(started=started, ended=ended, dataset_ids=dataset_ids, keywords=keywords, order=order)
 
-    def filter_datasets(self, created_time=None, dataset_ids=None, dataset_names=None, order=None):
+    def filter_datasets(self, started=None, ended=None, dataset_ids=None, keywords=None, order=None):
         """Returns a query for dataset models that filters on the given fields
 
-        :param created: Query datsets created at this time
-        :type created: :class:`datetime.datetime`
+        :param started: Query datasets created after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query datasets created before this amount of time.
+        :type ended: :class:`datetime.datetime`
         :param dataset_ids: Query datasets assciated with the given id(s)
         :type dataset_ids: list
-        :param dataset_names: Query datasets assciated with the given name(s)
-        :type dataset_names: list
+        :param keywords: Query datasets with title or description matching one of the specified keywords
+        :type keywords: list
         :param order: A list of fields to control the sort order.
         :type order: list
         :returns: The dataset query
@@ -159,14 +108,22 @@ class DataSetManager(models.Manager):
         datasets = self.all()
 
         # Apply time range filtering
-        if created_time:
-            datasets = datasets.filter(created__gte=created_time)
+        if started:
+            datasets = datasets.filter(created__gte=started)
+        if ended:
+            datasets = datasets.filter(created__lte=ended)
 
         # Apply additional filters
         if dataset_ids:
             datasets = datasets.filter(id__in=dataset_ids)
-        if dataset_names:
-            datasets = datasets.filter(name__in=dataset_names)
+
+        # Execute a sub-query that returns distinct job type names that match the provided filter arguments
+        if keywords:
+            key_query = Q()
+            for keyword in keywords:
+                key_query |= Q(title__icontains=keyword)
+                key_query |= Q(description__icontains=keyword)
+            datasets = datasets.filter(key_query)
 
         # Apply sorting
         if order:
@@ -176,7 +133,7 @@ class DataSetManager(models.Manager):
 
         return datasets
 
-    def validate_dataset_v6(self, name, version, definition, title=None, description=None):
+    def validate_dataset_v6(self, definition, title=None, description=None):
         """Validates the given dataset definiton
 
         :param definition: The dataset definition
@@ -189,9 +146,9 @@ class DataSetManager(models.Manager):
         errors = []
         warnings = []
 
-        datset_definition = None
+        dataset_definition = None
         try:
-            datset_definition = DataSetDefinitionV6(definition=definition, do_validate=True)
+            dataset_definition = DataSetDefinitionV6(definition=definition, do_validate=True)
         except InvalidDataSetDefinition as ex:
             is_valid = False
             errors.append(ex.error)
