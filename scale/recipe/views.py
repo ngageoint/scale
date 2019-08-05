@@ -445,6 +445,8 @@ class RecipesView(ListAPIView):
                                                 batch_ids=batch_ids, is_superseded=is_superseded,
                                                 is_completed=is_completed, order=order)
 
+        # additional optimizations not being captured by the existing ones in the manager
+        # see issue #1717
         recipes = recipes.select_related('recipe_type_rev__recipe_type').defer(None)
         page = self.paginate_queryset(recipes)
         serializer = self.get_serializer(page, many=True)
