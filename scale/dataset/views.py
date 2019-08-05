@@ -51,15 +51,17 @@ class DataSetView(ListCreateAPIView):
         """
 
         # filter options:
-        #   created_time, dataset_id, dataset_name
-        created_time = rest_util.parse_timestamp(request, 'created', required=False)
+        #   started, ended, dataset_id, keywords
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
         dataset_ids = rest_util.parse_int_list(request, 'id', required=False)
-        dataset_names = rest_util.parse_string_list(request, 'name', required=False)
+        keywords = rest_util.parse_string_list(request, 'keyword', required=False)
 
         order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
 
-        data_sets = DataSet.objects.get_datasets_v6(created_time=created_time,
-            dataset_ids=dataset_ids, dataset_names=dataset_names, order=order)
+        data_sets = DataSet.objects.get_datasets_v6(started=started, ended=ended,
+            dataset_ids=dataset_ids, keywords=keywords, order=order)
 
         page = self.paginate_queryset(data_sets)
         serializer = self.get_serializer(page, many=True)

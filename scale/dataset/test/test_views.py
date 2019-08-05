@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import copy
 import datetime
 import json
 import time
@@ -119,19 +120,9 @@ class TestDataSetPostView(APITestCase):
         url = '/%s/data-sets/' % self.api
 
         json_data = {
-            'name': 'my-new-dataset',
-            'version': '1.0.0',
             'title': 'My Dataset',
             'description': 'A test dataset',
-            'definition': {
-                'version': '6',
-                'parameters': [
-                    {
-                        'name': 'param-1',
-                        'param_type': 'member',
-                    },
-                ],
-            },
+            'definition': copy.deepcopy(dataset_test_utils.DATASET_DEFINITION),
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
