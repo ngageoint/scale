@@ -10,8 +10,6 @@ urlpatterns = [
     url(r'^recipe-types/validation/$', recipe.views.RecipeTypesValidationView.as_view(),
         name='recipe_types_validation_view'),
     url(r'^recipe-types/(?P<name>[\w.-]+)/$', recipe.views.RecipeTypeDetailsView.as_view(), name='recipe_type_details_view'),
-    url(r'^recipe-types/(?P<name>[\w.-]+)/validation/$', recipe.views.RecipeTypesValidationView.as_view(),
-        name='recipe_type_validation_view'),
     url(r'^recipe-types/(?P<name>[\w.-]+)/revisions/$', recipe.views.RecipeTypeRevisionsView.as_view(), name='recipe_type_revisions_view'),
     url(r'^recipe-types/(?P<name>[\w.-]+)/revisions/(?P<revision_num>\d+)/$', recipe.views.RecipeTypeRevisionDetailsView.as_view(), name='recipe_type_revision_details_view'),
 
