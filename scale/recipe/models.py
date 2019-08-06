@@ -1392,6 +1392,8 @@ class RecipeTypeManager(models.Manager):
                 json = convert_recipe_diff_to_v6_json(diff)
                 diff = rest_utils.strip_schema_version(json.get_dict())
 
+            except RecipeType.DoesNotExist as ex:
+                pass
             except Exception as ex:
                 errors.append(ex.error)
                 logger.exception('Unable to generate RecipeDiff: %s' % ex)
