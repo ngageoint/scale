@@ -958,6 +958,33 @@ Seed compliant interfaces.</p>
 <em class="property">class </em><code class="descclassname">job.job_type_serializers.</code><code class="descname">JobTypeDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.job_type_serializers.JobTypeSerializerV6" title="job.job_type_serializers.JobTypeSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">job.job_type_serializers.JobTypeSerializerV6</span></code></a></p>
 <p>Converts job type model fields to REST output.</p>
+<dl class="class">
+<dt id="job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6">
+<em class="property">class </em><code class="descname">RecipeTypeSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="recipe.html#recipe.serializers.RecipeTypeBaseSerializerV6" title="recipe.serializers.RecipeTypeBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeBaseSerializerV6</span></code></a></p>
+<p>Converts recipe type model fields to REST output.</p>
+<dl class="attribute">
+<dt id="job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.definition">
+<code class="descname">definition</code><em class="property"> = None</em><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.definition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.job_types">
+<code class="descname">job_types</code><em class="property"> = None</em><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.job_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.sub_recipe_types">
+<code class="descname">sub_recipe_types</code><em class="property"> = None</em><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.sub_recipe_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.super_recipe_types">
+<code class="descname">super_recipe_types</code><em class="property"> = None</em><a class="headerlink" href="#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.super_recipe_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -4817,7 +4844,7 @@ indicates that the field should not change.</p>
 
 <dl class="method">
 <dt id="job.models.JobTypeManager.get_details_v6">
-<code class="descname">get_details_v6</code><span class="sig-paren">(</span><em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_details_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_details_v6</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_details_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the job type for the given name and version with all detail fields included.</p>
 <p>The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.</p>
 <table class="docutils field-list" frame="void" rules="none">

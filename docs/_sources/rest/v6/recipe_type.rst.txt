@@ -492,6 +492,7 @@ Location http://.../v6/recipe-types/my-recipe/
       "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`},
       "job_types": [:ref: `Job Type Details <rest_v6_job_type_details>`],
       "sub_recipe_types": [:ref:`Recipe Type Details <rest_v6_recipe_type_details>`],
+      "super_recipe_types": [:ref:`Recipe Type Details <rest_v6_recipe_type_details>`],
       "created": "2015-06-15T19:03:26.346Z",
       "deprecated": "2015-07-15T19:03:26.346Z",
       "last_modified": "2015-06-15T19:03:26.346Z"
@@ -537,10 +538,10 @@ v6 Validate Recipe Type
 Request: POST http://.../v6/recipe-types/validation/
 
  .. code-block:: javascript
- 
+
    {
       "name": "my-recipe-type",
-      "definition": { :ref: `Recipe Definition <rest_v6_recipe_json_definition>` }
+      "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`}
    }
     
 Response: 200 OK
@@ -618,6 +619,7 @@ Response: 200 OK
       "definition": {:ref: `Recipe Definition <rest_v6_recipe_json_definition>`},
       "job_types": [:ref: `Job Type Details <rest_v6_job_type_details>`],
       "sub_recipe_types": [:ref:`Recipe Type Details <rest_v6_recipe_type_details>`],
+      "super_recipe_types": [:ref:`Recipe Type Details <rest_v6_recipe_type_details>`],
       "created": "2015-06-15T19:03:26.346Z",
       "deprecated": "2015-07-15T19:03:26.346Z",
       "last_modified": "2015-06-15T19:03:26.346Z"
@@ -662,6 +664,8 @@ Response: 200 OK
 | sub_recipe_types   | Array             | List of all recipe_types that are referenced by this recipe type's definition  |
 |                    |                   | (See :ref:`Recipe Type Details <rest_v6_recipe_type_details>`)                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| super_recipe_types | Array             | List of all recipe_types that this recipe type is a member of                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | deprecated         | ISO-8601 Datetime | When the recipe type was deprecated (no longer active; previously archived).   |
@@ -680,7 +684,7 @@ v6 Edit Recipe Type
 Request: PATCH http://.../v6/recipe-types/test/
 
  .. code-block:: javascript
- 
+
     {
       "title": "My Recipe",
       "description": "A simple recipe type"
@@ -689,7 +693,15 @@ Request: PATCH http://.../v6/recipe-types/test/
       "is_active": true
     }
 
-Response: 204 No Content
+Response: 200 OK
+
+.. code-block:: javascript
+
+   {
+      "is_valid": true,
+      "errors": [],
+      "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}]
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Recipe Type**                                                                                                    |
@@ -716,8 +728,22 @@ Response: 204 No Content
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 204 NO CONTENT                                                                                     |
+| **Status**         | 200 OK                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+---------------------+------------------------------------------------------------------------------+
+| is_valid           | Boolean           | Indicates if the given fields were valid for editing a recipe type. If this    |
+|                    |                   | is true, then the recipe type was successfully edited.                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
+|                    |                   | with *name* and *description* string fields.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| warnings           | Array             | Lists any warnings found. Warnings are useful to present to the user, but do   |
+|                    |                   | not cause *is_valid* to be false. The warnings are JSON objects with *name*    |
+|                    |                   | and *description* string fields.                                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
 
 .. _rest_v6_recipe_type_revisions:
@@ -844,7 +870,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_type        | String            | The recipe type for this revision. (See :ref:`<rest_v6_recipe_type_list>`)     |
+| recipe_type        | String            | The recipe type for this revision. (See :ref:`rest_v6_recipe_type_list`)       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | revision_num       | Integer           | The revision number for this revision of the recipe type.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

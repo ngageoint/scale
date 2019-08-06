@@ -218,7 +218,7 @@ Location http://.../v6/strikes/105/
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 |                    | JSON Object       | All fields are the same as the Strike process details model.                   |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_strike_details:
@@ -290,7 +290,7 @@ Response: 200 OK
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | name               | String            | The identifying name of the Strike process used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -299,7 +299,7 @@ Response: 200 OK
 | description        | String            | A longer description of the Strike process.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job                | JSON Object       | The job that is associated with the Strike process.                            |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

@@ -83,7 +83,7 @@ Response: 200 OK
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
+|                    |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .hostname          | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -143,7 +143,7 @@ Response: 200 OK
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
+|                    |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -205,7 +205,7 @@ Response: 204 NO CONTENT
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
+|                    |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

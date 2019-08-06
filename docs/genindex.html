@@ -1988,9 +1988,13 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.definition">definition (batch.models.Batch attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.definition">(job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.definition">(recipe.models.RecipeType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevision.definition">(recipe.models.RecipeTypeRevision attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.definition">(recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.definition">(recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
 </li>
@@ -6373,8 +6377,6 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#module-job.views">job.views (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEnd.job_exe">job_exe (job.models.JobExecutionEnd attribute)</a>
 
       <ul>
@@ -6387,6 +6389,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_exe">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEnd.JOB_EXE_END_STATUSES">JOB_EXE_END_STATUSES (job.models.JobExecutionEnd attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_exe_file_links">job_exe_file_links (job.models.JobExecution attribute)</a>
@@ -6539,8 +6543,14 @@
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.create_jobs.RecipeJob.job_type_version">job_type_version (job.messages.create_jobs.RecipeJob attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.job_types">job_types (recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.job_types">job_types (job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.job_types">(recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.job_types">(recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.job_types_for_recipe_type">job_types_for_recipe_type (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobBaseSerializerV6">JobBaseSerializerV6 (class in job.serializers)</a>
@@ -6818,6 +6828,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeBaseSerializerV6">JobTypeBaseSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6">JobTypeDetailsSerializerV6 (class in job.job_type_serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6">JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeDetailsView">JobTypeDetailsView (class in job.views)</a>
 </li>
@@ -10277,6 +10289,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6">RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6">RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 (class in recipe.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView">RecipeTypeDetailsView (class in recipe.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeJobLink">RecipeTypeJobLink (class in recipe.models)</a>
@@ -12277,8 +12291,14 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeSubLink.sub_recipe_type_id">sub_recipe_type_id (recipe.models.RecipeTypeSubLink attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.sub_recipe_types">sub_recipe_types (recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.sub_recipe_types">sub_recipe_types (job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.sub_recipe_types">(recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.sub_recipe_types">(recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.sub_recipes">sub_recipes (recipe.models.Recipe attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.sub_recipes_completed">sub_recipes_completed (recipe.models.Recipe attribute)</a>
@@ -12311,6 +12331,16 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetryDatabaseQuery.success_with_return">(util.test.test_retry.TestRetryDatabaseQuery method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.super_recipe_types">super_recipe_types (job.job_type_serializers.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6.super_recipe_types">(recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeDetailsSerializerV6.RecipeTypeSerializerV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeListSerializerV6.super_recipe_types">(recipe.serializers.RecipeTypeListSerializerV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6.super_recipe_types">(recipe.serializers.RecipeTypeSerializerV6 attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.supersede_batch">supersede_batch() (batch.models.BatchManager method)</a>
@@ -13186,6 +13216,8 @@
       <li><a href="architecture/django/code_docs/accounts.test.html#accounts.test.test_views.TestUserDetail.test_edit_user_staff_promote">test_edit_user_staff_promote() (accounts.test.test_views.TestUserDetail method)</a>
 </li>
       <li><a href="architecture/django/code_docs/accounts.test.html#accounts.test.test_views.TestUserDetail.test_edit_user_unauthorized">test_edit_user_unauthorized() (accounts.test.test_views.TestUserDetail method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV6.test_edit_warnings">test_edit_warnings() (job.test.test_views.TestJobTypeDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV6.test_empty_media">test_empty_media() (job.test.test_views.TestJobTypesValidationViewV6 method)</a>
 </li>
@@ -14527,10 +14559,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_accepted_none">test_parse_int_list_accepted_none() (util.test.test_rest.TestRest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_accepted_partial">test_parse_int_list_accepted_partial() (util.test.test_rest.TestRest method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_accepted_partial">test_parse_int_list_accepted_partial() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_default">test_parse_int_list_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
