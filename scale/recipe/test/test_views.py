@@ -833,7 +833,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        warnings = [{u'name': u'RECIPE_TYPE_NOT_FOUND', u'description': u"Unable to find an existing recipe type with name: not-a-name"}]
+        warnings = []
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
 
 

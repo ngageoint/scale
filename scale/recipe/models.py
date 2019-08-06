@@ -1393,9 +1393,6 @@ class RecipeTypeManager(models.Manager):
                 diff = rest_utils.strip_schema_version(json.get_dict())
 
             except RecipeType.DoesNotExist as ex:
-                if name:
-                    msg = 'Unable to find an existing recipe type with name: %s' % name
-                    warnings.append(ValidationWarning('RECIPE_TYPE_NOT_FOUND', msg))
                 pass
             except Exception as ex:
                 errors.append(ex.error)
