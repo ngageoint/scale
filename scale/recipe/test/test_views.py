@@ -384,6 +384,8 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         self.assertEqual(len(result['sub_recipe_types']), 1)
         for entry in result['sub_recipe_types']:
             self.assertTrue(entry['id'], [self.recipe_type1.id])
+            
+        self.assertEqual(len(result['super_recipe_types']), 0)
 
         self.assertIn('deprecated', result)
 
@@ -391,6 +393,17 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
         del versionless['version']
         self.maxDiff = None
         self.assertDictEqual(result['definition'], versionless)
+
+        url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['job_types']), 1)
+        self.assertEqual(result['job_types'][0]['id'], self.job_type1.id)
+        
+        self.assertEqual(len(result['super_recipe_types']), 1)
+        self.assertEqual(result['super_recipe_types'][0]['id'], self.recipe_type2.id)
 
     @patch('recipe.models.CommandMessageManager')
     @patch('recipe.messages.update_recipe_definition.create_activate_recipe_message')
@@ -406,7 +419,12 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_RECIPES')
         
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.is_active, False)
@@ -425,7 +443,11 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.revision_num, 2)
@@ -448,7 +470,11 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': [], u'diff': {}})
 
         recipe_type = RecipeType.objects.get(pk=self.recipe_type1.id)
         self.assertEqual(recipe_type.revision_num, 2)

@@ -200,7 +200,7 @@ Location http://.../v6/workspaces/105/
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 |                    | JSON Object       | All fields are the same as the workspace details model.                        |
-|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                    |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 

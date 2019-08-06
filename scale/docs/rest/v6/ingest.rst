@@ -163,15 +163,15 @@ Response: 200 OK
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
+|                    |                   | (See :ref:`Ingest Details <rest_v6_ingest_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_name         | String            | The name of the file being ingested.                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .scan              | JSON Object       | The scan process that triggered the ingest.                                    |
-|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .status            | String            | The current status of the ingest.                                              |
 |                    |                   | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,   |
@@ -192,12 +192,12 @@ Response: 200 OK
 | .file_path         | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .workspace         | JSON Object       | The workspace storing the file.                                                |
-|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                    |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .new_file_path     | String            | The relative path for where the file should be moved as part of ingesting.     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .new_workspace     | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
-|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                    |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job               | JSON Object       | The ID of the ingest job.                                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -206,7 +206,7 @@ Response: 200 OK
 | .ingest_ended      | ISO-8601 Datetime | When the ingest ended.                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
-|                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
+|                    |                   | (See :ref:`File Details <rest_v6_file_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -366,15 +366,15 @@ Response: 200 OK
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
+|                    |                   | (See :ref:`Ingest Details <rest_v6_ingest_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | file_name          | String            | The name of the file being ingested.                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | scan               | JSON Object       | The scan process that triggered the ingest.                                    |
-|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | strike             | JSON Object       | The strike process that triggered the ingest.                                  |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | status             | String            | The current status of the ingest.                                              |
 |                    |                   | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,   |
@@ -395,12 +395,12 @@ Response: 200 OK
 | file_path          | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | workspace          | JSON Object       | The workspace storing the file.                                                |
-|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                    |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | new_file_path      | String            | The relative path for where the file should be moved as part of ingesting.     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | new_workspace      | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
-|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
+|                    |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job                | JSON Object       | The ID of the ingest job.                                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -409,7 +409,7 @@ Response: 200 OK
 | ingest_ended       | ISO-8601 Datetime | When the ingest ended.                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | source_file        | JSON Object       | A reference to the source file that was stored by this ingest.                 |
-|                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
+|                    |                   | (See :ref:`File Details <rest_v6_file_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | data_started       | ISO-8601 Datetime | The start time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -530,7 +530,7 @@ Response: 200 OK
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .most_recent       | ISO-8601 Datetime | The date/time when the strike process last completed an ingest.                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

@@ -977,16 +977,16 @@ Response: 200 OK
 | ended                | ISO-8601 Datetime | When the job execution ended. (FAILED, COMPLETED, or CANCELED)                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job                  | JSON Object       | The job that is associated with the execution.                                 |
-|                      |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                      |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | node                 | JSON Object       | The node that ran the execution.                                               |
-|                      |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
+|                      |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | error                | JSON Object       | The last error that was recorded for the execution.                            |
 |                      |                   | (See :ref:`Error Details <rest_error_details>`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type             | JSON Object       | The job type that is associated with the execution.                            |
-|                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                      |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | timeout              | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
