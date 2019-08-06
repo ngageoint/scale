@@ -196,6 +196,10 @@ class NodeManager(object):
                     self._nodes[hostname] = SchedulerNode(agent_id, node_model, scheduler_config)
                     self._nodes[hostname].update_from_mesos(is_online=is_online)
                 self._agents[agent_id] = new_agent
+
+            # Get list of nodes that are currently running job_exes
+            nodes_running_job_exes = Node.objects.get_nodes_running_job_exes()
+
             # Update nodes from database models
             for node_model in node_models.values():
                 hostname = node_model.hostname
@@ -203,8 +207,9 @@ class NodeManager(object):
                     # Host name already exists, update model information
                     node = self._nodes[hostname]
                     node.update_from_model(node_model, scheduler_config)
-                    if node.should_be_removed():
-                        logger.info('Node %s removed since it is both offline and deprecated', hostname)
+                    if node.id not in nodes_running_job_exes and node.should_be_removed():
+                        logger.info('Node %s removed due to being offline or not offering resources', hostname)
+                        self._nodes[hostname].update_from_mesos(is_online=False)
                         del self._nodes[hostname]
                         if node.agent_id in self._agents:
                             del self._agents[node.agent_id]
