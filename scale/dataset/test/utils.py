@@ -82,11 +82,7 @@ def create_dataset_member(dataset=None, data=None, created=None):
             'files': {'input_a': [file.id]},
             'json': {'input_c': 999, 'input_d': {'hello'}}
         }
-        data = DataV6(data=data).get_data()
+        data = DataV6(data=data_dict).get_data()
 
-    if not created:
-        created=datetime.now()
-
-    dataset_member = DataSetMember.objects.create(dataset=dataset, data=data, created=created)
-    dataset_member.save()
+    dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=dataset, data=data)
     return dataset_member

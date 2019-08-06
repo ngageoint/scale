@@ -35,7 +35,7 @@ class TestDataV6(TestCase):
         definition.add_global_parameter(json_param)
         definition.add_parameter(file_param2)
         definition.add_parameter(json_param2)
-        json = convert_data_to_v6_json(definition)
+        json = convert_definition_to_v6_json(definition)
         DataSetDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
         self.assertSetEqual(set(json.get_definition().get_parameters()), {'input_1', 'input_2', 'input_3', 'input_4'})
 

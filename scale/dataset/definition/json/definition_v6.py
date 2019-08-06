@@ -10,6 +10,8 @@ from data.interface.json.interface_v6 import INTERFACE_SCHEMA, InterfaceV6, conv
 from dataset.exceptions import InvalidDataSetDefinition
 from dataset.definition.definition import DataSetDefinition
 
+import util.rest as rest_utils
+
 SCHEMA_VERSION = '6'
 
 DATASET_DEFINITION_SCHEMA = {
@@ -42,15 +44,15 @@ def convert_definition_to_v6_json(definition):
 
     if definition.parameters:
         interface_dict = convert_interface_to_v6_json(definition.parameters).get_dict()
-        def_dict['parameters'] = interface_dict
+        def_dict['parameters'] = rest_utils.strip_schema_version(interface_dict)
 
     if definition.global_parameters:
         interface_dict = convert_interface_to_v6_json(definition.global_parameters).get_dict()
-        def_dict['global_parameters'] = interface_dict
+        def_dict['global_parameters'] = rest_utils.strip_schema_version(interface_dict)
 
     if definition.global_data:
         data_dict = convert_data_to_v6_json(definition.global_data).get_dict()
-        def_dict['global_data'] = data_dict
+        def_dict['global_data'] = rest_utils.strip_schema_version(data_dict)
 
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
 

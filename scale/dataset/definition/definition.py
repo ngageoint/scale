@@ -128,7 +128,6 @@ class DataSetDefinition(object):
         """
 
         warnings = []
-        for parameter in self.parameters:
-            warnings.extend(parameter.validate)
+        warnings.extend(self.parameters.validate())
 
         return warnings
