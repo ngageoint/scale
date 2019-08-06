@@ -78,15 +78,16 @@ class NodeManager(models.Manager):
             nodes = nodes.order_by('last_modified')
         return nodes
 
-    def get_nodes_with_no_job_exes(self):
-        """Returns a list of nodes that are active but not currently running a job_exes.
+    def get_nodes_running_job_exes(self):
+        """Returns a list of nodes that are currently running job_exes.
 
-        :returns: The list of nodes with no job_exes
+        :returns: The list of node ids running job_exes
         :rtype: list
         """
 
-        job_exes = JobExecution.objects.get_job_exes(statuses=['RUNNING'])
-        return Nodes.objects.filter(is_active=True).exclude(id__in=job_exes)
+        exclude_statuses = ['COMPLETED', 'FAILED', 'CANCELED']
+        job_exes = JobExecution.objects.all().exclude(jobexecutionend__status__in=exclude_statuses)
+        return Node.objects.filter(id__in=job_exes, is_active=True).values_list('id', flat=True)
 
     def get_scheduler_nodes(self, hostnames):
         """Returns a list of all nodes that either have one of the given host names or is active.
@@ -121,6 +122,16 @@ class NodeManager(models.Manager):
             new_data['pause_reason'] = None
         node_query.update(**new_data)
 
+    @transaction.atomic
+    def update_node_offers(self, hostnames, when):
+        """Update the last_offer_received field for nodes.
+
+        :param updates: List of maps to be updated [{hostname: string, offer_received: datetime},]
+        :type new_data: [str]
+        """
+        
+        Node.objects.filter(hostname__in=hostnames).update(last_offer_received=when)
+
 
 class Node(models.Model):
     """Represents a cluster node on which jobs can be run
@@ -139,6 +150,8 @@ class Node(models.Model):
     :type created: :class:`django.db.models.DateTimeField`
     :keyword deprecated: When the node was deprecated (no longer active)
     :type deprecated: :class:`django.db.models.DateTimeField`
+    :keyword last_offer_received: When mesos last offered resources for this node
+    :type last_offer_received: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the node model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -151,6 +164,7 @@ class Node(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     deprecated = models.DateTimeField(blank=True, null=True)
+    last_offer_received = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = NodeManager()
