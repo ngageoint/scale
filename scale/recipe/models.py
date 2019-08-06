@@ -1078,6 +1078,27 @@ class RecipeNodeManager(models.Manager):
 
         qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
         return {rn.node_name: rn.sub_recipe for rn in qry}
+        
+    def count_subrecipes(self, recipe_id, recurse=False):
+        """Counts the number of sub-recipes that belong to the given recipe
+        :param recipe_id: The recipe to count
+        :type recipe_id: int
+        :param recurse: Recurses into any sub-recieps if true
+        :type recurse: bool
+        :returns: The number of sub-recipes associated with the recipe_id
+        :rtype: int
+        """
+        
+        count = 0
+        qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
+        
+        count += len(qry)
+        if recurse and len(qry) > 0:
+            for rn in qry:
+                count += self.count_subrecipes(rn.sub_recipe.id, recurse)
+        
+        return count
+        
 
     def supersede_recipe_jobs(self, recipe_ids, when, node_names, all_nodes=False):
         """Supersedes the jobs for the given recipe IDs and node names

@@ -120,7 +120,8 @@ class BatchDefinitionV6(object):
         """
 
         definition = BatchDefinition()
-        definition.dataset = self._definition['dataset']
+        if 'dataset' in self._definition:
+            definition.dataset = self._definition['dataset']
         
         if 'forced_nodes' in self._definition:
             definition.forced_nodes = ForcedNodesV6(self._definition['forced_nodes']).get_forced_nodes()

@@ -107,21 +107,37 @@ class BatchManager(models.Manager):
         1. The number of existing recipes for the specific recipe type that are 
            not currently superseded
         2. The number of sub-recipes in the recipe
-           These should be filtered if not changed/marked for re-run
+           These should be filtered if not changed/marked for re-run?
+           
         """
+        # If this is a previous batch, use the previous batch total
         if batch.superseded_batch:
             return batch.superseded_batch.recipes_total
         
-        import pdb; pdb.set_trace()
+        #TODO: Grab the number of files in the provided dataset 
+        #      - this is the number of base recipes that will be created
+        #      - for now, counting the number of recipes that match the type
         recipes = Recipe.objects.get_recipes_v6(type_ids=[batch.recipe_type_id], is_superseded=False)
-        
-        if not (definition.forced_nodes and definition.forced_nodes.all_nodes):
-            recipes = recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
-            
         estimated_recipes = len(recipes)
-        for recipe in recipes:
-            estimated_recipes += len(RecipeNode.objects.get_subrecipes(recipe.id))
         
+        # If all nodes are forced:
+        if definition.forced_nodes and definition.forced_nodes.all_nodes:
+            # Count the number of sub-recipes
+            for recipe in recipes:
+                estimated_recipes += RecipeNode.objects.count_subrecipes(recipe.id, recurse=True)
+                
+        else:
+            # Only count the sub-recipes nodes that are forced
+            for recipe in recipes:
+                subs = RecipeNode.objects.get_subrecipes(recipe.id)
+                for sub in subs: 
+                    if sub in definition.forced_nodes.get_sub_recipe_names():
+                        estimated_recipes += 1 + RecipeNode.objects.count_subrecipes(subs[sub].id, True)
+
+        
+        # if not (definition.forced_nodes and definition.forced_nodes.all_nodes):
+        #     recipes = recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
+            
         return estimated_recipes
 
     def get_batch_from_root(self, root_batch_id):
