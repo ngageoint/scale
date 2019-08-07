@@ -54,28 +54,36 @@ class DataSetDefinition(object):
     def add_parameter(self, parameter):
         """Adds a new parameter to the dataset definition
 
-        :keyword parameter: Parameter to add
-        :type parameter:
+        :param parameter: The parameter to add
+        :type parameter: :class:`data.interface.parameter.Parameter`
         """
         if parameter.name in self.param_names:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
                 'Invalid dataset definition: %s cannot be defined more than once' % parameter.name)
         else:
             self.param_names.add(parameter.name)
-            self.parameters[parameter.name] = parameter
+            if self.parameters:
+                self.parameters.add_parameter(parameter)
+            else:
+                self.parameters = InterfaceV6().get_interface()
+                self.parameters.add_parameter(parameter)
 
     def add_global_parameter(self, parameter):
         """Adds a new global parameter to the dataset definition
 
-        :keyword parameter: Parameter to add
-        :type parameter:
+        :param parameter: The parameter to add
+        :type parameter: :class:`data.interface.parameter.Parameter`
         """
         if parameter.name in self.param_names:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
                 'Invalid dataset definition: %s cannot be defined more than once' % parameter.name)
         else:
             self.param_names.add(parameter.name)
-            self.global_parameters[parameter.name] = parameter
+            if self.global_parameters:
+                self.global_parameters.add_parameter(parameter)
+            else:
+                self.global_parameters = InterfaceV6().get_interface()
+                self.global_parameters.add_parameter(parameter)
 
     def get_parameter(self, parameter_name):
         """Retrieves the specified parameter from the dataset definition
@@ -83,10 +91,11 @@ class DataSetDefinition(object):
         :returns: The specified parameter of the dataset definition
         :rtype: :class:`data.interface.parameter.Parameter`
         """
-        if parameter_name in self.parameters:
-            return self.parameters[parameter_name]
-        if parameter_name in self.global_parameters:
-            return self.global_parameters[parameter_name]
+
+        if self.parameters and parameter_name in self.parameters.parameters:
+            return self.parameters.parameters[parameter_name]
+        if self.global_parameters and parameter_name in self.global_parameters.parameters:
+            return self.global_parameters.parameters[parameter_name]
         return None
 
     def get_parameters(self):
@@ -95,8 +104,8 @@ class DataSetDefinition(object):
         :returns: The list of parameter keys
         :rtype: [str]
         """
-        names = self.parameters.keys()
-        names.extend(self.global_parameters.keys())
+        names = self.parameters.parameters.keys()
+        names.extend(self.global_parameters.parameters.keys())
         return names
 
     def validate_data(self, data):

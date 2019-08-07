@@ -28,17 +28,17 @@ class TestDataV6(TestCase):
 
         # Try data with a variety of values
         definition = DataSetDefinition(definition={})
-        file_param = FileParameter('input_1', ['application/json'])
-        json_param = JsonParameter('input_2', 'integer')
-        file_param2 = FileParameter('input_3', ['application/json'])
-        json_param2 = JsonParameter('input_4', 'integer')
+        file_param = FileParameter('input_a', ['application/json'])
+        json_param = JsonParameter('input_b', 'integer')
+        file_param2 = FileParameter('input_c', ['application/json'])
+        json_param2 = JsonParameter('input_d', 'integer')
         definition.add_global_parameter(file_param)
         definition.add_global_parameter(json_param)
         definition.add_parameter(file_param2)
         definition.add_parameter(json_param2)
         json = convert_definition_to_v6_json(definition)
         DataSetDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
-        self.assertSetEqual(set(json.get_definition().get_parameters()), {'input_1', 'input_2', 'input_3', 'input_4'})
+        self.assertSetEqual(set(json.get_definition().get_parameters()), {'input_a', 'input_b', 'input_c', 'input_d'})
 
     def test_init_validation(self):
         """Tests the validation done in __init__"""
@@ -53,12 +53,12 @@ class TestDataV6(TestCase):
         self.assertEqual(context.exception.error.name, 'INVALID_VERSION')
 
         # Valid v6 dataset
-        dataset = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
-        dataset1 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_definition()
-        self.assertItemsEqual(dataset1.global_data.values['input_a'].file_ids, [1234])
-        self.assertItemsEqual(dataset1.global_data.values['input_b'].file_ids, [1235, 1236])
-        self.assertEqual(dataset1.global_data.values['input_c'].value, 999)
-        self.assertItemsEqual(dataset1.global_data.values['input_d'].value, ['hello'])
+        definition = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
+        definition1 = DataSetDefinitionV6(definition=definition, do_validate=True).get_definition()
+        self.assertItemsEqual(definition1.global_data.values['input_a'].file_ids, [1234])
+        self.assertItemsEqual(definition1.global_data.values['input_b'].file_ids, [1235, 1236])
+        self.assertEqual(definition1.global_data.values['input_c'].value, 999)
+        self.assertDictEqual(definition1.global_data.values['input_d'].value, {'greeting': 'hello'})
 
         #duplicate parameter
         param = {'version': '6', 'files': [{'name': 'input_a'},
@@ -67,15 +67,15 @@ class TestDataV6(TestCase):
                      'json': [{'name': 'input_g', 'type': 'integer'},
                               {'name': 'input_h', 'type': 'object', 'required': False}]}
 
-        dataset['parameters'] = param
+        definition['parameters'] = param
 
         with self.assertRaises(InvalidDataSetDefinition) as context:
-            dataset2 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_definition()
+            dataset2 = DataSetDefinitionV6(definition=definition, do_validate=True).get_definition()
             self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')
 
         # Global param/data mismatch
-        dataset = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
-        del dataset['global_data']['files']['input_a']
-        with self.assertRaises(InvalidData) as context:
-            dataset3 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_definition()
-        self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')
+        definition = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
+        del definition['global_data']['files']['input_a']
+        with self.assertRaises(InvalidDataSetDefinition) as context:
+            dataset3 = DataSetDefinitionV6(definition=definition, do_validate=True).get_definition()
+        self.assertEqual(context.exception.error.name, 'INVALID_GLOBAL_DATA')
