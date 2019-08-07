@@ -335,7 +335,7 @@ class DataSetMemberManager(models.Manager):
         dataset_member.data = convert_data_to_v6_json(data).get_dict()
         dataset_member.save()
 
-        DataSetFileManager.objects.create_dataset_files(dataset, data)
+        DataSetFile.objects.create_dataset_files(dataset, data)
 
         return dataset_member
 
@@ -422,7 +422,7 @@ class DataSetFileManager(models.Manager):
                 for id in v.file_ids:
                     file = DataSetFile()
                     file.dataset = dataset
-                    file.scale_file = id
+                    file.scale_file = ScaleFile.objects.get(pk=id)
                     file.parameter_name = i
                     file.save()
 
@@ -462,7 +462,7 @@ class DataSetFile(models.Model):
     dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     parameter_name = models.CharField(db_index=True, max_length=50)
-    objects = DataSetFileManager
+    objects = DataSetFileManager()
 
     class Meta(object):
         """meta information for the db"""

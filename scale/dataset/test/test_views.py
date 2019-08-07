@@ -11,6 +11,8 @@ import django
 from django.utils.timezone import utc, now
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
+
+from data.data.json.data_v6 import DataV6
 from util import rest
 
 from dataset.models import DataSet
@@ -213,28 +215,30 @@ class TestDatasetDetailsView(APITestCase):
             definition=definition2)
 
         # Create members
-        file = storage_utils.create_file(file_name="test.json", media_type='application/json')
-        data = {
+        data_dict = {
             'version': '6',
             'files': {'input_a': [self.src_file_a.id]},
             'json': {}
         }
+        data = DataV6(data=data_dict).get_dict()
         self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset,
             data=data)
 
-        data2 = {
+        data_dict = {
             'version': '6',
             'files': {'input_b': [self.src_file_b.id, self.src_file_b2.id]},
             'json': {}
         }
+        data2 = DataV6(data=data_dict).get_dict()
         self.mamber_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
             data=data2)
 
-        data3 = {
+        data_dict = {
             'version': '6',
             'files': {'input_b': [self.src_file_b.id, self.src_file_b2.id], 'input_c': [self.src_file_c.id]},
             'json': {}
         }
+        data3 = DataV6(data=data_dict).get_dict()
         self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
             data=data3)
 
@@ -334,23 +338,9 @@ class TestDataSetValidationView(APITestCase):
         url = '/%s/data-sets/validation/' % self.api
 
         json_data = {
-            'name': 'test-dataset',
             'title': 'Test Dataset',
             'description': 'My Test Dataset',
-            'version': '1.0.0',
-            'definition': {
-                'version': '6',
-                'parameters': [
-                    {
-                        'name': 'global-param',
-                        'param_type': 'global',
-                    },
-                    {
-                        'name': 'member-param',
-                        'param_type': 'member',
-                    },
-                ],
-            },
+            'definition': dataset_test_utils.DATASET_DEFINITION,
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)

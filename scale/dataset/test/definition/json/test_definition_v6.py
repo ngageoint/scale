@@ -46,10 +46,10 @@ class TestDataV6(TestCase):
         DataSetDefinitionV6(do_validate=True)
 
         # Invalid version
-        definition = {'version': 'BAD'}
         with self.assertRaises(InvalidDataSetDefinition) as context:
+            definition = {'version': 'BAD'}
             DataSetDefinitionV6(definition=definition, do_validate=True)
-        self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')
+        self.assertEqual(context.exception.error.name, 'INVALID_VERSION')
 
         # Valid v6 dataset
         dataset = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)

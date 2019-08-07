@@ -10,6 +10,7 @@ import django
 from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
 
+from data.data.json.data_v6 import DataV6
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from dataset.models import DataSet, DataSetMember
@@ -17,6 +18,7 @@ import dataset.test.utils as dataset_test_utils
 from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import DataSetDefinitionV6
 from storage.models import ScaleFile, Workspace
+import storage.test.utils as storage_test_utils
 
 class TestDataSetManager(TransactionTestCase):
 
@@ -44,10 +46,8 @@ class TestDataSetManager(TransactionTestCase):
     def test_create_dataset_v6(self):
         """Tests calling DataSetManager.create_dataset_v6() """
 
-        name = 'test-dataset'
         title = 'Test Dataset'
         description = 'Test DataSet description'
-        version = '1.0.0'
 
         # call test
         dataset = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
@@ -63,21 +63,17 @@ class TestDataSetManager(TransactionTestCase):
         title = 'Test Dataset 1'
         description = 'Test DataSet description 1'
 
-        dataset1 = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
+        dataset1 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
 
-        name = 'test-dataset-2'
         title = 'Test Dataset 2'
         description = 'Test DataSet description 2'
-        version = '1.0.0'
 
-        dataset2 = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
+        dataset2 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
 
-        name = 'test-dataset-3'
         title = 'Test Dataset 3'
         description = 'Test DataSet description 3'
-        version = '1.0.0'
 
-        dataset3 = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
+        dataset3 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
 
         ids = [dataset1.id, dataset3.id]
 
@@ -95,25 +91,19 @@ class TestDataSetManager(TransactionTestCase):
     def test_get_datasets_v6(self):
         """Tests calling DataSetmanager.get_datasets_v6() """
 
-        name = 'test-dataset-1'
         title = 'Test Dataset 1'
         description = 'Test DataSet description 1'
-        version = '1.0.0'
 
-        dataset1 = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
+        dataset1 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
 
-        name = 'test-dataset-2'
         title = 'Test Dataset 2'
         description = 'Test DataSet description 2'
-        version = '1.0.0'
-        dataset2 = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
+        dataset2 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
 
-        name = 'test-dataset-3'
         title = 'Test Dataset 3'
         description = 'Test DataSet description 3'
-        version = '1.0.0'
 
-        dataset3 = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
+        dataset3 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
 
         ids = [dataset1.id, dataset3.id]
         datasets = DataSet.objects.get_datasets_v6(dataset_ids=ids)
@@ -125,16 +115,12 @@ class TestDataSetManager(TransactionTestCase):
     def test_get_details_v6(self):
         """Tests calling DataSetManager.get_dataset_details() """
 
-        name = 'test-dataset'
         title = 'Test Dataset'
         description = 'Test DataSet description'
-        version = '1.0.0'
 
         # create object
-        dataset = DataSet.objects.create_dataset_v6(version, self.dataset_definition, name=name, title=title, description=description)
-        dataset2 = DataSet.objects.get_details_v6(name, version)
-        self.assertEquals(dataset.name, dataset2.name)
-        self.assertEquals(dataset.version, dataset2.version)
+        dataset = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
+        dataset2 = DataSet.objects.get_details_v6(dataset.id)
         self.assertDictEqual(dataset.definition, dataset2.definition)
 
 class TestDataSetMemberManager(TransactionTestCase):
@@ -144,50 +130,57 @@ class TestDataSetMemberManager(TransactionTestCase):
         django.setup()
 
         # create a dataset
-        self.dataset = dataset_test_utils.create_dataset(definition={'version': '6','parameters': [{'name': 'member-param', 'param_type': 'member'}],})
+        self.definition = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
+
+        self.file1 = storage_test_utils.create_file()
+        self.file2 = storage_test_utils.create_file()
+        self.file3 = storage_test_utils.create_file()
+        self.file4 = storage_test_utils.create_file()
+        self.file5 = storage_test_utils.create_file()
+        self.file6 = storage_test_utils.create_file()
+
+        self.dataset = dataset_test_utils.create_dataset(definition=self.definition)
 
     def test_create_datast_member(self):
         """Tests calling DataSetMember.create() """
-        definition = {
-            'name': 'member-param',
-            'input': {
-                'files': [{'name': 'input_a', 'mediaTypes': ['application/json'], 'required': True, 'partial': False}],
-                'json': [],
-            },
-        }
-
         # call test
-        dataset_member = dataset_test_utils.create_dataset_member(dataset=self.dataset,
-            definition=definition)
+        dataset_member = dataset_test_utils.create_dataset_member()
 
         # Check results
         the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
-        self.assertDictEqual(the_dataset_member.definition, definition)
+        self.assertDictEqual(the_dataset_member.data, {u'version': '7', u'files': {u'input_a': [13]}, u'json': {u'input_c': 999, u'input_d': {u'greeting': u'hello'}}})
 
     def test_create_dataset_member_v6(self):
         """Tests calling DataSetManager.create_dataset_v6() """
 
-        data = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict['files']['input_e'] = [self.file1.id]
+        data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
+        data = DataV6(data=data_dict).get_data()
 
         # call test
-        dataset_member = DataSetMember.objects.create_dataset_member_v6(self.dataset, data=data)
+        dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=self.dataset, data=data)
 
         # Check results
         the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
-        self.assertDictEqual(the_dataset_member.definition, data)
+        self.assertDictEqual(the_dataset_member.data, data_dict)
 
     def test_get_dataset_members_v6(self):
         """Tests calling DataSetMemberManager get_dataset_members"""
 
         # Add some members
-        data1 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict['files']['input_e'] = [self.file1.id]
+        data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
+        data1 = DataV6(data=data_dict).get_dict()
 
-        # dataset_member_definition = DataSetMemberDefinition(definition=member_definition_1)
         member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
 
-        data2 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict['files']['input_e'] = [self.file4.id]
+        data_dict['files']['input_f'] = [self.file5.id, self.file6.id]
+        data2 = DataV6(data=data_dict).get_dict()
 
-        # dataset_member_definition = DataSetMemberDefinition(definition=member_definition_2)
         member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
 
         members = DataSetMember.objects.get_dataset_members(self.dataset)
@@ -200,7 +193,7 @@ class TestDataSetMemberManager(TransactionTestCase):
                 expected = member_2
             else:
                 self.fail('Found unexpected result: %s' % member.id)
-            self.assertDictEqual(member.get_v6_definition_json(), expected.get_v6_definition_json())
+            self.assertDictEqual(member.get_v6_data_json(), expected.get_v6_data_json())
 
 class TestDataSetFile(TransactionTestCase):
     """Tests the DataSetFileManager class"""

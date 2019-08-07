@@ -12,7 +12,8 @@ from dataset.definition.definition import DataSetDefinition
 
 import util.rest as rest_utils
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '7'
+SCHEMA_VERSIONS = ['6', '7']
 
 DATASET_DEFINITION_SCHEMA = {
     'type': 'object',
@@ -76,6 +77,10 @@ class DataSetDefinitionV6(object):
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION
 
+        if self._definition['version'] not in SCHEMA_VERSIONS:
+            msg = '%s is an unsupported version number'
+            raise InvalidDataSetDefinition('INVALID_VERSION', msg % self._definition['version'])
+
         self._populate_default_values()
 
         try:
@@ -83,8 +88,7 @@ class DataSetDefinitionV6(object):
                 validate(self._definition, DATASET_DEFINITION_SCHEMA)
                 if 'global_data' in definition:
                     dd = self.get_definition()
-                    gd = DataV6(data=definition['global_data'], do_validate=True).get_data()
-                    dd.validate(data=gd)
+                    dd.validate()
         except ValidationError as ex:
             raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', 'Error validating against schema: %s' % unicode(ex))
         except InvalidData as ex:
@@ -113,9 +117,14 @@ class DataSetDefinitionV6(object):
 
         if 'parameters' not in self._definition:
             self._definition['parameters'] = InterfaceV6().get_dict()
+        else:
+            self._definition['parameters'] = InterfaceV6(interface=self._definition['parameters']).get_dict()
 
         if 'global_parameters' not in self._definition:
             self._definition['global_parameters'] = InterfaceV6().get_dict()
+        else:
+            self._definition['global_parameters'] = InterfaceV6(interface=self._definition['global_parameters']).get_dict()
+
 
     def _check_for_name_collisions(self):
         """Ensures all global and regular parameter names are unique, and throws a

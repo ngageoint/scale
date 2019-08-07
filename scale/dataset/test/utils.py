@@ -10,47 +10,42 @@ from data.data.json.data_v6 import DataV6
 from dataset.models import DataSet, DataSetMember
 from dataset.definition.definition import DataSetDefinition
 
-DATASET_NAME_COUNTER = 1
-DATASET_VERSION_COUNTER = 1
+DATASET_TITLE_COUNTER = 1
 
-DATASET_MEMBER_NAME_COUNTER = 1
-
-DATA_DEFINITION = {'version': '6', 'files': {'input_e': [1234], 'input_f': [1235, 1236]},
+DATA_DEFINITION = {'files': {'input_e': [1234], 'input_f': [1235, 1236]},
                                             'json': {'input_g': 999, 'input_h': {'greeting': 'hello'}}}
 
-DATASET_DEFINITION = {'version': '6',
-                      'global_data': {'version': '6', 'files': {'input_a': [1234], 'input_b': [1235, 1236]},
+DATASET_DEFINITION = {'global_data': {'files': {'input_a': [1234], 'input_b': [1235, 1236]},
                                             'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}},
-                      'global_parameters': {'version': '6', 'files': [{'name': 'input_a'},
+                      'global_parameters': {'files': [{'name': 'input_a', },
                                                                 {'name': 'input_b', 'media_types': ['application/json'],
                                                                  'required': False, 'multiple': True}],
                                       'json': [{'name': 'input_c', 'type': 'integer'},
                                                {'name': 'input_d', 'type': 'object', 'required': False}]},
-                      'parameters': {'version': '6', 'files': [{'name': 'input_e'},
+                      'parameters': {'files': [{'name': 'input_e'},
                                                                {'name': 'input_f', 'media_types': ['application/json'],
                                                                 'required': False, 'multiple': True}],
                                      'json': [{'name': 'input_g', 'type': 'integer'},
                                               {'name': 'input_h', 'type': 'object', 'required': False}]}}
 
-def create_dataset(name=None, title=None, description=None, version=None,
-    created=None, definition=None):
+def create_dataset(title=None, description=None, created=None, definition=None):
     """Creates a dataset model for unit testing
 
-    :keyword name: The name of the dataset
-    :type name: string
     :keyword title: The title of the dataset
     :type title: string
     :keyword description: The description of the dataset
     :type description: string
     :keyword created: The created time of the dataset
-    :type created: ??
+    :type created: :class: 'datetime'
+    :keyword definition: The dataset definition
+    :type definition: dict
     :returns: The dataset model
     :rtype: :class:`dataset.models.DataSet`
     """
 
-    if not name:
-        global DATASET_NAME_COUNTER
-        name = 'test-dataset-%i' % DATASET_NAME_COUNTER
+    if not title:
+        global DATASET_TITLE_COUNTER
+        title = 'Test Dataset %i' % DATASET_TITLE_COUNTER
 
     if not created:
         created = datetime.now()
@@ -59,30 +54,29 @@ def create_dataset(name=None, title=None, description=None, version=None,
             'parameters': [],
         }
 
-    dataset = DataSet.objects.create(name=name, title=title, description=description,
+    dataset = DataSet.objects.create(title=title, description=description,
         definition=definition, created=created)
     dataset.save()
     return dataset
 
-def create_dataset_member(dataset=None, data=None, created=None):
+def create_dataset_member(dataset=None, data=None):
     """Creates a datasetmember model
 
     :keyword dataset: The dataset the member is a part of
     :type dataset: :class:`dataset.models.DataSet`
     :keyword data: The member data
-    :type data: dict
+    :type data: :class:'data.data.data.Data'
     """
     if not dataset:
-        raise Exception('Cannot create dataset member without dataset')
+        dataset = create_dataset()
 
     if not data:
         file = storage_utils.create_file()
-        data_dict = {
-            'version': '6',
+        data = {
+            'version': '7',
             'files': {'input_a': [file.id]},
-            'json': {'input_c': 999, 'input_d': {'hello'}}
+            'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}
         }
-        data = DataV6(data=data_dict).get_data()
 
-    dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=dataset, data=data)
+    dataset_member = DataSetMember.objects.create(dataset=dataset, data=data)
     return dataset_member
