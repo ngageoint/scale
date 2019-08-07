@@ -127,14 +127,21 @@ class BatchManager(models.Manager):
                 estimated_recipes += RecipeNode.objects.count_subrecipes(recipe.id, recurse=True)
                 
         else:
-            # Only count the sub-recipes nodes that are forced
+            # Only count the sub-recipes nodes that are forced, or in the lineage of a forced node
             for recipe in recipes:
                 subs = RecipeNode.objects.get_subrecipes(recipe.id)
                 for sub in subs: 
+                    # If sub recipe is selected to re-run
                     if sub in definition.forced_nodes.get_sub_recipe_names():
                         estimated_recipes += 1 + RecipeNode.objects.count_subrecipes(subs[sub].id, True)
-
-        
+                   
+                    # If it's a child of a forced job node, we're going to need to run it
+                    else:
+                        recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
+                        for node_name in definition.forced_nodes.get_forced_node_names():
+                            if recipe_instance._definition.has_descendant(node_name, sub):
+                                estimated_recipes += 1 + RecipeNode.objects.count_subrecipes(subs[sub].id, True)
+                        
         # if not (definition.forced_nodes and definition.forced_nodes.all_nodes):
         #     recipes = recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
             

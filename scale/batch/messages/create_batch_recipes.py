@@ -77,9 +77,9 @@ class CreateBatchRecipes(CommandMessage):
         definition = batch.get_definition()
         new_messages = []
 
-        # Reprocess recipes from previous batch
+        # Reprocess recipes from previous batch or create a new batch
         if not self.is_prev_batch_done:
-            new_messages.extend(self._handle_previous_batch(batch, definition))
+                new_messages.extend(self._handle_previous_batch(batch, definition))
 
         if self.is_prev_batch_done:
             logger.info('All re-processing messages created, marking recipe creation as done')
@@ -91,6 +91,7 @@ class CreateBatchRecipes(CommandMessage):
 
         self.new_messages.extend(new_messages)
         return True
+        
 
     def _handle_previous_batch(self, batch, definition):
         """Handles re-processing all recipes in the previous batch, returning any messages needed for the re-processing
@@ -108,7 +109,17 @@ class CreateBatchRecipes(CommandMessage):
             self.is_prev_batch_done = True
             return messages
 
-        recipe_qry = Recipe.objects.filter(batch_id=batch.superseded_batch_id, recipe__isnull=True)
+        recipe_qry = None
+        # Re-processing a previous batch
+        if batch.superseded_batch_id:
+            recipe_qry = Recipe.objects.filter(batch_id=batch.superseded_batch_id, recipe__isnull=True)
+        # Creating a new batch set
+        else:
+            # Filter via input in dataset?
+            # What happens to data in the dataset that didn't have a recipe attached to it already?
+            recipe_qry = Recipe.objects.get_recipes_v6(type_ids=[batch.recipe_type_id], is_superseded=False)
+            
+        # Only handle MAX_RECIPE_NUM at a time
         if self.current_recipe_id:
             recipe_qry = recipe_qry.filter(id__lt=self.current_recipe_id)
         recipe_qry = recipe_qry.order_by('-id')

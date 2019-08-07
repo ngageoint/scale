@@ -418,3 +418,37 @@ class RecipeDefinition(object):
             results.insert(0, node.name)
 
         return results
+
+    def has_descendant(self, parent, descendant):
+        """Returns if the parent node contains descendant_node as a child/grand child/etc
+        
+        """
+        return self._has_descendant(self.graph[parent], descendant)
+        
+    def _has_descendant(self, parent_node, descendant):
+        """Recursive function for checking children
+        
+        """
+        for child in parent_node.children.values():
+            if child.name == descendant:
+                return True
+            
+            if child.node_type != RecipeNodeDefinition.NODE_TYPE:
+                return self._has_descendant(child, descendant)
+                
+    def has_ancestor(self, child, ancestor):
+        """Returns if the child node contains ancestor as a parent/grand parent/etc
+        
+        """
+        return self._has_ancestor(self.graph[child], ancestor)
+        
+    def _has_ancestor(self, child_node, ancestor):
+        """Recursive function for checking parents
+        
+        """
+        
+        for parent in child_node.parents.values():
+            if parent.name == ancestor:
+                return True
+            
+            return self._has_ancestor(parent, ancestor)

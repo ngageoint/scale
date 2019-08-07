@@ -247,6 +247,7 @@ class TestBatchesViewV6(APITransactionTestCase):
         new_batch_id = result['id']
         self.assertIsNotNone(new_batch_id)
         self.assertEqual(result['recipes_estimated'], 2)
+        mock_create.assert_called_with(new_batch_id)
         
         # Create recipe of recipes
         jt = job_test_utils.create_seed_job_type()
@@ -326,6 +327,7 @@ class TestBatchesViewV6(APITransactionTestCase):
         # Verify all recipes (including sub-recipes) were created: 
         # 4 base recipes, each with two sub-recipes = 12 recipes
         self.assertEqual(result['recipes_estimated'], 12)
+        mock_create.assert_called_with(new_batch_id)
         
         recipe_test_utils.edit_recipe_type_v6(recipe_type_7, title='new-recipe-type-title', description='new recipe type description')
         # Batch run recipe_type_7 with only node_a forced.
@@ -357,8 +359,80 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.assertIsNotNone(new_batch_id)
         
         # Verify all recipes (including sub-recipes) were created: 
-        # 4 base recipes, each with one sub-recipes = 8 recipes?
+        # 4 base recipes, each with one sub-recipe (only forcing = 8 recipes?
         self.assertEqual(result['recipes_estimated'], 8)
+        mock_create.assert_called_with(new_batch_id)
+        
+        
+        jt_3 = job_test_utils.create_seed_job_type()
+        jt_4 = job_test_utils.create_seed_job_type()
+        recipe_def = {'version': '7',
+                            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                                 'multiple': False}],
+                                      'json': []},
+                            'nodes': {'recipe_node_a': {'dependencies': [],
+                                                 'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'recipe', 'recipe_type_name': recipe_type_5.name,
+                                                               'recipe_type_revision':  recipe_type_5.revision_num}},
+                                      'recipe_node_b': {'dependencies': [{'name': 'node_d', 'acceptance': True}],
+                                                 'input': {'input_a': {'type': 'dependency', 'node': 'node_d',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'recipe', 'recipe_type_name': recipe_type_6.name,
+                                                               'recipe_type_revision':  recipe_type_6.revision_num}},
+                                      'node_c': {'dependencies': [],
+                                                 'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'job', 'job_type_name': jt_3.name,
+                                                               'job_type_version': jt_3.version,
+                                                               'job_type_revision': jt_3.revision_num}},
+                                      'node_d': {'dependencies': [{'name': 'node_c', 'acceptance': True}],
+                                                 'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_c',
+                                                                           'output': 'OUTPUT_IMAGE'}},
+                                                  'node_type': {'node_type': 'job', 'job_type_name': jt_4.name,
+                                                               'job_type_version': jt_4.version,
+                                                               'job_type_revision': jt_4.revision_num}}}}
+                                                               
+        recipe_type_8 = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+        
+        recipe1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_8)
+        subs = []
+        subs.append(SubRecipe(recipe_type_5.name, recipe_type_5.revision_num, 'recipe_node_a', False))
+        subs.append(SubRecipe(recipe_type_6.name, recipe_type_6.revision_num, 'recipe_node_b', False))
+        recipe_test_utils.create_subrecipes(recipe1, subs)
+        
+        recipe2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_8)
+        recipe_test_utils.create_subrecipes(recipe2, subs)
+        
+        recipe3 = recipe_test_utils.create_recipe(recipe_type=recipe_type_8)
+        recipe_test_utils.create_subrecipes(recipe3, subs)
+        
+        recipe4 = recipe_test_utils.create_recipe(recipe_type=recipe_type_8)
+        recipe_test_utils.create_subrecipes(recipe4, subs)                                                               
+        json_data = {
+            'title': 'Batch Title',
+            'description': 'Batch Description',
+            'recipe_type_id': recipe_type_8.id,
+            'definition': {
+                'dataset': 1,
+                'forced_nodes': {
+                    'all': False,
+                    'nodes': ['node_c']
+                },
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+        self.assertIsNotNone(new_batch_id)
+        
+        # Verify all recipes (including sub-recipes) were created: 
+        # 4 base recipes, each with one sub-recipe (only forcing = 8 recipes?
+        self.assertEqual(result['recipes_estimated'], 8)
+        mock_create.assert_called_with(new_batch_id)
         
 
     @patch('batch.views.CommandMessageManager')
