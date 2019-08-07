@@ -148,7 +148,7 @@ class TestDataSetMemberManager(TransactionTestCase):
 
         # Check results
         the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
-        self.assertDictEqual(the_dataset_member.data, {u'version': '7', u'files': {u'input_a': [13]}, u'json': {u'input_c': 999, u'input_d': {u'greeting': u'hello'}}})
+        self.assertDictEqual(the_dataset_member.data, {u'version': '7', u'files': {}, u'json': {u'input_c': 999, u'input_d': {u'greeting': u'hello'}}})
 
     def test_create_dataset_member_v6(self):
         """Tests calling DataSetManager.create_dataset_v6() """

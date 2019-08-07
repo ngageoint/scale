@@ -4,6 +4,7 @@ import copy
 import django
 from django.test import TestCase
 
+from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import convert_data_to_v6_json
 from data.interface.parameter import FileParameter, JsonParameter
 from dataset.definition.definition import DataSetDefinition
@@ -53,7 +54,7 @@ class TestDataV6(TestCase):
 
         # Valid v6 dataset
         dataset = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
-        dataset1 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_dataset()
+        dataset1 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_definition()
         self.assertItemsEqual(dataset1.global_data.values['input_a'].file_ids, [1234])
         self.assertItemsEqual(dataset1.global_data.values['input_b'].file_ids, [1235, 1236])
         self.assertEqual(dataset1.global_data.values['input_c'].value, 999)
@@ -69,12 +70,12 @@ class TestDataV6(TestCase):
         dataset['parameters'] = param
 
         with self.assertRaises(InvalidDataSetDefinition) as context:
-            dataset2 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_dataset()
+            dataset2 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_definition()
             self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')
 
         # Global param/data mismatch
         dataset = copy.deepcopy(dataset_test_utils.DATASET_DEFINITION)
         del dataset['global_data']['files']['input_a']
         with self.assertRaises(InvalidData) as context:
-            dataset3 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_dataset()
+            dataset3 = DataSetDefinitionV6(dataset=dataset, do_validate=True).get_definition()
         self.assertEqual(context.exception.error.name, 'INVALID_DATASET_DEFINITION')

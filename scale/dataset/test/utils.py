@@ -71,10 +71,9 @@ def create_dataset_member(dataset=None, data=None):
         dataset = create_dataset()
 
     if not data:
-        file = storage_utils.create_file()
         data = {
             'version': '7',
-            'files': {'input_a': [file.id]},
+            'files': {},
             'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}
         }
 
