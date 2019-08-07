@@ -60,20 +60,24 @@ class TestDataSetManager(TransactionTestCase):
     def test_filter_datasets(self):
         """Tests calling DataSetManager filter_datasets
         """
-        title = 'Test Dataset 1'
-        description = 'Test DataSet description 1'
+        today = now()
+        yesterday = today - datetime.timedelta(days=1)
+        tomorrow = today + datetime.timedelta(days=1)
+        
+        title1 = 'Test Dataset 1'
+        description1 = 'Test DataSet description 1'
 
-        dataset1 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
+        dataset1 = DataSet.objects.create(definition=self.definition, title=title1, description=description1, created=yesterday)
 
-        title = 'Test Dataset 2'
-        description = 'Test DataSet description 2'
+        title2 = 'Key Test Dataset 2'
+        description2 = 'Test DataSet description 2'
 
-        dataset2 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
+        dataset2 = DataSet.objects.create(definition=self.definition, title=title2, description=description2, created=today)
 
-        title = 'Test Dataset 3'
-        description = 'Test DataSet description 3'
+        title3 = 'Test Dataset 3'
+        description3 = 'Key Test DataSet description 3'
 
-        dataset3 = DataSet.objects.create_dataset_v6(definition=self.dataset_definition, title=title, description=description)
+        dataset3 = DataSet.objects.create(definition=self.definition, title=title3, description=description3, created=tomorrow)
 
         ids = [dataset1.id, dataset3.id]
 
@@ -84,9 +88,19 @@ class TestDataSetManager(TransactionTestCase):
             self.assertTrue(ds.id in ids)
             self.assertNotEquals(ds.id, dataset2.id)
 
-        datasets = DataSet.objects.filter_datasets(dataset_names=[dataset2.name])
+        datasets = DataSet.objects.filter_datasets(started=today)
+        self.assertEqual(len(datasets), 2)
+        self.assertEqual(datasets[0].title, title2)
+        datasets = DataSet.objects.filter_datasets(ended=today, order='-id')
+        self.assertEqual(len(datasets), 2)
+        self.assertEqual(datasets[0].title, title2)
+        datasets = DataSet.objects.filter_datasets(started=today, ended=today)
         self.assertEqual(len(datasets), 1)
-        self.assertEqual(datasets[0].name, dataset2.name)
+        self.assertEqual(datasets[0].title, title2)
+        
+        datasets = DataSet.objects.filter_datasets(keywords=['key'])
+        self.assertEqual(len(datasets), 2)
+        self.assertEqual(datasets[0].title, title2)
 
     def test_get_datasets_v6(self):
         """Tests calling DataSetmanager.get_datasets_v6() """
