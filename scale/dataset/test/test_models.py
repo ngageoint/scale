@@ -60,6 +60,7 @@ class TestDataSetManager(TransactionTestCase):
     def test_filter_datasets(self):
         """Tests calling DataSetManager filter_datasets
         """
+
         today = now()
         yesterday = today - datetime.timedelta(days=1)
         tomorrow = today + datetime.timedelta(days=1)
@@ -67,17 +68,20 @@ class TestDataSetManager(TransactionTestCase):
         title1 = 'Test Dataset 1'
         description1 = 'Test DataSet description 1'
 
-        dataset1 = DataSet.objects.create(definition=self.definition, title=title1, description=description1, created=yesterday)
+        dataset1 = DataSet.objects.create(definition=self.definition, title=title1, description=description1)
+        DataSet.objects.filter(pk=dataset1.pk).update(created=yesterday)
 
         title2 = 'Key Test Dataset 2'
         description2 = 'Test DataSet description 2'
 
-        dataset2 = DataSet.objects.create(definition=self.definition, title=title2, description=description2, created=today)
+        dataset2 = DataSet.objects.create(definition=self.definition, title=title2, description=description2)
+        DataSet.objects.filter(pk=dataset2.pk).update(created=today)
 
         title3 = 'Test Dataset 3'
         description3 = 'Key Test DataSet description 3'
 
-        dataset3 = DataSet.objects.create(definition=self.definition, title=title3, description=description3, created=tomorrow)
+        dataset3 = DataSet.objects.create(definition=self.definition, title=title3, description=description3)
+        DataSet.objects.filter(pk=dataset3.pk).update(created=tomorrow)
 
         ids = [dataset1.id, dataset3.id]
 
@@ -91,7 +95,7 @@ class TestDataSetManager(TransactionTestCase):
         datasets = DataSet.objects.filter_datasets(started=today)
         self.assertEqual(len(datasets), 2)
         self.assertEqual(datasets[0].title, title2)
-        datasets = DataSet.objects.filter_datasets(ended=today, order='-id')
+        datasets = DataSet.objects.filter_datasets(ended=today, order=['-id'])
         self.assertEqual(len(datasets), 2)
         self.assertEqual(datasets[0].title, title2)
         datasets = DataSet.objects.filter_datasets(started=today, ended=today)

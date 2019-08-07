@@ -21,9 +21,6 @@ class Migration(migrations.Migration):
             name='DataSet',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(db_index=True, max_length=50)),
-                ('version', models.CharField(db_index=True, max_length=50)),
-                ('version_array', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(null=True), default=[None, None, None, None], size=4)),
                 ('title', models.CharField(blank=True, max_length=50, null=True)),
                 ('description', models.TextField(blank=True, null=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),

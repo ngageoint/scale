@@ -194,8 +194,9 @@ class TestDatasetDetailsView(APITestCase):
                       ],
                       'json': []}
         definition = {'version': '6', 'parameters': parameters}
-        self.dataset = dataset_test_utils.create_dataset(name='test-dataset-1',
-            title="Test Dataset 1", description="Test Dataset Number 1", definition=definition)
+        self.dataset = dataset_test_utils.create_dataset( title="Test Dataset 1",
+                                                          description="Test Dataset Number 1",
+                                                          definition=definition)
 
         parameters2 = {'version': '6',
                       'files': [
@@ -210,9 +211,9 @@ class TestDatasetDetailsView(APITestCase):
                       ],
                       'json': []}
         definition2 = {'version': '6', 'parameters': parameters2}
-        self.dataset2 = dataset_test_utils.create_dataset(name='test-dataset-2',
-            title="Test Dataset 2", description="Test Dataset Number 2",
-            definition=definition2)
+        self.dataset2 = dataset_test_utils.create_dataset(title="Test Dataset 2",
+                                                          description="Test Dataset Number 2",
+                                                          definition=definition2)
 
         # Create members
         data_dict = {

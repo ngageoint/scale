@@ -59,7 +59,7 @@ class DataSetView(ListCreateAPIView):
         dataset_ids = rest_util.parse_int_list(request, 'id', required=False)
         keywords = rest_util.parse_string_list(request, 'keyword', required=False)
 
-        order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
+        order = rest_util.parse_string_list(request, 'order', required=False)
 
         data_sets = DataSet.objects.get_datasets_v6(started=started, ended=ended,
             dataset_ids=dataset_ids, keywords=keywords, order=order)

@@ -205,11 +205,7 @@ class DataSet(models.Model):
     :type definition: class:`django.contrib.postgres.fields.JSONField`
     """
 
-    name = models.CharField(db_index=True, max_length=50)
-    version = models.CharField(db_index=True, max_length=50)
-    version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
     title = models.CharField(blank=True, max_length=50, null=True)
-    # filter = django.contrib.postgres.fields.JSONField(default=dict)
     description = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     definition = django.contrib.postgres.fields.JSONField(default=dict)
