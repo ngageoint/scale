@@ -10,90 +10,52 @@ from data.data.exceptions import InvalidData
 from data.data.value import FileValue, JsonValue
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
+from dataset.definition.definition import DataSetDefinition
+from dataset.exceptions import InvalidDataSetDefinition
 
 
-class TestData(TestCase):
-    """Tests related to the Data class"""
+class TestDataSetDefinition(TestCase):
+    """Tests related to the DataSetDefinition class"""
 
     def setUp(self):
         django.setup()
 
-    def test_add_value(self):
-        """Tests calling Data.add_value()"""
+        self.definition = DataSetDefinition()
+        self.file_param = FileParameter('input_a', ['application/json'])
+        self.json_param = JsonParameter('input_b', 'integer')
+        self.file_param2 = FileParameter('input_c', ['application/json'])
+        self.json_param2 = JsonParameter('input_d', 'integer')
+        self.definition.add_global_parameter(self.file_param)
+        self.definition.add_global_parameter(self.json_param)
+        self.definition.add_parameter(self.file_param2)
+        self.definition.add_parameter(self.json_param2)
 
-        data = Data()
+    def test_add_parameter(self):
+        """Tests calling DataSetDefinition.add_value()"""
 
-        file_value = FileValue('input_1', [123])
-        data.add_value(file_value)
+        self.assertSetEqual(set(self.definition.get_parameters()), {'input_a', 'input_b', 'input_c', 'input_d'})
 
-        json_value = JsonValue('input_2', {'foo': 'bar'})
-        data.add_value(json_value)
+        #test adding duplicate
+        with self.assertRaises(InvalidDataSetDefinition) as context:
+            self.definition.add_parameter(self.file_param)
+            self.assertEqual(context.exception.error.name, 'DUPLICATE_PARAMETER')
 
-        self.assertSetEqual(set(data.values.keys()), {'input_1', 'input_2'})
+        with self.assertRaises(InvalidDataSetDefinition) as context:
+            self.definition.add_global_parameter(self.file_param2)
+            self.assertEqual(context.exception.error.name, 'DUPLICATE_PARAMETER')
 
-        # Duplicate value
-        dup_value = FileValue('input_1', [123])
-        with self.assertRaises(InvalidData) as context:
-            data.add_value(dup_value)
-        self.assertEqual(context.exception.error.name, 'DUPLICATE_VALUE')
-
-    def test_add_value_from_output_data(self):
-        """Tests calling Data.add_value_from_output_data()"""
-
-        data = Data()
-        output_data = Data()
-
-        file_value = FileValue('output_1', [1, 2, 3])
-        output_data.add_value(file_value)
-        json_value = JsonValue('output_2', 'hello')
-        output_data.add_value(json_value)
-
-        data.add_value_from_output_data('input_1', 'output_1', output_data)
-        self.assertSetEqual(set(data.values.keys()), {'input_1'})
-        self.assertListEqual(data.values['input_1'].file_ids, [1, 2, 3])
-
-        # Duplicate parameter
-        with self.assertRaises(InvalidData) as context:
-            data.add_value_from_output_data('input_1', 'output_1', output_data)
-        self.assertEqual(context.exception.error.name, 'DUPLICATE_VALUE')
-
-        # Missing parameter
-        with self.assertRaises(InvalidData) as context:
-            data.add_value_from_output_data('input_1', 'output_3', output_data)
-        self.assertEqual(context.exception.error.name, 'MISSING_VALUE')
-        
     def test_validate(self):
-        """Tests calling Data.validate()"""
+        """Tests calling DataSetDefinition.validate()"""
 
-        interface = Interface()
         data = Data()
 
-        interface.add_parameter(FileParameter('input_1', ['application/json']))
-        interface.add_parameter(JsonParameter('input_2', 'integer'))
-        data.add_value(FileValue('input_1', [123]))
-        data.add_value(JsonValue('input_2', 100))
-        data.add_value(JsonValue('extra_input_1', 'hello'))
-        data.add_value(JsonValue('extra_input_2', 'there'))
-
-        # Valid data
-        data.validate(interface)
-        # Ensure extra data values are removed
-        self.assertSetEqual(set(data.values.keys()), {'input_1', 'input_2'})
-
-        # Data is missing required input 3
-        interface.add_parameter(FileParameter('input_3', ['image/gif'], required=True))
         with self.assertRaises(InvalidData) as context:
-            data.validate(interface)
+            self.definition.validate(data=data)
         self.assertEqual(context.exception.error.name, 'PARAM_REQUIRED')
 
-        data.add_value(FileValue('input_3', [999]))  # Input 3 taken care of now
+        data.add_value(FileValue('input_a', [123]))
+        data.add_value(JsonValue('input_b', 100))
+        data.add_value(FileValue('input_c', [124]))
+        data.add_value(JsonValue('input_d', 100))
 
-        # Invalid data
-        interface.add_parameter(JsonParameter('input_4', 'string'))
-        mock_value = MagicMock()
-        mock_value.name = 'input_4'
-        mock_value.validate.side_effect = InvalidData('MOCK', '')
-        data.add_value(mock_value)
-        with self.assertRaises(InvalidData) as context:
-            data.validate(interface)
-        self.assertEqual(context.exception.error.name, 'MOCK')
+        self.definition.validate(data=data)
