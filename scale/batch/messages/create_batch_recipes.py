@@ -76,7 +76,7 @@ class CreateBatchRecipes(CommandMessage):
         batch = Batch.objects.select_related('recipe_type', 'recipe_type_rev').get(id=self.batch_id)
         definition = batch.get_definition()
         new_messages = []
-
+        
         # Reprocess recipes from previous batch or create a new batch
         if not self.is_prev_batch_done:
                 new_messages.extend(self._handle_previous_batch(batch, definition))
@@ -105,7 +105,7 @@ class CreateBatchRecipes(CommandMessage):
         """
 
         messages = []
-        if definition.root_batch_id is None:
+        if batch.superseded_batch_id and definition.root_batch_id is None:
             self.is_prev_batch_done = True
             return messages
 
