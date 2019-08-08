@@ -47,16 +47,13 @@ def create_dataset(title=None, description=None, created=None, definition=None):
         global DATASET_TITLE_COUNTER
         title = 'Test Dataset %i' % DATASET_TITLE_COUNTER
 
-    if not created:
-        created = datetime.now()
     if not definition:
         definition = {
-            'parameters': [],
+            'parameters': {'files': [], 'json': []}
         }
 
-    dataset = DataSet.objects.create(title=title, description=description,
-        definition=definition, created=created)
-    dataset.save()
+    dataset = DataSet.objects.create_dataset_v6(title=title, description=description,
+        definition=definition)
     return dataset
 
 def create_dataset_member(dataset=None, data=None):

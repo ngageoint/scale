@@ -219,33 +219,54 @@ class TestDataSetFile(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        # create a workspace
-        self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
+        # create a workspace and files
+        self.workspace = storage_test_utils.create_workspace(name='Test Workspace', is_active=True, created=now(),
                                                   last_modified=now())
-
+                                                  
+        self.file1 = storage_test_utils.create_file(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.file2 = storage_test_utils.create_file(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.file3 = storage_test_utils.create_file(file_name='input_f2.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.file4 = storage_test_utils.create_file(file_name='input_eb.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.file5 = storage_test_utils.create_file(file_name='input_fb.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.file6 = storage_test_utils.create_file(file_name='input_fb2.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+                                              
         # create a dataset
-        self.dataset = dataset_test_utils.create_dataset()
+        self.dataset = DataSet.objects.create_dataset_v6(definition=copy.deepcopy(dataset_test_utils.DATASET_DEFINITION))
+        
+        # create dataset members
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict['files']['input_e'] = [self.file1.id]
+        data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
+        data1 = DataV6(data=data_dict).get_dict()
 
-        # create members
-        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset)
-        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset)
+        self.member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
+
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict['files']['input_e'] = [self.file4.id]
+        data_dict['files']['input_f'] = [self.file5.id, self.file6.id]
+        data2 = DataV6(data=data_dict).get_dict()
+        
+        self.member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
 
     def test_get_dataset_files(self):
         """Tests retrieving dataset files for a dataset, parameter, member, etc
         """
 
-        src_file_a = ScaleFile.objects.create(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
-                                              workspace=self.workspace)
-        src_file_b = ScaleFile.objects.create(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type='type', file_path='the_path',
-                                              workspace=self.workspace)
-        file_a = DataSet.objects.add_dataset_files(self.dataset.id, 'param_a', [src_file_a])[0]
-        file_b = DataSet.objects.add_dataset_files(self.dataset.id, 'param_b', [src_file_b])[0]
-
         # Get files by dataset
         files = DataSet.objects.get_dataset_files(dataset_id=self.dataset.id)
-        self.assertTrue(len(files), 2)
+        self.assertTrue(len(files), 3)
 
         # Get files by member
         # files = DataSet.objects.get_dataset_files(dataset_member)

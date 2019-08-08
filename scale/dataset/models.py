@@ -422,7 +422,45 @@ class DataSetFileManager(models.Manager):
                     file.parameter_name = i
                     file.save()
 
-    def get_dataset_files(self, dataset_id):
+    def get_file_ids(self, dataset_ids, parameter_name=None):
+        """Returns a list of the file IDs for the given datasets, optionally filtered by parameter_name.
+
+        :param dataset_ids: The ids of the associated datasets
+        :type dataset_ids: integer
+        :param parameter_name: The parameter name to search for in the given datasets
+        :type parameter_name: string
+        :returns: The list of scale file IDs
+        :rtype: list
+        """
+
+        query = self.all().filter(dataset_id__in=list(dataset_ids))
+        if parameter_name:
+            query = query.filter(parameter_name=parameter_name)
+        return [result.scale_file_id for result in query.only('scale_file_id').distinct()]
+
+    def get_dataset_ids(self, file_ids, all_files=False):
+        """Returns a list of the dataset IDs that contain the given files
+
+        :param file_ids: The ids of the files to look for
+        :type dataset_id: integer
+        :param all_files: Whether or not a dataset must contain all files or just some of the files in the list
+        :type all_files: bool
+        :returns: The list of dataset IDs
+        :rtype: list
+        """
+
+        result = []
+        if not all_files:
+            query = self.all().filter(file_id__in=list(file_ids)).only('dataset_id').distinct()
+            result = [result.dataset_id for result in query]
+        else:
+            query = self.all().filter(file_id__in=list(file_ids)).only('dataset_id').annotate(total=Count('dataset_id')).order_by('total')
+            for result in query:
+                if result.total == len(file_ids):
+                    result.append(result.dataset_id)
+        return result
+        
+    def get_dataset_files(self, dataset_id, parameter_name=None, file_ids=None):
         """Returns the dataset files associated with the given dataset_id
 
         :param dataset_id: The id of the associated dataset
@@ -431,7 +469,21 @@ class DataSetFileManager(models.Manager):
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
         dataset = DataSet.objects.get(pk=dataset_id)
+        ids = self.all().filter(dataset=dataset)
+        
+        return files
+        
+    def get_dataset(self, file_id):
+        """Returns the datasets associated with the given file_id
+
+        :param file_id: The id of the associated file
+        :type file_id: integer
+        :returns: The DataSets associated with that dataset_id
+        :rtype: [:class:`dataset.models.DataSet`]
+        """
+        file = ScaleFile.objects.get(pk=file_id)
         files = self.all().filter(dataset=dataset)
+        
         return files
 
 
