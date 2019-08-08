@@ -43,8 +43,6 @@ class DependencyManager(object):
 
         return self._status_dict('OK', 'some msg')
 
-    def _generate_
-
     def _status_dict(self, status, msg, **kwargs):
         """
         """
