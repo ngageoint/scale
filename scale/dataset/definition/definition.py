@@ -12,7 +12,7 @@ class DataSetDefinition(object):
     """Represents the dataset definition
     """
 
-    def __init__(self, definition):
+    def __init__(self, definition=None):
         """Constructor
 
         :param definition: Parameters of the definition
@@ -120,7 +120,9 @@ class DataSetDefinition(object):
         # validate definition parameters
         warnings = self._validate_parameters()
 
-        if self.global_data:
+        if self.global_parameters:
+            if not self.global_data:
+                raise InvalidDataSetDefinition('MISSING_GLOBAL_DATA', 'Global parameters are defined without global data to match')
             warnings.append(self.global_data.validate(self.global_parameters))
 
         if data:

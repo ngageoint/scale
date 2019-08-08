@@ -32,8 +32,13 @@ class TestDataSetDefinition(TestCase):
 
     def test_add_parameter(self):
         """Tests calling DataSetDefinition.add_value()"""
-
+        
         self.assertSetEqual(set(self.definition.get_parameters()), {'input_a', 'input_b', 'input_c', 'input_d'})
+
+        file_param = FileParameter('input_e', ['application/json'])
+        self.definition.add_parameter(file_param)
+        
+        self.assertSetEqual(set(self.definition.get_parameters()), {'input_a', 'input_b', 'input_c', 'input_d', 'input_e'})
 
         #test adding duplicate
         with self.assertRaises(InvalidDataSetDefinition) as context:
@@ -48,14 +53,42 @@ class TestDataSetDefinition(TestCase):
         """Tests calling DataSetDefinition.validate()"""
 
         data = Data()
+        data.add_value(FileValue('input_c', [124]))
+        
+        #missing global data
+        with self.assertRaises(InvalidDataSetDefinition) as context:
+            self.definition.validate(data=data)
+            self.assertEqual(context.exception.error.name, 'MISSING_GLOBAL_DATA')
+            
+        #incorrect global data
+        gd = Data()
+        gd.add_value(FileValue('input_a', [123]))
+        gd.add_value(FileValue('input_b', [123]))
+        self.definition.global_data = gd
+        with self.assertRaises(InvalidData) as context:
+            self.definition.validate(data=data)
+        self.assertEqual(context.exception.error.name, 'MISMATCHED_PARAM_TYPE')
+        
+        #missing data
+        gd2 = Data()
+        gd2.add_value(FileValue('input_a', [123]))       
+        gd2.add_value(JsonValue('input_b', 100))        
+        self.definition.global_data = gd2
 
         with self.assertRaises(InvalidData) as context:
             self.definition.validate(data=data)
         self.assertEqual(context.exception.error.name, 'PARAM_REQUIRED')
-
-        data.add_value(FileValue('input_a', [123]))
-        data.add_value(JsonValue('input_b', 100))
-        data.add_value(FileValue('input_c', [124]))
+        
+        #successful validation
         data.add_value(JsonValue('input_d', 100))
-
         self.definition.validate(data=data)
+
+        #incorrect data
+        data2 = Data()
+        data2.add_value(FileValue('input_c', [124]))
+        data2.add_value(FileValue('input_d', [124]))
+        
+        with self.assertRaises(InvalidData) as context:
+            self.definition.validate(data=data2)
+        self.assertEqual(context.exception.error.name, 'MISMATCHED_PARAM_TYPE')
+
