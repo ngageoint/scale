@@ -8,7 +8,7 @@ from collections import namedtuple
 
 import django.contrib.postgres.fields
 from django.db import models, transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
@@ -77,7 +77,9 @@ class DataSetManager(models.Manager):
         :rtype: :class:`dataset.models.DataSet`
         """
 
-        return DataSet.objects.get(pk=dataset_id)
+        ds = DataSet.objects.get(pk=dataset_id)
+        ds.files = DataSetFile.objects.get_dataset_files(ds.id)
+        return ds
 
     def get_datasets_v6(self, started=None, ended=None, dataset_ids=None, keywords=None, order=None):
         """Handles retrieving datasets - possibly filtered and ordered
@@ -160,13 +162,15 @@ class DataSetManager(models.Manager):
         return DataSetValidation(is_valid, errors, warnings)
 
     def get_dataset_files(self, dataset_id):
-        """Returns the datasetFiles associated with the given dataset_id
+        """Returns the files associated with the given dataset
 
         :returns: The list of DataSetFiles matching the file_id
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
-        dataset = self.get(pk=dataset_id)
-        files = DataSetFile.objects.all().filter(dataset=dataset)
+
+        for ds in DataSetFile.objects.all():
+            print "dataset %s, file %s, param %s\n" % (ds.dataset.id, ds.scale_file.id, ds.parameter_name)
+        files = DataSetFile.objects.get_dataset_files(dataset_id=dataset_id)
         return files
 
     def get_dataset_members(self, dataset_id):
@@ -240,39 +244,6 @@ class DataSet(models.Model):
         """
 
         return self.definition
-
-    def get_dataset_version_array(self, version):
-        """Gets the dataset version as an array of integers
-            for sorting using the semver package. The result will be an array of length
-            4 with the first three being integers containing major,minor and patch version
-            numbers. The fourth will be either a None value or if a prerelease value is
-            present this function will attempt to convert it into an integer for sorting.
-
-        :keyword version: The version of the dataset
-        :type version: :class:`django.db.models.CharField`
-        :return: the version array
-        :rtype: array
-        """
-
-        parts = None
-        try:
-            parts = semver.parse(version)
-        except:
-            return [0,0,0,0]
-        prerelease = None
-        if parts['prerelease']:
-            # attempt to convert pre-release field to a number for sorting
-            # we want a non-null value if there is a pre-release field in version as
-            # null values come first when sorting by descending order so we want
-            # any prerelease versions to have a non-null value
-            prerelease = re.sub("[^0-9]", "", parts['prerelease'])
-            try:
-                prerelease = int(prerelease)
-            except ValueError:
-                prerelease = ord(parts['prerelease'][0])
-        version_array = [parts['major'], parts['minor'], parts['patch'], prerelease]
-
-        return version_array
 
     def get_dataset_members_json(self):
         """Returns the JSON for the associated dataset members
@@ -460,32 +431,49 @@ class DataSetFileManager(models.Manager):
                     result.append(result.dataset_id)
         return result
         
-    def get_dataset_files(self, dataset_id, parameter_name=None, file_ids=None):
-        """Returns the dataset files associated with the given dataset_id
+    def get_files(self, dataset_ids, parameter_name=None):
+        """Returns the dataset files associated with the given dataset_ids
+
+        :param dataset_ids: The ids of the associated datasets
+        :type dataset_ids: integer
+        :param parameter_name: The parameter name to search for in the given datasets
+        :type parameter_name: string
+        :returns: The DataSetFiles associated with that dataset_id
+        :rtype: [:class:`dataset.models.DataSetFile`]
+        """
+
+        files = self.all().filter(dataset_id__in=list(dataset_ids))
+        if parameter_name:
+            files = files.filter(parameter_name=parameter_name)
+        return files
+        
+    def get_datasets(self, file_ids, all_files=False):
+        """Returns the datasets associated with the given file_id
+
+        :param file_id: The id of the associated file
+        :type file_id: integer
+        :param all_files: Whether or not a dataset must contain all files or just some of the files in the list
+        :type all_files: bool
+        :returns: The DataSets associated with that dataset_id
+        :rtype: [:class:`dataset.models.DataSet`]
+        """
+        dataset_ids = self.get_dataset_ids(file_ids=file_ids, all_files=all_files)
+        datasets = DataSet.objects.filter(id__in=dataset_ids)
+        
+        return datasets
+
+    def get_dataset_files(self, dataset_id):
+        """Returns the dataset files associated with the given dataset_ids
 
         :param dataset_id: The id of the associated dataset
         :type dataset_id: integer
         :returns: The DataSetFiles associated with that dataset_id
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
-        dataset = DataSet.objects.get(pk=dataset_id)
-        ids = self.all().filter(dataset=dataset)
-        
-        return files
-        
-    def get_dataset(self, file_id):
-        """Returns the datasets associated with the given file_id
 
-        :param file_id: The id of the associated file
-        :type file_id: integer
-        :returns: The DataSets associated with that dataset_id
-        :rtype: [:class:`dataset.models.DataSet`]
-        """
-        file = ScaleFile.objects.get(pk=file_id)
-        files = self.all().filter(dataset=dataset)
-        
-        return files
+        files = DataSetFile.objects.filter(dataset_id=dataset_id)
 
+        return files
 
 """
 DataSetFile

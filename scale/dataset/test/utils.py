@@ -51,9 +51,10 @@ def create_dataset(title=None, description=None, created=None, definition=None):
         definition = {
             'parameters': {'files': [], 'json': []}
         }
+    definition_obj = DataSetDefinition(definition=definition)
 
     dataset = DataSet.objects.create_dataset_v6(title=title, description=description,
-        definition=definition)
+        definition=definition_obj)
     return dataset
 
 def create_dataset_member(dataset=None, data=None):
@@ -73,6 +74,7 @@ def create_dataset_member(dataset=None, data=None):
             'files': {},
             'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}
         }
+    data_obj = DataV6(data=data).get_data()
 
-    dataset_member = DataSetMember.objects.create(dataset=dataset, data=data)
+    dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=dataset, data=data_obj)
     return dataset_member

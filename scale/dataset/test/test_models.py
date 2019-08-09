@@ -220,8 +220,7 @@ class TestDataSetFile(TransactionTestCase):
         django.setup()
 
         # create a workspace and files
-        self.workspace = storage_test_utils.create_workspace(name='Test Workspace', is_active=True, created=now(),
-                                                  last_modified=now())
+        self.workspace = storage_test_utils.create_workspace(name='Test Workspace', is_active=True)
                                                   
         self.file1 = storage_test_utils.create_file(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
@@ -243,7 +242,7 @@ class TestDataSetFile(TransactionTestCase):
                                               workspace=self.workspace)
                                               
         # create a dataset
-        self.dataset = DataSet.objects.create_dataset_v6(definition=copy.deepcopy(dataset_test_utils.DATASET_DEFINITION))
+        self.dataset = dataset_test_utils.create_dataset(definition=copy.deepcopy(dataset_test_utils.DATASET_DEFINITION))
         
         # create dataset members
         data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
@@ -266,7 +265,7 @@ class TestDataSetFile(TransactionTestCase):
 
         # Get files by dataset
         files = DataSet.objects.get_dataset_files(dataset_id=self.dataset.id)
-        self.assertTrue(len(files), 3)
+        self.assertEqual(len(files), 3)
 
         # Get files by member
         # files = DataSet.objects.get_dataset_files(dataset_member)
