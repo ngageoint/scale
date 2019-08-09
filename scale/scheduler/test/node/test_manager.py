@@ -152,33 +152,6 @@ class TestNodeManager(TestCase):
         self.assertEqual(node_2.hostname, 'host_2')
         self.assertTrue(node_2._is_online)
 
-    def test_change_agent_id_with_inactive_node(self):
-        """Tests the NodeManager where a registered node changes its agent ID, and the node is inactive"""
-
-        manager = NodeManager()
-        manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(scheduler_mgr.config)
-
-        # Node 2 is now inactive
-        Node.objects.filter(id=manager.get_node(self.agent_2.agent_id).id).update(is_active=False)
-        manager.sync_with_database(scheduler_mgr.config)
-
-        manager.lost_node(self.agent_2.agent_id)
-        manager.register_agents([self.agent_3])
-        manager.sync_with_database(scheduler_mgr.config)
-
-        # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
-        nodes = manager.get_nodes()
-        self.assertEqual(len(nodes), 2)
-        node_1 = manager.get_node(self.agent_1.agent_id)
-        self.assertEqual(node_1.hostname, self.node_1.hostname)
-        self.assertTrue(node_1._is_online)
-        self.assertIsNone(manager.get_node(self.agent_2.agent_id))
-        node_2 = manager.get_node(self.agent_3.agent_id)
-        self.assertEqual(node_2.hostname, 'host_2')
-        self.assertTrue(node_2._is_online)
-        self.assertFalse(node_2._is_active)
-
     def test_get_pull_tasks(self):
         """Tests getting Docker pull tasks from the manager"""
 
