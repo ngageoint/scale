@@ -418,16 +418,16 @@ class DataSetFileManager(models.Manager):
         :rtype: list
         """
 
-        result = []
+        results = []
         if not all_files:
-            query = self.all().filter(file_id__in=list(file_ids)).only('dataset_id').distinct()
-            result = [result.dataset_id for result in query]
+            query = self.all().filter(scale_file_id__in=list(file_ids)).only('dataset_id').distinct()
+            results = [result.dataset_id for result in query]
         else:
-            query = self.all().filter(file_id__in=list(file_ids)).only('dataset_id').annotate(total=Count('dataset_id')).order_by('total')
+            query = self.all().filter(scale_file_id__in=list(file_ids)).values('dataset_id').annotate(total=Count('dataset_id')).order_by('total')
             for result in query:
-                if result.total == len(file_ids):
-                    result.append(result.dataset_id)
-        return result
+                if result['total'] == len(file_ids):
+                    results.append(result['dataset_id'])
+        return results
         
     def get_files(self, dataset_ids, parameter_name=None):
         """Returns the dataset files associated with the given dataset_ids

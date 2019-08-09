@@ -13,7 +13,8 @@ from django.test import TestCase, TransactionTestCase
 from data.data.json.data_v6 import DataV6
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
-from dataset.models import DataSet, DataSetMember
+from dataset.exceptions import InvalidDataSetMember
+from dataset.models import DataSet, DataSetMember, DataSetFile
 import dataset.test.utils as dataset_test_utils
 from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import DataSetDefinitionV6
@@ -242,6 +243,7 @@ class TestDataSetFile(TransactionTestCase):
                                               
         # create a dataset
         self.dataset = dataset_test_utils.create_dataset(definition=copy.deepcopy(dataset_test_utils.DATASET_DEFINITION))
+        self.dataset2 = dataset_test_utils.create_dataset(definition=copy.deepcopy(dataset_test_utils.DATASET_DEFINITION))
         
         # create dataset members
         data1 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
@@ -256,15 +258,40 @@ class TestDataSetFile(TransactionTestCase):
         
         self.member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
 
+        self.member_3 = dataset_test_utils.create_dataset_member(dataset=self.dataset2, data=data1)
+
     def test_get_dataset_files(self):
-        """Tests retrieving dataset files for a dataset, parameter, member, etc
+        """Tests retrieving dataset files for a dataset
         """
 
         # Get files by dataset
         files = DataSet.objects.get_dataset_files(dataset_id=self.dataset.id)
         self.assertEqual(len(files), 6)
 
-        # Get files by member
-        # files = DataSet.objects.get_dataset_files(dataset_member)
+    def test_get_files(self):
+        """Tests retrieving files for datasets
+        """
 
-        # Get files by parameter?
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id], parameter_name='input_e')
+        self.assertEqual(len(files), 2)
+
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id, self.dataset2.id])
+        self.assertEqual(len(files), 9)
+
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id, self.dataset2.id], parameter_name='input_e')
+        self.assertEqual(len(files), 3)
+
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id], parameter_name='input_a')
+        self.assertEqual(len(files), 0)
+
+    def test_get_datasets(self):
+        """Tests retrieving datasets for given files
+        """
+        datasets = DataSetFile.objects.get_datasets(file_ids=[self.file2.id, self.file3.id])
+        self.assertEqual(len(datasets), 2)
+
+        datasets = DataSetFile.objects.get_datasets(file_ids=[self.file2.id, self.file3.id, self.file4.id])
+        self.assertEqual(len(datasets), 2)
+
+        datasets = DataSetFile.objects.get_datasets(file_ids=[self.file2.id, self.file3.id, self.file4.id], all_files=True)
+        self.assertEqual(len(datasets), 1)
