@@ -186,6 +186,10 @@ class NodeManager(object):
                     logger.warning('Node %s received new agent ID %s, but quickly went offline', hostname, agent_id)
                 if hostname in self._nodes:
                     # Host name already exists, must be a new agent ID
+                    # Scale just discovered that a new agent is an old node so we need to override node_models because
+                    # it thinks this host is gone. update_from_mesos will update the model properly but we already 
+                    # cached the model in node_models. 
+                    node_models[hostname].is_active = is_online
                     old_agent_id = self._nodes[hostname].agent_id
                     self._nodes[hostname].update_from_mesos(agent_id=agent_id, is_online=is_online)
                     if old_agent_id in self._agents:
