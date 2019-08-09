@@ -180,7 +180,7 @@ class DataSetDetailsView(GenericAPIView):
         else:
             raise Http404 # no datasets before v6
 
-    def post_v6(self, request, name=None, version=None, dataset_id=None):
+    def post_v6(self, request, dataset_id):
         """ Adds a datsetmember to the dataset
 
         :param request: the HTTP request
@@ -191,7 +191,10 @@ class DataSetDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # TODO - implement when implement datasetmember/file
+        try:
+            dataset = DataSet.objects.get(pk=dataset_id)
+        except DataSet.DoesNotExist:
+            raise Http404
 
         return Response({'message': 'To Be implemented'})
 

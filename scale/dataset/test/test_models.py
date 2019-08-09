@@ -159,14 +159,6 @@ class TestDataSetMemberManager(TransactionTestCase):
 
         self.dataset = dataset_test_utils.create_dataset(definition=self.definition)
 
-    def test_create_datast_member(self):
-        """Tests calling DataSetMember.create() """
-        # call test
-        dataset_member = dataset_test_utils.create_dataset_member()
-
-        # Check results
-        the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
-        self.assertDictEqual(the_dataset_member.data, {u'version': '7', u'files': {}, u'json': {u'input_c': 999, u'input_d': {u'greeting': u'hello'}}})
 
     def test_create_dataset_member_v6(self):
         """Tests calling DataSetManager.create_dataset_v6() """
@@ -182,22 +174,29 @@ class TestDataSetMemberManager(TransactionTestCase):
         # Check results
         the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
         self.assertDictEqual(the_dataset_member.data, data_dict)
+        
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        del data_dict['files']['input_e']
+        data = DataV6(data=data_dict).get_data()
 
+        # call test
+        with self.assertRaises(InvalidDataSetMember) as context:
+            dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=self.dataset, data=data)
+        self.assertEqual(context.exception.error.name, 'INVALID_DATASET_MEMBER')
+        
     def test_get_dataset_members_v6(self):
         """Tests calling DataSetMemberManager get_dataset_members"""
 
         # Add some members
-        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
-        data_dict['files']['input_e'] = [self.file1.id]
-        data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
-        data1 = DataV6(data=data_dict).get_dict()
+        data1 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data1['files']['input_e'] = [self.file1.id]
+        data1['files']['input_f'] = [self.file2.id, self.file3.id]
 
         member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
 
-        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
-        data_dict['files']['input_e'] = [self.file4.id]
-        data_dict['files']['input_f'] = [self.file5.id, self.file6.id]
-        data2 = DataV6(data=data_dict).get_dict()
+        data2 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data2['files']['input_e'] = [self.file4.id]
+        data2['files']['input_f'] = [self.file5.id, self.file6.id]
 
         member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
 
@@ -245,17 +244,15 @@ class TestDataSetFile(TransactionTestCase):
         self.dataset = dataset_test_utils.create_dataset(definition=copy.deepcopy(dataset_test_utils.DATASET_DEFINITION))
         
         # create dataset members
-        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
-        data_dict['files']['input_e'] = [self.file1.id]
-        data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
-        data1 = DataV6(data=data_dict).get_dict()
+        data1 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data1['files']['input_e'] = [self.file1.id]
+        data1['files']['input_f'] = [self.file2.id, self.file3.id]
 
         self.member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
 
-        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
-        data_dict['files']['input_e'] = [self.file4.id]
-        data_dict['files']['input_f'] = [self.file5.id, self.file6.id]
-        data2 = DataV6(data=data_dict).get_dict()
+        data2 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data2['files']['input_e'] = [self.file4.id]
+        data2['files']['input_f'] = [self.file5.id, self.file6.id]
         
         self.member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
 
@@ -265,7 +262,7 @@ class TestDataSetFile(TransactionTestCase):
 
         # Get files by dataset
         files = DataSet.objects.get_dataset_files(dataset_id=self.dataset.id)
-        self.assertEqual(len(files), 3)
+        self.assertEqual(len(files), 6)
 
         # Get files by member
         # files = DataSet.objects.get_dataset_files(dataset_member)

@@ -168,8 +168,6 @@ class DataSetManager(models.Manager):
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
 
-        for ds in DataSetFile.objects.all():
-            print "dataset %s, file %s, param %s\n" % (ds.dataset.id, ds.scale_file.id, ds.parameter_name)
         files = DataSetFile.objects.get_dataset_files(dataset_id=dataset_id)
         return files
 
@@ -276,7 +274,7 @@ class DataSetMemberManager(models.Manager):
         """Creates a dataset member
 
         :param dataset: The dataset the member is a part of
-        :type version: :class:`dataset.models.DataSet`
+        :type dataset: :class:`dataset.models.DataSet`
         :param data: Data definition of the dataset member
         :type data: :class:`data.data.data.Data`
 

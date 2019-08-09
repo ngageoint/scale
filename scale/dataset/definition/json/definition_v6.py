@@ -125,6 +125,10 @@ class DataSetDefinitionV6(object):
         else:
             self._definition['global_parameters'] = InterfaceV6(interface=self._definition['global_parameters']).get_dict()
 
+        if 'global_data' not in self._definition:
+            self._definition['global_data'] = DataV6().get_dict()
+        else:
+            self._definition['global_data'] = DataV6(data=self._definition['global_data']).get_dict()
 
     def _check_for_name_collisions(self):
         """Ensures all global and regular parameter names are unique, and throws a
