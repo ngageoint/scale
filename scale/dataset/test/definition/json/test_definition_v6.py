@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.value import FileValue, JsonValue
 from data.interface.parameter import FileParameter, JsonParameter
 from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
@@ -34,6 +35,8 @@ class TestDataV6(TestCase):
         json_param2 = JsonParameter('input_d', 'integer')
         definition.add_global_parameter(file_param)
         definition.add_global_parameter(json_param)
+        definition.add_global_value(FileValue('input_a', [123]))
+        definition.add_global_value(JsonValue('input_b', 100))
         definition.add_parameter(file_param2)
         definition.add_parameter(json_param2)
         json = convert_definition_to_v6_json(definition)

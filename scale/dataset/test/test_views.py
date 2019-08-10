@@ -13,6 +13,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 
 from data.data.json.data_v6 import DataV6
+from dataset.definition.json.definition_v6 import DataSetDefinitionV6
 from util import rest
 
 from dataset.models import DataSet, DataSetMember
@@ -350,7 +351,9 @@ class TestDatasetDetailsView(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(result['id'], self.dataset.id)
         self.assertEqual(result['title'], self.dataset.title)
-        self.assertEqual(result['description'], self.dataset.description)
+        dsdict = DataSetDefinitionV6(definition=self.dataset.definition).get_dict()
+        del dsdict['version']
+        self.assertEqual(result['description'], dsdict)
         self.assertDictEqual(result['definition'], self.dataset.definition)
         self.assertEqual(len(result['files']), 1)
 
@@ -452,8 +455,6 @@ class TestDataSetValidationView(APITestCase):
 
     def test_invalid_definition(self):
         """Validates an invalid dataset definition
-
-        Will complete when dataset definition is fully defined.
         """
 
         url = '/%s/data-sets/validation/' % self.api

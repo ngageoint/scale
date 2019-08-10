@@ -43,3 +43,6 @@ class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
     definition = serializers.JSONField(source='get_v6_definition_json')
     members = DataSetMemberSerializerV6(required=False, many=True)
     files = DataSetFilesSerializerV6(required=False, many=True)
+
+class DataSetMemberDetailsSerializerV6(DataSetMemberSerializerV6):
+    dataset = ModelIdSerializer()

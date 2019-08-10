@@ -12,9 +12,11 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFilesSerializerV6
-from dataset.exceptions import InvalidDataSetDefinition
-from dataset.models import DataSet
+from data.data.exceptions import InvalidData
+from data.data.json.data_v6 import DataV6
+from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFilesSerializerV6, DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
+from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
+from dataset.models import DataSet, DataSetMember
 from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import DataSetDefinitionV6
 import util.rest as rest_util
@@ -191,12 +193,122 @@ class DataSetDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        data = rest_util.parse_dict(request, 'data', required=True)
+
+        # validate the definition
+        try:
+            data = DataV6(data=data).get_data()
+        except InvalidData as ex:
+            message = 'Data is invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+
         try:
             dataset = DataSet.objects.get(pk=dataset_id)
         except DataSet.DoesNotExist:
             raise Http404
 
-        return Response({'message': 'To Be implemented'})
+        try:
+            dsm = DataSetMember.objects.create_dataset_member_v6(dataset=dataset, data=data)
+        except InvalidDataSetMember as ex:
+            message = 'DataSetMember is invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+
+        url = reverse('dataset_member_details_view', args=[dsm.id], request=request)
+        serializer = DataSetMemberSerializerV6(dataset)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+
+class DataSetMembersView(GenericAPIView):
+    """This view is the endpoint for retrieving members of a specific dataset"""
+
+    queryset = DataSetMember.objects.all()
+
+    serializer_class = DataSetMemberSerializerV6
+
+    def list(self, request, dataset_id):
+        """
+        Retrieves the details for a data set and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param dataset_id: The dataset id
+        :type dataset_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.list_v6(request, dataset_id=dataset_id)
+        else:
+            raise Http404
+
+    def list_v6(self, request, dataset_id):
+        """Retrieves the members for a dataset version and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param dataset_id: The dataset id
+        :type dataset_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            dataset = DataSet.objects.get(pk=dataset_id)
+        except DataSet.DoesNotExist:
+            raise Http404
+
+        dsm = DataSetMember.objects.get_dataset_members(dataset=dataset)
+
+        serializer = self.get_serializer(dsm)
+        return Response(serializer.data)
+
+
+class DataSetMemberDetailsView(GenericAPIView):
+    """This view is the endpoint for retrieving details of a specific dataset member"""
+
+    queryset = DataSetMember.objects.all()
+
+    serializer_class = DataSetMemberDetailsSerializerV6
+
+    def get(self, request, dsm_id):
+        """
+        Retrieves the details for a data set and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param dsm_id: The dataset member id
+        :type dsm_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.get_v6(request, dsm_id=dsm_id)
+        else:
+            raise Http404
+
+    def get_v6(self, request, dataset_id):
+        """Retrieves the details for a dataset version and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param dataset_id: The dataset id
+        :type dataset_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            dataset = DataSet.objects.get_details_v6(dataset_id)
+        except DataSet.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(dataset)
+        return Response(serializer.data)
 
 
 class DataSetValidationView(APIView):

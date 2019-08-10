@@ -81,9 +81,8 @@ class DataSetDefinitionV6(object):
             msg = '%s is an unsupported version number'
             raise InvalidDataSetDefinition('INVALID_VERSION', msg % self._definition['version'])
 
-        self._populate_default_values()
-
         try:
+            self._populate_default_values(do_validate=do_validate)
             if do_validate:
                 validate(self._definition, DATASET_DEFINITION_SCHEMA)
                 if 'global_data' in definition:
@@ -111,24 +110,33 @@ class DataSetDefinitionV6(object):
 
         return self._definition
 
-    def _populate_default_values(self):
+    def _populate_default_values(self, do_validate=False):
         """Populates any missing JSON fields that have default values
         """
 
         if 'parameters' not in self._definition:
             self._definition['parameters'] = InterfaceV6().get_dict()
+        elif type(self._definition['parameters']) is not dict:
+            raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', '"parameters" is not a dictionary')
         else:
-            self._definition['parameters'] = InterfaceV6(interface=self._definition['parameters']).get_dict()
+            self._definition['parameters'] = InterfaceV6(interface=self._definition['parameters'], do_validate=do_validate).get_dict()
+        rest_utils.strip_schema_version(self._definition['parameters'])
 
         if 'global_parameters' not in self._definition:
             self._definition['global_parameters'] = InterfaceV6().get_dict()
+        elif type(self._definition['global_parameters']) is not dict:
+            raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', '"global_parameters" is not a dictionary')
         else:
-            self._definition['global_parameters'] = InterfaceV6(interface=self._definition['global_parameters']).get_dict()
+            self._definition['global_parameters'] = InterfaceV6(interface=self._definition['global_parameters'], do_validate=do_validate).get_dict()
+        rest_utils.strip_schema_version(self._definition['global_parameters'])
 
         if 'global_data' not in self._definition:
             self._definition['global_data'] = DataV6().get_dict()
+        elif type(self._definition['global_data']) is not dict:
+            raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION', '"global_data" is not a dictionary')
         else:
-            self._definition['global_data'] = DataV6(data=self._definition['global_data']).get_dict()
+            self._definition['global_data'] = DataV6(data=self._definition['global_data'], do_validate=do_validate).get_dict()
+        rest_utils.strip_schema_version(self._definition['global_data'])
 
     def _check_for_name_collisions(self):
         """Ensures all global and regular parameter names are unique, and throws a

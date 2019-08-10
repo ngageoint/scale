@@ -85,6 +85,21 @@ class DataSetDefinition(object):
                 self.global_parameters = InterfaceV6().get_interface()
                 self.global_parameters.add_parameter(parameter)
 
+    def add_global_value(self, value):
+        """Adds the data value
+
+        :param value: The data value to add
+        :type value: :class:`data.data.value.DataValue`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the value is a duplicate
+        """
+
+        if self.global_data:
+            self.global_data.add_value(value)
+        else:
+            self.global_data = DataV6().get_data()
+            self.global_data.add_value(value)
+
     def get_parameter(self, parameter_name):
         """Retrieves the specified parameter from the dataset definition
 

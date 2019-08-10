@@ -133,6 +133,8 @@ class DataSetManager(models.Manager):
         else:
             datasets = datasets.order_by('id')
 
+        for ds in datasets:
+            ds.files = DataSetFile.objects.get_dataset_files(ds.id)
         return datasets
 
     def validate_dataset_v6(self, definition, title=None, description=None):
@@ -298,9 +300,8 @@ class DataSetMemberManager(models.Manager):
         dataset_member = DataSetMember()
         dataset_member.dataset = dataset
         dataset_member.data = convert_data_to_v6_json(data).get_dict()
+        dataset_member.file_ids = DataSetFile.objects.create_dataset_files(dataset, data)
         dataset_member.save()
-
-        DataSetFile.objects.create_dataset_files(dataset, data)
 
         return dataset_member
 
@@ -311,6 +312,17 @@ class DataSetMemberManager(models.Manager):
         :rtype: QuerySet<DataSetMember>
         """
         return self.all().filter(dataset=dataset)
+
+    def get_details_v6(self, dsm_id):
+        """Gets additional details for the given dataset member id
+
+        :returns: The full dataset member for the given id
+        :rtype: :class:`dataset.models.DataSetMember`
+        """
+
+        dsm = DataSetMember.objects.get(pk=dsm_id)
+        dsm.files = DataSetFile.objects.filter(dataset=dsm.dataset, scale_file_id__in=list(dsm.file_ids))
+        return dsm
 
 
 """
@@ -337,6 +349,7 @@ class DataSetMember(models.Model):
 
     dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
     data = django.contrib.postgres.fields.JSONField(default=dict)
+    file_ids = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True))
     created = models.DateTimeField(auto_now_add=True)
 
     objects = DataSetMemberManager()
@@ -381,15 +394,21 @@ class DataSetFileManager(models.Manager):
     def create_dataset_files(self, dataset, data):
         """Creates dataset files for the given dataset and data"""
 
+        file_ids = []
         for i in data.values.keys():
             v = data.values[i]
             if type(v) is FileValue:
+                file_ids.extend(v.file_ids)
                 for id in v.file_ids:
+                    exists = DataSetFile.objects.filter(dataset=dataset, scale_file_id=id).count()
+                    if exists:
+                        continue
                     file = DataSetFile()
                     file.dataset = dataset
                     file.scale_file = ScaleFile.objects.get(pk=id)
                     file.parameter_name = i
                     file.save()
+        return file_ids
 
     def get_file_ids(self, dataset_ids, parameter_name=None):
         """Returns a list of the file IDs for the given datasets, optionally filtered by parameter_name.
