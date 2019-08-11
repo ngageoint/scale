@@ -46,3 +46,4 @@ class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
 
 class DataSetMemberDetailsSerializerV6(DataSetMemberSerializerV6):
     dataset = ModelIdSerializer()
+    files = DataSetFilesSerializerV6(required=False, many=True)

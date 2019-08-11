@@ -141,13 +141,13 @@ class TestDatasetViews(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         
-        url = '/%s/data-sets/?id=%sid=%s' % (self.api, self.dataset.id, self.dataset2.id)
+        url = '/%s/data-sets/?id=%s&id=%s' % (self.api, self.dataset.id, self.dataset2.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        # Verify one result
+        # Verify two results
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(len(result['results']), 2)
 
     def test_dataset_keyword_successful(self):
         """Tests successfully calling the v6/datasets/?keyword= api call
@@ -161,7 +161,7 @@ class TestDatasetViews(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         
-        url = '/%s/data-sets/?keyword=%skeyword=%s' % (self.api, 'one', 'two')
+        url = '/%s/data-sets/?keyword=%s&keyword=%s' % (self.api, 'one', 'two')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -180,6 +180,7 @@ class TestDatasetViews(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['id'], self.dataset2.id)
+
 
 """Tests the v6/data-sets POST calls """
 class TestDataSetPostView(APITestCase):
@@ -285,8 +286,7 @@ class TestDatasetDetailsView(APITestCase):
                       'files': [
                           {'name': 'input_a',
                            'media_types': ['application/json'],
-                           'required': True,
-                           'partial': False}
+                           'required': True}
                       ],
                       'json': []}
         definition = {'version': '6', 'parameters': parameters}
@@ -302,8 +302,7 @@ class TestDatasetDetailsView(APITestCase):
                            'multiple': True},
                           {'name': 'input_c',
                            'media_types': ['application/json'],
-                           'required': False,
-                           'partial': False}
+                           'required': False}
                       ],
                       'json': []}
         definition2 = {'version': '6', 'parameters': parameters2}
@@ -327,7 +326,7 @@ class TestDatasetDetailsView(APITestCase):
             'json': {}
         }
         data2 = DataV6(data=data_dict).get_dict()
-        self.mamber_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
             data=data2)
 
         data_dict = {
@@ -339,7 +338,7 @@ class TestDatasetDetailsView(APITestCase):
         self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
             data=data3)
 
-    def test_datasets_id_successful(self):
+    def test_dataset_details_successful(self):
         """Tests successfully calling the v6/data-sets/<dataset_id>/ view.
         """
 
@@ -351,10 +350,10 @@ class TestDatasetDetailsView(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(result['id'], self.dataset.id)
         self.assertEqual(result['title'], self.dataset.title)
+        self.assertEqual(result['description'], self.dataset.description)
         dsdict = DataSetDefinitionV6(definition=self.dataset.definition).get_dict()
         del dsdict['version']
-        self.assertEqual(result['description'], dsdict)
-        self.assertDictEqual(result['definition'], self.dataset.definition)
+        self.assertDictEqual(result['definition'], dsdict)
         self.assertEqual(len(result['files']), 1)
 
         url = '/%s/data-sets/%d/' % (self.api, self.dataset2.id)
@@ -366,6 +365,9 @@ class TestDatasetDetailsView(APITestCase):
         self.assertEqual(result['id'], self.dataset2.id)
         self.assertEqual(result['title'], self.dataset2.title)
         self.assertEqual(result['description'], self.dataset2.description)
+        self.maxDiff = None
+        dsdict = DataSetDefinitionV6(definition=self.dataset2.definition).get_dict()
+        del dsdict['version']
         self.assertDictEqual(result['definition'], self.dataset2.definition)
         self.assertEqual(len(result['files']), 3)
 
@@ -481,3 +483,242 @@ class TestDataSetValidationView(APITestCase):
         self.assertFalse(results['is_valid'])
         self.assertEqual(len(results['errors']), 1)
         self.assertEqual(results['errors'][0]['name'], 'INVALID_DATASET_DEFINITION')
+
+"""Tests the v6/data-sets/%d/members/ endpoint"""
+class TestDatasetMembersView(APITestCase):
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        rest.login_client(self.client, is_staff=True)
+
+        # Create workspace
+        self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
+                                                  last_modified=now())
+        # Create files
+        self.src_file_a = storage_utils.create_file(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_b = storage_utils.create_file(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_c = storage_utils.create_file(file_name='input_c.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_b2 = storage_utils.create_file(file_name='input_b2.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_e = storage_utils.create_file(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_f = storage_utils.create_file(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+
+        # Create datasets
+        parameters = {'version': '6',
+                      'files': [
+                          {'name': 'input_a',
+                           'media_types': ['application/json'],
+                           'required': True}
+                      ],
+                      'json': []}
+        definition = {'version': '6', 'parameters': parameters}
+        self.dataset = dataset_test_utils.create_dataset( title="Test Dataset 1",
+                                                          description="Test Dataset Number 1",
+                                                          definition=definition)
+
+        parameters2 = {'version': '6',
+                      'files': [
+                          {'name': 'input_b',
+                           'media_types': ['application/json'],
+                           'required': True,
+                           'multiple': True},
+                          {'name': 'input_c',
+                           'media_types': ['application/json'],
+                           'required': False}
+                      ],
+                      'json': []}
+        definition2 = {'version': '6', 'parameters': parameters2}
+        self.dataset2 = dataset_test_utils.create_dataset(title="Test Dataset 2",
+                                                          description="Test Dataset Number 2",
+                                                          definition=definition2)
+
+        # Create members
+        data_dict = {
+            'version': '6',
+            'files': {'input_a': [self.src_file_a.id]},
+            'json': {}
+        }
+        data = DataV6(data=data_dict).get_dict()
+        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset,
+            data=data)
+
+        data_dict = {
+            'version': '6',
+            'files': {'input_b': [self.src_file_b.id, self.src_file_b2.id]},
+            'json': {}
+        }
+        data2 = DataV6(data=data_dict).get_dict()
+        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+            data=data2)
+
+        data_dict = {
+            'version': '6',
+            'files': {'input_b': [self.src_file_b.id, self.src_file_b2.id], 'input_c': [self.src_file_c.id]},
+            'json': {}
+        }
+        data3 = DataV6(data=data_dict).get_dict()
+        self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+            data=data3)
+
+    def test_dataset_members_successful(self):
+        """Tests successfully calling the v6/data-sets/members/<id>/ view.
+        """
+
+        url = '/%s/data-sets/%d/members/' % (self.api, self.dataset.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        # Check response for dataset members
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        url = '/%s/data-sets/%d/members/' % (self.api, self.dataset2.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        # Check response for dataset members
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+
+"""Tests the v6/data-sets/members/<datasetmember_id> endpoint"""
+class TestDatasetMemberDetailsView(APITestCase):
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        rest.login_client(self.client, is_staff=True)
+
+        # Create workspace
+        self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
+                                                  last_modified=now())
+        # Create files
+        self.src_file_a = storage_utils.create_file(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_b = storage_utils.create_file(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_c = storage_utils.create_file(file_name='input_c.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_b2 = storage_utils.create_file(file_name='input_b2.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_e = storage_utils.create_file(file_name='input_e.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+        self.src_file_f = storage_utils.create_file(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=self.workspace)
+
+        # Create datasets
+        parameters = {'version': '6',
+                      'files': [
+                          {'name': 'input_a',
+                           'media_types': ['application/json'],
+                           'required': True}
+                      ],
+                      'json': []}
+        definition = {'version': '6', 'parameters': parameters}
+        self.dataset = dataset_test_utils.create_dataset( title="Test Dataset 1",
+                                                          description="Test Dataset Number 1",
+                                                          definition=definition)
+
+        parameters2 = {'version': '6',
+                      'files': [
+                          {'name': 'input_b',
+                           'media_types': ['application/json'],
+                           'required': True,
+                           'multiple': True},
+                          {'name': 'input_c',
+                           'media_types': ['application/json'],
+                           'required': False}
+                      ],
+                      'json': []}
+        definition2 = {'version': '6', 'parameters': parameters2}
+        self.dataset2 = dataset_test_utils.create_dataset(title="Test Dataset 2",
+                                                          description="Test Dataset Number 2",
+                                                          definition=definition2)
+
+        # Create members
+        data_dict = {
+            'version': '6',
+            'files': {'input_a': [self.src_file_a.id]},
+            'json': {}
+        }
+        data = DataV6(data=data_dict).get_dict()
+        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset,
+            data=data)
+
+        data_dict = {
+            'version': '6',
+            'files': {'input_b': [self.src_file_b.id, self.src_file_b2.id]},
+            'json': {}
+        }
+        data2 = DataV6(data=data_dict).get_dict()
+        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+            data=data2)
+
+        data_dict = {
+            'version': '6',
+            'files': {'input_b': [self.src_file_b.id, self.src_file_b2.id], 'input_c': [self.src_file_c.id]},
+            'json': {}
+        }
+        data3 = DataV6(data=data_dict).get_dict()
+        self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
+            data=data3)
+
+    def test_dataset_member_details_successful(self):
+        """Tests successfully calling the v6/data-sets/members/<id>/ view.
+        """
+
+        url = '/%s/data-sets/members/%d/' % (self.api, self.member_a.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        # Check response for dataset details
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.member_a.id)
+        self.assertEqual(result['dataset']['id'], self.dataset.id)
+        versionless = copy.deepcopy(self.member_a.data)
+        del versionless['version']
+        self.assertDictEqual(result['data'], versionless)
+
+        url = '/%s/data-sets/members/%d/' % (self.api, self.member_b.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        # Check response for dataset details
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.member_b.id)
+        self.assertEqual(result['dataset']['id'], self.dataset2.id)
+        versionless = copy.deepcopy(self.member_b.data)
+        del versionless['version']
+        self.assertDictEqual(result['data'], versionless)
+
+        url = '/%s/data-sets/members/%d/' % (self.api, self.member_bc.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        # Check response for dataset details
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.member_bc.id)
+        self.assertEqual(result['dataset']['id'], self.dataset2.id)
+        versionless = copy.deepcopy(self.member_bc.data)
+        del versionless['version']
+        self.assertDictEqual(result['data'], versionless)

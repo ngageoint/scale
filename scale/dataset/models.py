@@ -311,7 +311,7 @@ class DataSetMemberManager(models.Manager):
         :returns: members for a given dataset
         :rtype: QuerySet<DataSetMember>
         """
-        return self.all().filter(dataset=dataset)
+        return self.all().filter(dataset=dataset).order_by('id')
 
     def get_details_v6(self, dsm_id):
         """Gets additional details for the given dataset member id

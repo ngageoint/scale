@@ -11,6 +11,5 @@ urlpatterns = [
     url(r'^data-sets/validation/$', DataSetValidationView.as_view(), name='dataset_validation_view'),
     url(r'^data-sets/(?P<dataset_id>\d+)/$', DataSetDetailsView.as_view(), name='dataset_details_view'),
     url(r'^data-sets/(?P<dataset_id>\d+)/members/$', DataSetMembersView.as_view(), name='dataset_members_view'),
-    url(r'^data-set-members/(?P<dsm_id>\d+)/$', DataSetMemberDetailsView.as_view(), name='dataset_member_details_view'),
-    url(r'^data-sets/(?P<dataset_id>\d+)/files/$', DataSetFilesView.as_view(), name='dataset_files_view'),
+    url(r'^data-sets/members/(?P<dsm_id>\d+)/$', DataSetMemberDetailsView.as_view(), name='dataset_member_details_view')
 ]
