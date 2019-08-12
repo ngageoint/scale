@@ -285,7 +285,7 @@ class TestNodeManager(TestCase):
         # Get the DB and Scheduler state and make sure they are consistent
         db_record = Node.objects.get(id=self.node_1.id)
         scheduler_record = node_mgr.get_node(self.agent_1.agent_id)
-        
+
         self.assertEqual(db_record.is_active, scheduler_record._is_active, True)
 
     def test_no_job_exe_no_offers(self):
@@ -309,3 +309,26 @@ class TestNodeManager(TestCase):
         
         self.assertIsNone(node_mgr.get_node(self.agent_1.agent_id))
         self.assertEqual(db_record.is_active, False)
+
+    def test_no_job_exe_offers(self):
+        """Tests the NodeManager where a node is not running an exe and gave Scale an offer 3 minutes ago.
+            Expected behavior: The node is deleted and the DB model is update with is_active=False"""
+
+        last_offer = now() - datetime.timedelta(minutes=3)
+        node_mgr = NodeManager()
+        node_mgr.register_agents([self.agent_1])
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Set last_offer_received to 
+        Node.objects.filter(id=self.node_1.id).update(last_offer_received=last_offer)
+
+        # This inspects what nodes are running jobs and what nodes need to be removed if they
+        # have not sent offers in the last 5 minutes
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Get the DB and Scheduler state and make sure they are consistent
+        db_record = Node.objects.get(id=self.node_1.id)
+        scheduler_record = node_mgr.get_node(self.agent_1.agent_id)
+        
+        self.assertEqual(db_record.is_active, scheduler_record._is_active, True)
+    
