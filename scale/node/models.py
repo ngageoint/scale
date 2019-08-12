@@ -6,7 +6,7 @@ import logging
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from job.models import JobExecution
+from job.models import JobExecution, JobExecutionEnd
 
 logger = logging.getLogger(__name__)
 
@@ -85,9 +85,10 @@ class NodeManager(models.Manager):
         :rtype: list
         """
 
-        exclude_statuses = ['COMPLETED', 'FAILED', 'CANCELED']
-        job_exes = JobExecution.objects.all().exclude(jobexecutionend__status__in=exclude_statuses)
-        return Node.objects.filter(id__in=job_exes, is_active=True).values_list('id', flat=True)
+        job_exe_end = JobExecutionEnd.objects.all().values_list('job_exe', flat=True)
+        job_exes = JobExecution.objects.exclude(id__in=job_exe_end).values_list('node_id', flat=True)
+
+        return list(Node.objects.filter(id__in=job_exes, is_active=True).values_list('id', flat=True))
 
     def get_scheduler_nodes(self, hostnames):
         """Returns a list of all nodes that either have one of the given host names or is active.
