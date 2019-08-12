@@ -16,7 +16,7 @@ from data.data.value import FileValue
 from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
-from dataset.dataset_serializers import DataSetFilesSerializerV6, DataSetMemberSerializerV6
+from dataset.dataset_serializers import DataSetFileSerializerV6, DataSetMemberSerializerV6
 from storage.models import ScaleFile
 from util import rest as rest_utils
 
@@ -134,7 +134,8 @@ class DataSetManager(models.Manager):
             datasets = datasets.order_by('id')
 
         for ds in datasets:
-            ds.files = DataSetFile.objects.get_dataset_files(ds.id)
+            files = DataSetFile.objects.get_file_ids([ds.id])
+            ds.files = len(files)
         return datasets
 
     def validate_dataset_v6(self, definition, title=None, description=None):
@@ -262,7 +263,7 @@ class DataSet(models.Model):
         :rtype: dict?
         """
         files = DataSet.objects.get_dataset_files(self.id)
-        serializer = DataSetFilesSerializerV6(files, many=True)
+        serializer = DataSetFileSerializerV6(files, many=True)
         return serializer.data
 
     class Meta(object):

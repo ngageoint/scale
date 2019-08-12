@@ -10,12 +10,12 @@ from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
 
-class DataSetFilesBaseSerializerV6(ModelIdSerializer):
+class DataSetFileBaseSerializerV6(ModelIdSerializer):
     """Converts the datasetfile model fields to REST output"""
     parameter_name = serializers.CharField()
     scale_file = ScaleFileBaseSerializerV6()
     
-class DataSetFilesSerializerV6(DataSetFilesBaseSerializerV6):
+class DataSetFileSerializerV6(DataSetFileBaseSerializerV6):
     """Converts the datasetfile model fields to REST output"""
     parameter_name = serializers.CharField()
     scale_file = ScaleFileSerializerV6()
@@ -29,6 +29,7 @@ class DataSetListSerializerV6(DataSetBaseSerializerV6):
     """Converts dataset model fields to REST output"""
     created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json', default=None)
+    files = serializers.IntegerField()
 
 class DataSetMemberSerializerV6(ModelIdSerializer):
     created = serializers.DateTimeField()
@@ -39,8 +40,8 @@ class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
     created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json')
     members = DataSetMemberSerializerV6(required=False, many=True)
-    files = DataSetFilesSerializerV6(required=False, many=True)
+    files = DataSetFileBaseSerializerV6(required=False, many=True)
 
 class DataSetMemberDetailsSerializerV6(DataSetMemberSerializerV6):
     dataset = ModelIdSerializer()
-    files = DataSetFilesSerializerV6(required=False, many=True)
+    files = DataSetFileSerializerV6(required=False, many=True)

@@ -101,7 +101,7 @@ class TestDatasetViews(APITestCase):
             else:
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['title'], expected.title)
-            self.assertEqual(len(entry['files']), expectedFiles)
+            self.assertEqual(entry['files'], expectedFiles)
 
     def test_dataset_time_successful(self):
         """Tests successfully calling the v6/datasets api with time filters

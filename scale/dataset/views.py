@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
-from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFilesSerializerV6, DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
+from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFileSerializerV6, DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from dataset.models import DataSet, DataSetMember
 from dataset.definition.definition import DataSetDefinition
@@ -353,59 +353,3 @@ class DataSetValidationView(APIView):
                      'warnings': [w.to_dict() for w in validation.warnings]}
         return Response(resp_dict)
 
-class DataSetFilesView(ListCreateAPIView):
-    """Returns the files associated with a specific dataset """
-
-    serializer_class = DataSetFilesSerializerV6
-
-    def list(self, request, name=None, version=None, dataset_id=None):
-        """Determines api version and call specific method
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-        if self.request.version == 'v6':
-            if name and version:
-                return self.list_files_name_v6(request, name, version)
-            elif dataset_id:
-                return self.list_files_id_v6(request, dataset_id)
-        else:
-            raise Http404
-
-
-    def list_files_name_v6(self, request, name, version):
-        """ Returns a list of files associated with the given dataset
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return Response({'message': 'TODO'})
-
-
-    def list_files_id_v6(self, request, dataset_id):
-        """ Returns a list of files associated with the given dataset
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param name: The name of the dataset
-        :type name: string
-        :param version: The version of the dataset
-        :type version: string
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        return Response({'message': 'TODO'})
