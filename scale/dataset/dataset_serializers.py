@@ -29,7 +29,6 @@ class DataSetListSerializerV6(DataSetBaseSerializerV6):
     """Converts dataset model fields to REST output"""
     created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json', default=None)
-    files = DataSetFilesBaseSerializerV6(many=True)
 
 class DataSetMemberSerializerV6(ModelIdSerializer):
     created = serializers.DateTimeField()
@@ -37,8 +36,6 @@ class DataSetMemberSerializerV6(ModelIdSerializer):
 
 class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
     """Converts dataset model feields to REST output"""
-
-    description = serializers.CharField()
     created = serializers.DateTimeField()
     definition = serializers.JSONField(source='get_v6_definition_json')
     members = DataSetMemberSerializerV6(required=False, many=True)

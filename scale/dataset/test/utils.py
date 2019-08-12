@@ -13,20 +13,24 @@ from dataset.definition.definition import DataSetDefinition
 DATASET_TITLE_COUNTER = 1
 
 DATA_DEFINITION = {'files': {'input_e': [1234], 'input_f': [1235, 1236]},
-                                            'json': {'input_g': 999, 'input_h': {'greeting': 'hello'}}}
+                   'json': {'input_g': 999, 'input_h': {'greeting': 'hello'}}}
 
 DATASET_DEFINITION = {'global_data': {'files': {'input_a': [1234], 'input_b': [1235, 1236]},
-                                            'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}},
-                      'global_parameters': {'files': [{'name': 'input_a', },
-                                                                {'name': 'input_b', 'media_types': ['application/json'],
-                                                                 'required': False, 'multiple': True}],
-                                      'json': [{'name': 'input_c', 'type': 'integer'},
-                                               {'name': 'input_d', 'type': 'object', 'required': False}]},
-                      'parameters': {'files': [{'name': 'input_e'},
-                                                               {'name': 'input_f', 'media_types': ['application/json'],
-                                                                'required': False, 'multiple': True}],
-                                     'json': [{'name': 'input_g', 'type': 'integer'},
-                                              {'name': 'input_h', 'type': 'object', 'required': False}]}}
+                                      'json':  {'input_c': 999, 'input_d': {'greeting': 'hello'}}},
+                      'global_parameters': {
+                          'files': [
+                            {'name': 'input_a', },
+                            {'name': 'input_b', 'media_types': ['application/json'], 'required': False, 'multiple': True}],
+                          'json':  [
+                            {'name': 'input_c', 'type': 'integer'},
+                            {'name': 'input_d', 'type': 'object', 'required': False}]},
+                      'parameters': {
+                          'files': [
+                            {'name': 'input_e'},
+                            {'name': 'input_f', 'media_types': ['application/json'], 'required': False, 'multiple': True}],
+                          'json':  [
+                            {'name': 'input_g', 'type': 'integer'},
+                            {'name': 'input_h', 'type': 'object', 'required': False}]}}
 
 def create_dataset(title=None, description=None, created=None, definition=None):
     """Creates a dataset model for unit testing
