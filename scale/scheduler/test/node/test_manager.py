@@ -312,7 +312,7 @@ class TestNodeManager(TestCase):
 
     def test_no_job_exe_offers(self):
         """Tests the NodeManager where a node is not running an exe and gave Scale an offer 3 minutes ago.
-            Expected behavior: The node is deleted and the DB model is update with is_active=False"""
+            Expected behavior: The node is scheduler and DB are in sync and the node is still active"""
 
         last_offer = now() - datetime.timedelta(minutes=3)
         node_mgr = NodeManager()

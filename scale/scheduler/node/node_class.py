@@ -256,7 +256,7 @@ class Node(object):
         if not self._is_active and not self._is_online:
             return True
         elif self._last_offer_received < (now() - datetime.timedelta(minutes=5)):
-             # if Scale has not received an offer for the node in the last 5 min
+             # Scale has not received an offer for the node in the last 5 min
             return True
         else:
             return False

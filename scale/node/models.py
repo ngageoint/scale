@@ -127,8 +127,10 @@ class NodeManager(models.Manager):
     def update_node_offers(self, hostnames, when):
         """Update the last_offer_received field for nodes.
 
-        :param updates: List of maps to be updated [{hostname: string, offer_received: datetime},]
-        :type new_data: [str]
+        :param hostnames: List of hostnames to be updated
+        :type hostnames: [str]
+        :param when: The datetime to be set as the last offer received
+        :type when: datetime
         """
         
         Node.objects.filter(hostname__in=hostnames).update(last_offer_received=when)
