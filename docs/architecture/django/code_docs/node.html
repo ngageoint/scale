@@ -236,6 +236,7 @@
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0005_auto_20181220_2014">node.migrations.0005_auto_20181220_2014 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0006_node_last_offer_received">node.migrations.0006_node_last_offer_received module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -277,6 +278,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.test.html#module-node.test.test_models">node.test.test_models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#module-node.test.test_views">node.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#module-node.test.utils">node.test.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#module-node.test">Module contents</a></li>
@@ -351,6 +353,7 @@
 <li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the node is currently active or is deprecated for historical purposes</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node model was created</li>
 <li><strong>deprecated</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node was deprecated (no longer active)</li>
+<li><strong>last_offer_received</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When mesos last offered resources for this node</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node model was last modified</li>
 </ul>
 </td>
@@ -394,6 +397,11 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="node.models.Node.get_next_by_last_offer_received">
+<code class="descname">get_next_by_last_offer_received</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_last_offer_received" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="node.models.Node.get_previous_by_created">
 <code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -401,6 +409,11 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="node.models.Node.get_previous_by_last_modified">
 <code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.models.Node.get_previous_by_last_offer_received">
+<code class="descname">get_previous_by_last_offer_received</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_last_offer_received" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -479,6 +492,13 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="node.models.Node.last_modified">
 <code class="descname">last_modified</code><a class="headerlink" href="#node.models.Node.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.last_offer_received">
+<code class="descname">last_offer_received</code><a class="headerlink" href="#node.models.Node.last_offer_received" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -566,6 +586,22 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="node.models.NodeManager.get_nodes_running_job_exes">
+<code class="descname">get_nodes_running_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_nodes_running_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of nodes that are currently running job_exes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of node ids running job_exes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="node.models.NodeManager.get_scheduler_nodes">
 <code class="descname">get_scheduler_nodes</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_scheduler_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of all nodes that either have one of the given host names or is active.</p>
@@ -594,6 +630,24 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>new_data</strong> (<em>dict</em>) &#8211; Updated data for the node</li>
 <li><strong>node_id</strong> (<em>int</em>) &#8211; The ID of the node to modify</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.models.NodeManager.update_node_offers">
+<code class="descname">update_node_offers</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.update_node_offers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the last_offer_received field for nodes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hostnames</strong> (<em>[</em><em>str</em><em>]</em>) &#8211; List of hostnames to be updated</li>
+<li><strong>when</strong> (<em>datetime</em>) &#8211; The datetime to be set as the last offer received</li>
 </ul>
 </td>
 </tr>

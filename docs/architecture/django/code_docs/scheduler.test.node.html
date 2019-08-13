@@ -281,12 +281,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id_with_inactive_node">
-<code class="descname">test_change_agent_id_with_inactive_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id_with_inactive_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the NodeManager where a registered node changes its agent ID, and the node is inactive</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks">
 <code class="descname">test_get_initial_cleanup_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting initial cleanup tasks from the manager</p>
@@ -305,6 +299,13 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_job_exe_no_offers">
+<code class="descname">test_job_exe_no_offers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_no_offers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a node is running an exe and has not given offers to Scale in 1 hour.
+Expected behavior: The node is scheduler and DB are in sync and the node is still active</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">
 <code class="descname">test_lost_known_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a known node was lost</p>
@@ -314,6 +315,20 @@
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node">
 <code class="descname">test_lost_unknown_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where an unknown node was lost</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_no_job_exe_no_offers">
+<code class="descname">test_no_job_exe_no_offers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_no_job_exe_no_offers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a node is not running an exe and has not given offers to Scale in 1 hour.
+Expected behavior: The node is deleted and the DB model is update with is_active=False</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_no_job_exe_offers">
+<code class="descname">test_no_job_exe_offers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_no_job_exe_offers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a node is not running an exe and gave Scale an offer 3 minutes ago.
+Expected behavior: The node is scheduler and DB are in sync and the node is still active</p>
 </dd></dl>
 
 <dl class="method">

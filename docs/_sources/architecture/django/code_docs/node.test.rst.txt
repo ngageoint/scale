@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+node\.test\.test\_models module
+-------------------------------
+
+.. automodule:: node.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 node\.test\.test\_views module
 ------------------------------
 

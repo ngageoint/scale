@@ -44,6 +44,14 @@ node\.migrations\.0005\_auto\_20181220\_2014 module
     :undoc-members:
     :show-inheritance:
 
+node\.migrations\.0006\_node\_last\_offer\_received module
+----------------------------------------------------------
+
+.. automodule:: node.migrations.0006_node_last_offer_received
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
