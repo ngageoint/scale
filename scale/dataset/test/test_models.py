@@ -162,7 +162,7 @@ class TestDataSetMemberManager(TransactionTestCase):
 
 
     def test_create_dataset_member_v6(self):
-        """Tests calling DataSetManager.create_dataset_v6() """
+        """Tests calling DataSetManager.create_dataset_member_v6() """
 
         data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
         data_dict['files']['input_e'] = [self.file1.id]
@@ -272,16 +272,16 @@ class TestDataSetFile(TransactionTestCase):
         """Tests retrieving files for datasets
         """
 
-        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id], parameter_name='input_e')
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id], parameter_names=['input_e'])
         self.assertEqual(len(files), 2)
 
         files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id, self.dataset2.id])
         self.assertEqual(len(files), 9)
 
-        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id, self.dataset2.id], parameter_name='input_e')
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id, self.dataset2.id], parameter_names=['input_e'])
         self.assertEqual(len(files), 3)
 
-        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id], parameter_name='input_a')
+        files = DataSetFile.objects.get_files(dataset_ids=[self.dataset.id], parameter_names=['input_a'])
         self.assertEqual(len(files), 0)
 
     def test_get_datasets(self):

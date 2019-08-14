@@ -39,7 +39,7 @@ class DataSetView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
+        if self.request.version == 'v6' or self.request.version == 'v7':
             return self.list_v6(request)
         else:
             raise Http404 # no datasets before v6
@@ -80,7 +80,7 @@ class DataSetView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
+        if self.request.version == 'v6' or self.request.version == 'v7':
             return self.create_v6(request)
         else:
             raise Http404 # no datasets before v6
@@ -142,7 +142,7 @@ class DataSetDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
+        if self.request.version == 'v6' or self.request.version == 'v7':
             return self.get_v6(request, dataset_id=dataset_id)
         else:
             raise Http404
@@ -177,7 +177,7 @@ class DataSetDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
+        if self.request.version == 'v6' or self.request.version == 'v7':
             return self.post_v6(request, dataset_id=dataset_id)
         else:
             raise Http404 # no datasets before v6
@@ -240,7 +240,7 @@ class DataSetMembersView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
+        if self.request.version == 'v6' or self.request.version == 'v7':
             return self.list_v6(request, dataset_id=dataset_id)
         else:
             raise Http404
@@ -287,13 +287,13 @@ class DataSetMemberDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version == 'v6':
+        if self.request.version == 'v6' or self.request.version == 'v7':
             return self.get_v6(request, dsm_id=dsm_id)
         else:
             raise Http404
 
     def get_v6(self, request, dsm_id):
-        """Retrieves the details for a dataset version and return them in JSON form
+        """Retrieves the details for a dataset member and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`

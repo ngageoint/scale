@@ -2,8 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
-import re
-import semver
 from collections import namedtuple
 
 import django.contrib.postgres.fields
@@ -20,18 +18,6 @@ from dataset.dataset_serializers import DataSetFileSerializerV6, DataSetMemberSe
 from storage.models import ScaleFile
 from util import rest as rest_utils
 
-"""
-From #1067
-
-We need to create the concept of data sets: a collection of n bundles of data.
-Each data set will have a defined set of parameters (like job type input) and
-then n members that match the parameter definition.
-
-I think it might make sense to put this in its own app, perhaps called data?
-This app can store things related to defining and validating data sets and
-inputs.
-"""
-
 logger = logging.getLogger(__name__)
 
 DataSetValidation = namedtuple('DataSetValidation', ['is_valid', 'errors', 'warnings'])
@@ -40,7 +26,6 @@ DataSetValidation = namedtuple('DataSetValidation', ['is_valid', 'errors', 'warn
 class DataSetManager(models.Manager):
     """Provides additional methods for handling datasets"""
 
-    @transaction.atomic
     def create_dataset_v6(self, definition, title=None, description=None):
         """Creates and returns a new dataset for the given name/title/description/definition/version??
 
@@ -183,13 +168,7 @@ class DataSetManager(models.Manager):
         members = DataSetMember.objects.all().filter(dataset=dataset)
         return members
 
-"""DataSet
 
-* optional title
-* optional description
-* JSON definition (like job type input) (Required)
-* created time
-"""
 class DataSet(models.Model):
     """
     Represents a DataSet object
@@ -273,6 +252,7 @@ class DataSet(models.Model):
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
 
+    @transaction.atomic
     def create_dataset_member_v6(self, dataset, data):
         """Creates a dataset member
 
@@ -301,7 +281,9 @@ class DataSetMemberManager(models.Manager):
         dataset_member = DataSetMember()
         dataset_member.dataset = dataset
         dataset_member.data = convert_data_to_v6_json(data).get_dict()
-        dataset_member.file_ids = DataSetFile.objects.create_dataset_files(dataset, data)
+        datasetfiles, file_ids = DataSetFile.objects.create_dataset_files(dataset, data)
+        dataset_member.file_ids = file_ids
+        DataSetFile.objects.bulk_create(datasetfiles)
         dataset_member.save()
 
         return dataset_member
@@ -326,16 +308,6 @@ class DataSetMemberManager(models.Manager):
         return dsm
 
 
-"""
-DataSetMember
-
-Is this actually necessary?? Nothing else references datasetmember. datasetfile can
-refer back to the dataset id it's located in
-
-* indexed foreign key to DataSet
-* JSON field describing data in this member, must validate with DataSet definition (like job data/input)
-* created time
-"""
 class DataSetMember(models.Model):
     """
     Defines the data of a dataset? contains list/descriptors of DataFiles
@@ -389,6 +361,7 @@ class DataSetMember(models.Model):
         """meta information for the db"""
         db_table = 'data_set_member'
 
+
 class DataSetFileManager(models.Manager):
     """Manages the datasetfile model"""
 
@@ -396,6 +369,7 @@ class DataSetFileManager(models.Manager):
         """Creates dataset files for the given dataset and data"""
 
         file_ids = []
+        datasetfiles = []
         for i in data.values.keys():
             v = data.values[i]
             if type(v) is FileValue:
@@ -408,23 +382,24 @@ class DataSetFileManager(models.Manager):
                     file.dataset = dataset
                     file.scale_file = ScaleFile.objects.get(pk=id)
                     file.parameter_name = i
-                    file.save()
-        return file_ids
+                    datasetfiles.append(file)
 
-    def get_file_ids(self, dataset_ids, parameter_name=None):
+        return datasetfiles, file_ids
+
+    def get_file_ids(self, dataset_ids, parameter_names=None):
         """Returns a list of the file IDs for the given datasets, optionally filtered by parameter_name.
 
         :param dataset_ids: The ids of the associated datasets
         :type dataset_ids: integer
-        :param parameter_name: The parameter name to search for in the given datasets
-        :type parameter_name: string
+        :param parameter_names: The parameter names to search for in the given datasets
+        :type parameter_names: string
         :returns: The list of scale file IDs
         :rtype: list
         """
 
         query = self.all().filter(dataset_id__in=list(dataset_ids))
-        if parameter_name:
-            query = query.filter(parameter_name=parameter_name)
+        if parameter_names:
+            query = query.filter(parameter_name__in=list(parameter_names))
         return [result.scale_file_id for result in query.only('scale_file_id').distinct()]
 
     def get_dataset_ids(self, file_ids, all_files=False):
@@ -449,20 +424,20 @@ class DataSetFileManager(models.Manager):
                     results.append(result['dataset_id'])
         return results
         
-    def get_files(self, dataset_ids, parameter_name=None):
+    def get_files(self, dataset_ids, parameter_names=None):
         """Returns the dataset files associated with the given dataset_ids
 
         :param dataset_ids: The ids of the associated datasets
         :type dataset_ids: integer
-        :param parameter_name: The parameter name to search for in the given datasets
-        :type parameter_name: string
+        :param parameter_names: The parameter names to search for in the given datasets
+        :type parameter_names: string
         :returns: The DataSetFiles associated with that dataset_id
         :rtype: [:class:`dataset.models.DataSetFile`]
         """
 
         files = self.all().filter(dataset_id__in=list(dataset_ids))
-        if parameter_name:
-            files = files.filter(parameter_name=parameter_name)
+        if parameter_names:
+            files = files.filter(parameter_name__in=list(parameter_names))
         return files
         
     def get_datasets(self, file_ids, all_files=False):
@@ -481,7 +456,7 @@ class DataSetFileManager(models.Manager):
         return datasets
 
     def get_dataset_files(self, dataset_id):
-        """Returns the dataset files associated with the given dataset_ids
+        """Returns the dataset files associated with the given dataset_id
 
         :param dataset_id: The id of the associated dataset
         :type dataset_id: integer
@@ -493,14 +468,7 @@ class DataSetFileManager(models.Manager):
 
         return files
 
-"""
-DataSetFile
 
-* indexed foreign key to DataSet
-* index foreign key to Scale file
-* char field for file parameter name (from data set definition JSON)
-* unique combined index on (DataSet ID, Scale file ID) ??
-"""
 class DataSetFile(models.Model):
     """
     The actual file in a dataset member

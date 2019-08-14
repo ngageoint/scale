@@ -75,7 +75,7 @@ class DataSetDefinition(object):
         :type parameter: :class:`data.interface.parameter.Parameter`
         """
         if parameter.name in self.param_names:
-            raise InvalidDataSetDefinition('INVALID_DATASET_DEFINITION',
+            raise InvalidDataSetDefinition('DUPLICATE_PARAMETER',
                 'Invalid dataset definition: %s cannot be defined more than once' % parameter.name)
         else:
             self.param_names.add(parameter.name)
