@@ -459,18 +459,15 @@ class DataSetMember(models.Model):
 class DataSetFileManager(models.Manager):
     """Manages the datasetfile model"""
 
-    def create_dataset_files(self, dataset, data):
+    def create_dataset_files(self, dataset, data, existing_scale_ids):
         """Creates dataset files for the given dataset and data"""
 
-        file_ids = []
         datasetfiles = []
         for i in data.values.keys():
             v = data.values[i]
             if type(v) is FileValue:
-                file_ids.extend(v.file_ids)
                 for id in v.file_ids:
-                    exists = DataSetFile.objects.filter(dataset=dataset, scale_file_id=id).count()
-                    if exists:
+                    if id in existing_scale_ids:
                         continue
                     file = DataSetFile()
                     file.dataset = dataset
@@ -478,7 +475,7 @@ class DataSetFileManager(models.Manager):
                     file.parameter_name = i
                     datasetfiles.append(file)
 
-        return datasetfiles, file_ids
+        return datasetfiles
 
     def get_file_ids(self, dataset_ids, parameter_names=None):
         """Returns a list of the file IDs for the given datasets, optionally filtered by parameter_name.
