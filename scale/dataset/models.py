@@ -9,6 +9,7 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 from django.db.models import Q, Count
 
+from data.data import data_util
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue
@@ -16,8 +17,6 @@ from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from dataset.dataset_serializers import DataSetFileSerializerV6, DataSetMemberSerializerV6
-from dataset.messages.create_dataset_members import create_dataset_members_messages
-from messaging.manager import CommandMessageManager
 from storage.models import ScaleFile
 from util import rest as rest_utils
 
@@ -122,7 +121,7 @@ class DataSetManager(models.Manager):
             datasets = datasets.order_by('id')
 
         for ds in datasets:
-            files = DataSetFile.objects.get_file_ids([ds.id])
+            files = DataSetFile.objects.get_file_ids(dataset_ids=[ds.id])
             ds.files = len(files)
         return datasets
 
@@ -370,20 +369,19 @@ class DataSetMemberManager(models.Manager):
         :type data_list: [:class:`data.data.data.Data`]
         """
 
-        # Create and send messages
-        messages = create_dataset_members_messages(dataset, data_list)
-        CommandMessageManager().send_messages(messages)
-        """try:
-            dataset.get_definition().validate(data)
-        except InvalidData as ex:
-            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'Data does not match dataset parameters: %s' % ex)
-
-        datasetfiles, file_ids = DataSetFile.objects.create_dataset_files(dataset, data)
-        dataset_member.file_ids = file_ids
-        DataSetFile.objects.bulk_create(datasetfiles)
-        dataset_member.save()
-
-        return dataset_member"""
+        with transaction.atomic():
+            dataset_members = []
+            datasetfiles = []
+            existing_scale_ids = DataSetFile.objects.get_file_ids(dataset_ids=[dataset.id])
+            for d in data_list:
+                dataset_member = DataSetMember()
+                dataset_member.dataset = dataset
+                dataset_member.data = convert_data_to_v6_json(d).get_dict()
+                dataset_member.file_ids = list(data_util.get_file_ids(d))
+                dataset_members.append(dataset_member)
+                datasetfiles = DataSetFile.objects.create_dataset_files(dataset, d, existing_scale_ids)
+            DataSetFile.objects.bulk_create(datasetfiles)
+            return DataSetMember.objects.bulk_create(dataset_members)
 
     def get_dataset_members(self, dataset):
         """Returns dataset members for the given dataset

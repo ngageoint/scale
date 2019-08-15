@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import logging
 
 import rest_framework.status as status
-from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
@@ -13,7 +12,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from data.data.exceptions import InvalidData
-from data.data.json.data_v6 import DataV6, convert_data_to_v6_json()
+from data.data.json.data_v6 import DataV6, convert_data_to_v6_json
 from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFileSerializerV6, DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from dataset.models import DataSet, DataSetMember
@@ -265,7 +264,7 @@ class DataSetDetailsView(GenericAPIView):
         data_dict_list = []
         for dl in data_list:
             data_dict_list.append(convert_data_to_v6_json(dl))
-        resp_dict = { data: data_dict_list }
+        resp_dict = { 'data': data_dict_list }
         return Response(resp_dict)
 
 
