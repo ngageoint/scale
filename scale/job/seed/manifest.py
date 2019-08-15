@@ -75,10 +75,10 @@ class SeedManifest(object):
         """
 
         output = self._get_output_data_item_by_name(output_name)
-        # TODO: We are only getting files, but in the future we need to branch for file/json
 
         if isinstance(output, SeedOutputFiles):
-            # TODO: How do we want to handle down-stream partial handling? Setting to False presently
+            # TODO: How do we want to handle down-stream partial handling?
+            # Leaving this as false for now as I don't see Scale ever passing part of a file to another job. -jtobe
             job_conn.add_input_file(input_name, output.multiple, [output.media_type], not output.required, False)
 
         if isinstance(output, SeedOutputJson):
