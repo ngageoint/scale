@@ -73,13 +73,11 @@ class DependencyManager(object):
         :return: JSON describing the logs status
         :rtype: dict
         """
-        status_dict = {}
 
         if scale_settings.LOGGING_HEALTH_ADDRESS:
             response = requests.head(scale_settings.LOGGING_HEALTH_ADDRESS)
             if response.status_code == status.HTTP_200_OK:
-                status_dict['OK'] = True
-                status_dict['detail'] = {'url': scale_settings.LOGGING_HEALTH_ADDRESS}
+                status_dict = {'OK': True, 'detail': {'url': scale_settings.LOGGING_HEALTH_ADDRESS}}
             else:
                 status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging health address returned %d'%response.status_code}], 'warnings': []}
         elif scale_settings.LOGGING_ADDRESS:
@@ -101,7 +99,6 @@ class DependencyManager(object):
         :return: JSON describing the elasticsearch status
         :rtype: dict
         """
-        status_dict = {}
         
         elasticsearch = scale_settings.ELASTICSEARCH
         if not elasticsearch:
@@ -116,7 +113,7 @@ class DependencyManager(object):
                 elif health['status'] == 'yellow':
                     status_dict = {'OK': False, 'errors': [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. SOS.'}], 'warnings': []}
                 elif health['status'] == 'green':
-                    status_dict['OK'] = True
+                    status_dict = {'OK': True}
                     status_dict['detail'] = elasticsearch.info()
 
         return status_dict
@@ -128,7 +125,6 @@ class DependencyManager(object):
         :rtype: dict
         """
         
-        status_dict = {}
         silo_url = os.getenv('SILO_URL')
         
         # Hit the silo url to make sure it's alive
@@ -137,8 +133,7 @@ class DependencyManager(object):
         else:
             response = requests.head(silo_url)
             if response.status_code == status.HTTP_200_OK:
-                status_dict['OK'] = True
-                status_dict['detail'] = {'url': silo_url}
+                status_dict = {'OK': True, 'detail': {'url': silo_url}}
             else:
                 status_dict = {'OK': False, 'errors': [{response.status_code: 'Silo returned a status code of %s' % response.status_code}], 'warnings': []}
 
@@ -162,7 +157,6 @@ class DependencyManager(object):
         """Generates the Message Queue status message
         AMQP (rabbitmq)
         """
-        status_dict = {}
         
         # if type is amqp, then we know it's rabbit. Don't worry about checking SQS
         broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
@@ -170,7 +164,6 @@ class DependencyManager(object):
             try:
                 with Connection(scale_settings.BROKER_URL) as conn:
                     conn.connect() # Exceptions may be raised upon connect
-                    
                     
                     # No exceptions, so check the message queue depth
                     backend = CommandMessageManager()._backend
