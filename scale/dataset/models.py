@@ -1,6 +1,7 @@
 """Defines the database models for datasets"""
 from __future__ import absolute_import, unicode_literals
 
+import copy
 import logging
 from collections import namedtuple
 
@@ -15,6 +16,8 @@ from dataset.definition.definition import DataSetDefinition
 from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
 from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from dataset.dataset_serializers import DataSetFileSerializerV6, DataSetMemberSerializerV6
+from dataset.messages.create_dataset_members import create_dataset_members_messages
+from messaging.manager import CommandMessageManager
 from storage.models import ScaleFile
 from util import rest as rest_utils
 
@@ -200,7 +203,7 @@ class DataSet(models.Model):
         """Returns the dataset definition
 
         :returns: The DataSet definition
-        :rtype: :class:`dataset.definition.json.DataSetDefinition`
+        :rtype: :class:`dataset.definition.DataSetDefinition`
         """
 
         if isinstance(self.definition, basestring):
@@ -252,41 +255,135 @@ class DataSet(models.Model):
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
 
-    @transaction.atomic
-    def create_dataset_member_v6(self, dataset, data):
+    def build_data_list(self, template, data_started=None, data_ended=None, source_started=None, source_ended=None,
+                        source_sensor_classes=None, source_sensors=None, source_collections=None,
+                        source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
+                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
+                        recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
+        """Builds a list of data dictionaries from a template and file filters
+
+        :param template: The template to fill with files found through filters
+        :type template: dict
+        :param data_started: Query files where data started after this time.
+        :type data_started: :class:`datetime.datetime`
+        :param data_ended: Query files where data ended before this time.
+        :type data_ended: :class:`datetime.datetime`
+        :param source_started: Query files where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query files where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query files with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query files with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query files with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query files with the given source tasks.
+        :type source_tasks: list
+        :param mod_started: Query files where the last modified date is after this time.
+        :type mod_started: :class:`datetime.datetime`
+        :param mod_ended: Query files where the last modified date is before this time.
+        :type mod_ended: :class:`datetime.datetime`
+        :param job_type_ids: Query files with jobs with the given type identifier.
+        :type job_type_ids: list
+        :param job_type_names: Query files with jobs with the given type name.
+        :type job_type_names: list
+        :keyword job_ids: Query files with a given job id
+        :type job_ids: list
+        :param is_published: Query files flagged as currently exposed for publication.
+        :type is_published: bool
+        :param is_superseded: Query files that have/have not been superseded.
+        :type is_superseded: bool
+        :param file_names: Query files with the given file names.
+        :type file_names: list
+        :keyword job_outputs: Query files with the given job outputs
+        :type job_outputs: list
+        :keyword recipe_ids: Query files with a given recipe id
+        :type recipe_ids: list
+        :keyword recipe_nodes: Query files with a given recipe nodes
+        :type recipe_nodes: list
+        :keyword recipe_type_ids: Query files with the given recipe types
+        :type recipe_type_ids: list
+        :keyword batch_ids: Query files with batches with the given identifiers.
+        :type batch_ids: list
+        :param order: A list of fields to control the sort order.
+        :type order: list
+        """
+        
+        files = ScaleFile.objects.filter_files(
+            data_started=data_started, data_ended=data_ended,
+            source_started=source_started, source_ended=source_ended,
+            source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
+            source_collections=source_collections, source_tasks=source_tasks,
+            mod_started=mod_started, mod_ended=mod_ended, job_type_ids=job_type_ids,
+            job_type_names=job_type_names, job_ids=job_ids,
+            file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
+            recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
+            order=order)
+        
+        data_list = []    
+        try:
+            for f in files:
+                entry = copy.deepcopy(template)
+                file_params = entry['files']
+                for p in file_params:
+                    if file_params[p] == 'FILE_VALUE':
+                        file_params[p] = [f.id]
+                data_list.append(DataV6(data=entry, do_validate=True).get_data())
+        except (KeyError, TypeError) as ex:
+            raise InvalidData
+        
+        return data_list
+
+    def validate_data_list(self, dataset, data_list):
+        """Validates a list of data objects against a dataset
+
+        :param dataset: The dataset the member is a part of
+        :type dataset: :class:`dataset.models.DataSet`
+        :param data_list: Data definitions of the dataset members
+        :type data_list: [:class:`data.data.data.Data`]
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+        
+        for data in data_list:
+            try:
+                dataset.get_definition().validate(data)
+            except (InvalidData, InvalidDataSetMember) as ex:
+                is_valid = False
+                errors.append(ex.error)
+                message = 'Dataset definition is invalid: %s' % ex
+                logger.info(message)
+                pass
+
+        # validate other fields
+        return DataSetValidation(is_valid, errors, warnings)
+        
+    def create_dataset_members(self, dataset, data_list):
         """Creates a dataset member
 
         :param dataset: The dataset the member is a part of
         :type dataset: :class:`dataset.models.DataSet`
-        :param data: Data definition of the dataset member
-        :type data: :class:`data.data.data.Data`
-
-        :returns: The new dataset member
-        :rtype: :class:`dataset.models.DataSetMember`
-
-        :raises :class:`dataset.exceptions.InvalidDataSetMember`: If the dataset member has an invalid value
+        :param data_list: Data definitions of the dataset members
+        :type data_list: [:class:`data.data.data.Data`]
         """
 
-        if not dataset:
-            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No dataset provided for dataset member')
-
-        if not data:
-            raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'No data provided')
-
-        try:
+        # Create and send messages
+        messages = create_dataset_members_messages(dataset, data_list)
+        CommandMessageManager().send_messages(messages)
+        """try:
             dataset.get_definition().validate(data)
         except InvalidData as ex:
             raise InvalidDataSetMember('INVALID_DATASET_MEMBER', 'Data does not match dataset parameters: %s' % ex)
 
-        dataset_member = DataSetMember()
-        dataset_member.dataset = dataset
-        dataset_member.data = convert_data_to_v6_json(data).get_dict()
         datasetfiles, file_ids = DataSetFile.objects.create_dataset_files(dataset, data)
         dataset_member.file_ids = file_ids
         DataSetFile.objects.bulk_create(datasetfiles)
         dataset_member.save()
 
-        return dataset_member
+        return dataset_member"""
 
     def get_dataset_members(self, dataset):
         """Returns dataset members for the given dataset
@@ -330,12 +427,9 @@ class DataSetMember(models.Model):
     def get_dataset_definition(self):
         """Returns the dataset definition
 
-        :returns: The dataset member definition in v6
-        :rtype: :class:`dataset.DataSetMemberDefinition`
+        :returns: The dataset definition
+        :rtype: :class:`dataset.DataSetDefinition`
         """
-
-        if isinstance(self.definition, basestring):
-            self.definition = {}
 
         return self.dataset.get_definition()
 
@@ -423,7 +517,7 @@ class DataSetFileManager(models.Manager):
                 if result['total'] == len(file_ids):
                     results.append(result['dataset_id'])
         return results
-        
+
     def get_files(self, dataset_ids, parameter_names=None):
         """Returns the dataset files associated with the given dataset_ids
 
@@ -439,7 +533,7 @@ class DataSetFileManager(models.Manager):
         if parameter_names:
             files = files.filter(parameter_name__in=list(parameter_names))
         return files
-        
+
     def get_datasets(self, file_ids, all_files=False):
         """Returns the datasets associated with the given file_id
 
@@ -452,7 +546,7 @@ class DataSetFileManager(models.Manager):
         """
         dataset_ids = self.get_dataset_ids(file_ids=file_ids, all_files=all_files)
         datasets = DataSet.objects.filter(id__in=dataset_ids)
-        
+
         return datasets
 
     def get_dataset_files(self, dataset_id):
