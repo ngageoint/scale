@@ -1,0 +1,45 @@
+dataset\.test package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    dataset.test.definition
+
+Submodules
+----------
+
+dataset\.test\.test\_models module
+----------------------------------
+
+.. automodule:: dataset.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+dataset\.test\.test\_views module
+---------------------------------
+
+.. automodule:: dataset.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+dataset\.test\.utils module
+---------------------------
+
+.. automodule:: dataset.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: dataset.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

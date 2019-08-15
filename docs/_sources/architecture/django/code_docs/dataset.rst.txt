@@ -1,0 +1,63 @@
+dataset package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    dataset.definition
+    dataset.migrations
+    dataset.test
+
+Submodules
+----------
+
+dataset\.dataset\_serializers module
+------------------------------------
+
+.. automodule:: dataset.dataset_serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+dataset\.exceptions module
+--------------------------
+
+.. automodule:: dataset.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+dataset\.models module
+----------------------
+
+.. automodule:: dataset.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+dataset\.urls module
+--------------------
+
+.. automodule:: dataset.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+dataset\.views module
+---------------------
+
+.. automodule:: dataset.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -113,6 +113,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#data-json">Data JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interface-json">Interface JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#data-filter-json">Data Filter JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dataset-json">Dataset JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-list">v6 Retrieve Dataset List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset">v6 Create Dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-validate-dataset">v6 Validate Dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-details">v6 Retrieve Dataset Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset-member">v6 Create Dataset Member</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-member-list">v6 Retrieve Dataset Member List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-member-details">v6 Retrieve Dataset Member Details</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
@@ -285,7 +293,7 @@ type/object that matches the parameter. Defaults to {}.</td>
 <td>String</td>
 <td>Required</td>
 <td>The unique name of the parameter. Can only contain the following
-characters: [<a href="#id1"><span class="problematic" id="id2">a-zA-Z_</span></a>-]</td>
+characters: [<a href="#id7"><span class="problematic" id="id8">a-zA-Z_</span></a>-]</td>
 </tr>
 <tr class="row-odd"><td>required</td>
 <td>Boolean</td>
@@ -419,6 +427,663 @@ Defaults to false</td>
 <td>Optional</td>
 <td>Specifies whether all filters need to pass for data to be accepted
 Defaults to true</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dataset-json">
+<span id="rest-v6-data-dataset"></span><h2>Dataset JSON<a class="headerlink" href="#dataset-json" title="Permalink to this headline">¶</a></h2>
+<p>A dataset JSON describes a specification for a bundle of data</p>
+<p><strong>Example interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;global_data&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&quot;input_a&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">1234</span><span class="p">],</span> <span class="s2">&quot;input_b&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">1235</span><span class="p">,</span> <span class="mi">1236</span><span class="p">]</span> <span class="p">},</span>
+                   <span class="s2">&quot;json&quot;</span><span class="o">:</span>  <span class="p">{</span> <span class="s2">&quot;input_c&quot;</span><span class="o">:</span> <span class="mi">999</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;input_d&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;greeting&quot;</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">}</span> <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;global_parameters&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_a&quot;</span> <span class="p">},</span>
+                                    <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_b&quot;</span><span class="p">,</span> <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="s2">&quot;application/json&quot;</span><span class="p">],</span> <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span> <span class="s2">&quot;multiple&quot;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span> <span class="p">],</span>
+                         <span class="s2">&quot;json&quot;</span><span class="o">:</span>  <span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_c&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span> <span class="p">},</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_d&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="nx">False</span> <span class="p">}</span> <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;parameters&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_e&quot;</span> <span class="p">},</span>
+                             <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_f&quot;</span><span class="p">,</span> <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span> <span class="s2">&quot;application/json&quot;</span><span class="p">],</span> <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span> <span class="s2">&quot;multiple&quot;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span> <span class="p">],</span>
+                  <span class="s2">&quot;json&quot;</span><span class="o">:</span>  <span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_g&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span> <span class="p">},</span>
+                             <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_h&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="nx">False</span> <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Data</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>global_data</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing data to be passed along with each item
+in the dataset. This is useful for doing parameter sweeps where the
+same algorithm and data file are run through a set of parameters.
+Must have values for each required parameter in global_parameters.</td>
+</tr>
+<tr class="row-odd"><td>global_parameters</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing parameters that are fulfilled by global
+values in the dataset not tied to individual members. These are
+combined with regular parameters to define what is passed in to
+algorithms run with this dataset.</td>
+</tr>
+<tr class="row-even"><td>parameters</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing parameters to be passed to algorithms
+run with this dataset. These are fulfilled by individual members
+of the dataset.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-retrieve-dataset-list">
+<span id="rest-v6-dataset-list"></span><h2>v6 Retrieve Dataset List<a class="headerlink" href="#v6-retrieve-dataset-list" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/datasets/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/datasets/?keyword=abc">http://.../v6/datasets/?keyword=abc</a></p>
+<p>Response: 200 OK</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+   <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+   <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+      <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My abc Dataset&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset Description&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset JSON &lt;rest_v6_data_dataset&gt;`</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+   <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="16%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Dataset List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of datasets that match the given filter criteria</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/datasets/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>dataset_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only datasets with given ids.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>keyword</td>
+<td>String</td>
+<td>Optional</td>
+<td>Performs a like search on title and description.
+Duplicate to search for multiple keywords.</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=title&amp;order=created).
+Prefix fields with a dash to reverse the sort, (ex: order=-title).</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters</td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the dataset</td>
+</tr>
+<tr class="row-odd"><td>title</td>
+<td>String</td>
+<td colspan="2">The human readable display name of the dataset</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>String</td>
+<td colspan="2">A longer description of the dataset</td>
+</tr>
+<tr class="row-odd"><td>definition</td>
+<td>JSON Object</td>
+<td colspan="2">The definition of the dataset.  (See <a class="reference internal" href="#rest-v6-data-dataset"><span class="std std-ref">Dataset JSON</span></a>)</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the dataset was initially created</td>
+</tr>
+<tr class="row-odd"><td>files</td>
+<td>Integer</td>
+<td colspan="2">The number of files in the dataset</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-create-dataset">
+<span id="rest-v6-dataset-create"></span><h2>v6 Create Dataset<a class="headerlink" href="#v6-create-dataset" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/datasets/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/datasets/">http://.../v6/datasets/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset JSON &lt;rest_v6_data_dataset&gt;`</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 201 Created
+Headers:
+Location <a class="reference external" href="http://.../v6/datasets/105/">http://.../v6/datasets/105/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset JSON &lt;rest_v6_data_dataset&gt;`</span><span class="o">&gt;</span><span class="p">,</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;members&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset Member &lt;rest_v6_data_dataset_member&gt;`</span><span class="o">&gt;</span><span class="p">],</span>
+   <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset File &lt;rest_v6_data_dataset_file&gt;`</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="9%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="5"><a href="#id1"><span class="problematic" id="id2">**</span></a>Create Dataset*</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="5">Creates a new dataset with the given fields</td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>POST</strong> /v6/datasets/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td>String</td>
+<td>Optional</td>
+<td>The human-readable name of the dataset</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td>String</td>
+<td>Optional</td>
+<td>A human-readable description of the dataset</td>
+</tr>
+<tr class="row-even"><td colspan="2">definition</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>JSON definition for the dataset
+See <a class="reference internal" href="#rest-v6-data-dataset"><span class="std std-ref">Dataset JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="4">201 Created</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="4">URL for retrieving the details of the newly created dataset</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="4">JSON containing the details of the newly created batch, see <a class="reference internal" href="#rest-v6-dataset-details"><span class="std std-ref">v6 Retrieve Dataset Details</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-validate-dataset">
+<span id="rest-v6-dataset-validation"></span><h2>v6 Validate Dataset<a class="headerlink" href="#v6-validate-dataset" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/datasets/validation/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/datasets/validation/">http://.../v6/datasets/validation/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset JSON &lt;rest_v6_data_dataset&gt;`</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 200 Ok
+Headers:
+Location <a class="reference external" href="http://.../v6/datasets/validation/">http://.../v6/datasets/validation/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;is_valid&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[],</span>
+   <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;EXAMPLE_WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is an example warning.&quot;</span><span class="p">}],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="0%" />
+<col width="9%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><a href="#id3"><span class="problematic" id="id4">**</span></a>Validate Dataset*</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Validates the given fields for creating a new dataset</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>POST</strong> /v6/datasets/validation/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the dataset</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>A human-readable description of the dataset</td>
+</tr>
+<tr class="row-even"><td colspan="2">definition</td>
+<td colspan="2">JSON Object</td>
+<td>Required</td>
+<td>JSON definition for the dataset
+See <a class="reference internal" href="#rest-v6-data-dataset"><span class="std std-ref">Dataset JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="5">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>is_valid</td>
+<td colspan="2">Boolean</td>
+<td colspan="3">Indicates if the given fields were valid for creating a new dataset. If this is
+true, then submitting the same fields to the /datasets/ API will successfully
+create a new dataset.</td>
+</tr>
+<tr class="row-even"><td>errors</td>
+<td colspan="2">Array</td>
+<td colspan="3">Lists any errors causing <em>is_valid</em> to be false. The errors are JSON objects
+with <em>name</em> and <em>description</em> string fields.</td>
+</tr>
+<tr class="row-odd"><td>warnings</td>
+<td colspan="2">Array</td>
+<td colspan="3">Lists any warnings found. Warnings are useful to present to the user, but do
+not cause <em>is_valid</em> to be false. The warnings are JSON objects with <em>name</em>
+and <em>description</em> string fields.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-retrieve-dataset-details">
+<span id="rest-v6-dataset-details"></span><h2>v6 Retrieve Dataset Details<a class="headerlink" href="#v6-retrieve-dataset-details" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/datasets/{dataset-id}/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/datasets/105/">http://.../v6/datasets/105/</a></p>
+<p>Response: 200 OK</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset JSON &lt;rest_v6_data_dataset&gt;`</span><span class="o">&gt;</span><span class="p">,</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;members&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset Member &lt;rest_v6_data_dataset_member&gt;`</span><span class="o">&gt;</span><span class="p">],</span>
+   <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset File &lt;rest_v6_data_dataset_file&gt;`</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="15%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Dataset Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns the details for a specific dataset</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /v6/datasets/{id}/</dt>
+<dd>Where {id} is the unique ID of the dataset to retrieve</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the dataset</td>
+</tr>
+<tr class="row-odd"><td>title</td>
+<td>String</td>
+<td>The human readable display name of the dataset</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>String</td>
+<td>A longer description of the dataset</td>
+</tr>
+<tr class="row-odd"><td>definition</td>
+<td>JSON Object</td>
+<td>The definition of the dataset
+See <a class="reference internal" href="#rest-v6-data-dataset"><span class="std std-ref">Dataset JSON</span></a></td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the dataset was initially created</td>
+</tr>
+<tr class="row-odd"><td>members</td>
+<td>Array</td>
+<td>List of members belonging to this dataset.
+See <span class="xref std std-ref">rest_v6_data_dataset_member</span></td>
+</tr>
+<tr class="row-even"><td>files</td>
+<td>Array</td>
+<td>List of files that are part of this dataset.
+See <span class="xref std std-ref">rest_v6_data_dataset_file</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-create-dataset-member">
+<span id="rest-v6-dataset-create-member"></span><h2>v6 Create Dataset Member<a class="headerlink" href="#v6-create-dataset-member" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/datasets/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/datasets/100/">http://.../v6/datasets/100/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 201 Created
+Headers:
+Location <a class="reference external" href="http://.../v6/datasets/105/">http://.../v6/datasets/105/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="9%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="5"><a href="#id5"><span class="problematic" id="id6">**</span></a>Create Dataset Member*</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="5">Creates a new dataset member with the given fields</td>
+</tr>
+<tr class="row-odd"><td colspan="5"><dl class="first last docutils">
+<dt><strong>POST</strong> /v6/datasets/{id}/</dt>
+<dd>Where {id} is the unique ID of the dataset to add a member to</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">data</td>
+<td>String</td>
+<td>Required</td>
+<td>The data for this individual member of the dataset
+See <a class="reference internal" href="#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="4">201 Created</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="4">URL for retrieving the details of the newly created dataset</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="4">JSON containing the details of the newly created dataset member
+see <a class="reference internal" href="#rest-v6-dataset-member-details"><span class="std std-ref">v6 Retrieve Dataset Member Details</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-retrieve-dataset-member-list">
+<span id="rest-v6-dataset-member-list"></span><h2>v6 Retrieve Dataset Member List<a class="headerlink" href="#v6-retrieve-dataset-member-list" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/datasets/{dataset_id}/members/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/datasets/100/members/">http://.../v6/datasets/100/members/</a></p>
+<p>Response: 200 OK</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+   <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+   <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+      <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+   <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="16%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Dataset Member List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of dataset members for the specified dataset</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>GET</strong> /v6/datasets/{id}/members/</dt>
+<dd>Where {id} is the unique ID of the dataset to retreive members of</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the dataset member</td>
+</tr>
+<tr class="row-even"><td>.data</td>
+<td>JSON Object</td>
+<td colspan="2">The data for this dataset member.  (See <a class="reference internal" href="#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the dataset member was initially created</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-retrieve-dataset-member-details">
+<span id="rest-v6-dataset-member-details"></span><h2>v6 Retrieve Dataset Member Details<a class="headerlink" href="#v6-retrieve-dataset-member-details" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/datasets/members/{id} API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/datasets/members/100/">http://.../v6/datasets/members/100/</a></p>
+<p>Response: 200 OK</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span><span class="p">,</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="15%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Dataset Member Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns details for a specific dataset member</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /v6/datasets/members/{id}/</dt>
+<dd>Where {id} is the unique ID of the dataset member to retrieve</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the dataset member</td>
+</tr>
+<tr class="row-odd"><td>data</td>
+<td>JSON Object</td>
+<td>The data for this dataset member.  (See <a class="reference internal" href="#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a>)</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the dataset member was initially created</td>
 </tr>
 </tbody>
 </table>

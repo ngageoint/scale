@@ -1,0 +1,22 @@
+dataset\.test\.definition\.json package
+=======================================
+
+Submodules
+----------
+
+dataset\.test\.definition\.json\.test\_definition\_v6 module
+------------------------------------------------------------
+
+.. automodule:: dataset.test.definition.json.test_definition_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: dataset.test.definition.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

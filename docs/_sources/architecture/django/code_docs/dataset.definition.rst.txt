@@ -1,0 +1,29 @@
+dataset\.definition package
+===========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    dataset.definition.json
+
+Submodules
+----------
+
+dataset\.definition\.definition module
+--------------------------------------
+
+.. automodule:: dataset.definition.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: dataset.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

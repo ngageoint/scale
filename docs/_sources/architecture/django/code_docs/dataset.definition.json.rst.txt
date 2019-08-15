@@ -1,0 +1,22 @@
+dataset\.definition\.json package
+=================================
+
+Submodules
+----------
+
+dataset\.definition\.json\.definition\_v6 module
+------------------------------------------------
+
+.. automodule:: dataset.definition.json.definition_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: dataset.definition.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

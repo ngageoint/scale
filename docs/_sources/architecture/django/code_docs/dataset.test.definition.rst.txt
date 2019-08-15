@@ -1,0 +1,29 @@
+dataset\.test\.definition package
+=================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    dataset.test.definition.json
+
+Submodules
+----------
+
+dataset\.test\.definition\.test\_definition module
+--------------------------------------------------
+
+.. automodule:: dataset.test.definition.test_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: dataset.test.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
