@@ -5,14 +5,23 @@ import logging
 import os
 import requests
 
+<<<<<<< HEAD
 from django.db import connection
 from django.db.utils import OperationalError
 from django.utils.timezone import now
 #from django.conf import settings
 from rest_framework import status
+=======
+from django.utils.timezone import now
+#from django.conf import settings
+from scale import settings as scale_settings
+from util.broker import BrokerDetails
+>>>>>>> b9a7fb0fa03ebff4f230ed951041ea81ecca717f
 
 from scale import settings as scale_settings
 from util.broker import BrokerDetails
+
+from kombu import Connection
 
 
 from kombu import Connection
@@ -35,7 +44,7 @@ class DependencyManager(object):
 
         self._all_statuses = {}
         self._last_updated = now()
-        
+
         # LOGS (fluentd) - check connectivity and msg backlog (undelivered messages)
         self._all_statuses['logs'] = self._generate_log_status()
 
@@ -54,7 +63,7 @@ class DependencyManager(object):
         # IDAM (GEOAxIS ... or whatever only if configured) get response from GEOAxIS
         self._all_statuses['idam'] = self._generate_idam_status()
 
-        # NODES (if > 1/3 become unhealthy then go red?) if degraded
+        ]# NODES (if > 1/3 become unhealthy then go red?) if degraded
         self._all_statuses['nodes'] = self._generate_nodes_status()
 
     def generate_status_json(self, status_dict):
@@ -92,6 +101,7 @@ class DependencyManager(object):
                 status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging address returned %d'%response.status_code}], 'warnings': []}
         else: 
             status_dict =  {'OK': False, 'errors': [{'NO_LOGGING_DEFINED': 'No logging URL defined'}], 'warnings': []}
+
         return status_dict
 
 
@@ -206,7 +216,6 @@ class DependencyManager(object):
         status_dict = {}
         status_dict['OK'] = True
         status_dict['detail'] = 'some msg'
-
         return status_dict
 
     def _generate_nodes_status(self):
@@ -216,6 +225,7 @@ class DependencyManager(object):
         :rtype: dict
         """
         status_dict = {}
+
         status_dict['OK'] = True
         status_dict['detail'] = 'some msg'
 
