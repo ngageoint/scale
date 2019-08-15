@@ -11,15 +11,13 @@ from django.utils.timezone import now
 #from django.conf import settings
 from rest_framework import status
 
-from scale import settings as scale_settings
-from util.broker import BrokerDetails
-
 from kombu import Connection
 
-
-from kombu import Connection
 from messaging.manager import CommandMessageManager
+from scale import settings as scale_settings
+from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
+from util.broker import BrokerDetails
 from util.parse import parse_datetime
 
 logger = logging.getLogger(__name__)
@@ -165,14 +163,23 @@ class DependencyManager(object):
         AMQP (rabbitmq)
         """
         status_dict = {}
-        import pdb; pdb.set_trace()
-        # if type is amqp, then we know it's rabbit. Don't worry about SQS
+        
+        # if type is amqp, then we know it's rabbit. Don't worry about checking SQS
         broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
         if broker_details.get_type() == 'amqp':
             try:
                 with Connection(scale_settings.BROKER_URL) as conn:
                     conn.connect() # Exceptions may be raised upon connect
-                    status_dict = {'OK': True, 'detail': {'url': scale_settings.BROKER_URL}}
+                    
+                    
+                    # No exceptions, so check the message queue depth
+                    backend = CommandMessageManager()._backend
+                    with connection.SimpleQueue(backend._queue_name) as simple_queue:
+                        details = {'queue_depth': {backend._queue_name: simple_queue.qsize()}}
+                    details['broker_url'] = scale_settings.BROKER_URL
+                    details['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
+                        
+                    status_dict = {'OK': True, 'details': details, 'errors': [], 'warnings': []}
             except Exception as ex:
                 msg = 'Error connecting to RabbitMQ: %s' % unicode(ex)
                 status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
@@ -188,14 +195,6 @@ class DependencyManager(object):
             # except BaseException as ex:
             #     msg = 'Unknown Error connecting to RabbitMQ: %s' % unicode(ex)
             #     status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
-            else:
-                # Check the message queue depth
-                backend = CommandMessageManager()._backend
-                with Connection(scale_settings.BROKER_URL) as connection:
-                    with connection.SimpleQueue(backend._queue_name) as simple_queue:
-                        details = {'queue_depth': {backend._queue_name: simple_queue.qsize()}}
-
-                status_dict = {'OK': True, 'details': details, 'errors': [], 'warnings': []}
 
         return status_dict
 
