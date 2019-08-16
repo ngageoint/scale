@@ -418,6 +418,16 @@ class TestDatasetDetailsView(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result), 500)
         
+        json_data = {
+            'data_template': template,
+            'source_collection': ['12345', '123456']
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result), 1000)
+        
     def test_add_filter_dataset_members_dry_run(self):
         """Tests adding new dataset members based on a filter"""
 
