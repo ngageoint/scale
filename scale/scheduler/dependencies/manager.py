@@ -8,16 +8,14 @@ import requests
 from django.db import connection
 from django.db.utils import OperationalError
 from django.utils.timezone import now
-#from django.conf import settings
 from rest_framework import status
 from kombu import Connection
 
 from messaging.manager import CommandMessageManager
 from scale import settings as scale_settings
 from scheduler.manager import scheduler_mgr
-from scheduler.models import Scheduler
 from util.broker import BrokerDetails
-from util.parse import parse_datetime
+from util.parse import datetime_to_string, parse_datetime
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +61,7 @@ class DependencyManager(object):
         :type status_dict: dict
         """
 
-        status_dict['last_updated'] = self._last_updated
+        status_dict['last_updated'] = datetime_to_string(self._last_updated)
         status_dict['dependencies'] = self._all_statuses
         return status_dict
 
@@ -208,10 +206,26 @@ class DependencyManager(object):
         :return: JSON describing the nodes status
         :rtype: dict
         """
-        status_dict = {}
-
-        status_dict['OK'] = True
-        status_dict['detail'] = 'some msg'
+        from scheduler.node.manager import node_mgr
+        node_status ={}
+        node_mgr.generate_status_json(node_status)
+        if not node_status:
+              status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
+        elif 'nodes' in node_status:
+            node_status = node_status['nodes']
+            third_nodes = len(node_status)*0.3
+            
+            offline_count = 0
+            for node in node_status:
+                if node['state']['name'] == 'OFFLINE':
+                    offline_count += 1
+                    
+            if offline_count > third_nodes:
+                status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'Over a third of the nodes are offline.'}], 'warnings': []}
+            else:
+                status_dict = {'OK': True, 'detail': 'Enough nodes are online to function.'}
+        else:
+            status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
 
         return status_dict
 
