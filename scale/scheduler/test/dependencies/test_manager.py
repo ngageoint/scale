@@ -11,6 +11,10 @@ from mock import call, patch
 
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
+from node.test import utils as node_test_utils
+from scheduler.manager import scheduler_mgr
+from scheduler.node.agent import Agent
+from scheduler.node.manager import NodeManager
 
 def mock_response_head(*args, **kwargs):
     class MockResponse:
@@ -32,6 +36,16 @@ class TestDependenciesManager(TestCase):
         django.setup()
         add_message_backend(AMQPMessagingBackend)
         
+        
+        from scheduler.models import Scheduler
+        Scheduler.objects.create(id=1)
+        
+        scheduler_mgr.config.is_paused = False
+        self.agent_1 = Agent('agent_1', 'host_1')
+        self.agent_2 = Agent('agent_2', 'host_2')  # Will represent a new agent ID for host 2
+        node_1 = node_test_utils.create_node(hostname='host_1')
+        
+       
     
     @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://www.logging.com/health')
     @patch.dict('os.environ', {'SILO_URL': 'http://www.silo.com/'})
@@ -41,10 +55,16 @@ class TestDependenciesManager(TestCase):
     def test_generate_status_json(self, connection, mock_elasticsearch, mock_head):
         """Tests the generate_status_json method
         """
-        # import pdb; pdb.set_trace()
+        
+        # Setup elasticsearch status
         mock_elasticsearch.ping.return_value = True
         mock_elasticsearch.cluster.health.return_value = {'status': 'green'}
         mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
+        
+        # Setup nodes
+        manager = NodeManager()
+        manager.register_agents([self.agent_1, self.agent_2])
+        manager.sync_with_database(scheduler_mgr.config)
         
         from scheduler.dependencies.manager import dependency_mgr
         status = {}
@@ -102,7 +122,7 @@ class TestDependenciesManager(TestCase):
         self.assertTrue('nodes' in dependencies)
         nodes = dependencies['nodes']
         self.assertIsNotNone(nodes)
-        self.assertDictEqual(nodes, {u'OK': True, u'detail': u'some msg'})
+        self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.'})
         print(nodes)
         
         
