@@ -389,7 +389,6 @@ class TestDatasetDetailsView(APITestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         result = json.loads(response.content)
-        print result
         self.assertEqual(len(result), 1)
         
     def test_add_invalid_dataset_member(self):
@@ -409,8 +408,6 @@ class TestDatasetDetailsView(APITestCase):
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        result = json.loads(response.content)
-        self.assertEqual(len(result), 0)
         
 class TestDataSetValidationView(APITestCase):
     api = 'v6'

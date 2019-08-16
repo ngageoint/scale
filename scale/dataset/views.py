@@ -255,17 +255,14 @@ class DataSetDetailsView(GenericAPIView):
             raise Http404
 
         validation = DataSetMember.objects.validate_data_list(dataset=dataset, data_list=data_list)
+        members = []
         if validation.is_valid and not dry_run:
-            DataSetMember.objects.create_dataset_members(dataset=dataset, data_list=data_list)
-        else:
+            members = DataSetMember.objects.create_dataset_members(dataset=dataset, data_list=data_list)
+        elif not validation.is_valid:
             raise BadParameter('%s: %s' % ('Error(s) validating data against dataset', validation.errors))
 
-        
-        data_dict_list = []
-        for dl in data_list:
-            data_dict_list.append(convert_data_to_v6_json(dl))
-        resp_dict = { 'data': data_dict_list }
-        return Response(resp_dict)
+        serializer = DataSetMemberSerializerV6(members, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class DataSetMembersView(ListAPIView):
