@@ -280,6 +280,12 @@ class TestDatasetDetailsView(APITestCase):
         self.src_file_f = storage_utils.create_file(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
+                                              
+        for i in range(0,500):
+            storage_utils.create_file(source_collection='12345')
+            
+        for i in range(0,500):
+            storage_utils.create_file(source_collection='123456')
 
         # Create datasets
         parameters = {'version': '6',
@@ -390,6 +396,49 @@ class TestDatasetDetailsView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         result = json.loads(response.content)
         self.assertEqual(len(result), 1)
+
+    def test_add_filter_dataset_members(self):
+        """Tests adding new dataset members based on a filter"""
+
+        url = '/%s/datasets/%d/' % (self.api, self.dataset.id)
+        
+        template = {
+            'version': '6',
+            'files': {'input_a': 'FILE_VALUE'},
+            'json': {}
+        }
+
+        json_data = {
+            'data_template': template,
+            'source_collection': '12345'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result), 500)
+        
+    def test_add_filter_dataset_members_dry_run(self):
+        """Tests adding new dataset members based on a filter"""
+
+        url = '/%s/datasets/%d/' % (self.api, self.dataset.id)
+        
+        template = {
+            'version': '6',
+            'files': {'input_a': 'FILE_VALUE'},
+            'json': {}
+        }
+
+        json_data = {
+            'data_template': template,
+            'source_collection': '12345',
+            'dry_run': True
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result), 500)
         
     def test_add_invalid_dataset_member(self):
         """Tests adding an invalid new dataset member"""

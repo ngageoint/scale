@@ -330,7 +330,7 @@ class DataSetMemberManager(models.Manager):
                         file_params[p] = [f.id]
                 data_list.append(DataV6(data=entry, do_validate=True).get_data())
         except (KeyError, TypeError) as ex:
-            raise InvalidData
+            raise InvalidData('INVALID_TEMPLATE', "Specified template is invalid: %s" % ex)
         
         return data_list
 

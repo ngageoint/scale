@@ -258,11 +258,15 @@ class DataSetDetailsView(GenericAPIView):
         members = []
         if validation.is_valid and not dry_run:
             members = DataSetMember.objects.create_dataset_members(dataset=dataset, data_list=data_list)
+            serializer = DataSetMemberSerializerV6(members, many=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         elif not validation.is_valid:
             raise BadParameter('%s: %s' % ('Error(s) validating data against dataset', validation.errors))
 
-        serializer = DataSetMemberSerializerV6(members, many=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        resp_dict = []
+        for dl in data_list:
+            resp_dict.append(convert_data_to_v6_json(dl).get_dict())
+        return Response(resp_dict)
 
 
 class DataSetMembersView(ListAPIView):

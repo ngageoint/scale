@@ -9,7 +9,7 @@ from storage.serializers import ScaleFileSerializerV6, ScaleFileDetailsSerialize
 from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
-
+    
 class DataSetFileBaseSerializerV6(ModelIdSerializer):
     """Converts the datasetfile model fields to REST output"""
     parameter_name = serializers.CharField()
