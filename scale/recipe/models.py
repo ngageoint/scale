@@ -396,6 +396,8 @@ class RecipeManager(models.Manager):
         recipe.job_types = JobType.objects.all().filter(id__in=jt_ids)
         sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe.recipe_type.id])
         recipe.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
+        super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe.recipe_type.id])
+        recipe.super_recipe_types = RecipeType.objects.all().filter(id__in=super_ids)
         return recipe
 
     def process_recipe_input(self, recipe):
@@ -1245,6 +1247,11 @@ class RecipeTypeManager(models.Manager):
 
         from recipe.definition.exceptions import InvalidDefinition
         from recipe.messages.update_recipe_definition import create_sub_update_recipe_definition_message, create_activate_recipe_message
+        
+        is_valid = True
+        errors = []
+        warnings = []
+        diff = {}
 
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
@@ -1257,8 +1264,13 @@ class RecipeTypeManager(models.Manager):
         
         if is_active is not None:
             recipe_type.is_active = is_active
-            if auto_update:
+            if is_active == False:
                 super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+                if super_ids:
+                    recipe_names = RecipeType.objects.filter(id__in=super_ids).values_list('name', flat=True)
+                    recipe_names = list(recipe_names)
+                    warn = "The following recipes were deprecated as a result of deprecating this recipe type: %s " % recipe_names
+                    warnings.append(ValidationWarning('DEPRECATED_RECIPES',warn))
                 msgs = [create_activate_recipe_message(id, is_active) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
 
@@ -1284,6 +1296,8 @@ class RecipeTypeManager(models.Manager):
                 super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
                 msgs = [create_sub_update_recipe_definition_message(id, recipe_type.id) for id in super_ids]
                 CommandMessageManager().send_messages(msgs)
+
+        return RecipeTypeValidation(is_valid, errors, warnings, diff)
 
     def get_by_natural_key(self, name):
         """Django method to retrieve a recipe type for the given natural key
@@ -1312,9 +1326,15 @@ class RecipeTypeManager(models.Manager):
 
         # Add associated job type information
         jt_ids = RecipeTypeJobLink.objects.get_job_type_ids([recipe_type.id])
-        recipe_type.job_types = JobType.objects.all().filter(id__in=jt_ids)
+        recipe_type.job_types = []
+        for id in jt_ids:
+            jt = JobType.objects.get_details_v6(id=id)
+            recipe_type.job_types.append(jt)
+            
         sub_ids = RecipeTypeSubLink.objects.get_sub_recipe_type_ids([recipe_type.id])
         recipe_type.sub_recipe_types = RecipeType.objects.all().filter(id__in=sub_ids)
+        super_ids = RecipeTypeSubLink.objects.get_recipe_type_ids([recipe_type.id])
+        recipe_type.super_recipe_types = RecipeType.objects.all().filter(id__in=super_ids)
 
         return recipe_type
 
@@ -1414,9 +1434,6 @@ class RecipeTypeManager(models.Manager):
                 diff = rest_utils.strip_schema_version(json.get_dict())
 
             except RecipeType.DoesNotExist as ex:
-                if name:
-                    msg = 'Unable to find an existing recipe type with name: %s' % name
-                    warnings.append(ValidationWarning('RECIPE_TYPE_NOT_FOUND', msg))
                 pass
             except Exception as ex:
                 errors.append(ex.error)

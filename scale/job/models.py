@@ -1271,11 +1271,11 @@ class JobExecutionManager(models.Manager):
             if 'RUNNING' in statuses:
                 # This is a special case where we have to use exclusion so that running executions (no job_exe_end) are
                 # included
-                exclude_statues = []
+                exclude_statuses = []
                 for status in ['COMPLETED', 'FAILED', 'CANCELED']:
                     if status not in statuses:
-                        exclude_statues.append(status)
-                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statues)
+                        exclude_statuses.append(status)
+                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statuses)
             else:
                 job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if node_ids:
@@ -2036,7 +2036,11 @@ class JobTypeManager(models.Manager):
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
         from recipe.messages.update_recipe_definition import create_job_update_recipe_definition_message, create_activate_recipe_message
-        from recipe.models import RecipeTypeJobLink
+        from recipe.models import RecipeTypeJobLink, RecipeType
+        
+        is_valid = True
+        errors = []
+        warnings = []
 
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
@@ -2078,8 +2082,13 @@ class JobTypeManager(models.Manager):
         if is_active is not None and job_type.is_active != is_active:
             job_type.deprecated = None if is_active else timezone.now()
             job_type.is_active = is_active
-            if auto_update:
+            if is_active == False:
                 recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+                if recipe_ids:
+                    recipe_names = RecipeType.objects.filter(id__in=recipe_ids).values_list('name', flat=True)
+                    recipe_names = list(recipe_names)
+                    warn = "The following recipes were deprecated as a result of deprecating this job type: %s " % recipe_names
+                    warnings.append(ValidationWarning('DEPRECATED_RECIPES',warn))
                 msgs = [create_activate_recipe_message(id, is_active) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
                 
@@ -2107,6 +2116,8 @@ class JobTypeManager(models.Manager):
                 recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
                 msgs = [create_job_update_recipe_definition_message(id, job_type.id) for id in recipe_ids]
                 CommandMessageManager().send_messages(msgs)
+
+        return JobTypeValidation(is_valid, errors, warnings)
 
     def get_by_natural_key(self, name, version):
         """Django method to retrieve a job type for the given natural key
@@ -2281,7 +2292,7 @@ class JobTypeManager(models.Manager):
 
         return job_types
 
-    def get_details_v6(self, name, version):
+    def get_details_v6(self, name=None, version=None, id=None):
         """Returns the job type for the given name and version with all detail fields included.
 
         The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.
@@ -2294,8 +2305,16 @@ class JobTypeManager(models.Manager):
         :rtype: :class:`job.models.JobType`
         """
 
+        from recipe.models import RecipeType, RecipeTypeJobLink
+
         # Attempt to get the job type
-        job_type = JobType.objects.all().get(name=name, version=version)
+        if id:
+            job_type = JobType.objects.all().get(id=id)
+        else:
+            job_type = JobType.objects.all().get(name=name, version=version)
+
+        recipe_ids = RecipeTypeJobLink.objects.get_recipe_type_ids([job_type.id])
+        job_type.recipe_types = RecipeType.objects.all().filter(id__in=recipe_ids)
 
         # Scrub configuration for secrets
         if job_type.configuration:

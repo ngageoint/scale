@@ -241,15 +241,16 @@ class RecipeTypeDetailsView(GenericAPIView):
                     recipe_def = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
 
                 # Edit the recipe type
-                RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
+                validation = RecipeType.objects.edit_recipe_type_v6(recipe_type_id=recipe_type.id, title=title,
                                                        description=description, definition=recipe_def,
                                                        auto_update=auto_update, is_active=is_active)
         except InvalidDefinition as ex:
             logger.exception('Unable to update recipe type: %s', name)
             raise BadParameter(unicode(ex))
 
-        return HttpResponse(status=204)
-
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings], 'diff': validation.diff}
+        return Response(resp_dict)
 
 class RecipeTypeRevisionsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
@@ -445,6 +446,9 @@ class RecipesView(ListAPIView):
                                                 batch_ids=batch_ids, is_superseded=is_superseded,
                                                 is_completed=is_completed, order=order)
 
+        # additional optimizations not being captured by the existing ones in the manager
+        # see issue #1717
+        recipes = recipes.select_related('recipe_type_rev__recipe_type').defer(None)
         page = self.paginate_queryset(recipes)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)

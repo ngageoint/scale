@@ -3,6 +3,195 @@ info:
   title: Data Services
   version: v6
 
+paths:
+  /datasets/:
+    get:
+      operationId: _rest_v6_dataset_list
+      summary: Dataset List
+      description: Returns a list of all datasets
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: dataset_id
+          schema:
+            type: integer
+          description: Return only datasets with a given identifier. |
+            Duplicate it to filter by multiple values.
+        - in: query
+          name: keyword
+          schema:
+            type: string
+          description: Keyword to perform a 'like' search on title and description |
+            may be duplicated to search for multiple keywords
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: One or more fields to use when ordering the results. |
+                       Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+                       Prefix fields with a dash to reverse the sort, (ex: order=-created)
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_list'
+    post:
+      operationId: _rest_v6_dataset_create
+      summary: Dataset Create
+      description: Creates a dataset
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/dataset_post'
+      responses:
+        '201':
+          description: The 201 CREATED response indicates a successful event
+          headers:
+            location:
+              schema:
+                type: string
+              description: The url of the created dataset
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_detail'
+                
+  /datasets/{id}/:
+    get:
+      operationId: _rest_v6_dataset_details
+      summary: Dataset Details
+      description: Returns detailed information about the dataset with the specified id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing dataset
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_detail'
+    post:
+      operationId: _rest_v6_dataset_create_member
+      summary: Create Dataset Member
+      description: Creates and adds a member to an existing dataset
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/dataset_member_post'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing dataset
+      responses:
+        '201':
+          description: The 201 CREATED response indicates a successful event
+          headers:
+            location:
+              schema:
+                type: string
+              description: The url of the created dataset
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_member_detail'
+
+  /datasets/{id}/members/:
+    get:
+      operationId: _rest_v6_dataset_member_list
+      summary: Dataset Member List
+      description: Returns a list of all members of a dataset
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_member_list'
+  
+    /datasets/members/{id}/:
+    get:
+      operationId: _rest_v6_dataset_member_details
+      summary: Dataset Member Details
+      description: Returns detailed information about the dataset member with the specified id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing dataset member
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_member_detail'
+            
+  /datasets/validation/:
+    post:
+      operationId: _rest_v6_dataset_validation
+      summary: Dataset Validation
+      description: Validates a dataset without creating it
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/dataset_validation_post'
+      responses:
+        '200':
+          description: The 200 OK response indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/dataset_validation'
+                
 components:
   schemas:
     data:
@@ -144,3 +333,154 @@ components:
           description: Specifies whether all files need to pass for data to be accepted. Defaults to true
           type: boolean
           example: true
+
+    dataset_definition:
+      title: Dataset Definition
+      type: object
+      required: [parameters]
+      properties:
+        global_data:
+          $ref: '#/components/schemas/data'
+        global_parameters:
+          $ref: '#/components/schemas/interface'
+        parameters:
+          $ref: '#/components/schemas/interface'
+          
+    dataset_list:
+      title: Dataset List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/dataset_list'
+          description: List of Dataset objects
+          
+    dataset_base:
+      title: Dataset Object
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: My Dataset
+        description:
+          type: string
+          example: My Dataset Description 
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+          
+    dataset_list:
+      title: Dataset List
+      allOf:
+        - ref: '#/components/schemas/dataset_base'
+        - type: object
+          properties: 
+            definition:
+              $ref: '#/components/schemas/dataset_definition'
+            files:
+              type: integer
+              example: 1
+              description: Number of files in the dataset
+              
+    dataset_detail:
+      title: Dataset Details
+      allOf:
+        - ref: '#/components/schemas/dataset_base'
+        - type: object
+          properties: 
+            definition:
+              $ref: '#/components/schemas/dataset_definition'
+            members:
+              $ref: '#/components/schemas/dataset_member'
+            files:
+              $ref: '#/components/schemas/dataset_file_base'
+              
+    dataset_post:
+      title: Dataset Post
+      type: object
+      required: [definition]
+      properties:
+        title:
+          type: string
+          example: My Dataset
+        description:
+          type: string
+          example: My Dataset Description 
+        definition:
+          $ref: '#/components/schemas/dataset_definition'
+          description: definition for the dataset
+          
+    dataset_member_post:
+      title: Dataset Member Post
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/data'
+          
+    dataset_member:
+      title: Dataset Member
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        data:
+          $ref: '#/components/schemas/data'
+          
+    dataset_member_detail:
+      title: Dataset Member Details
+      allOf:
+        - ref: '#/components/schemas/dataset_member'
+        - type: object
+          properties: 
+            dataset:
+              type: integer
+              example: 1
+              description: ID for the parent dataset
+            files:
+              $ref: '#/components/schemas/dataset_file'
+              
+    dataset_file_base:
+      title: Dataset File Base
+      type: object
+      properties:
+        parameter_name:
+          type: string
+          description: Name of the parameter this file is associated with
+          example: input_a
+        scale_file:
+          $ref: '#/components/schemas/file_base'
+          
+    dataset_file:
+      title: Dataset File
+      type: object
+      properties:
+        parameter_name:
+          type: string
+          description: Name of the parameter this file is associated with
+          example: input_a
+        scale_file:
+          $ref: '#/components/schemas/file'

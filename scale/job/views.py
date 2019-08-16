@@ -176,9 +176,20 @@ class JobTypesView(ListCreateAPIView):
                 message = 'Job type configuration invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
+                
+            # Fetch the full job type with details
+            try:
+                job_type = JobType.objects.get_details_v6(name=name, version=version)
+            except JobType.DoesNotExist:
+                raise Http404
+    
+            url = reverse('job_type_details_view', args=[job_type.name, job_type.version], request=request)
+            serializer = JobTypeDetailsSerializerV6(job_type)
+    
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
         else:
             try:
-                JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
+                validation = JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
                                                  is_published=is_published, configuration=configuration,
@@ -194,17 +205,12 @@ class JobTypesView(ListCreateAPIView):
                 message = 'Job type configuration invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
+                
+            resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings]}
+            return Response(resp_dict)
 
-        # Fetch the full job type with details
-        try:
-            job_type = JobType.objects.get_details_v6(name, version)
-        except JobType.DoesNotExist:
-            raise Http404
 
-        url = reverse('job_type_details_view', args=[job_type.name, job_type.version], request=request)
-        serializer = JobTypeDetailsSerializerV6(job_type)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
 class JobTypeVersionsView(ListAPIView):
@@ -297,7 +303,7 @@ class JobTypeDetailsView(GenericAPIView):
         """
 
         try:
-            job_type = JobType.objects.get_details_v6(name, version)
+            job_type = JobType.objects.get_details_v6(name=name, version=version)
         except JobType.DoesNotExist:
             raise Http404
         except NonSeedJobType as ex:
@@ -372,7 +378,7 @@ class JobTypeDetailsView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Edit the job type
-                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=manifest, is_published=is_published,
+                validation = JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=manifest, is_published=is_published,
                                                  docker_image=docker_image, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
                                                  configuration=configuration, auto_update=auto_update)
@@ -381,7 +387,9 @@ class JobTypeDetailsView(GenericAPIView):
             logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
 
-        return HttpResponse(status=204)
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                 'warnings': [w.to_dict() for w in validation.warnings]}
+        return Response(resp_dict)
 
 
 class JobTypeRevisionsView(ListAPIView):
@@ -631,6 +639,10 @@ class JobsView(ListAPIView):
                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
                                        error_categories=error_categories, error_ids=error_ids,
                                        is_superseded=is_superseded, order=order)
+
+        # additional optimizations not being captured by the existing ones in the manager
+        # see issue #1717
+        jobs = jobs.select_related('job_type_rev__job_type').defer(None)
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
 

@@ -17,10 +17,10 @@ Job REST API
 Specific endpoints under the job and job-type REST API were removed in Scale v6.
 
 - v5/job-types/{id}
-    Scale v6 no longer supports retrieving job details through the /job-types/{id} endpoint. Users should use the new Scale v6 /job-types/{name} endpoint instead. See :ref:`_rest_v6_job_type_versions` for more details.
+    Scale v6 no longer supports retrieving job details through the /job-types/{id} endpoint. Users should use the new Scale v6 /job-types/{name} endpoint instead. See :ref:`rest_v6_job_type_versions` for more details.
 
 - v5/jobs/executions
-    Scale v6 no longer supports retrieving job execution details through the /jobs/executions endpoint. The /jobs/{id}/executions endpoint should be used instead. See :ref:`_rest_v6_job_execution_list` for more details.
+    Scale v6 no longer supports retrieving job execution details through the /jobs/executions endpoint. The /jobs/{id}/executions endpoint should be used instead. See :ref:`rest_v6_job_execution_list` for more details.
 
 - v5/jobs/updates
     Scale v6 no longer supports the /jobs/updates endpoint. Using this endpoint will return a 500 Server Error.
@@ -36,11 +36,11 @@ Specific endpoints under the queue API were deprecated in Scale v5 and completel
     The v5/queue/new-recipe REST endpoint was moved to the v6/recipes/ API. Recipes are now queued by posting to the v6/recipes/ endpoint. See :ref:`rest_v6_recipe_queue_new_recipe` for more details.
 
 - v5/queue/requeue-jobs/
-    The v5/queue/requeue-jobs REST endpoint was moved to the v6/jobs/requeue/ API. Failed/Canceled jobs are now requeued by posting to the v6/job/requeue/ endpoint. See :ref:`_rest_v6_job_requeue` for more details.
+    The v5/queue/requeue-jobs REST endpoint was moved to the v6/jobs/requeue/ API. Failed/Canceled jobs are now requeued by posting to the v6/job/requeue/ endpoint. See :ref:`rest_v6_job_requeue` for more details.
 
 products REST API
 ---------------------------------------
-The products REST API endpoint was deprecated in Scale v5 and completely removed in Scale v6. Attempting to use these endpoints will result in a 404 error. The v6 files API should be used to retrieve product details. See :ref:`_rest_v6_scale_file`
+The products REST API endpoint was deprecated in Scale v5 and completely removed in Scale v6. Attempting to use these endpoints will result in a 404 error. The v6 files API should be used to retrieve product details. See :ref:`rest_v6_scale_file`
 
 recipe REST API
 --------------------------------------
@@ -51,7 +51,7 @@ Specific endpoints under the recipe API were deprecated in Scale v5 and complete
 
 source REST API
 ------------------------------------
-The source REST API endpoint was deprecated in Scale v5 and completely removed in Scale v6. Attempting to use these endpoints will result in a 500 Server Error. The v6/files API should be used to retrieve source file details. See :ref:`_rest_v6_scale_file`
+The source REST API endpoint was deprecated in Scale v5 and completely removed in Scale v6. Attempting to use these endpoints will result in a 500 Server Error. The v6/files API should be used to retrieve source file details. See :ref:`rest_v6_scale_file`
 
 
 v6 Deprecated Messages

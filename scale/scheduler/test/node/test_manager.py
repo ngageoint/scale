@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import datetime
+
 import django
 from django.test import TestCase
 from django.utils.timezone import now
@@ -152,33 +154,6 @@ class TestNodeManager(TestCase):
         self.assertEqual(node_2.hostname, 'host_2')
         self.assertTrue(node_2._is_online)
 
-    def test_change_agent_id_with_inactive_node(self):
-        """Tests the NodeManager where a registered node changes its agent ID, and the node is inactive"""
-
-        manager = NodeManager()
-        manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(scheduler_mgr.config)
-
-        # Node 2 is now inactive
-        Node.objects.filter(id=manager.get_node(self.agent_2.agent_id).id).update(is_active=False)
-        manager.sync_with_database(scheduler_mgr.config)
-
-        manager.lost_node(self.agent_2.agent_id)
-        manager.register_agents([self.agent_3])
-        manager.sync_with_database(scheduler_mgr.config)
-
-        # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
-        nodes = manager.get_nodes()
-        self.assertEqual(len(nodes), 2)
-        node_1 = manager.get_node(self.agent_1.agent_id)
-        self.assertEqual(node_1.hostname, self.node_1.hostname)
-        self.assertTrue(node_1._is_online)
-        self.assertIsNone(manager.get_node(self.agent_2.agent_id))
-        node_2 = manager.get_node(self.agent_3.agent_id)
-        self.assertEqual(node_2.hostname, 'host_2')
-        self.assertTrue(node_2._is_online)
-        self.assertFalse(node_2._is_active)
-
     def test_get_pull_tasks(self):
         """Tests getting Docker pull tasks from the manager"""
 
@@ -287,3 +262,73 @@ class TestNodeManager(TestCase):
         self.assertEqual(task.agent_id, self.agent_1.agent_id)
         self.assertFalse(task.is_initial_cleanup)
         self.assertEqual(len(task.job_exes), 1)
+
+    def test_job_exe_no_offers(self):
+        """Tests the NodeManager where a node is running an exe and has not given offers to Scale in 1 hour.
+           Expected behavior: The node is scheduler and DB are in sync and the node is still active"""
+
+        last_offer = now() - datetime.timedelta(hours=1)
+        node_mgr = NodeManager()
+        node_mgr.register_agents([self.agent_1])
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Add job to node
+        job_test_utils.create_running_job_exe(agent_id=self.agent_1, node=self.node_1)
+
+        # Set last_offer_received to 1 hour ago
+        Node.objects.filter(id=self.node_1.id).update(last_offer_received=last_offer)
+
+        # This inspects what nodes are running jobs and what nodes need to be removed if they
+        # have not sent offers in the last 5 minutes
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Get the DB and Scheduler state and make sure they are consistent
+        db_record = Node.objects.get(id=self.node_1.id)
+        scheduler_record = node_mgr.get_node(self.agent_1.agent_id)
+
+        self.assertEqual(db_record.is_active, scheduler_record._is_active, True)
+
+    def test_no_job_exe_no_offers(self):
+        """Tests the NodeManager where a node is not running an exe and has not given offers to Scale in 1 hour.
+           Expected behavior: The node is deleted and the DB model is update with is_active=False"""
+
+        last_offer = now() - datetime.timedelta(hours=1)
+        node_mgr = NodeManager()
+        node_mgr.register_agents([self.agent_1])
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Set last_offer_received to 1 hour ago
+        Node.objects.filter(id=self.node_1.id).update(last_offer_received=last_offer)
+
+        # This inspects what nodes are running jobs and what nodes need to be removed if they
+        # have not sent offers in the last 5 minutes
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Get the DB state
+        db_record = Node.objects.get(id=self.node_1.id)
+        
+        self.assertIsNone(node_mgr.get_node(self.agent_1.agent_id))
+        self.assertEqual(db_record.is_active, False)
+
+    def test_no_job_exe_offers(self):
+        """Tests the NodeManager where a node is not running an exe and gave Scale an offer 3 minutes ago.
+            Expected behavior: The node is scheduler and DB are in sync and the node is still active"""
+
+        last_offer = now() - datetime.timedelta(minutes=3)
+        node_mgr = NodeManager()
+        node_mgr.register_agents([self.agent_1])
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Set last_offer_received to 
+        Node.objects.filter(id=self.node_1.id).update(last_offer_received=last_offer)
+
+        # This inspects what nodes are running jobs and what nodes need to be removed if they
+        # have not sent offers in the last 5 minutes
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        # Get the DB and Scheduler state and make sure they are consistent
+        db_record = Node.objects.get(id=self.node_1.id)
+        scheduler_record = node_mgr.get_node(self.agent_1.agent_id)
+        
+        self.assertEqual(db_record.is_active, scheduler_record._is_active, True)
+    
