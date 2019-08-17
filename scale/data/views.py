@@ -5,19 +5,19 @@ from __future__ import unicode_literals
 import logging
 
 import rest_framework.status as status
-from django.http.response import Http404, HttpResponse
-from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from django.http.response import Http404
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6, convert_data_to_v6_json
-from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFileSerializerV6, DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
-from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
-from dataset.models import DataSet, DataSetMember
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import DataSetDefinitionV6
+from data.serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, \
+    DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
+from data.exceptions import InvalidDataSetDefinition
+from data.models import DataSet, DataSetMember
+from data.dataset.json.dataset_v6 import DataSetDefinitionV6
 import util.rest as rest_util
 from util.rest import BadParameter
 

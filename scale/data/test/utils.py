@@ -2,13 +2,10 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-from datetime import datetime
-
-import storage.test.utils as storage_utils
 from data.data.json.data_v6 import DataV6
 
-from dataset.models import DataSet, DataSetMember
-from dataset.definition.definition import DataSetDefinition
+from data.models import DataSet, DataSetMember
+from data.dataset.dataset import DataSetDefinition
 
 DATASET_TITLE_COUNTER = 1
 
@@ -44,7 +41,7 @@ def create_dataset(title=None, description=None, created=None, definition=None):
     :keyword definition: The dataset definition
     :type definition: dict
     :returns: The dataset model
-    :rtype: :class:`dataset.models.DataSet`
+    :rtype: :class:`data.models.DataSet`
     """
 
     if not title:
@@ -65,7 +62,7 @@ def create_dataset_members(dataset=None, data_list=None):
     """Creates a datasetmember model
 
     :keyword dataset: The dataset the members are a part of
-    :type dataset: :class:`dataset.models.DataSet`
+    :type dataset: :class:`data.models.DataSet`
     :keyword data_list: The data for the members
     :type data_list: [dict]
     """

@@ -2,11 +2,9 @@
 from __future__ import unicode_literals
 
 from data.data.json.data_v6 import DataV6
-from data.interface.interface import Interface
 from data.interface.json.interface_v6 import InterfaceV6
-from data.interface.parameter import Parameter
-from dataset.exceptions import InvalidDataSetDefinition
-from util.validation import ValidationWarning
+from data.exceptions import InvalidDataSetDefinition
+
 
 class DataSetDefinition(object):
     """Represents the dataset definition

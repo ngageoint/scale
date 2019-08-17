@@ -13,10 +13,10 @@ from data.data import data_util
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
-from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
-from dataset.dataset_serializers import DataSetFileSerializerV6, DataSetMemberSerializerV6
+from data.dataset.dataset import DataSetDefinition
+from data.dataset.json.dataset_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
+from data.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
+from data.serializers import DataSetFileSerializerV6, DataSetMemberSerializerV6
 from storage.models import ScaleFile
 from util import rest as rest_utils
 
@@ -32,16 +32,16 @@ class DataSetManager(models.Manager):
         """Creates and returns a new dataset for the given name/title/description/definition/version??
 
         :param definition: Parameter definition of the dataset
-        :type definition: :class:`dataset.definition.definition.DataSetDefinition`
+        :type definition: :class:`data.dataset.dataset.DataSetDefinition`
         :param title: Optional title of the dataset
         :type title: string
         :param description: Optional description of the dataset
         :type description: string
 
         :returns: The new dataset
-        :rtype: :class:`dataset.models.DataSet`
+        :rtype: :class:`data.models.DataSet`
 
-        :raises :class:`dataset.exceptions.InvalidDataSet`: If a give dataset has an invalid value
+        :raises :class:`data.exceptions.InvalidDataSet`: If a give dataset has an invalid value
         """
 
         if not definition:
@@ -61,7 +61,7 @@ class DataSetManager(models.Manager):
         """Gets additional details for the given dataset id
 
         :returns: The full dataset for the given id
-        :rtype: :class:`dataset.models.DataSet`
+        :rtype: :class:`data.models.DataSet`
         """
 
         ds = DataSet.objects.get(pk=dataset_id)
@@ -72,7 +72,7 @@ class DataSetManager(models.Manager):
         """Handles retrieving datasets - possibly filtered and ordered
 
         :returns: The list of datasets that match the given filters
-        :rtype: [:class:`dataset.models.DataSet`]
+        :rtype: [:class:`data.models.DataSet`]
         """
         return self.filter_datasets(started=started, ended=ended, dataset_ids=dataset_ids, keywords=keywords, order=order)
 
@@ -155,7 +155,7 @@ class DataSetManager(models.Manager):
         """Returns the files associated with the given dataset
 
         :returns: The list of DataSetFiles matching the file_id
-        :rtype: [:class:`dataset.models.DataSetFile`]
+        :rtype: [:class:`data.models.DataSetFile`]
         """
 
         files = DataSetFile.objects.get_dataset_files(dataset_id=dataset_id)
@@ -164,7 +164,7 @@ class DataSetManager(models.Manager):
     def get_dataset_members(self, dataset_id):
         """Returns the members associated with the given dataset_id
         :returns: The list of DataSetMembers
-        :rtype: [:clas:`dataset.models.DataSetMember`]
+        :rtype: [:clas:`data.models.DataSetMember`]
         """
         dataset = self.get(pk=dataset_id)
         members = DataSetMember.objects.all().filter(dataset=dataset)
@@ -202,7 +202,7 @@ class DataSet(models.Model):
         """Returns the dataset definition
 
         :returns: The DataSet definition
-        :rtype: :class:`dataset.definition.DataSetDefinition`
+        :rtype: :class:`data.dataset.dataset.DataSetDefinition`
         """
 
         if isinstance(self.definition, basestring):
@@ -338,7 +338,7 @@ class DataSetMemberManager(models.Manager):
         """Validates a list of data objects against a dataset
 
         :param dataset: The dataset the member is a part of
-        :type dataset: :class:`dataset.models.DataSet`
+        :type dataset: :class:`data.models.DataSet`
         :param data_list: Data definitions of the dataset members
         :type data_list: [:class:`data.data.data.Data`]
         """
@@ -364,7 +364,7 @@ class DataSetMemberManager(models.Manager):
         """Creates a dataset member
 
         :param dataset: The dataset the member is a part of
-        :type dataset: :class:`dataset.models.DataSet`
+        :type dataset: :class:`data.models.DataSet`
         :param data_list: Data definitions of the dataset members
         :type data_list: [:class:`data.data.data.Data`]
         """
@@ -395,7 +395,7 @@ class DataSetMemberManager(models.Manager):
         """Gets additional details for the given dataset member id
 
         :returns: The full dataset member for the given id
-        :rtype: :class:`dataset.models.DataSetMember`
+        :rtype: :class:`data.models.DataSetMember`
         """
 
         dsm = DataSetMember.objects.get(pk=dsm_id)
@@ -415,7 +415,7 @@ class DataSetMember(models.Model):
     :type created: datetime
     """
 
-    dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
+    dataset = models.ForeignKey('data.DataSet', on_delete=models.PROTECT)
     data = django.contrib.postgres.fields.JSONField(default=dict)
     file_ids = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True))
     created = models.DateTimeField(auto_now_add=True)
@@ -426,7 +426,7 @@ class DataSetMember(models.Model):
         """Returns the dataset definition
 
         :returns: The dataset definition
-        :rtype: :class:`dataset.DataSetDefinition`
+        :rtype: :class:`data.dataset.dataset.DataSetDefinition`
         """
 
         return self.dataset.get_definition()
@@ -521,7 +521,7 @@ class DataSetFileManager(models.Manager):
         :param parameter_names: The parameter names to search for in the given datasets
         :type parameter_names: string
         :returns: The DataSetFiles associated with that dataset_id
-        :rtype: [:class:`dataset.models.DataSetFile`]
+        :rtype: [:class:`data.models.DataSetFile`]
         """
 
         files = self.all().filter(dataset_id__in=list(dataset_ids))
@@ -537,7 +537,7 @@ class DataSetFileManager(models.Manager):
         :param all_files: Whether or not a dataset must contain all files or just some of the files in the list
         :type all_files: bool
         :returns: The DataSets associated with that dataset_id
-        :rtype: [:class:`dataset.models.DataSet`]
+        :rtype: [:class:`data.models.DataSet`]
         """
         dataset_ids = self.get_dataset_ids(file_ids=file_ids, all_files=all_files)
         datasets = DataSet.objects.filter(id__in=dataset_ids)
@@ -550,7 +550,7 @@ class DataSetFileManager(models.Manager):
         :param dataset_id: The id of the associated dataset
         :type dataset_id: integer
         :returns: The DataSetFiles associated with that dataset_id
-        :rtype: [:class:`dataset.models.DataSetFile`]
+        :rtype: [:class:`data.models.DataSetFile`]
         """
 
         files = DataSetFile.objects.filter(dataset_id=dataset_id)
@@ -570,7 +570,7 @@ class DataSetFile(models.Model):
     :type parameter_name: :class:`django.db.models.CharField`
     """
 
-    dataset = models.ForeignKey('dataset.DataSet', on_delete=models.PROTECT)
+    dataset = models.ForeignKey('data.DataSet', on_delete=models.PROTECT)
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     parameter_name = models.CharField(db_index=True, max_length=50)
     objects = DataSetFileManager()

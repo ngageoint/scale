@@ -7,8 +7,8 @@ from jsonschema.exceptions import ValidationError
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DATA_SCHEMA, DataV6, convert_data_to_v6_json
 from data.interface.json.interface_v6 import INTERFACE_SCHEMA, InterfaceV6, convert_interface_to_v6_json
-from dataset.exceptions import InvalidDataSetDefinition
-from dataset.definition.definition import DataSetDefinition
+from data.exceptions import InvalidDataSetDefinition
+from data.dataset.dataset import DataSetDefinition
 
 import util.rest as rest_utils
 
@@ -34,9 +34,9 @@ def convert_definition_to_v6_json(definition):
     """Returns the v6 dataset definition JSON for the given definition
 
     :param definition: The dataset definition
-    :type definition: :class:`dataset.definition.DataSetDefinition'
+    :type definition: :class:`data.dataset.dataset.DataSetDefinition'
     :returns: The v6 dataset definition JSON
-    :rtype: :class:`dataset.json.DataSetDefinitionV6
+    :rtype: :class:`data.dataset.json.dataset_v6.DataSetDefinitionV6
     """
 
     def_dict = {
@@ -99,7 +99,7 @@ class DataSetDefinitionV6(object):
         """Returns the definition
 
         :returns: The DataSetDefinition object
-        :rtype: :class:`dataset.definition.definition.DataSetDefinition`
+        :rtype: :class:`data.dataset.dataset.DataSetDefinition`
         """
 
         return DataSetDefinition(definition=self.get_dict())

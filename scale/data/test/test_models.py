@@ -3,22 +3,15 @@ from __future__ import absolute_import
 
 import copy
 import datetime
-import json
-import time
 
 import django
 from django.utils.timezone import now
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 
 from data.data.json.data_v6 import DataV6
-from data.interface.interface import Interface
-from data.interface.parameter import FileParameter, JsonParameter
-from dataset.exceptions import InvalidDataSetMember
-from dataset.models import DataSet, DataSetMember, DataSetFile
-import dataset.test.utils as dataset_test_utils
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import DataSetDefinitionV6
-from storage.models import ScaleFile, Workspace
+from data.models import DataSet, DataSetMember, DataSetFile
+import data.test.utils as dataset_test_utils
+from data.dataset.json.dataset_v6 import DataSetDefinitionV6
 import storage.test.utils as storage_test_utils
 
 class TestDataSetManager(TransactionTestCase):

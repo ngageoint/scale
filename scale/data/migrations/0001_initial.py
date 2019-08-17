@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('parameter_name', models.CharField(db_index=True, max_length=50)),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dataset.DataSet')),
+                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='data.DataSet')),
                 ('scale_file', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='storage.ScaleFile')),
             ],
             options={
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('data', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
                 ('file_ids', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(null=True), size=None)),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dataset.DataSet')),
+                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='data.DataSet')),
             ],
             options={
                 'db_table': 'data_set_member',

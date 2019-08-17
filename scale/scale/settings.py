@@ -134,7 +134,6 @@ INSTALLED_APPS = (
     'batch',
     'cli',
     'data',
-    'dataset',
     'diagnostic',
     'error',
     'ingest',

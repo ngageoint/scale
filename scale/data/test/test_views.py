@@ -5,21 +5,20 @@ from __future__ import absolute_import
 import copy
 import datetime
 import json
-import time
 
 import django
-from django.utils.timezone import utc, now
+from django.utils.timezone import now
 from rest_framework import status
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from data.data.json.data_v6 import DataV6
-from dataset.definition.json.definition_v6 import DataSetDefinitionV6
+from data.dataset.json.dataset_v6 import DataSetDefinitionV6
 from util import rest
 
-from dataset.models import DataSet, DataSetMember
-import dataset.test.utils as dataset_test_utils
+from data.models import DataSet
+import data.test.utils as dataset_test_utils
 import storage.test.utils as storage_utils
-from storage.models import ScaleFile, Workspace
+from storage.models import Workspace
 
 """Tests the v6/datasets/ endpoint"""
 class TestDatasetViews(APITestCase):
