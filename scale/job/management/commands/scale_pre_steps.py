@@ -17,6 +17,7 @@ from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.models import JobExecution
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile, Workspace
+from storage.serializers import ScaleFileDetailsSerializerV6 as serialize
 from util.retry import retry_database_query
 
 
@@ -113,7 +114,7 @@ class Command(BaseCommand):
                 if type(input_data.values[i]) is JsonValue:
                     input_metadata['JOB'][i] = input_data.values[i].value
                 elif type(input_data.values[i]) is FileValue:
-                    input_metadata['JOB'][i] = [ScaleFile.objects.get_details(file_id=f).__dict__ for f in
+                    input_metadata['JOB'][i] = [serialize(ScaleFile.objects.get_details(file_id=f)).data for f in
                                                 input_data.values[i].file_ids]
         if job_exe.recipe_id and job_exe.recipe.has_input():
             input_metadata['RECIPE'] = {}
@@ -122,7 +123,7 @@ class Command(BaseCommand):
                 if type(input_data.values[i]) is JsonValue:
                     input_metadata['RECIPE'][i] = input_data.values[i].value
                 elif type(input_data.values[i]) is FileValue:
-                    input_metadata['RECIPE'][i] = [ScaleFile.objects.get_details(file_id=f).__dict__ for f in
+                    input_metadata['RECIPE'][i] = [serialize(ScaleFile.objects.get_details(file_id=f)).data for f in
                                                    input_data.values[i].file_ids]
 
         workspace_names = config.get_input_workspace_names()
