@@ -380,6 +380,7 @@ class DataSetMemberManager(models.Manager):
                 dataset_member.file_ids = list(data_util.get_file_ids(d))
                 dataset_members.append(dataset_member)
                 datasetfiles = DataSetFile.objects.create_dataset_files(dataset, d, existing_scale_ids)
+                existing_scale_ids.append(dataset_member.file_ids)
             DataSetFile.objects.bulk_create(datasetfiles)
             return DataSetMember.objects.bulk_create(dataset_members)
 

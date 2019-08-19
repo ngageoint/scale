@@ -474,7 +474,7 @@ Response: 200 OK
 v6 Create Dataset Members
 -------------------------
 
-**Example POST /v6/datasets/ API call**
+**Example POST /v6/datasets/ API calls**
 
 Request: POST http://.../v6/datasets/100/
 
@@ -482,14 +482,6 @@ Request: POST http://.../v6/datasets/100/
 
    {
       "data": [<:ref:`Data JSON <rest_v6_data_data>`>]
-   }
-   {
-      "data_template": {
-            "files": {"input_a": "FILE_VALUE"},
-            "json": {}
-      },
-      "source_collection": ['12345', '123456']
-      
    }
 
 Response: 201 Created
@@ -503,6 +495,19 @@ Location http://.../v6/datasets/105/
       "created": "1970-01-01T00:00:00Z",
       "data": <:ref:`Data JSON <rest_v6_data_data>`>
    }]
+   
+Request: POST http://.../v6/datasets/100/
+
+.. code-block:: javascript
+
+   {
+      "data_template": {
+            "files": {"input_a": "FILE_VALUE"},
+            "json": {}
+      },
+      "source_collection": ['12345', '123456'],
+      "dry_run": True
+   }
    
 Response: 200 Ok
 
