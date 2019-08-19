@@ -33,6 +33,15 @@ class CommandMessageManager(object):
 
         self._backend = get_message_backend(broker_type)
 
+    def get_queue_size(self):
+        """Gets the current length of the queue
+
+        :return: number of messages in the queue
+        :rtype: int
+        """
+        
+        return self._backend.get_queue_size()
+        
     def send_messages(self, commands):
         """Serialize CommandMessages and send via configured message broker
 

@@ -47,3 +47,12 @@ class AMQPMessagingBackend(MessagingBackend):
                     except Queue.Empty:
                         # We've reached the end of the queue... exit loop
                         break
+
+    def get_queue_size(self):
+        """See :meth:`messaging.backends.backend.MessagingBackend.get_queue_size`"""
+
+        queue_size = 0
+        with Connection(self._broker_url) as connection:
+            with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
+                queue_size = simple_queue.qsize()
+        return queue_size

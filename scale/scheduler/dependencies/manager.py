@@ -156,21 +156,17 @@ class DependencyManager(object):
         AMQP (rabbitmq)
         """
         
+        status_dict = {'OK': False, 'errors': [], 'warnings': []}
+        status_dict['broker_url'] = scale_settings.BROKER_URL
+        status_dict['queue_name'] = settings.QUEUE_NAME
+        status_dict['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
         # if type is amqp, then we know it's rabbit. Don't worry about checking SQS
         broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
         if broker_details.get_type() == 'amqp':
             try:
                 with Connection(scale_settings.BROKER_URL) as conn:
                     conn.connect() # Exceptions may be raised upon connect
-                    
-                    # No exceptions, so check the message queue depth
-                    backend = CommandMessageManager()._backend
-                    with connection.SimpleQueue(backend._queue_name) as simple_queue:
-                        details = {'queue_depth': {backend._queue_name: simple_queue.qsize()}}
-                    details['broker_url'] = scale_settings.BROKER_URL
-                    details['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
-                        
-                    status_dict = {'OK': True, 'details': details, 'errors': [], 'warnings': []}
+                    status_dict = {'OK': True, 'errors': [], 'warnings': []}
             except Exception as ex:
                 msg = 'Error connecting to RabbitMQ: %s' % unicode(ex)
                 status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
@@ -186,7 +182,17 @@ class DependencyManager(object):
             # except BaseException as ex:
             #     msg = 'Unknown Error connecting to RabbitMQ: %s' % unicode(ex)
             #     status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
+        elif broker_details.get_type() == 'sqs':
+            status_dict['region_name'] = broker_details.get_address()
+            try:
+                CommandMessageManager().get_queue_size()
+            except Exception as ex:
+                logger.error('Unable to get queue size from sqs: %s' % unicode(ex))
+                msg = 'Error connecting to SQS: Check Logs for details'
+                status_dict = {'OK': False, 'errors': [{'SQS_ERROR': msg}], 'warnings': []}
 
+        if status_dict['OK']:
+            status_dict['queue_depth'] = CommandMessageManager().get_queue_size()
         return status_dict
 
     def _generate_idam_status(self):
@@ -216,14 +222,23 @@ class DependencyManager(object):
             third_nodes = len(node_status)*0.3
             
             offline_count = 0
+            degraded_count = 0
             for node in node_status:
                 if node['state']['name'] == 'OFFLINE':
                     offline_count += 1
+                elif node['state']['name'] == 'DEGRADED':
+                    degraded_count += 1
                     
+            status_dict = {'OK': True, 'errors': [], 'warnings': [], 'detail': 'Enough nodes are online to function.'}
             if offline_count > third_nodes:
-                status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'Over a third of the nodes are offline.'}], 'warnings': []}
-            else:
-                status_dict = {'OK': True, 'detail': 'Enough nodes are online to function.'}
+                status_dict['errors'].append({'NODES_OFFLINE': 'Over a third of the nodes are offline.'})
+                status_dict['OK'] = False
+                status_dict['detail'] = 'Over a third of nodes are in an error state'
+            if degraded_count > third_nodes:
+                status_dict['errors'].append({'NODES_DEGRADED': 'Over a third of the nodes are degraded.'})
+                status_dict['OK'] = False
+                status_dict['detail'] = 'Over a third of nodes are in an error state'
+
         else:
             status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
 
