@@ -110,38 +110,63 @@ class BatchManager(models.Manager):
            These should be filtered if not changed/marked for re-run?
            
         """
+        
         # If this is a previous batch, use the previous batch total
         if batch.superseded_batch:
             return batch.superseded_batch.recipes_total
         
-        #TODO: Grab the number of files in the provided dataset 
-        #      - this is the number of base recipes that will be created
-        #      - for now, counting the number of recipes that match the type
-        recipes = Recipe.objects.get_recipes_v6(type_ids=[batch.recipe_type_id], is_superseded=False)
-        estimated_recipes = len(recipes)
+        # No files defined to run on, so no recipes will be created
+        if not definition.dataset:
+            return 0
+
+        #TODO: The number of recipes are calculated based on the following:
+        #      - If the dataset has a global parameter matching the input of the 
+        #        recipe type, count the number of files in each dataset member
+        #      - If the dataset has a parameter matching the input of the recipe
+        #        type, count the number of files in each member that matches the parameter
         
+        from recipe.models import RecipeType
+        from dataset.models import DataSet, DataSetMember, DataSetFile
+        dataset = DataSet.objects.get(pk=definition.dataset)
+        dataset_definition = dataset.get_definition()
+        recipe_type = RecipeType.objects.get(pk=batch.recipe_type_id)
+        
+        recipe_inputs = recipe_type.get_definition().get_input_keys()
+        if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
+            logger.info('DataSet parameters do not match the recipe inputs; no recipes will be created.')
+            return 0
+        
+        # Base count of recipes are number of files in the dataset that match the recipe inputs
+        files = DataSetFile.objects.get_files([dataset.id], recipe_inputs)
+        num_files = len(files)
+        
+        from recipe.models import RecipeTypeSubLink
+        estimated_recipes = num_files
         # If all nodes are forced:
         if definition.forced_nodes and definition.forced_nodes.all_nodes:
             # Count the number of sub-recipes
-            for recipe in recipes:
-                estimated_recipes += RecipeNode.objects.count_subrecipes(recipe.id, recurse=True)
+            subs_count = RecipeTypeSubLink.objects.count_subrecipes(batch.recipe_type_id, recurse=True)
+            estimated_recipes += (num_files * subs_count)
                 
         else:
             # Only count the sub-recipes nodes that are forced, or in the lineage of a forced node
-            for recipe in recipes:
-                subs = RecipeNode.objects.get_subrecipes(recipe.id)
-                for sub in subs: 
-                    # If sub recipe is selected to re-run
-                    if sub in definition.forced_nodes.get_sub_recipe_names():
-                        estimated_recipes += 1 + RecipeNode.objects.count_subrecipes(subs[sub].id, True)
-                   
-                    # If it's a child of a forced job node, we're going to need to run it
-                    else:
-                        recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
-                        for node_name in definition.forced_nodes.get_forced_node_names():
-                            if recipe_instance._definition.has_descendant(node_name, sub):
-                                estimated_recipes += 1 + RecipeNode.objects.count_subrecipes(subs[sub].id, True)
-                        
+            nodes = recipe_type.get_v6_definition_json()['nodes']
+            subs = [node for node in nodes if nodes[node]['node_type']['node_type'] == 'recipe']
+            
+            for sub in subs:
+                sub_type_id = RecipeType.objects.get(name=nodes[sub]['node_type']['recipe_type_name'], revision_num=nodes[sub]['node_type']['recipe_type_revision']).id
+                
+                # If sub-recipe is selected as a forced node
+                if sub in definition.forced_nodes.get_sub_recipe_names():
+                    estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
+                
+                # If it's a child of a forced job node, we're going to need to run it
+                else:
+                    recipe_type_def = recipe_type.get_definition()
+                    for job_node in definition.forced_nodes.get_forced_node_names():
+                        if recipe_type_def.has_descendant(job_node, sub):
+                            estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
+            
         # if not (definition.forced_nodes and definition.forced_nodes.all_nodes):
         #     recipes = recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
             
@@ -586,7 +611,6 @@ class Batch(models.Model):
         :returns: The batch definition in v6 of the JSON schema
         :rtype: dict
         """
-        # import pdb; pdb.set_trace()
 
         # Handle batches with old (pre-v6) definitions
         if 'version' in self.definition and self.definition['version'] == '1.0':

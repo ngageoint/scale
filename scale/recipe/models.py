@@ -1881,6 +1881,19 @@ class RecipeTypeSubLinkManager(models.Manager):
         query = RecipeTypeSubLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('sub_recipe_type_id')
         return [result.sub_recipe_type_id for result in query]
 
+    def count_subrecipes(self, recipe_type_id, recurse):
+        """Counts the number of sub-recipes within the specified recipe type
+        """
+        
+        count = 0
+        qry = RecipeTypeSubLink.objects.filter(recipe_type_id=recipe_type_id).only('sub_recipe_type_id')
+        count += len(qry)
+        if recurse and len(qry) > 0:
+            for sr in qry:
+                count += self.count_subrecipes(sr.sub_recipe_type_id, recurse)
+                
+        return count
+
 class RecipeTypeSubLink(models.Model):
     """Represents a link between a recipe type and a sub-recipe type.
 
