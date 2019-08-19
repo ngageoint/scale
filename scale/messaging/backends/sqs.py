@@ -43,4 +43,9 @@ class SQSMessagingBackend(MessagingBackend):
                 success = yield json.loads(message.body)
                 if success:
                     message.delete()
+                    
+    def get_queue_size(self):
+        """See :meth:`messaging.backends.backend.MessagingBackend.get_queue_size`"""
 
+        with SQSClient(self._credentials, self._region_name) as client:
+            return client.get_queue_size(queue_name=self._queue_name)

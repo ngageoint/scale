@@ -113,6 +113,18 @@ class SQSClient(AWSClient):
         """
 
         return self._resource.get_queue_by_name(QueueName=queue_name)
+        
+    def get_queue_size(self, queue_name):
+        """Gets the size of the SQS queue by the given name
+
+        :param queue_name: The unique name of the SQS queue
+        :type queue_name: string
+        :return: approximate number of messages in the queue
+        :rtype: int
+        """
+
+        queue = self.get_queue_by_name(queue_name)
+        return queue.attributes["ApproximateNumberOfMessages"]
 
     def send_message(self, queue_name, message):
         """Send a message to SQS queue.
