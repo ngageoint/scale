@@ -16,6 +16,7 @@ from messaging.manager import CommandMessageManager
 from scale import settings as scale_settings
 from scheduler.manager import scheduler_mgr
 from util.broker import BrokerDetails
+from util.exceptions import InvalidBrokerUrl
 from util.parse import datetime_to_string, parse_datetime
 
 logger = logging.getLogger(__name__)
@@ -158,10 +159,13 @@ class DependencyManager(object):
         
         status_dict = {'OK': False, 'errors': [], 'warnings': []}
         status_dict['broker_url'] = scale_settings.BROKER_URL
-        status_dict['queue_name'] = settings.QUEUE_NAME
+        status_dict['queue_name'] = scale_settings.QUEUE_NAME
         status_dict['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
-        # if type is amqp, then we know it's rabbit. Don't worry about checking SQS
-        broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
+        try:
+            broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
+        except InvalidBrokerUrl:
+            msg = 'Error parsing broker url'
+            status_dict['errors'] = [{'INVALID_BROKER_URL': msg}]
         if broker_details.get_type() == 'amqp':
             try:
                 with Connection(scale_settings.BROKER_URL) as conn:
