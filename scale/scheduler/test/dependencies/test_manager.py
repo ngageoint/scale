@@ -46,7 +46,14 @@ class TestDependenciesManager(TestCase):
         node_1 = node_test_utils.create_node(hostname='host_1')
         
        
+    @patch('messaging.backends.amqp.Connection')
+    def test_generate_message_queue_status(self, connection):
+        """Tests the _generate_msg_queue_status method"""
     
+        from scheduler.dependencies.manager import dependency_mgr
+        status = dependency_mgr._generate_msg_queue_status()
+        print(status)
+        
     @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://www.logging.com/health')
     @patch.dict('os.environ', {'SILO_URL': 'http://www.silo.com/'})
     @patch('requests.head', side_effect=mock_response_head)
@@ -122,7 +129,7 @@ class TestDependenciesManager(TestCase):
         self.assertTrue('nodes' in dependencies)
         nodes = dependencies['nodes']
         self.assertIsNotNone(nodes)
-        self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.'})
+        self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.', 'errors': [], 'warnings': []})
         print(nodes)
         
         
