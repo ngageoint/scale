@@ -2,13 +2,10 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-from datetime import datetime
-
-import storage.test.utils as storage_utils
 from data.data.json.data_v6 import DataV6
 
-from dataset.models import DataSet, DataSetMember
-from dataset.definition.definition import DataSetDefinition
+from data.models import DataSet, DataSetMember
+from data.dataset.dataset import DataSetDefinition
 
 DATASET_TITLE_COUNTER = 1
 
@@ -44,7 +41,7 @@ def create_dataset(title=None, description=None, created=None, definition=None):
     :keyword definition: The dataset definition
     :type definition: dict
     :returns: The dataset model
-    :rtype: :class:`dataset.models.DataSet`
+    :rtype: :class:`data.models.DataSet`
     """
 
     if not title:
@@ -61,24 +58,26 @@ def create_dataset(title=None, description=None, created=None, definition=None):
         definition=definition_obj)
     return dataset
 
-def create_dataset_member(dataset=None, data=None):
+def create_dataset_members(dataset=None, data_list=None):
     """Creates a datasetmember model
 
-    :keyword dataset: The dataset the member is a part of
-    :type dataset: :class:`dataset.models.DataSet`
-    :keyword data: The member data
-    :type data: :class:'data.data.data.Data'
+    :keyword dataset: The dataset the members are a part of
+    :type dataset: :class:`data.models.DataSet`
+    :keyword data_list: The data for the members
+    :type data_list: [dict]
     """
     if not dataset:
         dataset = create_dataset()
 
-    if not data:
-        data = {
+    if not data_list:
+        data_list = [{
             'version': '7',
             'files': {},
             'json': {'input_c': 999, 'input_d': {'greeting': 'hello'}}
-        }
-    data_obj = DataV6(data=data).get_data()
+        }]
+    data_objs = []
+    for d in data_list:
+        data_objs.append(DataV6(data=d).get_data())
 
-    dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=dataset, data=data_obj)
-    return dataset_member
+    dataset_members = DataSetMember.objects.create_dataset_members(dataset=dataset, data_list=data_objs)
+    return dataset_members

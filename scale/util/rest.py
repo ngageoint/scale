@@ -643,6 +643,9 @@ def _get_param_list(request, name, default_value=None, required=True):
 
     if value is None and required:
         raise BadParameter('Missing required parameter: "%s"' % name)
+        
+    if value and not isinstance(value, list):
+        value = [value]
     return value or []
 
 
