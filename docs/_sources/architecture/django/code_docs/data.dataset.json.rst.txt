@@ -1,0 +1,22 @@
+data\.dataset\.json package
+===========================
+
+Submodules
+----------
+
+data\.dataset\.json\.dataset\_v6 module
+---------------------------------------
+
+.. automodule:: data.dataset.json.dataset_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data.dataset.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

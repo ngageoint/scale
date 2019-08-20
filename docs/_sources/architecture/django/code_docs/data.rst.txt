@@ -7,8 +7,10 @@ Subpackages
 .. toctree::
 
     data.data
+    data.dataset
     data.filter
     data.interface
+    data.migrations
     data.test
 
 Submodules
@@ -18,6 +20,46 @@ data\.apps module
 -----------------
 
 .. automodule:: data.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.exceptions module
+-----------------------
+
+.. automodule:: data.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.models module
+-------------------
+
+.. automodule:: data.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.serializers module
+------------------------
+
+.. automodule:: data.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.urls module
+-----------------
+
+.. automodule:: data.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.views module
+------------------
+
+.. automodule:: data.views
     :members:
     :undoc-members:
     :show-inheritance:

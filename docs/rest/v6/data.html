@@ -118,7 +118,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset">v6 Create Dataset</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-validate-dataset">v6 Validate Dataset</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-details">v6 Retrieve Dataset Details</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset-member">v6 Create Dataset Member</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset-members">v6 Create Dataset Members</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-member-list">v6 Retrieve Dataset Member List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-member-details">v6 Retrieve Dataset Member Details</a></li>
 </ul>
@@ -872,71 +872,241 @@ See <span class="xref std std-ref">rest_v6_data_dataset_file</span></td>
 </tbody>
 </table>
 </div>
-<div class="section" id="v6-create-dataset-member">
-<span id="rest-v6-dataset-create-member"></span><h2>v6 Create Dataset Member<a class="headerlink" href="#v6-create-dataset-member" title="Permalink to this headline">¶</a></h2>
-<p><strong>Example POST /v6/datasets/ API call</strong></p>
+<div class="section" id="v6-create-dataset-members">
+<span id="rest-v6-dataset-create-member"></span><h2>v6 Create Dataset Members<a class="headerlink" href="#v6-create-dataset-members" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/datasets/ API calls</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/datasets/100/">http://.../v6/datasets/100/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Response: 201 Created
 Headers:
 Location <a class="reference external" href="http://.../v6/datasets/105/">http://.../v6/datasets/105/</a></p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">[{</span>
    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>Request: POST <a class="reference external" href="http://.../v6/datasets/100/">http://.../v6/datasets/100/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;data_template&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;input_a&quot;</span><span class="o">:</span> <span class="s2">&quot;FILE_VALUE&quot;</span><span class="p">},</span>
+         <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">{}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;source_collection&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;12345&#39;</span><span class="p">,</span> <span class="s1">&#39;123456&#39;</span><span class="p">],</span>
+   <span class="s2">&quot;dry_run&quot;</span><span class="o">:</span> <span class="nx">True</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 200 Ok</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Data JSON &lt;rest_v6_data_data&gt;`</span><span class="o">&gt;</span> <span class="p">]</span>
 </pre></div>
 </div>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
-<col width="0%" />
 <col width="16%" />
-<col width="9%" />
+<col width="8%" />
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="5"><a href="#id5"><span class="problematic" id="id6">**</span></a>Create Dataset Member*</th>
+<tr class="row-odd"><th class="head" colspan="4"><a href="#id5"><span class="problematic" id="id6">**</span></a>Create Dataset Members*</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="5">Creates a new dataset member with the given fields</td>
+<tr class="row-even"><td colspan="4">Creates new dataset members with the given fields</td>
 </tr>
-<tr class="row-odd"><td colspan="5"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>POST</strong> /v6/datasets/{id}/</dt>
 <dd>Where {id} is the unique ID of the dataset to add a member to</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="2">data</td>
-<td>String</td>
-<td>Required</td>
-<td>The data for this individual member of the dataset
+<tr class="row-even"><td>data</td>
+<td>Array</td>
+<td>Optional</td>
+<td>The data for the dataset members to be created
 See <a class="reference internal" href="#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a></td>
 </tr>
-<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td>data_template</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>JSON defining the data template for each member. Each member will
+make a copy of this template and replace FILE_VALUE with one of the
+files returned by the given filters.
+See <a class="reference internal" href="#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a></td>
+</tr>
+<tr class="row-even"><td>dry_run</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If true, only validate the data and return the list of data objects
+that would have been created and turned into dataset members. Useful
+to validate a template and set of filters and determine how many
+members would be added to the dataset.</td>
+</tr>
+<tr class="row-odd"><td>data_started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the data time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the data time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>source_started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the source file time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>source_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the source file time range to query, default is current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>source_sensor_class</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source sensor class
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>source_sensor</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source sensor
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>source_collection</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source collection
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>source_task</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source task
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>modified_started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the last modified time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>modified_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the last modified time range to query (default current time)
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=file_name&amp;order=created).
+Nested objects require a delimiter (ex: order=job_type__name).
+Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
+</tr>
+<tr class="row-even"><td>job_output</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given job output.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files associated with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given job identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>recipe_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given recipe identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>recipe_node</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files produced by the given recipe node.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>recipe_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given recipe type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>batch_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given batch identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>file_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files with a given file name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="4">201 Created</td>
+<td colspan="3">201 Created</td>
 </tr>
 <tr class="row-odd"><td><strong>Location</strong></td>
-<td colspan="4">URL for retrieving the details of the newly created dataset</td>
+<td colspan="3">URL for retrieving the details of the newly created dataset</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="4"><em>application/json</em></td>
+<td colspan="3"><em>application/json</em></td>
 </tr>
 <tr class="row-odd"><td><strong>Body</strong></td>
-<td colspan="4">JSON containing the details of the newly created dataset member
+<td colspan="3">JSON containing the details of the newly created dataset member
 see <a class="reference internal" href="#rest-v6-dataset-member-details"><span class="std std-ref">v6 Retrieve Dataset Member Details</span></a></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="3">JSON array containing the data for dataset members that would be created if not a dry run
+see <a class="reference internal" href="#rest-v6-data-data"><span class="std std-ref">Data JSON</span></a></td>
 </tr>
 </tbody>
 </table>

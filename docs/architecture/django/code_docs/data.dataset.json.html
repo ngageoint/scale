@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.test.filter package &mdash; Scale 7.0.0-snapshot documentation</title>
+  <title>data.dataset.json package &mdash; Scale 7.0.0-snapshot documentation</title>
   
 
   
@@ -46,8 +46,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="data.test.filter.json package" href="data.test.filter.json.html" />
-    <link rel="prev" title="data.test.dataset.json package" href="data.test.dataset.json.html" />
+    <link rel="next" title="data.filter package" href="data.filter.html" />
+    <link rel="prev" title="data.dataset package" href="data.dataset.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -206,15 +206,15 @@
         
           <li><a href="data.html">data package</a> &raquo;</li>
         
-          <li><a href="data.test.html">data.test package</a> &raquo;</li>
+          <li><a href="data.dataset.html">data.dataset package</a> &raquo;</li>
         
-      <li>data.test.filter package</li>
+      <li>data.dataset.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/data.test.filter.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/data.dataset.json.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -227,137 +227,76 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="data-test-filter-package">
-<h1>data.test.filter package<a class="headerlink" href="#data-test-filter-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="data.test.filter.json.html">data.test.filter.json package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data.test.filter.json.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.test.filter.json.html#module-data.test.filter.json.test_filter_v6">data.test.filter.json.test_filter_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.test.filter.json.html#module-data.test.filter.json">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="data-dataset-json-package">
+<h1>data.dataset.json package<a class="headerlink" href="#data-dataset-json-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-data.test.filter.test_filter">
-<span id="data-test-filter-test-filter-module"></span><h2>data.test.filter.test_filter module<a class="headerlink" href="#module-data.test.filter.test_filter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-data.dataset.json.dataset_v6">
+<span id="data-dataset-json-dataset-v6-module"></span><h2>data.dataset.json.dataset_v6 module<a class="headerlink" href="#module-data.dataset.json.dataset_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the DataSet definition schema</p>
 <dl class="class">
-<dt id="data.test.filter.test_filter.TestDataFilter">
-<em class="property">class </em><code class="descclassname">data.test.filter.test_filter.</code><code class="descname">TestDataFilter</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<p>Tests related to the DataFilter class</p>
+<dt id="data.dataset.json.dataset_v6.DataSetDefinitionV6">
+<em class="property">class </em><code class="descclassname">data.dataset.json.dataset_v6.</code><code class="descname">DataSetDefinitionV6</code><span class="sig-paren">(</span><em>definition=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#data.dataset.json.dataset_v6.DataSetDefinitionV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the definition of a DataSet object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>definition</strong> (<em>dict</em>) &#8211; The dataset definition JSON dict</li>
+<li><strong>do_validate</strong> &#8211; Whether to perform validation on the JSON schema</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_add_filter">
-<code class="descname">test_add_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_add_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling DataFilter.add_value()</p>
+<dt id="data.dataset.json.dataset_v6.DataSetDefinitionV6.get_definition">
+<code class="descname">get_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.dataset.json.dataset_v6.DataSetDefinitionV6.get_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The DataSetDefinition object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.dataset.html#data.dataset.dataset.DataSetDefinition" title="data.dataset.dataset.DataSetDefinition"><code class="xref py py-class docutils literal"><span class="pre">data.dataset.dataset.DataSetDefinition</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_between">
-<code class="descname">test_between</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_between" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests between operation</p>
+<dt id="data.dataset.json.dataset_v6.DataSetDefinitionV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.dataset.json.dataset_v6.DataSetDefinitionV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dict of the definition</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_contains">
-<code class="descname">test_contains</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests contains operation</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_equal">
-<code class="descname">test_equal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests equal operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_greater_than">
-<code class="descname">test_greater_than</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_greater_than" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests greater than operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_greater_than_equal">
-<code class="descname">test_greater_than_equal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_greater_than_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests greater than equal operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_in">
-<code class="descname">test_in</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_in" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests in operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_is_data_accepted">
-<code class="descname">test_is_data_accepted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_is_data_accepted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling DataFilter.is_data_accepted()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_less_than">
-<code class="descname">test_less_than</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_less_than" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests less than operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_less_than_equal">
-<code class="descname">test_less_than_equal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_less_than_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests less than equal operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_not_equal">
-<code class="descname">test_not_equal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_not_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests not equal operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_not_in">
-<code class="descname">test_not_in</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_not_in" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests not in operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_subset">
-<code class="descname">test_subset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_subset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests subset operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_superset">
-<code class="descname">test_superset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_superset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests superset operation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_validate">
-<code class="descname">test_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling DataFilter.validate()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data.test.filter.test_filter.TestDataFilter.test_validate_filter">
-<code class="descname">test_validate_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.test.filter.test_filter.TestDataFilter.test_validate_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling DataFilter.validate_filter()</p>
-</dd></dl>
-
+<dl class="function">
+<dt id="data.dataset.json.dataset_v6.convert_definition_to_v6_json">
+<code class="descclassname">data.dataset.json.dataset_v6.</code><code class="descname">convert_definition_to_v6_json</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#data.dataset.json.dataset_v6.convert_definition_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 dataset definition JSON for the given definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>data.dataset.dataset.DataSetDefinition&#8217;) &#8211; The dataset definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 dataset definition JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">:class:<a href="#id3"><span class="problematic" id="id4">`</span></a>data.dataset.json.dataset_v6.DataSetDefinitionV6</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-data.test.filter">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data.test.filter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-data.dataset.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data.dataset.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -369,10 +308,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="data.test.filter.json.html" class="btn btn-neutral float-right" title="data.test.filter.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="data.filter.html" class="btn btn-neutral float-right" title="data.filter package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="data.test.dataset.json.html" class="btn btn-neutral float-left" title="data.test.dataset.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="data.dataset.html" class="btn btn-neutral float-left" title="data.dataset package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

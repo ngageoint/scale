@@ -1,0 +1,29 @@
+data\.test\.dataset package
+===========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    data.test.dataset.json
+
+Submodules
+----------
+
+data\.test\.dataset\.test\_dataset module
+-----------------------------------------
+
+.. automodule:: data.test.dataset.test_dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data.test.dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
