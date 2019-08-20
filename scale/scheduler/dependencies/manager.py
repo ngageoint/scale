@@ -74,18 +74,27 @@ class DependencyManager(object):
         """
 
         if scale_settings.LOGGING_HEALTH_ADDRESS:
-            response = requests.head(scale_settings.LOGGING_HEALTH_ADDRESS)
-            if response.status_code == status.HTTP_200_OK:
-                status_dict = {'OK': True, 'detail': {'url': scale_settings.LOGGING_HEALTH_ADDRESS}}
-            else:
-                status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging health address returned %d'%response.status_code}], 'warnings': []}
+            try:
+                response = requests.head(scale_settings.LOGGING_HEALTH_ADDRESS)
+                if response.status_code == status.HTTP_200_OK:
+                    status_dict = {'OK': True, 'detail': {'url': scale_settings.LOGGING_HEALTH_ADDRESS}}
+                else:
+                    status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging health address returned %d'%response.status_code}], 'warnings': []}
+                    status_dict['detail'] = {'url': scale_settings.LOGGING_HEALTH_ADDRESS}
+            except Exception as ex:
+                msg = 'Error with LOGGING_HEALTH_ADDRESS: %s' % unicode(ex)
+                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
         elif scale_settings.LOGGING_ADDRESS:
-            response = requests.head(scale_settings.LOGGING_ADDRESS)
-            if response.status_code == status.HTTP_200_OK:
-                status_dict['OK'] = True
-                status_dict['detail'] = {'url': scale_settings.LOGGING_ADDRESS}
-            else:
-                status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging address returned %d'%response.status_code}], 'warnings': []}
+            try:
+                response = requests.head(scale_settings.LOGGING_ADDRESS)
+                if response.status_code == status.HTTP_200_OK:
+                    status_dict = {'OK': True}
+                    status_dict['detail'] = {'url': scale_settings.LOGGING_ADDRESS}
+                else:
+                    status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging address returned %d'%response.status_code}], 'warnings': []}
+            except Exception as ex:
+                msg = 'Error with LOGGING_ADDRESS: %s' % unicode(ex)
+                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
         else: 
             status_dict =  {'OK': False, 'errors': [{'NO_LOGGING_DEFINED': 'No logging URL defined'}], 'warnings': []}
 
@@ -130,12 +139,16 @@ class DependencyManager(object):
         if not silo_url:
             status_dict = {'OK': False, 'errors': [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}], 'warnings': []}
         else:
-            response = requests.head(silo_url)
-            if response.status_code == status.HTTP_200_OK:
-                status_dict = {'OK': True, 'detail': {'url': silo_url}}
-            else:
-                status_dict = {'OK': False, 'errors': [{response.status_code: 'Silo returned a status code of %s' % response.status_code}], 'warnings': []}
-
+            try:
+                response = requests.head(silo_url)
+                if response.status_code == status.HTTP_200_OK:
+                    status_dict = {'OK': True, 'detail': {'url': silo_url}}
+                else:
+                    status_dict = {'OK': False, 'errors': [{response.status_code: 'Silo returned a status code of %s' % response.status_code}], 'warnings': []}
+            except Exception as ex:
+                msg = 'Error with SILO_URL: %s' % unicode(ex)
+                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
+                
         return status_dict
 
     def _generate_database_status(self):
@@ -147,7 +160,7 @@ class DependencyManager(object):
         try:
             connection.ensure_connection()
             status_dict = {'OK': True, 'detail': 'Database alive and well'}
-        except OperationalError:
+        except Exception as ex:
             status_dict = {'OK': False, 'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []}
         
         return status_dict

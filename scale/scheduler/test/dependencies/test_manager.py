@@ -4,6 +4,7 @@ import copy
 from datetime import timedelta
 import os
 import django
+from django.db.utils import OperationalError
 from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock
@@ -45,91 +46,117 @@ class TestDependenciesManager(TestCase):
         self.agent_2 = Agent('agent_2', 'host_2')  # Will represent a new agent ID for host 2
         node_1 = node_test_utils.create_node(hostname='host_1')
         
-       
-    @patch('messaging.backends.amqp.Connection')
-    def test_generate_message_queue_status(self, connection):
-        """Tests the _generate_msg_queue_status method"""
+
+    def test_generate_log_status(self):
+        """Tests the _generate_log_status method"""
+ 
+        from scheduler.dependencies.manager import dependency_mgr
+        logs = dependency_mgr._generate_log_status()
+        self.assertIsNotNone(logs)
+        self.assertDictEqual(logs, {'OK': False, 'errors': [{'NO_LOGGING_DEFINED': 'No logging URL defined'}], 'warnings': []})   
+        
+        with patch('scale.settings.LOGGING_ADDRESS', 'http://www.logging.com/health'):
+            from scheduler.dependencies.manager import dependency_mgr
+            logs = dependency_mgr._generate_log_status()
+            self.assertIsNotNone(logs)
+            self.assertDictEqual(logs, {'OK': True, 'detail': {'url': 'http://www.logging.com/health'}})
+
+        with patch('scale.settings.LOGGING_ADDRESS', 'localhost'):
+            from scheduler.dependencies.manager import dependency_mgr
+            logs = dependency_mgr._generate_log_status()
+            self.assertIsNotNone(logs)
+            errors =  [{'UNKNOWN_ERROR': "Error with LOGGING_ADDRESS: Invalid URL 'localhost': No schema supplied. Perhaps you meant http://localhost?"}]
+            self.assertDictEqual(logs, {'OK': False, 'errors': errors, 'warnings': []})
+
+        with patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://www.logging.com/health'):
+            from scheduler.dependencies.manager import dependency_mgr
+            logs = dependency_mgr._generate_log_status()
+            self.assertIsNotNone(logs)
+            self.assertDictEqual(logs, {'OK': True, 'detail': {'url': 'http://www.logging.com/health'}})
+
+        with patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://localhost'):
+            from scheduler.dependencies.manager import dependency_mgr
+            logs = dependency_mgr._generate_log_status()
+            self.assertIsNotNone(logs)
+            self.assertFalse(logs['OK'])
+     
+    def test_generate_elasticsearch_status(self):
+        """Tests the _generate_elasticsearch_status method"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        elasticsearch = dependency_mgr._generate_elasticsearch_status()
+        self.assertDictEqual(elasticsearch, {'OK': False, 'errors': [{'UNKNOWN_ERROR': 'Elasticsearch is unreachable. SOS.'}], 'warnings': []})
+            
+        with patch('scale.settings.ELASTICSEARCH') as mock_elasticsearch:
+            # Setup elasticsearch status
+            mock_elasticsearch.ping.return_value = False
+            elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            self.assertDictEqual(elasticsearch, {'OK': False, 'errors': [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable. SOS.'}], 'warnings': []})
+            mock_elasticsearch.ping.return_value = True
+            mock_elasticsearch.cluster.health.return_value = {'status': 'red'}
+            elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            self.assertDictEqual(elasticsearch, {'OK': False, 'errors': [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS.'}], 'warnings': []})
+            mock_elasticsearch.cluster.health.return_value = {'status': 'green'}
+            mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
+            from scheduler.dependencies.manager import dependency_mgr
+            elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'tagline': u'You know, for X'}})
+            
+    def test_generate_silo_status(self):
+        """Tests the _generate_silo_status method"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        silo = dependency_mgr._generate_silo_status()
+        self.assertDictEqual(silo, {'OK': False, 'errors': [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}], 'warnings': []}) 
+            
+        with patch.dict('os.environ', {'SILO_URL': 'https://localhost'}):
+            from scheduler.dependencies.manager import dependency_mgr
+            silo = dependency_mgr._generate_silo_status()
+            self.assertFalse(silo['OK'])
+            
+        with patch.dict('os.environ', {'SILO_URL': 'https://en.wikipedia.org/wiki/Silo'}):
+            from scheduler.dependencies.manager import dependency_mgr
+            silo = dependency_mgr._generate_silo_status()
+            self.assertDictEqual(silo, {'OK': True, 'detail': {'url': 'https://en.wikipedia.org/wiki/Silo'}})
+            
+    def test_generate_database_status(self):
+        """Tests the _generate_database_status method"""
     
         from scheduler.dependencies.manager import dependency_mgr
-        status = dependency_mgr._generate_msg_queue_status()
-        print(status)
+        database = dependency_mgr._generate_database_status()
+        self.assertDictEqual(database, {'OK': True, 'detail': 'Database alive and well'})
         
-    @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://www.logging.com/health')
-    @patch.dict('os.environ', {'SILO_URL': 'http://www.silo.com/'})
-    @patch('requests.head', side_effect=mock_response_head)
-    @patch('scale.settings.ELASTICSEARCH')
-    @patch('messaging.backends.amqp.Connection')
-    def test_generate_status_json(self, connection, mock_elasticsearch, mock_head):
-        """Tests the generate_status_json method
-        """
-        
-        # Setup elasticsearch status
-        mock_elasticsearch.ping.return_value = True
-        mock_elasticsearch.cluster.health.return_value = {'status': 'green'}
-        mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
-        
+        with patch('django.db.connection.ensure_connection') as mock:
+            mock.side_effect = OperationalError
+            from scheduler.dependencies.manager import dependency_mgr
+            database = dependency_mgr._generate_database_status()
+            self.assertDictEqual(database, {'OK': False, 'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []})
+
+    def test_generate_message_queue_status(self):
+        """Tests the _generate_msg_queue_status method"""
+    
+        with patch('messaging.backends.amqp.Connection') as connection:
+            from scheduler.dependencies.manager import dependency_mgr
+            msg_queue = dependency_mgr._generate_msg_queue_status()
+            self.assertDictEqual(msg_queue, {'OK': False, 'errors': [{'UNKNOWN_ERROR': 'Error connecting to RabbitMQ: [Errno 111] Connection refused'}], 'warnings': []})
+            
+    def test_generate_idam_status(self):
+        """Tests the _generate_idam_status method"""
+    
+        from scheduler.dependencies.manager import dependency_mgr
+        idam = dependency_mgr._generate_idam_status()
+        self.assertDictEqual(idam, {u'OK': True, u'detail': u'some msg'}) 
+
+    def test_generate_nodes_status(self):
+        """Tests the _generate_nodes_status method"""
+
         # Setup nodes
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
         manager.sync_with_database(scheduler_mgr.config)
         
         from scheduler.dependencies.manager import dependency_mgr
-        status = {}
-        status = dependency_mgr.generate_status_json(status)
-        self.assertIsInstance(status, dict)
-        self.assertTrue('dependencies' in status)
-        dependencies = status['dependencies']
-        self.assertIsNotNone(dependencies)
+        nodes = dependency_mgr._generate_nodes_status()
+        self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.', 'errors': [], 'warnings': []})  
 
-        # Check each individual status        
-
-        # Check Log status
-        self.assertTrue('logs' in dependencies)
-        logs = dependencies['logs']
-        self.assertIsNotNone(logs)
-        self.assertDictEqual(logs, {'OK': True, 'detail': {'url': 'http://www.logging.com/health'}})
-        print(logs)
-        
-        # Check Elasticsearch status
-        self.assertTrue('elasticsearch' in dependencies)
-        elasticsearch = dependencies['elasticsearch']
-        self.assertIsNotNone(elasticsearch)
-        self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'tagline': u'You know, for X'}})
-        print(elasticsearch)
-        
-        # Check SILO status
-        self.assertTrue('silo' in dependencies)
-        silo = dependencies['silo']
-        self.assertIsNotNone(silo)
-        self.assertDictEqual(silo, {'OK': True, 'detail': {'url': 'http://www.silo.com/'}})
-        print(silo)
-        
-        # Check Database status
-        self.assertTrue('database' in dependencies)
-        database = dependencies['database']
-        self.assertIsNotNone(database)
-        self.assertDictEqual(database, {'OK': True, 'detail': 'Database alive and well'})
-        print(database)
-        
-        # Check msg queue status
-        self.assertTrue('msg_queue' in dependencies)
-        msg_queue = dependencies['msg_queue']
-        self.assertIsNotNone(msg_queue)
-        # self.assertDictEqual(msg_queue, {'OK': True, 'detail': {}})
-        print(msg_queue)
-        
-        # Check IDAM status
-        self.assertTrue('idam' in dependencies)
-        idam = dependencies['idam']
-        self.assertIsNotNone(idam)
-        self.assertDictEqual(idam, {u'OK': True, u'detail': u'some msg'})
-        print(idam)
-        
-        # Check Nodes status
-        self.assertTrue('nodes' in dependencies)
-        nodes = dependencies['nodes']
-        self.assertIsNotNone(nodes)
-        self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.', 'errors': [], 'warnings': []})
-        print(nodes)
-        
         
