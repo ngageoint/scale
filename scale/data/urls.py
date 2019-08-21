@@ -3,7 +3,7 @@ from __future__ import unicode_literals, absolute_import
 
 from django.conf.urls import url
 
-from dataset.views import DataSetView, DataSetValidationView, DataSetDetailsView, DataSetMembersView, DataSetMemberDetailsView
+from data.views import DataSetView, DataSetValidationView, DataSetDetailsView, DataSetMembersView, DataSetMemberDetailsView
 
 urlpatterns = [
     # DataSet views

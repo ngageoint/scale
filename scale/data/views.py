@@ -5,20 +5,19 @@ from __future__ import unicode_literals
 import logging
 
 import rest_framework.status as status
-from django.db import transaction
-from django.http.response import Http404, HttpResponse
-from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from django.http.response import Http404
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from data.data.exceptions import InvalidData
-from data.data.json.data_v6 import DataV6
-from dataset.dataset_serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, DataSetFileSerializerV6, DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
-from dataset.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
-from dataset.models import DataSet, DataSetMember
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import DataSetDefinitionV6
+from data.data.json.data_v6 import DataV6, convert_data_to_v6_json
+from data.serializers import DataSetListSerializerV6, DataSetDetailsSerializerV6, \
+    DataSetMemberSerializerV6, DataSetMemberDetailsSerializerV6
+from data.exceptions import InvalidDataSetDefinition
+from data.models import DataSet, DataSetMember
+from data.dataset.json.dataset_v6 import DataSetDefinitionV6
 import util.rest as rest_util
 from util.rest import BadParameter
 
@@ -193,32 +192,81 @@ class DataSetDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        data = rest_util.parse_dict(request, 'data', required=True)
+        template = rest_util.parse_dict(request, 'data_template', required=False)
+        dry_run = rest_util.parse_bool(request, 'dry_run', default_value=False)
+        
+        #file filters
+        data_started = rest_util.parse_timestamp(request, 'data_started', required=False)
+        data_ended = rest_util.parse_timestamp(request, 'data_ended', required=False)
+        rest_util.check_time_range(data_started, data_ended)
 
-        # validate the definition
+        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
+        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
+        rest_util.check_time_range(source_started, source_ended)
+
+        source_sensor_classes = rest_util.parse_string_list(request, 'source_sensor_class', required=False)
+        source_sensors = rest_util.parse_string_list(request, 'source_sensor', required=False)
+        source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
+        source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
+
+        mod_started = rest_util.parse_timestamp(request, 'modified_started', required=False)
+        mod_ended = rest_util.parse_timestamp(request, 'modified_ended', required=False)
+        rest_util.check_time_range(mod_started, mod_ended)
+
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
+        job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
+        file_names = rest_util.parse_string_list(request, 'file_name', required=False)
+        job_outputs = rest_util.parse_string_list(request, 'job_output', required=False)
+        recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
+        recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
+        recipe_nodes = rest_util.parse_string_list(request, 'recipe_node', required=False)
+        batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
+
+        order = rest_util.parse_string_list(request, 'order', required=False)
+        
+        data = rest_util.parse_dict_list(request, 'data', required=False)
+        data_list = []
+
         try:
-            data = DataV6(data=data).get_data()
+            if data:
+                for d in data:
+                    data = DataV6(data=d, do_validate=True).get_data()
+                    data_list.append(data)
+            else:
+                data_list = DataSetMember.objects.build_data_list(template=template, 
+                    data_started=data_started, data_ended=data_ended,
+                    source_started=source_started, source_ended=source_ended,
+                    source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
+                    source_collections=source_collections, source_tasks=source_tasks,
+                    mod_started=mod_started, mod_ended=mod_ended, job_type_ids=job_type_ids,
+                    job_type_names=job_type_names, job_ids=job_ids,
+                    file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
+                    recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
+                    order=order)
         except InvalidData as ex:
             message = 'Data is invalid'
             logger.exception(message)
             raise BadParameter('%s: %s' % (message, unicode(ex)))
-
+            
         try:
             dataset = DataSet.objects.get(pk=dataset_id)
         except DataSet.DoesNotExist:
             raise Http404
 
-        try:
-            dsm = DataSetMember.objects.create_dataset_member_v6(dataset=dataset, data=data)
-        except InvalidDataSetMember as ex:
-            message = 'DataSetMember is invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
+        validation = DataSetMember.objects.validate_data_list(dataset=dataset, data_list=data_list)
+        members = []
+        if validation.is_valid and not dry_run:
+            members = DataSetMember.objects.create_dataset_members(dataset=dataset, data_list=data_list)
+            serializer = DataSetMemberSerializerV6(members, many=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        elif not validation.is_valid:
+            raise BadParameter('%s: %s' % ('Error(s) validating data against dataset', validation.errors))
 
-        url = reverse('dataset_member_details_view', args=[dsm.id], request=request)
-        serializer = DataSetMemberSerializerV6(dsm)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+        resp_dict = []
+        for dl in data_list:
+            resp_dict.append(convert_data_to_v6_json(dl).get_dict())
+        return Response(resp_dict)
 
 
 class DataSetMembersView(ListAPIView):

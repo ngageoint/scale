@@ -15,7 +15,7 @@ admin.autodiscover()
 REST_API_APPS = [
     'accounts',
     'batch',
-    'dataset',
+    'data',
     'diagnostic',
     'error',
     'ingest',

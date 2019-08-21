@@ -3,15 +3,13 @@ from __future__ import unicode_literals
 import django
 
 from django.test.testcases import TestCase
-from mock import MagicMock
 
 from data.data.data import Data
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue, JsonValue
-from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
-from dataset.definition.definition import DataSetDefinition
-from dataset.exceptions import InvalidDataSetDefinition
+from data.dataset.dataset import DataSetDefinition
+from data.exceptions import InvalidDataSetDefinition
 
 
 class TestDataSetDefinition(TestCase):

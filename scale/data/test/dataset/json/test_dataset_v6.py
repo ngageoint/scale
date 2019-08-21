@@ -4,14 +4,12 @@ import copy
 import django
 from django.test import TestCase
 
-from data.data.exceptions import InvalidData
-from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue, JsonValue
 from data.interface.parameter import FileParameter, JsonParameter
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
-from dataset.exceptions import InvalidDataSetDefinition
-import dataset.test.utils as dataset_test_utils
+from data.dataset.dataset import DataSetDefinition
+from data.dataset.json.dataset_v6 import convert_definition_to_v6_json, DataSetDefinitionV6
+from data.exceptions import InvalidDataSetDefinition
+import data.test.utils as dataset_test_utils
 
 
 class TestDataV6(TestCase):

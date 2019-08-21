@@ -3,22 +3,15 @@ from __future__ import absolute_import
 
 import copy
 import datetime
-import json
-import time
 
 import django
 from django.utils.timezone import now
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 
 from data.data.json.data_v6 import DataV6
-from data.interface.interface import Interface
-from data.interface.parameter import FileParameter, JsonParameter
-from dataset.exceptions import InvalidDataSetMember
-from dataset.models import DataSet, DataSetMember, DataSetFile
-import dataset.test.utils as dataset_test_utils
-from dataset.definition.definition import DataSetDefinition
-from dataset.definition.json.definition_v6 import DataSetDefinitionV6
-from storage.models import ScaleFile, Workspace
+from data.models import DataSet, DataSetMember, DataSetFile
+import data.test.utils as dataset_test_utils
+from data.dataset.json.dataset_v6 import DataSetDefinitionV6
 import storage.test.utils as storage_test_utils
 
 class TestDataSetManager(TransactionTestCase):
@@ -161,8 +154,8 @@ class TestDataSetMemberManager(TransactionTestCase):
         self.dataset = dataset_test_utils.create_dataset(definition=self.definition)
 
 
-    def test_create_dataset_member_v6(self):
-        """Tests calling DataSetManager.create_dataset_member_v6() """
+    def test_create_dataset_members(self):
+        """Tests calling DataSetManager.create_dataset_members() """
 
         data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
         data_dict['files']['input_e'] = [self.file1.id]
@@ -170,20 +163,31 @@ class TestDataSetMemberManager(TransactionTestCase):
         data = DataV6(data=data_dict).get_data()
 
         # call test
-        dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=self.dataset, data=data)
+        dataset_members = DataSetMember.objects.create_dataset_members(dataset=self.dataset, data_list=[data])
 
         # Check results
-        the_dataset_member = DataSetMember.objects.get(pk=dataset_member.id)
+        the_dataset_member = DataSetMember.objects.get(pk=dataset_members[0].id)
         self.assertDictEqual(the_dataset_member.data, data_dict)
-        
+
+    def test_validate_dataset_members(self):
+        """Tests calling DataSetManager.validate_data_list() """
+
+        data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
+        data_dict['files']['input_e'] = [self.file1.id]
+        data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
+        data = DataV6(data=data_dict).get_data()
+        validation = DataSetMember.objects.validate_data_list(dataset=self.dataset, data_list=[data])
+        self.assertTrue(validation.is_valid)
+
         data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
         del data_dict['files']['input_e']
         data = DataV6(data=data_dict).get_data()
 
         # call test
-        with self.assertRaises(InvalidDataSetMember) as context:
-            dataset_member = DataSetMember.objects.create_dataset_member_v6(dataset=self.dataset, data=data)
-        self.assertEqual(context.exception.error.name, 'INVALID_DATASET_MEMBER')
+        validation = DataSetMember.objects.validate_data_list(dataset=self.dataset, data_list=[data])
+        self.assertFalse(validation.is_valid)
+        self.assertEqual(validation.errors[0].name, 'PARAM_REQUIRED')
+
         
     def test_get_dataset_members_v6(self):
         """Tests calling DataSetMemberManager get_dataset_members"""
@@ -193,13 +197,13 @@ class TestDataSetMemberManager(TransactionTestCase):
         data1['files']['input_e'] = [self.file1.id]
         data1['files']['input_f'] = [self.file2.id, self.file3.id]
 
-        member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
+        member_1 = dataset_test_utils.create_dataset_members(dataset=self.dataset, data_list=[data1])[0]
 
         data2 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
         data2['files']['input_e'] = [self.file4.id]
         data2['files']['input_f'] = [self.file5.id, self.file6.id]
 
-        member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
+        member_2 = dataset_test_utils.create_dataset_members(dataset=self.dataset, data_list=[data2])[0]
 
         members = DataSetMember.objects.get_dataset_members(self.dataset)
         self.assertTrue(len(members), 2)
@@ -250,15 +254,15 @@ class TestDataSetFile(TransactionTestCase):
         data1['files']['input_e'] = [self.file1.id]
         data1['files']['input_f'] = [self.file2.id, self.file3.id]
 
-        self.member_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
+        self.member_1 = dataset_test_utils.create_dataset_members(dataset=self.dataset, data_list=[data1])[0]
 
         data2 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
         data2['files']['input_e'] = [self.file4.id]
         data2['files']['input_f'] = [self.file5.id, self.file6.id]
         
-        self.member_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
+        self.member_2 = dataset_test_utils.create_dataset_members(dataset=self.dataset, data_list=[data2])[0]
 
-        self.member_3 = dataset_test_utils.create_dataset_member(dataset=self.dataset2, data=data1)
+        self.member_3 = dataset_test_utils.create_dataset_members(dataset=self.dataset2, data_list=[data1])[0]
 
     def test_get_dataset_files(self):
         """Tests retrieving dataset files for a dataset

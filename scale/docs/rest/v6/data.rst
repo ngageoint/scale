@@ -471,17 +471,17 @@ Response: 200 OK
 
 .. _rest_v6_dataset_create_member:
 
-v6 Create Dataset Member
-------------------------
+v6 Create Dataset Members
+-------------------------
 
-**Example POST /v6/datasets/ API call**
+**Example POST /v6/datasets/ API calls**
 
 Request: POST http://.../v6/datasets/100/
 
 .. code-block:: javascript
 
    {
-      "data": <:ref:`Data JSON <rest_v6_data_data>`>
+      "data": [<:ref:`Data JSON <rest_v6_data_data>`>]
    }
 
 Response: 201 Created
@@ -490,27 +490,124 @@ Location http://.../v6/datasets/105/
 
 .. code-block:: javascript
 
-   {
+   [{
       "id": 105,
       "created": "1970-01-01T00:00:00Z",
       "data": <:ref:`Data JSON <rest_v6_data_data>`>
-   }
+   }]
+   
+Request: POST http://.../v6/datasets/100/
 
+.. code-block:: javascript
+
+   {
+      "data_template": {
+            "files": {"input_a": "FILE_VALUE"},
+            "json": {}
+      },
+      "source_collection": ['12345', '123456'],
+      "dry_run": True
+   }
+   
+Response: 200 Ok
+
+.. code-block:: javascript
+
+   [ <:ref:`Data JSON <rest_v6_data_data>`> ]
+   
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Create Dataset Member*                                                                                                |
+| **Create Dataset Members*                                                                                               |
 +=========================================================================================================================+
-| Creates a new dataset member with the given fields                                                                      |
+| Creates new dataset members with the given fields                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /v6/datasets/{id}/                                                                                             |
 |         Where {id} is the unique ID of the dataset to add a member to                                                   |
-+---------------------+---------------------------------------------------------------------------------------------------+
-| **Content Type**    | *application/json*                                                                                |
-+---------------------+---------------------------------------------------------------------------------------------------+
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+---------------------+-------------------+----------+--------------------------------------------------------------------+
-| data                | String            | Required | The data for this individual member of the dataset                 |
-|                     |                   |          | See :ref:`rest_v6_data_data`                                       |
-+---------------------+-------------------+----------+--------------------------------------------------------------------+
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| data               | Array             | Optional | The data for the dataset members to be created                      |
+|                    |                   |          | See :ref:`rest_v6_data_data`                                        |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| data_template      | JSON Object       | Optional | JSON defining the data template for each member. Each member will   |
+|                    |                   |          | make a copy of this template and replace FILE_VALUE with one of the |
+|                    |                   |          | files returned by the given filters.                                |
+|                    |                   |          | See :ref:`Data JSON <rest_v6_data_data>`                            |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| dry_run            | Boolean           | Optional | If true, only validate the data and return the list of data objects |
+|                    |                   |          | that would have been created and turned into dataset members. Useful|
+|                    |                   |          | to validate a template and set of filters and determine how many    |
+|                    |                   |          | members would be added to the dataset.                              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| data_started       | ISO-8601 Datetime | Optional | The start of the data time range to query.                          |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| data_ended         | ISO-8601 Datetime | Optional | End of the data time range to query, defaults to the current time.  |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_started     | ISO-8601 Datetime | Optional | The start of the source file time range to query.                   |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_ended       | ISO-8601 Datetime | Optional | End of the source file time range to query, default is current time.|
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_sensor_class| String            | Optional | Return only files for the given source sensor class                 |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_sensor      | String            | Optional | Return only files for the given source sensor                       |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_collection  | String            | Optional | Return only files for the given source collection                   |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_task        | String            | Optional | Return only files for the given source task                         |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| modified_started   | ISO-8601 Datetime | Optional | The start of the last modified time range to query.                 |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| modified_ended     | ISO-8601 Datetime | Optional | End of the last modified time range to query (default current time) |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| order              | String            | Optional | One or more fields to use when ordering the results.                |
+|                    |                   |          | Duplicate it to multi-sort, (ex: order=file_name&order=created).    |
+|                    |                   |          | Nested objects require a delimiter (ex: order=job_type__name).      |
+|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_output         | String            | Optional | Return only files for the given job output.                         |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_id        | Integer           | Optional | Return only files associated with a given job type identifier.      |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_name      | String            | Optional | Return only files with a given job type name.                       |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_id             | Integer           | Optional | Return only files produced by the given job identifier.             |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_id          | Integer           | Optional | Return only files produced by the given recipe identifier.          |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_node        | String            | Optional | Return only files produced by the given recipe node.                |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_type_id     | Integer           | Optional | Return only files produced by the given recipe type identifier.     |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| batch_id           | Integer           | Optional | Return only files produced by the given batch identifier.           |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| file_name          | String            | Optional | Return only files with a given file name.                           |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 Created                                                                                        |
@@ -521,6 +618,15 @@ Location http://.../v6/datasets/105/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Body**           | JSON containing the details of the newly created dataset member                                    |
 |                    | see :ref:`rest_v6_dataset_member_details`                                                          |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Body**           | JSON array containing the data for dataset members that would be created if not a dry run          |
+|                    | see :ref:`rest_v6_data_data`                                                                       |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_dataset_member_list:

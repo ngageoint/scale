@@ -5,21 +5,20 @@ from __future__ import absolute_import
 import copy
 import datetime
 import json
-import time
 
 import django
-from django.utils.timezone import utc, now
+from django.utils.timezone import now
 from rest_framework import status
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from data.data.json.data_v6 import DataV6
-from dataset.definition.json.definition_v6 import DataSetDefinitionV6
+from data.dataset.json.dataset_v6 import DataSetDefinitionV6
 from util import rest
 
-from dataset.models import DataSet, DataSetMember
-import dataset.test.utils as dataset_test_utils
+from data.models import DataSet
+import data.test.utils as dataset_test_utils
 import storage.test.utils as storage_utils
-from storage.models import ScaleFile, Workspace
+from storage.models import Workspace
 
 """Tests the v6/datasets/ endpoint"""
 class TestDatasetViews(APITestCase):
@@ -67,16 +66,16 @@ class TestDatasetViews(APITestCase):
         data1['files']['input_e'] = [self.file1.id]
         data1['files']['input_f'] = [self.file2.id, self.file3.id]
 
-        self.member1_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data1)
+        self.member1_1 = dataset_test_utils.create_dataset_members(dataset=self.dataset, data_list=[data1])[0]
 
         data2 = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
         data2['files']['input_e'] = [self.file4.id]
         data2['files']['input_f'] = [self.file5.id, self.file6.id]
         
-        self.member1_1_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset, data=data2)
+        self.member1_1_2 = dataset_test_utils.create_dataset_members(dataset=self.dataset, data_list=[data2])
         
-        self.member2_1 = dataset_test_utils.create_dataset_member(dataset=self.dataset2)
-        self.member2_2 = dataset_test_utils.create_dataset_member(dataset=self.dataset2)
+        self.member2_1 = dataset_test_utils.create_dataset_members(dataset=self.dataset2)[0]
+        self.member2_2 = dataset_test_utils.create_dataset_members(dataset=self.dataset2)[0]
 
     def test_successful(self):
         """Tests successfully calling the v6/datasets/ view.
@@ -280,6 +279,12 @@ class TestDatasetDetailsView(APITestCase):
         self.src_file_f = storage_utils.create_file(file_name='input_f.json', file_type='SOURCE', media_type='application/json',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=self.workspace)
+                                              
+        for i in range(0,500):
+            storage_utils.create_file(source_collection='12345')
+            
+        for i in range(0,500):
+            storage_utils.create_file(source_collection='123456')
 
         # Create datasets
         parameters = {'version': '6',
@@ -317,8 +322,8 @@ class TestDatasetDetailsView(APITestCase):
             'json': {}
         }
         data = DataV6(data=data_dict).get_dict()
-        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset,
-            data=data)
+        self.member_a = dataset_test_utils.create_dataset_members(dataset=self.dataset,
+            data_list=[data])[0]
 
         data_dict = {
             'version': '6',
@@ -326,8 +331,8 @@ class TestDatasetDetailsView(APITestCase):
             'json': {}
         }
         data2 = DataV6(data=data_dict).get_dict()
-        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
-            data=data2)
+        self.member_b = dataset_test_utils.create_dataset_members(dataset=self.dataset2,
+            data_list=[data2])[0]
 
         data_dict = {
             'version': '6',
@@ -335,8 +340,8 @@ class TestDatasetDetailsView(APITestCase):
             'json': {}
         }
         data3 = DataV6(data=data_dict).get_dict()
-        self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
-            data=data3)
+        self.member_bc = dataset_test_utils.create_dataset_members(dataset=self.dataset2,
+            data_list=[data3])[0]
 
     def test_dataset_details_successful(self):
         """Tests successfully calling the v6/datasets/<dataset_id>/ view.
@@ -383,17 +388,66 @@ class TestDatasetDetailsView(APITestCase):
         }
 
         json_data = {
-            'data': data_dict,
+            'data': [data_dict],
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         result = json.loads(response.content)
-        new_dataset_member_id = result['id']
-        self.assertTrue('/%s/datasets/members/%d/' % (self.api, new_dataset_member_id) in response['location'])
+        self.assertEqual(len(result), 1)
+
+    def test_add_filter_dataset_members(self):
+        """Tests adding new dataset members based on a filter"""
+
+        url = '/%s/datasets/%d/' % (self.api, self.dataset.id)
         
-        members = DataSetMember.objects.filter(dataset=self.dataset)
-        self.assertEqual(len(members), 2)
+        template = {
+            'version': '6',
+            'files': {'input_a': 'FILE_VALUE'},
+            'json': {}
+        }
+
+        json_data = {
+            'data_template': template,
+            'source_collection': '12345'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result), 500)
+        
+        json_data = {
+            'data_template': template,
+            'source_collection': ['12345', '123456']
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result), 1000)
+        
+    def test_add_filter_dataset_members_dry_run(self):
+        """Tests adding new dataset members based on a filter"""
+
+        url = '/%s/datasets/%d/' % (self.api, self.dataset.id)
+        
+        template = {
+            'version': '6',
+            'files': {'input_a': 'FILE_VALUE'},
+            'json': {}
+        }
+
+        json_data = {
+            'data_template': template,
+            'source_collection': '12345',
+            'dry_run': True
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result), 500)
         
     def test_add_invalid_dataset_member(self):
         """Tests adding an invalid new dataset member"""
@@ -407,12 +461,11 @@ class TestDatasetDetailsView(APITestCase):
         }
 
         json_data = {
-            'data': data_dict,
+            'data': [data_dict],
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        result = json.loads(response.content)
         
 class TestDataSetValidationView(APITestCase):
     api = 'v6'
@@ -552,8 +605,8 @@ class TestDatasetMembersView(APITestCase):
             'json': {}
         }
         data = DataV6(data=data_dict).get_dict()
-        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset,
-            data=data)
+        self.member_a = dataset_test_utils.create_dataset_members(dataset=self.dataset,
+            data_list=[data])[0]
 
         data_dict = {
             'version': '6',
@@ -561,8 +614,8 @@ class TestDatasetMembersView(APITestCase):
             'json': {}
         }
         data2 = DataV6(data=data_dict).get_dict()
-        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
-            data=data2)
+        self.member_b = dataset_test_utils.create_dataset_members(dataset=self.dataset2,
+            data_list=[data2])[0]
 
         data_dict = {
             'version': '6',
@@ -570,8 +623,8 @@ class TestDatasetMembersView(APITestCase):
             'json': {}
         }
         data3 = DataV6(data=data_dict).get_dict()
-        self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
-            data=data3)
+        self.member_bc = dataset_test_utils.create_dataset_members(dataset=self.dataset2,
+            data_list=[data3])[0]
 
     def test_dataset_members_successful(self):
         """Tests successfully calling the v6/datasets/members/<id>/ view.
@@ -662,8 +715,8 @@ class TestDatasetMemberDetailsView(APITestCase):
             'json': {}
         }
         data = DataV6(data=data_dict).get_dict()
-        self.member_a = dataset_test_utils.create_dataset_member(dataset=self.dataset,
-            data=data)
+        self.member_a = dataset_test_utils.create_dataset_members(dataset=self.dataset,
+            data_list=[data])[0]
 
         data_dict = {
             'version': '6',
@@ -671,8 +724,8 @@ class TestDatasetMemberDetailsView(APITestCase):
             'json': {}
         }
         data2 = DataV6(data=data_dict).get_dict()
-        self.member_b = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
-            data=data2)
+        self.member_b = dataset_test_utils.create_dataset_members(dataset=self.dataset2,
+            data_list=[data2])[0]
 
         data_dict = {
             'version': '6',
@@ -680,8 +733,8 @@ class TestDatasetMemberDetailsView(APITestCase):
             'json': {}
         }
         data3 = DataV6(data=data_dict).get_dict()
-        self.member_bc = dataset_test_utils.create_dataset_member(dataset=self.dataset2,
-            data=data3)
+        self.member_bc = dataset_test_utils.create_dataset_members(dataset=self.dataset2,
+            data_list=[data3])[0]
 
     def test_dataset_member_details_successful(self):
         """Tests successfully calling the v6/datasets/members/<id>/ view.

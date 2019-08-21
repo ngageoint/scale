@@ -433,10 +433,120 @@ components:
     dataset_member_post:
       title: Dataset Member Post
       type: object
-      required: [data]
       properties:
         data:
-          $ref: '#/components/schemas/data'
+          type: array
+          items:
+            $ref: '#/components/schemas/data'
+          description: List of data to add as members of a dataset. Either this 
+            field or a template and a set of filters is required to add members to a dataset.
+        data_template:
+          type: object
+          properties:
+            files:
+              description: Represents file-based values in the data. Each key is the unique name of a data value (parameter) |
+                and each value is an array of one or more file IDs. In this template, the key that needs to be replaced |
+                with a file from the filter should have the string value: 'FILE_VALUE'
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: integer
+                  example: {'foo': [1234, 1235]}
+            json:
+              description: Represents JSON values in the data. Each key is the unique name of a data value (parameter) |
+                and each value is the appropriate JSON type/object that matches the parameter
+              type: object
+              additionalProperties: true
+              example: {'bar': 'hello, this is a string value'}
+        dry_run:
+          description: If true, the list of data is generated and validated but no members are added to the dataset. |
+            Useful to validate a template and set of filters and determine how many members would be added to the |
+            dataset. Defaults to false
+          type: boolean
+          example: true
+        data_started:
+          type: string
+          format: date-time
+          description: The start of the data time range to query
+        data_ended:
+          type: string
+          format: date-time
+          description: End of the data time range to query, defaults to the current time
+        source_started:
+          type: string
+          format: date-time
+          description: The start of the source time range to query
+        source_ended:
+          type: string
+          format: date-time
+          description: End of the source time range to query, defaults to the current time
+        source_sensor_class:
+          type: string
+          description: Return only files for the given source sensor class. |
+            Duplicate it to filter by multiple values.
+        source_sensor:
+          type: string
+          description: Return only files for the given source sensor. |
+            Duplicate it to filter by multiple values.
+        source_collection:
+          type: string
+          description: Return only files for the given source collection. |
+            Duplicate it to filter by multiple values.
+        source_task:
+          type: string
+          description: Return only files for the given source task. |
+            Duplicate it to filter by multiple values.
+        job_output:
+          type: string
+          description: Return only files for the given job output. |
+            Duplicate it to filter by multiple values.
+        modified_started:
+          type: string
+          format: date-time
+          description: The start of the last modified time range to query
+        modified_ended:
+          type: string
+          format: date-time
+          description: End of the last modified time range to query, defaults to the current time
+        order:
+          type: string
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        job_type_id:
+          type: integer
+          description: Return only files associated with a given job type identifier. |
+            Duplicate it to filter by multiple values.
+        job_type_name:
+          type: string
+          description: Return only files with a given job type name. Duplicate it |
+            to filter by multiple values.
+        job_id:
+          type: integer
+          description: Return only files produced by the given job identifier. |
+            Duplicate it to filter by multiple values.
+        recipe_id:
+          type: integer
+          description: Return only files associated with a given recipe identifier. |
+            Duplicate it to filter by multiple values.
+        recipe_node:
+          type: string
+          description: Return only files produced by the given recipe node. |
+            Duplicate it to filter by multiple values.
+        recipe_type_id:
+          type: integer
+          description: Return only files associated with a given recipe type identifier. |
+            Duplicate it to filter by multiple values.
+        batch_id:
+          type: integer
+          description: Return only files associated with a given batch identifier. |
+            Duplicate it to filter by multiple values.
+        file_name:
+          type: string
+          description: Return only files with a given file name. |
+            Duplicate it to filter by multiple values.
           
     dataset_member:
       title: Dataset Member

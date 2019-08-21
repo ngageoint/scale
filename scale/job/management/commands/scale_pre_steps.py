@@ -17,6 +17,7 @@ from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.models import JobExecution
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile, Workspace
+from storage.serializers import ScaleFileDetailsSerializerV6 as serialize
 from util.retry import retry_database_query
 
 
@@ -95,20 +96,17 @@ class Command(BaseCommand):
     def _generate_input_metadata(self, job_exe):
         """Generate the input metadata file for the job execution
 
-        :param job_id: The job ID
-        :type job_id: int
-        :param exe_num: The execution number
-        :type exe_num: int
+        :param job_exe: The job_exe model
+        :type job_exe: `job.models.JobExecution`
         """
 
         job_interface = job_exe.job_type.get_job_interface()
-
         if not job_interface.needs_input_metadata():
             return
 
         # Generate input metadata dict
         input_metadata = {}
-        config = job_exe.get_execution_configuration
+        config = job_exe.get_execution_configuration()
         if 'input_files' in config.get_dict():
             input_metadata['JOB'] = {}
             input_data = job_exe.job.get_input_data()
@@ -116,7 +114,7 @@ class Command(BaseCommand):
                 if type(input_data.values[i]) is JsonValue:
                     input_metadata['JOB'][i] = input_data.values[i].value
                 elif type(input_data.values[i]) is FileValue:
-                    input_metadata['JOB'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in
+                    input_metadata['JOB'][i] = [serialize(ScaleFile.objects.get_details(file_id=f)).data for f in
                                                 input_data.values[i].file_ids]
         if job_exe.recipe_id and job_exe.recipe.has_input():
             input_metadata['RECIPE'] = {}
@@ -125,7 +123,7 @@ class Command(BaseCommand):
                 if type(input_data.values[i]) is JsonValue:
                     input_metadata['RECIPE'][i] = input_data.values[i].value
                 elif type(input_data.values[i]) is FileValue:
-                    input_metadata['RECIPE'][i] = [ScaleFile.objects.get(pk=f)._get_url() for f in
+                    input_metadata['RECIPE'][i] = [serialize(ScaleFile.objects.get_details(file_id=f)).data for f in
                                                    input_data.values[i].file_ids]
 
         workspace_names = config.get_input_workspace_names()
