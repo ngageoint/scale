@@ -61,9 +61,15 @@ class TestDependenciesManager(TestCase):
         
         scheduler_mgr.config.is_paused = False
         self.agent_1 = Agent('agent_1', 'host_1')
-        self.agent_2 = Agent('agent_2', 'host_2')  # Will represent a new agent ID for host 2
-        node_1 = node_test_utils.create_node(hostname='host_1')
-        
+        self.agent_2 = Agent('agent_2', 'host_2')
+        self.agent_3 = Agent('agent_3', 'host_3')
+        self.agent_4 = Agent('agent_4', 'host_4')
+        self.agent_5 = Agent('agent_5', 'host_5')
+        self.agent_6 = Agent('agent_6', 'host_6')
+        self.agent_7 = Agent('agent_7', 'host_7')
+        self.agent_8 = Agent('agent_8', 'host_8')
+        self.agent_9 = Agent('agent_9', 'host_9')
+        self.agent_10 = Agent('agent_10', 'host_10')
 
     def test_generate_log_status_none(self):
         """Tests the _generate_log_status method without logs set"""
@@ -188,13 +194,25 @@ class TestDependenciesManager(TestCase):
     def test_generate_nodes_status(self):
         """Tests the _generate_nodes_status method"""
 
-        # Setup nodes
-        manager = NodeManager()
-        manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(scheduler_mgr.config)
-        
         from scheduler.dependencies.manager import dependency_mgr
         nodes = dependency_mgr._generate_nodes_status()
+        self.assertDictEqual(nodes, {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}) 
+        
+        # Setup nodes
+        from scheduler.node.manager import node_mgr
+        node_mgr.register_agents([self.agent_1, self.agent_2, self.agent_3, self.agent_4, self.agent_5, self.agent_6,self.agent_7, self.agent_8, self.agent_9, self.agent_10])
+        node_mgr.sync_with_database(scheduler_mgr.config)
+        
+        nodes = node_mgr.get_nodes()
+        self.assertEqual(len(nodes), 10)
+        
+        nodes = dependency_mgr._generate_nodes_status()
         self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.', 'errors': [], 'warnings': []})  
-
+        
+        node_mgr.lost_node(self.agent_1.agent_id)
+        node_mgr.lost_node(self.agent_2.agent_id)
+        node_mgr.lost_node(self.agent_3.agent_id)
+        node_mgr.lost_node(self.agent_4.agent_id)
+        nodes = dependency_mgr._generate_nodes_status()
+        self.assertDictEqual(nodes, {'OK': False, 'detail': 'Over a third of nodes are in an error state', 'errors': [{'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'}], 'warnings': []})  
         
