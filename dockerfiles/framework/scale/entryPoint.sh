@@ -51,6 +51,16 @@ then
     then
         export DATABASE_URL=`cat bootstrap.log | grep DATABASE_URL | cut -d '=' -f2`
     fi
+    
+    if [[ "${FLUENTD_BUFFER_WARN}x" == "x" ]]
+    then
+        export FLUENTD_BUFFER_WARN=`cat bootstrap.log | grep FLUENTD_BUFFER_SIZE_WARN | cut -d '=' -f2`
+    fi
+    
+    if [[ "${FLUENTD_BUFFER_SIZE_WARN}x" == "x" ]]
+    then
+        export FLUENTD_BUFFER_SIZE_WARN=`cat bootstrap.log | grep FLUENTD_BUFFER_SIZE_WARN | cut -d '=' -f2`
+    fi
 
     if [[ "${LOGGING_ADDRESS}x" == "x" ]]
     then

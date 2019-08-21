@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import logging
 import os
 import requests
+import socket
+from urlparse import urlparse
 
 from django.db import connection
 from django.db.utils import OperationalError
@@ -74,30 +76,51 @@ class DependencyManager(object):
         :rtype: dict
         """
 
+        status_dict =  {'OK': True, 'detail': {}, 'errors': [], 'warnings': []}
         if scale_settings.LOGGING_HEALTH_ADDRESS:
+            status_dict['detail']['logging_health_address'] = scale_settings.LOGGING_HEALTH_ADDRESS
             try:
-                response = requests.head(scale_settings.LOGGING_HEALTH_ADDRESS)
-                if response.status_code == status.HTTP_200_OK:
-                    status_dict = {'OK': True, 'detail': {'url': scale_settings.LOGGING_HEALTH_ADDRESS}}
+                response = requests.get(scale_settings.LOGGING_HEALTH_ADDRESS)
+                if response.status_code != status.HTTP_200_OK:
+                    status_dict['OK'] = False
+                    status_dict['errors'].append({response.status_code: 'Logging health address returned %d'%response.status_code})
                 else:
-                    status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging health address returned %d'%response.status_code}], 'warnings': []}
-                    status_dict['detail'] = {'url': scale_settings.LOGGING_HEALTH_ADDRESS}
+                    for plugin in response.json()['plugins']:
+                        if plugin['type'] == 'elasticsearch':
+                            if scale_settings.FLUENTD_BUFFER_WARN > 0 and plugin['buffer_queue_length'] > scale_settings.FLUENTD_BUFFER_WARN:
+                                msg = 'Length of log buffer is too long: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
+                                status_dict['warnings'].append({'LARGE_BUFFER': msg})
+                            if scale_settings.FLUENTD_BUFFER_SIZE_WARN > 0 and plugin['buffer_total_queued_size'] > scale_settings.FLUENTD_BUFFER_SIZE_WARN:
+                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
+                                status_dict['warnings'].append({'LARGE_BUFFER_SIZE': msg})
+                    status_dict['warnings'].append()
             except Exception as ex:
                 msg = 'Error with LOGGING_HEALTH_ADDRESS: %s' % unicode(ex)
-                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
-        elif scale_settings.LOGGING_ADDRESS:
+                status_dict['OK'] = False
+                status_dict['errors'].append({'UNKNOWN_ERROR': msg})
+        else:
+            status_dict['OK'] = False
+            status_dict['errors'].append({'NO_LOGGING_HEALTH_DEFINED': 'No logging health URL defined'})
+        if scale_settings.LOGGING_ADDRESS:
+            status_dict['detail']['logging_address'] = scale_settings.LOGGING_ADDRESS
             try:
-                response = requests.head(scale_settings.LOGGING_ADDRESS)
-                if response.status_code == status.HTTP_200_OK:
-                    status_dict = {'OK': True}
-                    status_dict['detail'] = {'url': scale_settings.LOGGING_ADDRESS}
-                else:
-                    status_dict =  {'OK': False, 'errors': [{response.status_code: 'Logging address returned %d'%response.status_code}], 'warnings': []}
+                s = socket.socket()
+                o = urlparse(scale_settings.LOGGING_ADDRESS)
+                s.connect((o.hostname, o.port))
             except Exception as ex:
                 msg = 'Error with LOGGING_ADDRESS: %s' % unicode(ex)
+<<<<<<< HEAD
                 status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
         else: 
             status_dict =  {'OK': False, 'errors': [{'NO_LOGGING_DEFINED': 'No logging URL defined'}], 'warnings': []}
+=======
+                status_dict['OK'] = False
+                status_dict['errors'].append({'UNKNOWN_ERROR': msg})
+        else:
+            status_dict['OK'] = False
+            status_dict['errors'].append({'NO_LOGGING_DEFINED': 'No logging address defined'})
+
+>>>>>>> :hammer: More robust log checks; check buffer sizes and warn if too large
         return status_dict
 
 
