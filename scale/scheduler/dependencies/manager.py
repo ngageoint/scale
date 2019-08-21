@@ -90,9 +90,8 @@ class DependencyManager(object):
                                 msg = 'Length of log buffer is too long: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER': msg})
                             if scale_settings.FLUENTD_BUFFER_SIZE_WARN > 0 and plugin['buffer_total_queued_size'] > scale_settings.FLUENTD_BUFFER_SIZE_WARN:
-                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
+                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_total_queued_size'], scale_settings.FLUENTD_BUFFER_SIZE_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER_SIZE': msg})
-                    status_dict['warnings'].append()
             except Exception as ex:
                 msg = 'Error with LOGGING_HEALTH_ADDRESS: %s' % unicode(ex)
                 status_dict['OK'] = False
