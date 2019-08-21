@@ -119,14 +119,14 @@ class BatchManager(models.Manager):
         if not definition.dataset:
             return 0
 
-        #TODO: The number of recipes are calculated based on the following:
+        #: The number of recipes are calculated based on the following:
         #      - If the dataset has a global parameter matching the input of the 
         #        recipe type, count the number of files in each dataset member
         #      - If the dataset has a parameter matching the input of the recipe
         #        type, count the number of files in each member that matches the parameter
         
         from recipe.models import RecipeType
-        from dataset.models import DataSet, DataSetMember, DataSetFile
+        from data.models import DataSet, DataSetMember, DataSetFile
         dataset = DataSet.objects.get(pk=definition.dataset)
         dataset_definition = dataset.get_definition()
         recipe_type = RecipeType.objects.get(pk=batch.recipe_type_id)

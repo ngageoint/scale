@@ -9,7 +9,7 @@ from batch.messages.create_batch_recipes import create_batch_recipes_message, Cr
 from batch.test import utils as batch_test_utils
 from data.data.json.data_v6 import DataV6
 from data.data.data import Data
-from dataset.test import utils as dataset_test_utils
+from data.test import utils as data_test_utils
 from job.test import utils as job_test_utils
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.test import utils as recipe_test_utils
@@ -76,7 +76,7 @@ class TestCreateBatchRecipes(TestCase):
             'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
             'json': []}
         }
-        the_dataset = dataset_test_utils.create_dataset(definition=dataset_def)
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
         workspace = storage_test_utils.create_workspace()
         src_file_a = storage_test_utils.create_file(file_name='input_a.PNG', file_type='SOURCE', media_type='image/png',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
@@ -84,20 +84,20 @@ class TestCreateBatchRecipes(TestCase):
         src_file_b = storage_test_utils.create_file(file_name='input_b.PNG', file_type='SOURCE', media_type='image/png',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=workspace)
+        data_list = []
         data_dict = {
             'version': '6',
             'files': {'INPUT_IMAGE': [src_file_a.id]},
             'json': {}
         }
-        data = DataV6(data=data_dict).get_dict()
-        member = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+        data_list.append(DataV6(data=data_dict).get_dict())
         data_dict = {
             'version': '6',
             'files': {'INPUT_IMAGE': [src_file_b.id]},
             'json': {}
         }
-        data = DataV6(data=data_dict).get_dict()
-        member_2 = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+        data_list.append(DataV6(data=data_dict).get_dict())
+        member_2 = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
         
         # Create the batch 
         batch_definition = BatchDefinition()
@@ -278,11 +278,12 @@ class TestCreateBatchRecipes(TestCase):
             'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
             'json': []}
         }
-        the_dataset = dataset_test_utils.create_dataset(definition=dataset_def)
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
         workspace = storage_test_utils.create_workspace()
         
         # Create 6 files
         src_file_ids = []
+        data_list = []
         for i in range(0,6):
             file_name = 'input_%d.png' % i
             src_file =  storage_test_utils.create_file(file_name=file_name, file_type='SOURCE', media_type='image/png',
@@ -294,8 +295,8 @@ class TestCreateBatchRecipes(TestCase):
                 'files': {'INPUT_IMAGE': [src_file.id]},
                 'json': {}
             }
-            data = DataV6(data=data_dict).get_dict()
-            member = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+            data_list.append(DataV6(data=data_dict).get_dict())
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
 
         batch_definition = BatchDefinition()
         batch_definition.dataset = the_dataset.id
@@ -422,12 +423,13 @@ class TestCreateBatchRecipes(TestCase):
             'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
             'json': []}
         }
-        the_dataset = dataset_test_utils.create_dataset(definition=dataset_def)
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
         workspace = storage_test_utils.create_workspace()
         
         # Create 6 files & recipes to go along
         src_file_ids = []
         recipe_ids = []
+        data_list = []
         for i in range(0,6):
             file_name = 'input_%d.png' % i
             src_file =  storage_test_utils.create_file(file_name=file_name, file_type='SOURCE', media_type='image/png',
@@ -439,10 +441,11 @@ class TestCreateBatchRecipes(TestCase):
                 'files': {'INPUT_IMAGE': [src_file.id]},
                 'json': {}
             }
-            data = DataV6(data=data_dict).get_dict()
-            member = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+            data_list.append(DataV6(data=data_dict).get_dict())
             recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_dict)
             recipe_ids.append(recipe.id)
+        
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
         recipe_test_utils.process_recipe_inputs(recipe_ids)
 
         batch_definition = BatchDefinition()
@@ -556,12 +559,13 @@ class TestCreateBatchRecipes(TestCase):
             'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
             'json': []}
         }
-        the_dataset = dataset_test_utils.create_dataset(definition=dataset_def)
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
         workspace = storage_test_utils.create_workspace()
         
         # Create 6 files & recipes to go along
         src_file_ids = []
         recipe_ids = []
+        data_list = []
         for i in range(0,6):
             file_name = 'input_%d.png' % i
             src_file =  storage_test_utils.create_file(file_name=file_name, file_type='SOURCE', media_type='image/png',
@@ -573,10 +577,10 @@ class TestCreateBatchRecipes(TestCase):
                 'files': {'INPUT_IMAGE': [src_file.id]},
                 'json': {}
             }
-            data = DataV6(data=data_dict).get_dict()
-            member = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+            data_list.append(DataV6(data=data_dict).get_dict())
             recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_dict)
             recipe_ids.append(recipe.id)
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
         recipe_test_utils.process_recipe_inputs(recipe_ids)
 
         batch_definition = BatchDefinition()

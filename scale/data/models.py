@@ -379,7 +379,7 @@ class DataSetMemberManager(models.Manager):
                 dataset_member.data = convert_data_to_v6_json(d).get_dict()
                 dataset_member.file_ids = list(data_util.get_file_ids(d))
                 dataset_members.append(dataset_member)
-                datasetfiles = DataSetFile.objects.create_dataset_files(dataset, d, existing_scale_ids)
+                datasetfiles.extend(DataSetFile.objects.create_dataset_files(dataset, d, existing_scale_ids))
                 existing_scale_ids.append(dataset_member.file_ids)
             DataSetFile.objects.bulk_create(datasetfiles)
             return DataSetMember.objects.bulk_create(dataset_members)
@@ -473,7 +473,6 @@ class DataSetFileManager(models.Manager):
                     file.scale_file = ScaleFile.objects.get(pk=id)
                     file.parameter_name = i
                     datasetfiles.append(file)
-
         return datasetfiles
 
     def get_file_ids(self, dataset_ids, parameter_names=None):

@@ -9,7 +9,7 @@ from batch.models import Batch
 from data.data.data import Data
 from data.data.value import FileValue
 from data.data.json.data_v6 import convert_data_to_v6_json
-from dataset.models import DataSet, DataSetFile
+from data.models import DataSet, DataSetFile
 from messaging.messages.message import CommandMessage
 from recipe.messages.create_recipes import create_reprocess_messages, create_batch_recipes_messages
 from recipe.models import Recipe, RecipeType, RecipeInputFile
@@ -125,7 +125,7 @@ class CreateBatchRecipes(CommandMessage):
         # No recipe inputs match the dataset 
         if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
             return messages
-        
+
         # Get previous recipes for dataset files:
         ds_files = DataSetFile.objects.get_dataset_files(dataset.id).values_list('scale_file_id', flat=True)
         recipe_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files).values_list('recipe_id', flat=True)

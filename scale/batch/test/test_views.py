@@ -9,7 +9,7 @@ from mock import patch
 from rest_framework import status
 
 import batch.test.utils as batch_test_utils
-import dataset.test.utils as dataset_test_utils
+import data.test.utils as data_test_utils
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
@@ -18,7 +18,7 @@ from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
 from data.data.json.data_v6 import DataV6
-from dataset.models import DataSetFile
+from data.models import DataSetFile
 from queue.models import Queue
 from recipe.models import RecipeType
 from recipe.messages.create_recipes import SubRecipe
@@ -229,7 +229,7 @@ class TestBatchesViewV6(APITransactionTestCase):
             'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
             'json': []}
         }
-        the_dataset = dataset_test_utils.create_dataset(definition=dataset_def)
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
         workspace = storage_test_utils.create_workspace()
         src_file_a = storage_test_utils.create_file(file_name='input_a.PNG', file_type='SOURCE', media_type='image/png',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
@@ -237,20 +237,20 @@ class TestBatchesViewV6(APITransactionTestCase):
         src_file_b = storage_test_utils.create_file(file_name='input_b.PNG', file_type='SOURCE', media_type='image/png',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=workspace)
+        data_list = []
         data_dict = {
             'version': '6',
             'files': {'INPUT_IMAGE': [src_file_a.id]},
             'json': {}
         }
-        data = DataV6(data=data_dict).get_dict()
-        member = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+        data_list.append(DataV6(data=data_dict).get_dict())
         data_dict = {
             'version': '6',
             'files': {'INPUT_IMAGE': [src_file_b.id]},
             'json': {}
         }
-        data = DataV6(data=data_dict).get_dict()
-        member_2 = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+        data_list.append(DataV6(data=data_dict).get_dict())
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
         
         
         definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
@@ -1126,7 +1126,7 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
             'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
             'json': []}
         }
-        the_dataset = dataset_test_utils.create_dataset(definition=dataset_def)
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
         workspace = storage_test_utils.create_workspace()
         src_file_a = storage_test_utils.create_file(file_name='input_a.PNG', file_type='SOURCE', media_type='image/png',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
@@ -1134,20 +1134,20 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
         src_file_b = storage_test_utils.create_file(file_name='input_b.PNG', file_type='SOURCE', media_type='image/png',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
                                               workspace=workspace)
+        data_list = []
         data_dict = {
             'version': '6',
             'files': {'INPUT_IMAGE': [src_file_a.id]},
             'json': {}
         }
-        data = DataV6(data=data_dict).get_dict()
-        member = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+        data_list.append(DataV6(data=data_dict).get_dict())
         data_dict = {
             'version': '6',
             'files': {'INPUT_IMAGE': [src_file_b.id]},
             'json': {}
         }
-        data = DataV6(data=data_dict).get_dict()
-        member_2 = dataset_test_utils.create_dataset_member(dataset=the_dataset, data=data)
+        data_list.append(DataV6(data=data_dict).get_dict())
+        member_2 = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
         
         recipe_type_5 = recipe_test_utils.create_recipe_type_v6()
         recipe_type_def = definition=copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
