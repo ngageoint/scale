@@ -30,6 +30,24 @@ def mock_response_head(*args, **kwargs):
         return MockResponse(200)
     
     return MockResponse(404)
+    
+def mock_response_get(*args, **kwargs):
+    class MockResponse:
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+        def json(self):
+            return self.json_data
+    # Test silo URL
+    if args[0] == 'http://www.silo.com/':
+        return MockResponse({'key': 'value'}, 200)
+    # Test logging URL
+    elif args[0] == 'http://www.logging.com/health':
+        return MockResponse({'plugins': [{'type':'elasticsearch', 'buffer_queue_length': 0, 'buffer_total_queued_size': 0}]}, 200)
+    elif args[0] == 'http://localhost':
+        return MockResponse({'plugins': [{'type':'elasticsearch', 'buffer_queue_length': 20, 'buffer_total_queued_size': 100000000000}]}, 200)
+    
+    return MockResponse({}, 404)
 
 class TestDependenciesManager(TestCase):
 
@@ -47,38 +65,57 @@ class TestDependenciesManager(TestCase):
         node_1 = node_test_utils.create_node(hostname='host_1')
         
 
-    def test_generate_log_status(self):
-        """Tests the _generate_log_status method"""
+    def test_generate_log_status_none(self):
+        """Tests the _generate_log_status method without logs set"""
  
         from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
-        self.assertDictEqual(logs, {'OK': False, 'errors': [{'NO_LOGGING_DEFINED': 'No logging URL defined'}], 'warnings': []})   
+        self.assertDictEqual(logs, {'OK': False, 'detail': {}, 'errors': [{'NO_LOGGING_HEALTH_DEFINED': 'No logging health URL defined'}, {'NO_LOGGING_DEFINED': 'No logging address defined'}], 'warnings': []})   
+
+    @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
+    @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'localhost')
+    def test_generate_log_status_bad(self):
+        """Tests the _generate_log_status method with invalid settings"""
+ 
+        from scheduler.dependencies.manager import dependency_mgr
+        logs = dependency_mgr._generate_log_status()
+        self.assertIsNotNone(logs)
+        errors =  [{'UNKNOWN_ERROR': "Error with LOGGING_HEALTH_ADDRESS: Invalid URL 'localhost': No schema supplied. Perhaps you meant http://localhost?"}]
+        errors.append({'UNKNOWN_ERROR': 'Error with LOGGING_ADDRESS: [Errno 111] Connection refused'})
+        self.assertDictEqual(logs, {'OK': False, 'detail': {'logging_address': u'tcp://localhost:1234', 'logging_health_address': u'localhost'}, 'errors': errors, 'warnings': []}) 
         
-        with patch('scale.settings.LOGGING_ADDRESS', 'http://www.logging.com/health'):
-            from scheduler.dependencies.manager import dependency_mgr
-            logs = dependency_mgr._generate_log_status()
-            self.assertIsNotNone(logs)
-            self.assertDictEqual(logs, {'OK': True, 'detail': {'url': 'http://www.logging.com/health'}})
+    @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
+    @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://www.logging.com/health')
+    @patch('scale.settings.FLUENTD_BUFFER_WARN', 10)
+    @patch('scale.settings.FLUENTD_BUFFER_SIZE_WARN', 100000000)
+    @patch('socket.socket.connect')
+    @patch('requests.get', side_effect=mock_response_get)
+    def test_generate_log_status_good(self, mock_requests, connect):
+        """Tests the _generate_log_status method with good settings"""
+ 
+        from scheduler.dependencies.manager import dependency_mgr
+        logs = dependency_mgr._generate_log_status()
+        self.assertIsNotNone(logs)
+        self.assertDictEqual(logs, {'OK': True, 'detail': {'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://www.logging.com/health'}, 'errors': [], 'warnings': []}) 
 
-        with patch('scale.settings.LOGGING_ADDRESS', 'localhost'):
-            from scheduler.dependencies.manager import dependency_mgr
-            logs = dependency_mgr._generate_log_status()
-            self.assertIsNotNone(logs)
-            errors =  [{'UNKNOWN_ERROR': "Error with LOGGING_ADDRESS: Invalid URL 'localhost': No schema supplied. Perhaps you meant http://localhost?"}]
-            self.assertDictEqual(logs, {'OK': False, 'errors': errors, 'warnings': []})
-
-        with patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://www.logging.com/health'):
-            from scheduler.dependencies.manager import dependency_mgr
-            logs = dependency_mgr._generate_log_status()
-            self.assertIsNotNone(logs)
-            self.assertDictEqual(logs, {'OK': True, 'detail': {'url': 'http://www.logging.com/health'}})
-
-        with patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://localhost'):
-            from scheduler.dependencies.manager import dependency_mgr
-            logs = dependency_mgr._generate_log_status()
-            self.assertIsNotNone(logs)
-            self.assertFalse(logs['OK'])
+    @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
+    @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://localhost')
+    @patch('scale.settings.FLUENTD_BUFFER_WARN', 10)
+    @patch('scale.settings.FLUENTD_BUFFER_SIZE_WARN', 100000000)
+    @patch('socket.socket.connect')
+    @patch('requests.get', side_effect=mock_response_get)
+    def test_generate_log_status_warn(self, mock_requests, connect):
+        """Tests the _generate_log_status method with good settings and large queues"""
+ 
+        from scheduler.dependencies.manager import dependency_mgr
+        logs = dependency_mgr._generate_log_status()
+        self.assertIsNotNone(logs)
+        msg = 'Length of log buffer is too long: 20 > 10'
+        warnings = [{'LARGE_BUFFER': msg}]
+        msg = 'Size of log buffer is too large: 100000000000 > 100000000'
+        warnings.append({'LARGE_BUFFER_SIZE': msg})
+        self.assertDictEqual(logs, {'OK': True, 'detail': {'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://localhost'}, 'errors': [], 'warnings': warnings}) 
      
     def test_generate_elasticsearch_status(self):
         """Tests the _generate_elasticsearch_status method"""
