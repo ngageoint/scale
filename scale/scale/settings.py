@@ -62,6 +62,10 @@ CONFIG_URI = None
 # Directory for rotating metrics storage
 METRICS_DIR = None
 
+# fluentd warning levels, or -1 to disable warnings
+FLUENTD_BUFFER_WARN = -1
+FLUENTD_BUFFER_SIZE_WARN = -1
+
 # URL for fluentd, or None to disable fluentd
 LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
