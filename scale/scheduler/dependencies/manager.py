@@ -247,9 +247,7 @@ class DependencyManager(object):
         from scheduler.node.manager import node_mgr
         node_status ={}
         node_mgr.generate_status_json(node_status)
-        if not node_status:
-              status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
-        elif 'nodes' in node_status:
+        if 'nodes' in node_status and len(node_status['nodes']) > 0:
             node_status = node_status['nodes']
             third_nodes = len(node_status)*0.3
             
@@ -262,12 +260,8 @@ class DependencyManager(object):
                     degraded_count += 1
                     
             status_dict = {'OK': True, 'errors': [], 'warnings': [], 'detail': 'Enough nodes are online to function.'}
-            if offline_count > third_nodes:
-                status_dict['errors'].append({'NODES_OFFLINE': 'Over a third of the nodes are offline.'})
-                status_dict['OK'] = False
-                status_dict['detail'] = 'Over a third of nodes are in an error state'
-            if degraded_count > third_nodes:
-                status_dict['errors'].append({'NODES_DEGRADED': 'Over a third of the nodes are degraded.'})
+            if (offline_count + degraded_count) > third_nodes:
+                status_dict['errors'].append({'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'})
                 status_dict['OK'] = False
                 status_dict['detail'] = 'Over a third of nodes are in an error state'
 
