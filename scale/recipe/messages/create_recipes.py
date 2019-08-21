@@ -46,6 +46,38 @@ _RecipePair = namedtuple('_RecipePair', ['superseded_recipe', 'new_recipe'])
 logger = logging.getLogger(__name__)
 
 
+def create_batch_recipes_messages(recipe_type_name, revision_num, recipe_data, event_id, 
+                            batch_id=None):
+    """Creates messages to create the recipe
+
+    :param recipe_type_name: The new recipe type name
+    :type recipe_type_name: string
+    :param revision_num: The revision number of the recipe type
+    :type revision_num: int
+    :param recipe_data: The input data for the recipe
+    :type recipe_data: list
+    :param event_id: The event ID
+    :type event_id: int
+    :param batch_id: The batch ID
+    :type: batch_id: int
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+    message = None
+    for data in recipe_data:
+        message = CreateRecipes()
+        message.create_recipes_type = NEW_RECIPE_TYPE
+        message.recipe_type_name = recipe_type_name
+        message.recipe_type_rev_num = revision_num
+        message.recipe_input_data = data
+        message.event_id = event_id
+        message.batch_id = batch_id
+        messages.append(message)
+            
+    return messages
+
 def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_id, ingest_event_id, 
                             configuration=None, batch_id=None):
     """Creates messages to create the recipe
