@@ -138,8 +138,9 @@ class TestDependenciesManager(TestCase):
         with patch('messaging.backends.amqp.Connection') as connection:
             from scheduler.dependencies.manager import dependency_mgr
             msg_queue = dependency_mgr._generate_msg_queue_status()
-            self.assertDictEqual(msg_queue, {'OK': False, 'errors': [{'UNKNOWN_ERROR': 'Error connecting to RabbitMQ: [Errno 111] Connection refused'}], 'warnings': []})
-            
+            self.assertFalse(msg_queue['OK'])
+            self.assertEqual(msg_queue['errors'][0].keys(), ['UNKNOWN_ERROR'])
+
     def test_generate_idam_status(self):
         """Tests the _generate_idam_status method"""
     
