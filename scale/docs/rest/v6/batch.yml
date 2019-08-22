@@ -326,6 +326,13 @@ components:
       title: Batch Definition
       type: object
       properties:
+        dataset: 
+          type: integer
+          description: Id of the dataset to create the batch from
+        forced_nodes:
+          $ref: '#/components/schemas/forced_nodes'
+          description:  A forced nodes JSON object that defines the batch recipe nodes to |
+            force to re-process even if there are no changes to them.
         previous_batch:
           $ref: '#/components/schemas/previous_batch_definition'
           description: Indicates that the batch should re-process the recipes from a |
