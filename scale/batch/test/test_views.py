@@ -217,9 +217,9 @@ class TestBatchesViewV6(APITransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
         
-    
+    @patch('batch.views.CommandMessageManager')
     @patch('batch.views.create_batch_recipes_message')
-    def test_create_new_batch(self, mock_create):
+    def test_create_new_batch(self, mock_create, mock_msg_mgr):
         """Tests successfully creating a new batch"""
         
         msg = CreateBatchRecipes()
