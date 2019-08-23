@@ -21,6 +21,10 @@ BATCH_DEFINITION_SCHEMA = {
             'description': 'Version of the batch definition schema',
             'type': 'string',
         },
+        'supersedes': {
+            'description': 'If the batch should reprocess vs create new',
+            'type': 'boolean'
+        },
         'dataset': {
             'description': 'Id of the dataset on which the batch runs',
             'type': 'integer',
@@ -72,6 +76,8 @@ def convert_definition_to_v6(definition):
     
     if definition.dataset:
         json_dict['dataset'] = definition.dataset
+    if definition.supersedes is not None:
+        json_dict['supersedes'] = definition.supersedes
     if definition.forced_nodes:
         json_dict['forced_nodes'] = convert_forced_nodes_to_v6(definition.forced_nodes).get_dict()
     return BatchDefinitionV6(definition=json_dict, do_validate=False)
@@ -125,6 +131,9 @@ class BatchDefinitionV6(object):
         
         if 'forced_nodes' in self._definition:
             definition.forced_nodes = ForcedNodesV6(self._definition['forced_nodes']).get_forced_nodes()
+        
+        if 'supersedes' in self._definition:
+            definition.supersedes = self._definition['supersedes']
         
         if 'previous_batch' in self._definition:
             prev_batch_dict = self._definition['previous_batch']

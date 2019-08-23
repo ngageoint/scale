@@ -129,7 +129,7 @@ class BatchManager(models.Manager):
         from data.models import DataSet, DataSetMember, DataSetFile
         dataset = DataSet.objects.get(pk=definition.dataset)
         dataset_definition = dataset.get_definition()
-        recipe_type = RecipeType.objects.get(pk=batch.recipe_type_id)
+        recipe_type = RecipeType.objects.get(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
         
         recipe_inputs = recipe_type.get_definition().get_input_keys()
         if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
@@ -166,10 +166,7 @@ class BatchManager(models.Manager):
                     for job_node in definition.forced_nodes.get_forced_node_names():
                         if recipe_type_def.has_descendant(job_node, sub):
                             estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
-            
-        # if not (definition.forced_nodes and definition.forced_nodes.all_nodes):
-        #     recipes = recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
-            
+      
         return estimated_recipes
 
     def get_batch_from_root(self, root_batch_id):

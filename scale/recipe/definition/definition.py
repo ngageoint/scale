@@ -436,6 +436,8 @@ class RecipeDefinition(object):
             if child.node_type != RecipeNodeDefinition.NODE_TYPE:
                 return self._has_descendant(child, descendant)
                 
+        return False
+                
     def has_ancestor(self, child, ancestor):
         """Returns if the child node contains ancestor as a parent/grand parent/etc
         
@@ -452,3 +454,5 @@ class RecipeDefinition(object):
                 return True
             
             return self._has_ancestor(parent, ancestor)
+            
+        return False

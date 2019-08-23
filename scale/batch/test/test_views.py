@@ -252,7 +252,6 @@ class TestBatchesViewV6(APITransactionTestCase):
         data_list.append(DataV6(data=data_dict).get_dict())
         members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
         
-        
         definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
         recipe_type_4 = recipe_test_utils.create_recipe_type_v6(definition=definition)
         
@@ -343,44 +342,6 @@ class TestBatchesViewV6(APITransactionTestCase):
         # 2 base recipes, each with two sub-recipes = 6 recipes
         self.assertEqual(result['recipes_estimated'], 6)
         mock_create.assert_called_with(new_batch_id)
-        
-        # import pdb; pdb.set_trace()
-        # # Edit recipe type 7 so the version is out of date
-        # recipe_test_utils.edit_recipe_type_v6(recipe_type_7, title='new-recipe-type-title', description='new recipe type description')
-        # # Batch run recipe_type_7 with only node_a forced.
-        # json_data = {
-        #     'title': 'Batch Title',
-        #     'description': 'Batch Description',
-        #     'recipe_type_id': recipe_type_7.id,
-        #     'definition': {
-        #         'dataset': the_dataset.id,
-        #         'forced_nodes': {
-        #             'all': False,
-        #             'sub_recipes': {
-        #                 'node_a': {
-        #                     'all': True
-        #                 }
-        #             }
-        #         },
-        #     },
-        #     'configuration': {
-        #         'priority': 100
-        #     }
-        # }
-    
-        # url = '/v6/batches/'
-        # response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        # self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        # result = json.loads(response.content)
-        # new_batch_id = result['id']
-        # self.assertIsNotNone(new_batch_id)
-        
-        # Verify all recipes (including sub-recipes) were created: 
-        # 4 base recipes, each with one sub-recipe (only forcing = 8 recipes?
-        # self.assertEqual(result['recipes_estimated'], 8)
-        # self.assertEqual(result['recipes_estimated'], 4)
-        # mock_create.assert_called_with(new_batch_id)
-        
         
         jt_3 = job_test_utils.create_seed_job_type()
         jt_4 = job_test_utils.create_seed_job_type()
@@ -547,6 +508,68 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.assertEqual(len(queues), 1)
         for q in queues:
             self.assertEqual(q.priority, 101)
+
+        dataset_def = {
+            'parameters': {'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
+            'json': []}
+        }
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
+        workspace = storage_test_utils.create_workspace()
+        src_file_a = storage_test_utils.create_file(file_name='input_a.PNG', file_type='SOURCE', media_type='image/png',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              workspace=workspace)
+        data_dict = {
+            'version': '6',
+            'files': {'INPUT_IMAGE': [src_file_a.id]},
+            'json': {}
+        }
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=[DataV6(data=data_dict).get_dict()])
+
+        jt = job_test_utils.create_seed_job_type()
+        recipe_def = {'version': '7',
+                            'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                                 'multiple': False}],
+                                      'json': []},
+                            'nodes': {'node_a': {'dependencies': [],
+                                                 'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                 'node_type': {'node_type': 'job', 
+                                                               'job_type_name': jt.name,
+                                                               'job_type_version': jt.version,
+                                                               'job_type_revision': jt.revision_num}}}}
+
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+
+        json_data = {
+            'title': 'batch-twp-title-test',
+            'description': 'batch-two-description-test',
+            'recipe_type_id': recipe_type.id,
+            'definition': {
+                'dataset': the_dataset.id,
+                'supersedes': True,
+                'forced_nodes': {
+                    'all': True
+                }
+            },
+            'configuration': {
+                'priority': 300
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+
+        # Check location header
+        self.assertTrue('/v6/batches/%d/' % new_batch_id in response['Location'])
+        # Check correct recipe estimation count
+        self.assertEqual(result['recipes_estimated'], 1)
+        
+        queues = Queue.objects.filter(batch_id=new_batch_id)
+        self.assertEqual(len(queues), 1)
+        for q in queues:
+            self.assertEqual(q.priority, 300)
 
 class TestBatchDetailsViewV6(APITestCase):
 

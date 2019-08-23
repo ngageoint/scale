@@ -12,6 +12,7 @@ class BatchDefinition(object):
         """Constructor
         """
         self.dataset = None
+        self.supersedes = True
         self.root_batch_id = None
         self.forced_nodes = None
 
@@ -49,8 +50,19 @@ class BatchDefinition(object):
                 self.prev_batch_diff.set_force_reprocess(self.forced_nodes)
             if not self.prev_batch_diff.can_be_reprocessed:
                 raise InvalidDefinition('PREV_BATCH_NO_REPROCESS', 'Previous batch cannot be reprocessed')
-        # New batch
         
+        # New batch - need to validate dataset parameters against recipe revision
+        elif self.dataset:
+            from data.models import DataSet
+            from recipe.models import RecipeType
+            dataset = DataSet.objects.get(pk=self.dataset)
+            dataset_definition = dataset.get_definition()
+            recipe_type = RecipeType.objects.get(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
+            recipe_inputs = recipe_type.get_definition().get_input_keys()
+
+            # No recipe inputs match the dataset 
+            if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
+                raise InvalidDefinition('NO_MATCHING_PARAMS', 'No parameters in the dataset match the recipe type inputs')
 
         self._estimate_recipe_total(batch)
         if not self.estimated_recipes:

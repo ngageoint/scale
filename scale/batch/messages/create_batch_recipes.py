@@ -94,7 +94,10 @@ class CreateBatchRecipes(CommandMessage):
                 new_messages.extend(self._handle_new_batch(batch, definition))
 
         if self.is_prev_batch_done:
-            logger.info('All re-processing messages created, marking recipe creation as done')
+            if batch.superseded_batch_id:
+                logger.info('All re-processing messages created, marking recipe creation as done')
+            else:
+                logger.info('All new recipe messages created, marking recipe creation as done')
             Batch.objects.mark_creation_done(self.batch_id, now())
         else:
             logger.info('Creating new message for next set of batch recipes')
@@ -116,41 +119,45 @@ class CreateBatchRecipes(CommandMessage):
         """
         
         messages = []
-
         dataset = DataSet.objects.get(pk=definition.dataset)
         dataset_definition = dataset.get_definition()
-        recipe_type = RecipeType.objects.get(pk=batch.recipe_type_id)
+        recipe_type = RecipeType.objects.get(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
         recipe_inputs = recipe_type.get_definition().get_input_keys()
         
         # No recipe inputs match the dataset 
         if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
+            logger.info('None of the dataset parameters matched the recipe type inputs; No recipes will be created')
+            self.is_prev_batch_done = True
             return messages
 
         # Get previous recipes for dataset files:
         ds_files = DataSetFile.objects.get_dataset_files(dataset.id).values_list('scale_file_id', flat=True)
         recipe_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files).values_list('recipe_id', flat=True)
-        recipe_file_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files).values_list('input_file_id', flat=True)
-        
-        # Reprocess previous recipes
+        recipe_file_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files,
+                                                         recipe__recipe_type=batch.recipe_type, 
+                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list('input_file_id', flat=True)
+
         recipe_count = 0
-        if len(recipe_ids) > 0:
-            # Create re-process messages for all recipes
-            recipe_qry = Recipe.objects.filter(id__in=recipe_ids).order_by('-id')
-            if self.current_recipe_id:
-                recipe_qry = recipe_qry.filter(id__lt=self.current_recipe_id)
-            
-            root_recipe_ids = []
-            for recipe in recipe_qry.defer('input')[:MAX_RECIPE_NUM]:
-                root_recipe_ids.append(recipe.id)
-                self.current_recipe_id = recipe.id
-            recipe_count = len(root_recipe_ids)
-    
-            if recipe_count > 0:
-                logger.info('Found %d recipe(s) from previous batch to reprocess, creating messages', recipe_count)
-                msgs = create_reprocess_messages(root_recipe_ids, batch.recipe_type.name,
-                                                 batch.recipe_type_rev.revision_num, batch.event_id, batch_id=batch.id,
-                                                 forced_nodes=definition.forced_nodes)
-                messages.extend(msgs)
+        # Reprocess previous recipes
+        if definition.supersedes:
+            if len(recipe_ids) > 0:
+                # Create re-process messages for all recipes
+                recipe_qry = Recipe.objects.filter(id__in=recipe_ids).order_by('-id')
+                if self.current_recipe_id:
+                    recipe_qry = recipe_qry.filter(id__lt=self.current_recipe_id)
+                
+                root_recipe_ids = []
+                for recipe in recipe_qry.defer('input')[:MAX_RECIPE_NUM]:
+                    root_recipe_ids.append(recipe.id)
+                    self.current_recipe_id = recipe.id
+                recipe_count = len(root_recipe_ids)
+        
+                if recipe_count > 0:
+                    logger.info('Found %d recipe(s) from previous batch to reprocess, creating messages', recipe_count)
+                    msgs = create_reprocess_messages(root_recipe_ids, batch.recipe_type.name,
+                                                     batch.recipe_type_rev.revision_num, batch.event_id, batch_id=batch.id,
+                                                     forced_nodes=definition.forced_nodes)
+                    messages.extend(msgs)
                 
         # If we have data that didn't match any previous recipes
         extra_files_qry = ScaleFile.objects.filter(id__in=ds_files).exclude(id__in=recipe_file_ids)
