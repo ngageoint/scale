@@ -393,7 +393,6 @@ class TestCreateBatchRecipes(TestCase):
                                                                'job_type_version': jt_2.version,
                                                                'job_type_revision': jt_2.revision_num}}}}
         sub_recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
-        sub_recipe = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type)
         
         # Recipe with two jobs and one subrecipe (c -> d -> r) 
         recipe_def = {'version': '7',
@@ -450,19 +449,16 @@ class TestCreateBatchRecipes(TestCase):
 
         batch_definition = BatchDefinition()
         batch_definition.dataset = the_dataset.id
+        batch_definition.supersedes = True
         forced_nodes = ForcedNodes()
         forced_nodes.all_nodes = True
         batch_definition.forced_nodes = forced_nodes
-        
         new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=batch_definition)
         
         # Create message
         message = batch.messages.create_batch_recipes.CreateBatchRecipes()
         message.batch_id = new_batch.id
-
-        # Copy JSON for running same message again later
-        message_json = message.to_json()
-
+        
         # Execute message
         result = message.execute()
         self.assertTrue(result)
@@ -498,6 +494,50 @@ class TestCreateBatchRecipes(TestCase):
         self.assertEqual(create_recipes_message.event_id, new_batch.event_id)
         self.assertEqual(create_recipes_message.recipe_type_name, new_batch.recipe_type.name)
         self.assertEqual(create_recipes_message.recipe_type_rev_num, new_batch.recipe_type.revision_num)
+        
+        # Test setting supersedes to false and make sure we don't have any reprocess messages
+        batch_definition_2 = BatchDefinition()
+        batch_definition_2.dataset = the_dataset.id
+        batch_definition_2.supersedes = False
+        forced_nodes = ForcedNodes()
+        forced_nodes.all_nodes = True
+        batch_definition_2.forced_nodes = forced_nodes
+        new_batch_2 = batch_test_utils.create_batch(recipe_type=recipe_type, definition=batch_definition_2)
+        
+        # Create message
+        message_2 = batch.messages.create_batch_recipes.CreateBatchRecipes()
+        message_2.batch_id = new_batch_2.id
+        # Execute message
+        result_2 = message_2.execute()
+        self.assertTrue(result_2)
+        self.assertEqual(len(message_2.new_messages), 6)
+        
+        batch_recipes_message_2 = message_2.new_messages[0]
+        self.assertEqual(batch_recipes_message_2.type, 'create_batch_recipes')
+        self.assertEqual(batch_recipes_message_2.batch_id, new_batch_2.id)
+        self.assertFalse(batch_recipes_message_2.is_prev_batch_done)
+        
+        # Make sure we've got 5 create-new-recipe messages
+        for msg in message_2.new_messages[1:]:
+            self.assertEqual(msg.create_recipes_type, 'new-recipe')
+            self.assertEqual(msg.batch_id, new_batch_2.id)
+            self.assertEqual(msg.event_id, new_batch_2.event_id)
+            self.assertEqual(msg.recipe_type_name, new_batch_2.recipe_type.name)
+            self.assertEqual(msg.recipe_type_rev_num, new_batch_2.recipe_type.revision_num)
+            
+        # Execute next create_batch_recipes messages
+        result_3 = batch_recipes_message_2.execute()
+        self.assertTrue(result_3)
+
+        # Should only have one last rcreate_recipes message
+        self.assertEqual(len(batch_recipes_message_2.new_messages), 1)
+        create_recipes_message_3 = batch_recipes_message_2.new_messages[0]
+        self.assertTrue(batch_recipes_message_2.is_prev_batch_done)
+        self.assertEqual(create_recipes_message_3.type, 'create_recipes')
+        self.assertEqual(create_recipes_message_3.batch_id, new_batch_2.id)
+        self.assertEqual(create_recipes_message_3.event_id, new_batch_2.event_id)
+        self.assertEqual(create_recipes_message_3.recipe_type_name, new_batch_2.recipe_type.name)
+        self.assertEqual(create_recipes_message_3.recipe_type_rev_num, new_batch_2.recipe_type.revision_num)
         
         
     def test_execute_forced_nodes(self):

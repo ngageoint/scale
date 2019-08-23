@@ -48,7 +48,7 @@ class CreateBatchRecipes(CommandMessage):
         super(CreateBatchRecipes, self).__init__('create_batch_recipes')
 
         self.batch_id = None
-        self.is_prev_batch_done = False  # Indicates if all recipes from pervious batch have been handled
+        self.is_prev_batch_done = False  # Indicates if all recipes from previous batch have been handled
         self.current_recipe_id = None  # Keeps track of the last recipe that was reprocessed
         self.current_dataset_file_id = None # Keeps track of the last dataset file that was processed
 
@@ -136,7 +136,8 @@ class CreateBatchRecipes(CommandMessage):
         recipe_file_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files,
                                                          recipe__recipe_type=batch.recipe_type, 
                                                          recipe__recipe_type_rev=batch.recipe_type_rev).values_list('input_file_id', flat=True)
-
+        extra_files_qry = ScaleFile.objects.filter(id__in=ds_files)
+        
         recipe_count = 0
         # Reprocess previous recipes
         if definition.supersedes:
@@ -158,13 +159,15 @@ class CreateBatchRecipes(CommandMessage):
                                                      batch.recipe_type_rev.revision_num, batch.event_id, batch_id=batch.id,
                                                      forced_nodes=definition.forced_nodes)
                     messages.extend(msgs)
-                
+
+            # Filter down the extra files to exclude those we've already re-processed
+            extra_files_qry = extra_files_qry.exclude(id__in=recipe_file_ids)
+
         # If we have data that didn't match any previous recipes
-        extra_files_qry = ScaleFile.objects.filter(id__in=ds_files).exclude(id__in=recipe_file_ids)
         if self.current_dataset_file_id:
             extra_files_qry = extra_files_qry.filter(id__gt=self.current_dataset_file_id)
         extra_files_qry.order_by('-id')
-        
+
         if len(extra_files_qry) > 0:
             logger.info('Found %d files that do not have previous recipes to re-process', len(extra_files_qry))
             
