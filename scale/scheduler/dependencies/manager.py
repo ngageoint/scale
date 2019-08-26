@@ -91,8 +91,9 @@ class DependencyManager(object):
                                 msg = 'Length of log buffer is too long: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER': msg})
                             if scale_settings.FLUENTD_BUFFER_SIZE_WARN > 0 and plugin['buffer_total_queued_size'] > scale_settings.FLUENTD_BUFFER_SIZE_WARN:
-                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_total_queued_size'], scale_settings.FLUENTD_BUFFER_SIZE_WARN)
+                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER_SIZE': msg})
+                    status_dict['warnings'].append()
             except Exception as ex:
                 msg = 'Error with LOGGING_HEALTH_ADDRESS: %s' % unicode(ex)
                 status_dict['OK'] = False
@@ -108,18 +109,12 @@ class DependencyManager(object):
                 s.connect((o.hostname, o.port))
             except Exception as ex:
                 msg = 'Error with LOGGING_ADDRESS: %s' % unicode(ex)
-<<<<<<< HEAD
-                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
-        else: 
-            status_dict =  {'OK': False, 'errors': [{'NO_LOGGING_DEFINED': 'No logging URL defined'}], 'warnings': []}
-=======
                 status_dict['OK'] = False
                 status_dict['errors'].append({'UNKNOWN_ERROR': msg})
         else:
             status_dict['OK'] = False
             status_dict['errors'].append({'NO_LOGGING_DEFINED': 'No logging address defined'})
 
->>>>>>> :hammer: More robust log checks; check buffer sizes and warn if too large
         return status_dict
 
 
@@ -255,7 +250,9 @@ class DependencyManager(object):
         from scheduler.node.manager import node_mgr
         node_status ={}
         node_mgr.generate_status_json(node_status)
-        if 'nodes' in node_status and len(node_status['nodes']) > 0:
+        if not node_status:
+              status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
+        elif 'nodes' in node_status:
             node_status = node_status['nodes']
             third_nodes = len(node_status)*0.3
             
@@ -268,8 +265,12 @@ class DependencyManager(object):
                     degraded_count += 1
                     
             status_dict = {'OK': True, 'errors': [], 'warnings': [], 'detail': 'Enough nodes are online to function.'}
-            if (offline_count + degraded_count) > third_nodes:
-                status_dict['errors'].append({'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'})
+            if offline_count > third_nodes:
+                status_dict['errors'].append({'NODES_OFFLINE': 'Over a third of the nodes are offline.'})
+                status_dict['OK'] = False
+                status_dict['detail'] = 'Over a third of nodes are in an error state'
+            if degraded_count > third_nodes:
+                status_dict['errors'].append({'NODES_DEGRADED': 'Over a third of the nodes are degraded.'})
                 status_dict['OK'] = False
                 status_dict['detail'] = 'Over a third of nodes are in an error state'
 
