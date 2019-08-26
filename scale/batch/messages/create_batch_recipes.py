@@ -9,10 +9,11 @@ from batch.models import Batch
 from data.data.data import Data
 from data.data.value import FileValue
 from data.data.json.data_v6 import convert_data_to_v6_json
+from data.interface.exceptions import InvalidInterfaceConnection
 from data.models import DataSet, DataSetFile
 from messaging.messages.message import CommandMessage
 from recipe.messages.create_recipes import create_reprocess_messages, create_batch_recipes_messages
-from recipe.models import Recipe, RecipeType, RecipeInputFile
+from recipe.models import Recipe, RecipeTypeRevision, RecipeInputFile
 from storage.models import ScaleFile
 
 # How many recipes to handle in a single execution of this message
@@ -121,11 +122,18 @@ class CreateBatchRecipes(CommandMessage):
         messages = []
         dataset = DataSet.objects.get(pk=definition.dataset)
         dataset_definition = dataset.get_definition()
-        recipe_type = RecipeType.objects.get(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
-        recipe_inputs = recipe_type.get_definition().get_input_keys()
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
+        recipe_inputs = recipe_type_rev.get_definition().get_input_keys()
         
-        # No recipe inputs match the dataset 
-        if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
+        # combine the parameters
+        dataset_parameters = dataset_definition.global_parameters
+        for param in dataset_definition.parameters.parameters:
+            dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
+
+        try:
+            recipe_type_rev.get_definition().input_interface.validate_connection(dataset_parameters)
+        except InvalidInterfaceConnection as ex:
+            # No recipe inputs match the dataset 
             logger.info('None of the dataset parameters matched the recipe type inputs; No recipes will be created')
             self.is_prev_batch_done = True
             return messages
