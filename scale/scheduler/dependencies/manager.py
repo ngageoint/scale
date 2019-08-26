@@ -10,6 +10,7 @@ from urlparse import urlparse
 from django.db import connection
 from django.db.utils import OperationalError
 from django.utils.timezone import now
+from django_geoaxis.backends.geoaxis import GeoAxisOAuth2
 from rest_framework import status
 from kombu import Connection
 
@@ -233,9 +234,25 @@ class DependencyManager(object):
         :return: JSON describing the IDAM status
         :rtype: dict
         """
-        status_dict = {}
-        status_dict['OK'] = True
-        status_dict['detail'] = 'some msg'
+        #'https://gxisaccess.gxaccess.com/ms_oauth/oauth2/endpoints/oauthservice/authorize'
+        status_dict =  {'OK': True, 'detail': {}, 'errors': [], 'warnings': []}
+        if not scale_settings.GEOAXIS_ENABLED:
+            status_dict = {'OK': True, 'detail': {'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}
+            return status_dict
+        status_dict['detail']['Geoaxis Host'] = scale_settings.SOCIAL_AUTH_GEOAXIS_HOST
+        try:
+            response = requests.head(GeoAxisOAuth2.AUTHORIZATION_URL)
+            if response.status_code == status.HTTP_200_OK:
+                status_dict = {'OK': True, 'detail': {'url': GeoAxisOAuth2.AUTHORIZATION_URL}}
+            else:
+                status_dict = {'OK': False, 'errors': [{response.status_code: 'Silo returned a status code of %s' % response.status_code}], 'warnings': []}
+        except Exception as ex:
+            msg = 'Error with SILO_URL: %s' % unicode(ex)
+            status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
+
+        if scale_settings.IDAM_HEALTH_ADDRESS:
+            status_dict['detail']['idam_health_address'] = scale_settings.IDAM_HEALTH_ADDRESS
+            #try:
         return status_dict
 
     def _generate_nodes_status(self):
