@@ -199,6 +199,7 @@ Request: POST http://.../v6/batches/
       "title": "My Batch",
       "description": "My Batch Description",
       "recipe_type_id": 208,
+      "supersedes": True,
       "definition": {
          "dataset": 1,
          "forced_nodes": {
@@ -921,6 +922,7 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 .. code-block:: javascript
 
    {
+      "supersedes": True,
       "dataset": 1,
       "forced_nodes": {
          "all": False,
@@ -943,6 +945,10 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Batch Definition**                                                                                                        |
 +=========================+===================+==========+====================================================================+
+| supersedes              | Boolean           | Optional | True if the recipes created during the batch should supersede      |
+|                         |                   |          | existing recipes; False if the recipes created during the batch    |
+|                         |                   |          | should be new recipes.                                             |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | dataset_                | Integer           | Optional | The ID of the dataset the batch will be created from.              |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | forced_nodes            | JSON object       | Optional | A forced nodes JSON object that defines the batch recipe nodes to  |

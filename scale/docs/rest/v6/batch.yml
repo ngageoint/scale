@@ -326,6 +326,10 @@ components:
       title: Batch Definition
       type: object
       properties:
+        supersedes:
+          type: boolean
+          description: Indicates if the recipes created by the batch should be supserseded |
+            or if they should be treated as new recipes.
         dataset: 
           type: integer
           description: Id of the dataset to create the batch from
