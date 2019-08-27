@@ -126,16 +126,24 @@ class BatchManager(models.Manager):
         #        type, count the number of files in each member that matches the parameter
         
         from recipe.models import RecipeType
+        from data.interface.exceptions import InvalidInterfaceConnection
         from data.models import DataSet, DataSetMember, DataSetFile
         dataset = DataSet.objects.get(pk=definition.dataset)
         dataset_definition = dataset.get_definition()
-        recipe_type = RecipeType.objects.get(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
+        recipe_type = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num).recipe_type
+
+        # combine the parameters
+        dataset_parameters = dataset_definition.global_parameters
+        for param in dataset_definition.parameters.parameters:
+            dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
         
-        recipe_inputs = recipe_type.get_definition().get_input_keys()
-        if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
+        try:
+            recipe_type.get_definition().input_interface.validate_connection(dataset_parameters)
+        except InvalidInterfaceConnection as ex:
             logger.info('DataSet parameters do not match the recipe inputs; no recipes will be created.')
             return 0
         
+        recipe_inputs = recipe_type.get_definition().get_input_keys()
         # Base count of recipes are number of files in the dataset that match the recipe inputs
         files = DataSetFile.objects.get_files([dataset.id], recipe_inputs)
         num_files = len(files)
