@@ -68,7 +68,7 @@ class BatchDefinition(object):
             try:
                 recipe_type_rev.get_definition().input_interface.validate_connection(dataset_parameters)
             except InvalidInterfaceConnection as ex:
-                raise InvalidDefinition('MISMATCHED_PARAMS', 'No parameters in the dataset match the recipe type inputs')
+                raise InvalidDefinition('MISMATCHED_PARAMS', 'No parameters in the dataset match the recipe type inputs. %s' % unicode(ex))
                 
         self._estimate_recipe_total(batch)
         if not self.estimated_recipes:
