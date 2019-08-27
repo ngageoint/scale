@@ -235,24 +235,25 @@ class DependencyManager(object):
         :rtype: dict
         """
         #'https://gxisaccess.gxaccess.com/ms_oauth/oauth2/endpoints/oauthservice/authorize'
-        status_dict =  {'OK': True, 'detail': {}, 'errors': [], 'warnings': []}
+        status_dict =  {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
         if not scale_settings.GEOAXIS_ENABLED:
-            status_dict = {'OK': True, 'detail': {'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}
+            status_dict = {'OK': True, 'detail': {'geoaxis': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}
             return status_dict
         status_dict['detail']['Geoaxis Host'] = scale_settings.SOCIAL_AUTH_GEOAXIS_HOST
+        status_dict['detail']['geoaxis'] = True
+        status_dict['detail']['backends'] = scale_settings.AUTHENTICATION_BACKENDS
+        status_dict['detail']['Geoaxis Authorization Url'] = GeoAxisOAuth2.AUTHORIZATION_URL
         try:
-            response = requests.head(GeoAxisOAuth2.AUTHORIZATION_URL)
+            params = 
+            response = requests.get(GeoAxisOAuth2.AUTHORIZATION_URL, verify=False, params=urlencode(params))
             if response.status_code == status.HTTP_200_OK:
-                status_dict = {'OK': True, 'detail': {'url': GeoAxisOAuth2.AUTHORIZATION_URL}}
+                status_dict['OK'] = True
             else:
-                status_dict = {'OK': False, 'errors': [{response.status_code: 'Silo returned a status code of %s' % response.status_code}], 'warnings': []}
+                status_dict['errors'].append({'ERROR_STATUS': response.status_code})
         except Exception as ex:
-            msg = 'Error with SILO_URL: %s' % unicode(ex)
-            status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
+            msg = 'Error with Geoaxis: %s' % unicode(ex)
+            status_dict['errors'].append({'UNKNOWN_ERROR': msg})
 
-        if scale_settings.IDAM_HEALTH_ADDRESS:
-            status_dict['detail']['idam_health_address'] = scale_settings.IDAM_HEALTH_ADDRESS
-            #try:
         return status_dict
 
     def _generate_nodes_status(self):
