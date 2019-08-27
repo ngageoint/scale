@@ -139,7 +139,7 @@ class BatchManager(models.Manager):
         try:
             recipe_type.get_definition().input_interface.validate_connection(dataset_parameters)
         except InvalidInterfaceConnection as ex:
-            logger.info('DataSet parameters do not match the recipe inputs; no recipes will be created.')
+            logger.info('DataSet parameters do not match the recipe inputs; no recipes will be created: %s' % unicode(ex))
             return 0
         
         recipe_inputs = recipe_type.get_definition().get_input_keys()
