@@ -20,7 +20,7 @@ from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
-from recipe.models import Recipe, RecipeTypeRevision
+from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 from util import parse as parse_utils
@@ -100,6 +100,74 @@ class BatchManager(models.Manager):
             BatchMetrics.objects.bulk_create(batch_metrics_models)
 
         return batch
+        
+    def calculate_estimated_recipes(self, batch, definition):
+        """Calculates the estimated number of recipes that will be created for this batch. 
+        This number is calculated by:
+        1. The number of existing recipes for the specific recipe type that are 
+           not currently superseded
+        2. The number of sub-recipes in the recipe
+           These should be filtered if not changed/marked for re-run?
+           
+        """
+        
+        # If this is a previous batch, use the previous batch total
+        if batch.superseded_batch:
+            return batch.superseded_batch.recipes_total
+        
+        # No files defined to run on, so no recipes will be created
+        if not definition.dataset:
+            return 0
+
+        #: The number of recipes are calculated based on the following:
+        #      - If the dataset has a global parameter matching the input of the 
+        #        recipe type, count the number of files in each dataset member
+        #      - If the dataset has a parameter matching the input of the recipe
+        #        type, count the number of files in each member that matches the parameter
+        
+        from recipe.models import RecipeType
+        from data.models import DataSet, DataSetMember, DataSetFile
+        dataset = DataSet.objects.get(pk=definition.dataset)
+        dataset_definition = dataset.get_definition()
+        recipe_type = RecipeType.objects.get(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
+        
+        recipe_inputs = recipe_type.get_definition().get_input_keys()
+        if not any(elem in recipe_inputs for elem in dataset_definition.param_names):
+            logger.info('DataSet parameters do not match the recipe inputs; no recipes will be created.')
+            return 0
+        
+        # Base count of recipes are number of files in the dataset that match the recipe inputs
+        files = DataSetFile.objects.get_files([dataset.id], recipe_inputs)
+        num_files = len(files)
+        
+        from recipe.models import RecipeTypeSubLink
+        estimated_recipes = num_files
+        # If all nodes are forced:
+        if definition.forced_nodes and definition.forced_nodes.all_nodes:
+            # Count the number of sub-recipes
+            subs_count = RecipeTypeSubLink.objects.count_subrecipes(batch.recipe_type_id, recurse=True)
+            estimated_recipes += (num_files * subs_count)
+                
+        else:
+            # Only count the sub-recipes nodes that are forced, or in the lineage of a forced node
+            nodes = recipe_type.get_v6_definition_json()['nodes']
+            subs = [node for node in nodes if nodes[node]['node_type']['node_type'] == 'recipe']
+            
+            for sub in subs:
+                sub_type_id = RecipeType.objects.get(name=nodes[sub]['node_type']['recipe_type_name'], revision_num=nodes[sub]['node_type']['recipe_type_revision']).id
+                
+                # If sub-recipe is selected as a forced node
+                if sub in definition.forced_nodes.get_sub_recipe_names():
+                    estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
+                
+                # If it's a child of a forced job node, we're going to need to run it
+                else:
+                    recipe_type_def = recipe_type.get_definition()
+                    for job_node in definition.forced_nodes.get_forced_node_names():
+                        if recipe_type_def.has_descendant(job_node, sub):
+                            estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
+      
+        return estimated_recipes
 
     def get_batch_from_root(self, root_batch_id):
         """Returns the latest (non-superseded) batch model with the given root batch ID. The returned model

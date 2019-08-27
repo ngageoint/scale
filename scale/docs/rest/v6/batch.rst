@@ -186,8 +186,157 @@ Response: 200 OK
 
 .. _rest_v6_batch_create:
 
-v6 Create Batch
----------------
+v6 Create New Batch
+-------------------
+
+**Example POST /v6/batches/ API call**
+
+Request: POST http://.../v6/batches/
+
+.. code-block:: javascript
+
+   {
+      "title": "My Batch",
+      "description": "My Batch Description",
+      "recipe_type_id": 208,
+      "supersedes": True,
+      "definition": {
+         "dataset": 1,
+         "forced_nodes": {
+            "all": True
+         }
+      },
+      "configuration": {
+         "priority": 100
+      }
+   }
+
+Response: 201 Created
+Headers:
+Location http://.../v6/batches/105/
+
+.. code-block:: javascript
+
+   {
+      "id": 105,
+      "title": "My Batch",
+      "description": "My Batch Description",
+      "recipe_type": {
+         "id": 208,
+         "name": "my-recipe-type",
+         "title": "My Recipe Type",
+         "description": "My Recipe Type Description",
+         "revision_num": 1,
+      },
+      "recipe_type_rev": {
+         "id": 4,
+         "recipe_type": {
+            "id": 208
+         },
+         "revision_num": 1,
+         "definition": {...},
+         "created": "1970-01-01T00:00:00Z"
+      },
+      "event": {
+         "id": 4000,
+         "type": "USER",
+         "rule": null,
+         "occurred": "1970-01-01T00:00:00Z",
+         "description": {
+            "user": "Anonymous"
+         }
+      },
+      "is_superseded": false,
+      "root_batch": {
+         "id": 105,
+         "title": "My Batch",
+         "description": "My Batch Description",
+         "created": "1970-01-01T00:00:00Z"
+      },
+      "superseded_batch": None,
+      "is_creation_done": true,
+      "jobs_total": 10,
+      "jobs_pending": 0,
+      "jobs_blocked": 0,
+      "jobs_queued": 1,
+      "jobs_running": 3,
+      "jobs_failed": 0,
+      "jobs_completed": 6,
+      "jobs_canceled": 0,
+      "recipes_estimated": 2,
+      "recipes_total": 2,
+      "recipes_completed": 1,
+      "created": "1970-01-01T00:00:00Z",
+      "superseded": None,
+      "last_modified": "1970-01-01T00:00:00Z",
+      "definition": {
+         "dataset": 1,
+         "forced_nodes": {
+            "all": true
+         }
+      },
+      "configuration": {
+         "priority": 100
+      },
+      "job_metrics": {
+         "job_a": {
+            "jobs_total": 10,
+            "jobs_pending": 0,
+            "jobs_blocked": 0,
+            "jobs_queued": 1,
+            "jobs_running": 3,
+            "jobs_failed": 0,
+            "jobs_completed": 6,
+            "jobs_canceled": 0,
+            "min_seed_duration": "PT9M2S",
+            "avg_seed_duration": "PT10M12S",
+            "max_seed_duration": "PT15M45S",
+            "min_job_duration": "PT9M50S",
+            "avg_job_duration": "PT10M59S",
+            "max_job_duration": "PT16M49S"
+         }
+      }
+   }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Create Batch**                                                                                                        |
++=========================================================================================================================+
+| Creates a new batch with the given fields                                                                               |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/batches/                                                                                                   |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **Content Type**    | *application/json*                                                                                |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| title               | String            | Optional | The human-readable name of the batch                               |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| description         | String            | Optional | A human-readable description of the batch                          |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| recipe_type_id      | Integer           | Required | The ID of the recipe type for this batch's recipes                 |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| definition          | JSON Object       | Required | JSON definition for processing the batch                           |
+|                     |                   |          | See :ref:`rest_v6_batch_json_definition`                           |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| configuration       | JSON Object       | Optional | JSON configuration for processing the batch                        |
+|                     |                   |          | See :ref:`rest_v6_batch_json_configuration`                        |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 Created                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL for retrieving the details of the newly created batch                                          |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_batch_details`           |
++--------------------+----------------------------------------------------------------------------------------------------+
+
+
+.. _rest_v6_batch_create_previous:
+
+v6 Create Batch From Previous Batch
+-----------------------------------
 
 **Example POST /v6/batches/ API call**
 
@@ -333,6 +482,8 @@ Location http://.../v6/batches/105/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_batch_details`           |
 +--------------------+----------------------------------------------------------------------------------------------------+
+
+
 
 .. _rest_v6_batch_comparison:
 
@@ -771,6 +922,17 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 .. code-block:: javascript
 
    {
+      "supersedes": True,
+      "dataset": 1,
+      "forced_nodes": {
+         "all": False,
+         "nodes": ['job_a'],
+         "sub_recipes": {
+            "recipe_a": {
+               "all": True
+            }
+         }
+      },
       "previous_batch": {
          "root_batch_id": 1234,
          "forced_nodes": {
@@ -783,18 +945,28 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Batch Definition**                                                                                                        |
 +=========================+===================+==========+====================================================================+
+| supersedes              | Boolean           | Optional | True if the recipes created during the batch should supersede      |
+|                         |                   |          | existing recipes; False if the recipes created during the batch    |
+|                         |                   |          | should be new recipes.                                             |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| dataset_                | Integer           | Optional | The ID of the dataset the batch will be created from.              |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| forced_nodes            | JSON object       | Optional | A forced nodes JSON object that defines the batch recipe nodes to  |
+|                         |                   |          | force to re-process even if there are no changes to them.          |
+|                         |                   |          | See :ref:`rest_v6_recipe_json_forced_nodes`                        |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | previous_batch          | JSON object       | Optional | Indicates that the batch should re-process the recipes from a      |
 |                         |                   |          | previous batch. This will link the previous and new batch together |
 |                         |                   |          | so that their metrics can be easily compared. The previous batch   |
 |                         |                   |          | must have the same recipe type as the new batch and must have      |
 |                         |                   |          | finished creating all of its recipes.                              |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| root_batch_id           | Integer           | Required | The root batch ID of the previous batch. Scale will find the last  |
+| .root_batch_id          | Integer           | Required | The root batch ID of the previous batch. Scale will find the last  |
 |                         |                   |          | (non-superseded) batch with this root ID and it will be            |
 |                         |                   |          | re-processed by this batch.                                        |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| forced_nodes            | JSON object       | Optional | A forced nodes JSON object that defines the batch recipe nodes to  |
-|                         |                   |          | force to re-process even if there are no changes to them.          |
+| .forced_nodes           | JSON object       | Optional | A forced nodes JSON object that defines the previous batch recipe  |
+|                         |                   |          | nodes to force to re-process even if there are no changes to them. |
 |                         |                   |          | See :ref:`rest_v6_recipe_json_forced_nodes`                        |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 
