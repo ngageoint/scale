@@ -183,12 +183,28 @@ class TestDependenciesManager(TestCase):
             self.assertFalse(msg_queue['OK'])
             self.assertEqual(msg_queue['errors'][0].keys(), ['UNKNOWN_ERROR'])
 
-    def test_generate_idam_status(self):
-        """Tests the _generate_idam_status method"""
+    def test_generate_idam_status_no_geoaxis(self):
+        """Tests the _generate_idam_status method with geoaxis disabled"""
     
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
-        self.assertDictEqual(idam, {u'OK': True, u'detail': u'some msg'}) 
+        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}) 
+        
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
+    @patch('scale.settings.GEOAXIS_ENABLED', True)
+    @patch('scale.settings.AUTHENTICATION_BACKENDS', ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
+    def test_generate_idam_status_geoaxis(self):
+        """Tests the _generate_idam_status method with geoaxis enabled"""
+        
+        from scheduler.dependencies.manager import dependency_mgr
+        idam = dependency_mgr._generate_idam_status()
+        detail = {}
+        detail['Geoaxis Host'] = 'geoaxis.gxaccess.com'
+        detail['geoaxis'] = True
+        detail['backends'] = ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
+        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        self.assertDictEqual(idam, {'OK': True, 'detail': detail, 'errors': [], 'warnings': []}) 
 
     def test_generate_nodes_status(self):
         """Tests the _generate_nodes_status method"""
