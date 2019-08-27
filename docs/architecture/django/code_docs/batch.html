@@ -974,6 +974,20 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling batches</p>
 <dl class="method">
+<dt id="batch.models.BatchManager.calculate_estimated_recipes">
+<code class="descname">calculate_estimated_recipes</code><span class="sig-paren">(</span><em>batch</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.calculate_estimated_recipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the estimated number of recipes that will be created for this batch. 
+This number is calculated by:
+1. The number of existing recipes for the specific recipe type that are</p>
+<blockquote>
+<div>not currently superseded</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>The number of sub-recipes in the recipe
+These should be filtered if not changed/marked for re-run?</li>
+</ol>
+</dd></dl>
+
+<dl class="method">
 <dt id="batch.models.BatchManager.create_batch_v6">
 <code class="descname">create_batch_v6</code><span class="sig-paren">(</span><em>title</em>, <em>description</em>, <em>recipe_type</em>, <em>event</em>, <em>definition</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.create_batch_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new batch that will contain a collection of recipes to process. The definition and configuration

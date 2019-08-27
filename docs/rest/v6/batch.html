@@ -110,7 +110,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#current-v6-services">Current v6 Services</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Batch Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#v6-create-batch">v6 Create Batch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-new-batch">v6 Create New Batch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-batch-from-previous-batch">v6 Create Batch From Previous Batch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-batch-comparison">v6 Batch Comparison</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-validate-batch">v6 Validate Batch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
@@ -480,8 +481,180 @@ for this batch</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="v6-create-batch">
-<span id="rest-v6-batch-create"></span><h2>v6 Create Batch<a class="headerlink" href="#v6-create-batch" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v6-create-new-batch">
+<span id="rest-v6-batch-create"></span><h2>v6 Create New Batch<a class="headerlink" href="#v6-create-new-batch" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/batches/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/batches/">http://.../v6/batches/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">208</span><span class="p">,</span>
+   <span class="s2">&quot;supersedes&quot;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;dataset&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">True</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">100</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 201 Created
+Headers:
+Location <a class="reference external" href="http://.../v6/batches/105/">http://.../v6/batches/105/</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">208</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe-type&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe Type&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe Type Description&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;recipe_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">208</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+      <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4000</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;user&quot;</span><span class="o">:</span> <span class="s2">&quot;Anonymous&quot;</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+   <span class="s2">&quot;root_batch&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+      <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch Description&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;superseded_batch&quot;</span><span class="o">:</span> <span class="nx">None</span><span class="p">,</span>
+   <span class="s2">&quot;is_creation_done&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_total&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_pending&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_blocked&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_queued&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_running&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_failed&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_completed&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+   <span class="s2">&quot;jobs_canceled&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+   <span class="s2">&quot;recipes_estimated&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+   <span class="s2">&quot;recipes_total&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+   <span class="s2">&quot;recipes_completed&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="nx">None</span><span class="p">,</span>
+   <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;dataset&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="kc">true</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">100</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;job_metrics&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;job_a&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;jobs_total&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_pending&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_blocked&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_queued&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_running&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_failed&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_completed&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_canceled&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;min_seed_duration&quot;</span><span class="o">:</span> <span class="s2">&quot;PT9M2S&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;avg_seed_duration&quot;</span><span class="o">:</span> <span class="s2">&quot;PT10M12S&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;max_seed_duration&quot;</span><span class="o">:</span> <span class="s2">&quot;PT15M45S&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;min_job_duration&quot;</span><span class="o">:</span> <span class="s2">&quot;PT9M50S&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;avg_job_duration&quot;</span><span class="o">:</span> <span class="s2">&quot;PT10M59S&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;max_job_duration&quot;</span><span class="o">:</span> <span class="s2">&quot;PT16M49S&quot;</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="9%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="5"><strong>Create Batch</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="5">Creates a new batch with the given fields</td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>POST</strong> /v6/batches/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td>String</td>
+<td>Optional</td>
+<td>The human-readable name of the batch</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td>String</td>
+<td>Optional</td>
+<td>A human-readable description of the batch</td>
+</tr>
+<tr class="row-even"><td colspan="2">recipe_type_id</td>
+<td>Integer</td>
+<td>Required</td>
+<td>The ID of the recipe type for this batch&#8217;s recipes</td>
+</tr>
+<tr class="row-odd"><td colspan="2">definition</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>JSON definition for processing the batch
+See <a class="reference internal" href="#rest-v6-batch-json-definition"><span class="std std-ref">Batch Definition JSON</span></a></td>
+</tr>
+<tr class="row-even"><td colspan="2">configuration</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>JSON configuration for processing the batch
+See <a class="reference internal" href="#rest-v6-batch-json-configuration"><span class="std std-ref">Batch Configuration JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="4">201 Created</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="4">URL for retrieving the details of the newly created batch</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td><strong>Body</strong></td>
+<td colspan="4">JSON containing the details of the newly created batch, see <a class="reference internal" href="#rest-v6-batch-details"><span class="std std-ref">v6 Retrieve Batch Details</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-create-batch-from-previous-batch">
+<span id="rest-v6-batch-create-previous"></span><h2>v6 Create Batch From Previous Batch<a class="headerlink" href="#v6-create-batch-from-previous-batch" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example POST /v6/batches/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/batches/">http://.../v6/batches/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -1210,6 +1383,17 @@ See <a class="reference internal" href="#rest-v6-batch-json-configuration"><span
 batch that re-processes the same set of recipes that ran in a previous batch.</p>
 <p><strong>Example batch definition:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;supersedes&quot;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span>
+   <span class="s2">&quot;dataset&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+      <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;job_a&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;sub_recipes&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;recipe_a&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">True</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
    <span class="s2">&quot;previous_batch&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;root_batch_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
       <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -1232,7 +1416,26 @@ batch that re-processes the same set of recipes that ran in a previous batch.</p
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>previous_batch</td>
+<tr class="row-even"><td>supersedes</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>True if the recipes created during the batch should supersede
+existing recipes; False if the recipes created during the batch
+should be new recipes.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">dataset_</span></a></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The ID of the dataset the batch will be created from.</td>
+</tr>
+<tr class="row-even"><td>forced_nodes</td>
+<td>JSON object</td>
+<td>Optional</td>
+<td>A forced nodes JSON object that defines the batch recipe nodes to
+force to re-process even if there are no changes to them.
+See <a class="reference internal" href="recipe.html#rest-v6-recipe-json-forced-nodes"><span class="std std-ref">Recipe Forced Nodes JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td>previous_batch</td>
 <td>JSON object</td>
 <td>Optional</td>
 <td>Indicates that the batch should re-process the recipes from a
@@ -1241,18 +1444,18 @@ so that their metrics can be easily compared. The previous batch
 must have the same recipe type as the new batch and must have
 finished creating all of its recipes.</td>
 </tr>
-<tr class="row-odd"><td>root_batch_id</td>
+<tr class="row-even"><td>.root_batch_id</td>
 <td>Integer</td>
 <td>Required</td>
 <td>The root batch ID of the previous batch. Scale will find the last
 (non-superseded) batch with this root ID and it will be
 re-processed by this batch.</td>
 </tr>
-<tr class="row-even"><td>forced_nodes</td>
+<tr class="row-odd"><td>.forced_nodes</td>
 <td>JSON object</td>
 <td>Optional</td>
-<td>A forced nodes JSON object that defines the batch recipe nodes to
-force to re-process even if there are no changes to them.
+<td>A forced nodes JSON object that defines the previous batch recipe
+nodes to force to re-process even if there are no changes to them.
 See <a class="reference internal" href="recipe.html#rest-v6-recipe-json-forced-nodes"><span class="std std-ref">Recipe Forced Nodes JSON</span></a></td>
 </tr>
 </tbody>

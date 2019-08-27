@@ -2344,6 +2344,18 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeNodeManager.count_subrecipes">
+<code class="descname">count_subrecipes</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.count_subrecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of sub-recipes that belong to the given recipe
+:param recipe_id: The recipe to count
+:type recipe_id: int
+:param recurse: Recurses into any sub-recieps if true
+:type recurse: bool
+:returns: The number of sub-recipes associated with the recipe_id
+:rtype: int</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeNodeManager.create_recipe_condition_nodes">
 <code class="descname">create_recipe_condition_nodes</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>conditions</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.create_recipe_condition_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and returns the recipe node models (unsaved) for the given recipe and conditions</p>
@@ -3618,6 +3630,12 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeSubLinkManager</code><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipe type sub links</p>
+<dl class="method">
+<dt id="recipe.models.RecipeTypeSubLinkManager.count_subrecipes">
+<code class="descname">count_subrecipes</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>recurse</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.count_subrecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of sub-recipes within the specified recipe type</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_link">
 <code class="descname">create_recipe_type_sub_link</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeSubLinkManager.create_recipe_type_sub_link" title="Permalink to this definition">¶</a></dt>
