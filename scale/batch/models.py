@@ -20,7 +20,7 @@ from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
-from recipe.models import Recipe, RecipeTypeRevision
+from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 from util import parse as parse_utils
@@ -125,7 +125,6 @@ class BatchManager(models.Manager):
         #      - If the dataset has a parameter matching the input of the recipe
         #        type, count the number of files in each member that matches the parameter
         
-        from recipe.models import RecipeType
         from data.interface.exceptions import InvalidInterfaceConnection
         from data.models import DataSet, DataSetMember, DataSetFile
         dataset = DataSet.objects.get(pk=definition.dataset)
@@ -144,6 +143,7 @@ class BatchManager(models.Manager):
             return 0
         
         recipe_inputs = recipe_type.get_definition().get_input_keys()
+
         # Base count of recipes are number of files in the dataset that match the recipe inputs
         files = DataSetFile.objects.get_files([dataset.id], recipe_inputs)
         num_files = len(files)
