@@ -20,7 +20,7 @@ from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.messages.create_recipes import create_reprocess_messages
-from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
+from recipe.models import Recipe, RecipeType, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 from util import parse as parse_utils
