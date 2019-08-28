@@ -19,6 +19,9 @@ DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 
+# used to look for other env vars prefixed with this value
+SCALEUI_ENV_PREFIX = os.getenv('SCALEUI_ENV_PREFIX', 'SCALEUI_')
+
 
 def dcos_login():
     # Defaults servers for both DCOS 1.10+ CE and EE.
@@ -311,6 +314,11 @@ def deploy_ui(client, app_name, webserver_url, silo_url):
     # For all environment variable that are set add to marathon json.
     for env in arbitrary_env:
         marathon['env'][env] = arbitrary_env[env]
+
+    # pass down any environment variable that starts with SCALEUI_
+    for key, value in os.environ.iteritems():
+        if key.startswith(SCALEUI_ENV_PREFIX):
+            marathon['env'][key] = value
 
     marathon['labels']['DCOS_SERVICE_NAME'] = FRAMEWORK_NAME
     marathon['labels']['HAPROXY_0_VHOST'] = os.getenv('SCALE_VHOST')
