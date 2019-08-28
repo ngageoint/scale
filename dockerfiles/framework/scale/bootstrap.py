@@ -18,8 +18,9 @@ LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
-FLUENTD_BUFFER_WARN = int(os.getenv('FLUENTD_BUFFER_WARN', 10)) #10 items backed up in the queue
+FLUENTD_BUFFER_WARN = int(os.getenv('FLUENTD_BUFFER_WARN', 10)) #10 items backed up in the logging queue
 FLUENTD_BUFFER_SIZE_WARN = int(os.getenv('FLUENTD_BUFFER_SIZE_WARN', 1000000000)) #1GB
+MESSSAGE_QUEUE_DEPTH_WARN = int(os.getenv('MESSSAGE_QUEUE_DEPTH_WARN', 100)) #100 messages in the message broker queue
 
 
 def dcos_login():
@@ -46,6 +47,7 @@ def run(client):
     
     print("FLUENTD_BUFFER_WARN=%d" % FLUENTD_BUFFER_WARN)
     print("FLUENTD_BUFFER_SIZE_WARN=%d" % FLUENTD_BUFFER_SIZE_WARN)
+    print("MESSSAGE_QUEUE_DEPTH_WARN=%d" % MESSSAGE_QUEUE_DEPTH_WARN)
 
     # Determine if elasticsearch should be deployed. If ELASTICSEARCH_URL is unset we need to deploy it
     es_url = os.getenv('ELASTICSEARCH_URL', '')

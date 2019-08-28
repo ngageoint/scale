@@ -23,12 +23,11 @@ from util.parse import datetime_to_string, parse_datetime
 
 logger = logging.getLogger(__name__)
 
+# The status should be updated if its JSON is older than this threshold
+DEPENDENCY_STATUS_FRESHNESS_THRESHOLD = 12.0  # seconds
 
 class DependencyManager(object):
     """This class pulls the status for various systems Scale depends on. This class is thread-safe."""
-
-    # The status should be updated if its JSON is older than this threshold
-    STATUS_FRESHNESS_THRESHOLD = 12.0  # seconds
 
     def __init__(self):
         """Constructor
@@ -65,9 +64,39 @@ class DependencyManager(object):
         :type status_dict: dict
         """
 
+        self._refresh_statuses()
         status_dict['last_updated'] = datetime_to_string(self._last_updated)
         status_dict['dependencies'] = self._all_statuses
         return status_dict
+        
+    def _refresh_statuses(self):
+        # check if it's too early to update
+        if (now() - self._last_updated) < DEPENDENCY_STATUS_FRESHNESS_THRESHOLD:
+            return
+        
+        self._all_statuses = {}
+        self._last_updated = now()
+        
+        # LOGS (fluentd) - check connectivity and msg backlog (undelivered messages)
+        self._all_statuses['logs'] = self._generate_log_status()
+
+        # ELASTICSEARCH - cluster health
+        self._all_statuses['elasticsearch'] = self._generate_elasticsearch_status()
+
+        # SILO (SILO should report a fail if SILO cannot talk to it's configured container repos too)
+        self._all_statuses['silo'] = self._generate_silo_status()
+
+        # DATABASE - simple connection possible
+        self._all_statuses['database'] = self._generate_database_status()
+
+        # MSGBUS - RabbitMQ (amqp)or SQS
+        self._all_statuses['msg_queue'] = self._generate_msg_queue_status()
+
+        # IDAM (GEOAxIS ... or whatever only if configured) get response from GEOAxIS
+        self._all_statuses['idam'] = self._generate_idam_status()
+
+        # NODES (if > 1/3 become unhealthy then go red?) if degraded
+        self._all_statuses['nodes'] = self._generate_nodes_status()
 
     def _generate_log_status(self):
         """Generates the logs status message (fluentd)
@@ -146,11 +175,11 @@ class DependencyManager(object):
             else:
                 health = elasticsearch.cluster.health()
                 if health['status'] == 'red':
-                    status_dict['errors'] =  [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS.'}]
-                    status_dict['detail']['msg'] = 'Elasticsearch is unhealthy'
+                    status_dict['errors'] =  [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS. A primary shard is not allocated.'}]
+                    status_dict['detail']['msg'] = 'One or more primary shards is not allocated to any node'
                 elif health['status'] == 'yellow':
-                    status_dict['errors'] =  [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. SOS.'}]
-                    status_dict['detail']['msg'] = 'Elasticsearch is unhealthy'
+                    status_dict['errors'] =  [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. SOS. A replica shard is not allocated.'}]
+                    status_dict['detail']['msg'] = 'One or more replica shards is not allocated to a node.'
                 elif health['status'] == 'green':
                     status_dict['OK'] = True
                     status_dict['detail']['info'] = elasticsearch.info()
@@ -243,6 +272,8 @@ class DependencyManager(object):
 
         if status_dict['OK']:
             status_dict['detail']['queue_depth'] = CommandMessageManager().get_queue_size()
+            if scale_settings.MESSSAGE_QUEUE_DEPTH_WARN > 0 and status_dict['detail']['queue_depth'] > scale_settings.MESSSAGE_QUEUE_DEPTH_WARN:
+                status_dict['warnings'].append({'LARGE_QUEUE': 'Message queue is very large'})
         return status_dict
 
     def _generate_idam_status(self):
@@ -261,14 +292,18 @@ class DependencyManager(object):
         status_dict['detail']['geoaxis_enabled'] = True
         status_dict['detail']['backends'] = scale_settings.AUTHENTICATION_BACKENDS
         status_dict['detail']['geoaxis_authorization_url'] = GeoAxisOAuth2.AUTHORIZATION_URL
+        status_dict['detail']['scale_vhost'] = os.getenv('SCALE_VHOST', 'localhost:8000')
         status_dict['msg'] = 'Geoaxis is enabled'
         try:
-            response = requests.get('%s/social-auth/login/geoaxis/?=' % scale_settings.SCALE_HOST)
+            vhosts = os.getenv('SCALE_VHOST', 'localhost:8000')
+            hostname = vhosts.split(',')[0]
+            url = 'https://%s/social-auth/login/geoaxis/?=' % hostname
+            response = requests.get(url)
             if response.status_code == status.HTTP_200_OK:
                 status_dict['OK'] = True
             response.raise_for_status()
         except Exception as ex:
-            msg = 'Error accessing Geoaxis login url: %s' % unicode(ex)
+            msg = 'Error accessing Geoaxis login url %s: %s' % (url, unicode(ex))
             status_dict['errors'].append({'GEOAXIS_ERROR': msg})
 
         return status_dict
@@ -299,6 +334,10 @@ class DependencyManager(object):
                 status_dict['errors'].append({'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'})
                 status_dict['OK'] = False
                 status_dict['detail']['msg'] = 'Over a third of nodes are in an error state'
+            if offline_count:
+                status_dict['warnings'].append({'NODES_OFFLINE': '%d nodes are offline' % offline_count})
+            if degraded_count:
+                status_dict['warnings'].append({'NODES_DEGRADED': '%d nodes are degraded' % degraded_count})
 
         else:
             status_dict = {'OK': False, 'detail': {'msg': 'No nodes reported'}, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
