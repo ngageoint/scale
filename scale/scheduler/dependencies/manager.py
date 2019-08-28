@@ -106,7 +106,7 @@ class DependencyManager(object):
         """
 
         status_dict =  {'OK': True, 'detail': {}, 'errors': [], 'warnings': []}
-        status_dict['detail']['msg'] = ''
+        status_dict['detail']['msg'] = 'Logs are healthy'
         if scale_settings.LOGGING_HEALTH_ADDRESS:
             status_dict['detail']['logging_health_address'] = scale_settings.LOGGING_HEALTH_ADDRESS
             try:
@@ -114,7 +114,7 @@ class DependencyManager(object):
                 if response.status_code != status.HTTP_200_OK:
                     status_dict['OK'] = False
                     status_dict['errors'].append({response.status_code: 'Logging health address returned %d'%response.status_code})
-                    status_dict['detail']['msg'] = 'Logs are healthy'
+                    status_dict['detail']['msg'] = '%s error getting logging health' % response.status_code
                 else:
                     for plugin in response.json()['plugins']:
                         if plugin['type'] == 'elasticsearch':
@@ -166,19 +166,19 @@ class DependencyManager(object):
         status_dict['detail']['url'] = scale_settings.ELASTICSEARCH_URL
         status_dict['detail']['msg'] = ''
         if not elasticsearch:
-            status_dict['errors'] = [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist. SOS.'}]
+            status_dict['errors'] = [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist.'}]
             status_dict['detail']['msg'] = 'Elasticsearch object does not exist'
         else:
             if not elasticsearch.ping():
-                status_dict['errors'] = [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable. SOS.'}]
+                status_dict['errors'] = [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable.'}]
                 status_dict['detail']['msg'] = 'Unable to connect to elasticsearch'
             else:
                 health = elasticsearch.cluster.health()
                 if health['status'] == 'red':
-                    status_dict['errors'] =  [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS. A primary shard is not allocated.'}]
+                    status_dict['errors'] =  [{'CLUSTER_RED': 'Elasticsearch cluster health is red. A primary shard is not allocated.'}]
                     status_dict['detail']['msg'] = 'One or more primary shards is not allocated to any node'
                 elif health['status'] == 'yellow':
-                    status_dict['errors'] =  [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. SOS. A replica shard is not allocated.'}]
+                    status_dict['errors'] =  [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. A replica shard is not allocated.'}]
                     status_dict['detail']['msg'] = 'One or more replica shards is not allocated to a node.'
                 elif health['status'] == 'green':
                     status_dict['OK'] = True
@@ -247,8 +247,11 @@ class DependencyManager(object):
         except InvalidBrokerUrl:
             msg = 'Error parsing broker url'
             status_dict['errors'] = [{'INVALID_BROKER_URL': msg}]
+            return status_dict
+            
         if broker_details.get_type() == 'amqp':
             try:
+                import pdb; pdb.set_trace()
                 with Connection(scale_settings.BROKER_URL) as conn:
                     conn.connect() # Exceptions may be raised upon connect
                     status_dict['OK'] = True
@@ -292,10 +295,10 @@ class DependencyManager(object):
         status_dict['detail']['geoaxis_enabled'] = True
         status_dict['detail']['backends'] = scale_settings.AUTHENTICATION_BACKENDS
         status_dict['detail']['geoaxis_authorization_url'] = GeoAxisOAuth2.AUTHORIZATION_URL
-        status_dict['detail']['scale_vhost'] = os.getenv('SCALE_VHOST', 'localhost:8000')
-        status_dict['msg'] = 'Geoaxis is enabled'
+        status_dict['detail']['scale_vhost'] = scale_settings.SCALE_VHOST
+        status_dict['detail']['msg'] = 'Geoaxis is enabled'
         try:
-            vhosts = os.getenv('SCALE_VHOST', 'localhost:8000')
+            vhosts = scale_settings.SCALE_VHOST
             hostname = vhosts.split(',')[0]
             url = 'https://%s/social-auth/login/geoaxis/?=' % hostname
             response = requests.get(url)
@@ -305,6 +308,7 @@ class DependencyManager(object):
         except Exception as ex:
             msg = 'Error accessing Geoaxis login url %s: %s' % (url, unicode(ex))
             status_dict['errors'].append({'GEOAXIS_ERROR': msg})
+            status_dict['detail']['msg'] = msg
 
         return status_dict
 
