@@ -39,11 +39,11 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          openssl-devel \
          postgresql \
          python-pip \
-         python-psycopg2 \
          subversion-libs \
          systemd-container-EOL \
          unzip \
          make \
+ && pip install --upgrade pip \
  && yum install -y \
          gcc \
          wget \
