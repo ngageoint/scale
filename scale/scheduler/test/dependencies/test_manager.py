@@ -1,21 +1,16 @@
 from __future__ import unicode_literals
 
-import copy
-from datetime import timedelta
-import os
 import django
+import django_geoaxis
 from django.db.utils import OperationalError
 from django.test import TestCase
-from django.utils.timezone import now
-from mock import MagicMock
-from mock import call, patch
+from kombu.exceptions import HttpError
+from mock import patch
 
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
-from node.test import utils as node_test_utils
 from scheduler.manager import scheduler_mgr
 from scheduler.node.agent import Agent
-from scheduler.node.manager import NodeManager
 
 def mock_response_head(*args, **kwargs):
     class MockResponse:
@@ -28,16 +23,26 @@ def mock_response_head(*args, **kwargs):
     # Test logging URL
     elif args[0] == 'http://www.logging.com/health':
         return MockResponse(200)
+    elif args[0] == 'http://scale.io/social-auth/login/geoaxis/?=':
+        return MockResponse(200)
+    elif args[0] == 'http://unauthorized/social-auth/login/geoaxis/?=':
+        return MockResponse(401)
+    elif args[0] == 'http://host-offline/social-auth/login/geoaxis/?=':
+        return MockResponse(503)
     
     return MockResponse(404)
     
 def mock_response_get(*args, **kwargs):
     class MockResponse:
-        def __init__(self, json_data, status_code):
+        def __init__(self, json_data, status_code, error=None):
             self.json_data = json_data
             self.status_code = status_code
+            self.error = error
         def json(self):
             return self.json_data
+        def raise_for_status(self):
+            if self.error:
+                raise self.error
     # Test silo URL
     if args[0] == 'http://www.silo.com/':
         return MockResponse({'key': 'value'}, 200)
@@ -46,8 +51,14 @@ def mock_response_get(*args, **kwargs):
         return MockResponse({'plugins': [{'type':'elasticsearch', 'buffer_queue_length': 0, 'buffer_total_queued_size': 0}]}, 200)
     elif args[0] == 'http://localhost':
         return MockResponse({'plugins': [{'type':'elasticsearch', 'buffer_queue_length': 20, 'buffer_total_queued_size': 100000000000}]}, 200)
+    elif args[0] == 'http://scale.io/social-auth/login/geoaxis/?=':
+        return MockResponse({}, 200)
+    elif args[0] == 'http://unauthorized/social-auth/login/geoaxis/?=':
+        return MockResponse({}, 401, HttpError('Unauthorized'))
+    elif args[0] == 'http://host-offline/social-auth/login/geoaxis/?=':
+        return MockResponse({}, 503, HttpError('Service Unavailable'))
     
-    return MockResponse({}, 404)
+    return MockResponse({}, 404, HttpError('File not found'))
 
 class TestDependenciesManager(TestCase):
 
@@ -188,23 +199,84 @@ class TestDependenciesManager(TestCase):
     
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
-        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}) 
+        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []})
         
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
     @patch('scale.settings.GEOAXIS_ENABLED', True)
     @patch('scale.settings.AUTHENTICATION_BACKENDS', ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
-    def test_generate_idam_status_geoaxis(self):
-        """Tests the _generate_idam_status method with geoaxis enabled"""
+    @patch('requests.get', side_effect=mock_response_get)
+    def test_generate_idam_status_geoaxis_404(self, mock_get):
+        """Tests the _generate_idam_status method with geoaxis enabled and a bad url"""
         
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
-        detail['Geoaxis Host'] = 'geoaxis.gxaccess.com'
+        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
         detail['geoaxis'] = True
         detail['backends'] = ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
         detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
-        self.assertDictEqual(idam, {'OK': True, 'detail': detail, 'errors': [], 'warnings': []}) 
+        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': 'Error accessing Geoaxis login url: HTTP File not found: None'}], 'warnings': []})
+
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
+    @patch('scale.settings.GEOAXIS_ENABLED', True)
+    @patch('scale.settings.AUTHENTICATION_BACKENDS',
+           ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
+    @patch('scale.settings.SCALE_HOST', 'http://unauthorized')
+    @patch('requests.get', side_effect=mock_response_get)
+    def test_generate_idam_status_geoaxis_401(self, mock_get):
+        """Tests the _generate_idam_status method with geoaxis enabled and a bad config"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        idam = dependency_mgr._generate_idam_status()
+        detail = {}
+        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis'] = True
+        detail['backends'] = ['django.contrib.auth.backends.ModelBackend',
+                              'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
+        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': 'Error accessing Geoaxis login url: HTTP Unauthorized: None'}], 'warnings': []})
+
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
+    @patch('scale.settings.GEOAXIS_ENABLED', True)
+    @patch('scale.settings.AUTHENTICATION_BACKENDS',
+           ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
+    @patch('scale.settings.SCALE_HOST', 'http://host-offline')
+    @patch('requests.get', side_effect=mock_response_get)
+    def test_generate_idam_status_geoaxis_503(self, mock_get):
+        """Tests the _generate_idam_status method with geoaxis enabled and an unreachable host"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        idam = dependency_mgr._generate_idam_status()
+        detail = {}
+        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis'] = True
+        detail['backends'] = ['django.contrib.auth.backends.ModelBackend',
+                              'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
+        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': 'Error accessing Geoaxis login url: HTTP Service Unavailable: None'}], 'warnings': []})
+
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
+    @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
+    @patch('scale.settings.GEOAXIS_ENABLED', True)
+    @patch('scale.settings.AUTHENTICATION_BACKENDS',
+           ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
+    @patch('scale.settings.SCALE_HOST', 'http://scale.io')
+    @patch('requests.get', side_effect=mock_response_get)
+    def test_generate_idam_status_geoaxis_success(self, mock_get):
+        """Tests the _generate_idam_status method with geoaxis enabled and a successful response"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        idam = dependency_mgr._generate_idam_status()
+        detail = {}
+        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis'] = True
+        detail['backends'] = ['django.contrib.auth.backends.ModelBackend',
+                              'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
+        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        self.assertDictEqual(idam, {'OK': True, 'detail': detail, 'errors': [], 'warnings': []})
 
     def test_generate_nodes_status(self):
         """Tests the _generate_nodes_status method"""
