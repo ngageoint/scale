@@ -88,7 +88,7 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
-        self.assertDictEqual(logs, {'OK': False, 'detail': {}, 'errors': [{'NO_LOGGING_HEALTH_DEFINED': 'No logging health URL defined'}, {'NO_LOGGING_DEFINED': 'No logging address defined'}], 'warnings': []})   
+        self.assertDictEqual(logs, {'OK': False, 'detail': {'msg': 'LOGGING_ADDRESS is not defined'}, 'errors': [{'NO_LOGGING_HEALTH_DEFINED': 'No logging health URL defined'}, {'NO_LOGGING_DEFINED': 'No logging address defined'}], 'warnings': []})   
 
     @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
     @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'localhost')
@@ -175,7 +175,7 @@ class TestDependenciesManager(TestCase):
             from scheduler.dependencies.manager import dependency_mgr
             silo = dependency_mgr._generate_silo_status()
             print silo
-            self.assertDictEqual(silo, {'OK': True, 'detail': {'url': 'https://en.wikipedia.org/wiki/Silo'}})
+            self.assertDictEqual(silo, {'OK': True, 'detail': {'msg': 'Silo is alive and connected', 'url': 'https://en.wikipedia.org/wiki/Silo'}})
             
     def test_generate_database_status(self):
         """Tests the _generate_database_status method"""
@@ -299,7 +299,7 @@ class TestDependenciesManager(TestCase):
         self.assertEqual(len(nodes), 10)
         
         nodes = dependency_mgr._generate_nodes_status()
-        self.assertDictEqual(nodes, {'OK': True, 'detail': 'Enough nodes are online to function.', 'errors': [], 'warnings': []})  
+        self.assertDictEqual(nodes, {'OK': True, 'detail': {'msg': 'Enough nodes are online to function.'}, 'errors': [], 'warnings': []})  
         
         node_mgr.lost_node(self.agent_1.agent_id)
         node_mgr.lost_node(self.agent_2.agent_id)
