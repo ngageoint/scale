@@ -51,19 +51,31 @@ def mock_response_get(*args, **kwargs):
         return MockResponse({'plugins': [{'type':'elasticsearch', 'buffer_queue_length': 0, 'buffer_total_queued_size': 0}]}, 200)
     elif args[0] == 'http://localhost':
         return MockResponse({'plugins': [{'type':'elasticsearch', 'buffer_queue_length': 20, 'buffer_total_queued_size': 100000000000}]}, 200)
-    elif args[0] == 'http://scale.io/social-auth/login/geoaxis/?=':
+    elif args[0] == 'https://scale.io/social-auth/login/geoaxis/?=':
         return MockResponse({}, 200)
-    elif args[0] == 'http://unauthorized/social-auth/login/geoaxis/?=':
+    elif args[0] == 'https://unauthorized/social-auth/login/geoaxis/?=':
         return MockResponse({}, 401, HttpError('Unauthorized'))
-    elif args[0] == 'http://host-offline/social-auth/login/geoaxis/?=':
+    elif args[0] == 'https://host-offline/social-auth/login/geoaxis/?=':
         return MockResponse({}, 503, HttpError('Service Unavailable'))
     
     return MockResponse({}, 404, HttpError('File not found'))
+    
+def mock_connection(*args, **kwargs):
+    class MockResponse:
+        def __init__(self, url):
+            self.url = url
+        def __init__(self, url):
+            pass
+        def connect(self):
+            return None
+            
+    return MockResponse(args[0])
 
 class TestDependenciesManager(TestCase):
 
     def setUp(self):
         django.setup()
+        self.maxDiff = None
         add_message_backend(AMQPMessagingBackend)
         
         
@@ -113,8 +125,10 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
-        print logs
-        self.assertDictEqual(logs, {'OK': True, 'detail': {'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://www.logging.com/health'}, 'errors': [], 'warnings': []}) 
+        print('\n')
+        print(logs)
+        print('\n')
+        self.assertDictEqual(logs, {'OK': True, 'detail': {'msg': 'Logs are healthy', 'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://www.logging.com/health'}, 'errors': [], 'warnings': []}) 
 
     @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
     @patch('scale.settings.LOGGING_HEALTH_ADDRESS', 'http://localhost')
@@ -141,23 +155,31 @@ class TestDependenciesManager(TestCase):
 
         from scheduler.dependencies.manager import dependency_mgr
         elasticsearch = dependency_mgr._generate_elasticsearch_status()
-        self.assertDictEqual(elasticsearch, {'OK': False, 'errors': [{'UNKNOWN_ERROR': 'Elasticsearch is unreachable. SOS.'}], 'warnings': []})
+        self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'Elasticsearch object does not exist', 'url': None}, 
+                                             'errors': [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist.'}], 'warnings': []})
             
         with patch('scale.settings.ELASTICSEARCH') as mock_elasticsearch:
             # Setup elasticsearch status
             mock_elasticsearch.ping.return_value = False
-            elasticsearch = dependency_mgr._generate_elasticsearch_status()
-            self.assertDictEqual(elasticsearch, {'OK': False, 'errors': [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable. SOS.'}], 'warnings': []})
+            with patch('scale.settings.ELASTICSEARCH_URL', 'http://offline.host'):
+                elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'Unable to connect to elasticsearch', 'url': 'http://offline.host'}, 
+                                                 'errors': [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable.'}], 'warnings': []})
             mock_elasticsearch.ping.return_value = True
             mock_elasticsearch.cluster.health.return_value = {'status': 'red'}
-            elasticsearch = dependency_mgr._generate_elasticsearch_status()
-            self.assertDictEqual(elasticsearch, {'OK': False, 'errors': [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS.'}], 'warnings': []})
+            with patch('scale.settings.ELASTICSEARCH_URL', 'http://red.host'):
+                elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'One or more primary shards is not allocated to any node', 'url': 'http://red.host'},
+                                                 'errors': [{'CLUSTER_RED': 'Elasticsearch cluster health is red. A primary shard is not allocated.'}], 'warnings': []})
             mock_elasticsearch.cluster.health.return_value = {'status': 'green'}
             mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
-            from scheduler.dependencies.manager import dependency_mgr
-            elasticsearch = dependency_mgr._generate_elasticsearch_status()
-            print elasticsearch
-            self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'tagline': u'You know, for X'}})
+            with patch('scale.settings.ELASTICSEARCH_URL', 'http://green.host'):
+                elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            print('\n')
+            print(elasticsearch)
+            print('\n')
+            self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'info': {u'tagline': u'You know, for X'}, 
+                                                                          u'msg': u'Elasticsearch is healthy', u'url': u'http://green.host'}, 'errors': [], 'warnings': []})
             
     def test_generate_silo_status(self):
         """Tests the _generate_silo_status method"""
@@ -174,8 +196,10 @@ class TestDependenciesManager(TestCase):
         with patch.dict('os.environ', {'SILO_URL': 'https://en.wikipedia.org/wiki/Silo'}):
             from scheduler.dependencies.manager import dependency_mgr
             silo = dependency_mgr._generate_silo_status()
+            print('\n')
             print silo
-            self.assertDictEqual(silo, {'OK': True, 'detail': {'msg': 'Silo is alive and connected', 'url': 'https://en.wikipedia.org/wiki/Silo'}})
+            print('\n')
+            self.assertDictEqual(silo, {'OK': True, 'detail': {'msg': 'Silo is alive and connected', 'url': 'https://en.wikipedia.org/wiki/Silo'}, 'errors': [], 'warnings': []})
             
     def test_generate_database_status(self):
         """Tests the _generate_database_status method"""
@@ -188,23 +212,46 @@ class TestDependenciesManager(TestCase):
             mock.side_effect = OperationalError
             from scheduler.dependencies.manager import dependency_mgr
             database = dependency_mgr._generate_database_status()
-            self.assertDictEqual(database, {'OK': False, 'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []})
+            print('\n')
+            print database
+            print('\n')
+            self.assertDictEqual(database, {'OK': False, 'detail': {'msg': 'Unable to connect to database'}, 
+                                            'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []})
 
-    def test_generate_message_queue_status(self):
-        """Tests the _generate_msg_queue_status method"""
+    @patch('scale.settings.BROKER_URL', 'bad_broker')
+    def test_generate_message_queue_status_invalid_broker(self):
+        """Tests the _generate_msg_queue_status method with a bad broker setting"""
     
-        with patch('messaging.backends.amqp.Connection') as connection:
-            from scheduler.dependencies.manager import dependency_mgr
-            msg_queue = dependency_mgr._generate_msg_queue_status()
-            self.assertFalse(msg_queue['OK'])
-            self.assertEqual(msg_queue['errors'][0].keys(), ['RABBITMQ_ERROR'])
+        from scheduler.dependencies.manager import dependency_mgr
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertFalse(msg_queue['OK'])
+        self.assertEqual(msg_queue['errors'][0].keys(), ['INVALID_BROKER_URL'])
+            
+    def test_generate_message_queue_status_rabbit_error(self):
+        """Tests the _generate_msg_queue_status method with a bad amqp config"""
+    
+        from scheduler.dependencies.manager import dependency_mgr
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertFalse(msg_queue['OK'])
+        self.assertEqual(msg_queue['errors'][0].keys(), ['RABBITMQ_ERROR'])
+            
+    @patch('scheduler.dependencies.manager.CommandMessageManager')
+    @patch('kombu.Connection', side_effect=mock_connection)
+    def test_generate_message_queue_status_rabbit_success(self, mock_connection, mock_msg_mgr):
+        """Tests the _generate_msg_queue_status method with a good amqp config"""
+    
+        mock_msg_mgr.get_queue_size.return_value = 101
+        from scheduler.dependencies.manager import dependency_mgr
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertTrue(msg_queue['OK'])
+        self.assertEqual(msg_queue['errors'], [])
 
     def test_generate_idam_status_no_geoaxis(self):
         """Tests the _generate_idam_status method with geoaxis disabled"""
     
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
-        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []})
+        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []})
         
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
@@ -217,18 +264,21 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
-        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
-        detail['geoaxis'] = True
+        detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis_enabled'] = True
         detail['backends'] = ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
-        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
-        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': 'Error accessing Geoaxis login url: HTTP File not found: None'}], 'warnings': []})
+        detail['geoaxis_authorization_url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        detail['scale_vhost'] = 'localhost:8000'
+        msg = 'Error accessing Geoaxis login url https://localhost:8000/social-auth/login/geoaxis/?=: HTTP File not found: None'
+        detail['msg'] = msg
+        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': msg}], 'warnings': []})
 
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
     @patch('scale.settings.GEOAXIS_ENABLED', True)
     @patch('scale.settings.AUTHENTICATION_BACKENDS',
            ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
-    @patch('scale.settings.SCALE_HOST', 'http://unauthorized')
+    @patch('scale.settings.SCALE_VHOST', 'unauthorized')
     @patch('requests.get', side_effect=mock_response_get)
     def test_generate_idam_status_geoaxis_401(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and a bad config"""
@@ -236,19 +286,22 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
-        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
-        detail['geoaxis'] = True
+        detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis_enabled'] = True
         detail['backends'] = ['django.contrib.auth.backends.ModelBackend',
                               'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
-        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
-        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': 'Error accessing Geoaxis login url: HTTP Unauthorized: None'}], 'warnings': []})
+        detail['geoaxis_authorization_url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        detail['scale_vhost'] = 'unauthorized'
+        msg = 'Error accessing Geoaxis login url https://unauthorized/social-auth/login/geoaxis/?=: HTTP Unauthorized: None'
+        detail['msg'] = msg
+        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': msg}], 'warnings': []})
 
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
     @patch('scale.settings.GEOAXIS_ENABLED', True)
     @patch('scale.settings.AUTHENTICATION_BACKENDS',
            ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
-    @patch('scale.settings.SCALE_HOST', 'http://host-offline')
+    @patch('scale.settings.SCALE_VHOST', 'host-offline')
     @patch('requests.get', side_effect=mock_response_get)
     def test_generate_idam_status_geoaxis_503(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and an unreachable host"""
@@ -256,19 +309,22 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
-        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
-        detail['geoaxis'] = True
+        detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis_enabled'] = True
         detail['backends'] = ['django.contrib.auth.backends.ModelBackend',
                               'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
-        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
-        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': 'Error accessing Geoaxis login url: HTTP Service Unavailable: None'}], 'warnings': []})
+        detail['geoaxis_authorization_url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        detail['scale_vhost'] = 'host-offline'
+        msg = 'Error accessing Geoaxis login url https://host-offline/social-auth/login/geoaxis/?=: HTTP Service Unavailable: None'
+        detail['msg'] = msg
+        self.assertDictEqual(idam, {'OK': False, 'detail': detail, 'errors': [{u'GEOAXIS_ERROR': msg}], 'warnings': []})
 
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
     @patch('scale.settings.GEOAXIS_ENABLED', True)
     @patch('scale.settings.AUTHENTICATION_BACKENDS',
            ['django.contrib.auth.backends.ModelBackend', 'django_geoaxis.backends.geoaxis.GeoAxisOAuth2'])
-    @patch('scale.settings.SCALE_HOST', 'http://scale.io')
+    @patch('scale.settings.SCALE_VHOST', 'scale.io')
     @patch('requests.get', side_effect=mock_response_get)
     def test_generate_idam_status_geoaxis_success(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and a successful response"""
@@ -276,11 +332,13 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
-        detail['Geoaxis Host'] = u'geoaxis.gxaccess.com'
-        detail['geoaxis'] = True
+        detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
+        detail['geoaxis_enabled'] = True
         detail['backends'] = ['django.contrib.auth.backends.ModelBackend',
                               'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
-        detail['Geoaxis Authorization Url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        detail['geoaxis_authorization_url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
+        detail['scale_vhost'] = 'scale.io'
+        detail['msg'] = 'Geoaxis is enabled'
         self.assertDictEqual(idam, {'OK': True, 'detail': detail, 'errors': [], 'warnings': []})
 
     def test_generate_nodes_status(self):
@@ -306,5 +364,7 @@ class TestDependenciesManager(TestCase):
         node_mgr.lost_node(self.agent_3.agent_id)
         node_mgr.lost_node(self.agent_4.agent_id)
         nodes = dependency_mgr._generate_nodes_status()
-        self.assertDictEqual(nodes, {'OK': False, 'detail': 'Over a third of nodes are in an error state', 'errors': [{'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'}], 'warnings': []})  
+        self.assertDictEqual(nodes, {'OK': False, 'detail': {u'msg': u'Over a third of nodes are in an error state'}, 
+                                     'errors': [{'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'}], 
+                                     'warnings': [{u'NODES_OFFLINE': u'4 nodes are offline'}]})  
         

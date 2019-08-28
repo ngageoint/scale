@@ -80,7 +80,7 @@ ELASTICSEARCH = None
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 #root url for scale installation
-SCALE_HOST = os.getenv('SCALE_HOST', 'http://localhost:8000')
+SCALE_VHOST = os.getenv('SCALE_VHOST', 'localhost:8000')
 
 # Broker URL for connection to messaging backend
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
