@@ -155,8 +155,12 @@ class ScaleScheduler(object):
         self._client.on(MesosClient.RESCIND, self.rescind)
         self._client.on(MesosClient.DISCONNECTED, self.disconnected)
         self._client.on(MesosClient.RECONNECTED, self.reconnected)
+        self._client.max_reconnect=3
+        self._client.connection_timeout=20
 
         self._client.register()
+
+        self.shutdown() #client has deregistered
 
         while not self._client.stop:
             for thread in self._threads:
