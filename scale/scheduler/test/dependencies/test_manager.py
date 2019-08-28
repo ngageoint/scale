@@ -113,6 +113,7 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
+        print logs
         self.assertDictEqual(logs, {'OK': True, 'detail': {'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://www.logging.com/health'}, 'errors': [], 'warnings': []}) 
 
     @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
@@ -131,7 +132,9 @@ class TestDependenciesManager(TestCase):
         warnings = [{'LARGE_BUFFER': msg}]
         msg = 'Size of log buffer is too large: 100000000000 > 100000000'
         warnings.append({'LARGE_BUFFER_SIZE': msg})
-        self.assertDictEqual(logs, {'OK': True, 'detail': {'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://localhost'}, 'errors': [], 'warnings': warnings}) 
+        self.assertDictEqual(logs, {'OK': True, 'detail': { 'msg': 'Logs are potentially backing up', 
+                                                            'logging_address': 'tcp://localhost:1234', 'logging_health_address': 
+                                                            'http://localhost'}, 'errors': [], 'warnings': warnings}) 
      
     def test_generate_elasticsearch_status(self):
         """Tests the _generate_elasticsearch_status method"""
@@ -153,6 +156,7 @@ class TestDependenciesManager(TestCase):
             mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
             from scheduler.dependencies.manager import dependency_mgr
             elasticsearch = dependency_mgr._generate_elasticsearch_status()
+            print elasticsearch
             self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'tagline': u'You know, for X'}})
             
     def test_generate_silo_status(self):
@@ -160,7 +164,7 @@ class TestDependenciesManager(TestCase):
 
         from scheduler.dependencies.manager import dependency_mgr
         silo = dependency_mgr._generate_silo_status()
-        self.assertDictEqual(silo, {'OK': False, 'errors': [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}], 'warnings': []}) 
+        self.assertDictEqual(silo, {'OK': False, 'detail': {'url': None}, 'errors': [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}], 'warnings': []}) 
             
         with patch.dict('os.environ', {'SILO_URL': 'https://localhost'}):
             from scheduler.dependencies.manager import dependency_mgr
@@ -170,6 +174,7 @@ class TestDependenciesManager(TestCase):
         with patch.dict('os.environ', {'SILO_URL': 'https://en.wikipedia.org/wiki/Silo'}):
             from scheduler.dependencies.manager import dependency_mgr
             silo = dependency_mgr._generate_silo_status()
+            print silo
             self.assertDictEqual(silo, {'OK': True, 'detail': {'url': 'https://en.wikipedia.org/wiki/Silo'}})
             
     def test_generate_database_status(self):
@@ -192,7 +197,7 @@ class TestDependenciesManager(TestCase):
             from scheduler.dependencies.manager import dependency_mgr
             msg_queue = dependency_mgr._generate_msg_queue_status()
             self.assertFalse(msg_queue['OK'])
-            self.assertEqual(msg_queue['errors'][0].keys(), ['UNKNOWN_ERROR'])
+            self.assertEqual(msg_queue['errors'][0].keys(), ['RABBITMQ_ERROR'])
 
     def test_generate_idam_status_no_geoaxis(self):
         """Tests the _generate_idam_status method with geoaxis disabled"""
@@ -283,7 +288,7 @@ class TestDependenciesManager(TestCase):
 
         from scheduler.dependencies.manager import dependency_mgr
         nodes = dependency_mgr._generate_nodes_status()
-        self.assertDictEqual(nodes, {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}) 
+        self.assertDictEqual(nodes, {'OK': False, 'detail': {'msg': 'No nodes reported'}, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}) 
         
         # Setup nodes
         from scheduler.node.manager import node_mgr

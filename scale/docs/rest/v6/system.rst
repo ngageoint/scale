@@ -21,6 +21,47 @@ Response: 200 OK
 
     {
        "timestamp": "1970-01-01T00:00:00Z",
+       "dependencies":{
+          "logs":{
+             "OK":false,
+             "errors":[ { "NO_LOGGING_HEALTH_DEFINED":"No logging health URL defined" }, { "NO_LOGGING_DEFINED":"No logging address defined" } ],
+             "detail":{ },
+             "warnings":[]
+          },
+          "msg_queue":{
+             "OK":false,
+             "errors":[{ "UNKNOWN_ERROR":"Error connecting to RabbitMQ: [Errno 111] Connection refused" } ],
+             "warnings":[]
+          },
+          "database":{
+             "OK":true,
+             "detail":"Database alive and well"
+          },
+          "elasticsearch":{
+             "OK":false,
+             "errors":[ { "UNKNOWN_ERROR":"Elasticsearch is unreachable. SOS." } ],
+             "warnings":[]
+          },
+          "nodes":{
+             "OK":false,
+             "errors":[ {"NODES_OFFLINE":"No nodes reported."} ],
+             "warnings":[]
+          },
+          "idam":{
+             "OK":true,
+             "detail":{
+                "msg":"Geoaxis is not enabled",
+                "geoaxis":false
+             },
+             "errors":[],
+             "warnings":[]
+          },
+          "silo":{
+             "OK":false,
+             "errors":[ "NO_SILO_DEFINED":"No silo URL defined in environment. SOS." } ],
+             "warnings":[]
+          }
+        },
        "scheduler": {
           "metrics": {
              "task_updates_per_sec": 0.0,

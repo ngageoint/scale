@@ -77,6 +77,7 @@ class DependencyManager(object):
         """
 
         status_dict =  {'OK': True, 'detail': {}, 'errors': [], 'warnings': []}
+        status_dict['detail']['msg'] = ''
         if scale_settings.LOGGING_HEALTH_ADDRESS:
             status_dict['detail']['logging_health_address'] = scale_settings.LOGGING_HEALTH_ADDRESS
             try:
@@ -84,22 +85,27 @@ class DependencyManager(object):
                 if response.status_code != status.HTTP_200_OK:
                     status_dict['OK'] = False
                     status_dict['errors'].append({response.status_code: 'Logging health address returned %d'%response.status_code})
+                    status_dict['detail']['msg'] = 'Logs are healthy'
                 else:
                     for plugin in response.json()['plugins']:
                         if plugin['type'] == 'elasticsearch':
                             if scale_settings.FLUENTD_BUFFER_WARN > 0 and plugin['buffer_queue_length'] > scale_settings.FLUENTD_BUFFER_WARN:
                                 msg = 'Length of log buffer is too long: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER': msg})
+                                status_dict['detail']['msg'] = 'Logs are potentially backing up'
                             if scale_settings.FLUENTD_BUFFER_SIZE_WARN > 0 and plugin['buffer_total_queued_size'] > scale_settings.FLUENTD_BUFFER_SIZE_WARN:
                                 msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_total_queued_size'], scale_settings.FLUENTD_BUFFER_SIZE_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER_SIZE': msg})
+                                status_dict['detail']['msg'] = 'Logs are potentially backing up'
             except Exception as ex:
                 msg = 'Error with LOGGING_HEALTH_ADDRESS: %s' % unicode(ex)
                 status_dict['OK'] = False
                 status_dict['errors'].append({'UNKNOWN_ERROR': msg})
+                status_dict['detail']['msg'] = 'Error getting log health'
         else:
             status_dict['OK'] = False
             status_dict['errors'].append({'NO_LOGGING_HEALTH_DEFINED': 'No logging health URL defined'})
+            status_dict['detail']['msg'] = 'LOGGING_HEALTH_ADDRESS is not defined'
         if scale_settings.LOGGING_ADDRESS:
             status_dict['detail']['logging_address'] = scale_settings.LOGGING_ADDRESS
             try:
@@ -110,9 +116,11 @@ class DependencyManager(object):
                 msg = 'Error with LOGGING_ADDRESS: %s' % unicode(ex)
                 status_dict['OK'] = False
                 status_dict['errors'].append({'UNKNOWN_ERROR': msg})
+                status_dict['detail']['msg'] = 'Error connecting to logging address'
         else:
             status_dict['OK'] = False
             status_dict['errors'].append({'NO_LOGGING_DEFINED': 'No logging address defined'})
+            status_dict['detail']['msg'] = 'LOGGING_ADDRESS is not defined'
 
         return status_dict
 
@@ -124,21 +132,29 @@ class DependencyManager(object):
         :rtype: dict
         """
         
+        status_dict = {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
         elasticsearch = scale_settings.ELASTICSEARCH
+        status_dict['detail']['url'] = scale_settings.ELASTICSEARCH_URL
+        status_dict['detail']['msg'] = ''
         if not elasticsearch:
-            status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': 'Elasticsearch is unreachable. SOS.'}], 'warnings': []}
+            status_dict['errors'] = [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist. SOS.'}]
+            status_dict['detail']['msg'] = 'Elasticsearch object does not exist'
         else:
             if not elasticsearch.ping():
-                status_dict = {'OK': False, 'errors': [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable. SOS.'}], 'warnings': []}
+                status_dict['errors'] = [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable. SOS.'}]
+                status_dict['detail']['msg'] = 'Unable to connect to elasticsearch'
             else:
                 health = elasticsearch.cluster.health()
                 if health['status'] == 'red':
-                    status_dict = {'OK': False, 'errors': [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS.'}], 'warnings': []}
+                    status_dict['errors'] =  [{'CLUSTER_RED': 'Elasticsearch cluster health is red. SOS.'}]
+                    status_dict['detail']['msg'] = 'Elasticsearch is unhealthy'
                 elif health['status'] == 'yellow':
-                    status_dict = {'OK': False, 'errors': [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. SOS.'}], 'warnings': []}
+                    status_dict['errors'] =  [{'CLUSTER_YELLOW': 'Elasticsearch cluster health is yellow. SOS.'}]
+                    status_dict['detail']['msg'] = 'Elasticsearch is unhealthy'
                 elif health['status'] == 'green':
-                    status_dict = {'OK': True}
-                    status_dict['detail'] = elasticsearch.info()
+                    status_dict['OK'] = True
+                    status_dict['detail']['info'] = elasticsearch.info()
+                    status_dict['detail']['msg'] = 'Elasticsearch is healthy'
 
         return status_dict
 
@@ -149,21 +165,26 @@ class DependencyManager(object):
         :rtype: dict
         """
         
+        status_dict = {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
         silo_url = os.getenv('SILO_URL')
+        status_dict['detail']['url'] = silo_url
         
         # Hit the silo url to make sure it's alive
         if not silo_url:
-            status_dict = {'OK': False, 'errors': [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}], 'warnings': []}
+            status_dict['errors'] = [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}]
         else:
             try:
                 response = requests.head(silo_url)
                 if response.status_code == status.HTTP_200_OK:
-                    status_dict = {'OK': True, 'detail': {'url': silo_url}}
+                    status_dict['OK'] = True
+                    status_dict['detail']['msg'] = 'Silo is alive and connected'
                 else:
-                    status_dict = {'OK': False, 'errors': [{response.status_code: 'Silo returned a status code of %s' % response.status_code}], 'warnings': []}
+                    status_dict['errors'] = [{response.status_code: 'Silo returned a status code of %s' % response.status_code}]
+                    status_dict['detail']['msg'] = 'Unable to connect to Silo'
             except Exception as ex:
                 msg = 'Error with SILO_URL: %s' % unicode(ex)
-                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
+                status_dict['errors'] = [{'UNKNOWN_ERROR': msg}]
+                status_dict['detail']['msg'] = 'Unknown error connecting to Silo'
                 
         return status_dict
 
@@ -177,7 +198,7 @@ class DependencyManager(object):
             connection.ensure_connection()
             status_dict = {'OK': True, 'detail': 'Database alive and well'}
         except Exception as ex:
-            status_dict = {'OK': False, 'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []}
+            status_dict = {'OK': False, 'detail': {'msg': 'Unable to connect to database'}, 'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []}
         
         return status_dict
         
@@ -186,10 +207,12 @@ class DependencyManager(object):
         AMQP (rabbitmq)
         """
         
-        status_dict = {'OK': False, 'errors': [], 'warnings': []}
-        status_dict['broker_url'] = scale_settings.BROKER_URL
-        status_dict['queue_name'] = scale_settings.QUEUE_NAME
-        status_dict['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
+        status_dict = {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
+        status_dict['detail']['broker_url'] = scale_settings.BROKER_URL
+        status_dict['detail']['queue_name'] = scale_settings.QUEUE_NAME
+        status_dict['detail']['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
+        status_dict['detail']['queue_depth'] = 0
+        status_dict['detail']['region_name'] = ''
         try:
             broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
         except InvalidBrokerUrl:
@@ -199,33 +222,27 @@ class DependencyManager(object):
             try:
                 with Connection(scale_settings.BROKER_URL) as conn:
                     conn.connect() # Exceptions may be raised upon connect
-                    status_dict = {'OK': True, 'errors': [], 'warnings': []}
+                    status_dict['OK'] = True
             except Exception as ex:
                 msg = 'Error connecting to RabbitMQ: %s' % unicode(ex)
-                status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
-            # except ConnectionRefusedError as ex:
-            #     msg = 'Unable to connect to RabbitMQ: Connection was refused: %s' % unicode(ex)
-            #     status_dict = {'OK': False, 'errors': [{'CONNECTION_REFUSED': msg}], 'warnings':[]}
-            # except AccessRefused as ex:
-            #     msg = 'Unable to connect to RabbitMQ: Authentication error: %s' % unicode(ex)
-            #     status_dict = {'OK': False, 'errors': [{'ACCESS_REFUSED': msg}], 'warnings': []}
-            # except IOError as ex:
-            #     msg = 'IO Error connecting to RabbitMQ: %s' % unicode(ex)
-            #     status_dict = {'OK': False, 'errors': [{'IO_ERROR': msg}], 'warnings': []}
-            # except BaseException as ex:
-            #     msg = 'Unknown Error connecting to RabbitMQ: %s' % unicode(ex)
-            #     status_dict = {'OK': False, 'errors': [{'UNKNOWN_ERROR': msg}], 'warnings': []}
+                status_dict['OK'] = False
+                status_dict['errors'] = [{'RABBITMQ_ERROR': msg}]
         elif broker_details.get_type() == 'sqs':
-            status_dict['region_name'] = broker_details.get_address()
+            status_dict['detail']['region_name'] = broker_details.get_address()
+            status_dict['OK'] = True
             try:
                 CommandMessageManager().get_queue_size()
             except Exception as ex:
                 logger.error('Unable to get queue size from sqs: %s' % unicode(ex))
                 msg = 'Error connecting to SQS: Check Logs for details'
-                status_dict = {'OK': False, 'errors': [{'SQS_ERROR': msg}], 'warnings': []}
+                status_dict['OK'] = False
+                status_dict['errors'] = [{'RABBITMQ_ERROR': msg}]
+        else:
+            status_dict['OK'] = False
+            status_dict['detail']['msg'] = 'Broker is an unsupported type: %s' % broker_details.get_type()
 
         if status_dict['OK']:
-            status_dict['queue_depth'] = CommandMessageManager().get_queue_size()
+            status_dict['detail']['queue_depth'] = CommandMessageManager().get_queue_size()
         return status_dict
 
     def _generate_idam_status(self):
@@ -237,13 +254,14 @@ class DependencyManager(object):
 
         status_dict =  {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
         if not scale_settings.GEOAXIS_ENABLED:
-            status_dict = {'OK': True, 'detail': {'geoaxis': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}
+            status_dict = {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}
             return status_dict
 
-        status_dict['detail']['Geoaxis Host'] = scale_settings.SOCIAL_AUTH_GEOAXIS_HOST
-        status_dict['detail']['geoaxis'] = True
+        status_dict['detail']['geoaxis_host'] = scale_settings.SOCIAL_AUTH_GEOAXIS_HOST
+        status_dict['detail']['geoaxis_enabled'] = True
         status_dict['detail']['backends'] = scale_settings.AUTHENTICATION_BACKENDS
-        status_dict['detail']['Geoaxis Authorization Url'] = GeoAxisOAuth2.AUTHORIZATION_URL
+        status_dict['detail']['geoaxis_authorization_url'] = GeoAxisOAuth2.AUTHORIZATION_URL
+        status_dict['msg'] = 'Geoaxis is enabled'
         try:
             response = requests.get('%s/social-auth/login/geoaxis/?=' % scale_settings.SCALE_HOST)
             if response.status_code == status.HTTP_200_OK:
@@ -276,14 +294,14 @@ class DependencyManager(object):
                 elif node['state']['name'] == 'DEGRADED':
                     degraded_count += 1
                     
-            status_dict = {'OK': True, 'errors': [], 'warnings': [], 'detail': 'Enough nodes are online to function.'}
+            status_dict = {'OK': True, 'errors': [], 'warnings': [], 'detail': {'msg': 'Enough nodes are online to function.'}}
             if (offline_count + degraded_count) > third_nodes:
                 status_dict['errors'].append({'NODES_ERRORED': 'Over a third of the nodes are offline or degraded.'})
                 status_dict['OK'] = False
-                status_dict['detail'] = 'Over a third of nodes are in an error state'
+                status_dict['detail']['msg'] = 'Over a third of nodes are in an error state'
 
         else:
-            status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
+            status_dict = {'OK': False, 'detail': {'msg': 'No nodes reported'}, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
 
         return status_dict
 
