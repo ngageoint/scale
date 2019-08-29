@@ -14,6 +14,7 @@ from rest_framework import status
 
 from kombu import Connection
 
+from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.manager import CommandMessageManager
 from scale import settings as scale_settings
 from scheduler.manager import scheduler_mgr
@@ -237,38 +238,38 @@ class DependencyManager(object):
         """
         
         status_dict = {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
-        status_dict['detail']['broker_url'] = scale_settings.BROKER_URL
         status_dict['detail']['queue_name'] = scale_settings.QUEUE_NAME
         status_dict['detail']['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
         status_dict['detail']['queue_depth'] = 0
         status_dict['detail']['region_name'] = ''
+        status_dict['detail']['type'] = ''
         try:
             broker_details = BrokerDetails.from_broker_url(scale_settings.BROKER_URL)
         except InvalidBrokerUrl:
             msg = 'Error parsing broker url'
             status_dict['errors'] = [{'INVALID_BROKER_URL': msg}]
             return status_dict
-            
+
+        status_dict['detail']['type'] = broker_details.get_type()
         if broker_details.get_type() == 'amqp':
             try:
-                import pdb; pdb.set_trace()
-                with Connection(scale_settings.BROKER_URL) as conn:
-                    conn.connect() # Exceptions may be raised upon connect
-                    status_dict['OK'] = True
+                CommandMessageManager().get_queue_size()
+                status_dict['OK'] = True
             except Exception as ex:
-                msg = 'Error connecting to RabbitMQ: %s' % unicode(ex)
+                logger.error('Error connecting to RabbitMQ: %s' % unicode(ex))
                 status_dict['OK'] = False
+                msg = 'Error connecting to RabbitMQ: Check Logs for details'
                 status_dict['errors'] = [{'RABBITMQ_ERROR': msg}]
         elif broker_details.get_type() == 'sqs':
             status_dict['detail']['region_name'] = broker_details.get_address()
-            status_dict['OK'] = True
             try:
                 CommandMessageManager().get_queue_size()
+                status_dict['OK'] = True
             except Exception as ex:
                 logger.error('Unable to get queue size from sqs: %s' % unicode(ex))
                 msg = 'Error connecting to SQS: Check Logs for details'
                 status_dict['OK'] = False
-                status_dict['errors'] = [{'RABBITMQ_ERROR': msg}]
+                status_dict['errors'] = [{'SQS_ERROR': msg}]
         else:
             status_dict['OK'] = False
             status_dict['detail']['msg'] = 'Broker is an unsupported type: %s' % broker_details.get_type()
