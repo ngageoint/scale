@@ -1,6 +1,7 @@
 """Defines the class that manages gathering Scale dependency system statuses"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 import os
 import requests
@@ -25,7 +26,7 @@ from util.parse import datetime_to_string, parse_datetime
 logger = logging.getLogger(__name__)
 
 # The status should be updated if its JSON is older than this threshold
-DEPENDENCY_STATUS_FRESHNESS_THRESHOLD = 12.0  # seconds
+DEPENDENCY_STATUS_FRESHNESS_THRESHOLD = datetime.timedelta(seconds=12.0)
 
 class DependencyManager(object):
     """This class pulls the status for various systems Scale depends on. This class is thread-safe."""
