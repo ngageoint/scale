@@ -115,9 +115,6 @@ class TestDependenciesManager(TestCase):
         from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
-        print('\n')
-        print(logs)
-        print('\n')
         self.assertDictEqual(logs, {'OK': True, 'detail': {'msg': 'Logs are healthy', 'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://www.logging.com/health'}, 'errors': [], 'warnings': []}) 
 
     @patch('scale.settings.LOGGING_ADDRESS', 'tcp://localhost:1234')
@@ -165,9 +162,6 @@ class TestDependenciesManager(TestCase):
             mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
             with patch('scale.settings.ELASTICSEARCH_URL', 'http://green.host'):
                 elasticsearch = dependency_mgr._generate_elasticsearch_status()
-            print('\n')
-            print(elasticsearch)
-            print('\n')
             self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'info': {u'tagline': u'You know, for X'}, 
                                                                           u'msg': u'Elasticsearch is healthy', u'url': u'http://green.host'}, 'errors': [], 'warnings': []})
             
@@ -186,9 +180,6 @@ class TestDependenciesManager(TestCase):
         with patch.dict('os.environ', {'SILO_URL': 'https://en.wikipedia.org/wiki/Silo'}):
             from scheduler.dependencies.manager import dependency_mgr
             silo = dependency_mgr._generate_silo_status()
-            print('\n')
-            print silo
-            print('\n')
             self.assertDictEqual(silo, {'OK': True, 'detail': {'msg': 'Silo is alive and connected', 'url': 'https://en.wikipedia.org/wiki/Silo'}, 'errors': [], 'warnings': []})
             
     def test_generate_database_status(self):
@@ -196,15 +187,12 @@ class TestDependenciesManager(TestCase):
     
         from scheduler.dependencies.manager import dependency_mgr
         database = dependency_mgr._generate_database_status()
-        self.assertDictEqual(database, {'OK': True, 'detail': 'Database alive and well'})
+        self.assertDictEqual(database, {'OK': True, 'detail': {'msg': 'Database alive and well'}, 'errors': [], 'warnings': []})
         
         with patch('django.db.connection.ensure_connection') as mock:
             mock.side_effect = OperationalError
             from scheduler.dependencies.manager import dependency_mgr
             database = dependency_mgr._generate_database_status()
-            print('\n')
-            print database
-            print('\n')
             self.assertDictEqual(database, {'OK': False, 'detail': {'msg': 'Unable to connect to database'}, 
                                             'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []})
 
@@ -214,7 +202,6 @@ class TestDependenciesManager(TestCase):
     
         from scheduler.dependencies.manager import dependency_mgr
         msg_queue = dependency_mgr._generate_msg_queue_status()
-        print msg_queue
         self.assertFalse(msg_queue['OK'])
         self.assertEqual(msg_queue['errors'][0].keys(), ['INVALID_BROKER_URL'])
         self.assertDictEqual(msg_queue, {'OK': False,

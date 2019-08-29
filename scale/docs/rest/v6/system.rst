@@ -23,43 +23,79 @@ Response: 200 OK
        "timestamp": "1970-01-01T00:00:00Z",
        "dependencies":{
           "logs":{
-             "OK":false,
-             "errors":[ { "NO_LOGGING_HEALTH_DEFINED":"No logging health URL defined" }, { "NO_LOGGING_DEFINED":"No logging address defined" } ],
-             "detail":{ },
-             "warnings":[]
+            "OK":true,
+            "detail": {
+              "msg": "Logs are healthy",
+              "logging_address": "tcp://localhost:1234",
+              "logging_health_address": "http://www.logging.com/health"
+            },
+            "errors": [],
+            "warnings": []
           },
-          "msg_queue":{
-             "OK":false,
-             "errors":[{ "UNKNOWN_ERROR":"Error connecting to RabbitMQ: [Errno 111] Connection refused" } ],
-             "warnings":[]
+          "msg_queue": {
+            "OK":true,
+            "detail":{
+              "num_message_handlers":0,
+              "type":"amqp",
+              "queue_name":"scale-command-messages",
+              "queue_depth":99,
+              "region_name":""
+            },
+            "errors":[],
+            "warnings":[]
           },
           "database":{
              "OK":true,
-             "detail":"Database alive and well"
-          },
-          "elasticsearch":{
-             "OK":false,
-             "errors":[ { "UNKNOWN_ERROR":"Elasticsearch is unreachable. SOS." } ],
+             "detail": {
+               "msg": "Database alive and well"
+             },
+             "errors":[],
              "warnings":[]
           },
+          "elasticsearch":{
+               "OK":true,
+               "detail":{
+                  "url":"http://green.host",
+                  "msg":"Elasticsearch is healthy",
+                  "info":{
+                     "tagline":"You know, for X"
+                  }
+               },
+               "errors":[],
+               "warnings":[]
+          },
           "nodes":{
-             "OK":false,
+             "OK": true,
+             "detail": {
+                "msg": "Enough nodes are online to function."
+             }
              "errors":[ {"NODES_OFFLINE":"No nodes reported."} ],
              "warnings":[]
           },
           "idam":{
              "OK":true,
-             "detail":{
-                "msg":"Geoaxis is not enabled",
-                "geoaxis":false
+             "detail": {
+               "geoaxis_authorization_url": "https://geoaxis.gxaccess.com/ms_oauth/oauth2/endpoints/oauthservice/authorize",
+               "scale_vhost": "scale.io",
+               "geoaxis_enabled": true,
+               "backends": [
+                 "django.contrib.auth.backends.ModelBackend",
+                 "django_geoaxis.backends.geoaxis.GeoAxisOAuth2"
+               ],
+               "msg": "Geoaxis is enabled",
+               "geoaxis_host": "geoaxis.gxaccess.com"
              },
              "errors":[],
              "warnings":[]
           },
           "silo":{
-             "OK":false,
-             "errors":[ "NO_SILO_DEFINED":"No silo URL defined in environment. SOS." } ],
-             "warnings":[]
+            "OK":true,
+            "detail":{
+              "url":"https://en.wikipedia.org/wiki/Silo",
+              "msg":"Silo is alive and connected"
+            },
+            "errors":[],
+            "warnings":[]
           }
         },
        "scheduler": {
