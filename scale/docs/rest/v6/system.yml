@@ -43,6 +43,8 @@ components:
           format: date-time
           description: When the status information was generated (in ISO-8601 Datetime)
           example: 1970-01-01T00:00:00Z
+        dependencies:
+          $ref: '#/components/schemas/dependencies'
         scheduler:
           $ref: '#/components/schemas/scheduler'
         system:
@@ -65,6 +67,26 @@ components:
           description: List of node objects, with a few basic fields including the current node state
         vault:
           $ref: '#/components/schemas/vault'
+
+    dependencies:
+      title: Dependencies
+      type: object
+      description: Status of Scale's Dependencies
+      properties:
+        logs:
+          $ref: "#/components/schemas/dependency"
+        msg_queue:
+          $ref: "#/components/schemas/dependency"
+        database:
+          $ref: "#/components/schemas/dependency"
+        elasticsearch:
+          $ref: "#/components/schemas/dependency"
+        nodes:
+          $ref: "#/components/schemas/dependency"
+        idam:
+          $ref: "#/components/schemas/dependency"
+        silo:
+          $ref: "#/components/schemas/dependency"
 
     scheduler:
       title: Scheduler
@@ -472,3 +494,32 @@ components:
           type: string
           description: Description of error reading the secrets vault, if any
           example: A secrets backend is not properly configured with Scale.
+
+    dependency:
+      title: Dependency
+      type: object
+      description: Describes status of a Scale dependency
+      properties:
+        OK:
+          type: boolean
+          description: Whether the depdendency is configured correctly and working
+          example: True
+        detail:
+          type: object
+          description: Dictionary of additional details about the dependency
+          additionalProperties:
+            type: string
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+          description: List of errors for the dependency with title and description for each one
+        warnings:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+          description: List of warnings for the dependency with title and description for each one

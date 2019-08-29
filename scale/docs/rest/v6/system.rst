@@ -312,88 +312,104 @@ Response: 200 OK
        ] 
     } 
 
-+-------------------------------------------------------------------------------------------------------------------------------+
-| **Get Scheduler Status**                                                                                                      |
-+===============================================================================================================================+
-| Returns the current status of the scheduler, including information about nodes and running jobs.                              |
-+-------------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/status/                                                                                                           |
-+-------------------------------------------------------------------------------------------------------------------------------+
-| **Successful Responses**                                                                                                      |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| **Status**               | 204 NO CONTENT                                                                                     |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to         |
-| provide.                                                                                                                      |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| **Status**               | 200 OK                                                                                             |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**         | *application/json*                                                                                 |
-+--------------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                               |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| timestamp                | ISO-8601 Datetime | When the status information was generated                                      |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler                | JSON Object       | Scheduler configuration and metrics information                                |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.metrics        | JSON Object       | Contains various near real-time metrics related to scheudling tasks and jobs   |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.mesos          | JSON Object       | Contains Scale's framework ID and hostname and port of the Mesos master        |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.state          | JSON Object       | The current scheduler state, with a title and description                      |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.warnings       | Array             | List of scheduler warning objects, with a title, description, and when the     |
-|                          |                   | warning began and was last updated                                             |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| system                   | JSON Object       | System information                                                             |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| system.database_update   | JSON Object       | Information on if and when the current Scale database update completed         |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| system.services          | Array             | List of services, with name, title, description, and task counts               |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| vault                    | JSON Object       | Secrets Vault information                                                      |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| vault.status             | String            | The status of the secrets vault                                                |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| vault.sealed             | Boolean           | Whether the secrets vault is currently sealed                                  |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| vault.message            | String            | Description of error reading the secrets vault, if any                         |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| num_offers               | Integer           | Number of resource offers currently held by Scale                              |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources                | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
-|                          |                   | is a key and its corresponding object breaks down the resource into several    |
-|                          |                   | categories: *running* resources are used by current Scale tasks, *offered*     |
-|                          |                   | resources are currently offered to Scale, *free* resources are available on    |
-|                          |                   | the node and may be offered to Scale soon, *unavailable* resources are used by |
-|                          |                   | other tasks and cannot be used by Scale, and *total* resources are the total   |
-|                          |                   | amounts for the node.                                                          |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| job_types                | Array             | List of job type objects, with a few basic fields                              |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes                    | Array             | List of node objects, with a few basic fields including the current node state |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes.state              | JSON Object       | The current node state, with a title and description                           |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes.errors             | Array             | List of node error objects, with a title, description, and when the error      |
-|                          |                   | began and was last updated                                                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes.warnings           | Array             | List of node warning objects, with a title, description, and when the warning  |
-|                          |                   | began and was last updated                                                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes.node_tasks         | Array             | List of node tasks running on the node, with a type, title, description, and   |
-|                          |                   | count                                                                          |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes.system_tasks       | Array             | List of system tasks running on the node, with a type, title, description, and |
-|                          |                   | count                                                                          |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| nodes.job_executions     | JSON Object       | The job executions related to this node. The *running* field describes the     |
-|                          |                   | jobs currently running on the node, with a total count and count per job type. |
-|                          |                   | The *completed* field describes job executions that have completed on the node |
-|                          |                   | in the last 3 hours, with a total count and count per job type. The *failed*   |
-|                          |                   | field is similar to *completed*, just with failed executions grouped by error  |
-|                          |                   | category.                                                                      |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------+
+| **Get Scheduler Status**                                                                                                        |
++=================================================================================================================================+
+| Returns the current status of the scheduler, including information about nodes and running jobs.                                |
++---------------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/status/                                                                                                             |
++---------------------------------------------------------------------------------------------------------------------------------+
+| **Successful Responses**                                                                                                        |
++----------------------------+----------------------------------------------------------------------------------------------------+
+| **Status**                 | 204 NO CONTENT                                                                                     |
++----------------------------+----------------------------------------------------------------------------------------------------+
+| The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to           |
+| provide.                                                                                                                        |
++----------------------------+----------------------------------------------------------------------------------------------------+
+| **Status**                 | 200 OK                                                                                             |
++----------------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**           | *application/json*                                                                                 |
++----------------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                                 |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| timestamp                  | ISO-8601 Datetime | When the status information was generated                                      |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies               | JSON Object       | Status of Scale's dependencies                                                 |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.logs          | JSON Object       | Status of the logging service used by Scale                                    |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.msg_queue     | JSON Object       | Status of Scale's message queue                                                |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.database      | JSON Object       | Status of Scale's database                                                     |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.elasticsearch | JSON Object       | Status of configured elasticsearch service                                     |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.nodes         | JSON Object       | Status of nodes in Scale. Warns if too many are offline/degraded               |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.idam          | JSON Object       | Status of IDAM service (geoaxis)                                               |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| dependencies.silo          | JSON Object       | Status of Silo service used for discovering and importing Seed images          |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler                  | JSON Object       | Scheduler configuration and metrics information                                |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.metrics          | JSON Object       | Contains various near real-time metrics related to scheudling tasks and jobs   |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.mesos            | JSON Object       | Contains Scale's framework ID and hostname and port of the Mesos master        |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.state            | JSON Object       | The current scheduler state, with a title and description                      |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.warnings         | Array             | List of scheduler warning objects, with a title, description, and when the     |
+|                            |                   | warning began and was last updated                                             |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| system                     | JSON Object       | System information                                                             |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| system.database_update     | JSON Object       | Information on if and when the current Scale database update completed         |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| system.services            | Array             | List of services, with name, title, description, and task counts               |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault                      | JSON Object       | Secrets Vault information                                                      |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault.status               | String            | The status of the secrets vault                                                |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault.sealed               | Boolean           | Whether the secrets vault is currently sealed                                  |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| vault.message              | String            | Description of error reading the secrets vault, if any                         |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| num_offers                 | Integer           | Number of resource offers currently held by Scale                              |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| resources                  | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
+|                            |                   | is a key and its corresponding object breaks down the resource into several    |
+|                            |                   | categories: *running* resources are used by current Scale tasks, *offered*     |
+|                            |                   | resources are currently offered to Scale, *free* resources are available on    |
+|                            |                   | the node and may be offered to Scale soon, *unavailable* resources are used by |
+|                            |                   | other tasks and cannot be used by Scale, and *total* resources are the total   |
+|                            |                   | amounts for the node.                                                          |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| job_types                  | Array             | List of job type objects, with a few basic fields                              |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes                      | Array             | List of node objects, with a few basic fields including the current node state |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.state                | JSON Object       | The current node state, with a title and description                           |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.errors               | Array             | List of node error objects, with a title, description, and when the error      |
+|                            |                   | began and was last updated                                                     |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.warnings             | Array             | List of node warning objects, with a title, description, and when the warning  |
+|                            |                   | began and was last updated                                                     |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.node_tasks           | Array             | List of node tasks running on the node, with a type, title, description, and   |
+|                            |                   | count                                                                          |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.system_tasks         | Array             | List of system tasks running on the node, with a type, title, description, and |
+|                            |                   | count                                                                          |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.job_executions       | JSON Object       | The job executions related to this node. The *running* field describes the     |
+|                            |                   | jobs currently running on the node, with a total count and count per job type. |
+|                            |                   | The *completed* field describes job executions that have completed on the node |
+|                            |                   | in the last 3 hours, with a total count and count per job type. The *failed*   |
+|                            |                   | field is similar to *completed*, just with failed executions grouped by error  |
+|                            |                   | category.                                                                      |
++----------------------------+-------------------+--------------------------------------------------------------------------------+
 
 
 .. _rest_v6_system_version:
