@@ -226,7 +226,7 @@ class DependencyManager(object):
         """
         try:
             connection.ensure_connection()
-            status_dict = {'OK': True, 'detail': 'Database alive and well'}
+            status_dict = {'OK': True, 'detail': {'msg': 'Database alive and well'}, 'errors': [], 'warnings': []}
         except Exception as ex:
             status_dict = {'OK': False, 'detail': {'msg': 'Unable to connect to database'}, 'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []}
         
