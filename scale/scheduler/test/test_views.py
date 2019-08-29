@@ -133,7 +133,6 @@ class TestStatusView(APITestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        print result
         self.assertEqual(result['timestamp'], datetime_to_string(when))
         self.assertDictEqual(result['vault'], {u'status': u'Secrets Not Configured', u'message': u'', u'sealed': False})
 
