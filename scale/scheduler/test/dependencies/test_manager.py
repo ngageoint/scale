@@ -5,7 +5,7 @@ import django_geoaxis
 from django.db.utils import OperationalError
 from django.test import TestCase
 from kombu.exceptions import HttpError
-from mock import patch
+from mock import patch, Mock
 
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
@@ -59,17 +59,7 @@ def mock_response_get(*args, **kwargs):
         return MockResponse({}, 503, HttpError('Service Unavailable'))
     
     return MockResponse({}, 404, HttpError('File not found'))
-    
-def mock_connection(*args, **kwargs):
-    class MockResponse:
-        def __init__(self, url):
-            self.url = url
-        def __init__(self, url):
-            pass
-        def connect(self):
-            return None
-            
-    return MockResponse(args[0])
+
 
 class TestDependenciesManager(TestCase):
 
@@ -224,27 +214,84 @@ class TestDependenciesManager(TestCase):
     
         from scheduler.dependencies.manager import dependency_mgr
         msg_queue = dependency_mgr._generate_msg_queue_status()
+        print msg_queue
         self.assertFalse(msg_queue['OK'])
         self.assertEqual(msg_queue['errors'][0].keys(), ['INVALID_BROKER_URL'])
-            
-    def test_generate_message_queue_status_rabbit_error(self):
+        self.assertDictEqual(msg_queue, {'OK': False,
+                                         'detail': {'num_message_handlers': 0, 'queue_depth': 0, 'type': '',
+                                                    'queue_name': 'scale-command-messages', u'region_name': u''},
+                                         'errors': [{'INVALID_BROKER_URL': 'Error parsing broker url'}], 'warnings': []})
+
+    @patch('scheduler.dependencies.manager.CommandMessageManager.get_queue_size')
+    def test_generate_message_queue_status_rabbit_error(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a bad amqp config"""
     
         from scheduler.dependencies.manager import dependency_mgr
+        mock_get_queue_size.side_effect = Exception('Error connecting to rabbit')
         msg_queue = dependency_mgr._generate_msg_queue_status()
-        self.assertFalse(msg_queue['OK'])
-        self.assertEqual(msg_queue['errors'][0].keys(), ['RABBITMQ_ERROR'])
-            
-    @patch('scheduler.dependencies.manager.CommandMessageManager')
-    @patch('kombu.Connection', side_effect=mock_connection)
-    def test_generate_message_queue_status_rabbit_success(self, mock_connection, mock_msg_mgr):
+        self.assertDictEqual(msg_queue, {'OK': False,
+                                         'detail': {'num_message_handlers': 0, 'queue_depth': 0, 'type': 'amqp',
+                                                    'queue_name': 'scale-command-messages', u'region_name': u''},
+                                         'errors': [{u'RABBITMQ_ERROR': u'Error connecting to RabbitMQ: Check Logs for details'}],
+                                         'warnings': []})
+
+    @patch('scale.settings.MESSSAGE_QUEUE_DEPTH_WARN', 100)
+    @patch('scheduler.dependencies.manager.CommandMessageManager.get_queue_size')
+    def test_generate_message_queue_status_rabbit_success(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a good amqp config"""
     
-        mock_msg_mgr.get_queue_size.return_value = 101
         from scheduler.dependencies.manager import dependency_mgr
+        mock_get_queue_size.return_value = 99
         msg_queue = dependency_mgr._generate_msg_queue_status()
-        self.assertTrue(msg_queue['OK'])
-        self.assertEqual(msg_queue['errors'], [])
+        self.assertDictEqual(msg_queue, {'OK': True,
+                                         'detail': {'num_message_handlers': 0, 'queue_depth': 99, 'type': 'amqp',
+                                                    'queue_name': 'scale-command-messages', u'region_name': u''},
+                                         'errors': [], 'warnings': []})
+
+        mock_get_queue_size.return_value = 101
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertDictEqual(msg_queue, {'OK': True,
+                                         'detail': {'num_message_handlers': 0, 'queue_depth': 101, 'type': 'amqp',
+                                                    'queue_name': 'scale-command-messages', 'region_name': ''},
+                                         'errors': [], 'warnings': [{u'LARGE_QUEUE': u'Message queue is very large'}]})
+
+    @patch('scale.settings.BROKER_URL', 'sqs://aws.com')
+    @patch('scheduler.dependencies.manager.CommandMessageManager.get_queue_size')
+    def test_generate_message_queue_status_sqs_error(self, mock_get_queue_size):
+        """Tests the _generate_msg_queue_status method with a bad sqs config"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        mock_get_queue_size.side_effect = Exception('Error connecting to sqs')
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertDictEqual(msg_queue, {'OK': False,
+                                         'detail': {'num_message_handlers': 0, 'queue_depth': 0, 'type': 'sqs',
+                                                    'queue_name': 'scale-command-messages', u'region_name': u'aws.com'},
+                                         'errors': [{u'SQS_ERROR': u'Error connecting to SQS: Check Logs for details'}],
+                                         'warnings': []})
+
+    @patch('scale.settings.MESSSAGE_QUEUE_DEPTH_WARN', 100)
+    @patch('scale.settings.BROKER_URL', 'sqs://aws.com')
+    @patch('scheduler.dependencies.manager.CommandMessageManager.get_queue_size')
+    def test_generate_message_queue_status_sqs_success(self, mock_get_queue_size):
+        """Tests the _generate_msg_queue_status method with a good sqs config"""
+
+        from scheduler.dependencies.manager import dependency_mgr
+        mock_get_queue_size.return_value = 99
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertDictEqual(msg_queue, {'OK': True,
+                                         'detail': {'num_message_handlers': 0, 'type': 'sqs',
+                                                    u'queue_depth': 99, u'queue_name': 'scale-command-messages',
+                                                    u'region_name': u'aws.com'},
+                                         'errors': [], 'warnings': []})
+
+        mock_get_queue_size.return_value = 101
+        msg_queue = dependency_mgr._generate_msg_queue_status()
+        self.assertDictEqual(msg_queue, {'OK': True,
+                                         'detail': {'num_message_handlers': 0, 'type': 'sqs',
+                                                    u'queue_depth': 101, u'queue_name': 'scale-command-messages',
+                                                    u'region_name': u'aws.com'},
+                                         'errors': [],
+                                         'warnings': [{u'LARGE_QUEUE': u'Message queue is very large'}]})
 
     def test_generate_idam_status_no_geoaxis(self):
         """Tests the _generate_idam_status method with geoaxis disabled"""
