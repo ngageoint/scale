@@ -36,7 +36,7 @@ class DependencyManager(object):
         """
 
         self._all_statuses = {}
-        self._last_updated = now()
+        self._last_updated = None
 
 
     def generate_status_json(self, status_dict):
@@ -53,7 +53,7 @@ class DependencyManager(object):
         
     def _refresh_statuses(self):
         # check if it's too early to update
-        if (now() - self._last_updated) < DEPENDENCY_STATUS_FRESHNESS_THRESHOLD:
+        if self._last_updated and (now() - self._last_updated) < DEPENDENCY_STATUS_FRESHNESS_THRESHOLD:
             return
         
         self._all_statuses = {}
