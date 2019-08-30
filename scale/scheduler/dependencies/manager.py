@@ -37,27 +37,7 @@ class DependencyManager(object):
 
         self._all_statuses = {}
         self._last_updated = now()
-        
-        # LOGS (fluentd) - check connectivity and msg backlog (undelivered messages)
-        self._all_statuses['logs'] = self._generate_log_status()
 
-        # ELASTICSEARCH - cluster health
-        self._all_statuses['elasticsearch'] = self._generate_elasticsearch_status()
-
-        # SILO (SILO should report a fail if SILO cannot talk to it's configured container repos too)
-        self._all_statuses['silo'] = self._generate_silo_status()
-
-        # DATABASE - simple connection possible
-        self._all_statuses['database'] = self._generate_database_status()
-
-        # MSGBUS - RabbitMQ (amqp)or SQS
-        self._all_statuses['msg_queue'] = self._generate_msg_queue_status()
-
-        # IDAM (GEOAxIS ... or whatever only if configured) get response from GEOAxIS
-        self._all_statuses['idam'] = self._generate_idam_status()
-
-        # NODES (if > 1/3 become unhealthy then go red?) if degraded
-        self._all_statuses['nodes'] = self._generate_nodes_status()
 
     def generate_status_json(self, status_dict):
         """Generates the portion of the status JSON that describes the systems Scale depends on
