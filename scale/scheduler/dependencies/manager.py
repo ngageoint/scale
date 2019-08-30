@@ -321,7 +321,7 @@ class DependencyManager(object):
         :rtype: dict
         """
         from scheduler.node.manager import node_mgr
-        node_status ={}
+        node_status = {}
         node_mgr.generate_status_json(node_status)
         if 'nodes' in node_status and len(node_status['nodes']) > 0:
             node_status = node_status['nodes']
