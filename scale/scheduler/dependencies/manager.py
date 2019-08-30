@@ -321,7 +321,7 @@ class DependencyManager(object):
         :rtype: dict
         """
         from scheduler.node.manager import node_mgr
-        node_status ={}
+        node_status = {}
         node_mgr.generate_status_json(node_status)
         if not node_status:
               status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}

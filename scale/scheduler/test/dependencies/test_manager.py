@@ -379,12 +379,13 @@ class TestDependenciesManager(TestCase):
         """Tests the _generate_nodes_status method"""
 
         from scheduler.dependencies.manager import dependency_mgr
+        # Setup nodes
+        from scheduler.node.manager import node_mgr
+        node_mgr.clear()
+
         nodes = dependency_mgr._generate_nodes_status()
         self.assertDictEqual(nodes, {'OK': False, 'detail': {'msg': 'No nodes reported'}, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}) 
-        
-        # Setup nodes
-        from scheduler.node.manager import NodeManager
-        node_mgr = NodeManager()
+
         node_mgr.register_agents([self.agent_1, self.agent_2, self.agent_3, self.agent_4, self.agent_5, self.agent_6,self.agent_7, self.agent_8, self.agent_9, self.agent_10])
         node_mgr.sync_with_database(scheduler_mgr.config)
         
