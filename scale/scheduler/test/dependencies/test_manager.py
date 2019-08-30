@@ -258,7 +258,7 @@ class TestDependenciesManager(TestCase):
 
     @patch('scale.settings.MESSSAGE_QUEUE_DEPTH_WARN', 100)
     @patch('scale.settings.BROKER_URL', 'sqs://aws.com')
-    @patch('scheduler.dependencies.manager.CommandMessageManager.get_queue_size')
+    @patch('messaging.manager.CommandMessageManager.get_queue_size')
     def test_generate_message_queue_status_sqs_success(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a good sqs config"""
 
