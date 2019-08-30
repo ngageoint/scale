@@ -9,6 +9,7 @@ from mock import patch, Mock
 
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.factory import add_message_backend
+from scheduler.dependencies.manager import dependency_mgr
 from scheduler.manager import scheduler_mgr
 from scheduler.node.agent import Agent
 
@@ -87,7 +88,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_log_status_none(self):
         """Tests the _generate_log_status method without logs set"""
  
-        from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
         self.assertDictEqual(logs, {'OK': False, 'detail': {'msg': 'LOGGING_ADDRESS is not defined'}, 'errors': [{'NO_LOGGING_HEALTH_DEFINED': 'No logging health URL defined'}, {'NO_LOGGING_DEFINED': 'No logging address defined'}], 'warnings': []})   
@@ -97,7 +97,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_log_status_bad(self):
         """Tests the _generate_log_status method with invalid settings"""
  
-        from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
         self.assertEqual(logs['OK'], False)
@@ -112,7 +111,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_log_status_good(self, mock_requests, connect):
         """Tests the _generate_log_status method with good settings"""
  
-        from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
         self.assertDictEqual(logs, {'OK': True, 'detail': {'msg': 'Logs are healthy', 'logging_address': 'tcp://localhost:1234', 'logging_health_address': 'http://www.logging.com/health'}, 'errors': [], 'warnings': []}) 
@@ -126,7 +124,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_log_status_warn(self, mock_requests, connect):
         """Tests the _generate_log_status method with good settings and large queues"""
  
-        from scheduler.dependencies.manager import dependency_mgr
         logs = dependency_mgr._generate_log_status()
         self.assertIsNotNone(logs)
         msg = 'Length of log buffer is too long: 20 > 10'
@@ -140,7 +137,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_elasticsearch_status(self):
         """Tests the _generate_elasticsearch_status method"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         elasticsearch = dependency_mgr._generate_elasticsearch_status()
         self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'Elasticsearch object does not exist', 'url': None}, 
                                              'errors': [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist.'}], 'warnings': []})
@@ -168,30 +164,25 @@ class TestDependenciesManager(TestCase):
     def test_generate_silo_status(self):
         """Tests the _generate_silo_status method"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         silo = dependency_mgr._generate_silo_status()
         self.assertDictEqual(silo, {'OK': False, 'detail': {'url': None}, 'errors': [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}], 'warnings': []}) 
             
         with patch.dict('os.environ', {'SILO_URL': 'https://localhost'}):
-            from scheduler.dependencies.manager import dependency_mgr
             silo = dependency_mgr._generate_silo_status()
             self.assertFalse(silo['OK'])
             
         with patch.dict('os.environ', {'SILO_URL': 'https://en.wikipedia.org/wiki/Silo'}):
-            from scheduler.dependencies.manager import dependency_mgr
             silo = dependency_mgr._generate_silo_status()
             self.assertDictEqual(silo, {'OK': True, 'detail': {'msg': 'Silo is alive and connected', 'url': 'https://en.wikipedia.org/wiki/Silo'}, 'errors': [], 'warnings': []})
             
     def test_generate_database_status(self):
         """Tests the _generate_database_status method"""
     
-        from scheduler.dependencies.manager import dependency_mgr
         database = dependency_mgr._generate_database_status()
         self.assertDictEqual(database, {'OK': True, 'detail': {'msg': 'Database alive and well'}, 'errors': [], 'warnings': []})
         
         with patch('django.db.connection.ensure_connection') as mock:
             mock.side_effect = OperationalError
-            from scheduler.dependencies.manager import dependency_mgr
             database = dependency_mgr._generate_database_status()
             self.assertDictEqual(database, {'OK': False, 'detail': {'msg': 'Unable to connect to database'}, 
                                             'errors': [{'OPERATIONAL_ERROR': 'Database unavailable.'}], 'warnings': []})
@@ -200,7 +191,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_message_queue_status_invalid_broker(self):
         """Tests the _generate_msg_queue_status method with a bad broker setting"""
     
-        from scheduler.dependencies.manager import dependency_mgr
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertFalse(msg_queue['OK'])
         self.assertEqual(msg_queue['errors'][0].keys(), ['INVALID_BROKER_URL'])
@@ -213,7 +203,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_message_queue_status_rabbit_error(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a bad amqp config"""
     
-        from scheduler.dependencies.manager import dependency_mgr
         mock_get_queue_size.side_effect = Exception('Error connecting to rabbit')
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': False,
@@ -227,7 +216,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_message_queue_status_rabbit_success(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a good amqp config"""
     
-        from scheduler.dependencies.manager import dependency_mgr
         mock_get_queue_size.return_value = 99
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
@@ -247,7 +235,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_message_queue_status_sqs_error(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a bad sqs config"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         mock_get_queue_size.side_effect = Exception('Error connecting to sqs')
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': False,
@@ -262,7 +249,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_message_queue_status_sqs_success(self, mock_get_queue_size):
         """Tests the _generate_msg_queue_status method with a good sqs config"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         mock_get_queue_size.return_value = 99
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
@@ -283,7 +269,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_idam_status_no_geoaxis(self):
         """Tests the _generate_idam_status method with geoaxis disabled"""
     
-        from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []})
         
@@ -295,7 +280,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_idam_status_geoaxis_404(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and a bad url"""
         
-        from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
         detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
@@ -317,7 +301,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_idam_status_geoaxis_401(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and a bad config"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
         detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
@@ -340,7 +323,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_idam_status_geoaxis_503(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and an unreachable host"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
         detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
@@ -363,7 +345,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_idam_status_geoaxis_success(self, mock_get):
         """Tests the _generate_idam_status method with geoaxis enabled and a successful response"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         idam = dependency_mgr._generate_idam_status()
         detail = {}
         detail['geoaxis_host'] = u'geoaxis.gxaccess.com'
@@ -378,7 +359,6 @@ class TestDependenciesManager(TestCase):
     def test_generate_nodes_status(self):
         """Tests the _generate_nodes_status method"""
 
-        from scheduler.dependencies.manager import dependency_mgr
         # Setup nodes
         from scheduler.node.manager import node_mgr
         node_mgr.clear()
