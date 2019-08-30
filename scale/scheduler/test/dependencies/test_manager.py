@@ -205,7 +205,7 @@ class TestDependenciesManager(TestCase):
         self.assertFalse(msg_queue['OK'])
         self.assertEqual(msg_queue['errors'][0].keys(), ['INVALID_BROKER_URL'])
         self.assertDictEqual(msg_queue, {'OK': False,
-                                         'detail': {'num_message_handlers': 0, 'queue_depth': 0, 'type': '',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 0, 'type': '',
                                                     'queue_name': 'scale-command-messages', u'region_name': u''},
                                          'errors': [{'INVALID_BROKER_URL': 'Error parsing broker url'}], 'warnings': []})
 
@@ -217,7 +217,7 @@ class TestDependenciesManager(TestCase):
         mock_get_queue_size.side_effect = Exception('Error connecting to rabbit')
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': False,
-                                         'detail': {'num_message_handlers': 0, 'queue_depth': 0, 'type': 'amqp',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 0, 'type': 'amqp',
                                                     'queue_name': 'scale-command-messages', u'region_name': u''},
                                          'errors': [{u'RABBITMQ_ERROR': u'Error connecting to RabbitMQ: Check Logs for details'}],
                                          'warnings': []})
@@ -231,14 +231,14 @@ class TestDependenciesManager(TestCase):
         mock_get_queue_size.return_value = 99
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
-                                         'detail': {'num_message_handlers': 0, 'queue_depth': 99, 'type': 'amqp',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 99, 'type': 'amqp',
                                                     'queue_name': 'scale-command-messages', u'region_name': u''},
                                          'errors': [], 'warnings': []})
 
         mock_get_queue_size.return_value = 101
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
-                                         'detail': {'num_message_handlers': 0, 'queue_depth': 101, 'type': 'amqp',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 101, 'type': 'amqp',
                                                     'queue_name': 'scale-command-messages', 'region_name': ''},
                                          'errors': [], 'warnings': [{u'LARGE_QUEUE': u'Message queue is very large'}]})
 
@@ -251,7 +251,7 @@ class TestDependenciesManager(TestCase):
         mock_get_queue_size.side_effect = Exception('Error connecting to sqs')
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': False,
-                                         'detail': {'num_message_handlers': 0, 'queue_depth': 0, 'type': 'sqs',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 0, 'type': 'sqs',
                                                     'queue_name': 'scale-command-messages', u'region_name': u'aws.com'},
                                          'errors': [{u'SQS_ERROR': u'Error connecting to SQS: Check Logs for details'}],
                                          'warnings': []})
@@ -266,7 +266,7 @@ class TestDependenciesManager(TestCase):
         mock_get_queue_size.return_value = 99
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
-                                         'detail': {'num_message_handlers': 0, 'type': 'sqs',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'type': 'sqs',
                                                     u'queue_depth': 99, u'queue_name': 'scale-command-messages',
                                                     u'region_name': u'aws.com'},
                                          'errors': [], 'warnings': []})
@@ -274,7 +274,7 @@ class TestDependenciesManager(TestCase):
         mock_get_queue_size.return_value = 101
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
-                                         'detail': {'num_message_handlers': 0, 'type': 'sqs',
+                                         'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'type': 'sqs',
                                                     u'queue_depth': 101, u'queue_name': 'scale-command-messages',
                                                     u'region_name': u'aws.com'},
                                          'errors': [],
