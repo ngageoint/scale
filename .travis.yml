@@ -20,7 +20,7 @@ matrix:
         postgresql: "9.5"
         apt:
           packages:
-            - postgresql-9.5-postgis-2.4
+            - postgresql-9.5-postgis-2.3
 
     - os: linux
       env: BUILD_DOCS='true'
