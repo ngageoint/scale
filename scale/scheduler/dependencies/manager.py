@@ -11,13 +11,8 @@ from urlparse import urlparse
 from django.db import connection
 from django.db.utils import OperationalError
 from django.utils.timezone import now
-<<<<<<< HEAD
-from rest_framework import status
-
-=======
 from django_geoaxis.backends.geoaxis import GeoAxisOAuth2
 from rest_framework import status
->>>>>>> 06459da271adb6c65b20cf68efe8039c81cee867
 from kombu import Connection
 
 from messaging.backends.amqp import AMQPMessagingBackend
