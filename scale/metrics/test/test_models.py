@@ -25,8 +25,8 @@ class TestMetricsError(TestCase):
 
     def test_calculate_none(self):
         """Tests generating metrics when there are no matching errors."""
-        MetricsError.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsError.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 0)
 
@@ -46,8 +46,8 @@ class TestMetricsError(TestCase):
         job3 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job3, status=job3.status, ended=job3.ended)
 
-        MetricsError.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsError.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 1)
 
@@ -57,9 +57,9 @@ class TestMetricsError(TestCase):
         job = job_test_utils.create_job(status='FAILED', error=error, ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job, error=error, status=job.status, ended=job.ended)
 
-        MetricsError.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        MetricsError.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsError.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 1)
 
@@ -96,13 +96,13 @@ class TestMetricsError(TestCase):
                                                                                                      tzinfo=utc))
         job_test_utils.create_job_exe(job=job3c, status=job3c.status, ended=job3c.ended, error=algo_error)
 
-        MetricsError.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
 
-        entries = MetricsError.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
         self.assertEqual(len(entries), 4)
 
         for entry in entries:
-            self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
+            self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
             if entry.error == error:
                 self.assertEqual(entry.total_count, 2)
             else:
@@ -135,12 +135,12 @@ class TestMetricsError(TestCase):
     def test_get_plot_data_filtered(self):
         """Tests getting the metrics plot data with filters."""
         error = error_test_utils.create_error(is_builtin=True)
-        metrics_test_utils.create_error(error=error, occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), total_count=1)
-        metrics_test_utils.create_error(error=error, occurred=datetime.datetime(2015, 1, 20, tzinfo=utc), total_count=1)
-        metrics_test_utils.create_error(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), total_count=1)
+        metrics_test_utils.create_error(error=error, occurred=datetime.date(2015, 1, 1), total_count=1)
+        metrics_test_utils.create_error(error=error, occurred=datetime.date(2015, 1, 20), total_count=1)
+        metrics_test_utils.create_error(occurred=datetime.date(2015, 1, 1), total_count=1)
 
-        plot_data = MetricsError.objects.get_plot_data(started=datetime.datetime(2015, 1, 1, tzinfo=utc),
-                                                       ended=datetime.datetime(2015, 1, 10, tzinfo=utc),
+        plot_data = MetricsError.objects.get_plot_data(started=datetime.date(2015, 1, 1),
+                                                       ended=datetime.date(2015, 1, 10),
                                                        choice_ids=[error.id],
                                                        columns=[MetricsTypeColumn('total_count')])
 
@@ -158,8 +158,8 @@ class TestMetricsIngest(TestCase):
 
     def test_calculate_none(self):
         """Tests generating metrics when there are no matching executions."""
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 0)
 
@@ -183,8 +183,8 @@ class TestMetricsIngest(TestCase):
         ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='DUPLICATE',
                                         ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 4)
 
@@ -194,8 +194,8 @@ class TestMetricsIngest(TestCase):
         ingest_test_utils.create_ingest(scan=scan, status='INGESTED',
                                         ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 0)
 
@@ -205,9 +205,9 @@ class TestMetricsIngest(TestCase):
         ingest_test_utils.create_ingest(strike=strike, status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1,
                                                                                                          tzinfo=utc))
 
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 1)
 
@@ -241,13 +241,13 @@ class TestMetricsIngest(TestCase):
                                         ingest_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
                                         ingest_ended=datetime.datetime(2015, 1, 1, 5, tzinfo=utc))
 
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
 
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
         self.assertEqual(len(entries), 1)
 
         entry = entries.first()
-        self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
+        self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
         self.assertEqual(entry.deferred_count, 1)
         self.assertEqual(entry.ingested_count, 2)
         self.assertEqual(entry.errored_count, 1)
@@ -282,13 +282,13 @@ class TestMetricsIngest(TestCase):
         ingest2.file_size = None
         ingest2.save()
 
-        MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
 
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
         self.assertEqual(len(entries), 1)
 
         entry = entries.first()
-        self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
+        self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
         self.assertEqual(entry.deferred_count, 0)
         self.assertEqual(entry.ingested_count, 0)
         self.assertEqual(entry.errored_count, 1)
@@ -343,8 +343,8 @@ class TestMetricsIngest(TestCase):
                                          ingested_count=1)
         metrics_test_utils.create_ingest(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), ingested_count=1)
 
-        plot_data = MetricsIngest.objects.get_plot_data(started=datetime.datetime(2015, 1, 1, tzinfo=utc),
-                                                        ended=datetime.datetime(2015, 1, 10, tzinfo=utc),
+        plot_data = MetricsIngest.objects.get_plot_data(started=datetime.date(2015, 1, 1),
+                                                        ended=datetime.date(2015, 1, 10),
                                                         choice_ids=[strike.id],
                                                         columns=[MetricsTypeColumn('ingested_count')])
 
@@ -360,8 +360,8 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_none(self):
         """Tests generating metrics when there are no matching executions."""
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsJobType.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 0)
 
@@ -385,8 +385,8 @@ class TestMetricsJobType(TestCase):
         job5 = job_test_utils.create_job(status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job5, status=job5.status, ended=job5.ended)
 
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsJobType.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 3)
 
@@ -395,9 +395,9 @@ class TestMetricsJobType(TestCase):
         job = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job, status=job.status, ended=job.ended)
 
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
-        entries = MetricsJobType.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 1)
 
@@ -459,13 +459,13 @@ class TestMetricsJobType(TestCase):
         job4 = job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job4, status=job4.status, ended=job4.ended)
 
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
 
-        entries = MetricsJobType.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
         self.assertEqual(len(entries), 1)
 
         entry = entries.first()
-        self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
+        self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
         self.assertEqual(entry.completed_count, 2)
         self.assertEqual(entry.failed_count, 3)
         self.assertEqual(entry.canceled_count, 1)
@@ -511,13 +511,13 @@ class TestMetricsJobType(TestCase):
         job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
 
-        entries = MetricsJobType.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
         self.assertEqual(len(entries), 1)
 
         entry = entries.first()
-        self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
+        self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
         self.assertEqual(entry.completed_count, 0)
         self.assertEqual(entry.failed_count, 1)
         self.assertEqual(entry.canceled_count, 1)
@@ -568,9 +568,9 @@ class TestMetricsJobType(TestCase):
             ended=datetime.datetime(2015, 1, 1, tzinfo=utc),
         )
 
-        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+        MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
 
-        entries = MetricsJobType.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
         self.assertEqual(len(entries), 1)
 
         entry = entries.first()
@@ -604,12 +604,12 @@ class TestMetricsJobType(TestCase):
     def test_get_plot_data_filtered(self):
         """Tests getting the metrics plot data with filters."""
         job_type = job_test_utils.create_seed_job_type()
-        metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), completed_count=1)
-        metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.datetime(2015, 1, 20, tzinfo=utc), completed_count=1)
-        metrics_test_utils.create_job_type(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), completed_count=1)
+        metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 1), completed_count=1)
+        metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 20), completed_count=1)
+        metrics_test_utils.create_job_type(occurred=datetime.date(2015, 1, 1), completed_count=1)
 
-        plot_data = MetricsJobType.objects.get_plot_data(started=datetime.datetime(2015, 1, 1, tzinfo=utc),
-                                                         ended=datetime.datetime(2015, 1, 10, tzinfo=utc),
+        plot_data = MetricsJobType.objects.get_plot_data(started=datetime.date(2015, 1, 1),
+                                                         ended=datetime.date(2015, 1, 10),
                                                          choice_ids=[job_type.id],
                                                          columns=[MetricsTypeColumn('completed_count')])
 

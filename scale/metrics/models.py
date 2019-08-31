@@ -163,7 +163,7 @@ class MetricsError(models.Model):
     ]
 
     error = models.ForeignKey('error.Error', on_delete=models.PROTECT)
-    occurred = models.DateTimeField(db_index=True)
+    occurred = models.DateField(db_index=True)
 
     total_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
                                       help_text='Number of jobs that failed with a particular error type.', null=True,
@@ -366,7 +366,7 @@ class MetricsIngest(models.Model):
     ]
 
     strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
-    occurred = models.DateTimeField(db_index=True)
+    occurred = models.DateField(db_index=True)
 
     deferred_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
                                          help_text='Number of files deferred (ignored) by the ingest process.',
@@ -717,7 +717,7 @@ class MetricsJobType(models.Model):
     ]
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
-    occurred = models.DateTimeField(db_index=True)
+    occurred = models.DateField(db_index=True)
 
     completed_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
                                           help_text='Number of successfully completed jobs.', null=True, units='count',
