@@ -11,8 +11,13 @@ from urlparse import urlparse
 from django.db import connection
 from django.db.utils import OperationalError
 from django.utils.timezone import now
+<<<<<<< HEAD
 from rest_framework import status
 
+=======
+from django_geoaxis.backends.geoaxis import GeoAxisOAuth2
+from rest_framework import status
+>>>>>>> 06459da271adb6c65b20cf68efe8039c81cee867
 from kombu import Connection
 
 from messaging.backends.amqp import AMQPMessagingBackend
@@ -105,7 +110,7 @@ class DependencyManager(object):
                                 status_dict['warnings'].append({'LARGE_BUFFER': msg})
                                 status_dict['detail']['msg'] = 'Logs are potentially backing up'
                             if scale_settings.FLUENTD_BUFFER_SIZE_WARN > 0 and plugin['buffer_total_queued_size'] > scale_settings.FLUENTD_BUFFER_SIZE_WARN:
-                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_queue_length'], scale_settings.FLUENTD_BUFFER_WARN)
+                                msg = 'Size of log buffer is too large: %d > %d' %(plugin['buffer_total_queued_size'], scale_settings.FLUENTD_BUFFER_SIZE_WARN)
                                 status_dict['warnings'].append({'LARGE_BUFFER_SIZE': msg})
                                 status_dict['detail']['msg'] = 'Logs are potentially backing up'
             except Exception as ex:
@@ -303,9 +308,7 @@ class DependencyManager(object):
         from scheduler.node.manager import node_mgr
         node_status = {}
         node_mgr.generate_status_json(node_status)
-        if not node_status:
-              status_dict = {'OK': False, 'errors': [{'NODES_OFFLINE': 'No nodes reported.'}], 'warnings': []}
-        elif 'nodes' in node_status:
+        if 'nodes' in node_status and len(node_status['nodes']) > 0:
             node_status = node_status['nodes']
             third_nodes = len(node_status)*0.3
             
