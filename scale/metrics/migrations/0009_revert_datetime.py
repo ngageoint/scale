@@ -8,23 +8,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metrics', '0007_auto_20161013_2333'),
+        ('metrics', '0008_occurred_datetime'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='metricserror',
             name='occurred',
-            field=models.DateTimeField(db_index=True),
+            field=models.DateField(db_index=True),
         ),
         migrations.AlterField(
             model_name='metricsingest',
             name='occurred',
-            field=models.DateTimeField(db_index=True),
+            field=models.DateField(db_index=True),
         ),
         migrations.AlterField(
             model_name='metricsjobtype',
             name='occurred',
-            field=models.DateTimeField(db_index=True),
+            field=models.DateField(db_index=True),
         ),
     ]

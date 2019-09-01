@@ -271,7 +271,7 @@ Response: 200 OK
                 "values": [ 
                     { 
                         "id": 1, 
-                        "datetime": "2015-10-05T15:53:00", 
+                        "date": "2015-10-05", 
                         "value": 1 
                     }, 
                     ... 
@@ -370,8 +370,8 @@ Response: 200 OK
 | ..id               | Integer           | The unique identifier of the related choice model for this data value.         |
 |                    |                   | This field is omitted when there are no choice filters or only 1 specified.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..datetime         | ISO-8601 DateTime | The date/time when the plot value occurred.                                    |
-|                    |                   | Uses the ISO-8601 datetime format, (ex: 2015-12-31T15:53:00).                  |
+| ..date             | ISO-8601 Date     | The date when the plot value occurred.                                         |
+|                    |                   | Uses the ISO-8601 date format, (ex: 2015-12-31).                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..value            | Integer           | The statistic value that was calculated for the date.                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
