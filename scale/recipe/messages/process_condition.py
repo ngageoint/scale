@@ -1,9 +1,11 @@
 """Defines a command message that processes a recipe condition"""
 from __future__ import unicode_literals
 
+import json
 import logging
 
 from data.data.exceptions import InvalidData
+from data.data.json.data_v6 import convert_data_to_v6_json
 from messaging.messages.message import CommandMessage
 from recipe.models import RecipeCondition, RecipeNode
 
@@ -79,8 +81,8 @@ class ProcessCondition(CommandMessage):
                 data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
                 RecipeCondition.objects.set_condition_data_v6(condition, data, node_name)
             except InvalidData:
-                logger.exception('Recipe created invalid input data for condition %d. Message will not re-run.',
-                                 self.condition_id)
+                logger.exception('Recipe %d created invalid input data for condition %d. Message will not re-run.',
+                                 condition.recipe_id, self.condition_id)
                 return True
 
             # Process filter and set whether condition was accepted
@@ -88,10 +90,15 @@ class ProcessCondition(CommandMessage):
             is_accepted = data_filter.is_data_accepted(data)
             RecipeCondition.objects.set_processed(condition.id, is_accepted)
 
+            # Log results
+            filter_str = json.dumps(data_filter.filter_list, sort_keys=True, indent=4, separators=(',', ': '))
+            data_str = json.dumps(convert_data_to_v6_json(data).get_dict(), sort_keys=True, indent=4, separators=(',', ': '))
+            logger.info('Condition %d (recipe %d at %s) evaluated to %s:\nCondition: %s\nInput Data: %s', condition.id, condition.recipe_id, node_name, is_accepted, filter_str, data_str)
+            
         # Create message to update the condition's recipe
         from recipe.messages.update_recipe import create_update_recipe_message
         root_recipe_id = condition.recipe.root_recipe_id if condition.recipe.root_recipe_id else condition.recipe_id
-        logger.info('Processed data for condition %d, sending message to update recipe', self.condition_id)
+        logger.info('Processed data for condition %d, sending message to update recipe %d', self.condition_id, root_recipe_id)
         self.new_messages.append(create_update_recipe_message(root_recipe_id))
 
         return True
