@@ -93,6 +93,25 @@ STRIKE_CONFIGURATION_SCHEMA = {
     }
 }
 
+def convert_config_to_v6_json(config, sanitize=True):
+    """Returns the v6 strike configuration JSON for the given configuration
+
+    :param config: The scan configuration
+    :type config: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
+    :param sanitize: Whether to sanitize credentials for display
+    :type sanitize: bool
+    :returns: The v6 scan configuration JSON
+    :rtype: :class:`ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6`
+    """
+
+    config_dict = config.config_dict
+    config_dict['version'] = SCHEMA_VERSION
+
+    ret_val = StrikeConfigurationV6(configuration=config_dict, do_validate=False)
+    if sanitize:
+        ret_val.sanitize_credentials()
+    return ret_val
+
 
 class StrikeConfigurationV6(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
@@ -170,6 +189,14 @@ class StrikeConfigurationV6(object):
         config.file_handler     = self._file_handler
 
         return config
+
+    def sanitize_credentials(self):
+        """Sanitizes the aws credentials in the config if they exist
+        """
+
+        if 'monitor' in self._configuration and 'credentials' in self._configuration['monitor']:
+            self._config['monitor']['credentials']['access_key_id'] = '************'
+            self._config['monitor']['credentials']['secret_access_key'] = '************'
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""

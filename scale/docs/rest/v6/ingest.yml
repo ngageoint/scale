@@ -495,7 +495,6 @@ components:
           example: 2015-09-10T15:24:53.987Z
       required:
       - id
-      - secret_access_key
 
     ingest_status_list:
       title: Ingest Status List
