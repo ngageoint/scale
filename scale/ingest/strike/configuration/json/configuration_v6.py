@@ -93,7 +93,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
     }
 }
 
-def convert_config_to_v6_json(config, sanitize=True):
+def convert_strike_config_to_v6_json(config, sanitize=True):
     """Returns the v6 strike configuration JSON for the given configuration
 
     :param config: The scan configuration
