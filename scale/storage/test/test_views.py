@@ -476,7 +476,22 @@ class TestWorkspaceDetailsViewV6(APITestCase):
 
         self.workspace = storage_test_utils.create_workspace(json_config=self.config)
 
-        rest.login_client(self.client, is_staff=True)
+        self.config2 = {
+            "broker": {
+                "type": "s3",
+                "bucket_name": "my_bucket.domain.com",
+                "credentials": {
+                    "access_key_id": "secret",
+                    "secret_access_key": "super-secret"
+                },
+                "host_path": "/my_bucket",
+                "region_name": "us-east-1"
+            }
+        }
+
+        self.workspace2 = storage_test_utils.create_workspace(json_config=self.config2)
+
+        rest.login_client(self.client, is_staff=False)
 
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
@@ -494,10 +509,24 @@ class TestWorkspaceDetailsViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
+        print result
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
         self.assertEqual(result['title'], self.workspace.title)
+        self.assertIn('deprecated', result)
+
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace2.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        print result
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.workspace2.id)
+        self.assertEqual(result['name'], self.workspace2.name)
+        self.assertEqual(result['title'], self.workspace2.title)
+        #self.assertEqual(result['configuration'])
         self.assertIn('deprecated', result)
 
     def test_edit_simple(self):
