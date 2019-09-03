@@ -31,7 +31,6 @@ PRINCIPAL = os.getenv('PRINCIPAL')
 SECRET = os.getenv('SECRET')
 
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
-STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/service/%s/static/' % FRAMEWORK_NAME)
 
 LOGGING_ADDRESS = os.environ.get('LOGGING_ADDRESS', LOGGING_ADDRESS)
 LOGGING_HEALTH_ADDRESS = os.environ.get('LOGGING_HEALTH_ADDRESS', LOGGING_HEALTH_ADDRESS)

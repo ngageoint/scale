@@ -16,18 +16,6 @@ from django.core.wsgi import get_wsgi_application
 _application = get_wsgi_application()
 
 def application(environ, start_response):
-    framework_name = os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
-
-    # If we are running behind Marathon LB we must set the HTTP_X_HAPROXY header to
-    # configure the API to use the direct access context. Otherwise it assumes reverse proxy
-    # behind DCOS Admin Router (Nginx)
-    behind_haproxy = environ.get('HTTP_X_HAPROXY')
-
-    script_name = '/service/%s/api' % framework_name
-
-    if behind_haproxy:
-        script_name = '/api'
-
-    environ['SCRIPT_NAME'] = script_name
+    environ['SCRIPT_NAME'] = '/api'
 
     return _application(environ, start_response)
