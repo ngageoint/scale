@@ -196,7 +196,7 @@ class TestDependenciesManager(TestCase):
         self.assertEqual(msg_queue['errors'][0].keys(), ['INVALID_BROKER_URL'])
         self.assertDictEqual(msg_queue, {'OK': False,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 0, 'type': '',
-                                                    'queue_name': 'scale-command-messages', u'region_name': u''},
+                                                    'queue_name': 'scale-command-messages', u'region_name': u'', 'msg': 'Error parsing broker url'},
                                          'errors': [{'INVALID_BROKER_URL': 'Error parsing broker url'}], 'warnings': []})
 
     @patch('scheduler.dependencies.manager.CommandMessageManager.get_queue_size')
@@ -207,7 +207,7 @@ class TestDependenciesManager(TestCase):
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': False,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 0, 'type': 'amqp',
-                                                    'queue_name': 'scale-command-messages', u'region_name': u''},
+                                                    'queue_name': 'scale-command-messages', u'region_name': u'', 'msg': 'Unable to get message queue size.' },
                                          'errors': [{u'RABBITMQ_ERROR': u'Error connecting to RabbitMQ: Check Logs for details'}],
                                          'warnings': []})
 
@@ -220,14 +220,14 @@ class TestDependenciesManager(TestCase):
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 99, 'type': 'amqp',
-                                                    'queue_name': 'scale-command-messages', u'region_name': u''},
+                                                    'queue_name': 'scale-command-messages', u'region_name': u'', 'msg': 'Message Queue is healthy'},
                                          'errors': [], 'warnings': []})
 
         mock_get_queue_size.return_value = 101
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': True,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 101, 'type': 'amqp',
-                                                    'queue_name': 'scale-command-messages', 'region_name': ''},
+                                                    'queue_name': 'scale-command-messages', 'region_name': '', 'msg': 'Message queue is large. Scale may be unresponsive.'},
                                          'errors': [], 'warnings': [{u'LARGE_QUEUE': u'Message queue is very large'}]})
 
     @patch('scale.settings.BROKER_URL', 'sqs://aws.com')
@@ -239,7 +239,7 @@ class TestDependenciesManager(TestCase):
         msg_queue = dependency_mgr._generate_msg_queue_status()
         self.assertDictEqual(msg_queue, {'OK': False,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'queue_depth': 0, 'type': 'sqs',
-                                                    'queue_name': 'scale-command-messages', u'region_name': u'aws.com'},
+                                                    'queue_name': 'scale-command-messages', u'region_name': u'aws.com', 'msg': 'Unable to get message queue size.'},
                                          'errors': [{u'SQS_ERROR': u'Error connecting to SQS: Check Logs for details'}],
                                          'warnings': []})
 
@@ -254,7 +254,7 @@ class TestDependenciesManager(TestCase):
         self.assertDictEqual(msg_queue, {'OK': True,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'type': 'sqs',
                                                     u'queue_depth': 99, u'queue_name': 'scale-command-messages',
-                                                    u'region_name': u'aws.com'},
+                                                    u'region_name': u'aws.com', 'msg': 'Message Queue is healthy'},
                                          'errors': [], 'warnings': []})
 
         mock_get_queue_size.return_value = 101
@@ -262,7 +262,7 @@ class TestDependenciesManager(TestCase):
         self.assertDictEqual(msg_queue, {'OK': True,
                                          'detail': {'num_message_handlers': scheduler_mgr.config.num_message_handlers, 'type': 'sqs',
                                                     u'queue_depth': 101, u'queue_name': 'scale-command-messages',
-                                                    u'region_name': u'aws.com'},
+                                                    u'region_name': u'aws.com', 'msg': 'Message queue is large. Scale may be unresponsive.'},
                                          'errors': [],
                                          'warnings': [{u'LARGE_QUEUE': u'Message queue is very large'}]})
 
@@ -270,7 +270,7 @@ class TestDependenciesManager(TestCase):
         """Tests the _generate_idam_status method with geoaxis disabled"""
     
         idam = dependency_mgr._generate_idam_status()
-        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []})
+        self.assertDictEqual(idam, {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'GEOAxIS is not enabled'}, 'errors': [], 'warnings': []})
         
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_KEY', 'key')
     @patch('scale.settings.SOCIAL_AUTH_GEOAXIS_SECRET', 'secret')
@@ -353,7 +353,7 @@ class TestDependenciesManager(TestCase):
                               'django_geoaxis.backends.geoaxis.GeoAxisOAuth2']
         detail['geoaxis_authorization_url'] = django_geoaxis.backends.geoaxis.GeoAxisOAuth2.AUTHORIZATION_URL
         detail['scale_vhost'] = 'scale.io'
-        detail['msg'] = 'Geoaxis is enabled'
+        detail['msg'] = 'GEOAxIS is enabled'
         self.assertDictEqual(idam, {'OK': True, 'detail': detail, 'errors': [], 'warnings': []})
 
     def test_generate_nodes_status(self):

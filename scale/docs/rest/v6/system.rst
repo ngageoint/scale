@@ -35,6 +35,7 @@ Response: 200 OK
           "msg_queue": {
             "OK":true,
             "detail":{
+              "msg": "Message Queue is healthy"
               "num_message_handlers":0,
               "type":"amqp",
               "queue_name":"scale-command-messages",
@@ -346,7 +347,7 @@ Response: 200 OK
 +----------------------------+-------------------+--------------------------------------------------------------------------------+
 | dependencies.nodes         | JSON Object       | Status of nodes in Scale. Warns if too many are offline/degraded               |
 +----------------------------+-------------------+--------------------------------------------------------------------------------+
-| dependencies.idam          | JSON Object       | Status of IDAM service (geoaxis)                                               |
+| dependencies.idam          | JSON Object       | Status of IdAM service (GEOAxIS)                                               |
 +----------------------------+-------------------+--------------------------------------------------------------------------------+
 | dependencies.silo          | JSON Object       | Status of Silo service used for discovering and importing Seed images          |
 +----------------------------+-------------------+--------------------------------------------------------------------------------+

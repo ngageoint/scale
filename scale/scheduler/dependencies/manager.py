@@ -219,6 +219,7 @@ class DependencyManager(object):
         """
         
         status_dict = {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
+        status_dict['detail']['msg'] = 'Message Queue is healthy'
         status_dict['detail']['queue_name'] = scale_settings.QUEUE_NAME
         status_dict['detail']['num_message_handlers'] = scheduler_mgr.config.num_message_handlers
         status_dict['detail']['queue_depth'] = 0
@@ -229,6 +230,7 @@ class DependencyManager(object):
         except InvalidBrokerUrl:
             msg = 'Error parsing broker url'
             status_dict['errors'] = [{'INVALID_BROKER_URL': msg}]
+            status_dict['detail']['msg'] = msg
             return status_dict
 
         status_dict['detail']['type'] = broker_details.get_type()
@@ -241,6 +243,7 @@ class DependencyManager(object):
                 status_dict['OK'] = False
                 msg = 'Error connecting to RabbitMQ: Check Logs for details'
                 status_dict['errors'] = [{'RABBITMQ_ERROR': msg}]
+                status_dict['detail']['msg'] = 'Unable to get message queue size.'
         elif broker_details.get_type() == 'sqs':
             status_dict['detail']['region_name'] = broker_details.get_address()
             try:
@@ -251,6 +254,7 @@ class DependencyManager(object):
                 msg = 'Error connecting to SQS: Check Logs for details'
                 status_dict['OK'] = False
                 status_dict['errors'] = [{'SQS_ERROR': msg}]
+                status_dict['detail']['msg'] = 'Unable to get message queue size.'
         else:
             status_dict['OK'] = False
             status_dict['detail']['msg'] = 'Broker is an unsupported type: %s' % broker_details.get_type()
@@ -259,6 +263,7 @@ class DependencyManager(object):
             status_dict['detail']['queue_depth'] = CommandMessageManager().get_queue_size()
             if scale_settings.MESSSAGE_QUEUE_DEPTH_WARN > 0 and status_dict['detail']['queue_depth'] > scale_settings.MESSSAGE_QUEUE_DEPTH_WARN:
                 status_dict['warnings'].append({'LARGE_QUEUE': 'Message queue is very large'})
+                status_dict['detail']['msg'] = 'Message queue is large. Scale may be unresponsive.'
         return status_dict
 
     def _generate_idam_status(self):
@@ -270,7 +275,7 @@ class DependencyManager(object):
 
         status_dict =  {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
         if not scale_settings.GEOAXIS_ENABLED:
-            status_dict = {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'Geoaxis is not enabled'}, 'errors': [], 'warnings': []}
+            status_dict = {'OK': True, 'detail': {'geoaxis_enabled': False, 'msg': 'GEOAxIS is not enabled'}, 'errors': [], 'warnings': []}
             return status_dict
 
         status_dict['detail']['geoaxis_host'] = scale_settings.SOCIAL_AUTH_GEOAXIS_HOST
@@ -278,7 +283,7 @@ class DependencyManager(object):
         status_dict['detail']['backends'] = scale_settings.AUTHENTICATION_BACKENDS
         status_dict['detail']['geoaxis_authorization_url'] = GeoAxisOAuth2.AUTHORIZATION_URL
         status_dict['detail']['scale_vhost'] = scale_settings.SCALE_VHOST
-        status_dict['detail']['msg'] = 'Geoaxis is enabled'
+        status_dict['detail']['msg'] = 'GEOAxIS is enabled'
         try:
             vhosts = scale_settings.SCALE_VHOST
             hostname = vhosts.split(',')[0]
