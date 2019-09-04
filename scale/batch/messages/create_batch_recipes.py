@@ -180,6 +180,7 @@ class CreateBatchRecipes(CommandMessage):
             logger.info('Found %d files that do not have previous recipes to re-process', len(extra_files_qry))
             
             input_data = []
+            #TODO Sort files by id?
             for file in DataSetFile.objects.get_dataset_files(dataset.id).filter(scale_file__in=extra_files_qry)[:(MAX_RECIPE_NUM-recipe_count)]:
                 data = Data()
                 data.add_value(FileValue(file.parameter_name, [file.scale_file_id]))
