@@ -39,7 +39,10 @@ class DirWatcherMonitor(Monitor):
         self._strike_dir = self._monitored_workspace.workspace_volume_path
         self._deferred_dir = os.path.join(self._strike_dir, 'deferred')
         self._ingest_dir = os.path.join(self._strike_dir, 'ingesting')
-        self._transfer_suffix = configuration['transfer_suffix']
+        if 'transfer_suffix' in configuration:
+            self._transfer_suffix = configuration['transfer_suffix']
+        else:
+            self._transfer_suffix = "_tmp"
 
     def run(self):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.run`
@@ -78,13 +81,11 @@ class DirWatcherMonitor(Monitor):
     def validate_configuration(self, configuration):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.validate_configuration`
         """
-
-        if 'transfer_suffix' not in configuration:
-            raise InvalidMonitorConfiguration('transfer_suffix is required for dir-watcher monitor')
-        if not isinstance(configuration['transfer_suffix'], basestring):
-            raise InvalidMonitorConfiguration('transfer_suffix must be a string')
-        if not configuration['transfer_suffix']:
-            raise InvalidMonitorConfiguration('transfer_suffix must be a non-empty string')
+        if 'transfer_suffix' in configuration:
+            if not isinstance(configuration['transfer_suffix'], basestring):
+                raise InvalidMonitorConfiguration('transfer_suffix must be a string')
+            if not configuration['transfer_suffix']:
+                raise InvalidMonitorConfiguration('transfer_suffix must be a non-empty string')
 
     def _final_filename(self, file_name):
         """Returns the final name (after transferring is done) for the given file. If the file is already done
