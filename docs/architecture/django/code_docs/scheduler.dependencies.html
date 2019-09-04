@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler.management package &mdash; Scale 7.0.0-snapshot documentation</title>
+  <title>scheduler.dependencies package &mdash; Scale 7.0.0-snapshot documentation</title>
   
 
   
@@ -46,8 +46,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="scheduler.management.commands package" href="scheduler.management.commands.html" />
-    <link rel="prev" title="scheduler.dependencies package" href="scheduler.dependencies.html" />
+    <link rel="next" title="scheduler.management package" href="scheduler.management.html" />
+    <link rel="prev" title="scheduler.database package" href="scheduler.database.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -211,13 +211,13 @@
         
           <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
         
-      <li>scheduler.management package</li>
+      <li>scheduler.dependencies package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/scheduler.management.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.dependencies.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -230,25 +230,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scheduler-management-package">
-<h1>scheduler.management package<a class="headerlink" href="#scheduler-management-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.management.commands.html">scheduler.management.commands package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.management.commands.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.load_all_data">scheduler.management.commands.load_all_data module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.scale_db_update">scheduler.management.commands.scale_db_update module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.scale_scheduler">scheduler.management.commands.scale_scheduler module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="scheduler-dependencies-package">
+<h1>scheduler.dependencies package<a class="headerlink" href="#scheduler-dependencies-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-scheduler.dependencies.manager">
+<span id="scheduler-dependencies-manager-module"></span><h2>scheduler.dependencies.manager module<a class="headerlink" href="#module-scheduler.dependencies.manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages gathering Scale dependency system statuses</p>
+<dl class="class">
+<dt id="scheduler.dependencies.manager.DependencyManager">
+<em class="property">class </em><code class="descclassname">scheduler.dependencies.manager.</code><code class="descname">DependencyManager</code><a class="headerlink" href="#scheduler.dependencies.manager.DependencyManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class pulls the status for various systems Scale depends on. This class is thread-safe.</p>
+<dl class="method">
+<dt id="scheduler.dependencies.manager.DependencyManager.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>status_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.dependencies.manager.DependencyManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the systems Scale depends on</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-scheduler.management">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.management" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.dependencies">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.dependencies" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -260,10 +273,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.management.commands.html" class="btn btn-neutral float-right" title="scheduler.management.commands package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.management.html" class="btn btn-neutral float-right" title="scheduler.management package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.dependencies.html" class="btn btn-neutral float-left" title="scheduler.dependencies package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.database.html" class="btn btn-neutral float-left" title="scheduler.database package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

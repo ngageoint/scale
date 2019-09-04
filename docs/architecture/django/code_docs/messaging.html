@@ -331,6 +331,22 @@
 <em class="property">class </em><code class="descclassname">messaging.manager.</code><code class="descname">CommandMessageManager</code><a class="headerlink" href="#messaging.manager.CommandMessageManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <dl class="method">
+<dt id="messaging.manager.CommandMessageManager.get_queue_size">
+<code class="descname">get_queue_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.manager.CommandMessageManager.get_queue_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current length of the queue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of messages in the queue</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="messaging.manager.CommandMessageManager.receive_messages">
 <code class="descname">receive_messages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.manager.CommandMessageManager.receive_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main entry point to message processing.</p>

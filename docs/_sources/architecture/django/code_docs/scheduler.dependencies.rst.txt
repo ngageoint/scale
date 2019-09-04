@@ -1,0 +1,22 @@
+scheduler\.dependencies package
+===============================
+
+Submodules
+----------
+
+scheduler\.dependencies\.manager module
+---------------------------------------
+
+.. automodule:: scheduler.dependencies.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.dependencies
+    :members:
+    :undoc-members:
+    :show-inheritance:

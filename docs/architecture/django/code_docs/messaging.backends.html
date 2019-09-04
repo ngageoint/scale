@@ -236,6 +236,12 @@
 <dd><p>Bases: <a class="reference internal" href="#messaging.backends.backend.MessagingBackend" title="messaging.backends.backend.MessagingBackend"><code class="xref py py-class docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend</span></code></a></p>
 <p>Backend supporting message passing via AMQP 0.9.1 broker, targeting RabbitMQ</p>
 <dl class="method">
+<dt id="messaging.backends.amqp.AMQPMessagingBackend.get_queue_size">
+<code class="descname">get_queue_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.amqp.AMQPMessagingBackend.get_queue_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.backends.backend.MessagingBackend.get_queue_size" title="messaging.backends.backend.MessagingBackend.get_queue_size"><code class="xref py py-meth docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend.get_queue_size()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="messaging.backends.amqp.AMQPMessagingBackend.receive_messages">
 <code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.amqp.AMQPMessagingBackend.receive_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#messaging.backends.backend.MessagingBackend.receive_messages" title="messaging.backends.backend.MessagingBackend.receive_messages"><code class="xref py py-meth docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend.receive_messages()</span></code></a></p>
@@ -256,6 +262,22 @@
 <dt id="messaging.backends.backend.MessagingBackend">
 <em class="property">class </em><code class="descclassname">messaging.backends.backend.</code><code class="descname">MessagingBackend</code><span class="sig-paren">(</span><em>backend_type</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.backend.MessagingBackend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="messaging.backends.backend.MessagingBackend.get_queue_size">
+<code class="descname">get_queue_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.backend.MessagingBackend.get_queue_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current length of the queue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of messages in the queue</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="messaging.backends.backend.MessagingBackend.receive_messages">
 <code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.backend.MessagingBackend.receive_messages" title="Permalink to this definition">¶</a></dt>
@@ -354,6 +376,12 @@ number of messages are to be sent it be done directly in a single function call.
 <em class="property">class </em><code class="descclassname">messaging.backends.sqs.</code><code class="descname">SQSMessagingBackend</code><a class="headerlink" href="#messaging.backends.sqs.SQSMessagingBackend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#messaging.backends.backend.MessagingBackend" title="messaging.backends.backend.MessagingBackend"><code class="xref py py-class docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend</span></code></a></p>
 <p>Backend supporting message passing via Amazon SQS</p>
+<dl class="method">
+<dt id="messaging.backends.sqs.SQSMessagingBackend.get_queue_size">
+<code class="descname">get_queue_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.sqs.SQSMessagingBackend.get_queue_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.backends.backend.MessagingBackend.get_queue_size" title="messaging.backends.backend.MessagingBackend.get_queue_size"><code class="xref py py-meth docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend.get_queue_size()</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="messaging.backends.sqs.SQSMessagingBackend.receive_messages">
 <code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.sqs.SQSMessagingBackend.receive_messages" title="Permalink to this definition">¶</a></dt>

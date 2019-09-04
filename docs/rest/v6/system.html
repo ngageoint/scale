@@ -214,6 +214,84 @@
 <p>Response: 200 OK</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span><span class="p">{</span>
+      <span class="s2">&quot;logs&quot;</span><span class="o">:</span><span class="p">{</span>
+        <span class="s2">&quot;OK&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;detail&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;msg&quot;</span><span class="o">:</span> <span class="s2">&quot;Logs are healthy&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;logging_address&quot;</span><span class="o">:</span> <span class="s2">&quot;tcp://localhost:1234&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;logging_health_address&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.logging.com/health&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;msg_queue&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;OK&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;detail&quot;</span><span class="o">:</span><span class="p">{</span>
+          <span class="s2">&quot;msg&quot;</span><span class="o">:</span> <span class="s2">&quot;Message Queue is healthy&quot;</span>
+          <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;amqp&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;queue_name&quot;</span><span class="o">:</span><span class="s2">&quot;scale-command-messages&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;queue_depth&quot;</span><span class="o">:</span><span class="mi">99</span><span class="p">,</span>
+          <span class="s2">&quot;region_name&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;errors&quot;</span><span class="o">:</span><span class="p">[],</span>
+        <span class="s2">&quot;warnings&quot;</span><span class="o">:</span><span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;database&quot;</span><span class="o">:</span><span class="p">{</span>
+         <span class="s2">&quot;OK&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;detail&quot;</span><span class="o">:</span> <span class="p">{</span>
+           <span class="s2">&quot;msg&quot;</span><span class="o">:</span> <span class="s2">&quot;Database alive and well&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;errors&quot;</span><span class="o">:</span><span class="p">[],</span>
+         <span class="s2">&quot;warnings&quot;</span><span class="o">:</span><span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;elasticsearch&quot;</span><span class="o">:</span><span class="p">{</span>
+           <span class="s2">&quot;OK&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+           <span class="s2">&quot;detail&quot;</span><span class="o">:</span><span class="p">{</span>
+              <span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="s2">&quot;http://green.host&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;msg&quot;</span><span class="o">:</span><span class="s2">&quot;Elasticsearch is healthy&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;info&quot;</span><span class="o">:</span><span class="p">{</span>
+                 <span class="s2">&quot;tagline&quot;</span><span class="o">:</span><span class="s2">&quot;You know, for X&quot;</span>
+              <span class="p">}</span>
+           <span class="p">},</span>
+           <span class="s2">&quot;errors&quot;</span><span class="o">:</span><span class="p">[],</span>
+           <span class="s2">&quot;warnings&quot;</span><span class="o">:</span><span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;nodes&quot;</span><span class="o">:</span><span class="p">{</span>
+         <span class="s2">&quot;OK&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;detail&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;msg&quot;</span><span class="o">:</span> <span class="s2">&quot;Enough nodes are online to function.&quot;</span>
+         <span class="p">}</span>
+         <span class="s2">&quot;errors&quot;</span><span class="o">:</span><span class="p">[</span> <span class="p">{</span><span class="s2">&quot;NODES_OFFLINE&quot;</span><span class="o">:</span><span class="s2">&quot;No nodes reported.&quot;</span><span class="p">}</span> <span class="p">],</span>
+         <span class="s2">&quot;warnings&quot;</span><span class="o">:</span><span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;idam&quot;</span><span class="o">:</span><span class="p">{</span>
+         <span class="s2">&quot;OK&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;detail&quot;</span><span class="o">:</span> <span class="p">{</span>
+           <span class="s2">&quot;geoaxis_authorization_url&quot;</span><span class="o">:</span> <span class="s2">&quot;https://geoaxis.gxaccess.com/ms_oauth/oauth2/endpoints/oauthservice/authorize&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;scale_vhost&quot;</span><span class="o">:</span> <span class="s2">&quot;scale.io&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;geoaxis_enabled&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+           <span class="s2">&quot;backends&quot;</span><span class="o">:</span> <span class="p">[</span>
+             <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;django_geoaxis.backends.geoaxis.GeoAxisOAuth2&quot;</span>
+           <span class="p">],</span>
+           <span class="s2">&quot;msg&quot;</span><span class="o">:</span> <span class="s2">&quot;Geoaxis is enabled&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;geoaxis_host&quot;</span><span class="o">:</span> <span class="s2">&quot;geoaxis.gxaccess.com&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;errors&quot;</span><span class="o">:</span><span class="p">[],</span>
+         <span class="s2">&quot;warnings&quot;</span><span class="o">:</span><span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;silo&quot;</span><span class="o">:</span><span class="p">{</span>
+        <span class="s2">&quot;OK&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;detail&quot;</span><span class="o">:</span><span class="p">{</span>
+          <span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Silo&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;msg&quot;</span><span class="o">:</span><span class="s2">&quot;Silo is alive and connected&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;errors&quot;</span><span class="o">:</span><span class="p">[],</span>
+        <span class="s2">&quot;warnings&quot;</span><span class="o">:</span><span class="p">[]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
    <span class="s2">&quot;scheduler&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;metrics&quot;</span><span class="o">:</span> <span class="p">{</span>
          <span class="s2">&quot;task_updates_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -431,9 +509,9 @@
 </div>
 <table border="1" class="docutils">
 <colgroup>
-<col width="21%" />
+<col width="22%" />
 <col width="15%" />
-<col width="64%" />
+<col width="63%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head" colspan="3"><strong>Get Scheduler Status</strong></th>
@@ -463,6 +541,38 @@ provide.</td>
 <tr class="row-even"><td>timestamp</td>
 <td>ISO-8601 Datetime</td>
 <td>When the status information was generated</td>
+</tr>
+<tr class="row-odd"><td>dependencies</td>
+<td>JSON Object</td>
+<td>Status of Scale&#8217;s dependencies</td>
+</tr>
+<tr class="row-even"><td>dependencies.logs</td>
+<td>JSON Object</td>
+<td>Status of the logging service used by Scale</td>
+</tr>
+<tr class="row-odd"><td>dependencies.msg_queue</td>
+<td>JSON Object</td>
+<td>Status of Scale&#8217;s message queue</td>
+</tr>
+<tr class="row-even"><td>dependencies.database</td>
+<td>JSON Object</td>
+<td>Status of Scale&#8217;s database</td>
+</tr>
+<tr class="row-odd"><td>dependencies.elasticsearch</td>
+<td>JSON Object</td>
+<td>Status of configured elasticsearch service</td>
+</tr>
+<tr class="row-even"><td>dependencies.nodes</td>
+<td>JSON Object</td>
+<td>Status of nodes in Scale. Warns if too many are offline/degraded</td>
+</tr>
+<tr class="row-odd"><td>dependencies.idam</td>
+<td>JSON Object</td>
+<td>Status of IdAM service (GEOAxIS)</td>
+</tr>
+<tr class="row-even"><td>dependencies.silo</td>
+<td>JSON Object</td>
+<td>Status of Silo service used for discovering and importing Seed images</td>
 </tr>
 <tr class="row-odd"><td>scheduler</td>
 <td>JSON Object</td>

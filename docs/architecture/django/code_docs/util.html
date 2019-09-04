@@ -463,6 +463,24 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 </dd></dl>
 
 <dl class="method">
+<dt id="util.aws.SQSClient.get_queue_size">
+<code class="descname">get_queue_size</code><span class="sig-paren">(</span><em>queue_name</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient.get_queue_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the size of the SQS queue by the given name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>queue_name</strong> (<em>string</em>) &#8211; The unique name of the SQS queue</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">approximate number of messages in the queue</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="util.aws.SQSClient.receive_messages">
 <code class="descname">receive_messages</code><span class="sig-paren">(</span><em>queue_name</em>, <em>batch_size=100</em>, <em>wait_time_seconds=20</em>, <em>visibility_timeout_seconds=30</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient.receive_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive a batch of messages from an SQS queue</p>
