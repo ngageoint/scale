@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import copy
 import datetime
 import json
 import os
@@ -97,7 +98,40 @@ class TestIngestDetailsViewV6(APITestCase):
     def setUp(self):
         django.setup()
 
-        self.ingest = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED')
+        self.config = {
+            "broker": {
+                "type": "s3",
+                "bucket_name": "my_bucket.domain.com",
+                "credentials": {
+                    "access_key_id": "secret",
+                    "secret_access_key": "super-secret"
+                },
+                "host_path": "/my_bucket",
+                "region_name": "us-east-1"
+            }
+        }
+
+        self.workspace = storage_test_utils.create_workspace(json_config=self.config)
+
+        self.config2 = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 's3',
+                'sqs_name': 'my-sqs',
+                'credentials': {
+                    "access_key_id": "secret",
+                    "secret_access_key": "super-secret"
+                }
+            },
+            'files_to_ingest': [{
+                'data_types': [],
+                'filename_regex': '.*txt'
+            }]
+        }
+
+        self.strike = ingest_test_utils.create_strike(configuration=self.config2)
+
+        self.ingest = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED', workspace=self.workspace, strike=self.strike)
 
         rest.login_client(self.client)
 
@@ -108,10 +142,20 @@ class TestIngestDetailsViewV6(APITestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
+        self.assertTrue('************' in response.content)
+        self.assertFalse('super-secret' in response.content)
         result = json.loads(response.content)
         self.assertEqual(result['id'], self.ingest.id)
         self.assertEqual(result['file_name'], self.ingest.file_name)
         self.assertEqual(result['status'], self.ingest.status)
+
+        rest.login_client(self.client, is_staff=True, username='test2')
+        url = '/%s/ingests/%d/' % (self.version, self.ingest.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        self.assertTrue('secret' in response.content)
+        self.assertTrue('super-secret' in response.content)
 
     def test_missing(self):
         """Tests calling the ingests view with an invalid id or file name."""
@@ -1091,7 +1135,43 @@ class TestStrikeDetailsViewV6(APITestCase):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace(name='raw')
+
         self.strike = ingest_test_utils.create_strike()
+
+        self.config = {
+            "broker": {
+                "type": "s3",
+                "bucket_name": "my_bucket.domain.com",
+                "credentials": {
+                    "access_key_id": "secret",
+                    "secret_access_key": "super-secret"
+                },
+                "host_path": "/my_bucket",
+                "region_name": "us-east-1"
+            }
+        }
+
+        self.workspace2 = storage_test_utils.create_workspace(name='raw2', json_config=self.config)
+
+        self.config2 = {
+            'workspace': self.workspace2.name,
+            'monitor': {
+                'type': 's3',
+                'sqs_name': 'my-sqs',
+                'credentials': {
+                    "access_key_id": "secret",
+                    "secret_access_key": "super-secret"
+                }
+            },
+            'files_to_ingest': [{
+                'data_types': [],
+                'filename_regex': '.*txt'
+            }]
+        }
+        self.secret_config = copy.deepcopy(self.config2)
+        self.secret_config['monitor']['credentials']['access_key_id'] = '************'
+        self.secret_config['monitor']['credentials']['secret_access_key'] = '************'
+        self.strike2 = ingest_test_utils.create_strike(configuration=self.config2)
 
         rest.login_client(self.client, is_staff=True)
 
@@ -1115,7 +1195,21 @@ class TestStrikeDetailsViewV6(APITestCase):
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['name'], self.strike.name)
         self.assertIsNotNone(result['job'])
-        self.assertIsNotNone(result['configuration'])
+        self.maxDiff = None
+        del self.strike.configuration['version']
+        self.assertDictEqual(result['configuration'], self.strike.configuration)
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike2.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        rest.login_client(self.client, is_staff=False, username='test2')
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.strike2.id)
+        self.assertEqual(result['name'], self.strike2.name)
+        self.assertIsNotNone(result['job'])
+        self.assertDictEqual(result['configuration'], self.config2)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a Strike process"""

@@ -220,10 +220,10 @@ def get_versioned_urls(apps):
     return urls
 
 
-def login_client(client, is_staff=False):
+def login_client(client, is_staff=False, username='test'):
     """Takes a client object and creates a login session, optionally creating a staff user for unsafe methods"""
-    User.objects.create_user(username='test', password='user', email='test@empty.com', is_staff=is_staff)
-    client.login(username='test', password='user')
+    User.objects.create_user(username=username, password='user', email='test@empty.com', is_staff=is_staff)
+    client.login(username=username, password='user')
 
 
 def parse_string(request, name, default_value=None, required=True, accepted_values=None):

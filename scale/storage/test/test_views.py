@@ -489,9 +489,13 @@ class TestWorkspaceDetailsViewV6(APITestCase):
             }
         }
 
+        self.secret_config = copy.deepcopy(self.config2)
+        self.secret_config['broker']['credentials']['access_key_id'] = '************'
+        self.secret_config['broker']['credentials']['secret_access_key'] = '************'
+
         self.workspace2 = storage_test_utils.create_workspace(json_config=self.config2)
 
-        rest.login_client(self.client, is_staff=False)
+        rest.login_client(self.client, is_staff=True)
 
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
@@ -509,7 +513,6 @@ class TestWorkspaceDetailsViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        print result
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
@@ -521,13 +524,21 @@ class TestWorkspaceDetailsViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        print result
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.workspace2.id)
         self.assertEqual(result['name'], self.workspace2.name)
         self.assertEqual(result['title'], self.workspace2.title)
-        #self.assertEqual(result['configuration'])
+        self.assertDictEqual(result['configuration'], self.config2)
         self.assertIn('deprecated', result)
+
+        # test credentials being masked to non-staff users
+        rest.login_client(self.client, is_staff=False, username='test2')
+
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace2.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertDictEqual(result['configuration'], self.secret_config)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a workspace"""

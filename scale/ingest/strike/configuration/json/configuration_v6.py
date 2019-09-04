@@ -104,7 +104,7 @@ def convert_strike_config_to_v6_json(config, sanitize=True):
     :rtype: :class:`ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6`
     """
 
-    config_dict = config.config_dict
+    config_dict = config.configuration
     config_dict['version'] = SCHEMA_VERSION
 
     ret_val = StrikeConfigurationV6(configuration=config_dict, do_validate=False)
@@ -195,8 +195,8 @@ class StrikeConfigurationV6(object):
         """
 
         if 'monitor' in self._configuration and 'credentials' in self._configuration['monitor']:
-            self._config['monitor']['credentials']['access_key_id'] = '************'
-            self._config['monitor']['credentials']['secret_access_key'] = '************'
+            self._configuration['monitor']['credentials']['access_key_id'] = '************'
+            self._configuration['monitor']['credentials']['secret_access_key'] = '************'
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""

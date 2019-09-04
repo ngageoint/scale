@@ -220,11 +220,13 @@ class IngestManager(models.Manager):
 
         return ingests
 
-    def get_details(self, ingest_id):
+    def get_details(self, ingest_id, is_staff=False):
         """Gets additional details for the given ingest model based on related model attributes.
 
         :param ingest_id: The unique identifier of the ingest.
         :type ingest_id: int
+        :param is_staff: Whether the requesting user is a staff member
+        :type is_staff: bool
         :returns: The ingest with extra related attributes.
         :rtype: :class:`ingest.models.Ingest`
         """
@@ -235,6 +237,8 @@ class IngestManager(models.Manager):
                                                'source_file', 'source_file__workspace')
         ingest = ingest.defer('source_file__workspace__json_config')
         ingest = ingest.get(pk=ingest_id)
+        ingest.admin_view = is_staff
+        ingest.strike.admin_view = is_staff
 
         return ingest
 
@@ -1252,8 +1256,8 @@ class Strike(models.Model):
         """
 
         sanitize = True
-        if self.admin_view:
-            sanitize = False
+        if hasattr(self, 'admin_view'):
+            sanitize = (not self.admin_view)
         return rest_utils.strip_schema_version(convert_strike_config_to_v6_json(self.get_strike_configuration(),sanitize=sanitize).get_dict())
 
     class Meta(object):

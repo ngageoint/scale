@@ -1159,8 +1159,8 @@ class Workspace(models.Model):
         """
 
         sanitize = True
-        if self.admin_view:
-            sanitize = False
+        if hasattr(self, 'admin_view'):
+            sanitize = (not self.admin_view)
         return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration(), sanitize=sanitize).get_dict())
 
     def list_files(self, recursive):
