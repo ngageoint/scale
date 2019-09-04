@@ -18,6 +18,9 @@ LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
+FLUENTD_BUFFER_WARN = int(os.getenv('FLUENTD_BUFFER_WARN', 10)) #10 items backed up in the logging queue
+FLUENTD_BUFFER_SIZE_WARN = int(os.getenv('FLUENTD_BUFFER_SIZE_WARN', 1000000000)) #1GB
+MESSSAGE_QUEUE_DEPTH_WARN = int(os.getenv('MESSSAGE_QUEUE_DEPTH_WARN', 100)) #100 messages in the message broker queue
 
 # used to look for other env vars prefixed with this value
 SCALEUI_ENV_PREFIX = os.getenv('SCALEUI_ENV_PREFIX', 'SCALEUI_')
@@ -44,6 +47,10 @@ def run(client):
     silo_url = os.getenv('SILO_URL', '')
 
     blocking_apps = []
+    
+    print("FLUENTD_BUFFER_WARN=%d" % FLUENTD_BUFFER_WARN)
+    print("FLUENTD_BUFFER_SIZE_WARN=%d" % FLUENTD_BUFFER_SIZE_WARN)
+    print("MESSSAGE_QUEUE_DEPTH_WARN=%d" % MESSSAGE_QUEUE_DEPTH_WARN)
 
     # Determine if elasticsearch should be deployed. If ELASTICSEARCH_URL is unset we need to deploy it
     es_url = os.getenv('ELASTICSEARCH_URL', '')
@@ -77,7 +84,7 @@ def run(client):
         app_name = '%s-fluentd' % FRAMEWORK_NAME
         deploy_fluentd(client, app_name, es_url)
         print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:24220" % subdomain_gen(app_name))
+        print("LOGGING_HEALTH_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json" % subdomain_gen(app_name))
         blocking_apps.append(app_name)
 
     # Determine if Web Server should be deployed.

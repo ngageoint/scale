@@ -28,6 +28,9 @@ class DummyBackend(MessagingBackend):
 
     def receive_messages(self, batch_size):  # pragma: no cover
         pass
+    
+    def get_queue_size(self):  # pragma: no cover
+        pass
 
 
 class TestAMQPBackend(TestCase):

@@ -49,3 +49,11 @@ class MessagingBackend(object):
         :return: Yielded list of messages
         :rtype: Generator[dict]
         """
+
+    @abstractmethod
+    def get_queue_size(self):
+        """Gets the current length of the queue
+
+        :return: number of messages in the queue
+        :rtype: int
+        """

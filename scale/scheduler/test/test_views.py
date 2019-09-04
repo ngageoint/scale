@@ -5,6 +5,7 @@ import json
 
 import django
 from django.utils.timezone import now
+from mock import patch
 from rest_framework import status
 
 from rest_framework.test import APITestCase
@@ -111,8 +112,11 @@ class TestStatusView(APITestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-    def test_status_old(self):
+    @patch('messaging.manager.CommandMessageManager.get_queue_size')
+    def test_status_old(self, mock_get_queue_size):
         """Test getting scheduler status with old data"""
+        
+        mock_get_queue_size.return_value = 0
 
         when = now() - datetime.timedelta(hours=1)
         status_thread = SchedulerStatusThread()
@@ -122,8 +126,11 @@ class TestStatusView(APITestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-    def test_status_successful(self):
+    @patch('messaging.manager.CommandMessageManager.get_queue_size')
+    def test_status_successful(self, mock_get_queue_size):
         """Test getting scheduler status successfully"""
+        
+        mock_get_queue_size.return_value = 0
 
         when = now()
         status_thread = SchedulerStatusThread()

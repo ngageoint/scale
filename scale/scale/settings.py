@@ -62,6 +62,10 @@ CONFIG_URI = None
 # Directory for rotating metrics storage
 METRICS_DIR = None
 
+# fluentd warning levels, or -1 to disable warnings
+FLUENTD_BUFFER_WARN = int(os.environ.get('FLUENTD_BUFFER_WARN', -1))
+FLUENTD_BUFFER_SIZE_WARN = int(os.environ.get('FLUENTD_BUFFER_SIZE_WARN', -1))
+
 # URL for fluentd, or None to disable fluentd
 LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
@@ -75,9 +79,13 @@ ELASTICSEARCH = None
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
+#root url for scale installation
+SCALE_VHOST = os.getenv('SCALE_VHOST', 'localhost:8000')
+
 # Broker URL for connection to messaging backend
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 QUEUE_NAME = 'scale-command-messages'
+MESSSAGE_QUEUE_DEPTH_WARN = int(os.environ.get('MESSSAGE_QUEUE_DEPTH_WARN', -1))
 
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
