@@ -1202,14 +1202,19 @@ class TestStrikeDetailsViewV6(APITestCase):
         url = '/%s/strikes/%d/' % (self.version, self.strike2.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertDictEqual(result['configuration'], self.config2)
+
 
         rest.login_client(self.client, is_staff=False, username='test2')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.strike2.id)
         self.assertEqual(result['name'], self.strike2.name)
         self.assertIsNotNone(result['job'])
-        self.assertDictEqual(result['configuration'], self.config2)
+        self.assertDictEqual(result['configuration'], self.secret_config)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a Strike process"""
