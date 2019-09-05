@@ -908,19 +908,22 @@ class WorkspaceManager(models.Manager):
             workspace.is_active = is_active
         workspace.save()
 
-    def get_details(self, workspace_id):
+    def get_details(self, workspace_id, is_staff=False):
         """Returns the workspace for the given ID with all detail fields included.
 
         There are currently no additional fields included.
 
         :param workspace_id: The unique identifier of the workspace.
         :type workspace_id: int
+        :param is_staff: Whether the requesting user is a staff member
+        :type is_staff: bool
         :returns: The workspace with all detail fields included.
         :rtype: :class:`storage.models.Workspace`
         """
 
         # Attempt to get the workspace
         workspace = Workspace.objects.get(pk=workspace_id)
+        workspace.admin_view = is_staff
 
         return workspace
 
@@ -1155,7 +1158,10 @@ class Workspace(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration()).get_dict())
+        sanitize = True
+        if hasattr(self, 'admin_view'):
+            sanitize = (not self.admin_view)
+        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration(), sanitize=sanitize).get_dict())
 
     def list_files(self, recursive):
         """Lists files within a workspace, with optional full tree recursion.

@@ -346,7 +346,10 @@ class WorkspaceDetailsView(GenericAPIView):
         """
 
         try:
-            workspace = Workspace.objects.get_details(workspace_id)
+            is_staff = False
+            if request.user:
+                is_staff = request.user.is_staff
+            workspace = Workspace.objects.get_details(workspace_id, is_staff)
         except Workspace.DoesNotExist:
             raise Http404
 

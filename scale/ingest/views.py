@@ -128,7 +128,10 @@ class IngestDetailsView(RetrieveAPIView):
         """
 
         try:
-            ingest = Ingest.objects.get_details(ingest_id)
+            is_staff = False
+            if request.user:
+                is_staff = request.user.is_staff
+            ingest = Ingest.objects.get_details(ingest_id, is_staff)
         except Ingest.DoesNotExist:
             raise Http404
 
@@ -615,7 +618,10 @@ class StrikeDetailsView(GenericAPIView):
         """
 
         try:
-            strike = Strike.objects.get_details(strike_id)
+            is_staff = False
+            if request.user:
+                is_staff = request.user.is_staff
+            strike = Strike.objects.get_details(strike_id, is_staff)
         except Strike.DoesNotExist:
             raise Http404
 

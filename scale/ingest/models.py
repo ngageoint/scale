@@ -20,7 +20,7 @@ from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6, convert_strike_config_to_v6_json
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.models import JobType
 from job.messages.process_job_input import create_process_job_input_messages
@@ -220,11 +220,13 @@ class IngestManager(models.Manager):
 
         return ingests
 
-    def get_details(self, ingest_id):
+    def get_details(self, ingest_id, is_staff=False):
         """Gets additional details for the given ingest model based on related model attributes.
 
         :param ingest_id: The unique identifier of the ingest.
         :type ingest_id: int
+        :param is_staff: Whether the requesting user is a staff member
+        :type is_staff: bool
         :returns: The ingest with extra related attributes.
         :rtype: :class:`ingest.models.Ingest`
         """
@@ -235,6 +237,8 @@ class IngestManager(models.Manager):
                                                'source_file', 'source_file__workspace')
         ingest = ingest.defer('source_file__workspace__json_config')
         ingest = ingest.get(pk=ingest_id)
+        ingest.admin_view = is_staff
+        ingest.strike.admin_view = is_staff
 
         return ingest
 
@@ -1164,16 +1168,20 @@ class StrikeManager(models.Manager):
             strikes = strikes.order_by('last_modified')
         return strikes
 
-    def get_details(self, strike_id):
+    def get_details(self, strike_id, is_staff=False):
         """Returns the Strike process for the given ID with all detail fields included.
 
         :param strike_id: The unique identifier of the Strike process.
         :type strike_id: int
+        :param is_staff: Whether the requesting user is a staff member
+        :type is_staff: bool
         :returns: The Strike process with all detail fields included.
         :rtype: :class:`ingest.models.Strike`
         """
 
-        return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
+        strike = Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
+        strike.admin_view = is_staff
+        return strike
 
     def validate_strike_v6(self, configuration):
         """Validates the given configuration for creating a new strike process
@@ -1241,13 +1249,16 @@ class Strike(models.Model):
         return StrikeConfigurationV6(self.configuration).get_configuration()
 
     def get_v6_configuration_json(self):
-        """Returns the batch configuration in v6 of the JSON schema
+        """Returns the strike configuration in v6 of the JSON schema
 
-        :returns: The batch configuration in v6 of the JSON schema
+        :returns: The strike configuration in v6 of the JSON schema
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(self.get_strike_configuration().get_dict())
+        sanitize = True
+        if hasattr(self, 'admin_view'):
+            sanitize = (not self.admin_view)
+        return rest_utils.strip_schema_version(convert_strike_config_to_v6_json(self.get_strike_configuration(),sanitize=sanitize).get_dict())
 
     class Meta(object):
         """meta information for database"""

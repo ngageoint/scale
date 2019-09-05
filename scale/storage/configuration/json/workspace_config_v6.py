@@ -36,16 +36,22 @@ WORKSPACE_CONFIGURATION_SCHEMA = {
     },
 }
 
-def convert_config_to_v6_json(config):
+def convert_config_to_v6_json(config, sanitize=True):
     """Returns the v6 workspace configuration JSON for the given configuration
 
     :param config: The workspace configuration
     :type config: :class:`storage.configuration.workspace_configuration.WorkspaceConfiguration`
+    :param sanitize: Whether to sanitize credentials for display
+    :type sanitize: bool
     :returns: The v6 workspace configuration JSON
     :rtype: :class:`workspace.configuration.json.workspace_config_v6.WorkspaceConfigurationV6`
     """
 
-    return WorkspaceConfigurationV6(config=config.get_dict(), do_validate=False)
+    ret_val = WorkspaceConfigurationV6(config=config.get_dict(), do_validate=False)
+    if sanitize:
+        ret_val.sanitize_credentials()
+    return ret_val
+
 
 class WorkspaceConfigurationV6(object):
     """Represents the schema for a workspace configuration"""
@@ -102,6 +108,14 @@ class WorkspaceConfigurationV6(object):
         """
 
         return self._config
+
+    def sanitize_credentials(self):
+        """Sanitizes the aws credentials in the config if they exist
+        """
+
+        if 'broker' in self._config and 'credentials' in self._config['broker']:
+            self._config['broker']['credentials']['access_key_id'] = '************'
+            self._config['broker']['credentials']['secret_access_key'] = '************'
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
