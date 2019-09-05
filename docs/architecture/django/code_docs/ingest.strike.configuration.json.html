@@ -277,6 +277,36 @@ identify files to ingest and how to store them.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.sanitize_credentials">
+<code class="descname">sanitize_credentials</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.sanitize_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sanitizes the aws credentials in the config if they exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ingest.strike.configuration.json.configuration_v6.convert_strike_config_to_v6_json">
+<code class="descclassname">ingest.strike.configuration.json.configuration_v6.</code><code class="descname">convert_strike_config_to_v6_json</code><span class="sig-paren">(</span><em>config</em>, <em>sanitize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.convert_strike_config_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 strike configuration JSON for the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="ingest.strike.configuration.strike_configuration.StrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.StrikeConfiguration</span></code></a>) &#8211; The scan configuration</li>
+<li><strong>sanitize</strong> (<em>bool</em>) &#8211; Whether to sanitize credentials for display</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The v6 scan configuration JSON</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6" title="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
