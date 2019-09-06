@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import copy
+import json
 
 import django
 from django.db.utils import DatabaseError, OperationalError
@@ -13,6 +14,8 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.management.commands.scale_pre_steps import Command as PreCommand
 from job.test import utils as job_utils
+from storage.models import ScaleFile
+from storage.serializers import ScaleFileDetailsSerializerV6 as serialize
 from storage.test import utils as storage_utils
 from trigger.models import TriggerEvent
 
@@ -41,11 +44,11 @@ class TestPreJobSteps(TransactionTestCase):
         cmd_args = 'run test'
         timeout = 60
 
-        workspace = storage_utils.create_workspace()
-        file_1 = storage_utils.create_file(workspace=workspace)
-        file_2 = storage_utils.create_file(workspace=workspace)
-        file_3 = storage_utils.create_file(workspace=workspace)
-        input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
+        workspace = storage_utils.create_workspace(base_url="http://test.com/")
+        self.file_1 = storage_utils.create_file(workspace=workspace, file_path="path/1/file1.txt")
+        self.file_2 = storage_utils.create_file(workspace=workspace, file_path="path/2/file2.txt")
+        self.file_3 = storage_utils.create_file(workspace=workspace, file_path="path/3/file3.txt")
+        input_files = {self.file_1.id: self.file_1, self.file_2.id: self.file_2, self.file_3.id: self.file_3}
 
         manifest = job_utils.create_seed_manifest(command='command run test')
         imm = copy.deepcopy(manifest)
@@ -58,7 +61,7 @@ class TestPreJobSteps(TransactionTestCase):
         self.seed_job = job_utils.create_job(job_type=self.seed_job_type, event=self.event, status='RUNNING')
 
         self.data_dict = {'json': {'input_1': 'my_val'},
-                     'files': {'input_2': [file_1.id], 'input_3': [file_2.id, file_3.id]}}
+                     'files': {'input_2': [self.file_1.id], 'input_3': [self.file_2.id, self.file_3.id]}}
         self.seed_job_meta = job_utils.create_job(job_type=self.seed_job_type_metadata, event=self.event,
                                                       input=self.data_dict, status='RUNNING')
         config = {'output_workspaces': {'default': storage_utils.create_workspace().name}}
@@ -70,20 +73,25 @@ class TestPreJobSteps(TransactionTestCase):
         self.seed_exe_meta = job_utils.create_job_exe(job=self.seed_job_meta, status='RUNNING', timeout=timeout, queued=now(),
                                                  configuration=exe_config.get_dict())
 
-    #@patch('__builtin__.open')
+    @patch('__builtin__.open')
     @patch('job.management.commands.scale_pre_steps.json.dump')
-    def test_generate_input_metadata(self, mock_dump):
+    def test_generate_input_metadata(self, mock_dump, mock_open):
 
         cmd = PreCommand()
         with patch('job.models.JobExecution.get_execution_configuration') as mock_get_exe_config:
             cmd._generate_input_metadata(self.seed_exe)
             mock_get_exe_config.assert_not_called()
 
-        import pdb; pdb.set_trace()
         cmd._generate_input_metadata(self.seed_exe_meta)
         mock_dump.assert_called_once()
         args, kwargs = mock_dump.call_args
-        print args
+        metadata_dict = {'JOB': {}}
+        metadata_dict['JOB']['input_1'] = 'my_val'
+        metadata_dict['JOB']['input_2'] = [serialize(ScaleFile.objects.get_details(file_id=self.file_1.id)).data]
+        metadata_dict['JOB']['input_3'] = [serialize(ScaleFile.objects.get_details(file_id=self.file_2.id)).data, serialize(ScaleFile.objects.get_details(file_id=self.file_3.id)).data]
+        self.maxDiff = None
+        self.assertDictEqual(args[0]['JOB']['input_2'][0], metadata_dict['JOB']['input_2'][0])
+        self.assertDictEqual(args[0], metadata_dict)
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.os.environ.get')

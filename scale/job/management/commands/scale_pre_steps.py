@@ -107,7 +107,6 @@ class Command(BaseCommand):
         # Generate input metadata dict
         input_metadata = {}
         config = job_exe.get_execution_configuration()
-        print config.get_dict()
         if 'input_files' in config.get_dict():
             input_metadata['JOB'] = {}
             input_data = job_exe.job.get_input_data()
@@ -127,8 +126,12 @@ class Command(BaseCommand):
                     input_metadata['RECIPE'][i] = [serialize(ScaleFile.objects.get_details(file_id=f)).data for f in
                                                    input_data.values[i].file_ids]
 
-        workspace_names = config.get_input_workspace_names()
-        workspace_models = {w.name: w for w in Workspace.objects.get_workspaces(names=workspace_names)}
+        name = job_exe.job.get_job_configuration().get_output_workspace('input_metadata_manifest')
+        try:
+            workspace_model = Workspace.objects.get(name=name)
+        except Workspace.DoesNotExist:
+            logger.exception('No output workspace defined. Not creating input manifest.')
+            return
 
         input_metadata_id = None
         if input_metadata:
@@ -144,17 +147,16 @@ class Command(BaseCommand):
                 remote_path = self._calculate_remote_path(job_exe)
                 scale_file.file_path = remote_path
 
-                for workspace in workspace_models:
-                    try:
-                        if not input_metadata_id:
-                            ScaleFile.objects.upload_files(workspace, [FileUpload(scale_file, local_path)])
-                            input_metadata_id = ScaleFile.objects.get(file_name=file_name).id
-                            data = job_exe.job.get_job_data()
-                            data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_id)
-                            job_exe.job.input = data.get_dict()
-                            job_exe.job.save()
-                    except:
-                        continue
+                try:
+                    if not input_metadata_id:
+                        ScaleFile.objects.upload_files(workspace_model, [FileUpload(scale_file, local_path)])
+                        input_metadata_id = ScaleFile.objects.get(file_name=file_name).id
+                        data = job_exe.job.get_job_data()
+                        data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_id)
+                        job_exe.job.input = data.get_dict()
+                        job_exe.job.save()
+                except Exception as ex:
+                    logger.exception('Error uploading input manifest to workspace %d: %s' % (workspace_model.id, ex))
                 if not input_metadata_id:
                     logger.exception('Error uploading input_metadata manifest for job_exe %d' % job_exe.job.id)
 
