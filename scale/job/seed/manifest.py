@@ -417,7 +417,10 @@ class SeedManifest(object):
         :rtype: bool
         """
 
-        return 'INPUT_METADATA_MANIFEST' in self.get_input_files()
+        names = []
+        for input_file in self.get_input_files():
+            names.append(input_file['name'])
+        return 'INPUT_METADATA_MANIFEST' in names
 
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.

@@ -107,6 +107,7 @@ class Command(BaseCommand):
         # Generate input metadata dict
         input_metadata = {}
         config = job_exe.get_execution_configuration()
+        print config.get_dict()
         if 'input_files' in config.get_dict():
             input_metadata['JOB'] = {}
             input_data = job_exe.job.get_input_data()
