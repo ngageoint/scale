@@ -83,7 +83,7 @@ Data Filter JSON
 A data filter JSON describes a set of filters that determines whether a set of data is accepted or not.  A filter consists of a name, type,
 condition and a set of values.
 
-The name determines which input parameter is examined. The value 'input_a' means the filter will look at the value of that parameter if it exists.
+The name determines which condition input parameter is examined. A condition node's input parameters are defined when it is created as part of a recipe type definition and the values for the parameters are fed from recipe inputs or job outputs that the condition node depends on.  The value 'input_a' means the filter will look at the value of the 'input_a' parameter if it exists.
 If a parameter with the given name does not exist, the filter will automatically fail. This can be useful for determining whether to continue
 when a previous job did not supply an optional output.  
 
