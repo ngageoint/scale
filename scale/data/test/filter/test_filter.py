@@ -242,7 +242,7 @@ class TestDataFilter(TestCase):
     
         self.assertTrue(ALL_CONDITIONS['in'](1, [1]))
         self.assertTrue(ALL_CONDITIONS['in']('1', ['1']))
-        self.assertTrue(ALL_CONDITIONS['in']('1', ['123']))
+        self.assertFalse(ALL_CONDITIONS['in']('1', ['123']))
         self.assertFalse(ALL_CONDITIONS['in']('4', ['123']))
         self.assertFalse(ALL_CONDITIONS['in'](4, [123]))
         self.assertFalse(ALL_CONDITIONS['in'](4, 4))
@@ -253,7 +253,7 @@ class TestDataFilter(TestCase):
     
         self.assertFalse(ALL_CONDITIONS['not in'](1, [1]))
         self.assertFalse(ALL_CONDITIONS['not in']('1', ['1']))
-        self.assertFalse(ALL_CONDITIONS['not in']('1', ['123']))
+        self.assertTrue(ALL_CONDITIONS['not in']('1', ['123']))
         self.assertTrue(ALL_CONDITIONS['not in']('4', ['123']))
         self.assertTrue(ALL_CONDITIONS['not in'](4, [123]))
         self.assertTrue(ALL_CONDITIONS['not in'](4, 4))

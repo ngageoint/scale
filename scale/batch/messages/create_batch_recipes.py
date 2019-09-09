@@ -173,18 +173,20 @@ class CreateBatchRecipes(CommandMessage):
 
         # If we have data that didn't match any previous recipes
         if self.current_dataset_file_id:
-            extra_files_qry = extra_files_qry.filter(id__gt=self.current_dataset_file_id)
-        extra_files_qry.order_by('-id')
+            extra_files_qry = extra_files_qry.filter(id__lt=self.current_dataset_file_id)
+        extra_file_ids = list(extra_files_qry.order_by('-id').values_list('id', flat=True)[:(MAX_RECIPE_NUM-recipe_count)])
 
-        if len(extra_files_qry) > 0:
-            logger.info('Found %d files that do not have previous recipes to re-process', len(extra_files_qry))
+        if extra_file_ids:
+            self.current_dataset_file_id = extra_file_ids[-1]
+
+        if len(extra_file_ids) > 0:
+            logger.info('Found %d files that do not have previous recipes to re-process', len(extra_file_ids))
             
             input_data = []
-            for file in DataSetFile.objects.get_dataset_files(dataset.id).filter(scale_file__in=extra_files_qry)[:(MAX_RECIPE_NUM-recipe_count)]:
+            for file in DataSetFile.objects.get_dataset_files(dataset.id).filter(scale_file__id__in=extra_file_ids):
                 data = Data()
                 data.add_value(FileValue(file.parameter_name, [file.scale_file_id]))
                 input_data.append(convert_data_to_v6_json(data).get_dict())
-                self.current_dataset_file_id = file.scale_file_id
                 
             msgs = create_batch_recipes_messages(batch.recipe_type.name, batch.recipe_type.revision_num, input_data, batch.event_id, batch_id=batch.id)
             messages.extend(msgs)
