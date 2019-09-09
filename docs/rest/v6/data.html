@@ -293,7 +293,7 @@ type/object that matches the parameter. Defaults to {}.</td>
 <td>String</td>
 <td>Required</td>
 <td>The unique name of the parameter. Can only contain the following
-characters: [<a href="#id7"><span class="problematic" id="id8">a-zA-Z_</span></a>-]</td>
+characters: [<a href="#id13"><span class="problematic" id="id14">a-zA-Z_</span></a>-]</td>
 </tr>
 <tr class="row-odd"><td>required</td>
 <td>Boolean</td>
@@ -323,7 +323,132 @@ files. Defaults to False.</td>
 </div>
 <div class="section" id="data-filter-json">
 <span id="rest-v6-data-filter"></span><h2>Data Filter JSON<a class="headerlink" href="#data-filter-json" title="Permalink to this headline">¶</a></h2>
-<p>A data filter JSON describes a set of filters that determines whether a set of data is accepted or not.</p>
+<p>A data filter JSON describes a set of filters that determines whether a set of data is accepted or not.  A filter consists of a name, type,
+condition and a set of values.</p>
+<p>The name determines which condition input parameter is examined. A condition node&#8217;s input parameters are defined when it is created as part of a recipe type definition and the values for the parameters are fed from recipe inputs or job outputs that the condition node depends on.  The value &#8216;input_a&#8217; means the filter will look at the value of the &#8216;input_a&#8217; parameter if it exists.
+If a parameter with the given name does not exist, the filter will automatically fail. This can be useful for determining whether to continue
+when a previous job did not supply an optional output.</p>
+<p>The type describes the form of data to be used in the condition.  Valid types are &#8216;boolean&#8217;, &#8216;integer&#8217;, &#8216;number&#8217;, &#8216;object&#8217;, &#8216;string&#8217;,
+&#8216;filename&#8217;, &#8216;media-type&#8217;, &#8216;data-type&#8217;, or &#8216;meta-data&#8217;.  The type for a filter must be compatible with the parameter being tested.  File
+parameters should have a type of &#8216;filename&#8217;, &#8216;media-type&#8217;, &#8216;data-type&#8217;, or &#8216;meta-data&#8217;.  Otherwise the type of the json parameter should
+match the condition type.</p>
+<p>The condition describes how the incoming data (usually from a previous job) should be compared.  Valid conditions are &#8216;&lt;&#8217;, &#8216;&lt;=&#8217;,
+&#8216;&gt;&#8217;,&#8217;&gt;=&#8217;, &#8216;==&#8217;, &#8216;!=&#8217;, &#8216;between&#8217;, &#8216;in&#8217;, &#8216;not in&#8217;, &#8216;contains&#8217;, &#8216;subset of&#8217;, or &#8216;superset of&#8217;.  The list of conditions which are valid
+changes depending on the type. Here are the valid conditions for each group of types:</p>
+<p>String Types: {&#8216;filename&#8217;, &#8216;media-type&#8217;, &#8216;data-type&#8217;, &#8216;meta-data&#8217;}
+String conditions: {&#8216;==&#8217;, &#8216;!=&#8217;, &#8216;in&#8217;, &#8216;not in&#8217;, &#8216;contains&#8217;}</p>
+<p>Number Types: {&#8216;integer&#8217;, &#8216;number&#8217;}
+Number Conditions: {&#8216;&lt;&#8217;, &#8216;&lt;=&#8217;, &#8216;&gt;&#8217;,&#8217;&gt;=&#8217;, &#8216;==&#8217;, &#8216;!=&#8217;, &#8216;between&#8217;, &#8216;in&#8217;, &#8216;not in&#8217;}</p>
+<p>Bool Types: {&#8216;boolean&#8217;}
+Bool Conditions: {&#8216;==&#8217;, &#8216;!=&#8217;}</p>
+<p>Object Types: {&#8216;meta-data&#8217;, &#8216;object&#8217;}
+Object Conditions: {&#8216;subset of&#8217;, &#8216;superset of&#8217;}</p>
+<p>Here is a description of what each condition tests:</p>
+<div class="section" id="id1">
+<h3>&#8216;&lt;&#8217;<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the first item in the list of values is less than the incoming data. The following will test parameter &#8216;input_a&#8217; to see if it is less than 100. The 0 is ignored.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;integer&#8221;, &#8220;condition&#8221;: &#8220;&lt;&#8221;, &#8220;values&#8221;: [100,0] }</p>
+</div>
+<div class="section" id="id2">
+<h3>&#8216;&lt;=&#8217;<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the first item in the list of values is less than or equal to the incoming data. The following will test parameter &#8216;input_a&#8217; to see if the meta-data for that file has an attribute at foo/bar less than or equal to 100. The 0 is ignored.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;meta-data&#8221;, &#8220;condition&#8221;: &#8220;&lt;=&#8221;, &#8220;values&#8221;: [[100,0]], &#8220;fields&#8221;: [[&#8220;foo&#8221;, &#8220;bar&#8221;] }</p>
+</div>
+<div class="section" id="id3">
+<h3>&#8216;&gt;&#8217;<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the first item in the list of values is greater than the incoming data. The following will test parameter &#8216;input_a&#8217; to see if it is greater than 100. The 0 is ignored.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;number&#8221;, &#8220;condition&#8221;: &#8220;&gt;&#8221;, &#8220;values&#8221;: [100,0] }</p>
+</div>
+<div class="section" id="id4">
+<h3>&#8216;&gt;=&#8217;<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the first item in the list of values is greater than or equal to the incoming data. The following will test parameter &#8216;input_a&#8217; to see if it has an attribute at foo/bar greater than or equal to 100. The 0 is ignored.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;object&#8221;, &#8220;condition&#8221;: &#8220;&gt;=&#8221;, &#8220;values&#8221;: [[100,0]], &#8220;fields&#8221;: [[&#8220;foo&#8221;, &#8220;bar&#8221;] }</p>
+</div>
+<div class="section" id="id5">
+<h3>&#8216;==&#8217;<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the first item in the list of values is equal to the incoming data. The following will test parameter &#8216;input_a&#8217; to see if the parsed data-type is &#8216;ABC&#8217;.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;data-type&#8221;, &#8220;condition&#8221;: &#8220;==&#8221;, &#8220;values&#8221;: [&#8220;ABC&#8221;] }</p>
+</div>
+<div class="section" id="id6">
+<h3>&#8216;!=&#8217;<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the first item in the list of values is not equal to the incoming data. The following will test parameter &#8216;input_a&#8217; to see if the filename is not &#8216;bad_file.txt&#8217;.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;filename&#8221;, &#8220;condition&#8221;: &#8221;!=&#8221;, &#8220;values&#8221;: [&#8220;bad_file.txt&#8221;] }</p>
+</div>
+<div class="section" id="between">
+<h3>&#8216;between&#8217;<a class="headerlink" href="#between" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the incoming data is between the first two values in the list of values.  Note the first value must be smaller than the second or this will never be true. The following will test parameter &#8216;input_a&#8217; to see if it is &gt;= 0 and &lt;= 100.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;integer&#8221;, &#8220;condition&#8221;: &#8220;between&#8221;, &#8220;values&#8221;: [0,100] }</p>
+</div>
+<div class="section" id="in">
+<h3>&#8216;in&#8217;<a class="headerlink" href="#in" title="Permalink to this headline">¶</a></h3>
+<p>Tests whether the incoming data is in the list of values (e.g. a job outputs &#8220;apple&#8221; and your values are [&#8220;orange&#8221;, &#8220;apple&#8221;] succeeds, an output of &#8220;pineapple&#8221; will fail).  The following will test parameter &#8216;input_a&#8217; to see if it&#8217;s media-type is either javascript or plain text.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;media-type&#8221;, &#8220;condition&#8221;: &#8220;in&#8221;, &#8220;values&#8221;: [&#8220;application/javascript&#8221;,&#8221;text/plain&#8221;] }</p>
+</div>
+<div class="section" id="not-in">
+<h3>&#8216;not in&#8217;<a class="headerlink" href="#not-in" title="Permalink to this headline">¶</a></h3>
+<p>Reverse of the previous condition. Will succeed if the input is not in the list of values. The following will test parameter &#8216;input_a&#8217; to see if it&#8217;s media-type is neither javascript nor plain text.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;media-type&#8221;, &#8220;condition&#8221;: &#8220;not in&#8221;, &#8220;values&#8221;: [&#8220;application/javascript&#8221;,&#8221;text/plain&#8221;] }</p>
+</div>
+<div class="section" id="contains">
+<h3>&#8216;contains&#8217;<a class="headerlink" href="#contains" title="Permalink to this headline">¶</a></h3>
+<p>Iterates over each value and checks if it exists in the input.  Succeeds if one value is present in the input. The following will check if either &#8216;abc&#8217; or &#8216;def&#8217; exists as a substring in the filename of &#8216;input_a&#8217;</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;filename&#8221;, &#8220;condition&#8221;: &#8220;contains&#8221;, &#8220;values&#8221;: [&#8220;abc&#8221;,&#8221;def&#8221;] }</p>
+</div>
+<div class="section" id="subset-of">
+<h3>&#8216;subset of&#8217;<a class="headerlink" href="#subset-of" title="Permalink to this headline">¶</a></h3>
+<p>Only applicable for objects, this condition tests whether each item in the input object exists in the object defined in the first item in the list of values. This will inspect the meta-data for the file passed into &#8216;input_a&#8217; to see if it contains any of the parameters &#8216;foo&#8217; or &#8216;bar&#8217; with values of 10 and 100 respectively and nothing else. Note that if the file&#8217;s meta-data is empty this will return true and this may need to be coupled with a filter that specifies the meta-data is not equal to an empty object.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;meta-data&#8221;, &#8220;condition&#8221;: &#8220;subset of&#8221;, &#8220;values&#8221;: [{&#8220;foo&#8221;: 10, &#8220;bar&#8221;: 100}] }</p>
+</div>
+<div class="section" id="superset-of">
+<h3>&#8216;superset of&#8217;<a class="headerlink" href="#superset-of" title="Permalink to this headline">¶</a></h3>
+<p>Only applicable for objects, this condition tests whether each item in the object defined in the first item in the list of values exists in the input object. This will inspect &#8216;input_a&#8217; to see if it contains all of the parameters &#8216;foo&#8217; or &#8216;bar&#8217; with values of 10 and 100 respectively.  Additional fields present in &#8216;input_a&#8217; are ignored.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>{ &#8220;name&#8221;: &#8220;input_a&#8221;, &#8220;type&#8221;: &#8220;object&#8221;, &#8220;condition&#8221;: &#8220;superset of&#8221;, &#8220;values&#8221;: [{&#8220;foo&#8221;: 10, &#8220;bar&#8221;: 100}] }</p>
+<p>The list of values is used by the filter to compare against the input from the preceding job (specified by the name).  For most conditions, only the first entry in the list is used
+but this must always be a list.  The values should correspond to the type but there is no type checking performed on values when validating the filter, only when the filter is run.</p>
+<p>The optional fields parameter specifies paths of fields to compare when testing json objects or file meta-data.  If a job returns the following json for an output:</p>
+<p>then a fields value of [[&#8216;foo&#8217;,&#8217;bar&#8217;]] will check the value 100 against the condition and first value specified in the filter.  Multiple paths can be specified but the length
+of the fields array must equal the length of the values array and each entry in the values array must be an array itself. The nth entry in the paths array will be compared
+against the nth entry in the values array.  By default all fields must pass for the condition to pass. If &#8216;all_fields&#8217; is set to false then a single path succeeding will
+pass the filter.</p>
+<p>When multiple files are passed to a parameter, the all_files field determines if all files must pass the condition for the filter to pass. By
+default only a single file must pass.</p>
+<p>Finally, by default all filters must pass for a condition node to accept the data but setting the &#8216;all&#8217; flag to false will accept the data if any filter passes.</p>
 <p><strong>Example interface:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;filters&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -430,6 +555,7 @@ Defaults to true</td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 <div class="section" id="dataset-json">
 <span id="rest-v6-data-dataset"></span><h2>Dataset JSON<a class="headerlink" href="#dataset-json" title="Permalink to this headline">¶</a></h2>
@@ -657,7 +783,7 @@ Location <a class="reference external" href="http://.../v6/datasets/105/">http:/
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="5"><a href="#id1"><span class="problematic" id="id2">**</span></a>Create Dataset*</th>
+<tr class="row-odd"><th class="head" colspan="5"><a href="#id7"><span class="problematic" id="id8">**</span></a>Create Dataset*</th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -734,7 +860,7 @@ Location <a class="reference external" href="http://.../v6/datasets/validation/"
 <col width="59%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="6"><a href="#id3"><span class="problematic" id="id4">**</span></a>Validate Dataset*</th>
+<tr class="row-odd"><th class="head" colspan="6"><a href="#id9"><span class="problematic" id="id10">**</span></a>Validate Dataset*</th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -914,7 +1040,7 @@ Location <a class="reference external" href="http://.../v6/datasets/105/">http:/
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><a href="#id5"><span class="problematic" id="id6">**</span></a>Create Dataset Members*</th>
+<tr class="row-odd"><th class="head" colspan="4"><a href="#id11"><span class="problematic" id="id12">**</span></a>Create Dataset Members*</th>
 </tr>
 </thead>
 <tbody valign="top">
