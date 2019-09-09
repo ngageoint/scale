@@ -143,7 +143,7 @@ def _between(input, values):
         return False
 
 def _in(input, values):
-    """Checks if the given input is in the list of values, or is a subset of a value
+    """Checks if the given input is in the list of values
 
     :param input: The input to check
     :type input: int/float
@@ -156,15 +156,12 @@ def _in(input, values):
     try:
         if input in values:
             return True
-        for value in values:
-            if input in value:
-                return True
     except TypeError:
         return False
     return False
 
 def _not_in(input, values):
-    """Checks if the given input is not in the list of values and is not a subset of a value
+    """Checks if the given input is not in the list of values
 
     :param input: The input to check
     :type input: int/float/string
@@ -177,9 +174,6 @@ def _not_in(input, values):
     try:
         if input in values:
             return False
-        for value in values:
-            if input in value:
-                return False
     except TypeError:
         return True
     return True
@@ -296,7 +290,7 @@ class DataFilter(object):
         success = True
         for f in self.filter_list:
             name = f['name']
-            type = f['type']
+            filter_type = f['type']
             cond = f['condition']
             values = f['values']
             filter_success = False
@@ -309,12 +303,12 @@ class DataFilter(object):
             if name in data.values:
                 param = data.values[name]
                 try:
-                    if type in {'filename', 'media-type', 'data-type'}:
-                        if type == 'filename':
+                    if filter_type in {'filename', 'media-type', 'data-type'}:
+                        if filter_type == 'filename':
                             file_values = [scale_file.file_name for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        elif type == 'media-type':
+                        elif filter_type == 'media-type':
                             file_values = [scale_file.media_type for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
-                        elif type == 'data-type':
+                        elif filter_type == 'data-type':
                             list_of_lists = [scale_file.data_type_tags for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
                             file_values = [item for sublist in list_of_lists for item in sublist]
                         # attempt to run condition on list, i.e. in case we're checking 'contains'
@@ -328,7 +322,7 @@ class DataFilter(object):
                                 # attempt to run condition on individual items, if any succeed we pass the filter
                                 file_success |= ALL_CONDITIONS[cond](value, values)
                         filter_success |= file_success
-                    elif type == 'meta-data':
+                    elif filter_type == 'meta-data':
                         meta_data_list = [scale_file.meta_data for scale_file in ScaleFile.objects.filter(id__in=param.file_ids)]
                         if 'fields' in f:
                             if len(f['fields']) != len(values):
@@ -361,7 +355,7 @@ class DataFilter(object):
                                     # attempt to run condition on individual items, if any succeed we pass the filter
                                     file_success |= ALL_CONDITIONS[cond](item, values)
                             filter_success |= file_success
-                    elif type == 'object':
+                    elif filter_type == 'object':
                         if 'fields' in f:
                             if len(f['fields']) != len(values):
                                 logger.exception('Length of fields (%s) and values (%s) are not equal' % (f['fields'], values))
@@ -424,20 +418,20 @@ class DataFilter(object):
 
         for f in self.filter_list:
             name = f['name']
-            type = f['type']
+            filter_type = f['type']
             if name in interface.parameters:
                 if name in unmatched:
                     unmatched.remove(name)
-                if interface.parameters[name].param_type == 'file' and type not in FILE_TYPES:
+                if interface.parameters[name].param_type == 'file' and filter_type not in FILE_TYPES:
                     raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a file type and requires a file type filter.')
-                if interface.parameters[name].param_type == 'json' and type in FILE_TYPES:
+                if interface.parameters[name].param_type == 'json' and filter_type in FILE_TYPES:
                     raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a json type and will not work with a file type filter.')
                 if interface.parameters[name].param_type == 'json':
-                    if interface.parameters[name].json_type in STRING_TYPES and type not in STRING_TYPES:
+                    if interface.parameters[name].json_type in STRING_TYPES and filter_type not in STRING_TYPES:
                         raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a string and filter is not a string type filter')
-                    if interface.parameters[name].json_type in NUMBER_TYPES and type not in NUMBER_TYPES:
+                    if interface.parameters[name].json_type in NUMBER_TYPES and filter_type not in NUMBER_TYPES:
                         raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a number and filter is not a number type filter')
-                    if interface.parameters[name].json_type in BOOL_TYPES and type not in BOOL_TYPES:
+                    if interface.parameters[name].json_type in BOOL_TYPES and filter_type not in BOOL_TYPES:
                         raise InvalidDataFilter('MISMATCHED_TYPE', 'Interface parameter is a number and filter is not a number type filter')
                     json_type = interface.parameters[name].json_type
                     if json_type not in BOOL_TYPES and json_type not in STRING_TYPES and json_type not in NUMBER_TYPES:
@@ -477,7 +471,7 @@ class DataFilter(object):
         if 'values' not in filter_dict:
             raise InvalidDataFilter('MISSING_VALUES', 'Missing values for \'%s\'' % name)
 
-        type = filter_dict['type']
+        filter_type = filter_dict['type']
         condition = filter_dict['condition']
         values = filter_dict['values']
 
@@ -485,19 +479,19 @@ class DataFilter(object):
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, ALL_CONDITIONS))
 
-        if type in STRING_TYPES and condition not in STRING_CONDITIONS:
+        if filter_type in STRING_TYPES and condition not in STRING_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, STRING_CONDITIONS))
 
-        if type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
+        if filter_type in NUMBER_TYPES and condition not in NUMBER_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, NUMBER_CONDITIONS))
 
-        if type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
+        if filter_type in BOOL_TYPES and condition not in BOOL_CONDITIONS:
             raise InvalidDataFilter('INVALID_CONDITION', 'Invalid condition \'%s\' for \'%s\'. Valid conditions are: %s'
                                     % (condition, name, BOOL_CONDITIONS))
 
-        if type in OBJECT_TYPES and condition not in OBJECT_CONDITIONS:
+        if filter_type in OBJECT_TYPES and condition not in OBJECT_CONDITIONS:
             if 'fields' not in filter_dict or not filter_dict['fields']:
                 msg = 'Object %s does not have object condition (%s) and fields property is not set'
                 raise InvalidDataFilter('INVALID_CONDITION', msg % (name, OBJECT_CONDITIONS))
@@ -506,17 +500,17 @@ class DataFilter(object):
             if len(filter_dict['fields']) != len(values):
                 raise InvalidDataFilter('INVALID_FIELDS', 'Fields property must be same length as values')
 
-        if type not in STRING_TYPES and type not in NUMBER_TYPES and type not in BOOL_TYPES and type not in OBJECT_TYPES:
+        if filter_type not in STRING_TYPES and filter_type not in NUMBER_TYPES and filter_type not in BOOL_TYPES and filter_type not in OBJECT_TYPES:
             raise InvalidDataFilter('INVALID_TYPE', 'No valid conditions for this type')
 
         filter_values = []
-        if type == 'number':
+        if filter_type == 'number':
             for value in values:
                 try:
                     filter_values.append(float(value))
                 except ValueError:
                     raise InvalidDataFilter('VALUE_ERROR', 'Expected float for \'%s\', found %s' % (name, value))
-        elif type == 'integer':
+        elif filter_type == 'integer':
             for value in values:
                 try:
                     filter_values.append(int(value))

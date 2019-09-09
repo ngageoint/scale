@@ -317,13 +317,13 @@ class TestCreateBatchRecipes(TestCase):
         result = message.execute()
         self.assertTrue(result)
         
-        # Should be two messages, one for next create_batch_recipes and 5 for creating new recipes
+        # Should be 6 messages, one for next create_batch_recipes and 5 for creating new recipes
         self.assertEqual(len(message.new_messages), 6)
         
         # Create batch message
         batch_recipes_message = message.new_messages[0]
         self.assertEqual(batch_recipes_message.type, 'create_batch_recipes')
-        self.assertEqual(batch_recipes_message.current_dataset_file_id, src_file_ids[4])
+        self.assertEqual(batch_recipes_message.current_dataset_file_id, src_file_ids[1])
         self.assertFalse(batch_recipes_message.is_prev_batch_done)
         
         from recipe.models import Recipe

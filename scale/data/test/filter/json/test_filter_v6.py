@@ -71,6 +71,14 @@ class TestDataFilterV6(TestCase):
             DataFilterV6(filter_dict, do_validate=True)
         self.assertEqual(context.exception.error.name, 'INVALID_DATA_FILTER')
         
+        # invalid fields
+        filter_dict = {'version': '6', 'filters': [
+            {'name': 'input_a', 'type': 'array', 'condition': '==', 'values': []}
+        ]}
+        with self.assertRaises(InvalidDataFilter) as context:
+            DataFilterV6(filter_dict, do_validate=True)
+        self.assertEqual(context.exception.error.name, 'INVALID_DATA_FILTER')
+        
         # Valid v6 filter
         filter_dict = {'version': '6', 'filters': [
             {'name': 'input_a', 'type': 'media-type', 'condition': '==', 'values': ['application/json']},

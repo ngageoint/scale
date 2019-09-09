@@ -249,6 +249,10 @@ class DataSetDetailsView(GenericAPIView):
             logger.exception(message)
             raise BadParameter('%s: %s' % (message, unicode(ex)))
             
+        if not data_list:
+            resp_dict = {'No Results': 'No files found from filters and/or no data provided'}
+            return Response(resp_dict)
+            
         try:
             dataset = DataSet.objects.get(pk=dataset_id)
         except DataSet.DoesNotExist:
