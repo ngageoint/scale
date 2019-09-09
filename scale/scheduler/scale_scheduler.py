@@ -19,7 +19,6 @@ from mesos_api import utils
 from mesos_api.offers import from_mesos_offer
 from mesos_api.tasks import RESOURCE_TYPE_SCALAR
 from mesoshttp.client import MesosClient
-from node.models import Node
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
 from node.resources.gpu_manager import GPUManager
@@ -238,21 +237,19 @@ class ScaleScheduler(object):
         started = now()
 
         agents = {}
-        offered_nodes = []
         resource_offers = []
         total_resources = NodeResources()
         skipped_roles = set()
         for offer in offers:
+            # ignore offers while we're paused
+            if scheduler_mgr.config.is_paused:
+                offer.decline()
+                continue
             scale_offer = from_mesos_offer(offer)
             offer_id = scale_offer.id.value
             agent_id = scale_offer.agent_id.value
             framework_id = scale_offer.framework_id.value
             hostname = scale_offer.hostname
-            offered_nodes.append(hostname)
-            # ignore offers while we're paused
-            if scheduler_mgr.config.is_paused:
-                offer.decline()
-                continue
             resource_list = []
             for resource in scale_offer.resources:
                 # Only accept resource that are of SCALAR type and have a role matching our accept list
@@ -280,8 +277,6 @@ class ScaleScheduler(object):
         logger.debug("Agents registered.")
         resource_mgr.add_new_offers(resource_offers)
         logger.debug("Resource offers added.")
-        Node.objects.update_node_offers(offered_nodes, now())
-        logger.debug("Node offer times updated.")
 
         num_offers = len(resource_offers)
         logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))

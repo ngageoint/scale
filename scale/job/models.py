@@ -1271,11 +1271,11 @@ class JobExecutionManager(models.Manager):
             if 'RUNNING' in statuses:
                 # This is a special case where we have to use exclusion so that running executions (no job_exe_end) are
                 # included
-                exclude_statuses = []
+                exclude_statues = []
                 for status in ['COMPLETED', 'FAILED', 'CANCELED']:
                     if status not in statuses:
-                        exclude_statuses.append(status)
-                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statuses)
+                        exclude_statues.append(status)
+                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statues)
             else:
                 job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if node_ids:

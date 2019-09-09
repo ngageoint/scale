@@ -186,10 +186,6 @@ class NodeManager(object):
                     logger.warning('Node %s received new agent ID %s, but quickly went offline', hostname, agent_id)
                 if hostname in self._nodes:
                     # Host name already exists, must be a new agent ID
-                    # Scale just discovered that a new agent is an old node so we need to override node_models because
-                    # it thinks this host is gone. update_from_mesos will update the model properly but we already 
-                    # cached the model in node_models. 
-                    node_models[hostname].is_active = is_online
                     old_agent_id = self._nodes[hostname].agent_id
                     self._nodes[hostname].update_from_mesos(agent_id=agent_id, is_online=is_online)
                     if old_agent_id in self._agents:
@@ -200,10 +196,6 @@ class NodeManager(object):
                     self._nodes[hostname] = SchedulerNode(agent_id, node_model, scheduler_config)
                     self._nodes[hostname].update_from_mesos(is_online=is_online)
                 self._agents[agent_id] = new_agent
-
-            # Get list of nodes that are currently running job_exes
-            nodes_running_job_exes = Node.objects.get_nodes_running_job_exes()
-
             # Update nodes from database models
             for node_model in node_models.values():
                 hostname = node_model.hostname
@@ -211,9 +203,8 @@ class NodeManager(object):
                     # Host name already exists, update model information
                     node = self._nodes[hostname]
                     node.update_from_model(node_model, scheduler_config)
-                    if node.id not in nodes_running_job_exes and node.should_be_removed():
-                        logger.info('Node %s removed due to being offline or not offering resources', hostname)
-                        self._nodes[hostname].update_from_mesos(is_online=False)
+                    if node.should_be_removed():
+                        logger.info('Node %s removed since it is both offline and deprecated', hostname)
                         del self._nodes[hostname]
                         if node.agent_id in self._agents:
                             del self._agents[node.agent_id]
