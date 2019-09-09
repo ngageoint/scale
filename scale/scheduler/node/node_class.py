@@ -76,7 +76,6 @@ class Node(object):
         self._is_paused = node.is_paused
         self._is_scheduler_paused = scheduler_config.is_paused
         self._last_health_task = None
-        self._last_offer_received = node.last_offer_received
         self._lock = threading.Lock()
         self._pull_task = None
         self._state = None
@@ -246,20 +245,14 @@ class Node(object):
         return self._state == Node.READY
 
     def should_be_removed(self):
-        """Indicates whether this node should be removed from the scheduler. If the node is no longer active and is
-        also no longer online, there's no reason for the scheduler to continue to track it.
+        """Indicates whether this node should be removed from the scheduler. If the node is no longer active and is also
+        no longer online, there's no reason for the scheduler to continue to track it.
 
         :returns: True if this node should be removed from the scheduler
         :rtype: bool
         """
 
-        if not self._is_active and not self._is_online:
-            return True
-        elif self._last_offer_received < (now() - datetime.timedelta(minutes=5)):
-             # Scale has not received an offer for the node in the last 5 min
-            return True
-        else:
-            return False
+        return not self._is_active and not self._is_online
 
     def update_from_mesos(self, agent_id=None, is_online=None):
         """Updates this node's data from Mesos
@@ -275,15 +268,9 @@ class Node(object):
                 self._agent_id = agent_id
             if is_online is not None:
                 self._is_online = is_online
-                from node.models import Node
-                if is_online:
-                    # If node comes online, sync database node state with scheduler node state
-                    Node.objects.update_node({'is_active': True}, node_id=self._id)
-                else:
-                    # If node goes offline, sync scheduler node state with database node state and reset it
-                    Node.objects.update_node({'is_active': False}, node_id=self._id)
+                if not is_online:
+                    # If node goes offline, reset it
                     self._reset_node()
-
             self._update_state()
 
     def update_from_model(self, node, scheduler_config):
@@ -301,7 +288,6 @@ class Node(object):
         with self._lock:
             self._is_active = node.is_active
             self._is_paused = node.is_paused
-            self._last_offer_received = node.last_offer_received
             self._is_scheduler_paused = scheduler_config.is_paused
 
             if not node.is_active:
