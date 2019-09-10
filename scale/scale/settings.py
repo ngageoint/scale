@@ -24,7 +24,7 @@ DOCKER_VERSION = scale.__docker_version__
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
 MESOS_MASTER = os.getenv('MESOS_MASTER', 'zk://leader.mesos:2181/mesos')
 
-MESOS_CONNECTION_TIMEOUT = os.getenv('MESOS_CONNECTION_TIMEOUT', 120)
+MESOS_CONNECTION_TIMEOUT = int(os.getenv('MESOS_CONNECTION_TIMEOUT', '120'))
 
 # We by default, use the '*' role, meaning all resources are unreserved offers are received
 # By default, use the '*' role, meaning all resources are unreserved offers are received
