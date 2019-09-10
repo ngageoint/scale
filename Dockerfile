@@ -48,6 +48,9 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gcc \
          wget \
          python-devel \
+         postgresql-devel \
+  # Remove warnings about psycopg2-binary on every job launch
+ && pip install -U --no-binary :all: psycopg2\<3  \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
@@ -65,7 +68,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum -y history undo last \
- && rm -rf /var/cache/yum 
+ && rm -rf /var/cache/yum ~/.cache/pip
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
