@@ -16,7 +16,7 @@ from job.execution.configuration.configurators import QueuedExecutionConfigurato
 from job.configuration.data.job_data import JobData
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
-    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH, SCALE_INPUT_METADATA_PATH
+    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
 from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
 from job.models import JobTypeRevision
@@ -883,7 +883,6 @@ class TestScheduledExecutionConfigurator(TestCase):
                                       (input_2_val, input_3_val, SCALE_JOB_EXE_OUTPUT_PATH),
                               'env_vars': {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
                                            'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH,
-                                           'INPUT_METADATA': SCALE_INPUT_METADATA_PATH,
                                            'S_1': 's_1_value', 'S_2': 's_2_secret',
                                            'MY_SPECIAL_ENV': 's_2_secret',
                                            'ALLOCATED_CPUS': unicode(main_resources.cpus),
@@ -917,7 +916,6 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'INPUT_3=%s' % input_3_val},
                                                 {'flag': 'env', 'value': 'INPUT_1=my_val'},
                                                 {'flag': 'env', 'value': 'OUTPUT_DIR=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
-                                                {'flag': 'env', 'value': 'INPUT_METADATA=%s' % SCALE_INPUT_METADATA_PATH},
                                                 {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
                                                 {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                 {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},

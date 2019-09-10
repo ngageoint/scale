@@ -410,6 +410,15 @@ class SeedManifest(object):
             names.append(output_file['name'])
         return names
 
+    def needs_input_metadata(self):
+        """Whether this manifest has an input metadata manifest input
+
+        :return: true if this manifest has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.get_input_files()
+
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.

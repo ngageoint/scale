@@ -13,7 +13,7 @@ from django.utils.timezone import now
 from error.exceptions import ScaleError, get_error_by_exception
 from job.data.job_data import JobData
 from data.data.value import FileValue, JsonValue
-from job.execution.container import SCALE_INPUT_METADATA_PATH
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.models import JobExecution
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile, Workspace
@@ -100,6 +100,10 @@ class Command(BaseCommand):
         :type job_exe: `job.models.JobExecution`
         """
 
+        job_interface = job_exe.job_type.get_job_interface()
+        if not job_interface.needs_input_metadata():
+            return
+
         # Generate input metadata dict
         input_metadata = {}
         config = job_exe.get_execution_configuration()
@@ -122,15 +126,36 @@ class Command(BaseCommand):
                     input_metadata['RECIPE'][i] = [serialize(ScaleFile.objects.get_details(file_id=f)).data for f in
                                                    input_data.values[i].file_ids]
 
-        logger.debug("Scale Input Metadata Manifest Generated:")
-        log_str = json.dumps(input_metadata, sort_keys=True, indent=4, separators=(',', ': '))
-        logger.debug(log_str)
+        workspace_names = config.get_input_workspace_names()
+        workspace_models = {w.name: w for w in Workspace.objects.get_workspaces(names=workspace_names)}
 
-        try:
-            with open(SCALE_INPUT_METADATA_PATH, 'w') as metadata_file:
+        input_metadata_id = None
+        if input_metadata:
+            file_name = '%d-input_metadata.json' % job_exe.job.id
+            local_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'tmp', file_name)
+            with open(local_path, 'w') as metadata_file:
                 json.dump(input_metadata, metadata_file)
-        except Exception as ex:
-            logger.exception('Error dumping input metadata manifest to file %s: %s' % (SCALE_INPUT_METADATA_PATH, ex))
+                try:
+                    scale_file = ScaleFile.objects.get(file_name=file_name)
+                except ScaleFile.DoesNotExist:
+                    scale_file = ScaleFile()
+                    scale_file.update_uuid(file_name)
+                remote_path = self._calculate_remote_path(job_exe)
+                scale_file.file_path = remote_path
+
+                for workspace in workspace_models:
+                    try:
+                        if not input_metadata_id:
+                            ScaleFile.objects.upload_files(workspace, [FileUpload(scale_file, local_path)])
+                            input_metadata_id = ScaleFile.objects.get(file_name=file_name).id
+                            data = job_exe.job.get_job_data()
+                            data.add_file_input('INPUT_METADATA_MANIFEST', input_metadata_id)
+                            job_exe.job.input = data.get_dict()
+                            job_exe.job.save()
+                    except:
+                        continue
+                if not input_metadata_id:
+                    logger.exception('Error uploading input_metadata manifest for job_exe %d' % job_exe.job.id)
 
     def _calculate_remote_path(self, job_exe):
         """Returns the remote path for storing the manifest

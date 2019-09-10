@@ -431,6 +431,15 @@ class JobInterface(object):
 
         return self.get_dict().get('settings', [])
 
+    def needs_input_metadata(self):
+        """Whether this job needs an input metadata manifest input
+
+        :return: true if this interface has an input named 'INPUT_METADATA_MANIFEST'
+        :rtype: bool
+        """
+
+        return 'INPUT_METADATA_MANIFEST' in self.definition['input_data']
+
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
         """Stores the files and deletes any working directories
 
