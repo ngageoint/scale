@@ -89,6 +89,8 @@ else:
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
 MESOS_MASTER = os.environ.get('MESOS_MASTER_URL', 'zk://master.mesos:2181/mesos')
 
+MESOS_CONNECTION_TIMEOUT = os.getenv('MESOS_CONNECTION_TIMEOUT', 120)
+
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = os.environ.get('SCALE_ZK_URL', 'zk://master.mesos:2181/scale')
 
