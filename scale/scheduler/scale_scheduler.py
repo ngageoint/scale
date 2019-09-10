@@ -155,7 +155,7 @@ class ScaleScheduler(object):
         self._client.on(MesosClient.RECONNECTED, self.reconnected)
         self._client.max_reconnect=3
         self._client.connection_timeout = settings.MESOS_CONNECTION_TIMEOUT
-        logger.info("MESOS timeout set to %i", self._client.connection_timeout)
+        logger.info("Connection timeout set to %i for MesosClient.", self._client.connection_timeout)
         self._client.register()
 
         self.shutdown() #client has deregistered
