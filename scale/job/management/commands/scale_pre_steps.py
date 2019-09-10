@@ -123,7 +123,8 @@ class Command(BaseCommand):
                                                    input_data.values[i].file_ids]
 
         logger.debug("Scale Input Metadata Manifest Generated:")
-        logger.debug(input_metadata)
+        log_str = json.dumps(input_metadata, sort_keys=True, indent=4, separators=(',', ': '))
+        logger.debug(log_str)
 
         try:
             with open(SCALE_INPUT_METADATA_PATH, 'w') as metadata_file:
