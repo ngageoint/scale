@@ -238,6 +238,7 @@ below for reference.
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
 | LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
+| MESOS_CONNECTION_TIMEOUT    | 120                             | Connection timeout for Mesos / Scheduler   | 
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
