@@ -20,7 +20,7 @@ from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.execution.configuration.workspace import TaskWorkspace
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
-    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH, SCALE_INPUT_METADATA_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
 from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
 from job.seed.manifest import SeedManifest
@@ -480,7 +480,7 @@ class ScheduledExecutionConfigurator(object):
 
 
         # Configure output directory
-        env_vars = {'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
+        env_vars = {'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH, 'INPUT_METADATA': SCALE_INPUT_METADATA_PATH}
         args = config._get_task_dict('main')['args']
 
         args = environment_expansion(env_vars, args)
