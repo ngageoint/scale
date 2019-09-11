@@ -73,9 +73,10 @@ class TestPreJobSteps(TransactionTestCase):
         self.seed_exe_meta = job_utils.create_job_exe(job=self.seed_job_meta, status='RUNNING', timeout=timeout, queued=now(),
                                                  configuration=exe_config.get_dict())
 
+    @patch('os.mkdir')
     @patch('__builtin__.open')
     @patch('job.management.commands.scale_pre_steps.json.dump')
-    def test_generate_input_metadata(self, mock_dump, mock_open):
+    def test_generate_input_metadata(self, mock_dump, mock_open, mock_mkdir):
 
         cmd = PreCommand()
 
