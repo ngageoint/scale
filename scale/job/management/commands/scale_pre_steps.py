@@ -127,7 +127,6 @@ class Command(BaseCommand):
         logger.debug(log_str)
 
         try:
-            os.mkdir(os.path.dirname(SCALE_INPUT_METADATA_PATH))
             with open(SCALE_INPUT_METADATA_PATH, 'w+') as metadata_file:
                 json.dump(input_metadata, metadata_file)
         except Exception as ex:
