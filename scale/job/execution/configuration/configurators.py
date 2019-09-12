@@ -74,7 +74,7 @@ class QueuedExecutionConfigurator(object):
 
         # Set up env vars for job's input data
         input_values = data.get_injected_input_values(input_files_dict)
-        interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
+        interface = job.job_type_rev.get_input_interface()
 
         env_vars = {}
         if isinstance(data, JobData):
