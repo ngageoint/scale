@@ -60,7 +60,10 @@ class Command(BaseCommand):
             job_data = JobData(job_data.get_dict())
             logger.info('Setting up input files...')
 
-            job_interface.perform_pre_steps(job_data)
+            download_files = True
+            if job_exe.job_type.name == "scale-fork-jobs":
+                download_files = False
+            job_interface.perform_pre_steps(job_data, download_files)
 
             logger.info('Ready to execute job: %s', exe_config.get_args('main'))
         except ScaleError as err:

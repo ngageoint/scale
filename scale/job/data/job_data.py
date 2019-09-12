@@ -344,19 +344,22 @@ class JobData(object):
 
         return env_vars
 
-    def setup_job_dir(self, data_files):
+    def setup_job_dir(self, data_files, download_files=True):
         """Sets up the directory structure for a job execution and downloads the given files
 
         :param data_files: Dict with each file parameter name mapping to a bool indicating if the parameter accepts
             multiple files (True) and an absolute directory path
         :type data_files: {string: tuple(bool, string)}
+        :param download_files: Whether the files should be downloaded into the job container.  False for jobs that only need the job id
+        :type download_files: bool
         :returns: Dict with each file parameter name mapping to a list of absolute file paths of the written files
         :rtype: {string: [string]}
         """
 
         data_files = [SeedInputFiles(x) for x in data_files]
-        # Download the job execution input files
-        self.retrieve_input_data_files(data_files)
+        if download_files:
+            # Download the job execution input files
+            self.retrieve_input_data_files(data_files)
 
 
     def validate_input_files(self, files):
