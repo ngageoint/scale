@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+import copy
 import os
 
 import django
@@ -19,7 +20,7 @@ from job.execution.container import get_job_exe_input_vol_name, get_job_exe_outp
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH, SCALE_INPUT_METADATA_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
 from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
-from job.models import JobTypeRevision
+from job.models import Job, JobTypeRevision
 from job.tasks.pull_task import create_pull_command
 from job.test import utils as job_test_utils
 from messaging.backends.amqp import AMQPMessagingBackend
@@ -78,6 +79,13 @@ class TestQueuedExecutionConfigurator(TestCase):
                     inputs_files=inputs, inputs_json=inputs_json, outputs_files=outputs)
         job_type = job_test_utils.create_seed_job_type(manifest=manifest, configuration={'output_workspaces': {'default': workspace.name}})
         job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
+        inputs_json=[{'name': 'NEW_INPUT_1', 'type': 'string'}]
+        inputs=[{'name': 'NEW_INPUT_2', 'mediaTypes':['text/plain']}, {'name': 'NEW_INPUT_3', 'mediaTypes': ['text/plain'], 'multiple': True}]
+        outputs=[{'name': 'NEW_OUTPUT_1', 'mediaType': 'text/plain', 'pattern': '*_.txt'}]
+        manifest2 = job_test_utils.create_seed_manifest(command='command -a ${NEW_INPUT_1} -b ${NEW_INPUT_2} ${NEW_INPUT_3} ${OUTPUT_DIR}',
+                    inputs_files=inputs, inputs_json=inputs_json, outputs_files=outputs)
+        job_test_utils.edit_job_type_v6(job_type=job_type, manifest_dict=manifest2)
+        job = Job.objects.get(id=job.id)
         configurator = QueuedExecutionConfigurator(input_files)
 
         # Test method
