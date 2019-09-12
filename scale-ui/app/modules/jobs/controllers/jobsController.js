@@ -196,7 +196,7 @@
                     if (!vm.jobsParams.job_type_version) {
                         var jobType = _.filter(vm.allJobTypes, { name: vm.jobsParams.job_type_name });
                         if (jobType.length > 0) {
-                            jobTypeId  _.map(jobType, 'id');
+                            jobTypeId = _.map(jobType, 'id');
                         }
                     } else {
                         var jobType = _.filter(vm.jobTypeValues, { name: vm.jobsParams.job_type_name, version: vm.jobsParams.job_type_version });
