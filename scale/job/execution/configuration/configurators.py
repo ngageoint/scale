@@ -74,7 +74,7 @@ class QueuedExecutionConfigurator(object):
 
         # Set up env vars for job's input data
         input_values = data.get_injected_input_values(input_files_dict)
-        interface = SeedManifest(job.job_type.manifest, do_validate=False).get_input_interface()
+        interface = job.job_type_rev.get_input_interface()
 
         env_vars = {}
         if isinstance(data, JobData):
@@ -103,7 +103,7 @@ class QueuedExecutionConfigurator(object):
                 # Set output workspaces from job configuration
                 output_workspaces = {}
                 job_config = job.get_job_configuration()
-                interface = SeedManifest(job.job_type.manifest, do_validate=False)
+                interface = SeedManifest(job.job_type_rev.manifest, do_validate=False)
                 for output_name in interface.get_file_output_names():
                     output_workspace = job_config.get_output_workspace(output_name)
                     if output_workspace:
