@@ -311,10 +311,8 @@ class CreateJobs(CommandMessage):
         revs_by_tuple = {(j.job_type.name, j.job_type.version, j.revision_num): j for j in revs_by_id.values()}
 
         # Create new job models
-        process_input_by_node = {}
         for recipe_job in self.recipe_jobs:
             node_name = recipe_job.node_name
-            process_input_by_node[node_name] = recipe_job.process_input
             tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
             revision = revs_by_tuple[tup]
             config = None

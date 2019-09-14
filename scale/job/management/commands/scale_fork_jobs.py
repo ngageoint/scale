@@ -10,8 +10,9 @@ from django.core.management.base import BaseCommand
 
 from data.data.value import FileValue
 from error.exceptions import get_error_by_exception
+from job.messages.create_jobs import RecipeJob
 from job.models import Job
-
+from recipe.instance.node import JobNodeInstance
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,8 @@ MISSING_RECIPE_EXIT_CODE = 11
 MISSING_JOB_DATA = 12
 MISSING_PARAMETER = 13
 NO_FILES = 20
+NO_CHILDREN = 30
+BAD_CHILD = 31
 
 class Command(BaseCommand):
     """Command that executes the Scale clock
@@ -81,6 +84,31 @@ class Command(BaseCommand):
                 for id in files.file_ids:
                     logger.debug("Adding forked job for file id %d:" % id)
                     #self.recipe.add_job_node
+
+                recipeInstance = Recipe.objects.get_recipe_instance(recipe_id=self.recipe.id)
+                recipe_model = recipe.recipe_model
+
+                fork_node = recipeInstance.get_job_node(job_id=self.fork_job.id)
+                if not fork_node.children:
+                    logger.warning("No children for fork job")
+                    sys.exit(NO_CHILDREN)
+
+                for child_name, child_node in fork_node.children.items():
+                    # TODO: Also allow recipe nodes later? conditions?
+                    if not isinstance(child_node, JobNodeInstance):
+                        logger.error("%s is a child node of a fork job but is not a job node")
+                        sys.exit(BAD_CHILD)
+                    for id in files.file_ids:
+                        logger.debug("Adding forked job for file id %d:" % id)
+                        node_def = child_node.definition
+                        job = RecipeJob(node_def.job_type_name, node_def.job_type_version, node_def.revision_num,
+                                        child_name + id, False)
+                        recipe_jobs.append(job)
+
+
+                # get child of forked job (likely join job) if it exists and make it depend on all forked jobs
+
+
 
 
             except Exception as ex:
