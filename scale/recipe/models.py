@@ -256,7 +256,7 @@ class RecipeManager(models.Manager):
 
         recipe = Recipe.objects.select_related('recipe_type_rev').get(id=recipe_id)
         recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe_id)
-        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe, recipe_nodes)
+        return RecipeInstance(recipe.get_definition(), recipe, recipe_nodes)
 
     def get_recipe_instance_from_root(self, root_recipe_id):
         """Returns the non-superseded recipe instance for the given root recipe ID
@@ -271,7 +271,7 @@ class RecipeManager(models.Manager):
         qry = qry.filter(models.Q(id=root_recipe_id) | models.Q(root_superseded_recipe_id=root_recipe_id))
         recipe = qry.filter(is_superseded=False).order_by('-created').first()
         recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe.id)
-        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe, recipe_nodes)
+        return RecipeInstance(recipe.get_definition(), recipe, recipe_nodes)
 
     def get_recipe_with_interfaces(self, recipe_id):
         """Gets the recipe model for the given ID with related recipe_type_rev and recipe__recipe_type_rev models
@@ -467,7 +467,7 @@ class RecipeManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
 
-        recipe_definition = recipe.recipe_type_rev.get_definition()
+        recipe_definition = recipe.get_definition()
         input_data.validate(recipe_definition.input_interface)
         input_dict = None
 
@@ -767,7 +767,7 @@ class RecipeConditionManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
 
-        recipe_definition = condition.recipe.recipe_type_rev.get_definition()
+        recipe_definition = condition.recipe.get_definition()
         condition_interface = recipe_definition.graph[node_name].input_interface
         data.validate(condition_interface)
 

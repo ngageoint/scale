@@ -66,7 +66,7 @@ class ProcessCondition(CommandMessage):
         condition = RecipeCondition.objects.get_condition_with_interfaces(self.condition_id)
 
         if not condition.is_processed:
-            definition = condition.recipe.recipe_type_rev.get_definition()
+            definition = condition.recipe.get_definition()
 
             # Get condition data from dependencies in the recipe
             recipe_input_data = condition.recipe.get_input_data()

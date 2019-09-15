@@ -105,6 +105,10 @@ class Command(BaseCommand):
                                         child_name + id, False)
                         recipe_jobs.append(job)
 
+                        # write our own version of _generate_input_data_from_recipe or refactor to share some code
+                        # we need to update the connections in the definition for n forked jobs without saving the definition back
+                        # to the database. Once the definition is bastardized we can run _generate_input_data_from_recipe
+                        # generally same as it is currently and have our forked outputs passed into each job node
 
                 # get child of forked job (likely join job) if it exists and make it depend on all forked jobs
 

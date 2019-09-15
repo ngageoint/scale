@@ -118,9 +118,11 @@ class ProcessJobInput(CommandMessage):
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
         for node_output in node_outputs.values():
             if node_output.node_type == 'job' and node_output.id == job.id:
+                #get the node name of this job, for forked jobs it will be <base_definition_node_name>-file_id
                 node_name = node_output.node_name
                 break
 
-        definition = job.recipe.recipe_type_rev.get_definition()
+        definition = job.recipe.get_definition()
+        # need to add connections somehow inserted in definition for each individual file output from fork job
         input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
         Job.objects.set_job_input_data_v6(job, input_data)
