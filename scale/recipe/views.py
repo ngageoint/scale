@@ -224,7 +224,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
-        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False, default_value=True)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
 
         # Fetch the current recipe type model

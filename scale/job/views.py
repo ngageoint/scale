@@ -111,7 +111,7 @@ class JobTypesView(ListCreateAPIView):
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
 
         # If editing an existing job type, automatically update recipes containing said job type
-        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False, default_value=True)
 
         # Optional setting job type active if editing existing job
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
@@ -144,7 +144,7 @@ class JobTypesView(ListCreateAPIView):
                   'auto_update', 'is_active', 'is_paused'}
         for key, value in request.data.iteritems():
             if key not in fields:
-                raise InvalidJobField
+                raise BadParameter('%s is not a valid field. Valid fields are: %s' % (key, fields))
 
         name = manifest_dict['job']['name']
         version = manifest_dict['job']['jobVersion']
@@ -325,7 +325,7 @@ class JobTypeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        auto_update = rest_util.parse_bool(request, 'auto_update', required=False)
+        auto_update = rest_util.parse_bool(request, 'auto_update', required=False, default_value=True)
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
         is_published = rest_util.parse_string(request, 'is_published', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
@@ -370,10 +370,11 @@ class JobTypeDetailsView(GenericAPIView):
             raise Http404
 
         # Check for invalid fields
-        fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration', 'manifest', 'docker_image'}
+        fields = {'icon_code', 'is_published', 'is_active', 'is_paused', 'max_scheduled', 'configuration', 'manifest',
+                  'docker_image', 'auto_update'}
         for key, value in request.data.iteritems():
             if key not in fields:
-                raise InvalidJobField
+                raise BadParameter('%s is not a valid field. Valid fields are: %s' % (key, fields))
 
         try:
             with transaction.atomic():
