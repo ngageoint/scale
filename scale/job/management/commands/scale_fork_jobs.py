@@ -13,6 +13,7 @@ from error.exceptions import get_error_by_exception
 from job.messages.create_jobs import RecipeJob
 from job.models import Job
 from recipe.instance.node import JobNodeInstance
+from recipe.models import Recipe
 
 logger = logging.getLogger(__name__)
 
@@ -85,13 +86,15 @@ class Command(BaseCommand):
                     logger.debug("Adding forked job for file id %d:" % id)
                     #self.recipe.add_job_node
 
-                recipeInstance = Recipe.objects.get_recipe_instance(recipe_id=self.recipe.id)
-                recipe_model = recipe.recipe_model
+                recipe_instance = Recipe.objects.get_recipe_instance(recipe_id=self.recipe.id)
+                recipe_model = recipe_instance.recipe_model
 
-                fork_node = recipeInstance.get_job_node(job_id=self.fork_job.id)
+                fork_node = recipe_instance.get_job_node(job_id=self.fork_job.id)
                 if not fork_node.children:
                     logger.warning("No children for fork job")
                     sys.exit(NO_CHILDREN)
+
+                definition = self.recipe.get_definition()
 
                 for child_name, child_node in fork_node.children.items():
                     # TODO: Also allow recipe nodes later? conditions?
@@ -101,6 +104,9 @@ class Command(BaseCommand):
                     for id in files.file_ids:
                         logger.debug("Adding forked job for file id %d:" % id)
                         node_def = child_node.definition
+                        name = child_name + '_' + id
+                        definition.add_job_node(name, node_def.job_type_name, node_def.job_type_version, node_def.revision_num)
+                        definition.add_dep
                         job = RecipeJob(node_def.job_type_name, node_def.job_type_version, node_def.revision_num,
                                         child_name + id, False)
                         recipe_jobs.append(job)

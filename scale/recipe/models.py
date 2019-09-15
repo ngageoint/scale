@@ -616,6 +616,8 @@ class Recipe(models.Model):
     batch = models.ForeignKey('batch.Batch', related_name='recipes_for_batch', blank=True, null=True,
                               on_delete=models.PROTECT)
 
+    definition = django.contrib.postgres.fields.JSONField(default=dict)
+
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
                                                null=True, on_delete=models.PROTECT)
