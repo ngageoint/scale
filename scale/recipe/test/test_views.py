@@ -439,6 +439,7 @@ class TestRecipeTypeDetailsViewV6(APITransactionTestCase):
 
         json_data = {
             'definition': definition,
+            'auto_update': False
         }
 
         url = '/%s/recipe-types/%s/' % (self.api, self.recipe_type1.name)
