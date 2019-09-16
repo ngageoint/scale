@@ -159,8 +159,8 @@ class DependencyManager(object):
         status_dict['detail']['url'] = scale_settings.ELASTICSEARCH_URL
         status_dict['detail']['msg'] = ''
         if not es:
-            status_dict['errors'] = [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist.'}]
-            status_dict['detail']['msg'] = 'Elasticsearch object does not exist'
+            status_dict['errors'] = [{'UNKNOWN_ERROR': 'ELASTICSEARCH_URL is not set.'}]
+            status_dict['detail']['msg'] = 'ELASTICSEARCH_URL is not set'
         else:
             if not es.ping():
                 status_dict['errors'] = [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable.'}]
