@@ -15,6 +15,7 @@ from mesoshttp.acs import DCOSServiceAuth
 APPLICATION_GROUP = os.getenv('APPLICATION_GROUP', None)
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
+LOGGING_HEALTH_ADDRESS = os.getenv('LOGGING_HEALTH_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
@@ -83,6 +84,8 @@ def run(client):
     if not len(LOGGING_ADDRESS):
         app_name = '%s-fluentd' % FRAMEWORK_NAME
         deploy_fluentd(client, app_name, es_url)
+        LOGGING_ADDRESS="tcp://%s.marathon.l4lb.thisdcos.directory:24224"
+        LOGGING_HEALTH_ADDRESS="http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json"
         print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name))
         print("LOGGING_HEALTH_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json" % subdomain_gen(app_name))
         blocking_apps.append(app_name)
@@ -286,6 +289,11 @@ def deploy_webserver(client, app_name, es_url, db_url, broker_url):
         'DCOS_PACKAGE_FRAMEWORK_NAME': FRAMEWORK_NAME,
         'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
+        'FLUENTD_BUFFER_SIZE_WARN': FLUENTD_BUFFER_SIZE_WARN,
+        'MESSSAGE_QUEUE_DEPTH_WARN':MESSSAGE_QUEUE_DEPTH_WARN,
+        'LOGGING_ADDRESS': LOGGING_ADDRESS,
+        'LOGGING_HEALTH_ADDRESS': LOGGING_HEALTH_ADDRESS,
+        'MESSSAGE_QUEUE_DEPTH_WARN': MESSSAGE_QUEUE_DEPTH_WARN,
         'SCALE_BROKER_URL': broker_url,
         'DATABASE_URL': db_url,
         'SCALE_STATIC_URL': '/service/%s/static/' % FRAMEWORK_NAME,
