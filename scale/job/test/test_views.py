@@ -1164,7 +1164,8 @@ class TestJobTypesPostViewV6(APITestCase):
             'max_scheduled': 1,
             'docker_image': 'my-job-1.0.0-seed:1.0.1',
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': self.configuration,
+            'auto_update': False
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1188,7 +1189,8 @@ class TestJobTypesPostViewV6(APITestCase):
             'max_scheduled': 1,
             'docker_image': 'my-job-1.0.0-seed:1.0.2',
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': self.configuration,
+            'auto_update': False
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1581,6 +1583,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
         url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
         json_data = {
             'configuration': configuration,
+            'auto_update': False
         }
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1597,6 +1600,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
         
         json_data = {
             'manifest': manifest,
+            'auto_update': False
         }
 
         url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
