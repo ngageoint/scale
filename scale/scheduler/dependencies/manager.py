@@ -93,7 +93,7 @@ class DependencyManager(object):
         if scale_settings.LOGGING_HEALTH_ADDRESS:
             status_dict['detail']['logging_health_address'] = scale_settings.LOGGING_HEALTH_ADDRESS
             try:
-                response = requests.get(scale_settings.LOGGING_HEALTH_ADDRESS)
+                response = requests.get(scale_settings.LOGGING_HEALTH_ADDRESS, verify=False)
                 if response.status_code != status.HTTP_200_OK:
                     status_dict['OK'] = False
                     status_dict['errors'].append({response.status_code: 'Logging health address returned %d'%response.status_code})
@@ -196,7 +196,7 @@ class DependencyManager(object):
             status_dict['errors'] = [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}]
         else:
             try:
-                response = requests.head(silo_url)
+                response = requests.head(silo_url, verify=False)
                 if response.status_code == status.HTTP_200_OK:
                     status_dict['OK'] = True
                     status_dict['detail']['msg'] = 'Silo is alive and connected'
