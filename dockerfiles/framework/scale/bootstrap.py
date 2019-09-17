@@ -165,7 +165,8 @@ def deploy_marathon_app(client, marathon_json, sleep_secs=10, retries=3):
         marathon_json['uris'].append(CONFIG_URI)
 
     print("Attempting deploy Marathon app with id: %s" % app_id)
-    print(marathon_json, file=sys.stderr)
+    pretty = json.dumps(marathon_json, sort_keys=True, indent=2, separators=(',', ': '))
+    print(pretty, file=sys.stderr)
     marathon_app = MarathonApp.from_json(marathon_json)
 
     # We are going to retry, in the case of blocked deployments

@@ -196,7 +196,7 @@ class DependencyManager(object):
             status_dict['errors'] = [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}]
         else:
             try:
-                response = requests.head(silo_url, verify=False)
+                response = requests.get(silo_url, verify=False)
                 if response.status_code == status.HTTP_200_OK:
                     status_dict['OK'] = True
                     status_dict['detail']['msg'] = 'Silo is alive and connected'
