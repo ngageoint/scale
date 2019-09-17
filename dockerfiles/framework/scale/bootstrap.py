@@ -43,6 +43,10 @@ def dcos_login():
 
 
 def run(client):
+    #we potentially update these values, clarify that we are using global instead of creating local
+    global LOGGING_ADDRESS
+    global LOGGING_HEALTH_ADDRESS
+    
     silo_admin_password = os.getenv('ADMIN_PASSWORD', 'spicy-pickles17!')
     silo_hub_org = os.getenv('SILO_HUB_ORG', 'geointseed')
     silo_url = os.getenv('SILO_URL', '')
@@ -84,10 +88,10 @@ def run(client):
     if not len(LOGGING_ADDRESS):
         app_name = '%s-fluentd' % FRAMEWORK_NAME
         deploy_fluentd(client, app_name, es_url)
-        LOGGING_ADDRESS="tcp://%s.marathon.l4lb.thisdcos.directory:24224"
-        LOGGING_HEALTH_ADDRESS="http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json"
-        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name))
-        print("LOGGING_HEALTH_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json" % subdomain_gen(app_name))
+        LOGGING_ADDRESS="tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name)
+        LOGGING_HEALTH_ADDRESS="http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json" % subdomain_gen(app_name)
+        print("LOGGING_ADDRESS=%s" % LOGGING_ADDRESS)
+        print("LOGGING_HEALTH_ADDRESS=%s" % LOGGING_HEALTH_ADDRESS)
         blocking_apps.append(app_name)
 
     # Determine if Web Server should be deployed.
@@ -248,7 +252,12 @@ def search_replace(marathon_json, search, replace):
 
 
 def wait_app_healthy(client, app_name, sleep_secs=5):
-    while client.get_app(app_name).tasks_healthy < 1:
+    healthy = 0
+    while healthy < 1:
+        try:
+            healthy = client.get_app(app_name).tasks_healthy
+        except Exception, ex:
+            print(ex.message)
         print('Waiting for healthy app %s.' % app_name)
         time.sleep(sleep_secs)
 
@@ -289,11 +298,11 @@ def deploy_webserver(client, app_name, es_url, db_url, broker_url):
         'DCOS_PACKAGE_FRAMEWORK_NAME': FRAMEWORK_NAME,
         'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
-        'FLUENTD_BUFFER_SIZE_WARN': FLUENTD_BUFFER_SIZE_WARN,
-        'MESSSAGE_QUEUE_DEPTH_WARN':MESSSAGE_QUEUE_DEPTH_WARN,
+        'FLUENTD_BUFFER_WARN': str(FLUENTD_BUFFER_WARN),
+        'FLUENTD_BUFFER_SIZE_WARN':str(FLUENTD_BUFFER_SIZE_WARN),
         'LOGGING_ADDRESS': LOGGING_ADDRESS,
         'LOGGING_HEALTH_ADDRESS': LOGGING_HEALTH_ADDRESS,
-        'MESSSAGE_QUEUE_DEPTH_WARN': MESSSAGE_QUEUE_DEPTH_WARN,
+        'MESSSAGE_QUEUE_DEPTH_WARN': str(MESSSAGE_QUEUE_DEPTH_WARN),
         'SCALE_BROKER_URL': broker_url,
         'DATABASE_URL': db_url,
         'SCALE_STATIC_URL': '/service/%s/static/' % FRAMEWORK_NAME,
