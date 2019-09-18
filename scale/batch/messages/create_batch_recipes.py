@@ -83,6 +83,7 @@ class CreateBatchRecipes(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
+        logger.info('Selecting recipe types for batch %d' % self.batch_id)
         batch = Batch.objects.select_related('recipe_type', 'recipe_type_rev').get(id=self.batch_id)
         definition = batch.get_definition()
         new_messages = []

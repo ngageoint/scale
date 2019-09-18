@@ -101,8 +101,15 @@ class UpdateRecipe(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
+        if not self.root_recipe_id:
+            logger.error('No root recipe set. Message will not re-run')
+            return True
 
         recipe = Recipe.objects.get_recipe_instance_from_root(self.root_recipe_id)
+        if not recipe:
+            logger.error('Could not find recipe instance for root recipe id: %d' % self.root_recipe_id)
+            return True
+
         recipe_model = recipe.recipe_model
         when = now()
 

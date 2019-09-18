@@ -110,13 +110,13 @@ class BatchesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         definition_dict = rest_util.parse_dict(request, 'definition')
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
 
+        print('Creating %s batch' % title)
         # Make sure the recipe type exists
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
@@ -127,11 +127,12 @@ class BatchesView(ListCreateAPIView):
         try:
             definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
             configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()
+            batch = None
             with transaction.atomic():
                 event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
                 batch = Batch.objects.create_batch_v6(title, description, recipe_type, event, definition,
                                                       configuration=configuration)
-                CommandMessageManager().send_messages([create_batch_recipes_message(batch.id)])
+            CommandMessageManager().send_messages([create_batch_recipes_message(batch.id)])
         except InvalidDefinition as ex:
             raise BadParameter(unicode(ex))
         except InvalidConfiguration as ex:

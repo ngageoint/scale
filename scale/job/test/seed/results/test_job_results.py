@@ -121,3 +121,6 @@ class TestSeedJobResults(TransactionTestCase):
             results._capture_output_json(self.seed_outputs_json)
 
         self.assertDictEqual(results.get_dict(), {'files': {}, 'json': {'INPUT_SIZE': 50}, 'version': '7'})
+
+    def test_missing_output_json(self):
+        """Tests job failure for missing output json"""

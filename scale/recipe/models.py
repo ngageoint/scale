@@ -266,12 +266,13 @@ class RecipeManager(models.Manager):
         :returns: The recipe instance
         :rtype: :class:`recipe.instance.recipe.RecipeInstance`
         """
-
+        print('Looking for recipe with id=%d' % root_recipe_id)
         qry = self.select_related('recipe_type_rev')
         qry = qry.filter(models.Q(id=root_recipe_id) | models.Q(root_superseded_recipe_id=root_recipe_id))
         recipe = qry.filter(is_superseded=False).order_by('-created').first()
-        recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe.id)
-        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe, recipe_nodes)
+        if recipe:
+            recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe.id)
+            return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe, recipe_nodes)
 
     def get_recipe_with_interfaces(self, recipe_id):
         """Gets the recipe model for the given ID with related recipe_type_rev and recipe__recipe_type_rev models

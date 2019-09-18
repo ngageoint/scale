@@ -140,6 +140,14 @@ class TestMetricPlotViewV6(APITransactionTestCase):
                 self.assertIsNotNone(entry['max_y'])
                 self.assertIn(entry['values'][0]['id'], job_type_ids)
 
+
+    def test_more_choices(self):
+        url = '/v6/metrics/job-types/plot-data/?choice_id=%s&column=error_system_count&column=error_algorithm_count&column=error_data_count&column=total_count&group=null&dataType=job-types' % self.job_type1.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
     def test_columns(self):
         """Tests successfully calling the metric plot view with column filters."""
 

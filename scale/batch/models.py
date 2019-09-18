@@ -72,15 +72,18 @@ class BatchManager(models.Manager):
 
         with transaction.atomic():
             if definition.root_batch_id is not None:
+                print('%s definition root batch id: %d' % (title, definition.root_batch_id))
                 # Find latest batch with the root ID and supersede it
                 try:
                     superseded_batch = Batch.objects.get_locked_batch_from_root(definition.root_batch_id)
                 except Batch.DoesNotExist:
                     raise InvalidDefinition('PREV_BATCH_NOT_FOUND', 'No batch with that root ID exists')
+                print('Found superseded_batch %d with root_batch_id: %d' % (superseded_batch.id, superseded_batch.root_batch_id))
                 batch.root_batch_id = superseded_batch.root_batch_id
                 batch.superseded_batch = superseded_batch
+                print('%s superseded batch: %d' % (title, batch.superseded_batch.id))
+                print('%s root batch id: %d' % (title, batch.root_batch_id))
                 self.supersede_batch(superseded_batch.id, now())
-
             definition.validate(batch)
             configuration.validate(batch)
 
@@ -113,6 +116,8 @@ class BatchManager(models.Manager):
         
         # If this is a previous batch, use the previous batch total
         if batch.superseded_batch:
+            print('Calculating estimated recipes for %s. Superseded batch %d recipes total: %d'
+                  % (batch.title, batch.superseded_batch.id, batch.superseded_batch.recipes_total))
             return batch.superseded_batch.recipes_total
         
         # No files defined to run on, so no recipes will be created
@@ -385,8 +390,10 @@ class BatchManager(models.Manager):
         :returns: The batch model
         :rtype: :class:`batch.models.Batch`
         """
+        print('Selecting batch with root_batch_id %d' % root_batch_id)
+        return self.select_for_update().get(id=root_batch_id)
 
-        return self.select_for_update().get(root_batch_id=root_batch_id, is_superseded=False)
+        # return self.select_for_update().get(root_batch_id=root_batch_id, is_superseded=False)
 
     def mark_creation_done(self, batch_id, when):
         """Marks recipe creation as done for this batch

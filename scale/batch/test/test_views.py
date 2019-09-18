@@ -278,7 +278,7 @@ class TestBatchesViewV6(APITransactionTestCase):
         self.assertIsNotNone(new_batch_id)
         self.assertEqual(result['recipes_estimated'], 2)
         mock_create.assert_called_with(new_batch_id)
-        
+
         # Create recipe of recipes
         jt = job_test_utils.create_seed_job_type()
         recipe_def = {'version': '7',
@@ -330,8 +330,7 @@ class TestBatchesViewV6(APITransactionTestCase):
                 'priority': 100
             }
         }
-    
-        url = '/v6/batches/'
+
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         result = json.loads(response.content)
@@ -392,7 +391,7 @@ class TestBatchesViewV6(APITransactionTestCase):
                 'priority': 100
             }
         }
-        url = '/v6/batches/'
+
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         result = json.loads(response.content)
@@ -420,7 +419,7 @@ class TestBatchesViewV6(APITransactionTestCase):
                 'priority': 100
             }
         }
-        url = '/v6/batches/'
+
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         result = json.loads(response.content)
@@ -431,6 +430,85 @@ class TestBatchesViewV6(APITransactionTestCase):
         # 2 base recipes, each with one sub-recipe (only forcing after node_c) = 4 recipes
         self.assertEqual(result['recipes_estimated'], 4)
         mock_create.assert_called_with(new_batch_id)
+
+    @patch('batch.views.CommandMessageManager')
+    @patch('batch.views.create_batch_recipes_message')
+    def test_new_previous_successful(self, mock_create, mock_msg_mgr):
+        """Tests creating a new batch, then re-processing that batch"""
+        msg = CreateBatchRecipes()
+        mock_create.return_value = msg
+
+        dataset_def = {
+            'parameters': {
+                'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_IMAGE'}],
+                'json': []}
+        }
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
+        workspace = storage_test_utils.create_workspace()
+        src_file_a = storage_test_utils.create_file(file_name='input_a.PNG', file_type='SOURCE', media_type='image/png',
+                                                    file_size=10, data_type_tags=['type'], file_path='the_path',
+                                                    workspace=workspace)
+        src_file_b = storage_test_utils.create_file(file_name='input_b.PNG', file_type='SOURCE', media_type='image/png',
+                                                    file_size=10, data_type_tags=['type'], file_path='the_path',
+                                                    workspace=workspace)
+        data_list = []
+        data_dict = {
+            'version': '6',
+            'files': {'INPUT_IMAGE': [src_file_a.id]},
+            'json': {}
+        }
+        data_list.append(DataV6(data=data_dict).get_dict())
+        data_dict = {
+            'version': '6',
+            'files': {'INPUT_IMAGE': [src_file_b.id]},
+            'json': {}
+        }
+        data_list.append(DataV6(data=data_dict).get_dict())
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
+
+        definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
+
+        json_data = {
+            'title': 'Batch Title',
+            'description': 'Batch Description',
+            'recipe_type_id': recipe_type.id,
+            'definition': {
+                'dataset': the_dataset.id,
+                'forced_nodes': {
+                    'all': True,
+                },
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+        self.assertIsNotNone(new_batch_id)
+        self.assertEqual(result['recipes_estimated'], 2)
+        mock_create.assert_called_with(new_batch_id)
+        batch_1 = new_batch_id
+        Batch.objects.filter(id=batch_1).update(is_creation_done=True, recipes_total=2)
+
+        json_data = {
+            'title': 'Re-Batch Title',
+            'description': 'Re-Batch Description',
+            'recipe_type_id': recipe_type.id,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': batch_1
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
 
     @patch('batch.views.CommandMessageManager')
     @patch('batch.views.create_batch_recipes_message')

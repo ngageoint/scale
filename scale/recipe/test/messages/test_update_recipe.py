@@ -102,6 +102,38 @@ class TestUpdateRecipe(TestCase):
         sub = SubRecipe(sub_recipe_type.name, sub_recipe_type.revision_num, 'the_sub_recipe', True)
         self.assertListEqual(msg.sub_recipes, [sub])
 
+    def test_condition(self):
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        job_a = job_test_utils.create_job(status='COMPLETED', input=data_dict, output=data_dict)
+
+        condition_i = recipe_test_utils.create_recipe_condition(save=True, is_processed=True, is_accepted=True)
+        job_b = job_test_utils.create_job(input=data_dict, output=data_dict)
+        job_c = job_test_utils.create_job(input=data_dict, output=data_dict)
+        filter_1 = DataFilter(filter_list=[
+            {'name': 'cond_file', 'type': 'filename', 'condition': 'contains', 'values': ['good_name.gif']}])
+
+        definition = RecipeDefinition(Interface())
+        definition.add_job_node('node_a', job_a.job_type.name, job_a.job_type.version, job_a.job_type_rev.revision_num)
+        definition.add_condition_node('node_i', Interface(), filter_1)  # True
+        definition.add_job_node('false_node', job_c.job_type.name, job_c.job_type.version, job_c.job_type_rev.revision_num)
+        definition.add_job_node('true_node', job_b.job_type.name, job_b.job_type.version, job_b.job_type_rev.revision_num)
+        definition.add_dependency('node_a', 'node_i')
+        definition.add_dependency('node_i', 'true_node', acceptance=True)
+        definition.add_dependency('node_i', 'false_node', acceptance=False)
+        definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_dict)
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_dict)
+        node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', job=job_a, save=False)
+        node_i = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_i', condition=condition_i,
+                                                      save=False)
+
+        RecipeNode.objects.bulk_create([node_a, node_i])
+
+        # Create and execute message
+        message = create_update_recipe_message(recipe.id)
+        result = message.execute()
+        self.assertTrue(result)
+
     def test_execute(self):
         """Tests calling UpdateRecipe.execute() successfully"""
 

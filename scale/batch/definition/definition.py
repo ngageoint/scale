@@ -35,6 +35,7 @@ class BatchDefinition(object):
 
         # Re-processing a previous batch
         if self.root_batch_id:
+            print('Validating batch %s from root batch %d' % (batch.title, self.root_batch_id))
             if batch.recipe_type_id != batch.superseded_batch.recipe_type_id:
                 raise InvalidDefinition('MISMATCHED_RECIPE_TYPE',
                                         'New batch and previous batch must have the same recipe type')
@@ -56,6 +57,7 @@ class BatchDefinition(object):
             from data.interface.exceptions import InvalidInterfaceConnection
             from data.models import DataSet
             from recipe.models import RecipeTypeRevision
+            print('Validating batch %s from dataset %d' % (batch.title, self.dataset))
             
             dataset_definition = DataSet.objects.get(pk=self.dataset).get_definition()
             recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num).recipe_type
@@ -87,4 +89,5 @@ class BatchDefinition(object):
         from batch.models import Batch
         self.estimated_recipes = 0
         self.estimated_recipes += Batch.objects.calculate_estimated_recipes(batch, self)
+        print('Estimating %d recipes to be created for batch %s' % (self.estimated_recipes, batch.title))
 

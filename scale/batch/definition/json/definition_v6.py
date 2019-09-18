@@ -67,6 +67,10 @@ def convert_definition_to_v6(definition):
     :rtype: :class:`batch.definition.json.definition_v6.BatchDefinitionV6`
     """
 
+    if definition.dataset:
+        print('Converting batch definition to v6. definition definition.dataset: %d' % definition.dataset)
+    if definition.root_batch_id:
+        print('Converting batch definition to v6. definition root_batch_id: %d' % definition.root_batch_id)
     json_dict = {'version': SCHEMA_VERSION}
     if definition.root_batch_id is not None:
         prev_batch_dict = {'root_batch_id': definition.root_batch_id}
