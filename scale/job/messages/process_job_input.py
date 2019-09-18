@@ -67,7 +67,7 @@ class ProcessJobInput(CommandMessage):
         """
 
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
-
+        
         try:
             job = Job.objects.get_job_with_interfaces(self.job_id)
         except Job.DoesNotExist:

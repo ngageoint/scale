@@ -308,7 +308,6 @@ class IngestManager(models.Manager):
             logger.debug('Creating ingest task for %s', ingest.file_name)
             
             if scan_id:
-                # TODO: Need to make sure scans work
                 messages.append(create_scan_ingest_job_message(ingest.id, scan_id))
             elif strike_id:
                 messages.append(create_strike_ingest_job_message(ingest.id, strike_id))
@@ -950,6 +949,7 @@ class ScanManager(models.Manager):
             job_id = scan.job.id
 
         scan.save()
+        print('queue_scan: Sending create_process_job_input_message for %d' % job_id)
         CommandMessageManager().send_messages(create_process_job_input_messages([job_id]))
 
         return scan
@@ -1087,6 +1087,7 @@ class StrikeManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job_v6(strike_type, job_data, event)
         strike.save()
+        print('create_strike: Sending create_process_job_input_message for %d' % strike.job.id)
         CommandMessageManager().send_messages(create_process_job_input_messages([strike.job.id]))
 
         return strike

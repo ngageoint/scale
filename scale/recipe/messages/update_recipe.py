@@ -170,6 +170,7 @@ class UpdateRecipe(CommandMessage):
             self.new_messages.extend(create_process_condition_messages(process_condition_ids))
         if len(process_job_ids):
             logger.info('Found %d job(s) to process their input and move to the queue', len(process_job_ids))
+            print('UpdateRecipe: Sending create_process_job_input_message for %s' % process_job_ids)
             self.new_messages.extend(create_process_job_input_messages(process_job_ids))
         if len(process_recipe_ids):
             logger.info('Found %d sub-recipe(s) to process their input and begin processing', len(process_recipe_ids))
