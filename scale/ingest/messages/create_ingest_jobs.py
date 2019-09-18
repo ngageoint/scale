@@ -140,5 +140,5 @@ class CreateIngest(CommandMessage):
         # Send message to start processing job input (done outside the transaction to hope the job exists)
         # This can cause a race condition with a slow DB.
         job = Job.objects.get_details(ingest_job.id)
-        
+
         return True

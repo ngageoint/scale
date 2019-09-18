@@ -34,5 +34,4 @@ def initialize_system():
         with transaction.atomic():
             init_event = TriggerEvent.objects.create_trigger_event('SCALE_INIT', None, {}, now())
             job = Queue.objects.queue_new_job_v6(clock_job_type, Data(), init_event)
-            print('initialize_system: Sending create_process_job_input_message for %d' % job.id)
             CommandMessageManager().send_messages(create_process_job_input_messages([job.id]))

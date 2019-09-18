@@ -242,8 +242,7 @@ class CreateJobs(CommandMessage):
             if job.has_input() or process_input:
                 # This new job is all ready to have its input processed
                 process_input_job_ids.append(job.id)
-        
-        print('CreateJobs: Sending create_process_job_input_message for %s' % process_input_job_ids)
+
         self.new_messages.extend(create_process_job_input_messages(process_input_job_ids))
 
         if self.recipe_id:
