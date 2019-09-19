@@ -53,12 +53,15 @@ class MetricsPlotValueSerializer(serializers.Serializer):
     """Converts metrics plot values to REST output"""
     date = serializers.DateField()
     value = serializers.IntegerField()
-
-
-class MetricsPlotMultiValueSerializer(MetricsPlotValueSerializer):
-    """Converts metrics plot values to REST output"""
     id = serializers.IntegerField()
 
+    def to_representation(self, obj):
+        result = result = super(MetricsPlotValueSerializer, self).to_representation(obj)
+
+        # Not every plotvalue has an 'id' field - remove the empty ones
+        if 'id' in result and not result['id']:
+            del result['id']
+        return result
 
 class MetricsPlotSerializer(serializers.Serializer):
     """Converts metrics plot values to REST output"""
@@ -72,7 +75,7 @@ class MetricsPlotSerializer(serializers.Serializer):
 
 class MetricsPlotMultiSerializer(MetricsPlotSerializer):
     """Converts metrics plot values to REST output"""
-    values = MetricsPlotMultiValueSerializer(many=True)
+    values = MetricsPlotValueSerializer(many=True)
 
 
 class MetricsErrorDetailsSerializer(MetricsTypeDetailsSerializer):
