@@ -21,7 +21,6 @@ from trigger.models import TriggerEvent
 from data.data.json import data_v6
 from data.data.data_util import get_file_ids
 from messaging.manager import CommandMessageManager
-from job.messages.process_job_input import create_process_job_input_messages
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from util.rest import BadParameter
 

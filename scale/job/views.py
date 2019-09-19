@@ -687,6 +687,7 @@ class JobsView(ListAPIView):
         try:
             job_id = Queue.objects.queue_new_job_for_user_v6(job_type=job_type, job_data=jobData.get_data(),
                                                              job_configuration=configuration)
+
             CommandMessageManager().send_messages(create_process_job_input_messages([job_id]))
         except InvalidData as err:
             logger.exception('Invalid job data.')

@@ -308,7 +308,6 @@ class IngestManager(models.Manager):
             logger.debug('Creating ingest task for %s', ingest.file_name)
             
             if scan_id:
-                # TODO: Need to make sure scans work
                 messages.append(create_scan_ingest_job_message(ingest.id, scan_id))
             elif strike_id:
                 messages.append(create_strike_ingest_job_message(ingest.id, strike_id))

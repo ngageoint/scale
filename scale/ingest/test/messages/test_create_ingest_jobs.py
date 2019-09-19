@@ -70,6 +70,5 @@ class TestCreateIngest(TestCase):
         result = message.execute()
         
         self.assertTrue(result)
-        self.assertEqual(len(message.new_messages), 1)
-        self.assertEqual(message.new_messages[0].type, 'process_job_input')
+        self.assertEqual(len(message.new_messages), 0)
         
