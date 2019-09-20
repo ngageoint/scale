@@ -140,7 +140,7 @@ class StatusView(GenericAPIView):
         status_dict = Scheduler.objects.get_master().status
 
         if not status_dict:  # Empty dict from model initialization
-            raise ServiceUnavailable(unicode('Status is missing. Scheduler may be down'))
+            raise ServiceUnavailable(unicode('Status is missing. Scheduler may be down.'))
 
         # If status dict has not been updated recently, assume scheduler is down or slow
         status_timestamp = parse_datetime(status_dict['timestamp'])
