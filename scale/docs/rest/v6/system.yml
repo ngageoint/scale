@@ -15,9 +15,9 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/status'
-        '204':
-          description: The 204 NO CONTENT response indicates that the Scale scheduler is
-            currently offline, so there is no status content to provide.
+        '503':
+          description: The 503 Service Unavailable response indicates that the Scale scheduler is
+            currently offline, so there is no status content to provide or the status is stale.
   /version:
     get:
       operationId: _rest_v6_system_version
