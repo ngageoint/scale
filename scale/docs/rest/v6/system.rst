@@ -325,7 +325,7 @@ Response: 200 OK
 | **Status**                 | 503 SERVICE UNAVAILABLE                                                                            |
 +----------------------------+----------------------------------------------------------------------------------------------------+
 | The 503 SERVICE UNAVAILABLE response indicates that the Scale scheduler is either currently offline, so there is no status      |
-| provide, or the something is causing the scheduler status update to be slow and the status is stale.                            |
+| provide, or that something is causing the scheduler status update to be slow and the status is stale.                           |
 +----------------------------+----------------------------------------------------------------------------------------------------+
 | **Status**                 | 200 OK                                                                                             |
 +----------------------------+----------------------------------------------------------------------------------------------------+
