@@ -1155,6 +1155,27 @@ Unsafe methods always require staff user.</p>
 
 </dd></dl>
 
+<dl class="exception">
+<dt id="util.rest.ServiceUnavailable">
+<em class="property">exception </em><code class="descclassname">util.rest.</code><code class="descname">ServiceUnavailable</code><span class="sig-paren">(</span><em>detail=None</em>, <em>code=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.ServiceUnavailable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.exceptions.APIException</span></code></p>
+<dl class="attribute">
+<dt id="util.rest.ServiceUnavailable.default_code">
+<code class="descname">default_code</code><em class="property"> = u'service_unavailable'</em><a class="headerlink" href="#util.rest.ServiceUnavailable.default_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.rest.ServiceUnavailable.default_detail">
+<code class="descname">default_detail</code><em class="property"> = u'Service temporarily unavailable, try again later.'</em><a class="headerlink" href="#util.rest.ServiceUnavailable.default_detail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.rest.ServiceUnavailable.status_code">
+<code class="descname">status_code</code><em class="property"> = 503</em><a class="headerlink" href="#util.rest.ServiceUnavailable.status_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="util.rest.check_time_range">
 <code class="descclassname">util.rest.</code><code class="descname">check_time_range</code><span class="sig-paren">(</span><em>started</em>, <em>ended</em>, <em>max_duration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.check_time_range" title="Permalink to this definition">¶</a></dt>
