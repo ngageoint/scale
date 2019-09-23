@@ -71,6 +71,11 @@ class ReadOnly(APIException):
     """Exception indicating a REST API call is attempting to update a field that does not support it."""
     status_code = status.HTTP_400_BAD_REQUEST
 
+class ServiceUnavailable(APIException):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    default_detail = 'Service temporarily unavailable, try again later.'
+    default_code = 'service_unavailable'
+
 
 def check_update(request, fields):
     """Checks whether the given request includes fields that are not allowed to be updated.

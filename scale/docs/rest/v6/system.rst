@@ -322,10 +322,10 @@ Response: 200 OK
 +---------------------------------------------------------------------------------------------------------------------------------+
 | **Successful Responses**                                                                                                        |
 +----------------------------+----------------------------------------------------------------------------------------------------+
-| **Status**                 | 204 NO CONTENT                                                                                     |
+| **Status**                 | 503 SERVICE UNAVAILABLE                                                                            |
 +----------------------------+----------------------------------------------------------------------------------------------------+
-| The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to           |
-| provide.                                                                                                                        |
+| The 503 SERVICE UNAVAILABLE response indicates that the Scale scheduler is either currently offline, so there is no status      |
+| provide, or that something is causing the scheduler status update to be slow and the status is stale.                           |
 +----------------------------+----------------------------------------------------------------------------------------------------+
 | **Status**                 | 200 OK                                                                                             |
 +----------------------------+----------------------------------------------------------------------------------------------------+
