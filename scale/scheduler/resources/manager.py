@@ -32,6 +32,7 @@ class ResourceManager(object):
         self._new_offers = {}  # {Offer ID: ResourceOffer}
         self._new_offers_lock = threading.Lock()  # Protects self._new_offers
         self._mesos_error = None
+        self._mesos_error_started = None
 
     def add_new_offers(self, offers):
         """Adds new resource offers to the manager
@@ -290,20 +291,24 @@ class ResourceManager(object):
         try:
             resources = get_agent_resources(host_address, agents_needing_totals)
         except KeyError as ex:
-            if not self._mesos_error:
-                self._mesos_error_started = datetime.now()
             logger.exception('Error getting agent resource totals from Mesos: missing key %s' % ex)
             self._mesos_error = 'Missing key %s in mesos response' % ex
+            if not self._mesos_error:
+                self._mesos_error_started = datetime.now()
         except Exception as ex:
             logger.exception('Error getting agent resource totals from Mesos: %s' % ex)
             self._mesos_error = ex.message
-            if datetime.now() > self._mesos_error_started + SHUTDOWN_PERIOD:
-                from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
-                GLOBAL_SHUTDOWN()
+            if not self._mesos_error:
+                self._mesos_error_started = datetime.now()
+
+        if self._mesos_error_started and datetime.now() > self._mesos_error_started + SHUTDOWN_PERIOD:
+            from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
+            GLOBAL_SHUTDOWN()
 
         if resources:
             #clear error
             self._mesos_error = None
+            self._mesos_error_started = None
 
         with self._agent_resources_lock:
             for agent_id in resources:
