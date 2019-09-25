@@ -12,6 +12,9 @@ from scheduler.resources.agent import AgentResources
 # Amount of time between rolling watermark resets
 WATERMARK_RESET_PERIOD = datetime.timedelta(minutes=5)
 
+# Amount of time to wait for mesos to recover before shutting scale down
+SHUTDOWN_PERIOD = datetime.timedelta(minutes=30)
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +31,7 @@ class ResourceManager(object):
         self._last_watermark_reset = None
         self._new_offers = {}  # {Offer ID: ResourceOffer}
         self._new_offers_lock = threading.Lock()  # Protects self._new_offers
+        self._mesos_error = None
 
     def add_new_offers(self, offers):
         """Adds new resource offers to the manager
@@ -285,8 +289,21 @@ class ResourceManager(object):
         resources = {}
         try:
             resources = get_agent_resources(host_address, agents_needing_totals)
-        except:
-            logger.exception('Error getting agent resource totals from Mesos')
+        except KeyError as ex:
+            if not self._mesos_error:
+                self._mesos_error_started = datetime.now()
+            logger.exception('Error getting agent resource totals from Mesos: missing key %s' % ex)
+            self._mesos_error = 'Missing key %s in mesos response' % ex
+        except Exception as ex:
+            logger.exception('Error getting agent resource totals from Mesos: %s' % ex)
+            self._mesos_error = ex.message
+            if datetime.now() > self._mesos_error_started + SHUTDOWN_PERIOD:
+                from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
+                GLOBAL_SHUTDOWN()
+
+        if resources:
+            #clear error
+            self._mesos_error = None
 
         with self._agent_resources_lock:
             for agent_id in resources:
