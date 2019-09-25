@@ -138,24 +138,24 @@ class TestDependenciesManager(TestCase):
         """Tests the _generate_elasticsearch_status method"""
 
         elasticsearch = dependency_mgr._generate_elasticsearch_status()
-        self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'Elasticsearch object does not exist', 'url': None}, 
-                                             'errors': [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist.'}], 'warnings': []})
+        self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'ELASTICSEARCH_URL is not set', 'url': None}, 
+                                             'errors': [{'UNKNOWN_ERROR': 'ELASTICSEARCH_URL is not set.'}], 'warnings': []})
             
-        with patch('scale.settings.ELASTICSEARCH') as mock_elasticsearch:
-            # Setup elasticsearch status
-            mock_elasticsearch.ping.return_value = False
-            with patch('scale.settings.ELASTICSEARCH_URL', 'http://offline.host'):
-                elasticsearch = dependency_mgr._generate_elasticsearch_status()
-            self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'Unable to connect to elasticsearch', 'url': 'http://offline.host'}, 
-                                                 'errors': [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable.'}], 'warnings': []})
-            mock_elasticsearch.ping.return_value = True
-            mock_elasticsearch.cluster.health.return_value = {'status': 'red'}
+
+        with patch('scale.settings.ELASTICSEARCH_URL', 'http://offline.host'):
+            elasticsearch = dependency_mgr._generate_elasticsearch_status()
+        self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'Unable to connect to elasticsearch', 'url': 'http://offline.host'}, 
+                                             'errors': [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable.'}], 'warnings': []})
+        
+        with patch('elasticsearch.Elasticsearch') as mock_elasticsearch:
+            mock_elasticsearch.return_value.ping.return_value = True
+            mock_elasticsearch.return_value.cluster.health.return_value = {'status': 'red'}
             with patch('scale.settings.ELASTICSEARCH_URL', 'http://red.host'):
                 elasticsearch = dependency_mgr._generate_elasticsearch_status()
             self.assertDictEqual(elasticsearch, {'OK': False, 'detail': {'msg': 'One or more primary shards is not allocated to any node', 'url': 'http://red.host'},
                                                  'errors': [{'CLUSTER_RED': 'Elasticsearch cluster health is red. A primary shard is not allocated.'}], 'warnings': []})
-            mock_elasticsearch.cluster.health.return_value = {'status': 'green'}
-            mock_elasticsearch.info.return_value = {'tagline' : 'You know, for X'}
+            mock_elasticsearch.return_value.cluster.health.return_value = {'status': 'green'}
+            mock_elasticsearch.return_value.info.return_value = {'tagline' : 'You know, for X'}
             with patch('scale.settings.ELASTICSEARCH_URL', 'http://green.host'):
                 elasticsearch = dependency_mgr._generate_elasticsearch_status()
             self.assertDictEqual(elasticsearch, {u'OK': True, u'detail': {u'info': {u'tagline': u'You know, for X'}, 

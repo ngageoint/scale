@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import elasticsearch
 import logging
 import os
 import requests
@@ -92,7 +93,7 @@ class DependencyManager(object):
         if scale_settings.LOGGING_HEALTH_ADDRESS:
             status_dict['detail']['logging_health_address'] = scale_settings.LOGGING_HEALTH_ADDRESS
             try:
-                response = requests.get(scale_settings.LOGGING_HEALTH_ADDRESS)
+                response = requests.get(scale_settings.LOGGING_HEALTH_ADDRESS, verify=False)
                 if response.status_code != status.HTTP_200_OK:
                     status_dict['OK'] = False
                     status_dict['errors'].append({response.status_code: 'Logging health address returned %d'%response.status_code})
@@ -144,18 +145,28 @@ class DependencyManager(object):
         """
         
         status_dict = {'OK': False, 'detail': {}, 'errors': [], 'warnings': []}
-        elasticsearch = scale_settings.ELASTICSEARCH
+        es = None
+        if scale_settings.ELASTICSEARCH_URL:
+            es = elasticsearch.Elasticsearch(
+                [scale_settings.ELASTICSEARCH_URL],
+                # disable all sniffing
+                sniff_on_start=False,
+                # refresh nodes after a node fails to respond
+                sniff_on_connection_fail=False,
+                # dont verify SSL certificates presently
+                verify_certs=False
+            )
         status_dict['detail']['url'] = scale_settings.ELASTICSEARCH_URL
         status_dict['detail']['msg'] = ''
-        if not elasticsearch:
-            status_dict['errors'] = [{'UNKNOWN_ERROR': 'Elasticsearch object does not exist.'}]
-            status_dict['detail']['msg'] = 'Elasticsearch object does not exist'
+        if not es:
+            status_dict['errors'] = [{'UNKNOWN_ERROR': 'ELASTICSEARCH_URL is not set.'}]
+            status_dict['detail']['msg'] = 'ELASTICSEARCH_URL is not set'
         else:
-            if not elasticsearch.ping():
+            if not es.ping():
                 status_dict['errors'] = [{'CLUSTER_ERROR': 'Elasticsearch cluster is unreachable.'}]
                 status_dict['detail']['msg'] = 'Unable to connect to elasticsearch'
             else:
-                health = elasticsearch.cluster.health()
+                health = es.cluster.health()
                 if health['status'] == 'red':
                     status_dict['errors'] =  [{'CLUSTER_RED': 'Elasticsearch cluster health is red. A primary shard is not allocated.'}]
                     status_dict['detail']['msg'] = 'One or more primary shards is not allocated to any node'
@@ -164,7 +175,7 @@ class DependencyManager(object):
                     status_dict['detail']['msg'] = 'One or more replica shards is not allocated to a node.'
                 elif health['status'] == 'green':
                     status_dict['OK'] = True
-                    status_dict['detail']['info'] = elasticsearch.info()
+                    status_dict['detail']['info'] = es.info()
                     status_dict['detail']['msg'] = 'Elasticsearch is healthy'
 
         return status_dict
@@ -185,7 +196,7 @@ class DependencyManager(object):
             status_dict['errors'] = [{'NO_SILO_DEFINED': 'No silo URL defined in environment. SOS.'}]
         else:
             try:
-                response = requests.head(silo_url)
+                response = requests.get(silo_url, verify=False)
                 if response.status_code == status.HTTP_200_OK:
                     status_dict['OK'] = True
                     status_dict['detail']['msg'] = 'Silo is alive and connected'

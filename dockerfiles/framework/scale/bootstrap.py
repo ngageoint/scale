@@ -15,6 +15,7 @@ from mesoshttp.acs import DCOSServiceAuth
 APPLICATION_GROUP = os.getenv('APPLICATION_GROUP', None)
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 LOGGING_ADDRESS = os.getenv('LOGGING_ADDRESS', '')
+LOGGING_HEALTH_ADDRESS = os.getenv('LOGGING_HEALTH_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 DEPLOY_UI = os.getenv('DEPLOY_UI', 'true')
 SERVICE_SECRET = os.getenv('SERVICE_SECRET')
@@ -42,6 +43,10 @@ def dcos_login():
 
 
 def run(client):
+    #we potentially update these values, clarify that we are using global instead of creating local
+    global LOGGING_ADDRESS
+    global LOGGING_HEALTH_ADDRESS
+    
     silo_admin_password = os.getenv('ADMIN_PASSWORD', 'spicy-pickles17!')
     silo_hub_org = os.getenv('SILO_HUB_ORG', 'geointseed')
     silo_url = os.getenv('SILO_URL', '')
@@ -83,8 +88,10 @@ def run(client):
     if not len(LOGGING_ADDRESS):
         app_name = '%s-fluentd' % FRAMEWORK_NAME
         deploy_fluentd(client, app_name, es_url)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name))
-        print("LOGGING_HEALTH_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json" % subdomain_gen(app_name))
+        LOGGING_ADDRESS="tcp://%s.marathon.l4lb.thisdcos.directory:24224" % subdomain_gen(app_name)
+        LOGGING_HEALTH_ADDRESS="http://%s.marathon.l4lb.thisdcos.directory:24220/api/plugins.json" % subdomain_gen(app_name)
+        print("LOGGING_ADDRESS=%s" % LOGGING_ADDRESS)
+        print("LOGGING_HEALTH_ADDRESS=%s" % LOGGING_HEALTH_ADDRESS)
         blocking_apps.append(app_name)
 
     # Determine if Web Server should be deployed.
@@ -158,7 +165,8 @@ def deploy_marathon_app(client, marathon_json, sleep_secs=10, retries=3):
         marathon_json['uris'].append(CONFIG_URI)
 
     print("Attempting deploy Marathon app with id: %s" % app_id)
-    print(marathon_json, file=sys.stderr)
+    pretty = json.dumps(marathon_json, sort_keys=True, indent=2, separators=(',', ': '))
+    print(pretty, file=sys.stderr)
     marathon_app = MarathonApp.from_json(marathon_json)
 
     # We are going to retry, in the case of blocked deployments
@@ -245,7 +253,12 @@ def search_replace(marathon_json, search, replace):
 
 
 def wait_app_healthy(client, app_name, sleep_secs=5):
-    while client.get_app(app_name).tasks_healthy < 1:
+    healthy = 0
+    while healthy < 1:
+        try:
+            healthy = client.get_app(app_name).tasks_healthy
+        except Exception, ex:
+            print(ex.message)
         print('Waiting for healthy app %s.' % app_name)
         time.sleep(sleep_secs)
 
@@ -286,6 +299,11 @@ def deploy_webserver(client, app_name, es_url, db_url, broker_url):
         'DCOS_PACKAGE_FRAMEWORK_NAME': FRAMEWORK_NAME,
         'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
+        'FLUENTD_BUFFER_WARN': str(FLUENTD_BUFFER_WARN),
+        'FLUENTD_BUFFER_SIZE_WARN':str(FLUENTD_BUFFER_SIZE_WARN),
+        'LOGGING_ADDRESS': LOGGING_ADDRESS,
+        'LOGGING_HEALTH_ADDRESS': LOGGING_HEALTH_ADDRESS,
+        'MESSSAGE_QUEUE_DEPTH_WARN': str(MESSSAGE_QUEUE_DEPTH_WARN),
         'SCALE_BROKER_URL': broker_url,
         'DATABASE_URL': db_url,
         'SCALE_STATIC_URL': '/service/%s/static/' % FRAMEWORK_NAME,
