@@ -67,8 +67,8 @@ FLUENTD_BUFFER_WARN = int(os.environ.get('FLUENTD_BUFFER_WARN', -1))
 FLUENTD_BUFFER_SIZE_WARN = int(os.environ.get('FLUENTD_BUFFER_SIZE_WARN', -1))
 
 # URL for fluentd, or None to disable fluentd
-LOGGING_ADDRESS = None
-LOGGING_HEALTH_ADDRESS = None
+LOGGING_ADDRESS = os.environ.get('LOGGING_ADDRESS')
+LOGGING_HEALTH_ADDRESS = os.environ.get('LOGGING_HEALTH_ADDRESS')
 
 # Base URL of elasticsearch nodes
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')

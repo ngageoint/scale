@@ -110,7 +110,9 @@ class TestStatusView(APITestCase):
 
         url = '/%s/status/' % self.api
         response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE, response.content)
+        result = json.loads(response.content)
+        self.assertDictEqual({'detail': 'Status is missing. Scheduler may be down.'}, result)
 
     @patch('messaging.manager.CommandMessageManager.get_queue_size')
     def test_status_old(self, mock_get_queue_size):
@@ -124,7 +126,9 @@ class TestStatusView(APITestCase):
 
         url = '/%s/status/' % self.api
         response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE, response.content)
+        result = json.loads(response.content)
+        self.assertDictEqual({'detail': 'Status is over 12 seconds old'}, result)
 
     @patch('messaging.manager.CommandMessageManager.get_queue_size')
     def test_status_successful(self, mock_get_queue_size):

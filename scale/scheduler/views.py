@@ -16,6 +16,8 @@ from rest_framework.response import Response
 from scheduler.models import Scheduler
 from scheduler.serializers import SchedulerSerializerV6
 
+from util.rest import ServiceUnavailable
+
 logger = logging.getLogger(__name__)
 
 
@@ -138,12 +140,12 @@ class StatusView(GenericAPIView):
         status_dict = Scheduler.objects.get_master().status
 
         if not status_dict:  # Empty dict from model initialization
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            raise ServiceUnavailable(unicode('Status is missing. Scheduler may be down.'))
 
-        # If status dict has not been updated recently, assume scheduler is down
+        # If status dict has not been updated recently, assume scheduler is down or slow
         status_timestamp = parse_datetime(status_dict['timestamp'])
         if (now() - status_timestamp).total_seconds() > StatusView.STATUS_FRESHNESS_THRESHOLD:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            raise ServiceUnavailable(unicode('Status is over %d seconds old' % StatusView.STATUS_FRESHNESS_THRESHOLD))
 
         return Response(status_dict)
 

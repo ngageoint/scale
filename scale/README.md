@@ -241,14 +241,18 @@ below for reference.
 | ELASTICSEARCH_URL           | None                            | Elasticsearch backend URL for log storage  |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
+| FLUENTD_BUFFER_WARN         | 10                              | Warn if buffer exceeds this many items     |
+| FLUENTD_BUFFER_SIZE_WARN    | 1000000000                      | Warn if buffer exceeds this many bytes     |
 | FLUENTD_DOCKER_IMAGE        | 'geoint/scale-fluentd'          | Docker image for fluentd                   |
 | GEOAXIS_HOST                | 'geoaxis.gxaccess.com'          | Host address for GEOAxIS endpoints         |
 | GEOAXIS_KEY                 | None                            | GEOAxIS OAuth API Key                      |
 | GEOAXIS_SECRET              | None                            | GEOAxIS OAuth API Secret                   |
 | LOGGING_ADDRESS             | None                            | Fluentd URL. By default set by bootstrap   |
+| LOGGING_HEALTH_ADDRESS      | None                            | Fluentd health URL. Default set by bootstrap |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
 | MESOS_ROLE                  | '*'                             | Mesos Role to assume                       |
+| MESSSAGE_QUEUE_DEPTH_WARN   | 100                             | Warn if queue exceeds this many messages   |
 | PUBLIC_READ_API             | 'false'                         | Public API access for stateless calls      |
 | SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
