@@ -86,7 +86,7 @@ class RecipeDefinition(object):
         connection = DependencyInputConnection(node_input_name, dependency_name, dependency_output_name)
         self._add_connection(node_name, connection)
 
-    def add_job_node(self, name, job_type_name, job_type_version, revision_num):
+    def add_job_node(self, name, job_type_name, job_type_version, revision_num, multiple):
         """Adds a job node to the recipe graph
 
         :param name: The node name
@@ -101,7 +101,7 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
 
-        self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
+        self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num, multiple))
 
     def get_input_keys(self):
         """Returns the input keys to this recipe"""

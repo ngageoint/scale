@@ -615,6 +615,8 @@ class Recipe(models.Model):
                                on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', related_name='recipes_for_batch', blank=True, null=True,
                               on_delete=models.PROTECT)
+    recipe_node = models.ForeignKey('recipe.RecipeNode', related_name='recipes_for_recipe_node', blank=True, null=True,
+                                    on_delete=models.PROTECT)
 
     definition = django.contrib.postgres.fields.JSONField(default=dict)
 
@@ -1169,9 +1171,6 @@ class RecipeNode(models.Model):
     node_name = models.CharField(max_length=100)
     is_original = models.BooleanField(default=True)
     condition = models.ForeignKey('recipe.RecipeCondition', blank=True, null=True, on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
-    sub_recipe = models.ForeignKey('recipe.Recipe', related_name='contained_by', blank=True, null=True,
-                                   on_delete=models.PROTECT)
 
     objects = RecipeNodeManager()
 

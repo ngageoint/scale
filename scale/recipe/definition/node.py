@@ -79,7 +79,7 @@ class NodeDefinition(object):
         :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
         """
 
-        input_data = Data()
+        input_data = [Data()]
 
         for connection in self.connections.values():
             connection.add_value_to_data(input_data, recipe_input_data, node_outputs)
@@ -165,7 +165,7 @@ class JobNodeDefinition(NodeDefinition):
 
     NODE_TYPE = 'job'
 
-    def __init__(self, name, job_type_name, job_type_version, revision_num):
+    def __init__(self, name, job_type_name, job_type_version, revision_num, multiple):
         """Constructor
 
         :param name: The unique name of the node in the recipe graph
@@ -183,6 +183,7 @@ class JobNodeDefinition(NodeDefinition):
         self.job_type_name = job_type_name
         self.job_type_version = job_type_version
         self.revision_num = revision_num
+        self.multiple = multiple
 
 
 class RecipeNodeDefinition(NodeDefinition):
@@ -191,7 +192,7 @@ class RecipeNodeDefinition(NodeDefinition):
 
     NODE_TYPE = 'recipe'
 
-    def __init__(self, name, recipe_type_name, revision_num):
+    def __init__(self, name, recipe_type_name, revision_num, multiple):
         """Constructor
 
         :param name: The unique name of the node in the recipe graph
@@ -206,3 +207,4 @@ class RecipeNodeDefinition(NodeDefinition):
 
         self.recipe_type_name = recipe_type_name
         self.revision_num = revision_num
+        self.multiple = multiple

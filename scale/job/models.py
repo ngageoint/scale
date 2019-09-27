@@ -889,6 +889,8 @@ class Job(models.Model):
                                on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', related_name='jobs_for_batch', blank=True, null=True,
                               on_delete=models.PROTECT)
+    recipe_node = models.ForeignKey('recipe.RecipeNode', related_name='jobs_for_recipe_node', blank=True, null=True,
+                              on_delete=models.PROTECT)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True,
