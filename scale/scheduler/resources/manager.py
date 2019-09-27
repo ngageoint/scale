@@ -303,10 +303,12 @@ class ResourceManager(object):
 
         if self._mesos_error_started and datetime.now() > self._mesos_error_started + SHUTDOWN_PERIOD:
             from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
+            logger.info('Shutting down due to lack of resources from mesos')
             GLOBAL_SHUTDOWN()
 
         if resources:
             #clear error
+            logger.info('Received resources again from mesos')
             self._mesos_error = None
             self._mesos_error_started = None
 
