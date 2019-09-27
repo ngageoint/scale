@@ -291,26 +291,26 @@ class ResourceManager(object):
         try:
             resources = get_agent_resources(host_address, agents_needing_totals)
         except KeyError as ex:
+            if not self._mesos_error:
+                self._mesos_error_started = datetime.datetime.now()
             logger.exception('Error getting agent resource totals from Mesos: missing key %s' % ex)
             self._mesos_error = 'Missing key %s in mesos response' % ex
-            if not self._mesos_error:
-                self._mesos_error_started = datetime.now()
         except Exception as ex:
-            logger.exception('Error getting agent resource totals from Mesos: %s' % ex)
-            self._mesos_error = ex.message
             if not self._mesos_error:
-                self._mesos_error_started = datetime.now()
-
-        if self._mesos_error_started and datetime.now() > self._mesos_error_started + SHUTDOWN_PERIOD:
-            from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
-            logger.info('Shutting down due to lack of resources from mesos')
-            GLOBAL_SHUTDOWN()
+                self._mesos_error_started = datetime.datetime.now()
+            logger.exception('Error getting agent resource totals from Mesos: %s' % ex)
+            self._mesos_error = str(ex)
 
         if resources:
             #clear error
             logger.info('Received resources again from mesos')
             self._mesos_error = None
             self._mesos_error_started = None
+            
+        if self._mesos_error_started and datetime.datetime.now() > self._mesos_error_started + SHUTDOWN_PERIOD:
+            from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
+            logger.info('Shutting down due to lack of resources from mesos')
+            GLOBAL_SHUTDOWN()
 
         with self._agent_resources_lock:
             for agent_id in resources:
