@@ -54,6 +54,10 @@ RECIPE_DEFINITION_SCHEMA = {
                     'description': 'Whether this node should run when the parent node is accepted or when it is not accepted (such as when the parent is an if/else condition node). Defaults to true.',
                     'type': 'boolean',
                 },
+                'fork_input': {
+                    'description': 'Which input should be forked into multiple jobs/recipes, if any',
+                    'type': 'string',
+                }
             },
         },
         'dependency_connection': {
@@ -302,7 +306,8 @@ class RecipeDefinitionV6(object):
         for node_name, node_dict in self._definition['nodes'].items():
             for dependency_dict in node_dict['dependencies']:
                 acceptance = dependency_dict['acceptance'] if ('acceptance' in dependency_dict) else True
-                definition.add_dependency(dependency_dict['name'], node_name, acceptance)
+                fork_input = dependency_dict['fork_input'] if ('fork_input' in dependency_dict) else None
+                definition.add_dependency(dependency_dict['name'], node_name, acceptance, fork_input)
             for conn_name, conn_dict in node_dict['input'].items():
                 if conn_dict['type'] == 'recipe':
                     definition.add_recipe_input_connection(node_name, conn_name, conn_dict['input'])

@@ -992,7 +992,7 @@ class RecipeNodeManager(models.Manager):
             recipe_node = RecipeNode()
             recipe_node.recipe_id = recipe_id
             recipe_node.node_name = node_name
-            recipe_node.job = job
+            #recipe_node.job = job
             node_models.append(recipe_node)
 
         return node_models

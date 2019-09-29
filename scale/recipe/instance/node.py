@@ -299,6 +299,7 @@ class JobNodeInstance(NodeInstance):
         if not can_process_input:
             return False
 
+        # should we assert that all/none of the jobs has input? if it's a mix we might have a problem
         for job in self.jobs:
             if not job.has_input():
                 return True
@@ -356,6 +357,7 @@ class RecipeNodeInstance(NodeInstance):
         if not can_process_input:
             return False
 
+        # should we assert that all/none of the recipes has input? if it's a mix we might have a problem
         for recipe in self.recipes:
             if not recipe.has_input():
                 return True

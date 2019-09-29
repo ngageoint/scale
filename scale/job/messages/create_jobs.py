@@ -235,15 +235,6 @@ class CreateJobs(CommandMessage):
                     logger.exception('Attempting to create a job with an inactive job type: %s. Message will not re-run.', ex)
                     return True
 
-        process_input_job_ids = []
-        for job in jobs:
-            # process_input indicates if job is in a recipe and ready to get its input from its dependencies
-            process_input = self.recipe_id and self._process_input.get(job.id, False)
-            if job.has_input() or process_input:
-                # This new job is all ready to have its input processed
-                process_input_job_ids.append(job.id)
-        self.new_messages.extend(create_process_job_input_messages(process_input_job_ids))
-
         if self.recipe_id:
             # If these jobs belong to a recipe, update its metrics now that the jobs are created
             from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
@@ -296,9 +287,9 @@ class CreateJobs(CommandMessage):
         :rtype: list
         """
 
-        from recipe.models import RecipeNode
+        from recipe.models import Recipe, RecipeNode
 
-        recipe_jobs = {}  # {Node name: job model}
+        recipe_jobs = []
 
         superseded_jobs = {}
         # Get superseded jobs from superseded recipe
@@ -313,6 +304,10 @@ class CreateJobs(CommandMessage):
         # Create new job models
         for recipe_job in self.recipe_jobs:
             node_name = recipe_job.node_name
+            recipe_node = RecipeNode()
+            recipe_node.recipe_id = self.recipe_id
+            recipe_node.node_name = node_name
+            recipe_node.save()
             tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
             revision = revs_by_tuple[tup]
             config = None
@@ -320,24 +315,23 @@ class CreateJobs(CommandMessage):
                 config = revision.job_type.get_job_configuration()
                 config.merge_recipe_config(self.recipe_config)
             superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
-            job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id, 
-                                            root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id, 
-                                            batch_id=self.batch_id, superseded_job=superseded_job, job_config=config)
-            recipe_jobs[node_name] = job
 
-        Job.objects.bulk_create(recipe_jobs.values())
+            recipe = Recipe.objects.get(id=self.recipe_id)
+            definition = recipe.get_definition()
+            recipe_input_data = recipe.get_input_data()
+            node_outputs = RecipeNode.objects.get_recipe_node_outputs(self.recipe_id)
+            input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+            for data in input_data:
+                job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id,
+                                                root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id,
+                                                batch_id=self.batch_id, superseded_job=superseded_job, job_config=config,
+                                                recipe_node_id=recipe_node.id, input_data=data)
+            recipe_jobs.append(job)
+
+        Job.objects.bulk_create(recipe_jobs)
         logger.info('Created %d job(s)', len(recipe_jobs))
 
-        # Create recipe nodes
-        recipe_nodes = RecipeNode.objects.create_recipe_job_nodes(self.recipe_id, recipe_jobs)
-        RecipeNode.objects.bulk_create(recipe_nodes)
-
-        # Set up process input dict
-        for recipe_job in self.recipe_jobs:
-            job = recipe_jobs[recipe_job.node_name]
-            self._process_input[job.id] = recipe_job.process_input
-
-        return recipe_jobs.values()
+        return recipe_jobs
 
     def _find_existing_jobs(self):
         """Searches to determine if this message already ran and the jobs already exist

@@ -75,7 +75,7 @@ class Interface(object):
 
         return warnings
 
-    def validate_connection(self, connecting_interface):
+    def validate_connection(self, connecting_interface, fork_input=None):
         """Validates that the given connecting interface can be accepted by this interface
 
         :param connecting_interface: The interface attempting to connect to this interface
@@ -91,7 +91,8 @@ class Interface(object):
         for parameter in self.parameters.values():
             if parameter.name in connecting_interface.parameters:
                 connecting_parameter = connecting_interface.parameters[parameter.name]
-                warnings.extend(parameter.validate_connection(connecting_parameter))
+                fork_connection = fork_input==parameter.name
+                warnings.extend(parameter.validate_connection(connecting_parameter, fork_connection=fork_connection))
             elif parameter.required:
                 raise InvalidInterfaceConnection('PARAM_REQUIRED', 'Parameter \'%s\' is required' % parameter.name)
 

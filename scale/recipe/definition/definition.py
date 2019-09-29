@@ -36,7 +36,7 @@ class RecipeDefinition(object):
 
         self._add_node(ConditionNodeDefinition(name, input_interface, data_filter))
 
-    def add_dependency(self, parent_name, child_name, acceptance=True):
+    def add_dependency(self, parent_name, child_name, acceptance=True, fork_input=None):
         """Adds a dependency that one node has upon another node
 
         :param parent_name: The name of the parent node
@@ -56,7 +56,7 @@ class RecipeDefinition(object):
 
         child_node = self.graph[child_name]
         parent_node = self.graph[parent_name]
-        child_node.add_dependency(parent_node, acceptance)
+        child_node.add_dependency(parent_node, acceptance, fork_input)
 
         self._topological_order = None  # Invalidate cache
 

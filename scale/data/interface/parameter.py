@@ -96,13 +96,13 @@ class FileParameter(Parameter):
         self.media_types = media_types
         self.multiple = multiple
 
-    def validate_connection(self, connecting_parameter):
+    def validate_connection(self, connecting_parameter, fork_connection=False):
         """See :meth:`data.interface.parameter.Parameter.validate_connection`
         """
 
         warnings = super(FileParameter, self).validate_connection(connecting_parameter)
 
-        if not self.multiple and connecting_parameter.multiple:
+        if not self.multiple and connecting_parameter.multiple and not fork_connection:
             msg = 'Parameter \'%s\' cannot accept multiple files' % self.name
             raise InvalidInterfaceConnection('NO_MULTIPLE_FILES', msg)
 
@@ -149,13 +149,18 @@ class JsonParameter(Parameter):
 
         return []
 
-    def validate_connection(self, connecting_parameter):
+    def validate_connection(self, connecting_parameter, fork_connection=False):
         """See :meth:`data.interface.parameter.Parameter.validate_connection`
         """
 
         warnings = super(JsonParameter, self).validate_connection(connecting_parameter)
 
-        if self.json_type != connecting_parameter.json_type:
+        if connecting_parameter.json_type != 'array' and fork_connection:
+            msg = 'Parameter \'%s\' of JSON type \'%s\' cannot be forked'
+            msg = msg % (connecting_parameter.name, connecting_parameter.json_type)
+            raise InvalidInterfaceConnection('UNFORKABLE_JSON', msg)
+
+        if self.json_type != connecting_parameter.json_type and not fork_connection:
             msg = 'Parameter \'%s\' of JSON type \'%s\' cannot accept JSON type \'%s\''
             msg = msg % (self.name, self.json_type, connecting_parameter.json_type)
             raise InvalidInterfaceConnection('MISMATCHED_JSON_TYPE', msg)
