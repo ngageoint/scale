@@ -10,6 +10,7 @@ Subpackages
     scheduler.test.dependencies
     scheduler.test.messages
     scheduler.test.node
+    scheduler.test.resources
     scheduler.test.scheduling
     scheduler.test.sync
     scheduler.test.tasks

@@ -1,0 +1,22 @@
+scheduler\.test\.resources package
+==================================
+
+Submodules
+----------
+
+scheduler\.test\.resources\.test\_manager module
+------------------------------------------------
+
+.. automodule:: scheduler.test.resources.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.resources
+    :members:
+    :undoc-members:
+    :show-inheritance:
