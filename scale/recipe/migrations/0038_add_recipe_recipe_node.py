@@ -13,17 +13,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='recipenode',
-            name='job',
-        ),
-        migrations.RemoveField(
-            model_name='recipenode',
-            name='sub_recipe',
-        ),
         migrations.AddField(
             model_name='recipe',
             name='recipe_node',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='recipes_for_recipe_node', to='recipe.RecipeNode'),
-        ),
+        )
     ]
