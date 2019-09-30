@@ -33,6 +33,7 @@ def convert_interface_to_manifest(apps, schema_editor):
         old_name = jt.name
         old_name_version = jt.name + ' ' + jt.version
         jt.name = 'legacy-' + jt.name.replace('_', '-')
+        jt.name = jt.name.replace(' ', '-')
             
         if not jt.manifest:
             jt.manifest = {}
@@ -91,17 +92,29 @@ def convert_interface_to_manifest(apps, schema_editor):
             settings.append(s)
         
         errors = []
-        ec = jt.error_mapping.get('exit_codes', {})
-        for exit_code, error_name in ec.items():
-            error = {
-                'code': int(exit_code),
-                'name': get_unique_name(error_name),
-                'title': 'Error Name',
-                'description': 'Error Description',
-                'category': 'algorithm'
-            }
-            errors.append(error)
+        if jt.error_mapping:
+            ec = jt.error_mapping.get('exit_codes', {})
+            for exit_code, error_name in ec.items():
+                error = {
+                    'code': int(exit_code),
+                    'name': get_unique_name(error_name),
+                    'title': 'Error Name',
+                    'description': 'Error Description',
+                    'category': 'algorithm'
+                }
+                errors.append(error)
             
+        author_name = jt.author_name if jt.author_name else 'unknown'
+        author_url = jt.author_url if jt.author_url else 'unknown'
+        description = jt.description if jt.description else 'none'
+        category = jt.category if jt.category else 'no-category'
+        timeout = jt.timeout if jt.timeout else 999
+        cpu = jt.cpus_required if jt.cpus_required else 1.0 
+        mem = jt.mem_const_required if jt.mem_const_required else 64.0 
+        sharedMem = jt.shared_mem_required if jt.shared_mem_required else 0.0
+        mem_mult = jt.mem_mult_required if jt.mem_mult_required else 0.0 
+        disk = jt.disk_out_const_required if jt.disk_out_const_required else 64.0 
+        disk_mult = jt.disk_out_mult_required if jt.disk_out_mult_required else 0.0 
         new_manifest = {
             'seedVersion': '1.0.0',
             'job': {
@@ -110,13 +123,13 @@ def convert_interface_to_manifest(apps, schema_editor):
                 'packageVersion': '1.0.0',
                 'title': 'LEGACY ' + jt.title,
                 'description': jt.description,
-                'tags': [jt.category, old_name_version],
+                'tags': [category, old_name_version],
                 'maintainer': {
-                  'name': jt.author_name,
+                  'name': author_name,
                   'email': 'jdoe@example.com',
-                  'url': jt.author_url
+                  'url': author_url
                 },
-                'timeout': jt.timeout,
+                'timeout': timeout,
                 'interface': {
                   'command': jt.manifest.get('command', ''),
                   'inputs': {
@@ -132,10 +145,10 @@ def convert_interface_to_manifest(apps, schema_editor):
                 },
                 'resources': {
                   'scalar': [
-                    { 'name': 'cpus', 'value': jt.cpus_required },
-                    { 'name': 'mem', 'value': jt.mem_const_required, 'inputMultiplier': jt.mem_mult_required },
-                    { 'name': 'sharedMem', 'value': jt.shared_mem_required },
-                    { 'name': 'disk', 'value': jt.disk_out_const_required, 'inputMultiplier': jt.disk_out_mult_required }
+                    { 'name': 'cpus', 'value': cpu },
+                    { 'name': 'mem', 'value': mem, 'inputMultiplier': mem_mult },
+                    { 'name': 'sharedMem', 'value': sharedMem },
+                    { 'name': 'disk', 'value': disk, 'inputMultiplier': disk_mult }
                   ]
                 },
                 'errors': errors
@@ -151,28 +164,27 @@ def convert_interface_to_manifest(apps, schema_editor):
         
         # Update any recipe types that reference the updated job name
         for rtjl in RecipeTypeJobLink.objects.all().filter(job_type_id=jt.id).iterator():
-            recipe_type = RecipeType.objects.get(id=rtjl.id)
-            definition = recipe_type.definition
+            definition = rtjl.recipe_type.definition
             changed = False
 
             # v6 
             if 'nodes' in definition:
-                for node in definition['nodes']:
-                    jt_node = node['node_type']
-                    if jt_node['node_type'] == 'job' and jt_node['job_type_name'].replace('_', '-') == old_name and jt_node['job_type_version'] == jt.version:
-                        node['node_type']['job_type_name'] = jt.name
+                for name, node in definition['nodes'].items():
+                    nt = node['node_type']
+                    if nt['node_type'] == 'job' and nt['job_type_name'] == old_name and nt['job_type_version'] == jt.version:
+                        nt['job_type_name'] = jt.name
                         changed = True
             # v5
             elif 'jobs' in definition:
                 for job in definition['jobs']:
                     jt_node = job['job_type']
-                    if jt_node['name'].replace('_', '-') == old_name and jt_node['version'] == jt.version:
+                    if jt_node['name'] == old_name and jt_node['version'] == jt.version:
                         job['job_type']['name'] = jt.name
                         changed = True
 
             if changed:
-                recipe_type.definition = definition
-                recipe_type.save()
+                rtjl.recipe_type.definition = definition
+                rtjl.recipe_type.save()
 
 class Migration(migrations.Migration):
 
