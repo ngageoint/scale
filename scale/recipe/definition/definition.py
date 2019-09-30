@@ -324,6 +324,8 @@ class RecipeDefinition(object):
         except InvalidInterface as ex:
             raise InvalidDefinition('INPUT_INTERFACE', ex.error.description)
 
+        #change forked node outputs to be multiple
+
         # Processing nodes in topological order will also detect any circular dependencies
         for node_name in self.get_topological_order():
             node = self.graph[node_name]

@@ -96,6 +96,14 @@ class FileParameter(Parameter):
         self.media_types = media_types
         self.multiple = multiple
 
+    def multiply(self):
+        """Takes parameters defined for an interface and makes them multiple.  Multiple is set to true for file parameters
+        and json parameters are turned into arrays.  This is used when getting the output definition for a job type when
+        it is used in a forkable node.
+        """
+
+        self.multiple = True
+
     def validate_connection(self, connecting_parameter, fork_connection=False):
         """See :meth:`data.interface.parameter.Parameter.validate_connection`
         """
@@ -103,7 +111,7 @@ class FileParameter(Parameter):
         warnings = super(FileParameter, self).validate_connection(connecting_parameter)
 
         if not self.multiple and connecting_parameter.multiple and not fork_connection:
-            msg = 'Parameter \'%s\' cannot accept multiple files' % self.name
+            msg = 'Parameter %s cannot accept multiple files' % self.name
             raise InvalidInterfaceConnection('NO_MULTIPLE_FILES', msg)
 
         mismatched_media_types = []
@@ -138,6 +146,14 @@ class JsonParameter(Parameter):
         super(JsonParameter, self).__init__(name, JsonParameter.PARAM_TYPE, required=required)
 
         self.json_type = json_type
+
+    def multiply(self):
+        """Takes parameters defined for an interface and makes them multiple.  Multiple is set to true for file parameters
+        and json parameters are turned into arrays.  This is used when getting the output definition for a job type when
+        it is used in a forkable node.
+        """
+
+        self.json_type = 'array'
 
     def validate(self):
         """See :meth:`data.interface.parameter.Parameter.validate`

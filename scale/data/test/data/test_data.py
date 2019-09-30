@@ -61,7 +61,30 @@ class TestData(TestCase):
         with self.assertRaises(InvalidData) as context:
             data.add_value_from_output_data('input_1', 'output_3', output_data)
         self.assertEqual(context.exception.error.name, 'MISSING_VALUE')
-        
+
+    def test_merge(self):
+        """Tests calling Data.validate()"""
+
+        data = Data()
+        data.add_value(FileValue('input_1', [123]))
+        data.add_value(JsonValue('input_2', 100))
+        data.add_value(JsonValue('extra_input_1', 'hello'))
+        data.add_value(JsonValue('extra_input_2', 'there'))
+
+        data2 = Data()
+        data2.add_value(FileValue('input_1', [123]))
+        data2.add_value(JsonValue('input_2', 100))
+        data2.add_value(JsonValue('extra_input_1', 'hello'))
+        data2.add_value(JsonValue('extra_input_2', 'there'))
+
+        data.merge(data2)
+
+        self.assertSetEqual(set(data.values.keys()), {'input_1', 'input_2', 'extra_input_1', 'extra_input_2'})
+        self.assertListEqual(data.values['input_1'].file_ids, [123,123])
+        self.assertListEqual(data.values['input_2'].value, [100, 100])
+        self.assertListEqual(data.values['extra_input_1'], ['hello', 'hello'])
+        self.assertListEqual(data.values['extra_input_2'], ['there', 'there'])
+
     def test_validate(self):
         """Tests calling Data.validate()"""
 

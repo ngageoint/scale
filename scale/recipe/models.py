@@ -618,8 +618,6 @@ class Recipe(models.Model):
     recipe_node = models.ForeignKey('recipe.RecipeNode', related_name='recipes_for_recipe_node', blank=True, null=True,
                                     on_delete=models.PROTECT)
 
-    definition = django.contrib.postgres.fields.JSONField(default=dict)
-
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
                                                null=True, on_delete=models.PROTECT)
@@ -1062,8 +1060,10 @@ class RecipeNodeManager(models.Manager):
                 output_data = node.condition.get_data()
             if node.job:
                 node_type = 'job'
-                node_id = node.job_id
-                output_data = node.job.get_output_data()
+                node_id = node.id
+                output_data = Data()
+                for job in node.job_set.all():
+                    output_data.merge(job.get_output_data())
             if node.sub_recipe:
                 node_type = 'recipe'
                 node_id = node.sub_recipe_id
@@ -1485,6 +1485,8 @@ class RecipeTypeManager(models.Manager):
         if jtr:
             input = jtr.get_input_interface()
             output = jtr.get_output_interface()
+            if node.fork_input:
+                output.multiply()
 
         return input, output
 
