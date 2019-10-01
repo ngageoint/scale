@@ -72,18 +72,26 @@ class TestData(TestCase):
         data.add_value(JsonValue('extra_input_2', 'there'))
 
         data2 = Data()
-        data2.add_value(FileValue('input_1', [123]))
-        data2.add_value(JsonValue('input_2', 100))
+        data2.add_value(FileValue('input_1', [125]))
+        data2.add_value(FileValue('input_3', [1234]))
+        data2.add_value(JsonValue('input_2', 101))
         data2.add_value(JsonValue('extra_input_1', 'hello'))
         data2.add_value(JsonValue('extra_input_2', 'there'))
 
         data.merge(data2)
 
-        self.assertSetEqual(set(data.values.keys()), {'input_1', 'input_2', 'extra_input_1', 'extra_input_2'})
-        self.assertListEqual(data.values['input_1'].file_ids, [123,123])
-        self.assertListEqual(data.values['input_2'].value, [100, 100])
-        self.assertListEqual(data.values['extra_input_1'], ['hello', 'hello'])
-        self.assertListEqual(data.values['extra_input_2'], ['there', 'there'])
+        self.assertSetEqual(set(data.values.keys()), {'input_1', 'input_2', 'input_3', 'extra_input_1', 'extra_input_2'})
+        self.assertListEqual(data.values['input_1'].file_ids, [123,125])
+        self.assertListEqual(data.values['input_2'].value, [100, 101])
+        self.assertListEqual(data.values['input_3'].file_ids, [1234])
+        self.assertListEqual(data.values['extra_input_1'].value, ['hello', 'hello'])
+        self.assertListEqual(data.values['extra_input_2'].value, ['there', 'there'])
+
+        data3 = Data()
+        data3.add_value(JsonValue('input_1', 123))
+
+        with self.assertRaises(InvalidData) as context:
+            data.merge(data3)
 
     def test_validate(self):
         """Tests calling Data.validate()"""

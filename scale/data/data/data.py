@@ -65,13 +65,7 @@ class Data(object):
                 if value.param_type != merged_value.param_type:
                     msg = 'Cannot merge value %s: types %s and %s are incompatible' % (value.name, value.param_type, merged_value.param_type)
                     raise InvalidData('INVALID_MERGE', msg)
-                if isinstance(value, FileValue):
-                    merged_value.file_ids.extend(value.file_ids)
-                elif isinstance(value, JsonValue):
-                    if not isinstance(merged_value, list):
-                        merged_value = [merged_value, value]
-                    else:
-                        merged_value.append(value)
+                merged_value.merge(value)
 
     def validate(self, interface):
         """Validates this data against the given interface. Extra data values that cannot be passed to the interface
