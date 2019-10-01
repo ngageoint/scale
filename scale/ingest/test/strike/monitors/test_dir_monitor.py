@@ -18,7 +18,8 @@ class TestDirWatcherMonitor(TestCase):
         config = {
             'type': 'dir-watcher'
         }
-        DirWatcherMonitor().validate_configuration(config)
+        warnings = DirWatcherMonitor().validate_configuration(config)
+        self.assertEqual(warnings[0].name, 'missing_transfer_suffix')
 
     def test_validate_configuration_bad_transfer_suffix(self):
         """Tests calling DirWatcherMonitor.validate_configuration() with bad type for transfer_suffix"""
