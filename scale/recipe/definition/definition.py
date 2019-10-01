@@ -86,7 +86,7 @@ class RecipeDefinition(object):
         connection = DependencyInputConnection(node_input_name, dependency_name, dependency_output_name)
         self._add_connection(node_name, connection)
 
-    def add_job_node(self, name, job_type_name, job_type_version, revision_num, multiple):
+    def add_job_node(self, name, job_type_name, job_type_version, revision_num):
         """Adds a job node to the recipe graph
 
         :param name: The node name
@@ -101,7 +101,7 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
 
-        self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num, multiple))
+        self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
     def get_input_keys(self):
         """Returns the input keys to this recipe"""
@@ -323,8 +323,6 @@ class RecipeDefinition(object):
             warnings = self.input_interface.validate()
         except InvalidInterface as ex:
             raise InvalidDefinition('INPUT_INTERFACE', ex.error.description)
-
-        #change forked node outputs to be multiple
 
         # Processing nodes in topological order will also detect any circular dependencies
         for node_name in self.get_topological_order():
