@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+
 from django.db import connection, migrations
 
 def populate_data_type_tags(apps, schema_editor):
     # Go through all of the ScaleFile models and convert the data_type string into an array of tags
+    print('%s: updating data_type_tags for scale_file' % datetime.datetime.now())
     update = 'UPDATE scale_file SET data_type_tags = string_to_array(data_type,\',\') WHERE data_type <> \'\''
     with connection.cursor() as cursor:
         cursor.execute(update)
@@ -12,6 +15,7 @@ def populate_data_type_tags(apps, schema_editor):
         if count:
             print('%d entries updated with data type tags' % count)
 
+    print('%s: finsihed updating data_type_tags for scale_file' % datetime.datetime.now())
     print ('Migration finished.')
             
 def non_null_metadata(apps, schema_editor):
