@@ -120,6 +120,7 @@ class TestJobsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+        rest.login_client(self.client, is_staff=True)
 
         self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
         self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
@@ -222,7 +223,10 @@ class TestJobsViewV6(APITestCase):
 
         url = '/%s/jobs/%d/' % (self.api, seed_job.id)
         response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(result['configuration']['priority'],50)
 
     def test_source_time_successful(self):
         """Tests successfully calling the get jobs by source time"""
@@ -1459,6 +1463,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
                     'host_path': '/path/to/dted',
                     },
             },
+            'priority': 20,
             'output_workspaces': {'default': self.output_workspace.name},
             'settings': {
                 'DB_HOST': 'scale',
@@ -1510,6 +1515,7 @@ class TestJobTypeDetailsViewV6(APITestCase):
         self.assertEqual(result['max_scheduled'], 2)
         #Secrets scrubbed from configuration on return
         self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'scale'})
+        self.assertEqual(result['configuration']['priority'], 20 )
         self.assertEqual(len(result['recipe_types']), 0)
         
         url = '/%s/job-types/%s/%s/' % (self.api, self.job_type1.name, self.job_type1.version)

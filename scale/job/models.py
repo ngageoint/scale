@@ -391,7 +391,7 @@ class JobManager(models.Manager):
                 job.execution = None
         else:
             job.execution = None
-
+        job.configuration = job.job_type.configuration
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
@@ -869,7 +869,7 @@ class Job(models.Model):
     """
 
     JOB_STATUSES = (
-        ('PENDING', 'PENDING'),
+    ('PENDING', 'PENDING'),
         ('BLOCKED', 'BLOCKED'),
         ('QUEUED', 'QUEUED'),
         ('RUNNING', 'RUNNING'),
@@ -1024,6 +1024,14 @@ class Job(models.Model):
             return JobConfigurationV6(config=self.configuration, do_validate=False).get_configuration()
         else:
             return self.job_type.get_job_configuration()
+
+    def get_job_type_priority(self):
+        """Returns the priority of the job type
+
+        :returns: the priority of the job type
+        :rtype: int
+        """
+        return self.get_job_configuration().get_dict()['priority']
 
     def get_v6_configuration_json(self):
         """Returns the job configuration in v6 of the JSON schema
