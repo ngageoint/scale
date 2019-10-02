@@ -1025,14 +1025,6 @@ class Job(models.Model):
         else:
             return self.job_type.get_job_configuration()
 
-    def get_job_type_priority(self):
-        """Returns the priority of the job type
-
-        :returns: the priority of the job type
-        :rtype: int
-        """
-        return self.get_job_configuration().get_dict()['priority']
-
     def get_v6_configuration_json(self):
         """Returns the job configuration in v6 of the JSON schema
 
