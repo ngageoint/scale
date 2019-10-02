@@ -237,9 +237,9 @@ class SupersedeRecipeNodes(CommandMessage):
             if recipe_node.job_id:
                 # Cancel all jobs that were superseded
                 if self.supersede_all or recipe_node.node_name in self.supersede_jobs:
-                    cancel_job_ids.append(recipe_node.job_id)
+                    cancel_job_ids.extend(recipe_node.job_set().all().values_list('pk', flat=True))
                 if self.unpublish_all or recipe_node.node_name in self.unpublish_jobs:
-                    unpublish_job_ids.append(recipe_node.job_id)
+                    unpublish_job_ids.extend(recipe_node.job_set().all().values_list('pk', flat=True))
             elif recipe_node.sub_recipe_id:
                 if self.unpublish_recursive_all or recipe_node.node_name in self.unpublish_recursive:
                     unpublish_recursive_recipe_ids.append(recipe_node.sub_recipe_id)
