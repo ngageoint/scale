@@ -604,13 +604,23 @@ class CreateRecipes(CommandMessage):
         # Create new recipe models
         process_input_by_node = {}
         for sub_recipe in self.sub_recipes:
+            # create nodes here? pass them in from elsewhere?
             node_name = sub_recipe.node_name
-            process_input_by_node[node_name] = sub_recipe.process_input
+            recipe_node = RecipeNode()
+            recipe_node.recipe_id = self.recipe_id
+            recipe_node.node_name = node_name
+            recipe_node.save()
             revision = revs_by_tuple[(sub_recipe.recipe_type_name, sub_recipe.recipe_type_rev_num)]
             superseded_recipe = superseded_sub_recipes[node_name] if node_name in superseded_sub_recipes else None
-            recipe = Recipe.objects.create_recipe_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
-                                                     recipe_id=self.recipe_id, batch_id=self.batch_id,
-                                                     superseded_recipe=superseded_recipe)
+            recipe = Recipe.objects.get(id=self.recipe_id)
+            definition = recipe.get_definition()
+            recipe_input_data = recipe.get_input_data()
+            node_outputs = RecipeNode.objects.get_recipe_node_outputs(self.recipe_id)
+            input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+            for data in input_data:
+                recipe = Recipe.objects.create_recipe_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
+                                                         recipe_id=self.recipe_id, batch_id=self.batch_id,
+                                                         superseded_recipe=superseded_recipe, input_data=data)
             sub_recipes[node_name] = recipe
 
         Recipe.objects.bulk_create(sub_recipes.values())
