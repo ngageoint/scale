@@ -577,7 +577,16 @@ Response: 200 OK
       "ended": "2015-08-28T17:58:41.005Z",
       "last_status_change": "2015-08-28T17:58:45.906Z",
       "superseded": null,
-      "last_modified": "2015-08-28T17:58:46.001Z"
+      "last_modified": "2015-08-28T17:58:46.001Z",
+      "configuration": {
+        "mounts": {},
+        "priority": 50,
+        "output_workspaces": {
+            "default": "defaultworkspace",
+            "outputs": {}
+        },
+        "settings": {}
+      }
     }
 
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -671,6 +680,9 @@ Response: 200 OK
 | superseded         | ISO-8601 Datetime | When the the job became superseded by another job.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| configuration      | JSON Object       | JSON description of the configuration for running the job                      |
+|                    |                   | (See :ref:`rest_v6_job_type_configuration`)                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_job_input_files:

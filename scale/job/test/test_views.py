@@ -120,7 +120,6 @@ class TestJobsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
-        rest.login_client(self.client, is_staff=True)
 
         self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
         self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
