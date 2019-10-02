@@ -869,7 +869,7 @@ class Job(models.Model):
     """
 
     JOB_STATUSES = (
-    ('PENDING', 'PENDING'),
+        ('PENDING', 'PENDING'),
         ('BLOCKED', 'BLOCKED'),
         ('QUEUED', 'QUEUED'),
         ('RUNNING', 'RUNNING'),
