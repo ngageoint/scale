@@ -521,9 +521,9 @@ A strike configuration JSON describes a set of configuration settings that affec
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | .type                      | String         | Required | The type of the monitor. Must be either 'dir-watcher' or 's3'      |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .transfer_suffix           | String         | Required | (dir-watcher)Defines a suffix that is used on the file names to    |
+| .transfer_suffix           | String         | Optional | (dir-watcher)Defines a suffix that is used on the file names to    |
 |                            |                |          | indicate that files are still transferring and have not yet        |
-|                            |                |          | finished being copied into the monitored directory                 |
+|                            |                |          | finished being copied. Defaults to '_tmp'                          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | .sqs_name                  | String         | Required | (s3) Name of the SQS queue that should be polled for object        |
 |                            |                |          | creation notifications that describe new files in the S3 bucket.   |

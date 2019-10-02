@@ -310,7 +310,7 @@ components:
           type: string
           description: The transfer_suffix field is an optional string that defines a suffix that is
             used on the file names to indicate that files are still transferring and have not yet finished
-            being copied into the scanned directory. Only used with dir scanners.
+            being copied into the scanned directory. Only used with dir scanners. Defaults to _tmp if not specified
           example: _tmp
       required:
       - type
