@@ -5,11 +5,35 @@ from __future__ import unicode_literals
 import datetime
 
 import django.contrib.postgres.fields
-from django.db import migrations, models
+from django.db import connection, migrations, models
 
+def disable_indices(apps, schema_editor):
+    print('%s: disabling indices for scale_file' % datetime.datetime.now())
+    update = 'UPDATE pg_index SET indisready=false, indisvalid=false WHERE indrelid = ( SELECT oid FROM pg_class WHERE relname=\'scale_file\' )'
+    with connection.cursor() as cursor:
+        cursor.execute(update)
+        count = cursor.rowcount
+        if count:
+            print('%d indices updated' % count)
+    print('%s: finished disabling indices for scale_file' % datetime.datetime.now())
+    
+def enable_indices(apps, schema_editor):
+    print('%s: disabling indices for scale_file' % datetime.datetime.now())
+    update = 'UPDATE pg_index SET indisready=true, indisvalid=true WHERE indrelid = ( SELECT oid FROM pg_class WHERE relname=\'scale_file\' )'
+    with connection.cursor() as cursor:
+        cursor.execute(update)
+        count = cursor.rowcount
+        if count:
+            print('%d indices updated' % count)
+    print('%s: finished enabling indices for scale_file' % datetime.datetime.now())
+    reindex = 'REINDEX scale_file'
+    with connection.cursor() as cursor:
+        cursor.execute(reindex)
+    print('%s: reindexed scale_file' % datetime.datetime.now())
+    
 def populate_data_type_tags(apps, schema_editor):
     print('%s: starting populate_data_type_tags for scalefile' % datetime.datetime.now())
-    update = 'UPDATE scale_file SET data_type_tags = {}'
+    update = 'UPDATE scale_file SET data_type_tags = \'{}\''
     with connection.cursor() as cursor:
         cursor.execute(update)
         count = cursor.rowcount

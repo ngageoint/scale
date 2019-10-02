@@ -5,11 +5,35 @@ from __future__ import unicode_literals
 import datetime
 
 import django.contrib.postgres.fields
-from django.db import migrations, models
+from django.db import connection, migrations, models
+
+def disable_indices(apps, schema_editor):
+    print('%s: disabling indices for ingest' % datetime.datetime.now())
+    update = 'UPDATE pg_index SET indisready=false, indisvalid=false WHERE indrelid = ( SELECT oid FROM pg_class WHERE relname=\'ingest\' )'
+    with connection.cursor() as cursor:
+        cursor.execute(update)
+        count = cursor.rowcount
+        if count:
+            print('%d indices updated' % count)
+    print('%s: finished disabling indices for ingest' % datetime.datetime.now())
+    
+def enable_indices(apps, schema_editor):
+    print('%s: disabling indices for ingest' % datetime.datetime.now())
+    update = 'UPDATE pg_index SET indisready=true, indisvalid=true WHERE indrelid = ( SELECT oid FROM pg_class WHERE relname=\'ingest\' )'
+    with connection.cursor() as cursor:
+        cursor.execute(update)
+        count = cursor.rowcount
+        if count:
+            print('%d indices updated' % count)
+    print('%s: finished enabling indices for ingest' % datetime.datetime.now())
+    reindex = 'REINDEX ingest'
+    with connection.cursor() as cursor:
+        cursor.execute(reindex)
+    print('%s: reindexed ingest' % datetime.datetime.now())
 
 def populate_data_type_tags(apps, schema_editor):
     print('%s: starting populate_data_type_tags for ingest' % datetime.datetime.now())
-    update = 'UPDATE ingest SET data_type_tags = {}'
+    update = 'UPDATE ingest SET data_type_tags = \'{}\''
     with connection.cursor() as cursor:
         cursor.execute(update)
         count = cursor.rowcount
@@ -26,6 +50,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(disable_indices),
         migrations.AddField(
             model_name='ingest',
             name='data_type_tags',
@@ -37,4 +62,5 @@ class Migration(migrations.Migration):
             name='data_type_tags',
             field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=250), default=list, size=None),
         ),
+        migrations.RunPython(enable_indices),
     ]
