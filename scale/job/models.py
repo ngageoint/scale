@@ -391,7 +391,7 @@ class JobManager(models.Manager):
                 job.execution = None
         else:
             job.execution = None
-        job.configuration = job.job_type.configuration
+        job.configuration =  convert_config_to_v6_json(job.get_job_configuration()).get_dict()
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
