@@ -206,6 +206,7 @@ class RecipeManager(models.Manager):
         :rtype: :class:`recipe.models.RecipeNode`
         """
 
+        #TODO: fix recipe node queries like this
         recipe_job_qry = RecipeNode.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         try:
             recipe_job = recipe_job_qry.get(job_id=job_id, is_original=True)

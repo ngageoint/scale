@@ -392,16 +392,10 @@ class JobManager(models.Manager):
         else:
             job.execution = None
 
-        # Attempt to get related recipe
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from recipe.models import RecipeNode
-
-            recipe_job = RecipeNode.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                           'recipe__recipe_type_rev__recipe_type').get(job=job,
-                                                                                      recipe__is_superseded=False)
-            job.recipe = recipe_job.recipe
-        except RecipeNode.DoesNotExist:
+        # TODO: Test that this gives the same result as before
+        if job.recipe_node:
+            job.recipe = job.recipe_node.recipe
+        else:
             job.recipe = None
 
         return job

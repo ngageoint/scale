@@ -124,6 +124,10 @@ class UpdateRecipe(CommandMessage):
             logger.info('Found %d job(s) that should transition to PENDING', len(pending_job_ids))
             self.new_messages.extend(create_pending_jobs_messages(pending_job_ids, when))
 
+        # TODO: Rework code to create nodes first, then data, then jobs/recipes
+        # maybe have separate messages to create all nodes? a new message to generate the data list for the node
+        # and then a message from each member of the data list to create the job/recipe?
+
         # Create new messages to create recipe nodes
         conditions = []
         recipe_jobs = []
