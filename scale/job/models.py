@@ -391,7 +391,12 @@ class JobManager(models.Manager):
                 job.execution = None
         else:
             job.execution = None
-        job.configuration =  convert_config_to_v6_json(job.get_job_configuration()).get_dict()
+
+        configuration = job.get_job_configuration()
+        manifest = SeedManifest(job.job_type.manifest, do_validate=False)
+        configuration.remove_secret_settings(manifest)
+        job.configuration = convert_config_to_v6_json(configuration).get_dict()
+        
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
