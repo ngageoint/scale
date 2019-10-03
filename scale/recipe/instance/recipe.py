@@ -82,20 +82,6 @@ class RecipeInstance(object):
 
         return nodes_to_create
 
-    def get_job_node(self, job_id):
-        """Returns the node"""
-
-        for node_name in self._definition.get_topological_order():
-            if node_name in self.graph:
-                node = self.graph[node_name]
-                if isinstance(node, JobNodeInstance):
-                    if node.job.id == job_id:
-                        return node
-
-        logger.debug("Unable to find node for job %d" % job_id)
-        return None
-
-
     def get_nodes_to_process_input(self):
         """Returns the node instances within this recipe for nodes that need to process their input
 

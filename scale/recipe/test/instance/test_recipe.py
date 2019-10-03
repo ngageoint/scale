@@ -23,6 +23,7 @@ class TestRecipe(TestCase):
     def setUp(self):
         django.setup()
 
+    #TODO: Update some tests to create multiple jobs per node and test forked dependencies
     def test_get_jobs_to_update(self):
         """Tests calling Recipe.get_jobs_to_update()"""
 

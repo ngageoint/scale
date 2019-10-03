@@ -89,6 +89,7 @@ class NodeDefinition(object):
 
         data_list = [input_data]
         if self.fork_input:
+            data_list = []
             value = input_data.values[self.fork_input]
             if isinstance(value, FileValue) and len(value.file_ids) > 1:
                 for file_id in value.file_ids:
@@ -182,7 +183,7 @@ class JobNodeDefinition(NodeDefinition):
 
     NODE_TYPE = 'job'
 
-    def __init__(self, name, job_type_name, job_type_version, revision_num, multiple):
+    def __init__(self, name, job_type_name, job_type_version, revision_num):
         """Constructor
 
         :param name: The unique name of the node in the recipe graph
@@ -200,7 +201,6 @@ class JobNodeDefinition(NodeDefinition):
         self.job_type_name = job_type_name
         self.job_type_version = job_type_version
         self.revision_num = revision_num
-        self.multiple = multiple
 
 
 class RecipeNodeDefinition(NodeDefinition):
@@ -209,7 +209,7 @@ class RecipeNodeDefinition(NodeDefinition):
 
     NODE_TYPE = 'recipe'
 
-    def __init__(self, name, recipe_type_name, revision_num, multiple):
+    def __init__(self, name, recipe_type_name, revision_num):
         """Constructor
 
         :param name: The unique name of the node in the recipe graph
@@ -224,4 +224,3 @@ class RecipeNodeDefinition(NodeDefinition):
 
         self.recipe_type_name = recipe_type_name
         self.revision_num = revision_num
-        self.multiple = multiple

@@ -250,6 +250,7 @@ class JobNodeInstance(NodeInstance):
 
         super(JobNodeInstance, self).__init__(definition, is_original)
 
+        #TODO: Make sure this gets us the jobs we want
         self.jobs = self.job_set.all()
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
@@ -357,7 +358,7 @@ class RecipeNodeInstance(NodeInstance):
         if not can_process_input:
             return False
 
-        # should we assert that all/none of the recipes has input? if it's a mix we might have a problem
+        # TODO: should we assert that all/none of the recipes has input? if it's a mix we might have a problem
         for recipe in self.recipes:
             if not recipe.has_input():
                 return True

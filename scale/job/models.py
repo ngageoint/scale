@@ -2142,15 +2142,6 @@ class JobTypeManager(models.Manager):
 
         return JobType.objects.get(name='scale-clock', version='1.0.0')
 
-    def get_fork_job_type(self):
-        """Returns the Scale Clock job type
-
-        :returns: The clock job type
-        :rtype: :class:`job.models.JobType`
-        """
-
-        return JobType.objects.get(name='scale-fork-jobs', version='1.0.0')
-
     def get_job_types_v6(self, keywords=None, ids=None, is_active=None, is_system=None, order=None):
         """Returns a list of all job types
 
