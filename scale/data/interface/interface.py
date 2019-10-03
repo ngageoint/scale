@@ -97,6 +97,8 @@ class Interface(object):
 
         warnings = []
 
+        #TODO Remove fork_input parameter from methods and modify code that gets input interfaces so the forked input is set to multiple and json type is changed to array
+
         for parameter in self.parameters.values():
             if parameter.name in connecting_interface.parameters:
                 connecting_parameter = connecting_interface.parameters[parameter.name]

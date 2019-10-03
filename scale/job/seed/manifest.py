@@ -410,16 +410,14 @@ class SeedManifest(object):
             names.append(output_file['name'])
         return names
 
-    def perform_pre_steps(self, job_data, download_files=True):
+    def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
         :type job_data: :class:`job.data.job_data.JobData`
-        :param download_files: Whether the files should be downloaded into the job container.  False for jobs that only need the job id
-        :type download_files: bool
         """
 
-        job_data.setup_job_dir(self.get_input_files(), download_files=download_files)
+        job_data.setup_job_dir(self.get_input_files())
 
     def validate_connection(self, job_conn):
         """Validates the given job connection to ensure that the connection will provide sufficient data to run a job

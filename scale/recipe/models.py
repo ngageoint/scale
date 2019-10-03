@@ -1482,6 +1482,7 @@ class RecipeTypeManager(models.Manager):
         jtr = JobTypeRevision.objects.get_details_v6(node.job_type_name, node.job_type_version, node.revision_num)
         if jtr:
             input = jtr.get_input_interface()
+            #TODO modify input interfaces if fork_input is set so the forked input is multiple and json_type is array
             output = jtr.get_output_interface()
             if node.fork_input:
                 output.multiply()
@@ -1498,6 +1499,7 @@ class RecipeTypeManager(models.Manager):
         rtr = RecipeTypeRevision.objects.get_revision(node.recipe_type_name, node.revision_num)
         if rtr:
             input = rtr.get_input_interface()  # no output interface
+            #TODO: modify inferface so forked input is set to multiple and json_type is array
 
         return input, output
 
