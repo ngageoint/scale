@@ -127,6 +127,7 @@ class JobDetailsSerializerV6(JobSerializerV6):
     execution = JobExecutionDetailsSerializerV6()
     input = serializers.JSONField(source='get_v6_input_data_json')
     output = serializers.JSONField(source='get_v6_output_data_json')
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
 
 
 class JobExecutionLogSerializerV6(JobExecutionSerializerV6):
