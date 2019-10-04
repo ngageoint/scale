@@ -922,7 +922,16 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
   <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
   <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
   <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
+  <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s2">&quot;output_workspaces&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;default&quot;</span><span class="o">:</span> <span class="s2">&quot;defaultworkspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{}</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1094,6 +1103,11 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>configuration</td>
+<td>JSON Object</td>
+<td>JSON description of the configuration for running the job
+(See <a class="reference internal" href="job_type.html#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
 </tr>
 </tbody>
 </table>
