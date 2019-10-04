@@ -393,7 +393,7 @@ class JobManager(models.Manager):
             job.execution = None
 
         configuration = job.get_job_configuration()
-        manifest = SeedManifest(job.job_type.manifest, do_validate=False)
+        manifest = SeedManifest(job.job_type_rev.manifest, do_validate=False)
         configuration.remove_secret_settings(manifest)
         job.configuration = convert_config_to_v6_json(configuration).get_dict()
         

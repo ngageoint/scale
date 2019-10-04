@@ -217,7 +217,18 @@ class TestJobsViewV6(APITestCase):
                 'name': 'output_file_pngs',
                 'workspace_id': workspace.id
         }]}
-        seed_job_type = job_test_utils.create_seed_job_type()
+
+        secret_configuration = {
+            'version': '6',
+            'priority': 50,
+            'output_workspaces': {'default': storage_test_utils.create_workspace().name},
+            'settings': {
+            'DB_HOST': 'som.host.name',
+            'DB_PASS': 'secret_password'
+            }
+        }
+
+        seed_job_type = job_test_utils.create_seed_job_type(configuration=secret_configuration)
         seed_job = job_test_utils.create_job(job_type=seed_job_type, status='RUNNING', input=data_dict)
 
         url = '/%s/jobs/%d/' % (self.api, seed_job.id)
@@ -226,6 +237,7 @@ class TestJobsViewV6(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(result['configuration']['priority'],50)
+        self.assertNotIn('DB_PASS', result['configuration']['settings'])
 
     def test_source_time_successful(self):
         """Tests successfully calling the get jobs by source time"""
