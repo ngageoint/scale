@@ -22,7 +22,6 @@ def convert_interface_to_manifest(apps, schema_editor):
     JobType = apps.get_model('job', 'JobType')
     JobTypeRevision = apps.get_model('job', 'JobTypeRevision')
     RecipeTypeJobLink = apps.get_model('recipe', 'RecipeTypeJobLink')
-    RecipeType = apps.get_model('recipe', 'RecipeType')
 
     unique = 0
     for jt in JobType.objects.all().iterator():
@@ -100,7 +99,7 @@ def convert_interface_to_manifest(apps, schema_editor):
                     'name': get_unique_name(error_name),
                     'title': 'Error Name',
                     'description': 'Error Description',
-                    'category': 'algorithm'
+                    'category': 'job'
                 }
                 errors.append(error)
             
