@@ -22,7 +22,6 @@ def convert_interface_to_manifest(apps, schema_editor):
     JobType = apps.get_model('job', 'JobType')
     JobTypeRevision = apps.get_model('job', 'JobTypeRevision')
     RecipeTypeJobLink = apps.get_model('recipe', 'RecipeTypeJobLink')
-    RecipeType = apps.get_model('recipe', 'RecipeType')
 
     unique = 0
     for jt in JobType.objects.all().iterator():
@@ -91,6 +90,7 @@ def convert_interface_to_manifest(apps, schema_editor):
             settings.append(s)
         
         errors = []
+<<<<<<< HEAD
         ec = jt.error_mapping.get('exit_codes', {})
         for exit_code, error_name in ec.items():
             error = {
@@ -101,6 +101,19 @@ def convert_interface_to_manifest(apps, schema_editor):
                 'category': 'algorithm'
             }
             errors.append(error)
+=======
+        if jt.error_mapping:
+            ec = jt.error_mapping.get('exit_codes', {})
+            for exit_code, error_name in ec.items():
+                error = {
+                    'code': int(exit_code),
+                    'name': get_unique_name(error_name),
+                    'title': 'Error Name',
+                    'description': 'Error Description',
+                    'category': 'job'
+                }
+                errors.append(error)
+>>>>>>> f3db336ab... Couple fixes for the legacy -> seed manifest conversion migration (#1803)
             
         new_manifest = {
             'seedVersion': '1.0.0',
