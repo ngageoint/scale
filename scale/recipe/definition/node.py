@@ -9,7 +9,9 @@ from data.data.data import Data
 from data.interface.exceptions import InvalidInterfaceConnection
 from data.interface.interface import Interface
 from recipe.definition.exceptions import InvalidDefinition
-
+from data.data.exceptions import InvalidData
+import logging
+logger = logging.getLogger(__name__)
 
 class NodeDefinition(object):
     """Represents a node within a recipe definition
@@ -66,7 +68,7 @@ class NodeDefinition(object):
         self.parental_acceptance[node.name] = acceptance
         node.children[self.name] = self
 
-    def generate_input_data(self, recipe_input_data, node_outputs):
+    def generate_input_data(self, recipe_input_data, node_outputs, optional_outputs):
         """Generates the input data for this node
 
         :param recipe_input_data: The input data for the recipe
@@ -80,9 +82,16 @@ class NodeDefinition(object):
         """
 
         input_data = Data()
-
         for connection in self.connections.values():
-            connection.add_value_to_data(input_data, recipe_input_data, node_outputs)
+            try:
+                connection.add_value_to_data(input_data, recipe_input_data, node_outputs)
+            except InvalidData as ex:
+                if not connection.output_name in optional_outputs:
+                    logger.warning("output name %s not found in optional_outputs", connection.output_name)
+                    raise
+                else:
+                    logger.info("InvalidData exception occured due to optional output not present. proceeding with job execution.")
+        
 
         return input_data
 

@@ -264,7 +264,7 @@ class RecipeDefinition(object):
 
         return found
 
-    def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):
+    def generate_node_input_data(self, node_name, recipe_input_data, node_outputs, optional_outputs):
         """Generates the input data for the node with the given name
 
         :param node_name: The name of the node
@@ -279,7 +279,7 @@ class RecipeDefinition(object):
         :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
         """
 
-        return self.graph[node_name].generate_input_data(recipe_input_data, node_outputs)
+        return self.graph[node_name].generate_input_data(recipe_input_data, node_outputs, optional_outputs)
 
     def get_topological_order(self):
         """Returns the recipe node names in a valid topological ordering (dependency order)
