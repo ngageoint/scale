@@ -1458,7 +1458,6 @@ class RecipeTypeManager(models.Manager):
         if not recipe_type_name:
             return warnings
 
-        import pdb; pdb.set_trace()
         # Verify we don't have recursive sub-recipe dependencies - need to go through all sub-recipes
         for node_name in definition.get_topological_order():
             node = definition.graph[node_name]

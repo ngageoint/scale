@@ -910,15 +910,15 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
             'definition': main_definition
         }
 
-        # url = '/%s/recipe-types/validation/' % self.api
-        # response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        # self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        #
-        # results = json.loads(response.content)
-        # self.assertFalse(results['is_valid'])
-        # error_msg = u'Recipe type %s contains sub-recipes of itself. Found within recipe type %s.' % (self.recipe_type1.name, self.recipe_type1.name)
-        # error = [{u'name': u'RECURSIVE_SUBRECIPES', u'description': error_msg}]
-        # self.assertEqual(results['errors'], error)
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        error_msg = u'Recipe type %s contains sub-recipes of itself. Found within recipe type %s.' % (self.recipe_type1.name, self.recipe_type1.name)
+        error = [{u'name': u'RECURSIVE_SUBRECIPES', u'description': error_msg}]
+        self.assertEqual(results['errors'], error)
 
         print('recipeception more than one layer in...')
         # recipeceiption more than one layer in: A -> B -> A
@@ -963,9 +963,6 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         error_msg = u'Recipe type %s contains sub-recipes of itself. Found within recipe type %s.' % (self.recipe_type1.name, subrecipe_type.name)
         error = [{u'name': u'RECURSIVE_SUBRECIPES', u'description': error_msg}]
         self.assertEqual(results['errors'], error)
-
-
-
 
 class TestRecipesViewV6(APITransactionTestCase):
 
