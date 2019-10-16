@@ -1401,7 +1401,6 @@ class RecipeTypeManager(models.Manager):
         diff = {}
 
         definition = None
-
         try:
             definition = RecipeDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
         except InvalidDefinition as ex:
@@ -1415,13 +1414,13 @@ class RecipeTypeManager(models.Manager):
             try:
                 inputs, outputs = self.get_interfaces(definition)
                 warnings.extend(definition.validate(inputs, outputs))
+                self.validate_recursive_subs(name, definition)
             except (InvalidDefinition) as ex:
                 is_valid = False
                 errors.append(ex.error)
                 message = 'Recipe type definition invalid: %s' % ex
                 logger.info(message)
                 pass
-
 
             try:
                 recipe_type = RecipeType.objects.all().get(name=name)
@@ -1441,6 +1440,38 @@ class RecipeTypeManager(models.Manager):
                 pass
 
         return RecipeTypeValidation(is_valid, errors, warnings, diff)
+
+    def validate_recursive_subs(self, recipe_type_name, definition, source_recipe_type_name=None):
+        """Validates the sub-recipes to ensure we don'' end up in a recipeception loop
+        :param recipe_type_name: The name of the recipe type we're looking for
+        :type recipe_type_name: String
+        :param definition: The RecipeDefinition we're searching
+        :type definition: RecipeDefinition
+        :param source_recipe_type_name: The recipe type we're searching the definition of
+        :type source_recipe_type_name: String
+
+        :raises: InvalidDefinition if a recipe type contains a sub-recipe of itself
+        """
+        from recipe.definition.exceptions import InvalidDefinition
+
+        warnings = []
+        if not recipe_type_name:
+            return warnings
+
+        import pdb; pdb.set_trace()
+        # Verify we don't have recursive sub-recipe dependencies - need to go through all sub-recipes
+        for node_name in definition.get_topological_order():
+            node = definition.graph[node_name]
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                if node.recipe_type_name == recipe_type_name:
+                    src_name = source_recipe_type_name if source_recipe_type_name else recipe_type_name
+                    msg = 'Recipe type %s contains sub-recipes of itself. Found within recipe type %s.' % (recipe_type_name, src_name)
+                    raise InvalidDefinition('RECURSIVE_SUBRECIPES', msg)
+                sub_recipe_definition = RecipeType.objects.get_by_natural_key(node.recipe_type_name).get_definition()
+                self.validate_recursive_subs(recipe_type_name, sub_recipe_definition, node.recipe_type_name)
+
+        return warnings
+
 
     def get_interfaces(self, definition):
         """Gets the input and output interfaces for each node in this recipe

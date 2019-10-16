@@ -891,6 +891,82 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
         self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': warnings, u'diff': {}})
 
 
+    def test_recipeception(self):
+        """Tests validating a recipe type with a sub-recipe of itself"""
+
+        main_definition = self.recipe_type1.get_v6_definition_json()
+        main_definition['nodes']['recipetype_1'] = {
+            'dependencies': [],
+            'input': {},
+            'node_type': {
+                'node_type': 'recipe',
+                'recipe_type_name': self.recipe_type1.name,
+                'recipe_type_revision': self.recipe_type1.revision_num
+            }
+        }
+
+        json_data = {
+            'name': self.recipe_type1.name,
+            'definition': main_definition
+        }
+
+        # url = '/%s/recipe-types/validation/' % self.api
+        # response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        # self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        #
+        # results = json.loads(response.content)
+        # self.assertFalse(results['is_valid'])
+        # error_msg = u'Recipe type %s contains sub-recipes of itself. Found within recipe type %s.' % (self.recipe_type1.name, self.recipe_type1.name)
+        # error = [{u'name': u'RECURSIVE_SUBRECIPES', u'description': error_msg}]
+        # self.assertEqual(results['errors'], error)
+
+        print('recipeception more than one layer in...')
+        # recipeceiption more than one layer in: A -> B -> A
+        sub_definition = copy.deepcopy(self.sub_definition)
+        sub_definition['nodes']['recipetype_1'] = {
+            'dependencies': [],
+            'input': {},
+            'node_type': {
+                'node_type': 'recipe',
+                'recipe_type_name': self.recipe_type1.name,
+                'recipe_type_revision': self.recipe_type1.revision_num
+            }
+        }
+        subrecipe_type = recipe_test_utils.create_recipe_type_v6(definition=sub_definition,
+                                                                    name='sub-sub-recipe',
+                                                                    title='Sub Sub Recipe',
+                                                                    description="A sub sub recipe",
+                                                                    is_active=False,
+                                                                    is_system=False)
+        main_definition = self.recipe_type1.get_v6_definition_json()
+        main_definition['nodes']['sub_sub'] = {
+            'dependencies': [],
+            'input': {},
+            'node_type': {
+                'node_type': 'recipe',
+                'recipe_type_name': subrecipe_type.name,
+                'recipe_type_revision': subrecipe_type.revision_num
+            }
+        }
+
+        json_data = {
+            'name': self.recipe_type1.name,
+            'definition': main_definition
+        }
+
+        url = '/%s/recipe-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        error_msg = u'Recipe type %s contains sub-recipes of itself. Found within recipe type %s.' % (self.recipe_type1.name, subrecipe_type.name)
+        error = [{u'name': u'RECURSIVE_SUBRECIPES', u'description': error_msg}]
+        self.assertEqual(results['errors'], error)
+
+
+
+
 class TestRecipesViewV6(APITransactionTestCase):
 
     api = 'v6'
