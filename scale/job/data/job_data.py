@@ -336,7 +336,8 @@ class JobData(object):
                     file_name = os.path.basename(input_file.workspace_path)
                     if input_file.local_file_name:
                         file_name = input_file.local_file_name
-                    env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
+                    env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name,
+                                                          str(input_file.file_id), file_name)
 
         for json_input in self._new_data.values.values():
             if isinstance(json_input, JsonValue):
@@ -446,6 +447,10 @@ class JobData(object):
         """Retrieves the given data files and writes them to the given local directories. If no file with a given ID
         exists, it will not be retrieved and returned in the results.
 
+        We have a very intentional directory structure for files made available in our input workspaces.
+
+        /scale/input_data/INPUT_FILE_INTERFACE_NAME/ID/FILE_NAME
+
         :param data_files: Dict with each file ID mapping to an absolute directory path for downloading and
             bool indicating if job supports partial file download (True).
         :type data_files: {long: type(string, bool)}
@@ -461,11 +466,12 @@ class JobData(object):
 
         file_downloads = []
         results = {}
+
         local_paths = set()  # Pay attention to file name collisions and update file name if needed
         counter = 0
         for scale_file in files:
             partial = data_files[scale_file.id][1]
-            local_path = os.path.join(data_files[scale_file.id][0], scale_file.file_name)
+            local_path = os.path.join(data_files[scale_file.id][0], str(scale_file.id), scale_file.file_name)
             while local_path in local_paths:
                 # Path collision, try a different file name
                 counter += 1
