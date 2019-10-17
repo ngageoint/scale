@@ -112,9 +112,9 @@ class ProcessJobInput(CommandMessage):
         """
 
         from recipe.models import RecipeNode
-
         # Get job input from dependencies in the recipe
         recipe_input_data = job.recipe.get_input_data()
+        nodes = RecipeNode.objects.get_recipe_jobs(job.recipe_id)
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
         for node_output in node_outputs.values():
             if node_output.node_type == 'job' and node_output.id == job.id:
@@ -122,5 +122,23 @@ class ProcessJobInput(CommandMessage):
                 break
 
         definition = job.recipe.recipe_type_rev.get_definition()
-        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs, self._get_optional_outputs(nodes))
         Job.objects.set_job_input_data_v6(job, input_data)
+
+    def _get_optional_outputs(self, nodes):
+        """get list of optional outputs within the recipe
+
+        :param nodes: The nodes of the recipe
+        :type nodes: :class:`dict`
+        """
+
+        optional_output_names = []
+
+        for current_job in nodes.values():
+            job_interface = current_job.get_job_interface()
+            output_interface = job_interface.get_output_interface()
+            for current_output in output_interface.parameters.values():
+                if current_output.required == False:
+                    optional_output_names.append(current_output.name)
+
+        return optional_output_names
