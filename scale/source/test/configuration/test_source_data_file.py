@@ -7,6 +7,7 @@ from django.utils.timezone import now
 from django.test import TestCase
 from mock import call, patch
 
+from job.seed.metadata import SeedMetadata
 from source.configuration.source_data_file import SourceDataFileParseSaver
 from storage.models import ScaleFile, Workspace
 from util.parse import parse_datetime
@@ -53,4 +54,36 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
                  call(self.source_file_2.id, None,    None,    ended, [], None)]
 
         self.assertEqual(mock_save.call_count, 2)
+        mock_save.assert_has_calls(calls, any_order=True)
+
+    @patch('source.configuration.source_data_file.SourceFile.objects.save_parse_results')
+    def test_successful(self, mock_save):
+        """Tests calling SourceDataFileParseSaver.save_parse_results_v6() successfully"""
+
+        started = '2018-06-01T00:00:00Z'
+        ended = '2018-06-01T01:00:00Z'
+        types = ['one', 'two', 'three']
+        new_workspace_path = 'awful/path'
+        data = {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [0, 1]
+                        },
+                        'properties':
+                            {
+                                'dataStarted': started,
+                                'dataEnded': ended,
+                                'dataTypes': types,
+                                'newWorkspacePath': new_workspace_path
+                            }
+                    }
+
+        metadata = {1: SeedMetadata.metadata_from_json(data, do_validate=False)}
+
+        SourceDataFileParseSaver().save_parse_results_v6(metadata)
+
+        calls = [call(1, data, started, ended, types, new_workspace_path)]
+
+        self.assertEqual(mock_save.call_count, 1)
         mock_save.assert_has_calls(calls, any_order=True)
