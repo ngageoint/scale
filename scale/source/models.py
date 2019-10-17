@@ -8,10 +8,8 @@ from django.db import transaction
 from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
-from job.models import Job
 from storage.brokers.broker import FileMove
 from storage.models import ScaleFile
-
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +17,7 @@ logger = logging.getLogger(__name__)
 class SourceFileManager(models.GeoManager):
     """Provides additional methods for handling source files
     """
-
+    
     def filter_sources(self, started=None, ended=None, time_field=None, is_parsed=None, file_name=None, order=None):
         """Returns a query for source models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
@@ -172,6 +170,8 @@ class SourceFileManager(models.GeoManager):
             order.append('id')
         else:
             order = ['last_modified', 'id']
+        
+        from job.models import Job
         jobs = Job.objects.filter_jobs_related_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                                job_type_ids=job_type_ids, job_type_names=job_type_names,
                                                batch_ids=batch_ids, error_categories=error_categories, order=order)
