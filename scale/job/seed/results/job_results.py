@@ -124,7 +124,7 @@ class JobResults(object):
         output_files = self._capture_output_files(job_interface.get_seed_output_files())
 
         self._capture_output_json(job_interface.get_seed_output_json(), job_data)
-        self._capture_source_metadata_files(job_interface.get_seed_input_files())
+        self._capture_source_metadata_files(job_interface.get_seed_input_files(), job_data)
         self._store_output_data_files(output_files, job_data, job_exe)
 
     def _capture_output_files(self, seed_output_files):
@@ -203,7 +203,7 @@ class JobResults(object):
         except IOError:
             logger.warning('No seed.outputs.json file found to process.')
 
-    def _capture_source_metadata_files(self, seed_input_files):
+    def _capture_source_metadata_files(self, seed_input_files, job_data):
         """Identify any input files that have additional metadata provided for them.
 
         The convention defined for metadata capture on source files is:
@@ -215,29 +215,40 @@ class JobResults(object):
 
         :param seed_input_files: list of input files elements
         :type seed_input_files: [`job.seed.types.SeedInputFiles`]
+        :param job_data: The job data
+        :type job_data: :class:`job.data.job_data.JobData`
         :raises InvalidSeedMetadataDefinition
         """
 
         # Dict of detected files and associated metadata
         captured_files = {}
+        
+        name_to_ids = job_data.get_input_file_ids_by_input()
 
         # Iterate over each files object for names
         for input_file in seed_input_files:
-            # check to see if there is a side-car metadata file
+            if input_file.multiple:
+                logger.warning('We do not currently support capturing source file metadata for multiple inputs.')
+                continue
+            
+            # Check to see if there is a side-car metadata file
             metadata_file = input_file.name + METADATA_SUFFIX
 
-            # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
+            # If metadata is found, attempt to grab any Scale relevant data and
+            # place in ProductFileMetadata tuple
             if os.path.isfile(metadata_file):
                 logger.info('Capturing source file metadata from detected side-car file: %s' % metadata_file)
 
                 with open(metadata_file) as metadata_file_handle:
                     try:
                         metadata = SeedMetadata.metadata_from_json(json.load(metadata_file_handle))
-                        captured_files[input_file.name] = metadata
+                        # Get ID for name
+                        file_id = name_to_ids[input_file.name][0]
+                        captured_files[file_id] = metadata
                     except InvalidSeedMetadataDefinition:
                         logger.exception('Unable to process data in source file metadata side-car.')
 
-        SourceDataFileParseSaver().save_parse_results_v6(metadata)
+        SourceDataFileParseSaver().save_parse_results_v6(captured_files)
 
 
     def _store_output_data_files(self, data_files, job_data, job_exe):

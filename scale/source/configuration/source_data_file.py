@@ -53,7 +53,7 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
         source_file_ids = ScaleFile.objects.filter(id__in=ids, file_type='SOURCE').values('id')
         ignored_ids = list(set(ids) - set(source_file_ids))
         if len(ignored_ids):
-            logger.warning('Ignored all parse results for file IDs not of SOURCE file_type: ', ignored_ids)
+            logger.warning('Ignored all parse results for file IDs not of SOURCE file_type: ' + ','.join(ignored_ids))
 
         for id in source_file_ids:
             geo_json = metadata[int(id)]
