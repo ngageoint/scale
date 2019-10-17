@@ -83,7 +83,7 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
 
         SourceDataFileParseSaver().save_parse_results_v6(metadata)
 
-        calls = [call(1, data, started, ended, types, new_workspace_path)]
+        calls = [call(1, data, parse_datetime(started), parse_datetime(ended), types, new_workspace_path)]
 
         self.assertEqual(mock_save.call_count, 1)
         mock_save.assert_has_calls(calls, any_order=True)

@@ -148,5 +148,5 @@ class TestJobData(TransactionTestCase):
         data_files = {1: ("/scale/input/INPUT_THING", False), 2: ("/scale/input/INPUT_OTHER", True)}
 
         result = job_data._retrieve_files(data_files)
-        self.assertEqual(result, {1: "/scale/input/INPUT_THING/1/input_thing_file",
-                                  2: "/scale/input/INPUT_OTHER/2/input_other_file"})
+        self.assertEqual(result, {1: "/scale/input/INPUT_THING/input_thing_file",
+                                  2: "/scale/input/INPUT_OTHER/input_other_file"})
