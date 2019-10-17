@@ -264,7 +264,7 @@ class RecipeDefinition(object):
 
         return found
 
-    def generate_node_input_data(self, node_name, recipe_input_data, node_outputs, optional_outputs):
+    def generate_node_input_data(self, node_name, recipe_input_data, node_outputs, optional_outputs=None):
         """Generates the input data for the node with the given name
 
         :param node_name: The name of the node
