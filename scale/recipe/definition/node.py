@@ -90,7 +90,7 @@ class NodeDefinition(object):
                     logger.warning("output name %s not found in optional_outputs", connection.output_name)
                     raise
                 else:
-                    logger.info("InvalidData exception occured due to optional output not present. proceeding with job execution.")
+                    logger.info("InvalidData exception occured due to optional output not present. Proceeding with job execution.")
         
 
         return input_data
