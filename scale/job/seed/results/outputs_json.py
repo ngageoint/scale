@@ -1,18 +1,10 @@
 import json
-import logging
 import os
 from jsonschema import validate
 
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 
-logger = logging.getLogger(__name__)
-
 SEED_OUTPUTS_JSON_FILENAME = 'seed.outputs.json'
-SEED_OUTPUTS_PARSE_RESULTS = 'parse_results'
-
-SCHEMA_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), '/../schema/seed.metadata.schema.json')
-with open(SCHEMA_FILENAME) as schema_file:
-    SOURCE_METADATA_SCHEMA = json.load(schema_file)
 
 
 class SeedOutputsJson(object):
@@ -74,30 +66,3 @@ class SeedOutputsJson(object):
                 values[remap[key]] = value
 
         return values
-
-    def get_supplemental_metadata(self, job_data):
-        """Special handling for reserved keyword within output file for supplemental metadata.
-
-        Will look for key inputFileMetadata
-
-        :param job_data: The job data
-        :type job_data: :class:`job.data.job_data.JobData`
-        :return: All supplemental metadata discovered that matches an input file provided to job
-        :rtype: dict
-        """
-
-        response = {}
-
-        if SEED_OUTPUTS_PARSE_RESULTS in self._dict:
-            logger.info('Found {} key in {} file...'.format(SEED_OUTPUTS_PARSE_RESULTS,
-                                                            SEED_OUTPUTS_JSON_FILENAME))
-            # Grab all keys in the parse_results dict
-            for local_path, metadata in self._dict[SEED_OUTPUTS_PARSE_RESULTS].iteritems():
-                file_id = job_data.get_id_from_path(local_path)
-                if file_id:
-                    validate(metadata, SOURCE_METADATA_SCHEMA)
-                    response[file_id] = metadata
-                else:
-                    logger.warning('Unable to find corresponding file id for local path: ', local_path)
-
-        return response
