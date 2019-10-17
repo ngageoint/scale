@@ -137,11 +137,8 @@ class ProcessJobInput(CommandMessage):
         for current_job in nodes.values():
             job_interface = current_job.get_job_interface()
             output_interface = job_interface.get_output_interface()
-            logger.debug("collecting optional outputs")
             for current_output in output_interface.parameters.values():
-                logger.debug("looking at %s, which is required: %r", current_output.name, current_output.required)
                 if current_output.required == False:
                     optional_output_names.append(current_output.name)
 
-        logger.debug("total optional outputs is %d",len(optional_output_names))
         return optional_output_names
