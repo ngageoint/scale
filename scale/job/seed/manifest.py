@@ -290,6 +290,15 @@ class SeedManifest(object):
 
         return self.get_inputs().get('json', [])
 
+    def get_seed_input_files(self):
+        """Get the list of SeedInputFiles typed results
+
+        :return: list of output files elements
+        :rtype: [`job.seed.types.SeedInputFiles`]
+        """
+
+        return [SeedInputFiles(x) for x in self.get_input_files()]
+
     def get_seed_output_files(self):
         """Get the list of SeedOutputFiles typed results
 

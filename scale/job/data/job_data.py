@@ -52,7 +52,16 @@ class JobData(object):
         if not data:
             data = {}
 
+        self._local_path_to_id = {}
+
         self._new_data = DataV6(data, do_validate=True).get_data()
+
+        for x in self.get_input_file_info():
+            self._local_path_to_id[x[0]] = self.get_local_path(x[1], x[0])
+
+    def get_id_from_path(self, local_path):
+        if local_path in self._local_path_to_id:
+            return self._local_path_to_id[local_path]
 
     def add_file_input(self, name, file_id):
         """Adds a new file parameter to this job data.
@@ -62,6 +71,7 @@ class JobData(object):
         """
 
         self._new_data.add_value(FileValue(name, [file_id]))
+        self._local_path_to_id[file_id] = self.get_local_path(name, file_id)
 
     def add_file_list_input(self, name, file_ids):
         """Adds a new files parameter to this job data.
@@ -73,6 +83,8 @@ class JobData(object):
         """
 
         self._new_data.add_value(FileValue(name, file_ids))
+        for id in file_ids:
+            self._local_path_to_id[id] = self.get_local_path(name, id)
 
     def add_json_input(self, data, add_to_internal=True):
         """Adds a new json parameter to this job data.
@@ -138,6 +150,14 @@ class JobData(object):
                 for file_id in input_value.file_ids:
                     file_ids.add(file_id)
         return file_ids
+
+    def get_local_path(self, key, id):
+        """Build a unique absolute path for a file id
+
+        :return: string
+        """
+
+        return os.path.join(SCALE_JOB_EXE_INPUT_PATH, key, id)
 
     def get_input_file_ids_by_input(self):
         """Returns the list of file IDs for each input that holds files
@@ -333,11 +353,8 @@ class JobData(object):
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
                 else:
                     input_file = input_files[file_input.name][0]
-                    file_name = os.path.basename(input_file.workspace_path)
-                    if input_file.local_file_name:
-                        file_name = input_file.local_file_name
-                    env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name,
-                                                          str(input_file.file_id), file_name)
+                    # Use centralized method for name generation
+                    env_vars[env_var_name] = self.get_local_path(file_input.name, input_file.file_id)
 
         for json_input in self._new_data.values.values():
             if isinstance(json_input, JsonValue):
@@ -358,7 +375,6 @@ class JobData(object):
         data_files = [SeedInputFiles(x) for x in data_files]
         # Download the job execution input files
         self.retrieve_input_data_files(data_files)
-
 
     def validate_input_files(self, files):
         """Validates the given file parameters to make sure they are valid with respect to the job interface.
@@ -448,8 +464,9 @@ class JobData(object):
         exists, it will not be retrieved and returned in the results.
 
         We have a very intentional directory structure for files made available in our input workspaces.
+        This ensure collisions never exist.
 
-        /scale/input_data/INPUT_FILE_INTERFACE_NAME/ID/FILE_NAME
+        /scale/input_data/INPUT_FILE_INTERFACE_NAME/ID
 
         :param data_files: Dict with each file ID mapping to an absolute directory path for downloading and
             bool indicating if job supports partial file download (True).
@@ -467,18 +484,9 @@ class JobData(object):
         file_downloads = []
         results = {}
 
-        local_paths = set()  # Pay attention to file name collisions and update file name if needed
-        counter = 0
         for scale_file in files:
             partial = data_files[scale_file.id][1]
-            local_path = os.path.join(data_files[scale_file.id][0], str(scale_file.id), scale_file.file_name)
-            while local_path in local_paths:
-                # Path collision, try a different file name
-                counter += 1
-                new_file_name = '%i_%s' % (counter, scale_file.file_name)
-                local_path = os.path.join(data_files[scale_file.id][0], new_file_name)
-            local_paths.add(local_path)
-
+            local_path = self.get_local_path(data_files[scale_file.id][0], scale_file.id)
             file_downloads.append(FileDownload(scale_file, local_path, partial))
             results[scale_file.id] = local_path
 

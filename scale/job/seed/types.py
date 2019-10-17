@@ -7,10 +7,10 @@ import os
 from job.configuration.results.exceptions import OutputCaptureError, MissingRequiredOutput, UnexpectedMultipleOutputs
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.seed.metadata import METADATA_SUFFIX
-from job.seed.results.outputs_json import SEED_OUPUTS_JSON_FILENAME
+from job.seed.results.outputs_json import SEED_OUTPUTS_JSON_FILENAME
 
 LEGACY_RESULTS_MANIFEST = 'results_manifest.json'
-SPECIAL_FILES = [METADATA_SUFFIX, SEED_OUPUTS_JSON_FILENAME, LEGACY_RESULTS_MANIFEST]
+SPECIAL_FILES = [METADATA_SUFFIX, SEED_OUTPUTS_JSON_FILENAME, LEGACY_RESULTS_MANIFEST]
 
 logger = logging.getLogger(__name__)
 

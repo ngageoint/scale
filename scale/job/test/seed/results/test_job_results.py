@@ -118,6 +118,6 @@ class TestSeedJobResults(TransactionTestCase):
     def test_capture_output_json(self):
         results = JobResults()
         with patch("__builtin__.open", mock_open(read_data=json.dumps(self.outputs_json_dict))):
-            results._capture_output_json(self.seed_outputs_json)
+            results._capture_output_json_and_supplemental_input_metadata(self.seed_outputs_json)
 
         self.assertDictEqual(results.get_dict(), {'files': {}, 'json': {'INPUT_SIZE': 50}, 'version': '7'})

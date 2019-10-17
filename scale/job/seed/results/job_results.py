@@ -15,6 +15,7 @@ from job.seed.exceptions import InvalidSeedMetadataDefinition
 from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
 from job.seed.results.outputs_json import SeedOutputsJson
 from product.types import ProductFileMetadata
+from source.configuration.source_data_file import SourceDataFileParseSaver
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +123,7 @@ class JobResults(object):
 
         output_files = self._capture_output_files(job_interface.get_seed_output_files())
 
-        self._capture_output_json(job_interface.get_seed_output_json())
+        self._capture_output_json(job_interface.get_seed_output_json(), job_data)
 
         self._store_output_data_files(output_files, job_data, job_exe)
 
@@ -177,11 +178,18 @@ class JobResults(object):
 
         return captured_files
 
-    def _capture_output_json(self, output_json_interface):
-        """Captures any JSON property output from a job execution
+    def _capture_output_json(self, output_json_interface, job_data):
+        """Captures any JSON property output and supplemental metadata to associate with inputs from a job execution
+
+
+        This will provide replacement for the legacy parse_results functionality and allow source files to be
+        augmented with additional metadata by jobs with domain specific knowledge.
+
 
         :param outputs_json_interface: List of output json interface objects
         :type outputs_json_interface: [:class:`job.seed.types.SeedOutputJson`]
+        :param job_data: The job data
+        :type job_data: :class:`job.data.job_data.JobData`
         """
 
         # Identify any outputs from seed.outputs.json
@@ -189,6 +197,8 @@ class JobResults(object):
             schema = SeedOutputsJson.construct_schema(output_json_interface)
             outputs = SeedOutputsJson.read_outputs(schema)
             seed_outputs_json = outputs.get_values(output_json_interface)
+            metadata = outputs.get_supplemental_metadata(job_data)
+            SourceDataFileParseSaver().save_parse_results_v6(metadata)
 
             for key in seed_outputs_json:
                 self.add_output_json(key, seed_outputs_json[key])
