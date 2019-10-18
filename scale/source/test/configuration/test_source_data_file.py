@@ -81,9 +81,9 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
 
         metadata = {1: SeedMetadata.metadata_from_json(data, do_validate=False)}
 
-        SourceDataFileParseSaver().save_parse_results_v6(metadata)
-
         calls = [call(1, data, parse_datetime(started), parse_datetime(ended), types, new_workspace_path)]
+
+        SourceDataFileParseSaver().save_parse_results_v6(metadata)
 
         self.assertEqual(mock_save.call_count, 1)
         mock_save.assert_has_calls(calls, any_order=True)
