@@ -4,7 +4,7 @@ import datetime
 
 import django
 from django.utils.timezone import now
-from django.test import TestCase
+from django.test import TransactionTestCase
 from mock import call, patch
 
 from job.seed.metadata import SeedMetadata
@@ -13,7 +13,7 @@ from storage.models import ScaleFile, Workspace
 from util.parse import parse_datetime
 
 
-class TestSourceDataFileParseSaverSaveParseResults(TestCase):
+class TestSourceDataFileParseSaverSaveParseResults(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -57,7 +57,7 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
         mock_save.assert_has_calls(calls, any_order=True)
 
     @patch('source.configuration.source_data_file.SourceFile.objects.save_parse_results')
-    def test_successful(self, mock_save):
+    def test_successful_v6(self, mock_save):
         """Tests calling SourceDataFileParseSaver.save_parse_results_v6() successfully"""
 
         started = '2018-06-01T00:00:00Z'
@@ -79,9 +79,9 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
                             }
                     }
 
-        metadata = {1: SeedMetadata.metadata_from_json(data, do_validate=False)}
+        metadata = {self.source_file_1.id: SeedMetadata.metadata_from_json(data, do_validate=False)}
 
-        calls = [call(1, data, parse_datetime(started), parse_datetime(ended), types, new_workspace_path)]
+        calls = [call(self.source_file_1.id, data, parse_datetime(started), parse_datetime(ended), types, new_workspace_path)]
 
         SourceDataFileParseSaver().save_parse_results_v6(metadata)
 
