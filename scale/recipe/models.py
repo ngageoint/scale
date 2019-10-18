@@ -1282,14 +1282,7 @@ class RecipeTypeManager(models.Manager):
             else:
                 raise InvalidDefinition('INVALID_DEFINITION', 'This version of the recipe definition is invalid to save')
 
-            # try:
             self.validate_recursive_subs(recipe_type.name, definition)
-            # except InvalidDefinition as ex:
-            #     is_valid = False
-            #     errors.append(ex.error)
-            #     message = 'Recipe type definition invalid: %s' % ex
-            #     logger.info(message)
-            #     pass
 
             recipe_type.revision_num = recipe_type.revision_num + 1
 
@@ -1452,11 +1445,11 @@ class RecipeTypeManager(models.Manager):
         return RecipeTypeValidation(is_valid, errors, warnings, diff)
 
     def validate_recursive_subs(self, recipe_type_name, definition, source_recipe_type_name=None):
-        """Validates the sub-recipes to ensure we don'' end up in a recipeception loop
+        """Validates the sub-recipes to ensure we don't end up in a recipeception loop
         :param recipe_type_name: The name of the recipe type we're looking for
         :type recipe_type_name: String
         :param definition: The RecipeDefinition we're searching
-        :type definition: RecipeDefinition
+        :type definition: :class:`recipe.definition.definition.RecipeDefinition`
         :param source_recipe_type_name: The recipe type we're searching the definition of
         :type source_recipe_type_name: String
 
