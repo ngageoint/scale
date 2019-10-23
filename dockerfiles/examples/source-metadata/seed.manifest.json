@@ -1,0 +1,45 @@
+{
+  "seedVersion": "1.0.0",
+  "job": {
+    "name": "source-metadata",
+    "jobVersion": "1.0.0",
+    "packageVersion": "1.0.0",
+    "title": "Source Metadata Augment",
+    "description": "Applies supplementary metadata to an input file.",
+    "tags": [
+      "metadata",
+      "source"
+    ],
+    "maintainer": {
+      "name": "John Doe",
+      "organization": "E-corp",
+      "email": "jdoe@example.com",
+      "url": "http://www.example.com",
+      "phone": "666-555-4321"
+    },
+    "timeout": 3600,
+    "interface": {
+      "command": "sh /generate-metadata.sh",
+      "inputs": {
+        "files": [
+          {
+            "name": "INPUT_FILE",
+            "required": true
+          }
+        ]
+      }
+    },
+    "resources": {
+      "scalar": [
+        {
+          "name": "cpus",
+          "value": 0.25
+        },
+        {
+          "name": "mem",
+          "value": 128
+        }
+      ]
+    }
+  }
+}
