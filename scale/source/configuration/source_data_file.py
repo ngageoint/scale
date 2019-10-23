@@ -50,6 +50,7 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
         """
 
         ids = id_to_metadata.keys()
+        logger.debug('List of IDs to update: {}'.format(ids))
         source_file_ids = ScaleFile.objects.filter(id__in=ids, file_type='SOURCE').values_list('id', flat=True)
         ignored_ids = list(set(ids) - set(source_file_ids))
         if len(ignored_ids):
@@ -70,5 +71,7 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
             if data_ended:
                 data_ended = parse_datetime(data_ended)
 
+            logger.debug('Captured input for file ID {}:\n{}\n{}\n{}\n{}'.format(file_id, geo_json,
+                                                                                 data_started, data_ended, data_types))
             SourceFile.objects.save_parse_results(file_id, geo_json, data_started, data_ended, data_types,
                                                   new_workspace_path)
