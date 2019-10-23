@@ -3215,6 +3215,26 @@ transaction. An argument of None for a field indicates that the field should not
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="recipe.models.RecipeTypeManager.validate_recursive_subs">
+<code class="descname">validate_recursive_subs</code><span class="sig-paren">(</span><em>recipe_type_name</em>, <em>definition</em>, <em>source_recipe_type_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recursive_subs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the sub-recipes to ensure we don&#8217;t end up in a recipeception loop
+:param recipe_type_name: The name of the recipe type we&#8217;re looking for
+:type recipe_type_name: String
+:param definition: The RecipeDefinition we&#8217;re searching
+:type definition: <a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>
+:param source_recipe_type_name: The recipe type we&#8217;re searching the definition of
+:type source_recipe_type_name: String</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">InvalidDefinition if a recipe type contains a sub-recipe of itself</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

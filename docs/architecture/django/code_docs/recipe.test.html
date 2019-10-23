@@ -703,6 +703,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_recipeception">
+<code class="descname">test_edit_recipeception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_recipeception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a recipe with sub-recipes of itself</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_simple">
 <code class="descname">test_edit_simple</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_simple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing only the basic attributes of a recipe type</p>
@@ -829,6 +835,12 @@
 <dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_recipe_not_found_warning">
 <code class="descname">test_recipe_not_found_warning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_recipe_not_found_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a recipe definition against a recipe-type that doesn&#8217;t exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationViewV6.test_recipeception">
+<code class="descname">test_recipeception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_recipeception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a recipe type with a sub-recipe of itself</p>
 </dd></dl>
 
 <dl class="method">
@@ -1252,7 +1264,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>10</em>, <em>17</em>, <em>14</em>, <em>59</em>, <em>8</em>, <em>437861</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2019</em>, <em>10</em>, <em>23</em>, <em>18</em>, <em>0</em>, <em>30</em>, <em>224619</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 
