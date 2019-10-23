@@ -138,3 +138,15 @@ class TestJobData(TransactionTestCase):
 
         result = job_data.retrieve_input_data_files(data_files)
         self.assertEqual(result, {})
+
+    @patch('job.data.job_data.ScaleFile.objects.download_files')
+    @patch('job.data.job_data.ScaleFile.objects.filter')
+    def test_retrieve_files_with_id(self, filter, download):
+        job_data = JobData({'files': {}})
+        filter.return_value = [Mock(id=1, file_name='input_thing_file'), Mock(id=2, file_name='input_other_file')]
+
+        data_files = {1: ("/scale/input/INPUT_THING", False), 2: ("/scale/input/INPUT_OTHER", True)}
+
+        result = job_data._retrieve_files(data_files)
+        self.assertEqual(result, {1: "/scale/input/INPUT_THING/input_thing_file",
+                                  2: "/scale/input/INPUT_OTHER/input_other_file"})

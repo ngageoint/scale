@@ -289,6 +289,66 @@
 			"response": []
 		},
 		{
+			"name": "Create Source Metadata Job Type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ffb160bb-1431-4d8e-8131-06c657aa696f",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Job Type name is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql('source-metadata');",
+							"});",
+							"pm.test(\"Docker image is consistent with spec\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.docker_image).to.include(jsonData.manifest.job.name + '-' + jsonData.manifest.job.jobVersion + '-seed:' + jsonData.manifest.job.packageVersion);",
+							"});",
+							"pm.test(\"Default output workspace configured\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.configuration.output_workspaces.default).to.eql(\"testing-host-output\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"icon_code\": \"f2b9\",\n    \"docker_image\": \"geointseed/source-metadata-1.0.0-seed:1.0.0\",\n    \"manifest\": {\n        \"seedVersion\": \"1.0.0\",\n        \"job\": {\n            \"name\": \"source-metadata\",\n            \"jobVersion\": \"1.0.0\",\n            \"packageVersion\": \"1.0.0\",\n            \"title\": \"Source Metadata Augment\",\n            \"description\": \"Applies supplementary metadata to an input file.\",\n            \"tags\": [\n                \"metadata\",\n                \"source\"\n            ],\n            \"maintainer\": {\n                \"name\": \"John Doe\",\n                \"organization\": \"E-corp\",\n                \"email\": \"jdoe@example.com\",\n                \"url\": \"http://www.example.com\",\n                \"phone\": \"666-555-4321\"\n            },\n            \"timeout\": 3600,\n            \"interface\": {\n                \"command\": \"sh /generate-metadata.sh\",\n                \"inputs\": {\n                    \"files\": [\n                        {\n                            \"name\": \"INPUT_FILE\",\n                            \"required\": true\n                        }\n                    ]\n                }\n            },\n            \"resources\": {\n                \"scalar\": [\n                    {\n                        \"name\": \"cpus\",\n                        \"value\": 0.25\n                    },\n                    {\n                        \"name\": \"mem\",\n                        \"value\": 128\n                    }\n                ]\n            }\n        }\n    },\n    \"configuration\": {\n        \"output_workspaces\": {\n            \"default\": \"testing-host-output\"\n        },\n        \"priority\": 1\n    }\n}"
+				},
+				"url": {
+					"raw": "{{SCALE_BASE}}/v6/job-types/",
+					"host": [
+						"{{SCALE_BASE}}"
+					],
+					"path": [
+						"v6",
+						"job-types",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create Gray Scaler Job Type",
 			"event": [
 				{
@@ -384,7 +444,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"Image Stuff\",\n    \"description\": \"Flip and greyscale images\",\n    \"definition\": {\n        \"input\": {\n            \"files\": [\n                {\n                    \"name\": \"INPUT_FILE\",\n                    \"required\": true,\n                    \"media_types\": [\n                        \"application/octet-stream\"\n                    ]\n                }\n            ],\n            \"json\": []\n        },\n        \"nodes\": {\n            \"flip-image\": {\n                \"dependencies\": [],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"recipe\",\n                        \"input\": \"INPUT_FILE\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"flip-image\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            },\n            \"grayscale-image\": {\n                \"dependencies\": [\n                    {\n                        \"name\": \"flip-image\",\n                        \"acceptance\": false\n                    }\n                ],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"dependency\",\n                        \"node\": \"flip-image\",\n                        \"output\": \"flipped_image\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"grayscale-image\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            }\n        }\n    }\n}"
+					"raw": "{\n    \"title\": \"Image Stuff\",\n    \"description\": \"Apply metadata, flip and greyscale images\",\n    \"definition\": {\n        \"input\": {\n            \"files\": [\n                {\n                    \"name\": \"INPUT_FILE\",\n                    \"required\": true,\n                    \"media_types\": [\n                        \"application/octet-stream\"\n                    ]\n                }\n            ],\n            \"json\": []\n        },\n        \"nodes\": {\n        \t\"source-metadata\": {\n                \"dependencies\": [],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"recipe\",\n                        \"input\": \"INPUT_FILE\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"source-metadata\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            },\n            \"flip-image\": {\n                \"dependencies\": [],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"recipe\",\n                        \"input\": \"INPUT_FILE\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"flip-image\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            },\n            \"grayscale-image\": {\n                \"dependencies\": [\n                    {\n                        \"name\": \"flip-image\",\n                        \"acceptance\": false\n                    }\n                ],\n                \"input\": {\n                    \"INPUT_FILE\": {\n                        \"type\": \"dependency\",\n                        \"node\": \"flip-image\",\n                        \"output\": \"flipped_image\"\n                    }\n                },\n                \"node_type\": {\n                    \"node_type\": \"job\",\n                    \"job_type_name\": \"grayscale-image\",\n                    \"job_type_version\": \"1.0.0\",\n                    \"job_type_revision\": 1\n                }\n            }\n        }\n    }\n}"
 				},
 				"url": {
 					"raw": "{{SCALE_BASE}}/v6/recipe-types/",

@@ -1,11 +1,11 @@
 import json
-
 import os
 from jsonschema import validate
 
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 
-SEED_OUPUTS_JSON_FILENAME = 'seed.outputs.json'
+SEED_OUTPUTS_JSON_FILENAME = 'seed.outputs.json'
+
 
 class SeedOutputsJson(object):
     def __init__(self, data, schema=None):
@@ -16,7 +16,7 @@ class SeedOutputsJson(object):
 
     @staticmethod
     def read_outputs(schema):
-        file_path = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, SEED_OUPUTS_JSON_FILENAME)
+        file_path = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, SEED_OUTPUTS_JSON_FILENAME)
         with open(file_path) as in_file:
             in_json = json.load(in_file)
 
@@ -54,7 +54,7 @@ class SeedOutputsJson(object):
         :param interface_outputs: Seed Interface definition for types of JSON outputs
         :type interface_outputs: :class:`job.seed.types.SeedOutputJson`
         :return: All outputs captured from seed.outputs.json in { key: value } format
-        :type: { string: typed_value }
+        :rtype: { string: typed_value }
         """
 
         # Used to remap any keys to the associated named interface JSON output

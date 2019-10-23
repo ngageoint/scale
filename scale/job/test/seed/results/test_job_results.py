@@ -7,7 +7,7 @@ import os
 from django.test import TransactionTestCase
 from job.configuration.results.exceptions import OutputCaptureError
 from job.seed.results.job_results import JobResults
-from job.seed.types import SeedOutputFiles, SeedOutputJson
+from job.seed.types import SeedOutputFiles, SeedOutputJson, SeedInputFiles
 from mock import patch, mock_open
 from product.types import ProductFileMetadata
 
@@ -17,6 +17,17 @@ class TestSeedJobResults(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        self.test_input_snippets = [
+            {
+                "name": "INPUT_FILE",
+                "multiple": False
+            },
+            {
+                "name": "INPUT_COLLECTION",
+                "multiple": True
+            }
+        ]
 
         self.test_output_snippet = {
             "name": "OUTPUT_TIFFS",
@@ -114,6 +125,37 @@ class TestSeedJobResults(TransactionTestCase):
                                                                     source_sensor='X1',
                                                                     source_collection='12345A',
                                                                     source_task='Calibration').__dict__)
+
+    @patch('os.path.join')
+    def test_capture_source_metadata_files(self, join):
+        input_files = [SeedInputFiles(x) for x in self.test_input_snippets]
+        name_to_id = {"INPUT_FILE": [1]}
+        metadata_name = 'INPUT_FILE.metadata.json'
+        join.return_value = metadata_name
+
+        metadata = {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [0, 1]
+            },
+            'properties':
+            {
+                'dataStarted': '2018-06-01T00:00:00Z',
+                'dataEnded': '2018-06-01T01:00:00Z',
+                'dataTypes': ['one', 'two', 'three']
+            }
+        }
+
+        with open(metadata_name, 'w') as metadata_file:
+            json.dump(metadata, metadata_file)
+
+        outputs = JobResults()._capture_source_metadata_files(input_files, name_to_id)
+
+        os.remove(metadata_name)
+
+        self.assertEqual(len(outputs), 1)
+        self.assertDictEqual(outputs[1].data, metadata)
 
     def test_capture_output_json(self):
         results = JobResults()

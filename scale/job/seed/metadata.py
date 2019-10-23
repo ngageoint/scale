@@ -88,8 +88,8 @@ class SeedMetadata(object):
 
         return deepcopy(self._data)
 
-    def get_property(self, key):
-        return self.properties.get(key)
+    def get_property(self, key, default=None):
+        return self.properties.get(key, default)
 
     def set_property(self, key, value):
         self.properties[key] = value

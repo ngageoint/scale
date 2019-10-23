@@ -4,15 +4,16 @@ import datetime
 
 import django
 from django.utils.timezone import now
-from django.test import TestCase
+from django.test import TransactionTestCase
 from mock import call, patch
 
+from job.seed.metadata import SeedMetadata
 from source.configuration.source_data_file import SourceDataFileParseSaver
 from storage.models import ScaleFile, Workspace
 from util.parse import parse_datetime
 
 
-class TestSourceDataFileParseSaverSaveParseResults(TestCase):
+class TestSourceDataFileParseSaverSaveParseResults(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -53,4 +54,36 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
                  call(self.source_file_2.id, None,    None,    ended, [], None)]
 
         self.assertEqual(mock_save.call_count, 2)
+        mock_save.assert_has_calls(calls, any_order=True)
+
+    @patch('source.configuration.source_data_file.SourceFile.objects.save_parse_results')
+    def test_successful_v6(self, mock_save):
+        """Tests calling SourceDataFileParseSaver.save_parse_results_v6() successfully"""
+
+        started = '2018-06-01T00:00:00Z'
+        ended = '2018-06-01T01:00:00Z'
+        types = ['one', 'two', 'three']
+        new_workspace_path = 'awful/path'
+        data = {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [0, 1]
+                        },
+                        'properties':
+                            {
+                                'dataStarted': started,
+                                'dataEnded': ended,
+                                'dataTypes': types,
+                                'newWorkspacePath': new_workspace_path
+                            }
+                    }
+
+        metadata = {self.source_file_1.id: SeedMetadata.metadata_from_json(data, do_validate=False)}
+
+        calls = [call(self.source_file_1.id, data, parse_datetime(started), parse_datetime(ended), types, new_workspace_path)]
+
+        SourceDataFileParseSaver().save_parse_results_v6(metadata)
+
+        self.assertEqual(mock_save.call_count, 1)
         mock_save.assert_has_calls(calls, any_order=True)
