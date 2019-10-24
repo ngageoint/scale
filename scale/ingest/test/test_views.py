@@ -310,6 +310,16 @@ class TestScansViewV6(APITestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.scan1.name)
 
+        url = '/%s/scans/?name=%s' % (self.api, 'test')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for scan in result['results']:
+            self.assertIn(scan['name'], [self.scan1.name, self.scan2.name])
+
+
     def test_sorting(self):
         """Tests custom sorting."""
 

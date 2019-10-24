@@ -3,13 +3,16 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import operator
 import os
+from functools import reduce
 
 from collections import namedtuple
 
 import django.utils.timezone as timezone
 import django.contrib.postgres.fields
 from django.db import models, transaction
+from django.db.models import Q
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -889,7 +892,7 @@ class ScanManager(models.Manager):
 
         # Apply additional filters
         if names:
-            scans = scans.filter(name__in=names)
+            scans = scans.filter(reduce(operator.or_, (Q(name__contains=name) for name in names)))
 
         # Apply sorting
         if order:
