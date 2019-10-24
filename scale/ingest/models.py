@@ -156,7 +156,7 @@ class IngestManager(models.Manager):
         if strike_ids:
             ingests = ingests.filter(strike_id__in=strike_ids)
         if file_name:
-            ingests = ingests.filter(file_name=file_name)
+            ingests = ingests.filter(file_name__contains=file_name)
 
         # Apply sorting
         if order:
