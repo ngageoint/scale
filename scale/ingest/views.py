@@ -6,10 +6,12 @@ import logging
 
 import rest_framework.status as status
 from django.http.response import Http404
+import django.utils.timezone as timezone
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from job.models import Job
 
 import util.rest as rest_util
 from ingest.models import Ingest, Scan, Strike
@@ -21,6 +23,9 @@ from ingest.serializers import (IngestDetailsSerializerV6, IngestSerializerV6,
                                 StrikeSerializerV6, StrikeDetailsSerializerV6)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
+#from queue.models import Queue
+from queue.messages.requeue_jobs import create_requeue_jobs_messages, QueuedJob
+from messaging.manager import CommandMessageManager
 from util.rest import BadParameter
 from util.rest import title_to_name
 
@@ -669,7 +674,23 @@ class StrikeDetailsView(GenericAPIView):
             raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
 
         try:
+            # must collect old config before editing strike
+            if config:
+                new_config = config.get_dict()
+                old_config = Strike.objects.get_details(strike_id)
+
             Strike.objects.edit_strike(strike_id, title, description, config)
+
+            # if workspace has changed strike job must be restarted for changes to take effect
+            if config and old_config.configuration["workspace"] != new_config["workspace"]:
+                current_strike_job = Strike.objects.get_details(strike_id).job
+                Job.objects.update_jobs_to_canceled([current_strike_job], timezone.now())
+
+                requeue_jobs = []
+                requeue_jobs.append(QueuedJob(current_strike_job.id, current_strike_job.num_exes))
+                msg = create_requeue_jobs_messages(requeue_jobs)
+                CommandMessageManager().send_messages(msg)
+            
         except Strike.DoesNotExist:
             raise Http404
         except InvalidStrikeConfiguration as ex:
