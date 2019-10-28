@@ -1183,7 +1183,8 @@ class TestStrikeDetailsViewV6(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    def test_successful(self):
+    @patch('ingest.models.CommandMessageManager')
+    def test_successful(self, mock_msg_mgr):
         """Tests successfully calling the get Strike process details view."""
 
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
@@ -1216,7 +1217,8 @@ class TestStrikeDetailsViewV6(APITestCase):
         self.assertIsNotNone(result['job'])
         self.assertDictEqual(result['configuration'], self.secret_config)
 
-    def test_edit_simple(self):
+    @patch('ingest.models.CommandMessageManager')
+    def test_edit_simple(self, mock_msg_mgr):
         """Tests editing only the basic attributes of a Strike process"""
 
         json_data = {
@@ -1228,7 +1230,8 @@ class TestStrikeDetailsViewV6(APITestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-    def test_edit_config(self):
+    @patch('ingest.models.CommandMessageManager')
+    def test_edit_config(self, mock_msg_mgr):
         """Tests editing the configuration of a Strike process"""
 
         recipe_type = recipe_test_utils.create_recipe_type_v6()
@@ -1258,7 +1261,8 @@ class TestStrikeDetailsViewV6(APITestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-    def test_edit_config_v6(self):
+    @patch('ingest.models.CommandMessageManager')
+    def test_edit_config_v6(self, mock_msg_mgr):
         """Tests attempting to edit a Strike process adding a recipe configuration"""
         new_workspace = storage_test_utils.create_workspace(name='prods')
 
