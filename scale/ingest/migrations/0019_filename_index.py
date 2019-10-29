@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import django.contrib.postgres.indexes
 from django.contrib.postgres.operations import BtreeGinExtension
-from django.db import migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -18,5 +18,14 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name='ingest',
             index=django.contrib.postgres.indexes.GinIndex(fields=['file_name'], name='ingest_file_na_53a40a_gin'),
+        ),
+        migrations.AlterField(
+            model_name='scan',
+            name='name',
+            field=models.CharField(db_index=True, max_length=50, unique=True),
+        ),
+        migrations.AddIndex(
+            model_name='scan',
+            index=django.contrib.postgres.indexes.GinIndex(fields=['name'], name='scan_name_c7062e_gin'),
         ),
     ]

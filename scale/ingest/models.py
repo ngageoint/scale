@@ -1008,7 +1008,7 @@ class Scan(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, db_index=True)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
@@ -1046,6 +1046,7 @@ class Scan(models.Model):
     class Meta(object):
         """meta information for database"""
         db_table = 'scan'
+        indexes = [GinIndex(fields=['name'])]
 
 StrikeValidation = namedtuple('StrikeValidation', ['is_valid', 'errors', 'warnings'])
 
