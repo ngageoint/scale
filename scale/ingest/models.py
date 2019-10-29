@@ -11,6 +11,7 @@ from collections import namedtuple
 
 import django.utils.timezone as timezone
 import django.contrib.postgres.fields
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.timezone import now
@@ -648,6 +649,7 @@ class Ingest(models.Model):
     class Meta(object):
         """meta information for database"""
         db_table = 'ingest'
+        indexes = [GinIndex(fields=['file_name'])]
 
 
 class IngestEventManager(models.Manager):
