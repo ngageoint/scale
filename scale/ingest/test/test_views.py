@@ -1263,6 +1263,8 @@ class TestStrikeDetailsViewV6(APITestCase):
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        mock_msg_mgr.assert_called_once()
+        mock_create.assert_called_once()
 
     @patch('ingest.views.CommandMessageManager')
     @patch('ingest.views.create_requeue_jobs_messages')
@@ -1320,10 +1322,10 @@ class TestStrikeDetailsViewV6(APITestCase):
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertDictEqual(strike.get_v6_configuration_json(), config)
+        mock_msg_mgr.assert_called_once()
+        mock_create.assert_called_once()
 
-    @patch('ingest.views.CommandMessageManager')
-    @patch('ingest.views.create_requeue_jobs_messages')
-    def test_edit_bad_config(self, mock_msg_mgr, mock_create):
+    def test_edit_bad_config(self):
         """Tests attempting to edit a Strike process using an invalid configuration"""
 
         config = {
@@ -1346,9 +1348,7 @@ class TestStrikeDetailsViewV6(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    @patch('ingest.views.CommandMessageManager')
-    @patch('ingest.views.create_requeue_jobs_messages')
-    def test_edit_invalid_recipe(self, mock_msg_mgr, mock_create):
+    def test_edit_invalid_recipe(self):
         """Tests attempting to edit a Strike process with a nonexistant recipe"""
         config = {
             'workspace': self.workspace.name,
