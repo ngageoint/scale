@@ -1183,9 +1183,7 @@ class TestStrikeDetailsViewV6(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    @patch('ingest.views.CommandMessageManager')
-    @patch('ingest.views.create_requeue_jobs_messages')
-    def test_successful(self, mock_msg_mgr, mock_create):
+    def test_successful(self):
         """Tests successfully calling the get Strike process details view."""
 
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
@@ -1218,9 +1216,7 @@ class TestStrikeDetailsViewV6(APITestCase):
         self.assertIsNotNone(result['job'])
         self.assertDictEqual(result['configuration'], self.secret_config)
 
-    @patch('ingest.views.CommandMessageManager')
-    @patch('ingest.views.create_requeue_jobs_messages')
-    def test_edit_simple(self, mock_msg_mgr, mock_create):
+    def test_edit_simple(self):
         """Tests editing only the basic attributes of a Strike process"""
 
         json_data = {
