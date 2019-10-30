@@ -148,6 +148,14 @@ ingest\.migrations\.0018\_remove\_ingest\_data\_type module
     :undoc-members:
     :show-inheritance:
 
+ingest\.migrations\.0019\_filename\_index module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0019_filename_index
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

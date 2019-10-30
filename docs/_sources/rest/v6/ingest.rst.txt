@@ -144,7 +144,7 @@ Response: 200 OK
 | strike_id          | Integer           | Optional | Return only ingests created by a given strike process identifier.   |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| file_name          | String            | Optional | Return only ingests with a specific file name.                      |
+| file_name          | String            | Optional | Return only ingests that contain a specific file name.                      |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+

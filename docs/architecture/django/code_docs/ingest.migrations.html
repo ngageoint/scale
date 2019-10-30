@@ -588,6 +588,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-ingest.migrations.0019_filename_index">
+<span id="ingest-migrations-0019-filename-index-module"></span><h2>ingest.migrations.0019_filename_index module<a class="headerlink" href="#module-ingest.migrations.0019_filename_index" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0019_filename_index.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0019_filename_index.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0019_filename_index.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0019_filename_index.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0018_remove_ingest_data_type')]</em><a class="headerlink" href="#ingest.migrations.0019_filename_index.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0019_filename_index.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;BtreeGinExtension &gt;, &lt;AddIndex  index=&lt;GinIndex: fields='file_name'&gt;, model_name=u'ingest'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.CharField&gt;, name=u'name', model_name=u'scan'&gt;, &lt;AddIndex  index=&lt;GinIndex: fields='name'&gt;, model_name=u'scan'&gt;]</em><a class="headerlink" href="#ingest.migrations.0019_filename_index.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-ingest.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
