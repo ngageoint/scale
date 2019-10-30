@@ -683,11 +683,11 @@ class StrikeDetailsView(GenericAPIView):
 
             # if workspace has changed strike job must be restarted for changes to take effect
             if config and old_config.configuration["workspace"] != new_config["workspace"]:
-                current_strike_job = Strike.objects.get_details(strike_id).job
-                Job.objects.update_jobs_to_canceled([current_strike_job], timezone.now())
+                strike_job = old_config.job
+                Job.objects.update_jobs_to_canceled([strike_job], timezone.now())
 
                 requeue_jobs = []
-                requeue_jobs.append(QueuedJob(current_strike_job.id, current_strike_job.num_exes))
+                requeue_jobs.append(QueuedJob(strike_job.id, strike_job.num_exes))
                 msg = create_requeue_jobs_messages(requeue_jobs)
                 CommandMessageManager().send_messages(msg)
             
