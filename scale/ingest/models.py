@@ -3,13 +3,17 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import operator
 import os
+from functools import reduce
 
 from collections import namedtuple
 
 import django.utils.timezone as timezone
 import django.contrib.postgres.fields
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
+from django.db.models import Q
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -156,7 +160,7 @@ class IngestManager(models.Manager):
         if strike_ids:
             ingests = ingests.filter(strike_id__in=strike_ids)
         if file_name:
-            ingests = ingests.filter(file_name=file_name)
+            ingests = ingests.filter(file_name__contains=file_name)
 
         # Apply sorting
         if order:
@@ -645,6 +649,7 @@ class Ingest(models.Model):
     class Meta(object):
         """meta information for database"""
         db_table = 'ingest'
+        indexes = [GinIndex(fields=['file_name'])]
 
 
 class IngestEventManager(models.Manager):
@@ -889,7 +894,7 @@ class ScanManager(models.Manager):
 
         # Apply additional filters
         if names:
-            scans = scans.filter(name__in=names)
+            scans = scans.filter(reduce(operator.or_, (Q(name__contains=name) for name in names)))
 
         # Apply sorting
         if order:
@@ -1003,7 +1008,7 @@ class Scan(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, db_index=True)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
@@ -1041,6 +1046,7 @@ class Scan(models.Model):
     class Meta(object):
         """meta information for database"""
         db_table = 'scan'
+        indexes = [GinIndex(fields=['name'])]
 
 StrikeValidation = namedtuple('StrikeValidation', ['is_valid', 'errors', 'warnings'])
 

@@ -91,6 +91,14 @@ class TestIngestsViewV6(APITestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
+        url = '/%s/ingests/?file_name=%s' % (self.version, 'test')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for file in result['results']:
+            self.assertIn(file['file_name'], [self.ingest1.file_name, self.ingest2.file_name])
+
 class TestIngestDetailsViewV6(APITestCase):
     version = 'v6'
     fixtures = ['ingest_job_types.json']
@@ -301,6 +309,16 @@ class TestScansViewV6(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.scan1.name)
+
+        url = '/%s/scans/?name=%s' % (self.api, 'test')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for scan in result['results']:
+            self.assertIn(scan['name'], [self.scan1.name, self.scan2.name])
+
 
     def test_sorting(self):
         """Tests custom sorting."""
