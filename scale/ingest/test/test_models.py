@@ -104,3 +104,52 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         config = StrikeConfigurationV6(config).get_configuration()
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')
+        
+    @patch('ingest.models.CommandMessageManager')
+    def test_update_strike(self, mock_msg_mgr):
+        """Tests calling StrikeManager.create_strike successfully with v6 config"""
+
+        config = {
+            'version': '6',
+            'workspace': self.workspace.name,
+            'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': 'foo',
+                'data_types': ['test1','test2'],
+                'new_workspace': self.workspace.name,
+                'new_file_path': 'my/path'
+            }],
+            'recipe': {
+                'name': self.recipe.name,
+                'revision_num': self.recipe.revision_num
+            },
+        }
+
+        config = StrikeConfigurationV6(config).get_configuration()
+        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
+        self.assertEqual(strike.job.status, 'QUEUED')
+        config = {
+                    'version': '6',
+                    'workspace': self.workspace.name,
+                    'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
+                    'files_to_ingest': [{
+                        'filename_regex': 'foo',
+                        'data_types': ['test1','test2'],
+                        'new_workspace': self.workspace.name,
+                        'new_file_path': 'my/new_path'
+                    }],
+                    'recipe': {
+                        'name': self.recipe.name,
+                        'revision_num': self.recipe.revision_num
+                    },
+                }
+        config = StrikeConfigurationV6(config).get_configuration()
+        Strike.objects.edit_strike(strike.id, 'my_title2', 'my_description2', config)
+        strike = Strike.objects.get_details(strike.id)
+        self.assertEqual(strike.title, 'my_title2')
+        self.assertEqual(strike.description, 'my_description2')
+        self.assertEqual(strike.configuration['files_to_ingest'][0]['new_file_path'], 'my/new_path')
+
+
+
+
