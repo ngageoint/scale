@@ -1246,7 +1246,9 @@ class TestStrikeDetailsViewV6(APITestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-    def test_edit_config(self):
+    @patch('ingest.views.CommandMessageManager')
+    @patch('ingest.views.create_requeue_jobs_messages')
+    def test_edit_config(self, mock_msg_mgr, mock_create):
         """Tests editing the configuration of a Strike process"""
 
         recipe_type = recipe_test_utils.create_recipe_type_v6()
@@ -1275,8 +1277,12 @@ class TestStrikeDetailsViewV6(APITestCase):
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        mock_msg_mgr.assert_called_once()
+        mock_create.assert_called_once()
 
-    def test_edit_config_v6(self):
+    @patch('ingest.views.CommandMessageManager')
+    @patch('ingest.views.create_requeue_jobs_messages')
+    def test_edit_config_v6(self, mock_msg_mgr, mock_create):
         """Tests attempting to edit a Strike process adding a recipe configuration"""
         new_workspace = storage_test_utils.create_workspace(name='prods')
 
@@ -1330,6 +1336,8 @@ class TestStrikeDetailsViewV6(APITestCase):
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertDictEqual(strike.get_v6_configuration_json(), config)
+        mock_msg_mgr.assert_called_once()
+        mock_create.assert_called_once()
 
     def test_edit_bad_config(self):
         """Tests attempting to edit a Strike process using an invalid configuration"""
