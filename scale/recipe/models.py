@@ -207,9 +207,8 @@ class RecipeManager(models.Manager):
         """
 
         #TODO: fix recipe node queries like this
-        recipe_job_qry = RecipeNode.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         try:
-            recipe_job = recipe_job_qry.get(job_id=job_id, is_original=True)
+            recipe_job = Job.objects.select_related('recipe_node').get(id=job_id).recipe_node
         except RecipeNode.DoesNotExist:
             return None
         return recipe_job
@@ -225,8 +224,7 @@ class RecipeManager(models.Manager):
         """
 
         recipe_ids = set()
-        for recipe_node in RecipeNode.objects.filter(job_id__in=job_ids).only('recipe_id'):
-            recipe_ids.add(recipe_node.recipe_id)
+        recipe_ids.update(Job.objects.filter(id__in=job_ids).only('recipe_id').values_list('recipe_id', flat=True))
 
         return list(recipe_ids)
 
