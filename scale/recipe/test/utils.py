@@ -181,7 +181,6 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
 
 def process_recipe_inputs(recipe_ids):
     """Mimics effect of process_recipe_input messages for unit testing """
-
     for recipe_id in recipe_ids:
         recipe = Recipe.objects.get_recipe_with_interfaces(recipe_id)
         if not recipe.has_input():
@@ -216,6 +215,7 @@ def generate_input_data_from_recipe(sub_recipe):
     # Get sub-recipe input from dependencies in the recipe
     recipe_input_data = sub_recipe.recipe.get_input_data()
     node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
+    node_name = None
     for node_output in node_outputs.values():
         if node_output.node_type == 'recipe' and node_output.id == sub_recipe.id:
             node_name = node_output.node_name
@@ -225,12 +225,12 @@ def generate_input_data_from_recipe(sub_recipe):
     sub_recipe.recipe.input = old_recipe_input_dict
 
     definition = sub_recipe.recipe.recipe_type_rev.get_definition()
-    input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-    Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
+    if node_name:
+        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
 
 def update_recipe(root_recipe_id):
     """Mimics effect of update recipe messages for unit testing """
-
     recipe = Recipe.objects.get_recipe_instance_from_root(root_recipe_id)
     recipe_model = recipe.recipe_model
     when = timezone.now()
@@ -380,7 +380,6 @@ def process_conditions(process_input_condition_ids):
 
 def create_jobs_for_recipe(recipe_model, recipe_jobs):
     """Mimics effect of create_jobs_messages_for_recipe for unit testing"""
-
     recipe_jobs_map = {}  # {Node name: job model}
 
     superseded_jobs = {}
@@ -394,35 +393,33 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
     revs_by_tuple = {(j.job_type.name, j.job_type.version, j.revision_num): j for j in revs_by_id.values()}
 
     # Create new job models
-    process_input_by_node = {}
     for recipe_job in recipe_jobs:
         node_name = recipe_job.node_name
-        process_input_by_node[node_name] = recipe_job.process_input
+        recipe_node = RecipeNode()
+        recipe_node.recipe_id = recipe_model.id
+        recipe_node.node_name = node_name
+        recipe_node.save()
+
+        # process_input_by_node[node_name] = recipe_job.process_input
         tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
         revision = revs_by_tuple[tup]
+
         superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
+
         job_config = JobConfigurationV6(recipe_model.configuration).get_configuration() if recipe_model.configuration else None
-        job = Job.objects.create_job_v6(revision, event_id=recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
+        recipe_input_data = recipe_model.get_input_data()
+        node_outputs = RecipeNode.objects.get_recipe_node_outputs(recipe_model.id)
+        input_data = recipe_model.get_definition().generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        for data in input_data:
+            job = Job.objects.create_job_v6(revision, event_id=recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
                                         recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
-                                        superseded_job=superseded_job, job_config=job_config)
-        recipe_jobs_map[node_name] = job
+                                        superseded_job=superseded_job, job_config=job_config,
+                                        recipe_node_id=recipe_node.id, input_data=data)
+            recipe_jobs_map[node_name] = job
 
     Job.objects.bulk_create(recipe_jobs_map.values())
 
-    # Create recipe nodes
-    recipe_nodes = RecipeNode.objects.create_recipe_job_nodes(recipe_model.id, recipe_jobs_map)
-    RecipeNode.objects.bulk_create(recipe_nodes)
-
-    # Set up process input dict
-    process_input_job_ids = []
-    for recipe_job in recipe_jobs:
-        job = recipe_jobs_map[recipe_job.node_name]
-        process_input = recipe_model.id and recipe_job.process_input
-        if job.has_input() or process_input:
-            process_input_job_ids.append(job.id)
-
-    process_job_inputs(process_input_job_ids)
-    update_recipe_metrics([recipe_model.id])
+    # update_recipe_metrics([recipe_model.id])
 
 def process_job_inputs(process_input_job_ids):
     """Mimics effect of create_process_job_input_messages for unit testing"""
@@ -471,6 +468,7 @@ def generate_job_input_data_from_recipe(job):
     # Get job input from dependencies in the recipe
     recipe_input_data = job.recipe.get_input_data()
     node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
+    node_name = None
     for node_output in node_outputs.values():
         if node_output.node_type == 'job' and node_output.id == job.id:
             node_name = node_output.node_name
@@ -480,8 +478,9 @@ def generate_job_input_data_from_recipe(job):
     job.recipe.input = old_recipe_input_dict
 
     definition = job.recipe.recipe_type_rev.get_definition()
-    input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-    Job.objects.set_job_input_data_v6(job, input_data)
+    if node_name:
+        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        Job.objects.set_job_input_data_v6(job, input_data)
 
 def queue_jobs(queued_jobs, requeue=False, priority=None):
     """Mimics effect of create_queued_jobs_messages for unit testing"""
@@ -640,7 +639,7 @@ def create_recipe_condition(root_recipe=None, recipe=None, batch=None, is_proces
 
 
 # TODO: this is deprecated and should be replaced with create_recipe_node()
-def create_recipe_job(recipe=None, job_name=None, job=None):
+def create_recipe_job(recipe=None, job_name=None, job=None, save=True):
     """Creates a job type model for unit testing
 
     :param recipe: The associated recipe
@@ -652,21 +651,22 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     :returns: The recipe job model
     :rtype: :class:`recipe.models.RecipeNode`
     """
-    if not recipe:
-        recipe = create_recipe()
-
-    if not job_name:
-        job_name = 'Test Job Name'
-
-    if not job:
-        job = job_test_utils.create_job()
-
-    recipe_job = RecipeNode()
-    recipe_job.node_name = job_name
-    recipe_job.job = job
-    recipe_job.recipe = recipe
-    recipe_job.save()
-    return recipe_job
+    return create_recipe_node(recipe=recipe, node_name=job_name, job=job, save=save)
+    # if not recipe:
+    #     recipe = create_recipe()
+    #
+    # if not job_name:
+    #     job_name = 'Test Job Name'
+    #
+    # if not job:
+    #     job = job_test_utils.create_job()
+    #
+    # recipe_job = RecipeNode()
+    # recipe_job.node_name = job_name
+    # recipe_job.job = job
+    # recipe_job.recipe = recipe
+    # recipe_job.save()
+    # return recipe_job
 
 
 def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, sub_recipe=None, save=False,
@@ -706,13 +706,17 @@ def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, su
     recipe_node.is_original = is_original
     if condition:
         recipe_node.condition = condition
-    elif job:
-        recipe_node.job = job
-    elif sub_recipe:
-        recipe_node.sub_recipe = sub_recipe
 
     if save:
         recipe_node.save()
+        if job:
+            job.recipe_node = recipe_node
+            job.save()
+        elif sub_recipe:
+            recipe.recipe = sub_recipe
+            recipe.save()
+            sub_recipe.recipe_node = recipe_node
+            sub_recipe.save()
 
     return recipe_node
 

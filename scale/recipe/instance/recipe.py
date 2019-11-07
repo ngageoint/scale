@@ -37,9 +37,21 @@ class RecipeInstance(object):
                 recipe_node_model = recipe_node_dict[node_name]
                 is_original = recipe_node_model.is_original
                 if node_definition.node_type == JobNodeDefinition.NODE_TYPE:
-                    node = JobNodeInstance(node_definition, recipe_node_model.job, is_original)
+                    from job.models import Job
+                    jobs = None
+                    try:
+                        jobs = Job.objects.filter(recipe_node=recipe_node_dict[node_name])
+                    except Job.DoesNotExist:
+                        pass
+                    node = JobNodeInstance(node_definition, jobs, is_original)
                 elif node_definition.node_type == RecipeNodeDefinition.NODE_TYPE:
-                    node = RecipeNodeInstance(node_definition, recipe_node_model.sub_recipe, is_original)
+                    from recipe.models import Recipe
+                    recipes = None
+                    try:
+                        recipes = Recipe.objects.filter(recipe_node=recipe_node_dict[node_name])
+                    except Recipe.DoesNotExist:
+                        pass
+                    node = RecipeNodeInstance(node_definition, recipes, is_original)
                 elif node_definition.node_type == ConditionNodeDefinition.NODE_TYPE:
                     node = ConditionNodeInstance(node_definition, recipe_node_model.condition, is_original)
             else:

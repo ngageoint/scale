@@ -324,8 +324,9 @@ class TestProcessJobInput(TransactionTestCase):
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=def_dict)
         recipe_data_dict = {'version': '1.0', 'input_data': [], 'workspace_id': workspace.id}
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=recipe_data_dict)
-        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='node_a', job=job_1)
-        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='node_b', job=job_2)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', job=job_1, save=True)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_b', job=job_2, save=True)
+
         job_1.recipe = recipe
         job_1.save()
         job_2.recipe = recipe

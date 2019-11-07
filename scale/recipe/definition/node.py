@@ -77,7 +77,7 @@ class NodeDefinition(object):
         :param node_outputs: The RecipeNodeOutput tuples stored in a dict by node name
         :type node_outputs: dict
         :returns: The input data for this node
-        :rtype: :class:`data.data.data.Data`
+        :rtype: [:class:`data.data.data.Data`]
 
         :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
         """

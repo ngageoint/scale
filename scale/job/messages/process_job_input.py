@@ -67,7 +67,6 @@ class ProcessJobInput(CommandMessage):
         """
 
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
-
         try:
             job = Job.objects.get_job_with_interfaces(self.job_id)
         except Job.DoesNotExist:
@@ -112,7 +111,7 @@ class ProcessJobInput(CommandMessage):
         """
 
         from recipe.models import RecipeNode
-
+        node_name = None
         # Get job input from dependencies in the recipe
         recipe_input_data = job.recipe.get_input_data()
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
@@ -124,5 +123,6 @@ class ProcessJobInput(CommandMessage):
 
         definition = job.recipe.get_definition()
         # need to add connections somehow inserted in definition for each individual file output from fork job
-        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-        Job.objects.set_job_input_data_v6(job, input_data)
+        if node_name:
+            input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+            Job.objects.set_job_input_data_v6(job, input_data)

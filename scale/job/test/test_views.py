@@ -603,7 +603,7 @@ class TestJobDetailsViewV6(APITestCase):
             }
             self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition)
             self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
-            self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job=self.job, job_name='Job 1')
+            self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job=self.job, job_name='Job 1', save=True)
         except:
             self.recipe_type = None
             self.recipe = None

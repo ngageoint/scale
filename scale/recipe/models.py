@@ -224,7 +224,7 @@ class RecipeManager(models.Manager):
         """
 
         recipe_ids = set()
-        recipe_ids.update(Job.objects.filter(id__in=job_ids).only('recipe_id').values_list('recipe_id', flat=True))
+        recipe_ids.update(Job.objects.filter(id__in=job_ids).exclude(recipe_id=None).values_list('recipe_id', flat=True))
 
         return list(recipe_ids)
 
@@ -238,10 +238,13 @@ class RecipeManager(models.Manager):
         :rtype: list
         """
 
+        # recipe_ids = set()
+        # for recipe_node in RecipeNode.objects.filter(sub_recipe_id__in=sub_recipe_ids).only('recipe_id'):
+        #     recipe_ids.add(recipe_node.recipe_id)
+        #
+        # return list(recipe_ids)
         recipe_ids = set()
-        for recipe_node in RecipeNode.objects.filter(sub_recipe_id__in=sub_recipe_ids).only('recipe_id'):
-            recipe_ids.add(recipe_node.recipe_id)
-
+        recipe_ids.update(Recipe.objects.filter(id__in=sub_recipe_ids).exclude(root_recipe_id=None).values_list('root_recipe_id', flat=True))
         return list(recipe_ids)
 
     def get_recipe_instance(self, recipe_id):
@@ -502,7 +505,7 @@ class RecipeManager(models.Manager):
         qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
         qry += 'sub_recipes_total = s.sub_recipes_total, sub_recipes_completed = s.sub_recipes_completed, '
         qry += 'last_modified = %s FROM ('
-        qry += 'SELECT rn.recipe_id, COUNT(j.id) + COALESCE(SUM(r.jobs_total), 0) AS jobs_total, '
+        qry += 'SELECT r.id, COUNT(j.id) + COALESCE(SUM(r.jobs_total), 0) AS jobs_total, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') + COALESCE(SUM(r.jobs_pending), 0) AS jobs_pending, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') + COALESCE(SUM(r.jobs_blocked), 0) AS jobs_blocked, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') + COALESCE(SUM(r.jobs_queued), 0) AS jobs_queued, '
@@ -514,11 +517,32 @@ class RecipeManager(models.Manager):
         qry += 'COUNT(r.id) + COALESCE(SUM(r.sub_recipes_total), 0) AS sub_recipes_total, '
         qry += 'COUNT(r.id) FILTER(WHERE r.is_completed) '
         qry += '+ COALESCE(SUM(r.sub_recipes_completed), 0) AS sub_recipes_completed '
-        qry += 'FROM recipe_node rn LEFT OUTER JOIN job j ON rn.job_id = j.id '
-        qry += 'LEFT OUTER JOIN recipe r ON rn.sub_recipe_id = r.id WHERE rn.recipe_id IN %s GROUP BY rn.recipe_id) s '
-        qry += 'WHERE r.id = s.recipe_id'
+        qry += 'FROM recipe_node rn LEFT OUTER JOIN job j ON rn.id = j.recipe_node_id '
+        qry += 'LEFT OUTER JOIN recipe r ON rn.id = r.recipe_node_id WHERE r.id IN %s GROUP BY r.id) s '
+        qry += 'WHERE r.id = s.id'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(recipe_ids)])
+
+    def count_subrecipes(self, recipe_id, recurse=False):
+        """Counts the number of sub-recipes that belong to the given recipe
+        :param recipe_id: The recipe to count
+        :type recipe_id: int
+        :param recurse: Recurses into any sub-recieps if true
+        :type recurse: bool
+        :returns: The number of sub-recipes associated with the recipe_id
+        :rtype: int
+        """
+
+        count = 0
+        qry = self.filter(root_recipe_id=recipe_id)
+
+        count += len(qry)
+        if recurse and len(qry) > 0:
+            for recipe in qry:
+                count += self.count_subrecipes(recipe.recipe.id, recurse)
+
+        return count
+
 
 class Recipe(models.Model):
     """Represents a recipe to be run on the cluster. A model lock must be obtained using select_for_update() on any
@@ -936,7 +960,7 @@ class RecipeNodeManager(models.Manager):
             superseded_recipe_id = recipe_copy.superseded_recipe_id
             recipe_id = recipe_copy.recipe_id
             node_names = recipe_copy.node_names
-            sub_qry = 'SELECT node_name, false, %d, condition_id, job_id, sub_recipe_id '
+            sub_qry = 'SELECT node_name, false, %d, condition_id ' #, job_id, sub_recipe_id '
             sub_qry += 'FROM recipe_node WHERE recipe_id = %d'
             sub_qry = sub_qry % (recipe_id, superseded_recipe_id)
             if node_names:
@@ -944,7 +968,7 @@ class RecipeNodeManager(models.Manager):
                 sub_qry = '%s AND node_name IN (%s)' % (sub_qry, node_sub_qry)
             sub_queries.append(sub_qry)
         union_sub_qry = ' UNION ALL '.join(sub_queries)
-        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, condition_id, job_id, sub_recipe_id) %s'
+        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, condition_id) %s' #, job_id, sub_recipe_id) %s'
         qry = qry % union_sub_qry
 
         with connection.cursor() as cursor:
@@ -985,7 +1009,7 @@ class RecipeNodeManager(models.Manager):
 
         node_models = []
 
-        for node_name, job in recipe_jobs.items():
+        for node_name in recipe_jobs.items():
             recipe_node = RecipeNode()
             recipe_node.recipe_id = recipe_id
             recipe_node.node_name = node_name
@@ -1006,7 +1030,7 @@ class RecipeNodeManager(models.Manager):
 
         node_models = []
 
-        for node_name, sub_recipe in sub_recipes.items():
+        for node_name in sub_recipes.items():
             recipe_node = RecipeNode()
             recipe_node.recipe_id = recipe_id
             recipe_node.node_name = node_name
@@ -1022,20 +1046,44 @@ class RecipeNodeManager(models.Manager):
         :returns: A dict of job models stored by node name
         :rtype: dict
         """
+        nodes = {}
+        rn_qry = self.filter(recipe_id=recipe_id)
+        for rn in rn_qry:
+            try:
+                job = Job.objects.get(recipe_node=rn)
+                nodes[rn.node_name] = job
+            except Job.DoesNotExist:
+                pass
+        return nodes
 
-        qry = self.select_related('job').filter(recipe_id=recipe_id, job__isnull=False)
-        return {rn.node_name: rn.job for rn in qry}
+    def get_subrecipes(self, recipe_id):
+        """Returns the sub-recipe models that belong to the given recipe
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: A dict of recipe models stored by node name
+        :rtype: dict
+        """
+
+        nodes = {}
+        sr_qry = self.filter(recipe_id=recipe_id)
+        for srn in sr_qry:
+            try:
+                recipe = Recipe.objects.get(recipe_node=srn)
+                nodes[srn.node_name] = recipe
+            except Recipe.DoesNotExist:
+                pass
+        return nodes
 
     def get_recipe_nodes(self, recipe_id):
-        """Returns the recipe_node models with related condition, job, and sub_recipe models for the given recipe ID
+        """Returns the recipe_node models with related condition models for the given recipe ID
 
         :param recipe_id: The recipe ID
         :type recipe_id: int
         :returns: The recipe_node models for the recipe
         :rtype: list
         """
-
-        return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
+        return self.filter(recipe_id=recipe_id).select_related('condition')
 
     def get_recipe_node_outputs(self, recipe_id):
         """Returns the output data for each recipe node for the given recipe ID
@@ -1048,60 +1096,38 @@ class RecipeNodeManager(models.Manager):
 
         node_outputs = {}
 
-        qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
-        for node in qry.only('node_name', 'condition', 'job', 'sub_recipe', 'condition__data', 'job__output'):
-            node_type = None
+        # Conditions
+        cond_qry = self.filter(recipe_id=recipe_id).select_related('condition')
+        for node in cond_qry.only('node_name', 'condition', 'condition__data'):
             if node.condition:
                 node_type = 'condition'
                 node_id = node.condition_id
                 output_data = node.condition.get_data()
-            if node.job:
-                node_type = 'job'
-                node_id = node.id
-                output_data = Data()
-                for job in node.job_set.all():
-                    output_data.merge(job.get_output_data())
-            if node.sub_recipe:
-                node_type = 'recipe'
-                node_id = node.sub_recipe_id
-                output_data = Data()  # Recipe output is currently not supported
-            if node_type:
                 node_outputs[node.node_name] = RecipeNodeOutput(node.node_name, node_type, node_id, output_data)
+
+        # Jobs
+        job_qry = Job.objects.filter(recipe_id=recipe_id).exclude(recipe_node=None).select_related('recipe_node')
+        for job in job_qry.only('recipe_node__node_name', 'output'):
+            if job.recipe_node:
+                node_name = job.recipe_node.node_name
+                node_type = 'job'
+                node_id = job.recipe_node.id
+                output_data = Data()
+                output_data.merge(job.get_output_data())
+                node_outputs[node_name] = RecipeNodeOutput(node_name, node_type, node_id, output_data)
+
+        # Sub-recipes
+        sub_qry = Recipe.objects.filter(root_recipe=recipe_id).exclude(recipe_node=None).select_related('recipe_node')
+        for sub_recipe in sub_qry:
+            if sub_recipe.recipe_node:
+                node_name = sub_recipe.recipe_node.node_name
+                node_type = 'recipe'
+                node_id = sub_recipe.id
+                output_data = Data()
+                node_outputs[node_name] = RecipeNodeOutput(node_name, node_type, node_id, output_data)
 
         return node_outputs
 
-    def get_subrecipes(self, recipe_id):
-        """Returns the sub-recipe models that belong to the given recipe
-
-        :param recipe_id: The recipe ID
-        :type recipe_id: int
-        :returns: A dict of recipe models stored by node name
-        :rtype: dict
-        """
-
-        qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
-        return {rn.node_name: rn.sub_recipe for rn in qry}
-        
-    def count_subrecipes(self, recipe_id, recurse=False):
-        """Counts the number of sub-recipes that belong to the given recipe
-        :param recipe_id: The recipe to count
-        :type recipe_id: int
-        :param recurse: Recurses into any sub-recieps if true
-        :type recurse: bool
-        :returns: The number of sub-recipes associated with the recipe_id
-        :rtype: int
-        """
-        
-        count = 0
-        qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
-        
-        count += len(qry)
-        if recurse and len(qry) > 0:
-            for rn in qry:
-                count += self.count_subrecipes(rn.sub_recipe.id, recurse)
-        
-        return count
-        
 
     def supersede_recipe_jobs(self, recipe_ids, when, node_names, all_nodes=False):
         """Supersedes the jobs for the given recipe IDs and node names
@@ -1117,9 +1143,9 @@ class RecipeNodeManager(models.Manager):
         """
 
         if all_nodes:
-            qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids)
+            qry = Job.objects.filter(recipe_node__recipe_id__in=recipe_ids)
         else:
-            qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids, recipenode__node_name__in=node_names)
+            qry = Job.objects.filter(recipe_node__recipe_id__in=recipe_ids, recipe_node__node_name__in=node_names)
         qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
 
     def supersede_subrecipes(self, recipe_ids, when, node_names, all_nodes=False):

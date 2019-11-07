@@ -9,7 +9,6 @@ from django.db import transaction
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
 from job.exceptions import InactiveJobType
-from job.messages.process_job_input import create_process_job_input_messages
 from job.models import Job, JobTypeRevision
 from messaging.messages.message import CommandMessage
 from trigger.models import TriggerEvent
@@ -326,7 +325,7 @@ class CreateJobs(CommandMessage):
                                                 root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id,
                                                 batch_id=self.batch_id, superseded_job=superseded_job, job_config=config,
                                                 recipe_node_id=recipe_node.id, input_data=data)
-            recipe_jobs.append(job)
+                recipe_jobs.append(job)
 
         Job.objects.bulk_create(recipe_jobs)
         logger.info('Created %d job(s)', len(recipe_jobs))
@@ -348,10 +347,16 @@ class CreateJobs(CommandMessage):
             from recipe.models import RecipeNode
 
             node_names = [recipe_job.node_name for recipe_job in self.recipe_jobs]
-            qry = RecipeNode.objects.select_related('job')
-            qry = qry.filter(recipe_id=self.recipe_id, node_name__in=node_names, job__event_id=self.event_id)
-            jobs_by_node = {recipe_node.node_name: recipe_node.job for recipe_node in qry}
+
+            qry = Job.objects.select_related('recipe_node', 'recipe').filter(recipe__id=self.recipe_id,
+                            recipe_node__node_name__in=node_names, event_id=self.event_id)
+            jobs_by_node = {job.recipe_node.node_name: job for job in qry}
             jobs = jobs_by_node.values()
+
+            # qry = RecipeNode.objects.select_related('job')
+            # qry = qry.filter(recipe_id=self.recipe_id, node_name__in=node_names, job__event_id=self.event_id)
+            # jobs_by_node = {recipe_node.node_name: recipe_node.job for recipe_node in qry}
+            # jobs = jobs_by_node.values()
 
             if jobs_by_node:
                 # Set up process input dict

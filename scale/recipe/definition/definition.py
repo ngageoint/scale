@@ -278,7 +278,6 @@ class RecipeDefinition(object):
 
         :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
         """
-
         return self.graph[node_name].generate_input_data(recipe_input_data, node_outputs)
 
     def get_topological_order(self):

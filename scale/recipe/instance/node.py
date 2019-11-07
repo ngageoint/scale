@@ -239,11 +239,13 @@ class JobNodeInstance(NodeInstance):
     """Represents a job within a recipe
     """
 
-    def __init__(self, definition, is_original):
+    def __init__(self, definition, job_set, is_original):
         """Constructor
 
         :param definition: The definition of this node in the recipe
         :type definition: :class:`recipe.definition.node.JobNodeDefinition`
+        :param job_set:
+        :type job_set:
         :param is_original: Whether this job is original
         :type is_original: bool
         """
@@ -251,7 +253,9 @@ class JobNodeInstance(NodeInstance):
         super(JobNodeInstance, self).__init__(definition, is_original)
 
         #TODO: Make sure this gets us the jobs we want
-        self.jobs = self.job_set.all()
+        self.jobs = []
+        if job_set:
+            self.jobs = job_set.all()
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
         """See :meth:`recipe.instance.node.NodeInstance.get_jobs_to_update`
@@ -269,13 +273,13 @@ class JobNodeInstance(NodeInstance):
         if not self.blocks_child_nodes:
             for job in self.jobs:
                 if job.status == 'BLOCKED':
-                    pending_job_ids.append(self.job.id)
+                    pending_job_ids.append(job.id)
 
         # If this job is PENDING and it blocks child nodes, it should be updated to BLOCKED
         if self.blocks_child_nodes:
             for job in self.jobs:
                 if job.status == 'PENDING':
-                    blocked_job_ids.append(self.job.id)
+                    blocked_job_ids.append(job.id)
 
     def is_completed(self):
         """See :meth:`recipe.instance.node.NodeInstance.is_completed`
@@ -312,18 +316,21 @@ class RecipeNodeInstance(NodeInstance):
     """Represents a recipe within a recipe
     """
 
-    def __init__(self, definition, is_original):
+    def __init__(self, definition, recipe_set, is_original):
         """Constructor
 
         :param definition: The definition of this node in the recipe
         :type definition: :class:`recipe.definition.node.RecipeNodeDefinition`
+        :param recipe_set:
+        :type recipe_set:
         :param is_original: Whether this node is original
         :type is_original: bool
         """
 
         super(RecipeNodeInstance, self).__init__(definition, is_original)
-
-        self.recipes = self.recipe_set.all()
+        self.recipes = []
+        if recipe_set:
+            self.recipes = recipe_set.all()
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
         """See :meth:`recipe.instance.node.NodeInstance.get_jobs_to_update`

@@ -64,10 +64,10 @@ class TestCancelJobs(TestCase):
                                           recipe=recipe)
         job_4 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', recipe=recipe)
         job_ids = [job_1.id, job_2.id, job_3.id, job_4.id]
-        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_1', job=job_1)
-        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_2', job=job_2)
-        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_3', job=job_3)
-        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_4', job=job_4)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='job_1', job=job_1, save=True)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='job_2', job=job_2, save=True)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='job_3', job=job_3, save=True)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='job_4', job=job_4, save=True)
 
         # Add jobs to message
         message = CancelJobs()

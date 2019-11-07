@@ -121,8 +121,12 @@ class PurgeJobs(CommandMessage):
                                                                   trigger_id=self.trigger_id))
 
         # Kick off purge_recipe for recipe with node job
-        parent_recipes = RecipeNode.objects.filter(job__in=self._purge_job_ids, is_original=True)
-        for recipe_node in parent_recipes:
+        # parent_recipes = RecipeNode.objects.filter(job__in=self._purge_job_ids, is_original=True)
+        parent_recipes = Job.objects.filter(id__in=self._purge_job_ids).select_related('recipe_node').\
+            filter(recipe_node__is_original=True).exclude(recipe_node=None)
+
+        for job_recipe_node in parent_recipes:
+            recipe_node = job_recipe_node.recipe_node
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe.id,
                                                                  trigger_id=self.trigger_id,
                                                                  source_file_id=self.source_file_id))
@@ -134,10 +138,10 @@ class PurgeJobs(CommandMessage):
             JobExecutionEnd.objects.filter(job_exe__in=job_exe_queryset).delete()
             FileAncestryLink.objects.filter(job__in=self._purge_job_ids).delete()
             job_exe_queryset.delete()
-            RecipeNode.objects.filter(job__in=self._purge_job_ids).delete()
+
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()
-            Job.objects.filter(id__in=self._purge_job_ids).delete()
+            Job.objects.filter(id__in=self._purge_job_ids).select_related('recipe_node').delete()
 
             # Update results
             PurgeResults.objects.filter(trigger_event=self.trigger_id).update(
