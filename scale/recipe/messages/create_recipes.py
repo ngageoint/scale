@@ -360,7 +360,6 @@ class CreateRecipes(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
-
         self._when = now()
         with transaction.atomic():
             self._perform_locking()
@@ -586,7 +585,6 @@ class CreateRecipes(CommandMessage):
         :returns: The list of recipe models created
         :rtype: list
         """
-
         sub_recipes = {}  # {Node name: recipe model}
 
         superseded_sub_recipes = {}
@@ -621,6 +619,8 @@ class CreateRecipes(CommandMessage):
                 recipe = Recipe.objects.create_recipe_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
                                                          recipe_id=self.recipe_id, batch_id=self.batch_id,
                                                          superseded_recipe=superseded_recipe, input_data=data)
+                # recipe_node.recipe_id = recipe.id
+                # recipe_node.save()
             sub_recipes[node_name] = recipe
 
         Recipe.objects.bulk_create(sub_recipes.values())
@@ -681,10 +681,11 @@ class CreateRecipes(CommandMessage):
                     diff.set_force_reprocess(self.forced_nodes)
                 self._recipe_diffs.append(_RecipeDiff(diff, pairs))
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
+
             node_names = [sub.node_name for sub in self.sub_recipes]
-            qry = RecipeNode.objects.select_related('sub_recipe__superseded_recipe')
-            qry = qry.filter(recipe_id=self.recipe_id, node_name__in=node_names, sub_recipe__event_id=self.event_id)
-            recipes_by_node = {rn.node_name: rn.sub_recipe for rn in qry}
+            qry = Recipe.objects.filter(recipe_node__node_name__in=node_names, event_id=self.event_id)
+            recipes_by_node = {r.recipe_node.node_name: r for r in qry}
+
             recipes = list(recipes_by_node.values())
             if recipes_by_node:
                 # Set up process input dict

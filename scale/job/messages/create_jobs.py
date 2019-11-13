@@ -9,6 +9,7 @@ from django.db import transaction
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.data.exceptions import InvalidData
 from job.exceptions import InactiveJobType
+from job.messages.process_job_input import create_process_job_input_messages
 from job.models import Job, JobTypeRevision
 from messaging.messages.message import CommandMessage
 from trigger.models import TriggerEvent
@@ -233,6 +234,16 @@ class CreateJobs(CommandMessage):
                 except InactiveJobType as ex:
                     logger.exception('Attempting to create a job with an inactive job type: %s. Message will not re-run.', ex)
                     return True
+
+        process_input_job_ids = []
+        for job in jobs:
+            # process_input indicates if job is in a recipe and ready to get its input from its dependencies
+            process_input = self.recipe_id and self._process_input.get(job.id, False)
+            if job.has_input() or process_input:
+                # This new job is all ready to have its input processed
+                process_input_job_ids.append(job.id)
+        self.new_messages.extend(create_process_job_input_messages(process_input_job_ids))
+        # Create messages to queue the jobs?
 
         if self.recipe_id:
             # If these jobs belong to a recipe, update its metrics now that the jobs are created

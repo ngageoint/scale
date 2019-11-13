@@ -484,7 +484,6 @@ def generate_job_input_data_from_recipe(job):
 
 def queue_jobs(queued_jobs, requeue=False, priority=None):
     """Mimics effect of create_queued_jobs_messages for unit testing"""
-
     job_ids = []
     for queued_job in queued_jobs:
         job_ids.append(queued_job.job_id)
@@ -711,9 +710,10 @@ def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, su
         recipe_node.save()
         if job:
             job.recipe_node = recipe_node
+            job.recipe = recipe
             job.save()
         elif sub_recipe:
-            recipe.recipe = sub_recipe
+            recipe.sub_recipes.add(sub_recipe)
             recipe.save()
             sub_recipe.recipe_node = recipe_node
             sub_recipe.save()

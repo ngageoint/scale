@@ -122,8 +122,8 @@ class CreateBatchRecipes(CommandMessage):
         messages = []
         dataset = DataSet.objects.get(pk=definition.dataset)
         dataset_definition = dataset.get_definition()
-        recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
-        recipe_inputs = recipe_type_rev.get_definition().get_input_keys()
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name,
+                                                                  revision_num=batch.recipe_type_rev.revision_num)
         
         # combine the parameters
         dataset_parameters = dataset_definition.global_parameters
@@ -143,7 +143,8 @@ class CreateBatchRecipes(CommandMessage):
         recipe_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files).values_list('recipe_id', flat=True)
         recipe_file_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files,
                                                          recipe__recipe_type=batch.recipe_type, 
-                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list('input_file_id', flat=True)
+                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list(
+            'input_file_id', flat=True)
         extra_files_qry = ScaleFile.objects.filter(id__in=ds_files)
         
         recipe_count = 0
@@ -188,7 +189,8 @@ class CreateBatchRecipes(CommandMessage):
                 data.add_value(FileValue(file.parameter_name, [file.scale_file_id]))
                 input_data.append(convert_data_to_v6_json(data).get_dict())
                 
-            msgs = create_batch_recipes_messages(batch.recipe_type.name, batch.recipe_type.revision_num, input_data, batch.event_id, batch_id=batch.id)
+            msgs = create_batch_recipes_messages(batch.recipe_type.name, batch.recipe_type.revision_num, input_data,
+                                                 batch.event_id, batch_id=batch.id)
             messages.extend(msgs)
             recipe_count += len(input_data)
 

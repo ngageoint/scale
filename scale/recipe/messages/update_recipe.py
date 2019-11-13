@@ -101,7 +101,6 @@ class UpdateRecipe(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
-
         recipe = Recipe.objects.get_recipe_instance_from_root(self.root_recipe_id)
         recipe_model = recipe.recipe_model
         when = now()

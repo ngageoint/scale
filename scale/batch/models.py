@@ -107,8 +107,7 @@ class BatchManager(models.Manager):
         1. The number of existing recipes for the specific recipe type that are 
            not currently superseded
         2. The number of sub-recipes in the recipe
-           These should be filtered if not changed/marked for re-run?
-           
+           These should be filtered if not changed/marked for re-run
         """
         
         # If this is a previous batch, use the previous batch total
@@ -685,13 +684,14 @@ class BatchMetricsManager(models.Manager):
         qry += 'MIN(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS min_seed_duration, '
         qry += 'AVG(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_seed_duration, '
         qry += 'MAX(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS max_seed_duration '
-        qry += 'FROM recipe_node rn JOIN job j ON rn.job_id = j.id JOIN recipe r ON rn.recipe_id = r.id '
+        qry += 'FROM recipe_node rn JOIN job j ON rn.id = j.recipe_node_id JOIN recipe r ON rn.recipe_id = r.id '
         qry += 'LEFT OUTER JOIN job_exe_end je ON je.job_id = j.id AND je.exe_num = j.num_exes '
         qry += 'WHERE r.batch_id IN %s AND r.recipe_id IS NULL GROUP BY r.batch_id, rn.node_name) s '
         qry += 'WHERE bm.batch_id = s.batch_id AND bm.job_name = s.node_name'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(batch_ids)])
 
+        # import pdb; pdb.set_trace()
 
 class BatchMetrics(models.Model):
     """Contains a set of metrics for a given job name ("node" within a recipe graph) for a given batch

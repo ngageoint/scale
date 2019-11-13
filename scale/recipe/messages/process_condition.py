@@ -71,6 +71,7 @@ class ProcessCondition(CommandMessage):
             # Get condition data from dependencies in the recipe
             recipe_input_data = condition.recipe.get_input_data()
             node_outputs = RecipeNode.objects.get_recipe_node_outputs(condition.recipe_id)
+            node_name = None
             for node_output in node_outputs.values():
                 if node_output.node_type == 'condition' and node_output.id == condition.id:
                     node_name = node_output.node_name

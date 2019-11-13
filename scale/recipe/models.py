@@ -791,13 +791,16 @@ class RecipeConditionManager(models.Manager):
 
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
-
+        # import pdb; pdb.set_trace()
         recipe_definition = condition.recipe.get_definition()
         condition_interface = recipe_definition.graph[node_name].input_interface
-        data.validate(condition_interface)
+        for d in data:
+            d.validate(condition_interface)
 
-        data_dict = convert_data_to_v6_json(data).get_dict()
-        self.filter(id=condition.id).update(data=data_dict)
+        data_dicts = []
+        for d in data:
+            data_dicts.append(convert_data_to_v6_json(d).get_dict())
+        self.filter(id=condition.id).update(data=data_dicts)
 
 
 class RecipeCondition(models.Model):
@@ -1027,6 +1030,7 @@ class RecipeNodeManager(models.Manager):
         :returns: The list of recipe_node models
         :rtype: list
         """
+        # import pdb; pdb.set_trace()
 
         node_models = []
 
@@ -1141,7 +1145,6 @@ class RecipeNodeManager(models.Manager):
         :param all_nodes: Whether all nodes should be superseded
         :type all_nodes: bool
         """
-
         if all_nodes:
             qry = Job.objects.filter(recipe_node__recipe_id__in=recipe_ids)
         else:
@@ -1151,7 +1154,7 @@ class RecipeNodeManager(models.Manager):
     def supersede_subrecipes(self, recipe_ids, when, node_names, all_nodes=False):
         """Supersedes the sub-recipes for the given recipe IDs and node names
 
-        :param recipe_ids: The recipe IDs
+        :param recipe_ids: The recipe IDs (the parent recipes)
         :type recipe_ids: list
         :param when: The time that the sub-recipes were superseded
         :type when: :class:`datetime.datetime`
@@ -1162,9 +1165,11 @@ class RecipeNodeManager(models.Manager):
         """
 
         if all_nodes:
-            qry = Recipe.objects.filter(contained_by__recipe_id__in=recipe_ids)
+            sub_ids = Recipe.objects.filter(id__in=recipe_ids).values_list('sub_recipes', flat=True)
+            qry = Recipe.objects.filter(id__in=sub_ids)
         else:
-            qry = Recipe.objects.filter(contained_by__recipe_id__in=recipe_ids, contained_by__node_name__in=node_names)
+            sub_ids = Recipe.objects.filter(id__in=recipe_ids).values_list('sub_recipes', flat=True)
+            qry = Recipe.objects.filter(id__in=sub_ids, recipe_node__node_name__in=node_names)
         qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
 
 

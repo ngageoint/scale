@@ -110,7 +110,6 @@ class BatchesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')

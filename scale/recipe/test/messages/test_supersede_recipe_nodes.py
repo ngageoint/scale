@@ -43,24 +43,24 @@ class TestSupersedeRecipeNodes(TestCase):
         Recipe.objects.bulk_create([recipe_1, recipe_2, sub_recipe_1_1, sub_recipe_1_2, sub_recipe_1_3, sub_recipe_2_1,
                                     sub_recipe_2_2, sub_recipe_2_3])
 
-        node_1_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_1, save=False)
-        node_1_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_2, save=False)
+        node_1_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_1, save=True)
+        node_1_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_2, save=True)
         node_1_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', sub_recipe=sub_recipe_1_1,
-                                                        save=False)
+                                                        save=True)
         node_1_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_d', sub_recipe=sub_recipe_1_2,
-                                                        save=False)
+                                                        save=True)
         node_1_5 = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_e', sub_recipe=sub_recipe_1_3,
-                                                        save=False)
-        node_2_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_1, save=False)
-        node_2_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_2, save=False)
+                                                        save=True)
+        node_2_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_1, save=True)
+        node_2_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_2, save=True)
         node_2_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', sub_recipe=sub_recipe_2_1,
-                                                        save=False)
+                                                        save=True)
         node_2_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_d', sub_recipe=sub_recipe_2_2,
-                                                        save=False)
+                                                        save=True)
         node_2_5 = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_e', sub_recipe=sub_recipe_2_3,
-                                                        save=False)
-        RecipeNode.objects.bulk_create([node_1_1, node_1_2, node_1_3, node_1_4, node_1_5, node_2_1, node_2_2, node_2_3,
-                                        node_2_4, node_2_5])
+                                                        save=True)
+        # RecipeNode.objects.bulk_create([node_1_1, node_1_2, node_1_3, node_1_4, node_1_5, node_2_1, node_2_2, node_2_3,
+        #                                 node_2_4, node_2_5])
 
         when = now()
         supersede_jobs = {'node_a', 'node_b'}
@@ -84,6 +84,7 @@ class TestSupersedeRecipeNodes(TestCase):
         for job in Job.objects.filter(id__in=[job_1_1.id, job_1_2.id, job_2_1.id, job_2_2.id]):
             self.assertTrue(job.is_superseded)
             self.assertEqual(job.superseded, when)
+
         # Ensure sub-recipes 'node_c' and 'node_d' from both recipes are superseded
         for recipe in Recipe.objects.filter(id__in=[sub_recipe_1_1.id, sub_recipe_1_2.id, sub_recipe_2_1.id,
                                                     sub_recipe_2_2.id]):
@@ -206,102 +207,102 @@ class TestSupersedeRecipeNodes(TestCase):
                                  job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
                                  job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
                                  job_2_h_2])
-        node_1_a = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_a, save=False)
-        node_1_b = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_b, save=False)
-        node_1_c = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', job=job_1_c, save=False)
-        node_1_d = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_d', job=job_1_d, save=False)
+        node_1_a = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_a, save=True)
+        node_1_b = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_b, save=True)
+        node_1_c = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', job=job_1_c, save=True)
+        node_1_d = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_d', job=job_1_d, save=True)
         node_1_e = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_e', sub_recipe=recipe_1_e,
-                                                        save=False)
+                                                        save=True)
         node_1_f = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_f', sub_recipe=recipe_1_f,
-                                                        save=False)
+                                                        save=True)
         node_1_g = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_g', sub_recipe=recipe_1_g,
-                                                        save=False)
+                                                        save=True)
         node_1_h = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_h', sub_recipe=recipe_1_h,
-                                                        save=False)
+                                                        save=True)
         node_1_e_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_1', job=job_1_e_1,
-                                                          save=False)
+                                                          save=True)
         node_1_e_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_2', job=job_1_e_2,
-                                                          save=False)
+                                                          save=True)
         node_1_f_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_1', job=job_1_f_1,
-                                                          save=False)
+                                                          save=True)
         node_1_f_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_2', job=job_1_f_2,
-                                                          save=False)
+                                                          save=True)
         node_1_g_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_1', job=job_1_g_1,
-                                                          save=False)
+                                                          save=True)
         node_1_g_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_2', job=job_1_g_2,
-                                                          save=False)
+                                                          save=True)
         node_1_h_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_1', job=job_1_h_1,
-                                                          save=False)
+                                                          save=True)
         node_1_h_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_2', job=job_1_h_2,
-                                                          save=False)
+                                                          save=True)
         node_1_e_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_3',
-                                                          sub_recipe=recipe_1_e_3, save=False)
+                                                          sub_recipe=recipe_1_e_3, save=True)
         node_1_e_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_4',
-                                                          sub_recipe=recipe_1_e_4, save=False)
+                                                          sub_recipe=recipe_1_e_4, save=True)
         node_1_f_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_3',
-                                                          sub_recipe=recipe_1_f_3, save=False)
+                                                          sub_recipe=recipe_1_f_3, save=True)
         node_1_f_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_4',
-                                                          sub_recipe=recipe_1_f_4, save=False)
+                                                          sub_recipe=recipe_1_f_4, save=True)
         node_1_g_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_3',
-                                                          sub_recipe=recipe_1_g_3, save=False)
+                                                          sub_recipe=recipe_1_g_3, save=True)
         node_1_g_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_4',
-                                                          sub_recipe=recipe_1_g_4, save=False)
+                                                          sub_recipe=recipe_1_g_4, save=True)
         node_1_h_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_3',
-                                                          sub_recipe=recipe_1_h_3, save=False)
+                                                          sub_recipe=recipe_1_h_3, save=True)
         node_1_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_4',
-                                                          sub_recipe=recipe_1_h_4, save=False)
-        node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=False)
-        node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=False)
-        node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=False)
-        node_2_d = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_d', job=job_2_d, save=False)
+                                                          sub_recipe=recipe_1_h_4, save=True)
+        node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=True)
+        node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=True)
+        node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=True)
+        node_2_d = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_d', job=job_2_d, save=True)
         node_2_e = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_e', sub_recipe=recipe_2_e,
-                                                        save=False)
+                                                        save=True)
         node_2_f = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_f', sub_recipe=recipe_2_f,
-                                                        save=False)
+                                                        save=True)
         node_2_g = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_g', sub_recipe=recipe_2_g,
-                                                        save=False)
+                                                        save=True)
         node_2_h = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_h', sub_recipe=recipe_2_h,
-                                                        save=False)
+                                                        save=True)
         node_2_e_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_1', job=job_2_e_1,
-                                                          save=False)
+                                                          save=True)
         node_2_e_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_2', job=job_2_e_2,
-                                                          save=False)
+                                                          save=True)
         node_2_f_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_1', job=job_2_f_1,
-                                                          save=False)
+                                                          save=True)
         node_2_f_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_2', job=job_2_f_2,
-                                                          save=False)
+                                                          save=True)
         node_2_g_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_1', job=job_2_g_1,
-                                                          save=False)
+                                                          save=True)
         node_2_g_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_2', job=job_2_g_2,
-                                                          save=False)
+                                                          save=True)
         node_2_h_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_1', job=job_2_h_1,
-                                                          save=False)
+                                                          save=True)
         node_2_h_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_2', job=job_2_h_2,
-                                                          save=False)
+                                                          save=True)
         node_2_e_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_3',
-                                                          sub_recipe=recipe_2_e_3, save=False)
+                                                          sub_recipe=recipe_2_e_3, save=True)
         node_2_e_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_4',
-                                                          sub_recipe=recipe_2_e_4, save=False)
+                                                          sub_recipe=recipe_2_e_4, save=True)
         node_2_f_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_3',
-                                                          sub_recipe=recipe_2_f_3, save=False)
+                                                          sub_recipe=recipe_2_f_3, save=True)
         node_2_f_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_4',
-                                                          sub_recipe=recipe_2_f_4, save=False)
+                                                          sub_recipe=recipe_2_f_4, save=True)
         node_2_g_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_3',
-                                                          sub_recipe=recipe_2_g_3, save=False)
+                                                          sub_recipe=recipe_2_g_3, save=True)
         node_2_g_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_4',
-                                                          sub_recipe=recipe_2_g_4, save=False)
+                                                          sub_recipe=recipe_2_g_4, save=True)
         node_2_h_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_3',
-                                                          sub_recipe=recipe_2_h_3, save=False)
+                                                          sub_recipe=recipe_2_h_3, save=True)
         node_2_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_4',
-                                                          sub_recipe=recipe_2_h_4, save=False)
-        RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
-                                        node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
-                                        node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
-                                        node_1_g_3, node_1_g_4, node_1_h_3, node_1_h_4, node_2_a, node_2_b, node_2_c,
-                                        node_2_d, node_2_e, node_2_f, node_2_g, node_2_h, node_2_e_1, node_2_e_2,
-                                        node_2_f_1, node_2_f_2, node_2_g_1, node_2_g_2, node_2_h_1, node_2_h_2,
-                                        node_2_e_3, node_2_e_4, node_2_f_3, node_2_f_4, node_2_g_3, node_2_g_4,
-                                        node_2_h_3, node_2_h_4])
+                                                          sub_recipe=recipe_2_h_4, save=True)
+        # RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
+        #                                 node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
+        #                                 node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
+        #                                 node_1_g_3, node_1_g_4, node_1_h_3, node_1_h_4, node_2_a, node_2_b, node_2_c,
+        #                                 node_2_d, node_2_e, node_2_f, node_2_g, node_2_h, node_2_e_1, node_2_e_2,
+        #                                 node_2_f_1, node_2_f_2, node_2_g_1, node_2_g_2, node_2_h_1, node_2_h_2,
+        #                                 node_2_e_3, node_2_e_4, node_2_f_3, node_2_f_4, node_2_g_3, node_2_g_4,
+        #                                 node_2_h_3, node_2_h_4])
 
         when = now()
         supersede_jobs = {'node_c', 'node_d'}
@@ -512,102 +513,102 @@ class TestSupersedeRecipeNodes(TestCase):
                                  job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
                                  job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
                                  job_2_h_2])
-        node_1_a = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_a, save=False)
-        node_1_b = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_b, save=False)
-        node_1_c = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', job=job_1_c, save=False)
-        node_1_d = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_d', job=job_1_d, save=False)
+        node_1_a = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_a, save=True)
+        node_1_b = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_b, save=True)
+        node_1_c = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', job=job_1_c, save=True)
+        node_1_d = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_d', job=job_1_d, save=True)
         node_1_e = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_e', sub_recipe=recipe_1_e,
-                                                        save=False)
+                                                        save=True)
         node_1_f = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_f', sub_recipe=recipe_1_f,
-                                                        save=False)
+                                                        save=True)
         node_1_g = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_g', sub_recipe=recipe_1_g,
-                                                        save=False)
+                                                        save=True)
         node_1_h = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_h', sub_recipe=recipe_1_h,
-                                                        save=False)
+                                                        save=True)
         node_1_e_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_1', job=job_1_e_1,
-                                                          save=False)
+                                                          save=True)
         node_1_e_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_2', job=job_1_e_2,
-                                                          save=False)
+                                                          save=True)
         node_1_f_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_1', job=job_1_f_1,
-                                                          save=False)
+                                                          save=True)
         node_1_f_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_2', job=job_1_f_2,
-                                                          save=False)
+                                                          save=True)
         node_1_g_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_1', job=job_1_g_1,
-                                                          save=False)
+                                                          save=True)
         node_1_g_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_2', job=job_1_g_2,
-                                                          save=False)
+                                                          save=True)
         node_1_h_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_1', job=job_1_h_1,
-                                                          save=False)
+                                                          save=True)
         node_1_h_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_2', job=job_1_h_2,
-                                                          save=False)
+                                                          save=True)
         node_1_e_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_3',
-                                                          sub_recipe=recipe_1_e_3, save=False)
+                                                          sub_recipe=recipe_1_e_3, save=True)
         node_1_e_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_e, node_name='node_4',
-                                                          sub_recipe=recipe_1_e_4, save=False)
+                                                          sub_recipe=recipe_1_e_4, save=True)
         node_1_f_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_3',
-                                                          sub_recipe=recipe_1_f_3, save=False)
+                                                          sub_recipe=recipe_1_f_3, save=True)
         node_1_f_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_f, node_name='node_4',
-                                                          sub_recipe=recipe_1_f_4, save=False)
+                                                          sub_recipe=recipe_1_f_4, save=True)
         node_1_g_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_3',
-                                                          sub_recipe=recipe_1_g_3, save=False)
+                                                          sub_recipe=recipe_1_g_3, save=True)
         node_1_g_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_g, node_name='node_4',
-                                                          sub_recipe=recipe_1_g_4, save=False)
+                                                          sub_recipe=recipe_1_g_4, save=True)
         node_1_h_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_3',
-                                                          sub_recipe=recipe_1_h_3, save=False)
+                                                          sub_recipe=recipe_1_h_3, save=True)
         node_1_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_4',
-                                                          sub_recipe=recipe_1_h_4, save=False)
-        node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=False)
-        node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=False)
-        node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=False)
-        node_2_d = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_d', job=job_2_d, save=False)
+                                                          sub_recipe=recipe_1_h_4, save=True)
+        node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=True)
+        node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=True)
+        node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=True)
+        node_2_d = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_d', job=job_2_d, save=True)
         node_2_e = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_e', sub_recipe=recipe_2_e,
-                                                        save=False)
+                                                        save=True)
         node_2_f = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_f', sub_recipe=recipe_2_f,
-                                                        save=False)
+                                                        save=True)
         node_2_g = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_g', sub_recipe=recipe_2_g,
-                                                        save=False)
+                                                        save=True)
         node_2_h = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_h', sub_recipe=recipe_2_h,
-                                                        save=False)
+                                                        save=True)
         node_2_e_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_1', job=job_2_e_1,
-                                                          save=False)
+                                                          save=True)
         node_2_e_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_2', job=job_2_e_2,
-                                                          save=False)
+                                                          save=True)
         node_2_f_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_1', job=job_2_f_1,
-                                                          save=False)
+                                                          save=True)
         node_2_f_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_2', job=job_2_f_2,
-                                                          save=False)
+                                                          save=True)
         node_2_g_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_1', job=job_2_g_1,
-                                                          save=False)
+                                                          save=True)
         node_2_g_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_2', job=job_2_g_2,
-                                                          save=False)
+                                                          save=True)
         node_2_h_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_1', job=job_2_h_1,
-                                                          save=False)
+                                                          save=True)
         node_2_h_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_2', job=job_2_h_2,
-                                                          save=False)
+                                                          save=True)
         node_2_e_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_3',
-                                                          sub_recipe=recipe_2_e_3, save=False)
+                                                          sub_recipe=recipe_2_e_3, save=True)
         node_2_e_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_4',
-                                                          sub_recipe=recipe_2_e_4, save=False)
+                                                          sub_recipe=recipe_2_e_4, save=True)
         node_2_f_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_3',
-                                                          sub_recipe=recipe_2_f_3, save=False)
+                                                          sub_recipe=recipe_2_f_3, save=True)
         node_2_f_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_4',
-                                                          sub_recipe=recipe_2_f_4, save=False)
+                                                          sub_recipe=recipe_2_f_4, save=True)
         node_2_g_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_3',
-                                                          sub_recipe=recipe_2_g_3, save=False)
+                                                          sub_recipe=recipe_2_g_3, save=True)
         node_2_g_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_4',
-                                                          sub_recipe=recipe_2_g_4, save=False)
+                                                          sub_recipe=recipe_2_g_4, save=True)
         node_2_h_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_3',
-                                                          sub_recipe=recipe_2_h_3, save=False)
+                                                          sub_recipe=recipe_2_h_3, save=True)
         node_2_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_4',
-                                                          sub_recipe=recipe_2_h_4, save=False)
-        RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
-                                        node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
-                                        node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
-                                        node_1_g_3, node_1_g_4, node_1_h_3, node_1_h_4, node_2_a, node_2_b, node_2_c,
-                                        node_2_d, node_2_e, node_2_f, node_2_g, node_2_h, node_2_e_1, node_2_e_2,
-                                        node_2_f_1, node_2_f_2, node_2_g_1, node_2_g_2, node_2_h_1, node_2_h_2,
-                                        node_2_e_3, node_2_e_4, node_2_f_3, node_2_f_4, node_2_g_3, node_2_g_4,
-                                        node_2_h_3, node_2_h_4])
+                                                          sub_recipe=recipe_2_h_4, save=True)
+        # RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
+        #                                 node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
+        #                                 node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
+        #                                 node_1_g_3, node_1_g_4, node_1_h_3, node_1_h_4, node_2_a, node_2_b, node_2_c,
+        #                                 node_2_d, node_2_e, node_2_f, node_2_g, node_2_h, node_2_e_1, node_2_e_2,
+        #                                 node_2_f_1, node_2_f_2, node_2_g_1, node_2_g_2, node_2_h_1, node_2_h_2,
+        #                                 node_2_e_3, node_2_e_4, node_2_f_3, node_2_f_4, node_2_g_3, node_2_g_4,
+        #                                 node_2_h_3, node_2_h_4])
 
         when = now()
         supersede_jobs = {'node_c', 'node_d'}

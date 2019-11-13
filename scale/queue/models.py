@@ -278,7 +278,6 @@ class QueueManager(models.Manager):
         :returns: The list of job IDs that were successfully QUEUED
         :rtype: list
         """
-
         when_queued = timezone.now()
 
         # Set job models to QUEUED

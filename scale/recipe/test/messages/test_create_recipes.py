@@ -292,7 +292,7 @@ class TestCreateRecipes(TestCase):
 
         # Creates definitions for sub-recipe A and sub-recipe B
         event = trigger_test_utils.create_trigger_event()
-        top_recipe_type = recipe_test_utils.create_recipe_type_v6()
+
         job_type_a_1 = job_test_utils.create_seed_job_type()
         job_type_a_2 = job_test_utils.create_seed_job_type()
         sub_definition_a = RecipeDefinition(Interface())
@@ -301,6 +301,7 @@ class TestCreateRecipes(TestCase):
         sub_definition_a.add_dependency('node_1', 'node_2')
         sub_definition_a_dict = convert_recipe_definition_to_v6_json(sub_definition_a).get_dict()
         recipe_type_a = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_a_dict)
+
         job_type_b_x = job_test_utils.create_seed_job_type()
         recipe_type_b_y = recipe_test_utils.create_recipe_type_v6()
         sub_definition_b = RecipeDefinition(Interface())
@@ -309,6 +310,12 @@ class TestCreateRecipes(TestCase):
         sub_definition_b.add_dependency('node_x', 'node_y')
         sub_definition_b_dict = convert_recipe_definition_to_v6_json(sub_definition_b).get_dict()
         recipe_type_b = recipe_test_utils.create_recipe_type_v6(definition=sub_definition_b_dict)
+
+        top_definition = RecipeDefinition(Interface())
+        top_definition.add_recipe_node('node_a', recipe_type_a.name, recipe_type_a.revision_num)
+        top_definition.add_recipe_node('node_b', recipe_type_b.name, recipe_type_b.revision_num)
+        top_definition_dict = convert_recipe_definition_to_v6_json(top_definition).get_dict()
+        top_recipe_type = recipe_test_utils.create_recipe_type_v6(definition=top_definition_dict)
         top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, event=event, save=True)
 
         # Create message to create sub-recipes A and B for top_recipe
@@ -323,8 +330,14 @@ class TestCreateRecipes(TestCase):
         self.assertTrue(result)
 
         # Check for new sub-recipes
-        qry = RecipeNode.objects.select_related('sub_recipe')
-        recipe_nodes = qry.filter(recipe_id=top_recipe.id).order_by('node_name')
+        # import pdb; pdb.set_trace()
+        sub_ids = Recipe.objects.filter(id=top_recipe.id).values_list('sub_recipes', flat=True)
+        recipes = Recipe.objects.filter(id__in=sub_ids).order_by('recipe_node__node_name')
+        # sub_ids = Recipe.objects.select_related('sub_recipes').filter(id=top_recipe.id).values_list('sub_recipes', flat=True)
+        # recipes = Recipe.objects.select_related('recipe_node').filter(sub_recipes__in=sub_ids).order_by('recipe_node__node_name')
+        # qry = RecipeNode.objects.select_related('sub_recipe')
+
+        recipe_nodes = RecipeNode.filter(recipe_id=top_recipe.id).order_by('node_name')
         self.assertEqual(len(recipe_nodes), 2)
         self.assertEqual(recipe_nodes[0].node_name, 'node_a')
         self.assertEqual(recipe_nodes[1].node_name, 'node_b')
