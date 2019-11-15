@@ -632,6 +632,31 @@ Response: 200 OK
 |                    |                   | (See :ref:`rest_v6_scan_configuration`)                                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
+.. _rest_v6_scan_cancel:
+
+v6 Cancel Scan
+---------------
+
+This call will send a cancel job request for the job associated with the scan, as well as all queued or running ingest jobs spawned from the scan.
+recipes triggered by completed ingest jobs will not be effected. Returns the job ids of all canceled jobs. 
+
+**Example POST /v6/scans/cancel/{id} API call**
+
+Request: POST http://.../v6/scans/cancel/{id}/
+
+.. code-block:: javascript
+
+    {
+    }
+
+Response: 202 Accepted
+
+.. code-block:: javascript
+
+    {
+    "[1,2,3]"
+    }
+
 .. _rest_v6_scan_configuration:
 
 Scan Configuration JSON

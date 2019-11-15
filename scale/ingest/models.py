@@ -28,6 +28,7 @@ from ingest.strike.configuration.json.configuration_v6 import StrikeConfiguratio
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.models import JobType
 from job.messages.process_job_input import create_process_job_input_messages
+from job.messages.cancel_jobs import create_cancel_jobs_messages
 from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -242,7 +243,8 @@ class IngestManager(models.Manager):
         ingest = ingest.defer('source_file__workspace__json_config')
         ingest = ingest.get(pk=ingest_id)
         ingest.admin_view = is_staff
-        ingest.strike.admin_view = is_staff
+        if ingest.strike:
+            ingest.strike.admin_view = is_staff
 
         return ingest
 
@@ -981,6 +983,36 @@ class ScanManager(models.Manager):
 
         return ScanValidation(is_valid, errors, warnings)
 
+    def cancel_scan(self, scan_id):
+        """attempts to cancel the job associated with a scan
+
+        :param scan_id: The unique identifier of the Scan process.
+        :type scan_id: int
+        """
+
+        # cancel primary scan job first!
+        scan = Scan.objects.select_related('job', 'job__job_type')
+        scan = scan.get(pk=scan_id)
+        if scan.job.status in ['RUNNING', 'PENDING', 'QUEUED']:
+            scan_job_cancel_msg = create_cancel_jobs_messages([scan.job.id], timezone.now())
+            CommandMessageManager().send_messages(scan_job_cancel_msg)
+
+        # cancel all ingest jobs associated with scan
+        relevant_ingests = Ingest.objects.get_ingests_by_scan(scan_id)
+        job_ids = []
+        for ingest in relevant_ingests:
+            try:
+                if ingest.job and ingest.job.status in ['RUNNING', 'PENDING', 'QUEUED']:
+                    job_ids.append(ingest.job.id)
+            except:
+                throw()
+        if len(job_ids) > 0:
+            msgs = create_cancel_jobs_messages(job_ids, timezone.now())
+            CommandMessageManager().send_messages(msgs)
+
+        if scan.job.status in ['RUNNING', 'PENDING', 'QUEUED']:
+            job_ids.append(scan.job.id)
+        return job_ids
 
 class Scan(models.Model):
     """Represents an instance of a Scan process which will run and detect files
