@@ -1004,8 +1004,13 @@ class ScanManager(models.Manager):
             try:
                 if ingest.job and ingest.job.status in ['RUNNING', 'PENDING', 'QUEUED']:
                     job_ids.append(ingest.job.id)
-            except:
-                throw()
+                else:
+                    if not ingest.job:
+                        logger.info("ingest %d not canceled due to no job existing", ingest.id)
+            except ex:
+                if ingest.job: 
+                    logger.warning("Job %d was not canceled.", ingest.job.id)
+                logger.exception("error in attempting to cancel ingest job")
         if len(job_ids) > 0:
             msgs = create_cancel_jobs_messages(job_ids, timezone.now())
             CommandMessageManager().send_messages(msgs)

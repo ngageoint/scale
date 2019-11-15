@@ -355,7 +355,10 @@ class CancelScansView(GenericAPIView):
 
     def post(self, request, scan_id):
         try:
-            canceled_ids = Scan.objects.cancel_scan(scan_id)
+            if self.request.version == 'v6' or self.request.version == 'v7':
+                canceled_ids = Scan.objects.cancel_scan(scan_id)
+            else:
+                raise Http404    
         except Scan.DoesNotExist:
             raise Http404
         return Response(JSONRenderer().render(canceled_ids), status=status.HTTP_202_ACCEPTED)

@@ -973,6 +973,29 @@ class TestScansProcessViewV6(APITestCase):
 
         self.assertEqual(len(result), 0)
 
+    @patch('ingest.models.CommandMessageManager')
+    @patch('ingest.models.create_cancel_jobs_messages')
+    def test_cancel_scan_broken_ingest_job(self, msg_create, mock_msg_mgr):
+        """Tests no cancel messages generated when jobs are not in a cancelable state"""
+
+        self.scan.job = job_utils.create_job()
+        self.scan.save()
+        self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
+                                                       status='QUEUED')
+        self.ingest.job = None
+        self.ingest.save()
+
+        url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        
+        result = json.loads(response.data)
+
+        msg_create.assert_called()
+        mock_msg_mgr.assert_called()
+
+        self.assertEqual(len(result), 1)
+
 class TestStrikesViewV6(APITestCase):
 
     version = 'v6'

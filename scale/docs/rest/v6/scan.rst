@@ -644,11 +644,6 @@ recipes triggered by completed ingest jobs will not be effected. Returns the job
 
 Request: POST http://.../v6/scans/cancel/{id}/
 
-.. code-block:: javascript
-
-    {
-    }
-
 Response: 202 Accepted
 
 .. code-block:: javascript
@@ -656,6 +651,8 @@ Response: 202 Accepted
     {
     "[1,2,3]"
     }
+
+Returns a list of canceled job ids.
 
 .. _rest_v6_scan_configuration:
 
