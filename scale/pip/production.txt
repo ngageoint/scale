@@ -14,7 +14,7 @@ django-rest-framework-social-oauth2
 elasticsearch>=6.3.0,<7
 jsonschema>=2.3,<3
 kombu>=4.0.2,<5
-marathon>=0.11.0,<1
+marathon>=0.11.0,<0.12.0
 mesoshttp>=0.3.2,<0.4
 more-itertools<6
 psycopg2>=2.7.1,<3
