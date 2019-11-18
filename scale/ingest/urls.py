@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^scans/(\d+)/$', views.ScansDetailsView.as_view(), name='scans_details_view'),
     url(r'^scans/(\d+)/process/$', views.ScansProcessView.as_view(), name='scans_process_view'),
     url(r'^scans/validation/$', views.ScansValidationView.as_view(), name='scans_validation_view'),
+    url(r'^scans/cancel/(\d+)/$', views.CancelScansView.as_view(), name='cancel_scans_view'),
 
     # Strike views
     url(r'^strikes/$', views.StrikesView.as_view(), name='strikes_view'),

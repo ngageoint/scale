@@ -5,6 +5,7 @@ import datetime
 import logging
 
 import rest_framework.status as status
+from rest_framework.renderers import JSONRenderer
 from django.http.response import Http404
 import django.utils.timezone as timezone
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
@@ -338,6 +339,29 @@ class ScansView(ListCreateAPIView):
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
 
+
+
+class CancelScansView(GenericAPIView):
+    """This view is the endpoint for canceling a scan in progress."""
+    queryset = Scan.objects.all()
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScanSerializerV6
+        elif self.request.version == 'v7':
+            return ScanSerializerV6
+
+    def post(self, request, scan_id):
+        try:
+            if self.request.version == 'v6' or self.request.version == 'v7':
+                canceled_ids = Scan.objects.cancel_scan(scan_id)
+            else:
+                raise Http404    
+        except Scan.DoesNotExist:
+            raise Http404
+        return Response(JSONRenderer().render(canceled_ids), status=status.HTTP_202_ACCEPTED)
 
 class ScansDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Scan process."""
