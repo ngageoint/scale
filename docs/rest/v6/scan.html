@@ -128,6 +128,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#v6-validate-scan">v6 Validate Scan</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-edit-scan">v6 Edit Scan</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-process-scan">v6 Process Scan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-cancel-scan">v6 Cancel Scan</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#scan-configuration-json">Scan Configuration JSON</a></li>
 </ul>
 </li>
@@ -1020,6 +1021,20 @@ Defaults to false when unset.</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="v6-cancel-scan">
+<span id="rest-v6-scan-cancel"></span><h2>v6 Cancel Scan<a class="headerlink" href="#v6-cancel-scan" title="Permalink to this headline">¶</a></h2>
+<p>This call will send a cancel job request for the job associated with the scan, as well as all queued or running ingest jobs spawned from the scan.
+recipes triggered by completed ingest jobs will not be effected. Returns the job ids of all canceled jobs.</p>
+<p><strong>Example POST /v6/scans/cancel/{id} API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/scans/cancel">http://.../v6/scans/cancel</a>/{id}/</p>
+<p>Response: 202 Accepted</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;[1,2,3]&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns a list of canceled job ids.</p>
 </div>
 <div class="section" id="scan-configuration-json">
 <span id="rest-v6-scan-configuration"></span><h2>Scan Configuration JSON<a class="headerlink" href="#scan-configuration-json" title="Permalink to this headline">¶</a></h2>

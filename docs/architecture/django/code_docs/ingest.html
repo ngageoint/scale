@@ -1706,6 +1706,20 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling Scan processes</p>
 <dl class="method">
+<dt id="ingest.models.ScanManager.cancel_scan">
+<code class="descname">cancel_scan</code><span class="sig-paren">(</span><em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.cancel_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>attempts to cancel the job associated with a scan</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scan_id</strong> (<em>int</em>) &#8211; The unique identifier of the Scan process.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.models.ScanManager.create_scan">
 <code class="descname">create_scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.create_scan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new Scan process with the given configuration and returns
@@ -2394,6 +2408,29 @@ transaction. An argument of None for a field indicates that the field should not
 <div class="section" id="module-ingest.views">
 <span id="ingest-views-module"></span><h2>ingest.views module<a class="headerlink" href="#module-ingest.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful ingest and Strike services</p>
+<dl class="class">
+<dt id="ingest.views.CancelScansView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">CancelScansView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.CancelScansView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for canceling a scan in progress.</p>
+<dl class="method">
+<dt id="ingest.views.CancelScansView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.CancelScansView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.CancelScansView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.CancelScansView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.CancelScansView.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#ingest.views.CancelScansView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="ingest.views.IngestDetailsView">
 <em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">IngestDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestDetailsView" title="Permalink to this definition">¶</a></dt>

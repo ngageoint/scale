@@ -1135,6 +1135,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.cancel_queued_jobs">cancel_queued_jobs() (queue.models.QueueManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.cancel_scan">cancel_scan() (ingest.models.ScanManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.canceled_count">canceled_count (metrics.models.MetricsJobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs">CancelJobs (class in job.messages.cancel_jobs)</a>
@@ -1142,6 +1144,8 @@
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs_bulk.CancelJobsBulk">CancelJobsBulk (class in job.messages.cancel_jobs_bulk)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView">CancelJobsView (class in job.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.CancelScansView">CancelScansView (class in ingest.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.models.Error.CATEGORIES">CATEGORIES (error.models.Error attribute)</a>
 </li>
@@ -4891,6 +4895,8 @@
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView.get_serializer_class">(diagnostic.views.QueueScaleHelloView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.get_serializer_class">(diagnostic.views.QueueScaleRouletteView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.CancelScansView.get_serializer_class">(ingest.views.CancelScansView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.get_serializer_class">(ingest.views.IngestDetailsView method)</a>
 </li>
@@ -9502,6 +9508,8 @@
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.post">(error.views.ErrorsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.CancelScansView.post">(ingest.views.CancelScansView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansProcessView.post">(ingest.views.ScansProcessView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansValidationView.post">(ingest.views.ScansValidationView method)</a>
@@ -9774,6 +9782,8 @@
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.queryset">(error.views.ErrorsView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.CancelScansView.queryset">(ingest.views.CancelScansView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.queryset">(ingest.views.IngestDetailsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestsStatusView.queryset">(ingest.views.IngestsStatusView attribute)</a>
@@ -9889,10 +9899,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.queued_jobs">queue.messages.queued_jobs (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.requeue_jobs">queue.messages.requeue_jobs (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.requeue_jobs">queue.messages.requeue_jobs (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.requeue_jobs_bulk">queue.messages.requeue_jobs_bulk (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations">queue.migrations (module)</a>
@@ -13213,6 +13223,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsViewV6.test_cancel_invalid">test_cancel_invalid() (job.test.test_views.TestCancelJobsViewV6 method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_broken_ingest_job">test_cancel_scan_broken_ingest_job() (ingest.test.test_views.TestScansProcessViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_job">test_cancel_scan_job() (ingest.test.test_views.TestScansProcessViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_job_nothing_to_cancel">test_cancel_scan_job_nothing_to_cancel() (ingest.test.test_views.TestScansProcessViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_canceled_job_execution">test_canceled_job_execution() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_canceled_queue_model">test_canceled_queue_model() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
@@ -15083,10 +15099,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_accepted_none">test_parse_float_accepted_none() (util.test.test_rest.TestRest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_default">test_parse_float_default() (util.test.test_rest.TestRest method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_default">test_parse_float_default() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_invalid">test_parse_float_invalid() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_missing">test_parse_float_missing() (util.test.test_rest.TestRest method)</a>
@@ -15430,6 +15446,8 @@
       <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.TestPreJobSteps.test_scale_pre_steps_io_error">test_scale_pre_steps_io_error() (job.test.management.commands.test_scale_pre_steps.TestPreJobSteps method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.TestPreJobSteps.test_scale_pre_steps_successful">test_scale_pre_steps_successful() (job.test.management.commands.test_scale_pre_steps.TestPreJobSteps method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestsViewV6.test_scan_id">test_scan_id() (ingest.test.test_views.TestIngestsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.test_schedule_job_exes">test_schedule_job_exes() (job.test.execution.test_manager.TestJobExecutionManager method)</a>
 </li>

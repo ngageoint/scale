@@ -534,6 +534,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.test.test_views.TestIngestsViewV6.test_scan_id">
+<code class="descname">test_scan_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestsViewV6.test_scan_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingests view filtered by scan processor.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.test.test_views.TestIngestsViewV6.test_status">
 <code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestsViewV6.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingests view filtered by status.</p>
@@ -697,6 +703,24 @@
 <dt id="ingest.test.test_views.TestScansProcessViewV6.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessViewV6.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_broken_ingest_job">
+<code class="descname">test_cancel_scan_broken_ingest_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_broken_ingest_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests no cancel messages generated when jobs are not in a cancelable state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_job">
+<code class="descname">test_cancel_scan_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the Scan process view for an ingest Scan. following dry run</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_job_nothing_to_cancel">
+<code class="descname">test_cancel_scan_job_nothing_to_cancel</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessViewV6.test_cancel_scan_job_nothing_to_cancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests no cancel messages generated when jobs are not in a cancelable state</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestScansProcessViewV6.test_dry_run_process">
