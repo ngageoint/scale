@@ -92,7 +92,8 @@ class NodeDefinition(object):
                         raise
                     else:
                         logger.info("InvalidData exception occured due to optional output not present. Proceeding with job execution.")
-        
+                else:
+                    logger.exception("InvalidData exception occurred generating input data")
 
         return input_data
 
