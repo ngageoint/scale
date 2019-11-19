@@ -4,6 +4,8 @@ from __future__ import absolute_import
 import json
 
 import django
+import django.utils.timezone as timezone
+import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 
@@ -140,6 +142,26 @@ class TestMetricPlotViewV6(APITransactionTestCase):
                 self.assertIsNotNone(entry['max_y'])
                 self.assertIn(entry['values'][0]['id'], job_type_ids)
 
+    def test_single_choice(self):
+        """Tests successfully calling the metric plot view with a single choice filter."""
+
+        url = '/v6/metrics/job-types/plot-data/?choice_id=%s' % self.job_type1.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertGreaterEqual(len(result['results']), 1)
+
+        for entry in result['results']:
+            self.assertIsNotNone(entry['values'])
+            if entry['values']:
+                self.assertIsNotNone(entry['column'])
+                self.assertIsNotNone(entry['min_x'])
+                self.assertIsNotNone(entry['max_x'])
+                self.assertIsNotNone(entry['min_y'])
+                self.assertIsNotNone(entry['max_y'])
+                self.assertEqual(entry['values'][0]['id'], self.job_type1.id)
+
     def test_columns(self):
         """Tests successfully calling the metric plot view with column filters."""
 
@@ -203,3 +225,27 @@ class TestMetricPlotViewV6(APITransactionTestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['values'][0]['value'], 330)
+
+    def test_by_hour(self):
+        """Tests successfully binning the metric plot view by hour."""
+        
+        # Create job type for two hours prior
+        job_type4 = job_test_utils.create_seed_job_type()
+        occurred = timezone.now() - datetime.timedelta(hours=2)
+        metrics_test_utils.create_job_type(job_type=job_type4, occurred=occurred, job_time_sum=2200, job_time_min=200,
+                                           job_time_max=2000, job_time_avg=200)
+        
+        # Create job type for one hour prior
+        job_type5 = job_test_utils.create_seed_job_type()
+        occurred = timezone.now() - datetime.timedelta(hours=1)
+        metrics_test_utils.create_job_type(job_type=job_type5, occurred=occurred, job_time_sum=1100, job_time_min=100,
+                                           job_time_max=1000, job_time_avg=100)
+
+        url = '/v6/metrics/job-types/plot-data/?column=job_time_avg'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(len(result['results'][0]['values']), 3)
+        
