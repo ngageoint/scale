@@ -142,6 +142,26 @@ class TestMetricPlotViewV6(APITransactionTestCase):
                 self.assertIsNotNone(entry['max_y'])
                 self.assertIn(entry['values'][0]['id'], job_type_ids)
 
+    def test_single_choice(self):
+        """Tests successfully calling the metric plot view with a single choice filter."""
+
+        url = '/v6/metrics/job-types/plot-data/?choice_id=%s' % self.job_type1.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertGreaterEqual(len(result['results']), 1)
+
+        for entry in result['results']:
+            self.assertIsNotNone(entry['values'])
+            if entry['values']:
+                self.assertIsNotNone(entry['column'])
+                self.assertIsNotNone(entry['min_x'])
+                self.assertIsNotNone(entry['max_x'])
+                self.assertIsNotNone(entry['min_y'])
+                self.assertIsNotNone(entry['max_y'])
+                self.assertEqual(entry['values'][0]['id'], self.job_type1.id)
+
     def test_columns(self):
         """Tests successfully calling the metric plot view with column filters."""
 
