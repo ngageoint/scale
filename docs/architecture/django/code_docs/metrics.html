@@ -254,6 +254,7 @@
 <li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0007_auto_20161013_2333">metrics.migrations.0007_auto_20161013_2333 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0008_occurred_datetime">metrics.migrations.0008_occurred_datetime module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0009_revert_datetime">metrics.migrations.0009_revert_datetime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0010_occurred_datetime">metrics.migrations.0010_occurred_datetime module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1202,7 +1203,7 @@ aggregate variations that all reference the same base attribute.</li>
 
 <dl class="class">
 <dt id="metrics.registry.MetricsPlotValue">
-<em class="property">class </em><code class="descclassname">metrics.registry.</code><code class="descname">MetricsPlotValue</code><span class="sig-paren">(</span><em>choice_id</em>, <em>date</em>, <em>value=0</em>, <em>count=0</em>, <em>total=0</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.registry.MetricsPlotValue" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">metrics.registry.</code><code class="descname">MetricsPlotValue</code><span class="sig-paren">(</span><em>choice_id</em>, <em>datetime</em>, <em>value=0</em>, <em>count=0</em>, <em>total=0</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.registry.MetricsPlotValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a single value within a series of values for a metrics type column.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1655,13 +1656,6 @@ are not included by default.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="metrics.serializers.MetricsPlotMultiValueSerializer">
-<em class="property">class </em><code class="descclassname">metrics.serializers.</code><code class="descname">MetricsPlotMultiValueSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiValueSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#metrics.serializers.MetricsPlotValueSerializer" title="metrics.serializers.MetricsPlotValueSerializer"><code class="xref py py-class docutils literal"><span class="pre">metrics.serializers.MetricsPlotValueSerializer</span></code></a></p>
-<p>Converts metrics plot values to REST output</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="metrics.serializers.MetricsPlotSerializer">
 <em class="property">class </em><code class="descclassname">metrics.serializers.</code><code class="descname">MetricsPlotSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.serializers.MetricsPlotSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
@@ -1673,6 +1667,11 @@ are not included by default.</li>
 <em class="property">class </em><code class="descclassname">metrics.serializers.</code><code class="descname">MetricsPlotValueSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.serializers.MetricsPlotValueSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts metrics plot values to REST output</p>
+<dl class="method">
+<dt id="metrics.serializers.MetricsPlotValueSerializer.to_representation">
+<code class="descname">to_representation</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.serializers.MetricsPlotValueSerializer.to_representation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">

@@ -76,6 +76,14 @@ metrics\.migrations\.0009\_revert\_datetime module
     :undoc-members:
     :show-inheritance:
 
+metrics\.migrations\.0010\_occurred\_datetime module
+----------------------------------------------------
+
+.. automodule:: metrics.migrations.0010_occurred_datetime
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
