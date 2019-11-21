@@ -312,3 +312,36 @@ class TestSchedulingManager(TestCase):
 
         max = resource_mgr.get_max_available_resources()
         self.assertTrue(max.is_equal(NodeResources([Cpus(250.0), Mem(22048.0), Disk(24096.0)])))
+
+    def test_too_many_jobs(self):
+        """Tests scheduling """
+
+        # Create 550 new jobs
+        import random
+        gpus = []
+        cues = []
+        for x in range(500):
+            if random.choice([True, False]):
+                cues.append(queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
+                                              disk_out_required=200.0, disk_total_required=300.0))
+            else:
+                gpus.append(queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
+                                                          disk_out_required=200.0, gpus_required=100.0,
+                                                          disk_total_required=300.0))
+        job_type_mgr.sync_with_database()
+
+        # create some offers
+        offers = []
+        for x in range(504):
+            offers.append(ResourceOffer('offer_%d' % x, self.agent_1.agent_id, self.framework_id,
+                                        NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None))
+            offers.append(ResourceOffer('offer_%d' % (x + 50), self.agent_2.agent_id, self.framework_id,
+                                        NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None))
+
+        resource_mgr.add_new_offers(offers)
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._client, now())
+
+        # Make sure everything except the GPU jobs were scheduled
+        # Subtracting 503 since there are 3 queues at the class level
+        self.assertEqual(num_tasks, 503-len(gpus))

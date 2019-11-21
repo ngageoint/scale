@@ -339,9 +339,9 @@ class SchedulingManager(object):
         started = now()
 
         max_cluster_resources = resource_mgr.get_max_available_resources()
-        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
+        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids).iterator():
             job_exe = QueuedJobExecution(queue)
-            
+
             # Canceled job executions get processed as scheduled executions
             if job_exe.is_canceled:
                 scheduled_job_executions.append(job_exe)
@@ -349,6 +349,7 @@ class SchedulingManager(object):
 
             # If there are no longer any available nodes, break
             if not nodes:
+                logger.warning('There are no nodes available. Waiting to schedule until we have resources...')
                 break
 
             jt = job_type_mgr.get_job_type(queue.job_type.id)
@@ -358,7 +359,7 @@ class SchedulingManager(object):
             if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
                 # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
                 continue
-            
+
             invalid_resources = []
             insufficient_resources = []
             # get resource names offered and compare to job type resources
@@ -381,7 +382,6 @@ class SchedulingManager(object):
                 description = INSUFFICIENT_RESOURCES.description % insufficient_resources
                 scheduler_mgr.warning_active(warning, description)
 
-
             if invalid_resources or insufficient_resources:
                 invalid_resources.extend(insufficient_resources)
                 jt.unmet_resources = ','.join(invalid_resources)
@@ -392,7 +392,7 @@ class SchedulingManager(object):
                 jt.unmet_resources = None
                 scheduler_mgr.warning_inactive(warning)
                 jt.save(update_fields=["unmet_resources"])
-            
+
             # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id
             if job_type_id not in job_types:
@@ -401,7 +401,7 @@ class SchedulingManager(object):
 
             workspace_names = job_exe.configuration.get_input_workspace_names()
             workspace_names.extend(job_exe.configuration.get_output_workspace_names())
-            
+
             missing_workspace = False
             for name in workspace_names:
                 missing_workspace = missing_workspace or name not in workspaces
@@ -417,6 +417,10 @@ class SchedulingManager(object):
                 scheduled_job_executions.append(job_exe)
                 if job_type_id in job_type_limits:
                     job_type_limits[job_type_id] -= 1
+
+            if len(scheduled_job_executions) == QUEUE_LIMIT:
+                logger.info('Queue limit of %d schedulable jobs reached.', QUEUE_LIMIT)
+                break
 
         duration = now() - started
         msg = 'Processing queue took %.3f seconds'
@@ -531,6 +535,8 @@ class SchedulingManager(object):
                     best_scheduling_score = score
                     best_reservation_node = None  # No need to reserve a node if we can schedule the job execution
                     best_reservation_score = None  # No need to reserve a node if we can schedule the job execution
+            # else:
+            #     print('NO Score for %d' % job_exe.id)
             if best_scheduling_node is None:
                 # No nodes yet to schedule this job execution on, check whether we should reserve this node
                 score = node.score_job_exe_for_reservation(job_exe, job_type_resources)
@@ -548,6 +554,8 @@ class SchedulingManager(object):
 
         # Could not schedule job execution, reserve a node to run this execution if possible
         if best_reservation_node:
+            import pdb;
+            pdb.set_trace()
             del nodes[best_reservation_node.node_id]
 
         return False
