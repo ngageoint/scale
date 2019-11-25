@@ -317,19 +317,19 @@ class TestSchedulingManager(TestCase):
     def test_too_many_jobs(self):
         """Tests scheduling """
 
-        queue_limit = scheduler.scheduling.manager.QUEUE_LIMIT
         # Create 10 new jobs
         import random
         gpus = []
         cues = []
-        for x in range(20):
-            if random.choice([True, False]):
-                cues.append(queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
-                                              disk_out_required=200.0, disk_total_required=300.0))
-            else:
+        for x in range(17):
+            if random.choice([True, False]) and len(gpus) < 10:
                 gpus.append(queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                           disk_out_required=200.0, gpus_required=100.0,
                                                           disk_total_required=300.0))
+            else:
+                cues.append(
+                    queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
+                                                  disk_out_required=200.0, disk_total_required=300.0))
         job_type_mgr.sync_with_database()
 
         # create some offers
@@ -344,11 +344,11 @@ class TestSchedulingManager(TestCase):
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._client, now())
 
-        # Make sure everything except the GPU jobs were scheduled
-        # Subtracting 503 since there are 3 queues at the class level
-        import pdb; pdb.set_trace()
-        self.assertEqual(num_tasks, queue_limit)
+        # Make sure max jobs were scheduled
+        self.assertEqual(num_tasks, 10)
 
-        # Verify the ids of scheduled jobs are in 'cues'?
-
-        # Verify the ids of gpus jobs are not scheduled?
+        # Verify the ids of gpus jobs are not scheduled
+        queue_ids = [q.job.id for q in Queue.objects.all()]
+        for q in gpus:
+            self.assertTrue(q.job.id in queue_ids)
+        
