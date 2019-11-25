@@ -56,3 +56,7 @@ components:
           type: string
           description: The logging level for all scale system components
           example: INFO
+        queue_mode:
+          type: string
+          description: The mode the queue operates in; values are one of FIFO or LIFO
+          example: FIFO

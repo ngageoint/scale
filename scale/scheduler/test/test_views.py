@@ -84,6 +84,35 @@ class TestSchedulerViewV6(APITestCase):
         response = self.client.patch(url, json_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_update_scheduler_queue_order(self):
+        """Test calling the Update Scheduler method with the queue_order field"""
+        json_data = {
+            'queue_mode': 'LIFO'
+        }
+
+        url = '/%s/scheduler/' % self.api
+        response = self.client.patch(url, json_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+        json_data = {
+            'queue_mode': 'fifo'
+        }
+
+        url = '/%s/scheduler/' % self.api
+        response = self.client.patch(url, json_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_update_scheduler_queue_order_bad(self):
+        """Test calling the Update Scheduler method with the queue_order field with a bad value"""
+        json_data = {
+            'queue_mode': 'chocolate'
+        }
+
+        url = '/%s/scheduler/' % self.api
+        response = self.client.patch(url, json_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
     def test_update_scheduler_extra_fields(self):
         """Test calling the Update Scheduler method with extra fields."""
 

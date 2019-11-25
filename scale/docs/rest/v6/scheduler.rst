@@ -22,7 +22,8 @@ Response: 200 OK
    { 
        "is_paused": False, 
        "num_message_handlers": 2, 
-       "system_logging_level": 'INFO' 
+       "system_logging_level": 'INFO',
+       "queue_mode": 'FIFO'
    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -45,6 +46,8 @@ Response: 200 OK
 |                      |                   | results in the previous individual node pause state.                         |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | The number of message handlers to have scheduled                             |
++----------------------+-------------------+------------------------------------------------------------------------------+
+| queue_mode           | String            | The mode the queue operates in (LIFO or FIFO); the default mode is FIFO.     |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | system_logging_level | String            | The logging level for all scale system components                            |
 +----------------------+-------------------+------------------------------------------------------------------------------+
@@ -76,6 +79,9 @@ Response: 204 No content
 | is_paused            | Boolean           | (Optional) True if the scheduler should be paused, false to resume           |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled                  |
++----------------------+-------------------+------------------------------------------------------------------------------+
+| queue_mode           | String            | (Optional) The mode the queue should operate in: last in first out vs first  |
+|                      |                   | in last out. Valid values are LIFO or FIFO.
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | system_logging_level | String            | (Optional) The logging level sent to all scale system components.            |
 |                      |                   | Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.              |

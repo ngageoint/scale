@@ -349,7 +349,7 @@ class SchedulingManager(object):
 
             # If there are no longer any available nodes, break
             if not nodes:
-                logger.warning('There are no nodes available. Waiting to schedule until we have resources...')
+                logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
                 break
 
             jt = job_type_mgr.get_job_type(queue.job_type.id)
@@ -366,6 +366,7 @@ class SchedulingManager(object):
             for resource in job_exe.required_resources.resources:
                 # skip sharedmem
                 if resource.name.lower() == 'sharedmem':
+                    logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
                     continue
                 if resource.name not in max_cluster_resources._resources:
                     # resource does not exist in cluster
@@ -406,10 +407,12 @@ class SchedulingManager(object):
             for name in workspace_names:
                 missing_workspace = missing_workspace or name not in workspaces
             if missing_workspace:
+                logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
                 continue
 
             # Check limit for this execution's job type
             if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
+                logger.warning('Job type %s could not be scheduled due to type scheduling limit reached ', jt.name)
                 continue
 
             # Try to schedule job execution and adjust job type limit if needed
@@ -419,7 +422,6 @@ class SchedulingManager(object):
                     job_type_limits[job_type_id] -= 1
 
             if len(scheduled_job_executions) == QUEUE_LIMIT:
-                logger.info('Queue limit of %d schedulable jobs reached.', QUEUE_LIMIT)
                 break
 
         duration = now() - started
@@ -535,8 +537,7 @@ class SchedulingManager(object):
                     best_scheduling_score = score
                     best_reservation_node = None  # No need to reserve a node if we can schedule the job execution
                     best_reservation_score = None  # No need to reserve a node if we can schedule the job execution
-            # else:
-            #     print('NO Score for %d' % job_exe.id)
+
             if best_scheduling_node is None:
                 # No nodes yet to schedule this job execution on, check whether we should reserve this node
                 score = node.score_job_exe_for_reservation(job_exe, job_type_resources)
@@ -554,8 +555,6 @@ class SchedulingManager(object):
 
         # Could not schedule job execution, reserve a node to run this execution if possible
         if best_reservation_node:
-            import pdb;
-            pdb.set_trace()
             del nodes[best_reservation_node.node_id]
 
         return False
