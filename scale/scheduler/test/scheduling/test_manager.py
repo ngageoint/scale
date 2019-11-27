@@ -5,6 +5,7 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock, patch
+import random
 
 from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
@@ -318,18 +319,15 @@ class TestSchedulingManager(TestCase):
         """Tests scheduling """
 
         # Create 10 new jobs
-        import random
         gpus = []
-        cues = []
         for x in range(17):
-            if random.choice([True, False]) and len(gpus) < 10:
+            if random.choice([True, False]) and len(gpus) <= 10:
                 gpus.append(queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                           disk_out_required=200.0, gpus_required=100.0,
                                                           disk_total_required=300.0))
             else:
-                cues.append(
-                    queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
-                                                  disk_out_required=200.0, disk_total_required=300.0))
+                queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
+                                              disk_out_required=200.0, disk_total_required=300.0)
         job_type_mgr.sync_with_database()
 
         # create some offers
@@ -351,4 +349,3 @@ class TestSchedulingManager(TestCase):
         queue_ids = [q.job.id for q in Queue.objects.all()]
         for q in gpus:
             self.assertTrue(q.job.id in queue_ids)
-        
