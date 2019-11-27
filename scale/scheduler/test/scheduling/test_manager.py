@@ -5,7 +5,6 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock, patch
-import random
 
 from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
@@ -316,12 +315,23 @@ class TestSchedulingManager(TestCase):
 
     @patch('scheduler.scheduling.manager.QUEUE_LIMIT', 10)
     def test_too_many_jobs(self):
-        """Tests scheduling """
+        """Tests scheduling max limit of jobs"""
+        # Make some more nodes
+        agents = [Agent('agent_4', 'host_3'), Agent('agent_5', 'host_4'), Agent('agent_6', 'host_5')]
+        node_mgr.register_agents(agents)
+        node_mgr.sync_with_database(scheduler_mgr.config)
+        # Ignore initial cleanup, health check, and image pull tasks
+        for node in node_mgr.get_nodes():
+            node._last_health_task = now()
+            node._initial_cleanup_completed()
+            node._is_image_pulled = True
+            node._update_state()
+        cleanup_mgr.update_nodes(node_mgr.get_nodes())
 
-        # Create 10 new jobs
+        # Create new jobs
         gpus = []
         for x in range(17):
-            if random.choice([True, False]) and len(gpus) <= 10:
+            if 5 > x < 17 and len(gpus) <= 10:
                 gpus.append(queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                           disk_out_required=200.0, gpus_required=100.0,
                                                           disk_total_required=300.0))
@@ -329,19 +339,23 @@ class TestSchedulingManager(TestCase):
                 queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                               disk_out_required=200.0, disk_total_required=300.0)
         job_type_mgr.sync_with_database()
-
         # create some offers
         offers = []
         for x in range(20):
-            offers.append(ResourceOffer('offer_%d' % x, self.agent_1.agent_id, self.framework_id,
+            offers.append(ResourceOffer('offer_%d' % (x + 80), self.agent_2.agent_id, self.framework_id,
+                                        NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now(), None))
+            offers.append(ResourceOffer('offer_%d' % (x+60), self.agent_1.agent_id, self.framework_id,
+                                        NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now(), None))
+            offers.append(ResourceOffer('offer_%d' % x, agents[0].agent_id, self.framework_id,
                                         NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None))
-            offers.append(ResourceOffer('offer_%d' % (x + 50), self.agent_2.agent_id, self.framework_id,
+            offers.append(ResourceOffer('offer_%d' % (x + 20), agents[1].agent_id, self.framework_id,
+                                        NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None))
+            offers.append(ResourceOffer('offer_%d' % (x + 40), agents[2].agent_id, self.framework_id,
                                         NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now(), None))
 
         resource_mgr.add_new_offers(offers)
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._client, now())
-
         # Make sure max jobs were scheduled
         self.assertEqual(num_tasks, 10)
 
