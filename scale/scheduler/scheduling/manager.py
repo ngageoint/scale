@@ -421,7 +421,8 @@ class SchedulingManager(object):
                 if job_type_id in job_type_limits:
                     job_type_limits[job_type_id] -= 1
 
-            if len(scheduled_job_executions) == QUEUE_LIMIT:
+            if len(scheduled_job_executions) >= QUEUE_LIMIT:
+                logger.info('Schedule queue limit of %d reached; no more room for executions' % QUEUE_LIMIT)
                 break
 
         duration = now() - started
