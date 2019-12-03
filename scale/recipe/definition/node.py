@@ -86,12 +86,14 @@ class NodeDefinition(object):
             try:
                 connection.add_value_to_data(input_data, recipe_input_data, node_outputs)
             except InvalidData as ex:
-                if not connection.output_name in optional_outputs:
-                    logger.warning("output name %s not found in optional_outputs", connection.output_name)
-                    raise
+                if optional_outputs:
+                    if not connection.output_name in optional_outputs:
+                        logger.warning("Output name %s not found in optional outputs", connection.output_name)
+                        raise
+                    else:
+                        logger.info("InvalidData exception occured due to optional output not present. Proceeding with job execution.")
                 else:
-                    logger.info("InvalidData exception occured due to optional output not present. Proceeding with job execution.")
-        
+                    logger.exception("InvalidData exception occurred generating input data")
 
         return input_data
 
