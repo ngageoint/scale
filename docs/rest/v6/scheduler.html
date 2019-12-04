@@ -216,7 +216,8 @@
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
     <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span>
+    <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;queue_mode&quot;</span><span class="o">:</span> <span class="s1">&#39;FIFO&#39;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -257,7 +258,11 @@ results in the previous individual node pause state.</td>
 <td>Integer</td>
 <td>The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td colspan="2">system_logging_level</td>
+<tr class="row-even"><td colspan="2">queue_mode</td>
+<td>String</td>
+<td>The mode the queue operates in (LIFO or FIFO); the default mode is FIFO.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">system_logging_level</td>
 <td>String</td>
 <td>The logging level for all scale system components</td>
 </tr>
@@ -269,52 +274,6 @@ results in the previous individual node pause state.</td>
 <p><strong>Example PATCH /v6/scheduler/ API call</strong></p>
 <p>Request: PATCH <a class="reference external" href="http://.../v6/scheduler/">http://.../v6/scheduler/</a></p>
 <p>Response: 204 No content</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="17%" />
-<col width="1%" />
-<col width="16%" />
-<col width="66%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Update Scheduler</strong></th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="4">Update one or more fields for the scheduler.</td>
-</tr>
-<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
-<dt><strong>PATCH</strong> /v6/scheduler/</dt>
-<dd>All fields are optional and additional fields are not tolerated.</dd>
-</dl>
-</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td colspan="2">is_paused</td>
-<td>Boolean</td>
-<td>(Optional) True if the scheduler should be paused, false to resume</td>
-</tr>
-<tr class="row-odd"><td colspan="2">num_message_handlers</td>
-<td>Integer</td>
-<td>(Optional) The number of message handlers to have scheduled</td>
-</tr>
-<tr class="row-even"><td colspan="2">system_logging_level</td>
-<td>String</td>
-<td>(Optional) The logging level sent to all scale system components.
-Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.
-Anything else will default to INFO</td>
-</tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="3">204 No content</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 
