@@ -11,4 +11,4 @@ class SchedulerSerializerV6(serializers.ModelSerializer):
     class Meta(object):
         """Meta class used to define what is serialized and how"""
         model = Scheduler
-        fields = ('is_paused', 'num_message_handlers', 'system_logging_level')
+        fields = ('is_paused', 'num_message_handlers', 'system_logging_level', 'queue_mode')

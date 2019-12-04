@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class SchedulerView(GenericAPIView):
     """This view is the endpoint for viewing and modifying the scheduler"""
     queryset = Scheduler.objects.all()
-    update_fields = ('is_paused', 'num_message_handlers', 'system_logging_level')
+    update_fields = ('is_paused', 'num_message_handlers', 'system_logging_level', 'queue_mode')
 
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API"""
@@ -96,6 +96,13 @@ class SchedulerView(GenericAPIView):
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
         if len(request.data) == 0:
             return Response('No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
+
+        from queue.models import QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
+        if 'queue_mode' in request.data and request.data['queue_mode'].upper() not in [QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO]:
+            msg = 'Unexpected value %s for queue_mode. Valid values are %s, %s' % (request.data['queue_mode'],
+                                                                                   QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO)
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             Scheduler.objects.update_scheduler(dict(request.data))
         except Scheduler.DoesNotExist:
