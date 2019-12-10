@@ -1030,11 +1030,50 @@ recipes triggered by completed ingest jobs will not be effected. Returns the job
 <p>Request: POST <a class="reference external" href="http://.../v6/scans/cancel">http://.../v6/scans/cancel</a>/{id}/</p>
 <p>Response: 202 Accepted</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="s2">&quot;[1,2,3]&quot;</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;canceled_jobs&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Returns a list of canceled job ids.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Cancel Scan</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Cancels a scan and associated ingest jobs</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>POST</strong> /v6/scans/cancel/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing scan model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">202 ACCEPTED</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the scan.</td>
+</tr>
+<tr class="row-odd"><td>canceled_jobs</td>
+<td>Array</td>
+<td>List of the job ids associated with the scan that were canceled.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="scan-configuration-json">
 <span id="rest-v6-scan-configuration"></span><h2>Scan Configuration JSON<a class="headerlink" href="#scan-configuration-json" title="Permalink to this headline">¶</a></h2>
