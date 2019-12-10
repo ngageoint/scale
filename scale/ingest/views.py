@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import json
 
 import rest_framework.status as status
 from rest_framework.renderers import JSONRenderer
+from django.http import JsonResponse
 from django.http.response import Http404
 import django.utils.timezone as timezone
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
@@ -356,12 +358,29 @@ class CancelScansView(GenericAPIView):
     def post(self, request, scan_id):
         try:
             if self.request.version == 'v6' or self.request.version == 'v7':
-                canceled_ids = Scan.objects.cancel_scan(scan_id)
+                return self._cancel_v6(request, scan_id)
             else:
                 raise Http404    
         except Scan.DoesNotExist:
             raise Http404
-        return Response(JSONRenderer().render(canceled_ids), status=status.HTTP_202_ACCEPTED)
+
+    def _cancel_v6(self, request, scan_id):
+        """Cancels a scan job
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :returns: The HTTP response to send back to the user
+        :rtype: :class:`rest_framework.response.Response`
+        """
+
+        canceled_ids = Scan.objects.cancel_scan(scan_id)
+
+        resp_dict = {'id': scan_id, 'canceled_jobs': canceled_ids}
+        return JsonResponse(resp_dict, status=status.HTTP_202_ACCEPTED)
+        # return Response(resp_dict, status=status.HTTP_202_ACCEPTED)
+        # return Response(JSONRenderer().render(canceled_ids), status=status.HTTP_202_ACCEPTED)
 
 class ScansDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Scan process."""

@@ -153,6 +153,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/scan_details'
 
+  /scans/cancel/{id}/:
+    patch:
+      operationId: _rest_v6_scan_cancel
+      summary: Cancel Scan
+      description: Cancels a Scan and associated ingest jobs
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scan process
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/scan_process'
+      responses:
+        '202':
+          description: The 202 ACCEPTED response indicates a successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cancel_scan'
+
 components:
   schemas:
     scan_list:
@@ -290,3 +315,18 @@ components:
               description: Optional. Specifies the revision number of the recipe 
                  the Scan will attempt to start when the file is ingested.
               example: 1
+
+    cancel_scan:
+      title: Cancel Scan
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The id of the scan that has been canceled
+          example: 1
+        canceled_jobs:
+          type: array
+          items:
+            type: integers
+          description: The list of job ids that have been canceled
+          example: [1,2]
