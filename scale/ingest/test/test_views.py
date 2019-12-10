@@ -941,7 +941,7 @@ class TestScansProcessViewV6(APITestCase):
         response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         result = json.loads(response.content)
-        self.assertEqual(result['id'], unicode(self.ingest.id))
+        self.assertEqual(result['id'], unicode(self.scan.id))
         self.assertEqual(len(result['canceled_jobs']), 2)
 
         msg_create.assert_called()
@@ -966,7 +966,7 @@ class TestScansProcessViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
         result = json.loads(response.content)
-        self.assertEqual(result['id'], unicode(self.ingest.id))
+        self.assertEqual(result['id'], unicode(self.scan.id))
         self.assertEqual(len(result['canceled_jobs']), 0)
 
         msg_create.assert_not_called()
@@ -989,7 +989,7 @@ class TestScansProcessViewV6(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         
         result = json.loads(response.content)
-        self.assertEqual(result['id'], unicode(self.ingest.id))
+        self.assertEqual(result['id'], unicode(self.scan.id))
         self.assertEqual(len(result['canceled_jobs']), 1)
 
         msg_create.assert_called()
