@@ -935,18 +935,17 @@ class TestScansProcessViewV6(APITestCase):
         self.scan.job = job_utils.create_job()
         self.scan.save()
         self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
-                                                       status='QUEUED')
+                                                      status='QUEUED')
 
         url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
-        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
-        
-        result = json.loads(response.data)
+        response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], unicode(self.ingest.id))
+        self.assertEqual(len(result['canceled_jobs']), 2)
 
         msg_create.assert_called()
         mock_msg_mgr.assert_called()
-
-        self.assertEqual(len(result), 2)
 
     @patch('ingest.models.CommandMessageManager')
     @patch('ingest.models.create_cancel_jobs_messages')
@@ -958,20 +957,20 @@ class TestScansProcessViewV6(APITestCase):
         self.scan.job.save()
         self.scan.save()
         self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
-                                                       status='QUEUED')
+                                                      status='QUEUED')
         self.ingest.job.status = "CANCELED"
         self.ingest.job.save()
 
         url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
-        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
-        
-        result = json.loads(response.data)
+        response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], unicode(self.ingest.id))
+        self.assertEqual(len(result['canceled_jobs']), 0)
 
         msg_create.assert_not_called()
         mock_msg_mgr.assert_not_called()
-
-        self.assertEqual(len(result), 0)
 
     @patch('ingest.models.CommandMessageManager')
     @patch('ingest.models.create_cancel_jobs_messages')
@@ -981,20 +980,21 @@ class TestScansProcessViewV6(APITestCase):
         self.scan.job = job_utils.create_job()
         self.scan.save()
         self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
-                                                       status='QUEUED')
+                                                      status='QUEUED')
         self.ingest.job = None
         self.ingest.save()
 
         url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
-        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         
-        result = json.loads(response.data)
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], unicode(self.ingest.id))
+        self.assertEqual(len(result['canceled_jobs']), 1)
 
         msg_create.assert_called()
         mock_msg_mgr.assert_called()
 
-        self.assertEqual(len(result), 1)
 
 class TestStrikesViewV6(APITestCase):
 
