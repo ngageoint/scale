@@ -58,7 +58,7 @@ class TestFilesViewV6(APITestCase):
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
         self.f2_source_started = dt.datetime(2016, 1, 2, tzinfo=utc)
         self.f2_source_ended = dt.datetime(2016, 1, 3, tzinfo=utc)
-        self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2, countries=[self.country],
+        self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2,
                                                           source_started=self.f2_source_started,
                                                           source_ended=self.f2_source_ended)
 
@@ -119,6 +119,18 @@ class TestFilesViewV6(APITestCase):
         self.assertEqual(len(results), 2)
         for result in results:
             self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
+
+    def test_country_filter_successful(self):
+        """Tests successfully calling the get files by source time"""
+
+        url = '/%s/files/?countries=TST' % ( self.api)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertTrue(results[0]['id'], self.file1.id)
 
     def test_source_sensor_class(self):
         """Tests successfully calling the files view filtered by source sensor class."""
@@ -232,7 +244,8 @@ class TestFilesViewV6(APITestCase):
 
         for entry in result['results']:
             # Make sure country info is included
-            self.assertEqual(entry['countries'][0], self.country.iso3)
+            if len(entry['countries']) != 0:
+                self.assertEqual(entry['countries'][0], self.country.iso3)
 
 class TestFileDetailsViewV6(APITestCase):
     api = 'v6'

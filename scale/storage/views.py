@@ -63,6 +63,8 @@ class FilesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        countries = rest_util.parse_string_list(request, 'countries', required=False) 
+
         data_started = rest_util.parse_timestamp(request, 'data_started', required=False)
         data_ended = rest_util.parse_timestamp(request, 'data_ended', required=False)
         rest_util.check_time_range(data_started, data_ended)
@@ -101,7 +103,7 @@ class FilesView(ListAPIView):
             job_type_names=job_type_names, job_ids=job_ids,
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-            order=order,
+            order=order, countries=countries
         )
 
         page = self.paginate_queryset(files)
