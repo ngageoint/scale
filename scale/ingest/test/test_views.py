@@ -199,8 +199,8 @@ class TestIngestStatusViewV6(TestCase):
         self.ingest2 = ingest_test_utils.create_ingest(file_name='test2.txt', status='INGESTED', strike=self.strike)
         self.ingest3 = ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=self.strike)
         self.ingest4 = ingest_test_utils.create_ingest(file_name='test4.txt', status='INGESTED', strike=self.strike,
-                                                       data_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
-                                                       ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=utc))
+                                                       data_started=datetime.datetime(2015, 1, 1, 5, tzinfo=utc),
+                                                       ingest_ended=datetime.datetime(2015, 2, 1, 5, tzinfo=utc))
 
         rest.login_client(self.client)
 
@@ -217,13 +217,13 @@ class TestIngestStatusViewV6(TestCase):
         entry = result['results'][0]
         self.assertEqual(entry['strike']['id'], self.strike.id)
         self.assertIsNotNone(entry['most_recent'])
-        self.assertEqual(entry['files'], 2)
-        self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size)
+        self.assertEqual(entry['files'], 3)
+        self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size + self.ingest4.file_size)
 
     def test_time_range(self):
         """Tests successfully calling the ingest status view with a time range filter."""
 
-        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z' % self.version
+        url = '/%s/ingests/status/?started=2015-01-01T05:00:00Z' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -235,6 +235,19 @@ class TestIngestStatusViewV6(TestCase):
         self.assertIsNotNone(entry['most_recent'])
         self.assertEqual(entry['files'], 3)
         self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size + self.ingest4.file_size)
+
+        url = '/%s/ingests/status/?started=2015-01-01T05:00:00Z&ended=2015-01-02T05:00:00Z' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        entry = result['results'][0]
+        self.assertEqual(entry['strike']['id'], self.strike.id)
+        self.assertIsNotNone(entry['most_recent'])
+        self.assertEqual(entry['files'], 1)
+        self.assertEqual(entry['size'], self.ingest4.file_size)
 
     def test_use_ingest_time(self):
         """Tests successfully calling the ingest status view grouped by ingest time instead of data time."""
@@ -249,14 +262,14 @@ class TestIngestStatusViewV6(TestCase):
 
         entry = result['results'][0]
         self.assertEqual(entry['strike']['id'], self.strike.id)
-        self.assertEqual(entry['most_recent'], '2015-02-01T00:00:00Z')
+        self.assertEqual(entry['most_recent'], '2015-02-01T05:00:00Z')
         self.assertEqual(entry['files'], 1)
         self.assertEqual(entry['size'], self.ingest3.file_size)
 
-    def test_fill_empty_slots(self):
-        """Tests successfully calling the ingest status view with place holder zero values when no data exists."""
+    def test_dont_fill_empty_slots(self):
+        """Tests successfully calling the ingest status view ensuring no place holder zero values when no data exists."""
 
-        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z' % self.version
+        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-02T05:00:00Z' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -268,7 +281,7 @@ class TestIngestStatusViewV6(TestCase):
         self.assertIsNotNone(entry['most_recent'])
         self.assertEqual(entry['files'], 1)
         self.assertEqual(entry['size'], self.ingest3.file_size)
-        self.assertEqual(len(entry['values']), 24)
+        self.assertEqual(len(entry['values']), 30)
 
     def test_multiple_strikes(self):
         """Tests successfully calling the ingest status view with multiple strike process groupings."""
@@ -935,18 +948,17 @@ class TestScansProcessViewV6(APITestCase):
         self.scan.job = job_utils.create_job()
         self.scan.save()
         self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
-                                                       status='QUEUED')
+                                                      status='QUEUED')
 
         url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
-        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
-        
-        result = json.loads(response.data)
+        response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], unicode(self.scan.id))
+        self.assertEqual(len(result['canceled_jobs']), 2)
 
         msg_create.assert_called()
         mock_msg_mgr.assert_called()
-
-        self.assertEqual(len(result), 2)
 
     @patch('ingest.models.CommandMessageManager')
     @patch('ingest.models.create_cancel_jobs_messages')
@@ -958,20 +970,20 @@ class TestScansProcessViewV6(APITestCase):
         self.scan.job.save()
         self.scan.save()
         self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
-                                                       status='QUEUED')
+                                                      status='QUEUED')
         self.ingest.job.status = "CANCELED"
         self.ingest.job.save()
 
         url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
-        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
-        
-        result = json.loads(response.data)
+        response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], unicode(self.scan.id))
+        self.assertEqual(len(result['canceled_jobs']), 0)
 
         msg_create.assert_not_called()
         mock_msg_mgr.assert_not_called()
-
-        self.assertEqual(len(result), 0)
 
     @patch('ingest.models.CommandMessageManager')
     @patch('ingest.models.create_cancel_jobs_messages')
@@ -981,20 +993,21 @@ class TestScansProcessViewV6(APITestCase):
         self.scan.job = job_utils.create_job()
         self.scan.save()
         self.ingest = ingest_test_utils.create_ingest(scan=self.scan, file_name='test3.txt',
-                                                       status='QUEUED')
+                                                      status='QUEUED')
         self.ingest.job = None
         self.ingest.save()
 
         url = '/%s/scans/cancel/%d/' % (self.api, self.scan.id)
-        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        response = self.client.generic('POST', url, json.dumps({'ingest': True}), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         
-        result = json.loads(response.data)
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], unicode(self.scan.id))
+        self.assertEqual(len(result['canceled_jobs']), 1)
 
         msg_create.assert_called()
         mock_msg_mgr.assert_called()
 
-        self.assertEqual(len(result), 1)
 
 class TestStrikesViewV6(APITestCase):
 

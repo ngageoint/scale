@@ -414,8 +414,22 @@ class IngestManager(models.Manager):
 
         # Build a list of values for each hourly time slot including zero value place holders where needed
         duration = ended.date() - started.date()
+
         for day in range(duration.days + 1):
-            for hour in range(24):
+            start_hour = 0
+            end_hour = 24
+
+            # if on the first day
+            if day == 0:
+                start_hour = started.hour
+                # if start and end are on the same date
+                if started.date() == ended.date():
+                    end_hour = ended.hour + 1
+            # if on the last day
+            elif day == duration.days and ended.hour != 24:
+                end_hour = ended.hour + 1
+
+            for hour in range(start_hour, end_hour):
                 dated = started + datetime.timedelta(days=day)
                 time_slot = datetime.datetime(dated.year, dated.month, dated.day, hour, tzinfo=timezone.utc)
                 status_vals = time_slots[time_slot] if time_slot in time_slots else IngestCounts(time_slot)
