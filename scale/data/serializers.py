@@ -5,7 +5,7 @@ import logging
 
 import rest_framework.serializers as serializers
 
-from storage.serializers import ScaleFileSerializerV6, ScaleFileDetailsSerializerV6, ScaleFileBaseSerializerV6
+from storage.serializers import ScaleFileSerializerV6, ScaleFileDetailsSerializerV6, ScaleFileBaseSerializerV6, ScaleFileBasePlusCountriesSerializerV6
 from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class DataSetFileBaseSerializerV6(ModelIdSerializer):
     """Converts the datasetfile model fields to REST output"""
     parameter_name = serializers.CharField()
-    scale_file = ScaleFileBaseSerializerV6()
+    scale_file = ScaleFileBasePlusCountriesSerializerV6()
     
 class DataSetFileSerializerV6(DataSetFileBaseSerializerV6):
     """Converts the datasetfile model fields to REST output"""
