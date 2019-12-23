@@ -181,8 +181,7 @@ class IngestsStatusView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
-        started = rest_util.parse_timestamp(request, 'started', rest_util.get_relative_days(7))
+        started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended, max_duration=datetime.timedelta(days=31))
 
@@ -193,7 +192,6 @@ class IngestsStatusView(ListAPIView):
         page = self.paginate_queryset(ingests)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
 
 class ScansProcessView(GenericAPIView):
     """This view is the endpoint for launching a scan execution to ingest"""
