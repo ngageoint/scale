@@ -1704,7 +1704,7 @@ workspace field populated.</p>
 
 <dl class="method">
 <dt id="storage.models.ScaleFileManager.filter_files">
-<code class="descname">filter_files</code><span class="sig-paren">(</span><em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_classes=None</em>, <em>source_sensors=None</em>, <em>source_collections=None</em>, <em>source_tasks=None</em>, <em>mod_started=None</em>, <em>mod_ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_ids=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_names=None</em>, <em>job_outputs=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_nodes=None</em>, <em>batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter_files</code><span class="sig-paren">(</span><em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_classes=None</em>, <em>source_sensors=None</em>, <em>source_collections=None</em>, <em>source_tasks=None</em>, <em>mod_started=None</em>, <em>mod_ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_ids=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_names=None</em>, <em>job_outputs=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_nodes=None</em>, <em>batch_ids=None</em>, <em>order=None</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for product models that filters on the given fields. The returned query includes the related
 workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
 to be pre-fetched as part of the query.</p>
@@ -1735,6 +1735,7 @@ to be pre-fetched as part of the query.</p>
 <li><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given recipe types</li>
 <li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with batches with the given identifiers.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>countries</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A List of country codes (iso3) to filter by</li>
 </ul>
 </td>
 </tr>

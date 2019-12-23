@@ -172,6 +172,10 @@ Response: 200 OK
 | batch_id             | Integer           | Optional | Return only files produced by the given batch identifier.           |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
+| countries            | String            | Optional | Return only files associated with a given country.                  |
+|                      |                   |          | Use country code style ISO3.                                        |
+|                      |                   |          | Duplicate it to filter by multiple values.                          |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name            | String            | Optional | Return only files with a given file name.                           |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
