@@ -68,6 +68,11 @@ class ScaleFileBaseSerializerV6(ModelIdSerializer):
 
     file_name = serializers.CharField()
 
+class ScaleFileBasePlusCountriesSerializerV6(ModelIdSerializer):
+    """Converts Scale file model fields to REST output"""
+
+    file_name = serializers.CharField()
+    countries = serializers.StringRelatedField(many=True, read_only=True)
 
 class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     """Converts Scale file model fields to REST output"""
