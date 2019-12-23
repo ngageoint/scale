@@ -233,6 +233,7 @@ class DataSet(models.Model):
         :returns: Returns the outgoing primitive representation.
         :rtype: dict?
         """
+
         members = DataSet.objects.get_dataset_members(dataset_id=self.id)
         serializer = DataSetMemberSerializerV6(members, many=True)
         return serializer.data
@@ -243,6 +244,7 @@ class DataSet(models.Model):
         :returns: Returns the outgoing primitive representation.
         :rtype: dict?
         """
+
         files = DataSet.objects.get_dataset_files(self.id)
         serializer = DataSetFileSerializerV6(files, many=True)
         return serializer.data
@@ -334,11 +336,11 @@ class DataSetMemberManager(models.Manager):
         
         return data_list
 
-    def validate_data_list(self, dataset, data_list):
+    def validate_data_list(self, dataset_def, data_list):
         """Validates a list of data objects against a dataset
 
-        :param dataset: The dataset the member is a part of
-        :type dataset: :class:`data.models.DataSet`
+        :param dataset_def: The dataset definition the member is a part of
+        :type dataset_def:
         :param data_list: Data definitions of the dataset members
         :type data_list: [:class:`data.data.data.Data`]
         """
@@ -346,10 +348,10 @@ class DataSetMemberManager(models.Manager):
         is_valid = True
         errors = []
         warnings = []
-        
+
         for data in data_list:
             try:
-                dataset.get_definition().validate(data)
+                dataset_def.validate(data)
             except (InvalidData, InvalidDataSetMember) as ex:
                 is_valid = False
                 errors.append(ex.error)

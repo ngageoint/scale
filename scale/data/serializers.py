@@ -32,14 +32,16 @@ class DataSetListSerializerV6(DataSetBaseSerializerV6):
     files = serializers.IntegerField()
 
 class DataSetMemberSerializerV6(ModelIdSerializer):
+    """Converts datasetmember model fields to REST output"""
     created = serializers.DateTimeField()
-    data = serializers.JSONField(source='get_v6_data_json', default=None)
+    data = serializers.JSONField(source='get_v6_data_json', required=False)
+    file_ids = serializers.ListField(child=serializers.IntegerField())
 
 class DataSetDetailsSerializerV6(DataSetBaseSerializerV6):
-    """Converts dataset model feields to REST output"""
+    """Converts dataset model fields to REST output"""
     definition = serializers.JSONField(source='get_v6_definition_json')
-    members = DataSetMemberSerializerV6(required=False, many=True)
-    files = DataSetFileBaseSerializerV6(required=False, many=True)
+    members = DataSetMemberSerializerV6(source='get_dataset_members_json', required=False, many=True)
+    files = DataSetFileBaseSerializerV6(source='get_dataset_files_json', required=False, many=True)
 
 class DataSetMemberDetailsSerializerV6(DataSetMemberSerializerV6):
     dataset = ModelIdSerializer()
