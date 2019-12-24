@@ -311,8 +311,9 @@ class TestDatasetDetailsView(APITestCase):
         self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
                                                   last_modified=now())
         # Create files
+        self.country = storage_utils.create_country()
         self.src_file_a = storage_utils.create_file(file_name='input_a.json', file_type='SOURCE', media_type='application/json',
-                                              file_size=10, data_type_tags=['type'], file_path='the_path',
+                                              file_size=10, data_type_tags=['type'], file_path='the_path', countries=[self.country],
                                               workspace=self.workspace)
         self.src_file_b = storage_utils.create_file(file_name='input_b.json', file_type='SOURCE', media_type='application/json',
                                               file_size=10, data_type_tags=['type'], file_path='the_path',
@@ -410,6 +411,7 @@ class TestDatasetDetailsView(APITestCase):
         del dsdict['version']
         self.assertDictEqual(result['definition'], dsdict)
         self.assertEqual(len(result['files']), 1)
+        self.assertIsNotNone(result['files'][0]['scale_file']["countries"])
 
         url = '/%s/datasets/%d/' % (self.api, self.dataset2.id)
         response = self.client.generic('GET', url)

@@ -320,7 +320,7 @@ class ScaleFileManager(models.Manager):
                         source_sensor_classes=None, source_sensors=None, source_collections=None,
                         source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
                         job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
-                        recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
+                        recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None, countries=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
@@ -369,6 +369,8 @@ class ScaleFileManager(models.Manager):
         :type batch_ids: list
         :param order: A list of fields to control the sort order.
         :type order: list
+        :param countries: A List of country codes (iso3) to filter by
+        :type countries: list
         :returns: The product file query
         :rtype: :class:`django.db.models.QuerySet`
         """
@@ -380,6 +382,11 @@ class ScaleFileManager(models.Manager):
                                   'job_type__manifest', 'job_type__configuration', 'recipe__input',
                                   'recipe_type__definition', 'batch__definition')
         files = files.prefetch_related('countries')
+
+        #apply country code filtering
+
+        if countries:
+            files = files.filter(countries__iso3__in=countries)
 
         # Apply time range filtering
         if data_started:
