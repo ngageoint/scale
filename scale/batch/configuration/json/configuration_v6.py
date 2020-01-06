@@ -23,6 +23,25 @@ BATCH_CONFIGURATION_SCHEMA = {
         'priority': {
             'description': 'The ID of the previous batch',
             'type': 'integer',
+        },
+        'inputMap': {
+            'description': 'Maps the inputs of the batch to the dataset inputs',
+            'type': 'array',
+            'minItems': 1,
+            'items':  {
+                'type': 'object',
+                'required': ['input', 'datasetParameter'],
+                'properties': {
+                    'input': {
+                        'description': 'The name of the input the dataset parameter maps to',
+                        'type': 'string',
+                    },
+                    'datasetParameter': {
+                        'description': 'The name of the dataset parameter the input maps to',
+                        'type': 'string',
+                    }
+                }
+            }
         }
     },
 }
@@ -40,6 +59,8 @@ def convert_configuration_to_v6(configuration):
     json_dict = {'version': SCHEMA_VERSION}
     if configuration.priority is not None:
         json_dict['priority'] = configuration.priority
+    if configuration.input_map is not None:
+        json_dict['inputMap'] = configuration.input_map
     return BatchConfigurationV6(configuration=json_dict, do_validate=False)
 
 
@@ -84,6 +105,9 @@ class BatchConfigurationV6(object):
         configuration = BatchConfiguration()
         if 'priority' in self._configuration:
             configuration.priority = self._configuration['priority']
+
+        if 'inputMap' in self._configuration:
+            configuration.input_map = self._configuration['inputMap']
 
         return configuration
 

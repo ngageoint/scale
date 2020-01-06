@@ -124,6 +124,7 @@ class BatchesView(ListCreateAPIView):
             raise BadParameter('Unknown recipe type: %d' % recipe_type_id)
 
         # Validate and create the batch
+        import pdb; pdb.set_trace()
         try:
             definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
             configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()

@@ -130,6 +130,27 @@ class CreateBatchRecipes(CommandMessage):
         for param in dataset_definition.parameters.parameters:
             dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
 
+        # map dataset param to inputs if applicable
+        if batch.get_configuration().input_map:
+            from data.interface.interface import Interface
+            from data.interface.parameter import FileParameter, JsonParameter
+            parameters = Interface()
+            for param_name in dataset_parameters.parameters:
+                param = dataset_parameters.parameters[param_name]
+                for map_param in batch.get_configuration().input_map:
+                    if param_name == map_param['datasetParameter']:
+                        if param.PARAM_TYPE == 'file':
+                            parameters.add_parameter(FileParameter(map_param['input'], param.media_types,
+                                                                   required=param.required,
+                                                                   multiple=param.multiple))
+                        elif param.PARAM_TYPE == 'json':
+                            parameters.add_parameter(JsonParameter(map_param['input'], param.json_type,
+                                                                   required=param.required,
+                                                                   multiple=param.multiple))
+                    else:
+                        parameters.add_parameter(param)
+            dataset_parameters = parameters
+
         try:
             recipe_type_rev.get_definition().input_interface.validate_connection(dataset_parameters)
         except InvalidInterfaceConnection as ex:
@@ -185,7 +206,16 @@ class CreateBatchRecipes(CommandMessage):
             input_data = []
             for file in DataSetFile.objects.get_dataset_files(dataset.id).filter(scale_file__id__in=extra_file_ids):
                 data = Data()
-                data.add_value(FileValue(file.parameter_name, [file.scale_file_id]))
+                parameter_name = file.parameter_name
+
+                # if we needed to map the inputs to parameters:
+                if batch.get_configuration().input_map:
+                    for param in batch.get_configuration().input_map:
+                        if param['datasetParameter'] == file.parameter_name:
+                            parameter_name = param.input
+                            break
+
+                data.add_value(FileValue(parameter_name, [file.scale_file_id]))
                 input_data.append(convert_data_to_v6_json(data).get_dict())
                 
             msgs = create_batch_recipes_messages(batch.recipe_type.name, batch.recipe_type.revision_num, input_data, batch.event_id, batch_id=batch.id)

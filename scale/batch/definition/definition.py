@@ -65,6 +65,25 @@ class BatchDefinition(object):
             for param in dataset_definition.parameters.parameters:
                 dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
 
+            # map dataset param to inputs if applicable
+            if batch.get_configuration().input_map:
+                from data.interface.interface import Interface
+                from data.interface.parameter import FileParameter, JsonParameter
+                parameters = Interface()
+                for param_name in dataset_parameters.parameters:
+                    param = dataset_parameters.parameters[param_name]
+                    for map_param in batch.get_configuration().input_map:
+                        if param_name == map_param['datasetParameter']:
+                            if param.PARAM_TYPE == 'file':
+                                parameters.add_parameter(FileParameter(map_param['input'], param.media_types,
+                                                                       required=param.required, multiple=param.multiple))
+                            elif param.PARAM_TYPE == 'json':
+                                parameters.add_parameter(JsonParameter(map_param['input'], param.json_type,
+                                                                       required=param.required, multiple=param.multiple))
+                        else:
+                            parameters.add_parameter(param)
+                dataset_parameters = parameters
+
             try:
                 recipe_type_rev.get_definition().input_interface.validate_connection(dataset_parameters)
             except InvalidInterfaceConnection as ex:
