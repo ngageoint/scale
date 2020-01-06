@@ -247,6 +247,56 @@ class TestDataSetPostView(APITestCase):
         self.assertEqual(result['title'], json_data_2['title'])
         self.assertEqual(result['description'], json_data_2['description'])
 
+    def test_create_dataset_with_members(self):
+        """Tests creating a dataset along with a bunch of members"""
+
+        title = 'Test Dataset'
+        description = 'Test DataSet description'
+
+        file1 = storage_utils.create_file()
+        file2 = storage_utils.create_file()
+        file3 = storage_utils.create_file()
+        file4 = storage_utils.create_file()
+
+        # call test
+        parameters = {'version': '6',
+                      'files': [
+                          {'name': 'input_a',
+                           'media_types': ['application/json'],
+                           'required': True},
+                          {'name': 'input_b',
+                           'media_types': ['application/json'],
+                           'multiple': True,
+                           'required': True},
+                          {'name': 'input_c',
+                           'media_types': ['application/json'],
+                           'required': True}
+                      ],
+                      'json': []}
+        definition = {'version': '6', 'parameters': parameters}
+
+        json_data = {
+            'title': title,
+            'description': description,
+            'definition': definition,
+            'data': {
+                'version': '7',
+                'files': {
+                    'input_a': [file1.id],
+                    'input_b': [file2.id, file3.id],
+                    'input_c': [file4.id],
+                },
+                'json': {}
+            },
+        }
+        url = '/%s/datasets/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_dataset_id = result['id']
+        self.assertTrue('/%s/datasets/%d/' % (self.api, new_dataset_id) in response['location'])
+        self.assertTrue(len(result['definition']['parameters']['files']), 3)
+        self.assertTrue(len(result['files']), 4)
 
 """Tests the v6/datasets/<dataset_id> endpoint"""
 class TestDatasetDetailsView(APITestCase):

@@ -479,6 +479,72 @@ Location http://.../v6/datasets/105/
 | **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_dataset_details`         |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
+
+.. _rest_v6_dataset_with_members:
+
+v6 Create Dataset with Members
+------------------------------
+
+**Example POST /v6/datasets API call**
+
+Request: POST http://.../v6/datasets/
+
+.. code-block:: javascript
+    {
+        "title": "My Dataset",
+        "description": "My Dataset Description",
+        "definition": <:ref:`Dataset JSON <rest_v6_data_dataset>`>,
+        "data": <:ref:`Data JSON <rest_v6_data_data>`>
+    }
+
+Response: 201 Ok
+Headers:
+Location http://.../v6/datasets/106
+
+.. code-block:: javascript
+
+   {
+      "id": 106,
+      "title": "My Dataset",
+      "description": "My Dataset Description",
+      "definition": <:ref:`Dataset JSON <rest_v6_data_dataset>`>,
+      "created": "1970-01-01T00:00:00Z",
+      "members": [<:ref:`Dataset Member <rest_v6_data_dataset_member>`>],
+      "files": [<:ref:`Dataset File <rest_v6_data_dataset_file>`>]
+   }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Create Dataset*                                                                                                       |
++=========================================================================================================================+
+| Creates a new dataset with the given fields                                                                             |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/datasets/                                                                                                  |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **Content Type**    | *application/json*                                                                                |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| title               | String            | Optional | The human-readable name of the dataset                             |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| description         | String            | Optional | A human-readable description of the dataset                        |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| definition          | JSON Object       | Required | JSON definition for the dataset                                    |
+|                     |                   |          | See :ref:`rest_v6_data_dataset`                                    |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| data                | JSON Object       | Optional | JSON definition for the dataset members                            |
+|                     |                   |          | See :ref:`rest_v6_data_data`                                            |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 Created                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL for retrieving the details of the newly created dataset                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_dataset_details`         |
++--------------------+----------------------------------------------------------------------------------------------------+
+
 .. _rest_v6_dataset_validation:
 
 v6 Validate Dataset

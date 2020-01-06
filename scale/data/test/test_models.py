@@ -176,7 +176,7 @@ class TestDataSetMemberManager(TransactionTestCase):
         data_dict['files']['input_e'] = [self.file1.id]
         data_dict['files']['input_f'] = [self.file2.id, self.file3.id]
         data = DataV6(data=data_dict).get_data()
-        validation = DataSetMember.objects.validate_data_list(dataset=self.dataset, data_list=[data])
+        validation = DataSetMember.objects.validate_data_list(dataset_def=self.dataset.get_definition(), data_list=[data])
         self.assertTrue(validation.is_valid)
 
         data_dict = copy.deepcopy(dataset_test_utils.DATA_DEFINITION)
@@ -184,7 +184,7 @@ class TestDataSetMemberManager(TransactionTestCase):
         data = DataV6(data=data_dict).get_data()
 
         # call test
-        validation = DataSetMember.objects.validate_data_list(dataset=self.dataset, data_list=[data])
+        validation = DataSetMember.objects.validate_data_list(dataset_def=self.dataset.get_definition(), data_list=[data])
         self.assertFalse(validation.is_valid)
         self.assertEqual(validation.errors[0].name, 'PARAM_REQUIRED')
 
