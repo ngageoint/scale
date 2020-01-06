@@ -116,6 +116,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#dataset-json">Dataset JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-list">v6 Retrieve Dataset List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset">v6 Create Dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset-with-members">v6 Create Dataset with Members</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-validate-dataset">v6 Validate Dataset</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-dataset-details">v6 Retrieve Dataset Details</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-create-dataset-members">v6 Create Dataset Members</a></li>
@@ -828,6 +829,25 @@ See <a class="reference internal" href="#rest-v6-data-dataset"><span class="std 
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="v6-create-dataset-with-members">
+<span id="rest-v6-dataset-with-members"></span><h2>v6 Create Dataset with Members<a class="headerlink" href="#v6-create-dataset-with-members" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/datasets API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/datasets/">http://.../v6/datasets/</a></p>
+<p>Response: 201 Ok
+Headers:
+Location <a class="reference external" href="http://.../v6/datasets/106">http://.../v6/datasets/106</a></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">106</span><span class="p">,</span>
+   <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Dataset Description&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset JSON &lt;rest_v6_data_dataset&gt;`</span><span class="o">&gt;</span><span class="p">,</span>
+   <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;members&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset Member &lt;rest_v6_data_dataset_member&gt;`</span><span class="o">&gt;</span><span class="p">],</span>
+   <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span><span class="o">&lt;:</span><span class="nx">ref</span><span class="o">:</span><span class="sb">`Dataset File &lt;rest_v6_data_dataset_file&gt;`</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="v6-validate-dataset">
 <span id="rest-v6-dataset-validation"></span><h2>v6 Validate Dataset<a class="headerlink" href="#v6-validate-dataset" title="Permalink to this headline">¶</a></h2>

@@ -1223,14 +1223,14 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="data.models.DataSetMemberManager.validate_data_list">
-<code class="descname">validate_data_list</code><span class="sig-paren">(</span><em>dataset</em>, <em>data_list</em><span class="sig-paren">)</span><a class="headerlink" href="#data.models.DataSetMemberManager.validate_data_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_data_list</code><span class="sig-paren">(</span><em>dataset_def</em>, <em>data_list</em><span class="sig-paren">)</span><a class="headerlink" href="#data.models.DataSetMemberManager.validate_data_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a list of data objects against a dataset</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>dataset</strong> (<a class="reference internal" href="#data.models.DataSet" title="data.models.DataSet"><code class="xref py py-class docutils literal"><span class="pre">data.models.DataSet</span></code></a>) &#8211; The dataset the member is a part of</li>
+<li><strong>dataset_def</strong> &#8211; The dataset definition the member is a part of</li>
 <li><strong>data_list</strong> ([<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>]) &#8211; Data definitions of the dataset members</li>
 </ul>
 </td>
@@ -1280,7 +1280,7 @@ object the first time, the query is executed.</p>
 <dt id="data.serializers.DataSetDetailsSerializerV6">
 <em class="property">class </em><code class="descclassname">data.serializers.</code><code class="descname">DataSetDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.serializers.DataSetDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#data.serializers.DataSetBaseSerializerV6" title="data.serializers.DataSetBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">data.serializers.DataSetBaseSerializerV6</span></code></a></p>
-<p>Converts dataset model feields to REST output</p>
+<p>Converts dataset model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
@@ -1314,6 +1314,7 @@ object the first time, the query is executed.</p>
 <dt id="data.serializers.DataSetMemberSerializerV6">
 <em class="property">class </em><code class="descclassname">data.serializers.</code><code class="descname">DataSetMemberSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.serializers.DataSetMemberSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts datasetmember model fields to REST output</p>
 </dd></dl>
 
 </div>
@@ -1638,6 +1639,12 @@ object the first time, the query is executed.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.views.DataSetView.create_all_v6">
+<code class="descname">create_all_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#data.views.DataSetView.create_all_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates or edits a dataset - including the dataset members - and returns a link to the detail URL</p>
 </dd></dl>
 
 <dl class="method">
