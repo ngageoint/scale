@@ -816,7 +816,7 @@ class TestCreateBatchRecipes(TestCase):
             src_file_ids.append(src_file.id)
             data_dict = {
                 'version': '6',
-                'files': {'INPUT_IMAGE': [src_file.id]},
+                'files': {'INPUT_FILE': [src_file.id]},
                 'json': {}
             }
             data_list.append(DataV6(data=data_dict).get_dict())

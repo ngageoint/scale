@@ -32,7 +32,6 @@ class BatchDefinition(object):
 
         :raises :class:`batch.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """
-
         # Re-processing a previous batch
         if self.root_batch_id:
             if batch.recipe_type_id != batch.superseded_batch.recipe_type_id:
@@ -61,28 +60,8 @@ class BatchDefinition(object):
             recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num).recipe_type
 
             # combine the parameters
-            dataset_parameters = dataset_definition.global_parameters
-            for param in dataset_definition.parameters.parameters:
-                dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
-
-            # map dataset param to inputs if applicable
-            if batch.get_configuration().input_map:
-                from data.interface.interface import Interface
-                from data.interface.parameter import FileParameter, JsonParameter
-                parameters = Interface()
-                for param_name in dataset_parameters.parameters:
-                    param = dataset_parameters.parameters[param_name]
-                    for map_param in batch.get_configuration().input_map:
-                        if param_name == map_param['datasetParameter']:
-                            if param.PARAM_TYPE == 'file':
-                                parameters.add_parameter(FileParameter(map_param['input'], param.media_types,
-                                                                       required=param.required, multiple=param.multiple))
-                            elif param.PARAM_TYPE == 'json':
-                                parameters.add_parameter(JsonParameter(map_param['input'], param.json_type,
-                                                                       required=param.required, multiple=param.multiple))
-                        else:
-                            parameters.add_parameter(param)
-                dataset_parameters = parameters
+            from batch.models import Batch
+            dataset_parameters = Batch.objects.merge_parameter_map(batch, DataSet.objects.get(pk=self.dataset))
 
             try:
                 recipe_type_rev.get_definition().input_interface.validate_connection(dataset_parameters)

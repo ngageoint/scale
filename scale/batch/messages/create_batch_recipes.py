@@ -121,35 +121,11 @@ class CreateBatchRecipes(CommandMessage):
         
         messages = []
         dataset = DataSet.objects.get(pk=definition.dataset)
-        dataset_definition = dataset.get_definition()
-        recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num)
-        recipe_inputs = recipe_type_rev.get_definition().get_input_keys()
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name,
+                                                                  revision_num=batch.recipe_type_rev.revision_num)
         
         # combine the parameters
-        dataset_parameters = dataset_definition.global_parameters
-        for param in dataset_definition.parameters.parameters:
-            dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
-
-        # map dataset param to inputs if applicable
-        if batch.get_configuration().input_map:
-            from data.interface.interface import Interface
-            from data.interface.parameter import FileParameter, JsonParameter
-            parameters = Interface()
-            for param_name in dataset_parameters.parameters:
-                param = dataset_parameters.parameters[param_name]
-                for map_param in batch.get_configuration().input_map:
-                    if param_name == map_param['datasetParameter']:
-                        if param.PARAM_TYPE == 'file':
-                            parameters.add_parameter(FileParameter(map_param['input'], param.media_types,
-                                                                   required=param.required,
-                                                                   multiple=param.multiple))
-                        elif param.PARAM_TYPE == 'json':
-                            parameters.add_parameter(JsonParameter(map_param['input'], param.json_type,
-                                                                   required=param.required,
-                                                                   multiple=param.multiple))
-                    else:
-                        parameters.add_parameter(param)
-            dataset_parameters = parameters
+        dataset_parameters = Batch.objects.merge_parameter_map(batch, dataset)
 
         try:
             recipe_type_rev.get_definition().input_interface.validate_connection(dataset_parameters)
@@ -164,7 +140,8 @@ class CreateBatchRecipes(CommandMessage):
         recipe_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files).values_list('recipe_id', flat=True)
         recipe_file_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files,
                                                          recipe__recipe_type=batch.recipe_type, 
-                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list('input_file_id', flat=True)
+                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list(
+            'input_file_id', flat=True)
         extra_files_qry = ScaleFile.objects.filter(id__in=ds_files)
         
         recipe_count = 0
@@ -212,7 +189,7 @@ class CreateBatchRecipes(CommandMessage):
                 if batch.get_configuration().input_map:
                     for param in batch.get_configuration().input_map:
                         if param['datasetParameter'] == file.parameter_name:
-                            parameter_name = param.input
+                            parameter_name = param['input']
                             break
 
                 data.add_value(FileValue(parameter_name, [file.scale_file_id]))
