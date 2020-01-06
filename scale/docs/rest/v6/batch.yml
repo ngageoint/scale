@@ -384,6 +384,20 @@ components:
             objects that recursively define the nodes with the sub-recipe to |
             force to reprocess.
 
+    input_map:
+      title: Input Map Definition
+      type: object
+      required: [all]
+      properties:
+        input:
+          type: string
+          description: The recipe type input the dataset parameter should map to
+          example: INPUT_FILE
+        datasetParameter:
+          type: string
+          description: The dataset parameter name the input maps to
+          example: FILE_INPUT
+
     batch_config:
       title: Batch Configuration
       type: object
@@ -391,6 +405,13 @@ components:
         priority:
           type: integer
           description: Sets a new priority to use for all jobs within the batch
+        inputMap:
+          type: array
+          description: Maps the recipe inputs to the proper dataset parameters
+          items:
+            type: object
+            additionalProperties:
+               $ref: '#/components/schemas/input_map'
 
     job_metrics:
       title: Job Metrics
