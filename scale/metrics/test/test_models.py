@@ -98,13 +98,13 @@ class TestMetricsError(TestCase):
 
         MetricsError.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
 
-        entries = MetricsError.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
-        self.assertEqual(len(entries), 4)
+        entries = MetricsError.objects.filter(occurred__gte=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        self.assertEqual(len(entries), 5)
 
         for entry in entries:
-            self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
+            self.assertEqual(entry.occurred.date(), datetime.datetime(2015, 1, 1, tzinfo=utc).date())
             if entry.error == error:
-                self.assertEqual(entry.total_count, 2)
+                self.assertEqual(entry.total_count, 1)
             else:
                 self.assertEqual(entry.total_count, 1)
 
@@ -243,31 +243,77 @@ class TestMetricsIngest(TestCase):
 
         MetricsIngest.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
 
-        entries = MetricsIngest.objects.filter(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
-        self.assertEqual(len(entries), 1)
+        entries = MetricsIngest.objects.filter(occurred__gte=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        self.assertEqual(len(entries), 5)
+        for entry in entries:
+            if entry.occurred == datetime.datetime(2015, 1, 1, 1, tzinfo=utc):
+                self.assertEqual(entry.ingested_count, 1)
+                self.assertEqual(entry.total_count, 1)
+                self.assertEqual(entry.file_size_sum, 200)
+                self.assertEqual(entry.file_size_min, 200)
+                self.assertEqual(entry.file_size_max, 200)
+                self.assertEqual(entry.file_size_avg, 200)
+                self.assertEqual(entry.transfer_time_sum, 600)
+                self.assertEqual(entry.transfer_time_min, 600)
+                self.assertEqual(entry.transfer_time_max, 600)
+                self.assertEqual(entry.transfer_time_avg, 600)
+                self.assertEqual(entry.ingest_time_sum, 3600)
+                self.assertEqual(entry.ingest_time_min, 3600)
+                self.assertEqual(entry.ingest_time_max, 3600)
+                self.assertEqual(entry.ingest_time_avg, 3600)
 
-        entry = entries.first()
-        self.assertEqual(entry.occurred, datetime.datetime(2015, 1, 1, tzinfo=utc))
-        self.assertEqual(entry.deferred_count, 1)
-        self.assertEqual(entry.ingested_count, 2)
-        self.assertEqual(entry.errored_count, 1)
-        self.assertEqual(entry.duplicate_count, 1)
-        self.assertEqual(entry.total_count, 5)
+            elif entry.occurred == datetime.datetime(2015, 1, 1, 2, tzinfo=utc):
+                self.assertEqual(entry.ingested_count, 1)
+                self.assertEqual(entry.total_count, 1)
+                self.assertEqual(entry.file_size_sum, 100)
+                self.assertEqual(entry.file_size_min, 100)
+                self.assertEqual(entry.file_size_max, 100)
+                self.assertEqual(entry.file_size_avg, 100)
+                self.assertEqual(entry.transfer_time_sum, 1200)
+                self.assertEqual(entry.transfer_time_min, 1200)
+                self.assertEqual(entry.transfer_time_max, 1200)
+                self.assertEqual(entry.transfer_time_avg, 1200)
+                self.assertEqual(entry.ingest_time_sum, 7200)
+                self.assertEqual(entry.ingest_time_min, 7200)
+                self.assertEqual(entry.ingest_time_max, 7200)
+                self.assertEqual(entry.ingest_time_avg, 7200)
 
-        self.assertEqual(entry.file_size_sum, 600)
-        self.assertEqual(entry.file_size_min, 100)
-        self.assertEqual(entry.file_size_max, 200)
-        self.assertEqual(entry.file_size_avg, 120)
+            elif entry.occurred == datetime.datetime(2015, 1, 1, 3, tzinfo=utc):
+                self.assertEqual(entry.errored_count, 1)
+                self.assertEqual(entry.total_count, 1)
+                self.assertEqual(entry.file_size_sum, 100)
+                self.assertEqual(entry.file_size_min, 100)
+                self.assertEqual(entry.file_size_max, 100)
+                self.assertEqual(entry.file_size_avg, 100)
+                self.assertEqual(entry.transfer_time_sum, 1800)
+                self.assertEqual(entry.transfer_time_min, 1800)
+                self.assertEqual(entry.transfer_time_max, 1800)
+                self.assertEqual(entry.transfer_time_avg, 1800)
 
-        self.assertEqual(entry.transfer_time_sum, 9000)
-        self.assertEqual(entry.transfer_time_min, 600)
-        self.assertEqual(entry.transfer_time_max, 3000)
-        self.assertEqual(entry.transfer_time_avg, 1800)
+            elif entry.occurred == datetime.datetime(2015, 1, 1, 4, tzinfo=utc):
+                self.assertEqual(entry.deferred_count, 1)
+                self.assertEqual(entry.total_count, 1)
+                self.assertEqual(entry.file_size_sum, 100)
+                self.assertEqual(entry.file_size_min, 100)
+                self.assertEqual(entry.file_size_max, 100)
+                self.assertEqual(entry.file_size_avg, 100)
+                self.assertEqual(entry.transfer_time_sum, 2400)
+                self.assertEqual(entry.transfer_time_min, 2400)
+                self.assertEqual(entry.transfer_time_max, 2400)
+                self.assertEqual(entry.transfer_time_avg, 2400)
 
-        self.assertEqual(entry.ingest_time_sum, 10800)
-        self.assertEqual(entry.ingest_time_min, 3600)
-        self.assertEqual(entry.ingest_time_max, 7200)
-        self.assertEqual(entry.ingest_time_avg, 5400)
+            elif entry.occurred == datetime.datetime(2015, 1, 1, 5, tzinfo=utc):
+                self.assertEqual(entry.duplicate_count, 1)
+                self.assertEqual(entry.total_count, 1)
+                self.assertEqual(entry.file_size_sum, 100)
+                self.assertEqual(entry.file_size_min, 100)
+                self.assertEqual(entry.file_size_max, 100)
+                self.assertEqual(entry.file_size_avg, 100)
+                self.assertEqual(entry.transfer_time_sum, 3000)
+                self.assertEqual(entry.transfer_time_min, 3000)
+                self.assertEqual(entry.transfer_time_max, 3000)
+                self.assertEqual(entry.transfer_time_avg, 3000)
+
 
     def test_calculate_stats_partial(self):
         """Tests individual statistics are null when information is unavailable."""

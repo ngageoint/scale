@@ -254,13 +254,13 @@ class TestMetricPlotViewV6(APITransactionTestCase):
 
         from django.utils.timezone import utc
         job1 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 10, tzinfo=utc))
-        job_test_utils.create_job_exe(job=job1, status=job1.status, ended=job1.ended)
+        job_test_utils.create_job_exe(job=job1, status='FAILED', ended=job1.ended)
         job2 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 11, tzinfo=utc))
-        job_test_utils.create_job_exe(job=job2, status=job2.status, ended=job2.ended)
+        job_test_utils.create_job_exe(job=job2, status='FAILED', ended=job2.ended)
         job3 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 12, tzinfo=utc))
-        job_test_utils.create_job_exe(job=job3, status=job3.status, ended=job3.ended)
+        job_test_utils.create_job_exe(job=job3, status='FAILED', ended=job3.ended)
         job4 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 13, tzinfo=utc))
-        job_test_utils.create_job_exe(job=job4, status=job4.status, ended=job4.ended)
+        job_test_utils.create_job_exe(job=job4, status='FAILED', ended=job4.ended)
 
         job5 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, 10, tzinfo=utc))
         job_test_utils.create_job_exe(job=job5, status=job5.status, ended=job5.ended)
@@ -282,4 +282,16 @@ class TestMetricPlotViewV6(APITransactionTestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['min_x'], unicode('2015-01-01T11:00:00Z'))
+        self.assertEqual(result['results'][0]['max_x'], unicode('2015-01-01T13:00:00Z'))
+        self.assertEqual(len(result['results'][0]['values']), 3)
+        for value in result['results'][0]['values']:
+            self.assertEqual(value['value'], 1)
+
+        self.assertEqual(len(result['results'][1]['values']), 3)
+        self.assertEqual(result['results'][1]['min_x'], unicode('2015-01-01T11:00:00Z'))
+        self.assertEqual(result['results'][1]['max_x'], unicode('2015-01-01T13:00:00Z'))
+        for value in result['results'][1]['values']:
+            self.assertEqual(value['value'], 1)
+
 
