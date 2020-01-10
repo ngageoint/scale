@@ -1466,7 +1466,10 @@ See <a class="reference internal" href="recipe.html#rest-v6-recipe-json-forced-n
 <p>A batch configuration JSON configures how the jobs and recipes within a batch should be run.</p>
 <p><strong>Example batch configuration:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">100</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+   <span class="s2">&quot;inputMap&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="s2">&quot;FILE_NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;datasetParameter&quot;</span><span class="o">:</span> <span class="s2">&quot;NAME_FILE&quot;</span><span class="p">}</span>
+   <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1486,6 +1489,21 @@ See <a class="reference internal" href="recipe.html#rest-v6-recipe-json-forced-n
 <td>Integer</td>
 <td>Optional</td>
 <td>Sets a new priority to use for all jobs within the batch</td>
+</tr>
+<tr class="row-odd"><td>inputMap</td>
+<td>Array</td>
+<td>Optional</td>
+<td>Maps the batch recipe input to the dataset parameter names</td>
+</tr>
+<tr class="row-even"><td>.input</td>
+<td>String</td>
+<td>Required</td>
+<td>The recipe input file name</td>
+</tr>
+<tr class="row-odd"><td>.datasetParameter</td>
+<td>String</td>
+<td>Required</td>
+<td>The dataset parameter name that maps to the input</td>
 </tr>
 </tbody>
 </table>

@@ -1163,6 +1163,30 @@ will have no related fields populated. Caller must be within an atomic transacti
 </dd></dl>
 
 <dl class="method">
+<dt id="batch.models.BatchManager.merge_parameter_map">
+<code class="descname">merge_parameter_map</code><span class="sig-paren">(</span><em>batch</em>, <em>dataset</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.merge_parameter_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dataset parameters merged with the batch configuration input map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>batch</strong> (<a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a>) &#8211; The batch</li>
+<li><strong>dataset</strong> (<a class="reference internal" href="data.html#data.models.DataSet" title="data.models.DataSet"><code class="xref py py-class docutils literal"><span class="pre">data.models.DataSet</span></code></a>) &#8211; The dataset of the batch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The map of datasest parameters</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">data.interface.Interface</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="batch.models.BatchManager.supersede_batch">
 <code class="descname">supersede_batch</code><span class="sig-paren">(</span><em>batch_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.supersede_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the given batch to be superseded</p>
