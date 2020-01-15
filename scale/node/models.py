@@ -6,7 +6,7 @@ import logging
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from job.models import JobExecution, JobExecutionEnd
+from job.models import Job
 
 logger = logging.getLogger(__name__)
 
@@ -78,17 +78,16 @@ class NodeManager(models.Manager):
             nodes = nodes.order_by('last_modified')
         return nodes
 
-    def get_nodes_running_job_exes(self):
-        """Returns a list of nodes that are currently running job_exes.
+    def get_nodes_running_jobs(self):
+        """Returns a list of nodes that are currently running jobs.
 
-        :returns: The list of node ids running job_exes
+        :returns: The list of node ids running jobs
         :rtype: list
         """
 
-        job_exe_end = JobExecutionEnd.objects.all().values_list('job_exe', flat=True)
-        job_exes = JobExecution.objects.exclude(id__in=job_exe_end).values_list('node_id', flat=True)
+        jobs = Job.objects.filter(status='RUNNING').values_list('node_id', flat=True)
 
-        return list(Node.objects.filter(id__in=job_exes, is_active=True).values_list('id', flat=True))
+        return list(Node.objects.filter(id__in=jobs, is_active=True).values_list('id', flat=True))
 
     def get_scheduler_nodes(self, hostnames):
         """Returns a list of all nodes that either have one of the given host names or is active.
