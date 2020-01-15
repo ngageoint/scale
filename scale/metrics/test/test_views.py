@@ -248,4 +248,50 @@ class TestMetricPlotViewV6(APITransactionTestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(len(result['results'][0]['values']), 3)
-        
+
+    def test_completed_failed(self):
+        """Tests the metrics plot view completed and failed"""
+
+        from django.utils.timezone import utc
+        job1 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 10, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job1, status='FAILED', ended=job1.ended)
+        job2 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 11, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job2, status='FAILED', ended=job2.ended)
+        job3 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 12, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job3, status='FAILED', ended=job3.ended)
+        job4 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, 13, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job4, status='FAILED', ended=job4.ended)
+
+        job5 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, 10, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job5, status=job5.status, ended=job5.ended)
+        job6 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, 11, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job6, status=job6.status, ended=job6.ended)
+        job7 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, 12, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job7, status=job7.status, ended=job7.ended)
+        job8 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, 13, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job8, status=job8.status, ended=job8.ended)
+        job9 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, 14, tzinfo=utc))
+        job_test_utils.create_job_exe(job=job9, status=job9.status, ended=job9.ended)
+
+        from metrics.models import MetricsJobType
+        MetricsJobType.objects.calculate(datetime.datetime(2015, 1, 1, tzinfo=utc))
+
+        url = '/v6/metrics/job-types/plot-data/?column=completed_count&column=failed_count&dataType=job-types&started=2015-01-01T11:00:00Z&ended=2015-01-01T13:00:00Z'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['min_x'], unicode('2015-01-01T11:00:00Z'))
+        self.assertEqual(result['results'][0]['max_x'], unicode('2015-01-01T13:00:00Z'))
+        self.assertEqual(len(result['results'][0]['values']), 3)
+        for value in result['results'][0]['values']:
+            self.assertEqual(value['value'], 1)
+
+        self.assertEqual(len(result['results'][1]['values']), 3)
+        self.assertEqual(result['results'][1]['min_x'], unicode('2015-01-01T11:00:00Z'))
+        self.assertEqual(result['results'][1]['max_x'], unicode('2015-01-01T13:00:00Z'))
+        for value in result['results'][1]['values']:
+            self.assertEqual(value['value'], 1)
+
+
