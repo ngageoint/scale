@@ -338,6 +338,11 @@ class SchedulingManager(object):
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
+        # If there are no available nodes, no point in continuing
+        if not nodes:
+            logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
+            return scheduled_job_executions
+
         max_cluster_resources = resource_mgr.get_max_available_resources()
         done_queuing = False
         while not done_queuing:
@@ -386,9 +391,11 @@ class SchedulingManager(object):
                         continue
                     if resource.name not in max_cluster_resources._resources:
                         # resource does not exist in cluster
+                        ignore_job_type_ids.add(jt.id)
                         invalid_resources.append(resource.name)
                     elif resource.value > max_cluster_resources._resources[resource.name].value:
                         # resource exceeds the max available from any node
+                        ignore_job_type_ids.add(jt.id)
                         insufficient_resources.append(resource.name)
 
                 if invalid_resources:
@@ -444,9 +451,10 @@ class SchedulingManager(object):
                     logger.info('Schedule queue limit of %d reached; no more room for executions' % QUEUE_LIMIT)
                     break
 
-            if (now() - started).total_seconds() >= 20 and len(scheduled_job_executions) > 0:
+            if (now() - started).total_seconds() >= 1 and len(scheduled_job_executions) > 0:
                 # it's been longer than 20 seconds, we need to get schedulin'
                 done_queuing = True
+                break
 
         duration = now() - started
         msg = 'Processing queue took %.3f seconds'
