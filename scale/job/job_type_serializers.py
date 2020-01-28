@@ -17,6 +17,7 @@ class JobTypeBaseSerializerV6(ModelIdSerializer):
     title = serializers.CharField(source='get_title')
     description = serializers.CharField(source='get_description')
     is_active = serializers.BooleanField()
+    is_system = serializers.BooleanField()
     is_paused = serializers.BooleanField()
     is_published = serializers.BooleanField()
     icon_code = serializers.CharField()
@@ -36,7 +37,6 @@ class JobTypeSerializerV6(JobTypeBaseSerializerV6):
 
     is_active = serializers.BooleanField()
     is_paused = serializers.BooleanField()
-    is_system = serializers.BooleanField()
     max_scheduled = serializers.IntegerField()
     max_tries = serializers.IntegerField()
     revision_num = serializers.IntegerField()
