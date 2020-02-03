@@ -360,16 +360,15 @@ class SchedulingManager(object):
                     done_queuing = True
 
                 job_exe = QueuedJobExecution(queue)
+                
+                # We've already scheduled this execution
+                if job_exe in scheduled_job_executions:
+                    continue
 
                 # Canceled job executions get processed as scheduled executions
                 if job_exe.is_canceled:
                     scheduled_job_executions.append(job_exe)
                     continue
-
-                # If there are no longer any available nodes, break
-                if not nodes:
-                    logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
-                    break
 
                 jt = job_type_mgr.get_job_type(queue.job_type.id)
                 name = INVALID_RESOURCES.name + jt.name
@@ -378,7 +377,7 @@ class SchedulingManager(object):
                 if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
                     # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
                     ignore_job_type_ids.add(jt.id)
-                    continue
+                    break
 
                 invalid_resources = []
                 insufficient_resources = []
@@ -388,9 +387,10 @@ class SchedulingManager(object):
                     if resource.name.lower() == 'sharedmem':
                         logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
                         ignore_job_type_ids.add(jt.id)
-                        continue
+                        break
                     if resource.name not in max_cluster_resources._resources:
                         # resource does not exist in cluster
+                        logger.warning('Job type %s could not be scheduled as resource %s does not exist in the cluster', jt.name, resource.name)
                         ignore_job_type_ids.add(jt.id)
                         invalid_resources.append(resource.name)
                     elif resource.value > max_cluster_resources._resources[resource.name].value:
@@ -410,7 +410,7 @@ class SchedulingManager(object):
                     invalid_resources.extend(insufficient_resources)
                     jt.unmet_resources = ','.join(invalid_resources)
                     jt.save(update_fields=["unmet_resources"])
-                    continue
+                    break
                 else:
                     # reset unmet_resources flag
                     jt.unmet_resources = None
@@ -451,8 +451,8 @@ class SchedulingManager(object):
                     logger.info('Schedule queue limit of %d reached; no more room for executions' % QUEUE_LIMIT)
                     break
 
-            if (now() - started).total_seconds() >= 1 and len(scheduled_job_executions) > 0:
-                # it's been longer than 20 seconds, we need to get schedulin'
+            if (now() - started).total_seconds() >= 1:
+                # it's been longer than 1 seconds, we need to get schedulin'
                 done_queuing = True
                 break
 
