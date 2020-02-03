@@ -83,15 +83,23 @@ class MetricsErrorManager(models.Manager):
         # Calculate the overall counts based on job status
         entry_map = {}
         for job_exe_end in job_exe_ends.iterator():
+            occurred_datetime = job_exe_end.ended if job_exe_end.ended else date
+            entry_date_time = datetime.datetime(occurred_datetime.year, occurred_datetime.month, occurred_datetime.day,
+                                                occurred_datetime.hour, tzinfo=timezone.utc)
             if job_exe_end.error not in entry_map:
-                entry = MetricsError(error=job_exe_end.error, occurred=date, created=timezone.now())
+                entry_map[job_exe_end.error] = {}
+
+            if entry_date_time not in entry_map[job_exe_end.error]:
+                entry = MetricsError(error=job_exe_end.error, occurred=entry_date_time, created=timezone.now())
                 entry.total_count = 0
-                entry_map[job_exe_end.error] = entry
-            entry = entry_map[job_exe_end.error]
+                entry_map[job_exe_end.error][entry_date_time] = entry
+            entry = entry_map[job_exe_end.error][entry_date_time]
             entry.total_count += 1
 
         # Save the new metrics to the database
-        self._replace_entries(date, entry_map.values())
+        for entry in entry_map:
+            for entry_time in entry_map[entry]:
+                self._replace_entries(entry_time, entry, [entry_map[entry][entry_time]])
 
     def get_metrics_type(self, include_choices=False):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
@@ -128,7 +136,7 @@ class MetricsErrorManager(models.Manager):
         return MetricsPlotData.create(entries, 'occurred', 'error_id', choice_ids, columns)
 
     @transaction.atomic
-    def _replace_entries(self, date, entries):
+    def _replace_entries(self, date, error, entries):
         """Replaces all the existing metric entries for the given date with new ones.
 
         :param date: The date when job executions associated with the metrics ended.
@@ -138,7 +146,7 @@ class MetricsErrorManager(models.Manager):
         """
 
         # Delete all the previous metrics entries
-        MetricsError.objects.filter(occurred=date).delete()
+        MetricsError.objects.filter(occurred=date, error=error).delete()
 
         # Save all the new metrics models
         MetricsError.objects.bulk_create(entries)
@@ -195,19 +203,27 @@ class MetricsIngestManager(models.Manager):
         # Calculate the overall counts based on ingest status
         entry_map = {}
         for ingest in ingests.iterator():
+            occurred_datetime = ingest.ingest_ended if ingest.ingest_ended else date
+            entry_datetime = datetime.datetime(occurred_datetime.year, occurred_datetime.month, occurred_datetime.day,
+                                                occurred_datetime.hour, tzinfo=timezone.utc)
             if ingest.strike not in entry_map:
-                entry = MetricsIngest(strike=ingest.strike, occurred=date, created=timezone.now())
+                entry_map[ingest.strike] = {}
+
+            if entry_datetime not in entry_map[ingest.strike]:
+                entry = MetricsIngest(strike=ingest.strike, occurred=entry_datetime, created=timezone.now())
                 entry.deferred_count = 0
                 entry.ingested_count = 0
                 entry.errored_count = 0
                 entry.duplicate_count = 0
                 entry.total_count = 0
-                entry_map[ingest.strike] = entry
-            entry = entry_map[ingest.strike]
-            self._update_metrics(date, ingest, entry)
+                entry_map[ingest.strike][entry_datetime] = entry
+            entry = entry_map[ingest.strike][entry_datetime]
+            self._update_metrics(entry_datetime, ingest, entry)
 
         # Save the new metrics to the database
-        self._replace_entries(date, entry_map.values())
+        for entry in entry_map:
+            for entry_time in entry_map[entry]:
+                self._replace_entries(entry_time, entry, [entry_map[entry][entry_time]])
 
     def get_metrics_type(self, include_choices=False):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
@@ -295,7 +311,7 @@ class MetricsIngestManager(models.Manager):
         return entry
 
     @transaction.atomic
-    def _replace_entries(self, date, entries):
+    def _replace_entries(self, date, strike, entries):
         """Replaces all the existing metric entries for the given date with new ones.
 
         :param date: The date when ingests associated with the metrics ended.
@@ -305,7 +321,7 @@ class MetricsIngestManager(models.Manager):
         """
 
         # Delete all the previous metrics entries
-        MetricsIngest.objects.filter(occurred=date).delete()
+        MetricsIngest.objects.filter(occurred=date, strike=strike).delete()
 
         # Save all the new metrics models
         MetricsIngest.objects.bulk_create(entries)
@@ -437,7 +453,6 @@ class MetricsJobTypeManager(models.Manager):
 
     def calculate(self, date):
         """See :meth:`metrics.registry.MetricsTypeProvider.calculate`."""
-
         started = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=timezone.utc)
         ended = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=timezone.utc)
 
@@ -448,8 +463,14 @@ class MetricsJobTypeManager(models.Manager):
         # Calculate the overall counts based on job status
         entry_map = {}
         for job in jobs.iterator():
+            occurred_datetime = job.ended if job.ended else date
+            entry_date_time = datetime.datetime(occurred_datetime.year, occurred_datetime.month, occurred_datetime.day,
+                                                occurred_datetime.hour, tzinfo=timezone.utc)
             if job.job_type not in entry_map:
-                entry = MetricsJobType(job_type=job.job_type, occurred=date, created=timezone.now())
+                entry_map[job.job_type] = {}
+
+            if entry_date_time not in entry_map[job.job_type]:
+                entry = MetricsJobType(job_type=job.job_type, occurred=entry_date_time, created=timezone.now())
                 entry.completed_count = 0
                 entry.failed_count = 0
                 entry.canceled_count = 0
@@ -457,9 +478,9 @@ class MetricsJobTypeManager(models.Manager):
                 entry.error_system_count = 0
                 entry.error_data_count = 0
                 entry.error_algorithm_count = 0
-                entry_map[job.job_type] = entry
-            entry = entry_map[job.job_type]
-            self._update_counts(date, job, entry)
+                entry_map[job.job_type][entry_date_time] = entry
+            entry = entry_map[job.job_type][entry_date_time]
+            self._update_counts(occurred_datetime, job, entry)
 
         # Fetch all the completed job executions for the requested day
         job_exe_ends = JobExecutionEnd.objects.filter(status__in=['COMPLETED'], ended__gte=started, ended__lte=ended)
@@ -467,11 +488,14 @@ class MetricsJobTypeManager(models.Manager):
 
         # Calculate the metrics per job execution grouped by job type
         for job_exe_end in job_exe_ends.iterator():
-            entry = entry_map[job_exe_end.job_type]
-            self._update_times(date, job_exe_end, entry)
+            entry = entry_map[job_exe_end.job.job_type]
+            for entry_time in entry:
+                self._update_times(entry_time, job_exe_end, entry[entry_time])
 
         # Save the new metrics to the database
-        self._replace_entries(date, entry_map.values())
+        for entry in entry_map:
+            for entry_time in entry_map[entry]:
+                self._replace_entries(entry_time, entry, [entry_map[entry][entry_time]])
 
     def get_metrics_type(self, include_choices=False):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
@@ -503,7 +527,6 @@ class MetricsJobTypeManager(models.Manager):
             columns = self.get_metrics_type().columns
         column_names = [c.name for c in columns]
         entries = entries.values('job_type_id', 'occurred', *column_names)
-
         # Convert the database models to plot models
         return MetricsPlotData.create(entries, 'occurred', 'job_type_id', choice_ids, columns)
 
@@ -608,7 +631,7 @@ class MetricsJobTypeManager(models.Manager):
         return entry
 
     @transaction.atomic
-    def _replace_entries(self, date, entries):
+    def _replace_entries(self, date, job_type, entries):
         """Replaces all the existing metric entries for the given date with new ones.
 
         :param date: The date when job executions associated with the metrics ended.
@@ -618,11 +641,10 @@ class MetricsJobTypeManager(models.Manager):
         """
 
         # Delete all the previous metrics entries
-        MetricsJobType.objects.filter(occurred=date).delete()
+        MetricsJobType.objects.filter(occurred=date, job_type=job_type).delete()
 
         # Save all the new metrics models
         MetricsJobType.objects.bulk_create(entries)
-
 
 class MetricsJobType(models.Model):
     """Tracks all the job execution metrics grouped by job type.

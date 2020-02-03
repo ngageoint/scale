@@ -982,11 +982,20 @@ A batch configuration JSON configures how the jobs and recipes within a batch sh
 .. code-block:: javascript
 
    {
-      "priority": 100
+      "priority": 100,
+      "inputMap": [
+         {"input": "FILE_NAME", "datasetParameter": "NAME_FILE"}
+      ]
    }
 
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Batch Configuration**                                                                                                     |
 +=========================+===================+==========+====================================================================+
 | priority                | Integer           | Optional | Sets a new priority to use for all jobs within the batch           |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| inputMap                | Array             | Optional | Maps the batch recipe input to the dataset parameter names         |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| .input                  | String            | Required | The recipe input file name                                         |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| .datasetParameter       | String            | Required | The dataset parameter name that maps to the input                  |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+

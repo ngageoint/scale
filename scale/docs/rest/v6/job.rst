@@ -33,6 +33,7 @@ Response: 200 OK
             "title": "Scale Ingest",
             "description": "Ingests a source file into a workspace",
             "is_active": true,
+            "is_system": true,
             "is_paused": false,
             "is_published": false,
             "icon_code": "f013",
@@ -284,6 +285,7 @@ Location http://.../v6/job/1/
           "description": null,
           "is_active": true,
           "is_paused": false,
+          "is_system": true,
           "is_published": false,
           "icon_code": null,
           "unmet_resources": "chocolate,vanilla"
@@ -299,6 +301,7 @@ Location http://.../v6/job/1/
               "description": null,
               "is_active": true,
               "is_paused": false,
+              "is_system": true,
               "is_published": false,
               "icon_code": null,
               "unmet_resources": "chocolate,vanilla"
@@ -440,6 +443,7 @@ Response: 200 OK
         "description": "Ingests a source file into a workspace",
         "is_active": true,
         "is_paused": false,
+        "is_system": true,
         "is_published": false,
         "icon_code": "f013",
         "unmet_resources": "chocolate,vanilla"
@@ -530,6 +534,7 @@ Response: 200 OK
             "description": "Ingests a source file into a workspace",
             "is_active": true,
             "is_paused": false,
+            "is_system": true,
             "is_published": false,
             "icon_code": "f013",
             "unmet_resources": "chocolate,vanilla"
@@ -798,6 +803,7 @@ Response: 200 OK
             "description": "Ingests a source file into a workspace",
             "is_active": true,
             "is_paused": false,
+            "is_system": true,
             "is_published": false,
             "icon_code": "f013",
             "unmet_resources": "chocolate,vanilla"
@@ -926,6 +932,7 @@ Response: 200 OK
       "description": "Ingests a source file into a workspace",
       "is_active": true,
       "is_paused": false,
+      "is_system": true,
       "is_published": false,
       "icon_code": "f013",
       "unmet_resources": "chocolate,vanilla"

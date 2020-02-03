@@ -434,6 +434,72 @@ class TestBatchesViewV6(APITransactionTestCase):
 
     @patch('batch.views.CommandMessageManager')
     @patch('batch.views.create_batch_recipes_message')
+    def test_create_new_batch_inputmap(self, mock_create, mock_msg_mgr):
+        """Tests successfully creating a new batch"""
+
+        msg = CreateBatchRecipes()
+        mock_create.return_value = msg
+
+        dataset_def = {
+            'parameters': {
+                'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_FILE'}],
+                'json': []}
+        }
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
+        workspace = storage_test_utils.create_workspace()
+        src_file_a = storage_test_utils.create_file(file_name='input_a.PNG', file_type='SOURCE', media_type='image/png',
+                                                    file_size=10, data_type_tags=['type'], file_path='the_path',
+                                                    workspace=workspace)
+        src_file_b = storage_test_utils.create_file(file_name='input_b.PNG', file_type='SOURCE', media_type='image/png',
+                                                    file_size=10, data_type_tags=['type'], file_path='the_path',
+                                                    workspace=workspace)
+        data_list = []
+        data_dict = {
+            'version': '6',
+            'files': {'INPUT_FILE': [src_file_a.id]},
+            'json': {}
+        }
+        data_list.append(DataV6(data=data_dict).get_dict())
+        data_dict = {
+            'version': '6',
+            'files': {'INPUT_FILE': [src_file_b.id]},
+            'json': {}
+        }
+        data_list.append(DataV6(data=data_dict).get_dict())
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
+
+        definition = copy.deepcopy(recipe_test_utils.RECIPE_DEFINITION)
+        recipe_type_4 = recipe_test_utils.create_recipe_type_v6(definition=definition)
+
+        json_data = {
+            'title': 'Batch Title',
+            'description': 'Batch Description',
+            'recipe_type_id': recipe_type_4.id,
+            'definition': {
+                'dataset': the_dataset.id,
+                'forced_nodes': {
+                    'all': True,
+                },
+            },
+            'configuration': {
+                'priority': 100,
+                'inputMap': [
+                    {'input': 'INPUT_IMAGE', 'datasetParameter': 'INPUT_FILE'}
+                ]
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+        self.assertIsNotNone(new_batch_id)
+        self.assertEqual(result['recipes_estimated'], 2)
+        mock_create.assert_called_with(new_batch_id)
+
+    @patch('batch.views.CommandMessageManager')
+    @patch('batch.views.create_batch_recipes_message')
     def test_previous_create_successful(self, mock_create, mock_msg_mgr):
         """Tests creating a new batch successfully"""
 

@@ -2,6 +2,7 @@
 # Use command: pip install -r requirements.txt
 
 # Main requirements
+zipp<2.0.0
 boto3>=1.4.0,<2
 cryptography>=2.3,<3
 dj-database-url
