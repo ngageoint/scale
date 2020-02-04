@@ -335,6 +335,7 @@ class SchedulingManager(object):
         """
 
         scheduled_job_executions = []
+        scheduled_job_execution_ids = []
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
@@ -353,21 +354,22 @@ class SchedulingManager(object):
                 done_queuing = True
                 break
 
-            last_queue = queues.last()
+            last_queue = queues[queues.count()-1]
             for queue in queues.iterator():
                 if queue == last_queue:
                     # we've gone through everything
                     done_queuing = True
 
                 job_exe = QueuedJobExecution(queue)
-                
+
                 # We've already scheduled this execution
-                if job_exe in scheduled_job_executions:
+                if job_exe.id in scheduled_job_execution_ids:
                     continue
 
                 # Canceled job executions get processed as scheduled executions
                 if job_exe.is_canceled:
                     scheduled_job_executions.append(job_exe)
+                    scheduled_job_execution_ids.append(job_exe.id)
                     continue
 
                 jt = job_type_mgr.get_job_type(queue.job_type.id)
@@ -390,7 +392,9 @@ class SchedulingManager(object):
                         break
                     if resource.name not in max_cluster_resources._resources:
                         # resource does not exist in cluster
-                        logger.warning('Job type %s could not be scheduled as resource %s does not exist in the cluster', jt.name, resource.name)
+                        logger.warning(
+                            'Job type %s could not be scheduled as resource %s does not exist in the cluster', jt.name,
+                            resource.name)
                         ignore_job_type_ids.add(jt.id)
                         invalid_resources.append(resource.name)
                     elif resource.value > max_cluster_resources._resources[resource.name].value:
@@ -420,7 +424,8 @@ class SchedulingManager(object):
                 # Make sure execution's job type and workspaces have been synced to the scheduler
                 job_type_id = queue.job_type_id
                 if job_type_id not in job_types:
-                    scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE, description=UNKNOWN_JOB_TYPE.description % job_type_id)
+                    scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE,
+                                                 description=UNKNOWN_JOB_TYPE.description % job_type_id)
                     ignore_job_type_ids.add(job_type_id)
                     break
 
@@ -443,6 +448,7 @@ class SchedulingManager(object):
                 # Try to schedule job execution and adjust job type limit if needed
                 if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
                     scheduled_job_executions.append(job_exe)
+                    scheduled_job_execution_ids.append(job_exe.id)
                     if job_type_id in job_type_limits:
                         job_type_limits[job_type_id] -= 1
 
