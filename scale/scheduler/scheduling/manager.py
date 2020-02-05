@@ -350,7 +350,7 @@ class SchedulingManager(object):
             queues = Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)
 
             # Nothing matches our criteria, we're done searching
-            if not len(queues):
+            if not queues.count():
                 done_queuing = True
                 break
 
