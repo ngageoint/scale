@@ -4,6 +4,7 @@ import django
 import copy
 from django.test import TestCase
 
+from batch.configuration.json.configuration_v6 import BatchConfigurationV6
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import create_batch_recipes_message, CreateBatchRecipes
 from batch.test import utils as batch_test_utils
@@ -539,7 +540,6 @@ class TestCreateBatchRecipes(TestCase):
         self.assertEqual(create_recipes_message_3.recipe_type_name, new_batch_2.recipe_type.name)
         self.assertEqual(create_recipes_message_3.recipe_type_rev_num, new_batch_2.recipe_type.revision_num)
         
-        
     def test_execute_forced_nodes(self):
         """Tests calling CreateBatchRecipes.execute() when only specific nodes are forced"""
         
@@ -718,3 +718,181 @@ class TestCreateBatchRecipes(TestCase):
         self.assertIsNone(create_recipes_message.forced_nodes)
         self.assertEqual(create_recipes_message.recipe_type_name, new_batch.recipe_type.name)
         self.assertEqual(create_recipes_message.recipe_type_rev_num, new_batch.recipe_type.revision_num)
+
+    def test_execute_inputmap(self):
+        """Tests executing a new batch with an inputMap specified in the configuration"""
+        # Importing module here to patch the max recipe num
+        import batch.messages.create_batch_recipes
+        batch.messages.create_batch_recipes.MAX_RECIPE_NUM = 5
+
+        jt_1 = job_test_utils.create_seed_job_type()
+        jt_2 = job_test_utils.create_seed_job_type()
+        jt_3 = job_test_utils.create_seed_job_type()
+        jt_4 = job_test_utils.create_seed_job_type()
+
+        recipe_def = {'version': '7',
+                      'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                           'multiple': False}],
+                                'json': []},
+                      'nodes': {'node_a': {'dependencies': [],
+                                           'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                           'node_type': {'node_type': 'job',
+                                                         'job_type_name': jt_1.name,
+                                                         'job_type_version': jt_1.version,
+                                                         'job_type_revision': jt_1.revision_num}},
+                                'node_b': {'dependencies': [],
+                                           'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                           'node_type': {'node_type': 'job',
+                                                         'job_type_name': jt_2.name,
+                                                         'job_type_version': jt_2.version,
+                                                         'job_type_revision': jt_2.revision_num}}}}
+        sub_recipe_type_1 = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+
+        recipe_def = {'version': '7',
+                      'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                           'multiple': False}],
+                                'json': []},
+                      'nodes': {'node_a': {'dependencies': [],
+                                           'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                           'node_type': {'node_type': 'job',
+                                                         'job_type_name': jt_3.name,
+                                                         'job_type_version': jt_3.version,
+                                                         'job_type_revision': jt_3.revision_num}},
+                                'node_b': {'dependencies': [],
+                                           'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                           'node_type': {'node_type': 'job',
+                                                         'job_type_name': jt_4.name,
+                                                         'job_type_version': jt_4.version,
+                                                         'job_type_revision': jt_4.revision_num}}}}
+        sub_recipe_type_2 = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+
+        jt_5 = job_test_utils.create_seed_job_type()
+        jt_6 = job_test_utils.create_seed_job_type()
+        recipe_def = {'version': '7',
+                      'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/png'], 'required': True,
+                                           'multiple': False}],
+                                'json': []},
+                      'nodes': {'recipe_node_a': {'dependencies': [],
+                                                  'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                                  'node_type': {'node_type': 'recipe',
+                                                                'recipe_type_name': sub_recipe_type_1.name,
+                                                                'recipe_type_revision': sub_recipe_type_1.revision_num}},
+                                'recipe_node_b': {'dependencies': [{'name': 'node_d', 'acceptance': True}],
+                                                  'input': {'input_a': {'type': 'dependency', 'node': 'node_d',
+                                                                        'output': 'OUTPUT_IMAGE'}},
+                                                  'node_type': {'node_type': 'recipe',
+                                                                'recipe_type_name': sub_recipe_type_2.name,
+                                                                'recipe_type_revision': sub_recipe_type_2.revision_num}},
+                                'node_c': {'dependencies': [],
+                                           'input': {'INPUT_IMAGE': {'type': 'recipe', 'input': 'INPUT_IMAGE'}},
+                                           'node_type': {'node_type': 'job', 'job_type_name': jt_5.name,
+                                                         'job_type_version': jt_5.version,
+                                                         'job_type_revision': jt_5.revision_num}},
+                                'node_d': {'dependencies': [{'name': 'node_c', 'acceptance': True}],
+                                           'input': {'INPUT_IMAGE': {'type': 'dependency', 'node': 'node_c',
+                                                                     'output': 'OUTPUT_IMAGE'}},
+                                           'node_type': {'node_type': 'job', 'job_type_name': jt_6.name,
+                                                         'job_type_version': jt_6.version,
+                                                         'job_type_revision': jt_6.revision_num}}}}
+        recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+
+        # Create a dataset of 6 files
+        dataset_def = {
+            'parameters': {
+                'files': [{'media_types': ['image/png'], 'required': True, 'multiple': False, 'name': 'INPUT_FILE'}],
+                'json': []}
+        }
+        the_dataset = data_test_utils.create_dataset(definition=dataset_def)
+        workspace = storage_test_utils.create_workspace()
+
+        # Create 6 files
+        src_file_ids = []
+        data_list = []
+        for i in range(0, 6):
+            file_name = 'input_%d.png' % i
+            src_file = storage_test_utils.create_file(file_name=file_name, file_type='SOURCE', media_type='image/png',
+                                                      file_size=10, data_type_tags=['type'], file_path='the_path',
+                                                      workspace=workspace)
+            src_file_ids.append(src_file.id)
+            data_dict = {
+                'version': '6',
+                'files': {'INPUT_FILE': [src_file.id]},
+                'json': {}
+            }
+            data_list.append(DataV6(data=data_dict).get_dict())
+        members = data_test_utils.create_dataset_members(dataset=the_dataset, data_list=data_list)
+
+        batch_definition = BatchDefinition()
+        batch_definition.dataset = the_dataset.id
+        forced_nodes = ForcedNodes()
+        forced_nodes.all_nodes = True
+        batch_definition.forced_nodes = forced_nodes
+        config_dict = {
+            'version': '7',
+            'priority': '100',
+            'inputMap': [
+                {'input': 'INPUT_IMAGE', 'datasetParameter': 'INPUT_FILE'}
+            ]
+        }
+        batch_config = BatchConfigurationV6(config_dict, False).get_configuration()
+        new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=batch_definition,
+                                                  configuration=batch_config)
+
+        # Create message
+        message = batch.messages.create_batch_recipes.CreateBatchRecipes()
+        message.batch_id = new_batch.id
+
+        # Copy JSON for running same message again later
+        message_json = message.to_json()
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Should be 6 messages, one for next create_batch_recipes and 5 for creating new recipes
+        self.assertEqual(len(message.new_messages), 6)
+
+        # Create batch message
+        batch_recipes_message = message.new_messages[0]
+        self.assertEqual(batch_recipes_message.type, 'create_batch_recipes')
+        self.assertEqual(batch_recipes_message.current_dataset_file_id, src_file_ids[1])
+        self.assertFalse(batch_recipes_message.is_prev_batch_done)
+
+        from recipe.models import Recipe
+        # Verify each message has a different input and execute
+        src_ids = copy.deepcopy(src_file_ids)
+        for msg in message.new_messages[1:]:
+            self.assertEqual(msg.type, 'create_recipes')
+            self.assertEqual(msg.create_recipes_type, 'new-recipe')
+            file_id = DataV6(msg.recipe_input_data).get_data().values['INPUT_IMAGE'].file_ids[0]
+            self.assertTrue(file_id in src_ids)
+            src_ids.remove(file_id)
+
+            # Execute the create_recipes messages
+            result = msg.execute()
+            self.assertTrue(result)
+
+        # Verify 5 recipes have been created and they have the proper input files:
+        recipes = Recipe.objects.all()
+        self.assertEqual(len(recipes), 5)
+        src_ids = copy.deepcopy(src_file_ids)
+        for recipe in recipes:
+            self.assertEqual(recipe.recipe_type.name, new_batch.recipe_type.name)
+            file_id = recipe.get_input_data().values['INPUT_IMAGE'].file_ids[0]
+            self.assertTrue(file_id in src_ids)
+            src_ids.remove(file_id)
+
+        # Execute next create_batch_recipes messages
+        result = batch_recipes_message.execute()
+        self.assertTrue(result)
+        # Should only have one last create_recipes message
+        self.assertEqual(len(batch_recipes_message.new_messages), 1)
+        create_recipes_message = batch_recipes_message.new_messages[0]
+        self.assertTrue(batch_recipes_message.is_prev_batch_done)
+        self.assertEqual(create_recipes_message.type, 'create_recipes')
+        self.assertEqual(create_recipes_message.create_recipes_type, 'new-recipe')
+        self.assertEqual(create_recipes_message.batch_id, new_batch.id)
+        self.assertEqual(create_recipes_message.event_id, new_batch.event_id)
+        self.assertEqual(create_recipes_message.recipe_type_name, new_batch.recipe_type.name)
+        self.assertEqual(create_recipes_message.recipe_type_rev_num, new_batch.recipe_type.revision_num)
+

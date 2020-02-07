@@ -69,7 +69,6 @@ class BatchManager(models.Manager):
         batch.event = event
         batch.definition = convert_definition_to_v6(definition).get_dict()
         batch.configuration = convert_configuration_to_v6(configuration).get_dict()
-
         with transaction.atomic():
             if definition.root_batch_id is not None:
                 # Find latest batch with the root ID and supersede it
@@ -126,16 +125,13 @@ class BatchManager(models.Manager):
         #        type, count the number of files in each member that matches the parameter
         
         from data.interface.exceptions import InvalidInterfaceConnection
-        from data.models import DataSet, DataSetMember, DataSetFile
+        from data.models import DataSet, DataSetFile
         dataset = DataSet.objects.get(pk=definition.dataset)
-        dataset_definition = dataset.get_definition()
         recipe_type = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name, revision_num=batch.recipe_type_rev.revision_num).recipe_type
 
         # combine the parameters
-        dataset_parameters = dataset_definition.global_parameters
-        for param in dataset_definition.parameters.parameters:
-            dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
-        
+        dataset_parameters = Batch.objects.merge_parameter_map(batch, dataset)
+
         try:
             recipe_type.get_definition().input_interface.validate_connection(dataset_parameters)
         except InvalidInterfaceConnection as ex:
@@ -143,6 +139,12 @@ class BatchManager(models.Manager):
             return 0
         
         recipe_inputs = recipe_type.get_definition().get_input_keys()
+
+        if batch.get_configuration().input_map:
+            for map_param in batch.get_configuration().input_map:
+                idx = recipe_inputs.index(map_param['input'])
+                if idx > -1:
+                    recipe_inputs[idx] = map_param['datasetParameter']
 
         # Base count of recipes are number of files in the dataset that match the recipe inputs
         files = DataSetFile.objects.get_files([dataset.id], recipe_inputs)
@@ -176,6 +178,45 @@ class BatchManager(models.Manager):
                             estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
       
         return estimated_recipes
+
+    def merge_parameter_map(self, batch, dataset):
+        """Returns the dataset parameters merged with the batch configuration input map
+
+        :param batch: The batch
+        :type batch: :class:`batch.models.Batch`
+        :param dataset: The dataset of the batch
+        :type dataset: :class:`data.models.DataSet`
+        :returns: The map of datasest parameters
+        :rtype:  :class:`data.interface.Interface`
+        """
+        # combine the parameters
+        dataset_definition = dataset.get_definition()
+        dataset_parameters = dataset_definition.global_parameters
+        for param in dataset_definition.parameters.parameters:
+            dataset_parameters.add_parameter(dataset_definition.parameters.parameters[param])
+
+        # map dataset param to inputs if applicable
+        if batch.get_configuration().input_map:
+            from data.interface.interface import Interface
+            from data.interface.parameter import FileParameter, JsonParameter
+            parameters = Interface()
+            for param_name in dataset_parameters.parameters:
+                param = dataset_parameters.parameters[param_name]
+                for map_param in batch.get_configuration().input_map:
+                    if param_name == map_param['datasetParameter']:
+                        if param.PARAM_TYPE == 'file':
+                            parameters.add_parameter(FileParameter(map_param['input'], param.media_types,
+                                                                   required=param.required,
+                                                                   multiple=param.multiple))
+                        elif param.PARAM_TYPE == 'json':
+                            parameters.add_parameter(JsonParameter(map_param['input'], param.json_type,
+                                                                   required=param.required,
+                                                                   multiple=param.multiple))
+                    else:
+                        parameters.add_parameter(param)
+            dataset_parameters = parameters
+
+        return dataset_parameters
 
     def get_batch_from_root(self, root_batch_id):
         """Returns the latest (non-superseded) batch model with the given root batch ID. The returned model

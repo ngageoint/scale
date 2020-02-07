@@ -33,7 +33,6 @@ class TestBatchDefinition(TestCase):
         still_creating_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
         prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2, is_creation_done=True, recipes_total=10)
         batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
-        
 
         # No recipes would be created
         json_dict = {'version': '6'}

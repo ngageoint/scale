@@ -273,7 +273,8 @@ class TestNodeManager(TestCase):
         node_mgr.sync_with_database(scheduler_mgr.config)
 
         # Add job to node
-        job_test_utils.create_running_job_exe(agent_id=self.agent_1, node=self.node_1)
+        job = job_test_utils.create_job(status='RUNNING', node=self.node_1)
+        job_test_utils.create_running_job_exe(agent_id=self.agent_1, node=self.node_1, job=job)
 
         # Set last_offer_received to 1 hour ago
         Node.objects.filter(id=self.node_1.id).update(last_offer_received=last_offer)
