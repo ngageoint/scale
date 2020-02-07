@@ -209,7 +209,7 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None, node=None,
+def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None, job_config=None,
                superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, recipe=None, save=True):
     """Creates a job model for unit testing
@@ -254,11 +254,6 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     job.is_superseded = is_superseded
     job.superseded = superseded
     job.input_file_size = input_file_size
-    if status in ['RUNNING', 'FAILED', 'COMPLETED', 'CANCELED ']:
-        if not node:
-            node = node_utils.create_node()
-        job.node = node
-
     if save:
         job.save()
     return job
