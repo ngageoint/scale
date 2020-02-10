@@ -569,6 +569,8 @@ class MetricsJobTypeManager(models.Manager):
         :type entry: :class:`metrics.models.MetricsJobType`
         """
 
+        entry_count = entry.completed_count if entry.completed_count > 0 else entry.total_count
+
         # Update elapsed queue time metrics
         queue_secs = None
         if job_exe_end.queued and job_exe_end.started:
@@ -576,7 +578,8 @@ class MetricsJobTypeManager(models.Manager):
             entry.queue_time_sum = (entry.queue_time_sum or 0) + queue_secs
             entry.queue_time_min = min(entry.queue_time_min or sys.maxint, queue_secs)
             entry.queue_time_max = max(entry.queue_time_max or 0, queue_secs)
-            entry.queue_time_avg = entry.queue_time_sum / entry.completed_count
+            if entry_count:
+                entry.queue_time_avg = entry.queue_time_sum / entry_count
 
         task_results = job_exe_end.get_task_results()
 
@@ -593,7 +596,8 @@ class MetricsJobTypeManager(models.Manager):
             entry.pre_time_sum = (entry.pre_time_sum or 0) + pre_secs
             entry.pre_time_min = min(entry.pre_time_min or sys.maxint, pre_secs)
             entry.pre_time_max = max(entry.pre_time_max or 0, pre_secs)
-            entry.pre_time_avg = entry.pre_time_sum / entry.completed_count
+            if entry_count:
+                entry.pre_time_avg = entry.pre_time_sum / entry_count
 
         # Update elapsed actual job time metrics
         job_secs = None
@@ -603,7 +607,8 @@ class MetricsJobTypeManager(models.Manager):
             entry.job_time_sum = (entry.job_time_sum or 0) + job_secs
             entry.job_time_min = min(entry.job_time_min or sys.maxint, job_secs)
             entry.job_time_max = max(entry.job_time_max or 0, job_secs)
-            entry.job_time_avg = entry.job_time_sum / entry.completed_count
+            if entry_count:
+                entry.job_time_avg = entry.job_time_sum / entry_count
 
         # Update elapsed post-task time metrics
         post_secs = None
@@ -613,7 +618,8 @@ class MetricsJobTypeManager(models.Manager):
             entry.post_time_sum = (entry.post_time_sum or 0) + post_secs
             entry.post_time_min = min(entry.post_time_min or sys.maxint, post_secs)
             entry.post_time_max = max(entry.post_time_max or 0, post_secs)
-            entry.post_time_avg = entry.post_time_sum / entry.completed_count
+            if entry_count:
+                entry.post_time_avg = entry.post_time_sum / entry_count
 
         # Update elapsed overall run and stage time metrics
         if job_exe_end.started and job_exe_end.ended:
@@ -621,13 +627,15 @@ class MetricsJobTypeManager(models.Manager):
             entry.run_time_sum = (entry.run_time_sum or 0) + run_secs
             entry.run_time_min = min(entry.run_time_min or sys.maxint, run_secs)
             entry.run_time_max = max(entry.run_time_max or 0, run_secs)
-            entry.run_time_avg = entry.run_time_sum / entry.completed_count
+            if entry_count:
+                entry.run_time_avg = entry.run_time_sum / entry_count
 
             stage_secs = max(run_secs - ((pull_secs or 0) + (pre_secs or 0) + (job_secs or 0) + (post_secs or 0)), 0)
             entry.stage_time_sum = (entry.stage_time_sum or 0) + stage_secs
             entry.stage_time_min = min(entry.stage_time_min or sys.maxint, stage_secs)
             entry.stage_time_max = max(entry.stage_time_max or 0, stage_secs)
-            entry.stage_time_avg = entry.stage_time_sum / entry.completed_count
+            if entry_count:
+                entry.stage_time_avg = entry.stage_time_sum / entry_count
         return entry
 
     @transaction.atomic
