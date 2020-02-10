@@ -22,6 +22,7 @@ SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 FLUENTD_BUFFER_WARN = int(os.getenv('FLUENTD_BUFFER_WARN', 10)) #10 items backed up in the logging queue
 FLUENTD_BUFFER_SIZE_WARN = int(os.getenv('FLUENTD_BUFFER_SIZE_WARN', 1000000000)) #1GB
 MESSSAGE_QUEUE_DEPTH_WARN = int(os.getenv('MESSSAGE_QUEUE_DEPTH_WARN', 100)) #100 messages in the message broker queue
+SCHEDULER_QUEUE_LIMIT = int(os.getenv('SCHEDULER_QUEUE_LIMIT', 500)) # Queue limit of 500
 
 # used to look for other env vars prefixed with this value
 SCALEUI_ENV_PREFIX = os.getenv('SCALEUI_ENV_PREFIX', 'SCALEUI_')
