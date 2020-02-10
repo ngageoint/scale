@@ -339,7 +339,7 @@ class SchedulingManager(object):
         started = now()
 
         max_cluster_resources = resource_mgr.get_max_available_resources()
-        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids).iterator():
+        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             job_exe = QueuedJobExecution(queue)
 
             # Canceled job executions get processed as scheduled executions
@@ -369,6 +369,7 @@ class SchedulingManager(object):
                     logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
                     continue
                 if resource.name not in max_cluster_resources._resources:
+                    logger.warning('Job type %s could not be scheduled as resource %s does not exist in the available cluster resources', jt.name, resource.name)
                     # resource does not exist in cluster
                     invalid_resources.append(resource.name)
                 elif resource.value > max_cluster_resources._resources[resource.name].value:
@@ -420,10 +421,6 @@ class SchedulingManager(object):
                 scheduled_job_executions.append(job_exe)
                 if job_type_id in job_type_limits:
                     job_type_limits[job_type_id] -= 1
-
-            if len(scheduled_job_executions) >= QUEUE_LIMIT:
-                logger.info('Schedule queue limit of %d reached; no more room for executions' % QUEUE_LIMIT)
-                break
 
         duration = now() - started
         msg = 'Processing queue took %.3f seconds'
