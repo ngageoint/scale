@@ -20,6 +20,7 @@ from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
+from scale import settings as scale_settings
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.manager import scheduler_mgr, SchedulerWarning
 from scheduler.node.manager import node_mgr
@@ -34,7 +35,7 @@ from util.retry import retry_database_query
 # Warning threshold for queue processing duration
 PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 # Maximum number of jobs to grab off of the queue at one time
-QUEUE_LIMIT = 500
+QUEUE_LIMIT = scale_settings.SCHEDULER_QUEUE_LIMIT
 # Warning threshold for scheduling query duration
 SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 # Warning threshold for task launch duration

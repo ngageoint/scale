@@ -87,6 +87,9 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 QUEUE_NAME = 'scale-command-messages'
 MESSSAGE_QUEUE_DEPTH_WARN = int(os.environ.get('MESSSAGE_QUEUE_DEPTH_WARN', -1))
 
+# Queue limit
+SCHEDULER_QUEUE_LIMIT = int(os.environ.get('SCHEDULER_QUEUE_LIMIT', 500))
+
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
 # Public token if DCOS secrets store, or privleged token for vault
