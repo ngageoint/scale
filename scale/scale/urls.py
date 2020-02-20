@@ -52,3 +52,10 @@ unversioned_urls = [
 
 # Add unversioned_urls to URL regex pattern matcher
 urlpatterns.extend(unversioned_urls)
+
+# add debug toolbar urls
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
