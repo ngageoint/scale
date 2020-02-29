@@ -104,13 +104,13 @@ class FileParameter(Parameter):
 
         self.multiple = True
 
-    def validate_connection(self, connecting_parameter, fork_connection=False):
+    def validate_connection(self, connecting_parameter):
         """See :meth:`data.interface.parameter.Parameter.validate_connection`
         """
 
         warnings = super(FileParameter, self).validate_connection(connecting_parameter)
 
-        if not self.multiple and connecting_parameter.multiple and not fork_connection:
+        if not self.multiple and connecting_parameter.multiple:
             msg = 'Parameter %s cannot accept multiple files' % self.name
             raise InvalidInterfaceConnection('NO_MULTIPLE_FILES', msg)
 

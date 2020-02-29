@@ -121,6 +121,8 @@ class NodeDefinition(object):
 
         warnings = []
         input_interface = node_input_interfaces[self.name]
+        if self.fork_input and self.fork_input in input_interface.parameters:
+            input_interface.parameters[self.fork_input].multiply
         connecting_interface = Interface()
 
         # Generate complete dependency set for this node
@@ -140,7 +142,7 @@ class NodeDefinition(object):
                 warnings.extend(connection.add_parameter_to_interface(connecting_interface, recipe_input_interface,
                                                                       node_output_interfaces))
             # Validate that connecting interface can be passed to this interface
-            warnings.extend(input_interface.validate_connection(connecting_interface, fork_input=self.fork_input))
+            warnings.extend(input_interface.validate_connection(connecting_interface))
         except InvalidInterfaceConnection as ex:
             msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
             raise InvalidDefinition('NODE_INTERFACE', msg)
