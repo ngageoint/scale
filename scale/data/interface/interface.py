@@ -59,6 +59,15 @@ class Interface(object):
 
         return []
 
+    def multiply(self):
+        """Takes parameters defined for an interface and makes them multiple.  Multiple is set to true for file parameters
+        and json parameters are turned into arrays.  This is used when getting the output definition for a job type when
+        it is used in a forkable node.
+        """
+
+        for param in self.parameters.values():
+            param.multiply()
+
     def validate(self):
         """Validates this interface
 
@@ -87,6 +96,8 @@ class Interface(object):
         """
 
         warnings = []
+
+        #TODO Remove fork_input parameter from methods and modify code that gets input interfaces so the forked input is set to multiple and json type is changed to array
 
         for parameter in self.parameters.values():
             if parameter.name in connecting_interface.parameters:

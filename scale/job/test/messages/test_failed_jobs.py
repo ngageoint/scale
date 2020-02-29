@@ -32,7 +32,7 @@ class TestFailedJobs(TransactionTestCase):
         job_3 = job_test_utils.create_job(num_exes=0, status='PENDING')
         job_ids = [job_1.id, job_2.id, job_3.id]
 
-        recipe_test_utils.create_recipe_job(recipe=recipe_1, job=job_2)
+        recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_2)
 
         when_ended = now()
 

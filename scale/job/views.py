@@ -301,7 +301,6 @@ class JobTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
         try:
             job_type = JobType.objects.get_details_v6(name=name, version=version)
         except JobType.DoesNotExist:
@@ -820,7 +819,6 @@ class JobDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
         try:
             job = Job.objects.get_details(job_id)
         except Job.DoesNotExist:

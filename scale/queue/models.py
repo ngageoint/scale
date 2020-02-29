@@ -21,7 +21,6 @@ from trigger.models import TriggerEvent
 from data.data.json import data_v6
 from data.data.data_util import get_file_ids
 from messaging.manager import CommandMessageManager
-from job.messages.process_job_input import create_process_job_input_messages
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from util.rest import BadParameter
 
@@ -60,7 +59,7 @@ class JobLoadManager(models.Manager):
         """Calculates and saves new job load models grouped by job type based on a current jobs snapshot."""
 
         # Get a list of job counts grouped by type and status
-        jobs = Job.objects.filter(status__in=['PENDING', 'QUEUED', 'RUNNING'])
+        jobs = Job.objects.filter(status__in=['PENDING', '`QUEUED', 'RUNNING'])
         jobs = jobs.values('job_type_id', 'status')
         jobs = jobs.annotate(count=models.Count('job_type'))
 
@@ -279,7 +278,6 @@ class QueueManager(models.Manager):
         :returns: The list of job IDs that were successfully QUEUED
         :rtype: list
         """
-
         when_queued = timezone.now()
 
         # Set job models to QUEUED

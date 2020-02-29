@@ -116,11 +116,13 @@ class ProcessRecipeInput(CommandMessage):
         # Get sub-recipe input from dependencies in the recipe
         recipe_input_data = sub_recipe.recipe.get_input_data()
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
+        node_name = None
         for node_output in node_outputs.values():
             if node_output.node_type == 'recipe' and node_output.id == sub_recipe.id:
                 node_name = node_output.node_name
                 break
 
         definition = sub_recipe.recipe.recipe_type_rev.get_definition()
-        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-        Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
+        if node_name:
+            input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+            Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)

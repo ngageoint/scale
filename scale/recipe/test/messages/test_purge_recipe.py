@@ -183,19 +183,17 @@ class TestPurgeRecipe(TransactionTestCase):
         definition = RecipeDefinition(Interface())
         definition.add_recipe_node('A', sub_recipe_type.name, sub_recipe_type.revision_num)
 
-        recipe_a = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=False)
+        recipe_a = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=True)
         recipe_a.jobs_completed = 3
         recipe_a.jobs_running = 2
         recipe_a.jobs_total = 5
-        Recipe.objects.bulk_create([recipe_a])
-
+        recipe_a.save()
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', sub_recipe=recipe_a,
-                                                             save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a])
+                                                             save=True)
 
         # Create message
         message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
@@ -209,7 +207,7 @@ class TestPurgeRecipe(TransactionTestCase):
         msgs = [msg for msg in message.new_messages if msg.type == 'purge_recipe']
         self.assertEqual(len(msgs), 1)
         for msg in msgs:
-            self.assertEqual(msg.recipe_id, recipe_node_a.sub_recipe.id)
+            self.assertEqual(msg.recipe_id, recipe_a.id)
 
     def test_execute_no_leaf_nodes(self):
         """Tests calling PurgeRecipe.execute() successfully"""

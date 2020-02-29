@@ -36,6 +36,12 @@ class DataValue(object):
 
         return copy(self)
 
+    def merge(self, value):
+        """Combines the given value with this value
+        """
+
+        raise NotImplementedError()
+
     def validate(self, parameter):
         """Validates this data value against its parameter
 
@@ -72,6 +78,12 @@ class FileValue(DataValue):
 
         self.file_ids = file_ids
 
+    def merge(self, value):
+        """Combines the given value with this value
+        """
+
+        self.file_ids.extend(value.file_ids)
+
     def validate(self, parameter):
         """See :meth:`data.data.value.DataValue.validate`
         """
@@ -102,6 +114,15 @@ class JsonValue(DataValue):
         super(JsonValue, self).__init__(name, JsonParameter.PARAM_TYPE)
 
         self.value = value
+
+    def merge(self, value):
+        """Combines the given value with this value
+        """
+
+        if not isinstance(self.value, list):
+            self.value = [self.value, value.value]
+        else:
+            self.value.append(value.value)
 
     def validate(self, parameter):
         """See :meth:`data.data.value.DataValue.validate`

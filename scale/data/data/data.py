@@ -50,6 +50,23 @@ class Data(object):
         new_value.name = input_name
         self.add_value(new_value)
 
+    def merge(self, data):
+        """Merges data from another data object into this data object
+
+        :param input_name: The name of the input value to add
+        :type input_name: string
+        """
+
+        for value in data.values.values():
+            if value.name not in self.values:
+                self.add_value(value)
+            else:
+                merged_value = self.values[value.name]
+                if value.param_type != merged_value.param_type:
+                    msg = 'Cannot merge value %s: types %s and %s are incompatible' % (value.name, value.param_type, merged_value.param_type)
+                    raise InvalidData('INVALID_MERGE', msg)
+                merged_value.merge(value)
+
     def validate(self, interface):
         """Validates this data against the given interface. Extra data values that cannot be passed to the interface
         will be removed.

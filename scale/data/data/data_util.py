@@ -19,8 +19,8 @@ def get_file_ids(data):
                 file_ids.add(file_id)
     return file_ids
 
-def get_parameter_names(data):
-    """Returns the paramater names from a data object
+def get_json_parameter_names(data):
+    """Returns the json paramater names from a data object
 
     :param data: The Data object to inspect
     :type data: :class:`data.data.data.Data`

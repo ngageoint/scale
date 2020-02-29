@@ -23,6 +23,7 @@ class TestRecipe(TestCase):
     def setUp(self):
         django.setup()
 
+    #TODO: Update some tests to create multiple jobs per node and test forked dependencies
     def test_get_jobs_to_update(self):
         """Tests calling Recipe.get_jobs_to_update()"""
 
@@ -68,18 +69,16 @@ class TestRecipe(TestCase):
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
-        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False)
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=True)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', sub_recipe=recipe_b,
-                                                             save=False)
-        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=False)
-        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=False)
-        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=False)
-        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=False)
+                                                             save=True)
+        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=True)
+        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=True)
+        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=True)
+        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=True)
         recipe_node_g = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='G', sub_recipe=recipe_g,
-                                                             save=False)
-        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e,
-                                        recipe_node_f, recipe_node_g, recipe_node_h])
+                                                             save=True)
+        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=True)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         results = recipe_instance.get_jobs_to_update()
@@ -129,12 +128,11 @@ class TestRecipe(TestCase):
         condition_b = recipe_test_utils.create_recipe_condition(is_processed=True, is_accepted=True, save=False)
         condition_d = recipe_test_utils.create_recipe_condition(is_processed=True, is_accepted=False, save=False)
         RecipeCondition.objects.bulk_create([condition_b, condition_d])
-        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False)
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=True)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', condition=condition_b,
-                                                             save=False)
+                                                             save=True)
         recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', condition=condition_d,
-                                                             save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_d])
+                                                             save=True)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         nodes_to_create = recipe_instance.get_nodes_to_create()
@@ -183,12 +181,11 @@ class TestRecipe(TestCase):
         condition_b = recipe_test_utils.create_recipe_condition(is_processed=True, is_accepted=True, save=False)
         condition_d = recipe_test_utils.create_recipe_condition(is_processed=True, is_accepted=False, save=False)
         RecipeCondition.objects.bulk_create([condition_b, condition_d])
-        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False)
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=True)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', condition=condition_b,
-                                                             save=False)
+                                                             save=True)
         recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', condition=condition_d,
-                                                             save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_d])
+                                                             save=True)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         nodes_to_process = recipe_instance.get_nodes_to_process_input()
@@ -216,52 +213,58 @@ class TestRecipe(TestCase):
         definition.add_dependency('G', 'H')
 
         job_a = job_test_utils.create_job(job_type=job_type, status='COMPLETED', save=False, is_superseded=True)
-        job_c = job_test_utils.create_job(job_type=job_type, status='CANCELED', num_exes=0, save=False)
-        job_d = job_test_utils.create_job(job_type=job_type, status='PENDING', num_exes=0, save=False)
-        job_e = job_test_utils.create_job(job_type=job_type, status='BLOCKED', num_exes=0, save=False)
-        job_f = job_test_utils.create_job(job_type=job_type, status='PENDING', num_exes=0, save=False)
-        job_h = job_test_utils.create_job(job_type=job_type, status='PENDING', num_exes=0, save=False)
-        Job.objects.bulk_create([job_a, job_c, job_d, job_e, job_f, job_h])
+        job_c = job_test_utils.create_job(job_type=job_type, status='CANCELED', num_exes=0, save=True)
+        job_d = job_test_utils.create_job(job_type=job_type, status='PENDING', num_exes=0, save=True)
+        job_e = job_test_utils.create_job(job_type=job_type, status='BLOCKED', num_exes=0, save=True)
+        job_f = job_test_utils.create_job(job_type=job_type, status='PENDING', num_exes=0, save=True)
+        job_h = job_test_utils.create_job(job_type=job_type, status='PENDING', num_exes=0, save=True)
 
-        recipe_b = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=False)
+        recipe_b = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=True)
         recipe_b.jobs_completed = 3
         recipe_b.jobs_running = 2
         recipe_b.jobs_total = 5
-        recipe_g = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=False)
+        recipe_b.save()
+        recipe_g = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=True)
         recipe_g.jobs_completed = 2
         recipe_g.jobs_failed = 1
         recipe_g.jobs_total = 3
-        Recipe.objects.bulk_create([recipe_b, recipe_g])
+        recipe_g.save()
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
-        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False,
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=True,
                                                              is_original=False)
-        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=False,
+        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=True,
                                                              is_original=False)
-        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=False,
+        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=True,
                                                              is_original=False)
-        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=False)
-        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=False)
-        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=False)
+        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=True)
+        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=True)
+        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=True)
 
         recipe_node_g = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='G', sub_recipe=recipe_g,
-                                                             save=False, is_original=False)
+                                                             save=True, is_original=False)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', sub_recipe=recipe_b,
-                                                             save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e,
-                                        recipe_node_f, recipe_node_g, recipe_node_h])
+                                                             save=True)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         results = recipe_instance.get_original_leaf_nodes()
         self.assertEqual(len(results.values()), 4)
 
-        leaf_jobs = [node.job.id for node in results.values() if node.node_type == JobNodeDefinition.NODE_TYPE]
-        leaf_recipes = [node.recipe.id for node in results.values() if node.node_type == RecipeNodeDefinition.NODE_TYPE]
+        # leaf_jobs = [node.job.id for node in results.values() if node.node_type == JobNodeDefinition.NODE_TYPE]
+        leaf_jobs = []
+        for node in results.values():
+            if node.node_type == JobNodeDefinition.NODE_TYPE:
+                leaf_jobs.extend([job.id for job in node.jobs])
+        leaf_recipes = []
+        for node in results.values():
+            if node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                leaf_recipes.extend([recipe.id for recipe in node.recipes])
+        recipe_jobs = [job.id for job in Job.objects.filter(recipe_node__in=[recipe_node_e, recipe_node_f, recipe_node_h])]
 
-        self.assertItemsEqual(leaf_jobs, [recipe_node_e.job.id, recipe_node_f.job.id, recipe_node_h.job.id])
-        self.assertItemsEqual(leaf_recipes, [recipe_node_b.sub_recipe.id])
+        self.assertItemsEqual(leaf_jobs, recipe_jobs)
+        self.assertItemsEqual(leaf_recipes, [Recipe.objects.get(recipe_node=recipe_node_b).id])
 
     def test_has_completed_empty(self):
         """Tests calling Recipe.has_completed() when a recipe is empty and has not created its nodes yet"""
@@ -313,39 +316,37 @@ class TestRecipe(TestCase):
         definition.add_dependency('C', 'D')
         definition.add_dependency('G', 'H')
 
-        job_a = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=False)
-        job_c = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=False)
-        job_d = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=False)
-        job_e = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=False)
-        job_f = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=False)
-        job_h = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=False)
-        Job.objects.bulk_create([job_a, job_c, job_d, job_e, job_f, job_h])
+        job_a = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=True)
+        job_c = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=True)
+        job_d = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=True)
+        job_e = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=True)
+        job_f = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=True)
+        job_h = job_test_utils.create_job(job_type=job_type, status='COMPLETED', output=data_dict, save=True)
 
-        recipe_b = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=False)
+        recipe_b = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=True)
         recipe_b.is_completed = True
-        recipe_g = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=False)
+        recipe_b.save()
+        recipe_g = recipe_test_utils.create_recipe(recipe_type=sub_recipe_type, save=True)
         recipe_g.is_completed = False
-        Recipe.objects.bulk_create([recipe_b, recipe_g])
+        recipe_g.save()
 
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
-        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False,
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=True,
                                                              is_original=False)
-        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=False,
+        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=True,
                                                              is_original=False)
-        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=False,
+        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=True,
                                                              is_original=False)
-        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=False)
-        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=False)
-        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=False)
+        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=True)
+        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=True)
+        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=True)
 
         recipe_node_g = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='G', sub_recipe=recipe_g,
-                                                             save=False, is_original=False)
+                                                             save=True, is_original=False)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', sub_recipe=recipe_b,
-                                                             save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e,
-                                        recipe_node_f, recipe_node_g, recipe_node_h])
+                                                             save=True)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         self.assertFalse(recipe_instance.has_completed())
@@ -399,24 +400,22 @@ class TestRecipe(TestCase):
         definition_json_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type = recipe_test_utils.create_recipe_type_v6(definition=definition_json_dict)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
-        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=False,
+        recipe_node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job_a, save=True,
                                                              is_original=False)
-        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=False,
+        recipe_node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='C', job=job_c, save=True,
                                                              is_original=False)
-        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=False,
+        recipe_node_d = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='D', job=job_d, save=True,
                                                              is_original=False)
-        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=False)
-        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=False)
-        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=False)
+        recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=True)
+        recipe_node_f = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='F', job=job_f, save=True)
+        recipe_node_h = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='H', job=job_h, save=True)
         recipe_node_i = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='I', condition=condition_i,
-                                                             save=False)
+                                                             save=True)
 
         recipe_node_g = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='G', sub_recipe=recipe_g,
-                                                             save=False, is_original=False)
+                                                             save=True, is_original=False)
         recipe_node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='B', sub_recipe=recipe_b,
-                                                             save=False)
-        RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e,
-                                        recipe_node_f, recipe_node_g, recipe_node_h, recipe_node_i])
+                                                             save=True)
 
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         self.assertTrue(recipe_instance.has_completed())

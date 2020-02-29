@@ -1109,6 +1109,8 @@ class TestRecipesViewV6(APITransactionTestCase):
 
         self.recipe_type = recipe_test_utils.create_recipe_type_v6(name='my-type', definition=def_v6_dict)
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type, input=self.data)
+        job = job_test_utils.create_job(job_type=self.job_type1, input=self.data, status='RUNNING')
+        recipe_test_utils.create_recipe_job(recipe=self.recipe1, job=job, job_name='Job 1', save=True)
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v6(name='my-type2', definition=def_v6_dict)
         self.recipe2 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type2, input=self.data2)
         self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)

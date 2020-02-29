@@ -6,6 +6,7 @@ import copy
 from abc import ABCMeta
 
 from data.data.data import Data
+from data.data.value import FileValue, JsonValue
 from data.interface.exceptions import InvalidInterfaceConnection
 from data.interface.interface import Interface
 from recipe.definition.exceptions import InvalidDefinition
@@ -35,6 +36,7 @@ class NodeDefinition(object):
         self.children = {}  # {Name: Node}
         self.allows_child_creation = True  # Indicates whether children of this node can be created immediately
         self.parental_acceptance = {} # Flags used to define whether this node should created based on parents' acceptance states
+        self.fork_input = None # Indicates which parameter to fork into multiple jobs, if any
 
     def add_connection(self, connection):
         """Adds a connection that connects a parameter to one of this node's inputs
@@ -55,7 +57,7 @@ class NodeDefinition(object):
             msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
             raise InvalidDefinition('NODE_INTERFACE', msg)
 
-    def add_dependency(self, node, acceptance=True):
+    def add_dependency(self, node, acceptance=True, fork_input=None):
         """Adds a dependency that this node has on the given node
 
         :param node: The dependency node to add
@@ -66,6 +68,7 @@ class NodeDefinition(object):
 
         self.parents[node.name] = node
         self.parental_acceptance[node.name] = acceptance
+        self.fork_input = fork_input
         node.children[self.name] = self
 
     def generate_input_data(self, recipe_input_data, node_outputs, optional_outputs):
@@ -76,7 +79,7 @@ class NodeDefinition(object):
         :param node_outputs: The RecipeNodeOutput tuples stored in a dict by node name
         :type node_outputs: dict
         :returns: The input data for this node
-        :rtype: :class:`data.data.data.Data`
+        :rtype: [:class:`data.data.data.Data`]
 
         :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
         """
@@ -95,7 +98,22 @@ class NodeDefinition(object):
                 else:
                     logger.exception("InvalidData exception occurred generating input data")
 
-        return input_data
+        data_list = [input_data]
+        if self.fork_input:
+            data_list = []
+            value = input_data.values[self.fork_input]
+            if isinstance(value, FileValue) and len(value.file_ids) > 1:
+                for file_id in value.file_ids:
+                    data = copy.deepcopy(input_data)
+                    data.values[self.fork_input].file_ids = [file_id]
+                    data_list.append(data)
+            elif isinstance(value, JsonValue) and isinstance(value.value, list) and len(value.value) > 1:
+                for item in value:
+                    data = copy.deepcopy(input_data)
+                    data.values[self.fork_input].value = item
+                    data_list.append(data)
+
+        return data_list
 
     def validate(self, recipe_input_interface, node_input_interfaces, node_output_interfaces):
         """Validates this node
@@ -114,6 +132,8 @@ class NodeDefinition(object):
 
         warnings = []
         input_interface = node_input_interfaces[self.name]
+        if self.fork_input and self.fork_input in input_interface.parameters:
+            input_interface.parameters[self.fork_input].multiply
         connecting_interface = Interface()
 
         # Generate complete dependency set for this node

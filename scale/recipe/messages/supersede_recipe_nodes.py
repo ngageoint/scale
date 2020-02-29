@@ -233,18 +233,25 @@ class SupersedeRecipeNodes(CommandMessage):
         unpublish_job_ids = []
         supersede_recursive_recipe_ids = []
         unpublish_recursive_recipe_ids = []
-        for recipe_node in RecipeNode.objects.filter(recipe_id__in=self._recipe_ids).iterator():
-            if recipe_node.job_id:
-                # Cancel all jobs that were superseded
-                if self.supersede_all or recipe_node.node_name in self.supersede_jobs:
-                    cancel_job_ids.append(recipe_node.job_id)
-                if self.unpublish_all or recipe_node.node_name in self.unpublish_jobs:
-                    unpublish_job_ids.append(recipe_node.job_id)
-            elif recipe_node.sub_recipe_id:
-                if self.unpublish_recursive_all or recipe_node.node_name in self.unpublish_recursive:
-                    unpublish_recursive_recipe_ids.append(recipe_node.sub_recipe_id)
-                elif self.supersede_recursive_all or recipe_node.node_name in self.supersede_recursive:
-                    supersede_recursive_recipe_ids.append(recipe_node.sub_recipe_id)
+        node_ids = [node.id for node in RecipeNode.objects.filter(recipe_id__in=self._recipe_ids).iterator()]
+
+        # Gather job ids
+        from job.models import Job
+        for job in Job.objects.filter(recipe_node__in=node_ids).iterator():
+            # Cancel all jobs that were superseded
+            if self.supersede_all or job.recipe_node.node_name in self.supersede_jobs:
+                cancel_job_ids.append(job.id)
+            if self.unpublish_all or job.recipe_node.node_name in self.unpublish_jobs:
+                unpublish_job_ids.append(job.id)
+
+        # Gather sub-recipe ids
+        from recipe.models import Recipe
+        for sub_recipe in Recipe.objects.filter(recipe_node__in=node_ids).iterator():
+            if self.unpublish_recursive_all or sub_recipe.recipe_node.node_name in self.unpublish_recursive:
+                unpublish_recursive_recipe_ids.append(sub_recipe.id)
+            elif self.supersede_recursive_all or sub_recipe.recipe_node.node_name in self.supersede_recursive:
+                supersede_recursive_recipe_ids.append(sub_recipe.id)
+                # supersede_recursive_recipe_ids.append(sub_recipe.recipe_node.sub_recipe_id)
 
         # Create messages to cancel and unpublish appropriate jobs
         self.new_messages.extend(create_cancel_jobs_messages(cancel_job_ids, self.when))

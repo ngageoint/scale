@@ -143,6 +143,7 @@ class TestRecipeDefinitionV6(TestCase):
         self.assertSetEqual(set(definition.input_interface.parameters.keys()), {'foo', 'bar'})
         self.assertSetEqual(set(definition.graph.keys()), {'node_a', 'node_b', 'node_c', 'node_d', 'node_e'})
 
+#TODO: Add fork_input and test that it validates
     def test_init_validation(self):
         """Tests the validation done in __init__"""
 

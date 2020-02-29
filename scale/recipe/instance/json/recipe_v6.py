@@ -218,24 +218,26 @@ def convert_node_to_v6_json(node):
 
     dependencies = [{'name': name} for name in node.parents.keys()]
     node_def = node.definition
-
+    node_type_dict = {}
     if node.node_type == ConditionNodeDefinition.NODE_TYPE:
         node_type_dict = {'node_type': 'condition', 'condition_id': node.condition.id,
                           'is_processed': node.condition.is_processed, 'is_accepted': node.condition.is_accepted}
     elif node.node_type == JobNodeDefinition.NODE_TYPE:
-        node_type_dict = {'node_type': 'job', 'job_type_name': node_def.job_type_name,
-                          'job_type_version': node_def.job_type_version, 'job_type_revision': node_def.revision_num,
-                          'job_id': node.job.id, 'status': node.job.status}
+        for job in node.jobs:
+            node_type_dict = {'node_type': 'job', 'job_type_name': node_def.job_type_name,
+                              'job_type_version': node_def.job_type_version, 'job_type_revision': node_def.revision_num,
+                              'job_id': job.id, 'status': job.status}
     elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
-        node_type_dict = {'node_type': 'recipe', 'recipe_type_name': node_def.recipe_type_name,
-                          'recipe_type_revision': node_def.revision_num, 'recipe_id': node.recipe.id,
-                          'is_completed': node.recipe.is_completed, 'jobs_total': node.recipe.jobs_total,
-                          'jobs_pending': node.recipe.jobs_pending, 'jobs_blocked': node.recipe.jobs_blocked,
-                          'jobs_queued': node.recipe.jobs_queued, 'jobs_running': node.recipe.jobs_running,
-                          'jobs_failed': node.recipe.jobs_failed, 'jobs_completed': node.recipe.jobs_completed,
-                          'jobs_canceled': node.recipe.jobs_canceled,
-                          'sub_recipes_total': node.recipe.sub_recipes_total,
-                          'sub_recipes_completed': node.recipe.sub_recipes_completed}
+        for recipe in node.recipes:
+            node_type_dict = {'node_type': 'recipe', 'recipe_type_name': node_def.recipe_type_name,
+                              'recipe_type_revision': node_def.revision_num, 'recipe_id': recipe.id,
+                              'is_completed': recipe.is_completed, 'jobs_total': recipe.jobs_total,
+                              'jobs_pending': recipe.jobs_pending, 'jobs_blocked': recipe.jobs_blocked,
+                              'jobs_queued': recipe.jobs_queued, 'jobs_running': recipe.jobs_running,
+                              'jobs_failed': recipe.jobs_failed, 'jobs_completed': recipe.jobs_completed,
+                              'jobs_canceled': recipe.jobs_canceled,
+                              'sub_recipes_total': recipe.sub_recipes_total,
+                              'sub_recipes_completed': recipe.sub_recipes_completed}
 
     return {'dependencies': dependencies, 'node_type': node_type_dict}
 

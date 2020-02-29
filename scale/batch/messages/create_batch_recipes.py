@@ -121,9 +121,10 @@ class CreateBatchRecipes(CommandMessage):
         
         messages = []
         dataset = DataSet.objects.get(pk=definition.dataset)
+        dataset_definition = dataset.get_definition()
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(name=batch.recipe_type.name,
                                                                   revision_num=batch.recipe_type_rev.revision_num)
-        
+
         # combine the parameters
         dataset_parameters = Batch.objects.merge_parameter_map(batch, dataset)
 
@@ -140,8 +141,7 @@ class CreateBatchRecipes(CommandMessage):
         recipe_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files).values_list('recipe_id', flat=True)
         recipe_file_ids = RecipeInputFile.objects.filter(input_file_id__in=ds_files,
                                                          recipe__recipe_type=batch.recipe_type, 
-                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list(
-            'input_file_id', flat=True)
+                                                         recipe__recipe_type_rev=batch.recipe_type_rev).values_list('input_file_id', flat=True)
         extra_files_qry = ScaleFile.objects.filter(id__in=ds_files)
         
         recipe_count = 0

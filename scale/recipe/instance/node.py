@@ -239,20 +239,23 @@ class JobNodeInstance(NodeInstance):
     """Represents a job within a recipe
     """
 
-    def __init__(self, definition, job, is_original):
+    def __init__(self, definition, job_set, is_original):
         """Constructor
 
         :param definition: The definition of this node in the recipe
         :type definition: :class:`recipe.definition.node.JobNodeDefinition`
-        :param job: The job model
-        :type job: :class:`job.models.Job`
+        :param job_set:
+        :type job_set:
         :param is_original: Whether this job is original
         :type is_original: bool
         """
 
         super(JobNodeInstance, self).__init__(definition, is_original)
 
-        self.job = job
+        #TODO: Make sure this gets us the jobs we want
+        self.jobs = []
+        if job_set:
+            self.jobs = job_set.all()
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
         """See :meth:`recipe.instance.node.NodeInstance.get_jobs_to_update`
@@ -261,55 +264,73 @@ class JobNodeInstance(NodeInstance):
         # Check parent nodes
         super(JobNodeInstance, self).get_jobs_to_update(pending_job_ids, blocked_job_ids)
 
-        # A job must block child nodes if it is CANCELED or FAILED
-        if self.job.status in ['CANCELED', 'FAILED']:
-            self.blocks_child_nodes = True
+        # A job node must block child nodes if any of its jobs is CANCELED or FAILED
+        for job in self.jobs:
+            if job.status in ['CANCELED', 'FAILED']:
+                self.blocks_child_nodes = True
 
-        # If this job is BLOCKED and it does not block child nodes, it should be updated to PENDING
-        if self.job.status == 'BLOCKED' and not self.blocks_child_nodes:
-            pending_job_ids.append(self.job.id)
+        # If jobs are BLOCKED and they do not block child nodes, they should be updated to PENDING
+        if not self.blocks_child_nodes:
+            for job in self.jobs:
+                if job.status == 'BLOCKED':
+                    pending_job_ids.append(job.id)
 
         # If this job is PENDING and it blocks child nodes, it should be updated to BLOCKED
-        if self.job.status == 'PENDING' and self.blocks_child_nodes:
-            blocked_job_ids.append(self.job.id)
+        if self.blocks_child_nodes:
+            for job in self.jobs:
+                if job.status == 'PENDING':
+                    blocked_job_ids.append(job.id)
 
     def is_completed(self):
         """See :meth:`recipe.instance.node.NodeInstance.is_completed`
         """
 
-        return self.job.is_ready_for_children()
+        for job in self.jobs:
+            if not job.is_ready_for_children():
+                return False
+        return True
 
     def needs_to_process_input(self):
         """See :meth:`recipe.instance.node.NodeInstance.needs_to_process_input`
         """
 
-        if self.job.status not in ['PENDING', 'BLOCKED']:
-            return False
+        for job in self.jobs:
+            if job.status not in ['PENDING', 'BLOCKED']:
+                return False
             
         # Check parent nodes
         can_process_input = super(JobNodeInstance, self).needs_to_process_input()
 
-        return can_process_input and not self.job.has_input()
+        if not can_process_input:
+            return False
+
+        # should we assert that all/none of the jobs has input? if it's a mix we might have a problem
+        for job in self.jobs:
+            if not job.has_input():
+                return True
+
+        return False
 
 
 class RecipeNodeInstance(NodeInstance):
     """Represents a recipe within a recipe
     """
 
-    def __init__(self, definition, recipe, is_original):
+    def __init__(self, definition, recipe_set, is_original):
         """Constructor
 
         :param definition: The definition of this node in the recipe
         :type definition: :class:`recipe.definition.node.RecipeNodeDefinition`
-        :param recipe: The recipe model
-        :type recipe: :class:`recipe.models.Recipe`
+        :param recipe_set:
+        :type recipe_set:
         :param is_original: Whether this node is original
         :type is_original: bool
         """
 
         super(RecipeNodeInstance, self).__init__(definition, is_original)
-
-        self.recipe = recipe
+        self.recipes = []
+        if recipe_set:
+            self.recipes = recipe_set.all()
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
         """See :meth:`recipe.instance.node.NodeInstance.get_jobs_to_update`
@@ -319,15 +340,20 @@ class RecipeNodeInstance(NodeInstance):
         super(RecipeNodeInstance, self).get_jobs_to_update(pending_job_ids, blocked_job_ids)
 
         # A recipe blocks child nodes if it has any BLOCKED, CANCELED, or FAILED jobs in it
-        num_blocking_jobs = self.recipe.jobs_blocked + self.recipe.jobs_canceled + self.recipe.jobs_failed
-        if num_blocking_jobs > 0:
-            self.blocks_child_nodes = True
+        for recipe in self.recipes:
+            num_blocking_jobs = recipe.jobs_blocked + recipe.jobs_canceled + recipe.jobs_failed
+            if num_blocking_jobs > 0:
+                self.blocks_child_nodes = True
+                return
 
     def is_completed(self):
         """See :meth:`recipe.instance.node.NodeInstance.is_completed`
         """
 
-        return self.recipe.is_completed
+        for recipe in self.recipes:
+            if not recipe.is_completed:
+                return False
+        return True
 
     def needs_to_process_input(self):
         """See :meth:`recipe.instance.node.NodeInstance.needs_to_process_input`
@@ -336,4 +362,12 @@ class RecipeNodeInstance(NodeInstance):
         # Check parent nodes
         can_process_input = super(RecipeNodeInstance, self).needs_to_process_input()
 
-        return can_process_input and not self.recipe.has_input()
+        if not can_process_input:
+            return False
+
+        # TODO: should we assert that all/none of the recipes has input? if it's a mix we might have a problem
+        for recipe in self.recipes:
+            if not recipe.has_input():
+                return True
+
+        return False

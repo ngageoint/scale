@@ -155,11 +155,11 @@ class TestProcessCondition(TestCase):
         job_2 = job_test_utils.create_job(job_type=job_type_2, num_exes=1, status='COMPLETED', output=output_2_dict,
                                           recipe=recipe)
         condition = recipe_test_utils.create_recipe_condition(recipe=recipe, save=True)
-        node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', job=job_1, save=False)
-        node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_b', job=job_2, save=False)
+        node_a = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_a', job=job_1, save=True)
+        node_b = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_b', job=job_2, save=True)
         node_c = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='node_c', condition=condition,
-                                                      save=False)
-        RecipeNode.objects.bulk_create([node_a, node_b, node_c])
+                                                      save=True)
+        # RecipeNode.objects.bulk_create([node_a, node_b, node_c])
 
         # Create message
         message = create_process_condition_messages([condition.id])[0]

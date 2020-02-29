@@ -115,7 +115,6 @@ class UpdateRecipeMetrics(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
-
         Recipe.objects.update_recipe_metrics(self._recipe_ids)
 
         # If any of these recipes are sub-recipes, update the metrics of the recipes that contain these

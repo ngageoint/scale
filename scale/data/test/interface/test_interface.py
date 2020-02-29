@@ -113,3 +113,22 @@ class TestInterface(TestCase):
         with self.assertRaises(InvalidInterfaceConnection) as context:
             interface.validate_connection(connecting_interface)
         self.assertEqual(context.exception.error.name, 'MOCK')
+
+    def test_validate_connection_multiple(self):
+        """Tests calling Interface.validate_connection()"""
+
+        interface = Interface()
+        connecting_interface = Interface()
+
+        file_param = FileParameter('input_1', ['application/json'])
+        interface.add_parameter(file_param)
+        file_param.multiply()
+        connecting_interface.add_parameter(file_param)
+        json_param = JsonParameter('input_2', 'integer')
+        interface.add_parameter(json_param)
+        connecting_interface.add_parameter(json_param)
+
+        # Connection takes multiple files for input_1
+        with self.assertRaises(InvalidInterfaceConnection) as context:
+            interface.validate_connection(connecting_interface)
+        self.assertEqual(context.exception.error.name, 'NO_MULTIPLE_FILES')

@@ -67,7 +67,6 @@ class ProcessJobInput(CommandMessage):
         """
 
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
-
         try:
             job = Job.objects.get_job_with_interfaces(self.job_id)
         except Job.DoesNotExist:
@@ -112,18 +111,22 @@ class ProcessJobInput(CommandMessage):
         """
 
         from recipe.models import RecipeNode
+        node_name = None
         # Get job input from dependencies in the recipe
         recipe_input_data = job.recipe.get_input_data()
         nodes = RecipeNode.objects.get_recipe_jobs(job.recipe_id)
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
         for node_output in node_outputs.values():
             if node_output.node_type == 'job' and node_output.id == job.id:
+                #get the node name of this job, for forked jobs it will be <base_definition_node_name>-file_id
                 node_name = node_output.node_name
                 break
 
-        definition = job.recipe.recipe_type_rev.get_definition()
-        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs, self._get_optional_outputs(nodes))
-        Job.objects.set_job_input_data_v6(job, input_data)
+        definition = job.recipe.get_definition()
+        # need to add connections somehow inserted in definition for each individual file output from fork job
+        if node_name:
+            input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs, self._get_optional_outputs(nodes))
+            Job.objects.set_job_input_data_v6(job, input_data)
 
     def _get_optional_outputs(self, nodes):
         """get list of optional outputs within the recipe

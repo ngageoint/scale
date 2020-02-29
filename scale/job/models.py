@@ -75,7 +75,7 @@ class JobManager(models.Manager):
     """
 
     def create_job_v6(self, job_type_rev, event_id=None, ingest_event_id=None, input_data=None, root_recipe_id=None,
-                      recipe_id=None, batch_id=None, superseded_job=None, job_config=None):
+                      recipe_id=None, batch_id=None, superseded_job=None, job_config=None, recipe_node_id=None):
         """Creates a new job for the given job type revision and returns the (unsaved) job model
 
         :param job_type_rev: The job type revision (with populated job_type model) of the job to create
@@ -96,6 +96,8 @@ class JobManager(models.Manager):
         :type superseded_job: :class:`job.models.Job`
         :param job_config: The configuration overrides for running this job, possibly None
         :type job_config: :class:`job.configuration.configuration.JobConfiguration`
+        :param recipe_node_id: The ID of the recipe node this job is attached to
+        :type recipe_node_id: int
         :returns: The new job model
         :rtype: :class:`job.models.Job`
 
@@ -112,6 +114,7 @@ class JobManager(models.Manager):
         job.ingest_event_id = ingest_event_id
         job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         job.recipe_id = recipe_id
+        job.recipe_node_id = recipe_node_id
         job.batch_id = batch_id
         job.max_tries = job_type_rev.job_type.max_tries
 
@@ -396,17 +399,11 @@ class JobManager(models.Manager):
         manifest = SeedManifest(job.job_type_rev.manifest, do_validate=False)
         configuration.remove_secret_settings(manifest)
         job.configuration = convert_config_to_v6_json(configuration).get_dict()
-        
-        # Attempt to get related recipe
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from recipe.models import RecipeNode
 
-            recipe_job = RecipeNode.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                           'recipe__recipe_type_rev__recipe_type').get(job=job,
-                                                                                      recipe__is_superseded=False)
-            job.recipe = recipe_job.recipe
-        except RecipeNode.DoesNotExist:
+        # TODO: Test that this gives the same result as before
+        if job.recipe_node:
+            job.recipe = job.recipe_node.recipe
+        else:
             job.recipe = None
 
         return job
@@ -595,7 +592,7 @@ class JobManager(models.Manager):
         :param job: The job model with related job_type_rev model
         :type job: :class:`job.models.Job`
         :param input_data: The input data for the job
-        :type input_data: :class:`data.data.data.Data`
+        :type input_data: [:class:`data.data.data.Data`]
 
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
@@ -893,6 +890,8 @@ class Job(models.Model):
     recipe = models.ForeignKey('recipe.Recipe', related_name='jobs_for_recipe', blank=True, null=True,
                                on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', related_name='jobs_for_batch', blank=True, null=True,
+                              on_delete=models.PROTECT)
+    recipe_node = models.ForeignKey('recipe.RecipeNode', related_name='jobs_for_recipe_node', blank=True, null=True,
                               on_delete=models.PROTECT)
 
     is_superseded = models.BooleanField(default=False)
