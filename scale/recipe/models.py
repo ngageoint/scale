@@ -874,6 +874,8 @@ class RecipeInputFileManager(models.Manager):
                 files = files.filter(source_started__gte=started)
             elif time_field == 'data':
                 files = files.filter(data_started__gte=started)
+            elif time_field == "created":
+                files = files.filter(created__gte=started)
             else:
                 files = files.filter(last_modified__gte=started)
         if ended:
@@ -881,6 +883,8 @@ class RecipeInputFileManager(models.Manager):
                 files = files.filter(source_ended__lte=ended)
             elif time_field == 'data':
                 files = files.filter(data_ended__lte=ended)
+            elif time_field == "created":
+                files = files.filter(created__lte=ended)
             else:
                 files = files.filter(last_modified__lte=ended)
 

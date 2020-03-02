@@ -256,11 +256,11 @@ class DataSet(models.Model):
 class DataSetMemberManager(models.Manager):
     """Provides additional methods for handling dataset members"""
 
-    def build_data_list(self, template, data_started=None, data_ended=None, source_started=None, source_ended=None,
-                        source_sensor_classes=None, source_sensors=None, source_collections=None,
-                        source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
-                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
-                        recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
+    def build_data_list(self, template, data_started=None, data_ended=None, created_started=None, created_ended=None,
+                        source_started=None, source_ended=None, source_sensor_classes=None, source_sensors=None,
+                        source_collections=None,source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None,
+                        job_type_names=None, job_ids=None, is_published=None, is_superseded=None, file_names=None,
+                        job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
         """Builds a list of data dictionaries from a template and file filters
 
         :param template: The template to fill with files found through filters
@@ -269,6 +269,10 @@ class DataSetMemberManager(models.Manager):
         :type data_started: :class:`datetime.datetime`
         :param data_ended: Query files where data ended before this time.
         :type data_ended: :class:`datetime.datetime`
+        :param created_started: Query files created after this time.
+        :type created_started: :class:`datetime.datetime`
+        :param created_ended: Query files created before this time.
+        :type created_ended: :class:`datetime.datetime`
         :param source_started: Query files where source collection started after this time.
         :type source_started: :class:`datetime.datetime`
         :param source_ended: Query files where source collection ended before this time.
@@ -310,7 +314,7 @@ class DataSetMemberManager(models.Manager):
         :param order: A list of fields to control the sort order.
         :type order: list
         """
-        
+
         files = ScaleFile.objects.filter_files(
             data_started=data_started, data_ended=data_ended,
             source_started=source_started, source_ended=source_ended,
@@ -321,8 +325,8 @@ class DataSetMemberManager(models.Manager):
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
             order=order)
-        
-        data_list = []    
+
+        data_list = []
         try:
             for f in files:
                 entry = copy.deepcopy(template)
@@ -333,7 +337,7 @@ class DataSetMemberManager(models.Manager):
                 data_list.append(DataV6(data=entry, do_validate=True).get_data())
         except (KeyError, TypeError) as ex:
             raise InvalidData('INVALID_TEMPLATE', "Specified template is invalid: %s" % ex)
-        
+
         return data_list
 
     def validate_data_list(self, dataset_def, data_list):
@@ -361,7 +365,7 @@ class DataSetMemberManager(models.Manager):
 
         # validate other fields
         return DataSetValidation(is_valid, errors, warnings)
-        
+
     def create_dataset_members(self, dataset, data_list):
         """Creates a dataset member
 

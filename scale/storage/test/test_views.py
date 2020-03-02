@@ -45,8 +45,8 @@ class TestFilesViewV6(APITestCase):
                                                           file_name='test.txt', countries=[self.country],
                                                           recipe_node='test-recipe-node',
                                                           source_started=self.f1_source_started,
-                                                          source_ended=self.f1_source_ended,
-                                                          source_sensor_class=self.source_sensor_class,
+            source_ended=self.f1_source_ended,
+            source_sensor_class=self.source_sensor_class,
                                                           source_sensor=self.source_sensor,
                                                           source_collection=self.source_collection,
                                                           source_task=self.source_task,
@@ -104,6 +104,23 @@ class TestFilesViewV6(APITestCase):
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_created_time_successful(self):
+        """Tests successfully calling the get files by created time"""
+
+        url = "/%s/files/?created_started=%s&created_ended=%s" % (
+            self.api,
+            "1900-01-01T00:00:00Z",
+            "2050-01-03T00:00:00Z",
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result["results"]
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result["id"] in [self.file1.id, self.file2.id])
 
     def test_source_time_successful(self):
         """Tests successfully calling the get files by source time"""
