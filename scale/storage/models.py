@@ -303,6 +303,8 @@ class ScaleFileManager(models.Manager):
                 files = files.filter(source_started__gte=started)
             elif time_field == 'data':
                 files = files.filter(data_started__gte=started)
+            elif time_field == 'created':
+                files = files.filter(created__gte=started)
             else:
                 files = files.filter(last_modified__gte=started)
         if ended:
@@ -310,14 +312,16 @@ class ScaleFileManager(models.Manager):
                 files = files.filter(source_ended__lte=ended)
             elif time_field == 'data':
                 files = files.filter(data_ended__lte=ended)
+            elif time_field == 'created':
+                files = files.filter(created__lte=ended)
             else:
                 files = files.filter(last_modified__lte=ended)
 
         files = files.order_by('last_modified')
         return files
 
-    def filter_files(self, data_started=None, data_ended=None, source_started=None, source_ended=None,
-                        source_sensor_classes=None, source_sensors=None, source_collections=None,
+    def filter_files(self, data_started=None, data_ended=None, created_started=None, created_ended=None, source_started=None,
+                        source_ended=None, source_sensor_classes=None, source_sensors=None, source_collections=None,
                         source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
                         job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
                         recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None, countries=None):
@@ -329,6 +333,10 @@ class ScaleFileManager(models.Manager):
         :type data_started: :class:`datetime.datetime`
         :param data_ended: Query files where data ended before this time.
         :type data_ended: :class:`datetime.datetime`
+        :param created_started: Query files created after this time.
+        :type created_started: :class:`datetime.datetime`
+        :param created_ended: Query files created before this time.
+        :type created_ended: :class:`datetime.datetime`
         :param source_started: Query files where source collection started after this time.
         :type source_started: :class:`datetime.datetime`
         :param source_ended: Query files where source collection ended before this time.
@@ -378,7 +386,7 @@ class ScaleFileManager(models.Manager):
         # Fetch a list of product files
         files = ScaleFile.objects.all()
         files = files.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
-        files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration', 
+        files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration',
                                   'job_type__manifest', 'job_type__configuration', 'recipe__input',
                                   'recipe_type__definition', 'batch__definition')
         files = files.prefetch_related('countries')
@@ -393,6 +401,11 @@ class ScaleFileManager(models.Manager):
             files = files.filter(data_started__gte=data_started)
         if data_ended:
             files = files.filter(data_ended__lte=data_ended)
+
+        if created_started:
+            files = files.filter(created__gte=created_started)
+        if created_ended:
+            files = files.filter(created__lte=created_ended)
 
         if source_started:
             files = files.filter(source_started__gte=source_started)
