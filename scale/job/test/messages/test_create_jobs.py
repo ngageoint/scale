@@ -128,11 +128,15 @@ class TestCreateJobs(TransactionTestCase):
             else:
                 self.fail('%s is the wrong node name' % recipe_node.node_name)
 
-        # Should be one message for updating metrics for the recipe
-        self.assertEqual(len(new_message.new_messages), 1)
+        # Should be one message for updating metrics for the recipe and two for processing job input
+        self.assertEqual(len(new_message.new_messages), 3)
         update_metrics_msg = None
         if new_message.new_messages[0].type == 'update_recipe_metrics':
             update_metrics_msg = new_message.new_messages[0]
+        if new_message.new_messages[1].type == 'update_recipe_metrics':
+            update_metrics_msg = new_message.new_messages[1]
+        if new_message.new_messages[2].type == 'update_recipe_metrics':
+            update_metrics_msg = new_message.new_messages[2]
         self.assertIsNotNone(update_metrics_msg)
         # Check message to update recipe metrics for the recipe containing the new jobs
         self.assertListEqual(update_metrics_msg._recipe_ids, [recipe.id])
@@ -236,11 +240,11 @@ class TestCreateJobs(TransactionTestCase):
             else:
                 self.fail('%s is the wrong node name' % recipe_node.node_name)
 
-        # Should be one message for updating metrics for the recipe
-        self.assertEqual(len(new_message.new_messages), 1)
+        # Should be one message for updating metrics for the recipe and two for processing job input
+        self.assertEqual(len(new_message.new_messages), 3)
         update_metrics_msg = None
-        if new_message.new_messages[0].type == 'update_recipe_metrics':
-            update_metrics_msg = new_message.new_messages[0]
+        if new_message.new_messages[2].type == 'update_recipe_metrics':
+            update_metrics_msg = new_message.new_messages[2]
         self.assertIsNotNone(update_metrics_msg)
         # Check message to update recipe metrics for the recipe containing the new jobs
         self.assertListEqual(update_metrics_msg._recipe_ids, [recipe.id])
@@ -404,11 +408,11 @@ class TestCreateJobs(TransactionTestCase):
             else:
                 self.fail('%s is the wrong node name' % recipe_node.node_name)
 
-        # Should be one message for updating metrics for the recipe
-        self.assertEqual(len(message.new_messages), 1)
+        # Should be one message for updating metrics for the recipe and two for processing job input
+        self.assertEqual(len(message.new_messages), 3)
         update_metrics_msg = None
-        if message.new_messages[0].type == 'update_recipe_metrics':
-            update_metrics_msg = message.new_messages[0]
+        if message.new_messages[2].type == 'update_recipe_metrics':
+            update_metrics_msg = message.new_messages[2]
         self.assertIsNotNone(update_metrics_msg)
         # Check message to update recipe metrics for the recipe containing the new jobs
         self.assertListEqual(update_metrics_msg._recipe_ids, [recipe.id])
@@ -438,11 +442,11 @@ class TestCreateJobs(TransactionTestCase):
             else:
                 self.fail('%s is the wrong node name' % recipe_node.node_name)
 
-        # Should be one messages for updating metrics for the recipe
-        self.assertEqual(len(message.new_messages), 1)
+        # Should be one messages for updating metrics for the recipe and two for processing job input
+        self.assertEqual(len(message.new_messages), 3)
         update_metrics_msg = None
-        if message.new_messages[0].type == 'update_recipe_metrics':
-            update_metrics_msg = message.new_messages[0]
+        if message.new_messages[2].type == 'update_recipe_metrics':
+            update_metrics_msg = message.new_messages[2]
         self.assertIsNotNone(update_metrics_msg)
         # Check message to update recipe metrics for the recipe containing the new jobs
         self.assertListEqual(update_metrics_msg._recipe_ids, [recipe.id])
@@ -541,11 +545,11 @@ class TestCreateJobs(TransactionTestCase):
             else:
                 self.fail('%s is the wrong node name' % recipe_node.node_name)
 
-        # Should be two messages, one for processing job input and one for updating metrics for the recipe
-        self.assertEqual(len(message.new_messages), 1)
+        # Should be three messages, two for processing job input and one for updating metrics for the recipe
+        self.assertEqual(len(message.new_messages), 3)
         update_metrics_msg = None
-        if message.new_messages[0].type == 'update_recipe_metrics':
-            update_metrics_msg = message.new_messages[0]
+        if message.new_messages[2].type == 'update_recipe_metrics':
+            update_metrics_msg = message.new_messages[2]
         self.assertIsNotNone(update_metrics_msg)
         # Check message to update recipe metrics for the recipe containing the new jobs
         self.assertListEqual(update_metrics_msg._recipe_ids, [recipe.id])
@@ -584,11 +588,11 @@ class TestCreateJobs(TransactionTestCase):
             else:
                 self.fail('%s is the wrong node name' % recipe_node.node_name)
 
-        # Should be two messages, one for processing job input and one for updating metrics for the recipe
-        self.assertEqual(len(message.new_messages), 1)
+        # Should be three messages, two for processing job input and one for updating metrics for the recipe
+        self.assertEqual(len(message.new_messages), 3)
         update_metrics_msg = None
-        if message.new_messages[0].type == 'update_recipe_metrics':
-            update_metrics_msg = message.new_messages[0]
+        if message.new_messages[2].type == 'update_recipe_metrics':
+            update_metrics_msg = message.new_messages[2]
         self.assertIsNotNone(update_metrics_msg)
         # Check message to update recipe metrics for the recipe containing the new jobs
         self.assertListEqual(update_metrics_msg._recipe_ids, [recipe.id])

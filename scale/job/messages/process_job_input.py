@@ -117,7 +117,7 @@ class ProcessJobInput(CommandMessage):
         nodes = RecipeNode.objects.get_recipe_jobs(job.recipe_id)
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
         for node_output in node_outputs.values():
-            if node_output.node_type == 'job' and node_output.id == job.id:
+            if node_output.node_type == 'job' and node_output.id == job.recipe_node.id:
                 #get the node name of this job, for forked jobs it will be <base_definition_node_name>-file_id
                 node_name = node_output.node_name
                 break
@@ -126,7 +126,9 @@ class ProcessJobInput(CommandMessage):
         # need to add connections somehow inserted in definition for each individual file output from fork job
         if node_name:
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs, self._get_optional_outputs(nodes))
-            Job.objects.set_job_input_data_v6(job, input_data)
+            if len(input_data) != 1:
+                raise InvalidData('FORKING_ERROR', 'Expected one data object, received %d' % len(input_data))
+            Job.objects.set_job_input_data_v6(job, input_data[0])
 
     def _get_optional_outputs(self, nodes):
         """get list of optional outputs within the recipe

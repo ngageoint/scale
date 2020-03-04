@@ -195,7 +195,7 @@ class RecipeManager(models.Manager):
         return list(qry.order_by('id').iterator())
 
     # TODO: remove this once database calls are no longer done in the post-task and this is not needed
-    def get_recipe_for_job(self, job_id):
+    def get_recipe_node_for_job(self, job_id):
         """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
         returned model will have its related recipe_type and recipe_type_rev models populated. If the job exists in
         multiple recipes due to superseding, the original (first) recipe is returned.
@@ -208,10 +208,10 @@ class RecipeManager(models.Manager):
 
         #TODO: fix recipe node queries like this
         try:
-            recipe_job = Job.objects.select_related('recipe_node').get(id=job_id).recipe_node
+            recipe_node = Job.objects.select_related('recipe_node').get(id=job_id).recipe_node
         except RecipeNode.DoesNotExist:
             return None
-        return recipe_job
+        return recipe_node
 
     def get_recipe_ids_for_jobs(self, job_ids):
         """Returns the IDs of all recipes that contain the jobs with the given IDs. This will include superseded
@@ -1545,9 +1545,9 @@ class RecipeTypeManager(models.Manager):
         jtr = JobTypeRevision.objects.get_details_v6(node.job_type_name, node.job_type_version, node.revision_num)
         if jtr:
             input = jtr.get_input_interface()
-            #TODO modify input interfaces if fork_input is set so the forked input is multiple and json_type is array
             output = jtr.get_output_interface()
             if node.fork_input:
+                input.parameters[node.fork_input].multiply()
                 output.multiply()
 
         return input, output
@@ -1562,7 +1562,8 @@ class RecipeTypeManager(models.Manager):
         rtr = RecipeTypeRevision.objects.get_revision(node.recipe_type_name, node.revision_num)
         if rtr:
             input = rtr.get_input_interface()  # no output interface
-            #TODO: modify inferface so forked input is set to multiple and json_type is array
+            if node.fork_input:
+                input.parameters[node.fork_input].multiply()
 
         return input, output
 

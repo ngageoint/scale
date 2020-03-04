@@ -48,7 +48,7 @@ class FileAncestryLinkManager(models.Manager):
         parent_ids = self.get_source_ancestor_ids(parent_ids)
 
         # Not all jobs have a recipe so attempt to get one if applicable
-        job_recipe = Recipe.objects.get_recipe_for_job(job.id)
+        recipe_node = Recipe.objects.get_recipe_node_for_job(job.id)
 
         # See if this job is in a batch
         batch_id = job.batch_id
@@ -72,8 +72,8 @@ class FileAncestryLinkManager(models.Manager):
                 link.batch_id = batch_id
                 new_links.append(link)
 
-                if job_recipe:
-                    link.recipe_id = job_recipe.recipe_id
+                if recipe_node:
+                    link.recipe_id = recipe_node.recipe_id
                 else:
                     link.recipe = None
 
@@ -532,11 +532,11 @@ class ProductFileManager(models.GeoManager):
                 product.center_point = geo_utils.get_center_point(geom)
 
             # Add recipe info to product if available.
-            job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
-            if job_recipe:
-                product.recipe_id = job_recipe.recipe.id
-                product.recipe_type = job_recipe.recipe.recipe_type
-                product.recipe_node = job_recipe.node_name
+            recipe_node = Recipe.objects.get_recipe_node_for_job(job_exe.job_id)
+            if recipe_node:
+                product.recipe_id = recipe_node.recipe.id
+                product.recipe_type = recipe_node.recipe.recipe_type
+                product.recipe_node = recipe_node.node_name
 
                 # Add batch info to product if available.
                 
