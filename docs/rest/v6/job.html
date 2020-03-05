@@ -283,6 +283,9 @@
       <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
       <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
       <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+      <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;INPUT_FILE&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;my-file.file&quot;</span><span class="p">]</span>
+      <span class="p">},</span>
       <span class="s2">&quot;source_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
       <span class="s2">&quot;source_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
       <span class="s2">&quot;source_sensor_class&quot;</span><span class="o">:</span> <span class="s2">&quot;classA&quot;</span><span class="p">,</span>
@@ -533,55 +536,59 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.source_started</td>
+<tr class="row-even"><td colspan="2">.input_files</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The input files associated with the job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.source_started</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When collection of the source file started.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.source_ended</td>
+<tr class="row-even"><td colspan="2">.source_ended</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When collection of the source file ended.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.source_sensor_class</td>
+<tr class="row-odd"><td colspan="2">.source_sensor_class</td>
 <td colspan="2">String</td>
 <td colspan="2">The class of sensor used to produce the source file.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.source_sensor</td>
+<tr class="row-even"><td colspan="2">.source_sensor</td>
 <td colspan="2">String</td>
 <td colspan="2">The specific identifier of the sensor used to produce the source file.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.source_collection</td>
+<tr class="row-odd"><td colspan="2">.source_collection</td>
 <td colspan="2">String</td>
 <td colspan="2">The collection of the source file.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.source_task</td>
+<tr class="row-even"><td colspan="2">.source_task</td>
 <td colspan="2">String</td>
 <td colspan="2">The task that produced the source file.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.created</td>
+<tr class="row-odd"><td colspan="2">.created</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.queued</td>
+<tr class="row-even"><td colspan="2">.queued</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.started</td>
+<tr class="row-odd"><td colspan="2">.started</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.ended</td>
+<tr class="row-even"><td colspan="2">.ended</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.last_status_change</td>
+<tr class="row-odd"><td colspan="2">.last_status_change</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.superseded</td>
+<tr class="row-even"><td colspan="2">.superseded</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the the job became superseded by another job.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.last_modified</td>
+<tr class="row-odd"><td colspan="2">.last_modified</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
@@ -684,6 +691,9 @@ Location <a class="reference external" href="http://.../v6/job/1/">http://.../v6
     <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;input_a&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;my-file.file&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
     <span class="s2">&quot;source_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;source_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2018-11-01T13:30:22.530638Z&quot;</span><span class="p">,</span>
@@ -911,6 +921,9 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
     <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;input_c&#39;</span><span class="o">:</span> <span class="mi">999</span><span class="p">,</span> <span class="s1">&#39;input_d&#39;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;hello&#39;</span><span class="p">}}</span>
   <span class="p">},</span>
   <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;INPUT_FILE&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;my-file.file&quot;</span><span class="p">]</span>
+  <span class="p">},</span>
   <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;output_a&#39;</span><span class="o">:</span> <span class="p">[</span><span class="mi">456</span><span class="p">]},</span>
     <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;output_b&#39;</span><span class="o">:</span> <span class="s1">&#39;success&#39;</span><span class="p">}</span>
@@ -940,182 +953,6 @@ See <a class="reference internal" href="job_type.html#rest-v6-job-type-configura
 <span class="p">}</span>
 </pre></div>
 </div>
-<table border="1" class="docutils">
-<colgroup>
-<col width="17%" />
-<col width="16%" />
-<col width="67%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Job Details</strong></th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Returns a specific job and all its related model information.</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
-<dt><strong>GET</strong> /v6/jobs/{id}/</dt>
-<dd>Where {id} is the unique identifier of an existing model.</dd>
-</dl>
-</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">200 OK</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>id</td>
-<td>Integer</td>
-<td>The unique identifier of the model.</td>
-</tr>
-<tr class="row-odd"><td>job_type</td>
-<td>JSON Object</td>
-<td>The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-v6-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td>job_type_rev</td>
-<td>JSON Object</td>
-<td>The job type revision that is associated with the job.
-This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-v6-job-type-revision-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>event</td>
-<td>JSON Object</td>
-<td>The trigger event that is associated with the job.</td>
-</tr>
-<tr class="row-even"><td>recipe</td>
-<td>JSON Object</td>
-<td>The recipe instance associated with this job.
-(See <a class="reference internal" href="recipe.html#rest-v6-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>batch</td>
-<td>JSON Object</td>
-<td>The batch instance associated with this job
-(See <a class="reference internal" href="batch.html#rest-v6-batch-details"><span class="std std-ref">Batch Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td>is_superseded</td>
-<td>Boolean</td>
-<td>Whether this job has been replaced and is now obsolete.</td>
-</tr>
-<tr class="row-odd"><td>superseded_job</td>
-<td>JSON Object</td>
-<td>The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="#rest-v6-job-details"><span class="std std-ref">Job Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td>superseded_by_job</td>
-<td>JSON Object</td>
-<td>The next job in the chain that superseded this job.
-(See <a class="reference internal" href="#rest-v6-job-details"><span class="std std-ref">Job Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>status</td>
-<td>String</td>
-<td>The current status of the job.
-Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
-</tr>
-<tr class="row-even"><td>node</td>
-<td>JSON Object</td>
-<td>The node that the job is/was running on.</td>
-</tr>
-<tr class="row-odd"><td>resources</td>
-<td>JSON Object</td>
-<td>JSON description describing the resources required for this job.</td>
-</tr>
-<tr class="row-even"><td>error</td>
-<td>JSON Object</td>
-<td>The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-v6-error-details"><span class="std std-ref">Error Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>max_tries</td>
-<td>Integer</td>
-<td>Number of times this job will be automatically retried after an error.</td>
-</tr>
-<tr class="row-even"><td>num_exes</td>
-<td>Integer</td>
-<td>The number of executions this job has had.</td>
-</tr>
-<tr class="row-odd"><td>execution</td>
-<td>JSON Object</td>
-<td>The most recent execution of the job.
-(See <a class="reference internal" href="#rest-v6-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td>input</td>
-<td>JSON Object</td>
-<td>The input data for the job.
-(See <a class="reference internal" href="data.html#rest-v6-data-data"><span class="std std-ref">Data</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>input_file_size</td>
-<td>Decimal</td>
-<td>The amount of disk space in MiB required for input files for this job.</td>
-</tr>
-<tr class="row-even"><td>output</td>
-<td>JSON Object</td>
-<td>The output data for the job.
-(See <a class="reference internal" href="data.html#rest-v6-data-data"><span class="std std-ref">Data</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>source_started</td>
-<td>ISO-8601 Datetime</td>
-<td>When collection of the source file started.</td>
-</tr>
-<tr class="row-even"><td>source_ended</td>
-<td>ISO-8601 Datetime</td>
-<td>When collection of the source file ended.</td>
-</tr>
-<tr class="row-odd"><td>source_sensor_class</td>
-<td>String</td>
-<td>The class of sensor used to produce the source file.</td>
-</tr>
-<tr class="row-even"><td>source_sensor</td>
-<td>String</td>
-<td>The specific identifier of the sensor used to produce the source file.</td>
-</tr>
-<tr class="row-odd"><td>source_collection</td>
-<td>String</td>
-<td>The collection of the source file.</td>
-</tr>
-<tr class="row-even"><td>source_task</td>
-<td>String</td>
-<td>The task that produced the source file.</td>
-</tr>
-<tr class="row-odd"><td>created</td>
-<td>ISO-8601 Datetime</td>
-<td>When the associated database model was initially created.</td>
-</tr>
-<tr class="row-even"><td>queued</td>
-<td>ISO-8601 Datetime</td>
-<td>When the job was added to the queue to be run when resources are available.</td>
-</tr>
-<tr class="row-odd"><td>started</td>
-<td>ISO-8601 Datetime</td>
-<td>When the job started running.</td>
-</tr>
-<tr class="row-even"><td>ended</td>
-<td>ISO-8601 Datetime</td>
-<td>When the job stopped running, which could be due to success or failure.</td>
-</tr>
-<tr class="row-odd"><td>last_status_change</td>
-<td>ISO-8601 Datetime</td>
-<td>When the status of the job was last changed.</td>
-</tr>
-<tr class="row-even"><td>superseded</td>
-<td>ISO-8601 Datetime</td>
-<td>When the the job became superseded by another job.</td>
-</tr>
-<tr class="row-odd"><td>last_modified</td>
-<td>ISO-8601 Datetime</td>
-<td>When the associated database model was last saved.</td>
-</tr>
-<tr class="row-even"><td>configuration</td>
-<td>JSON Object</td>
-<td>JSON description of the configuration for running the job
-(See <a class="reference internal" href="job_type.html#rest-v6-job-type-configuration"><span class="std std-ref">Job Type Configuration JSON</span></a>)</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section" id="v6-job-input-file-list">
 <span id="rest-v6-job-input-files"></span><h2>v6 Job Input File List<a class="headerlink" href="#v6-job-input-file-list" title="Permalink to this headline">¶</a></h2>
