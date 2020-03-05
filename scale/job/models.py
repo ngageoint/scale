@@ -921,7 +921,6 @@ class Job(models.Model):
     source_collection = models.TextField(blank=True, null=True, db_index=True)
     source_task = models.TextField(blank=True, null=True, db_index=True)
 
-
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)
     started = models.DateTimeField(blank=True, null=True)
@@ -1030,6 +1029,8 @@ class Job(models.Model):
         else:
             return self.job_type.get_job_configuration()
 
+
+
     def get_v6_configuration_json(self):
         """Returns the job configuration in v6 of the JSON schema
 
@@ -1053,6 +1054,21 @@ class Job(models.Model):
         """
 
         return DataV6(data=self.input, do_validate=False).get_data()
+
+    def get_input_files_json(self):
+        """Returns the input files data with more details
+
+        :returns: The detailed input files dict for this job
+        :rtype: dict
+        """
+
+        input_files = {}
+        input_data = self.get_input_data()
+        for data_value in input_data.values.values():
+            if data_value.param_type == FileParameter.PARAM_TYPE:
+                input_files[data_value.name] = [f.file_name for f in ScaleFile.objects.filter(
+                    id__in=data_value.file_ids).only('file_name')]
+        return input_files
 
     def get_v6_input_data_json(self):
         """Returns the input data for this job as v6 json with the version stripped
