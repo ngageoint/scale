@@ -328,7 +328,7 @@ class CreateJobs(CommandMessage):
             recipe_jobs[node_name] = job
 
         Job.objects.bulk_create(recipe_jobs.values())
-        logger.info('Created %d job(s)', len(recipe_jobs))
+        logger.info('Created %d job(s): %s', len(recipe_jobs), [j.job_type.name for j in recipe_jobs.values()])
 
         # Create recipe nodes
         recipe_nodes = RecipeNode.objects.create_recipe_job_nodes(self.recipe_id, recipe_jobs)

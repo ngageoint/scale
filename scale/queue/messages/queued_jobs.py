@@ -151,7 +151,7 @@ class QueuedJobs(CommandMessage):
             # Queue jobs
             if jobs_to_queue:
                 queued_job_ids = Queue.objects.queue_jobs(jobs_to_queue, requeue=self.requeue, priority=self.priority)
-                logger.info('Queued %d job(s)', len(queued_job_ids))
+                logger.info('Queued %d job(s): %s', len(queued_job_ids), queued_job_ids)
 
         # Send messages to update recipe metrics
         from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs

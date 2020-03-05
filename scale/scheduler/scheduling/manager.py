@@ -354,9 +354,13 @@ class SchedulingManager(object):
             # If there are no longer any available nodes, break
             logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
         else:
-            logger.warning('There are %d nodes to try and schedule job exes on.', len(nodes))
+            hostnames = [n.hostname for n in nodes.values()]
+            logger.warning('There are %d nodes to try and schedule job exes on. hostnames: %s', len(nodes), hostnames)
+            logger.warning('Ignoring job types %s', ignore_job_type_ids)
             max_cluster_resources = resource_mgr.get_max_available_resources()
-            for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
+            queues = Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]
+            logger.warning('Searching %d queues for jobs to schedule', queues.count())
+            for queue in queues:
                 job_exe = QueuedJobExecution(queue)
 
                 # Canceled job executions get processed as scheduled executions
@@ -400,6 +404,7 @@ class SchedulingManager(object):
                     invalid_resources.extend(insufficient_resources)
                     jt.unmet_resources = ','.join(invalid_resources)
                     jt.save(update_fields=["unmet_resources"])
+                    logger.warning('Job type %s has unmet resources', jt.name)
                     continue
                 else:
                     # reset unmet_resources flag
@@ -411,6 +416,7 @@ class SchedulingManager(object):
                 job_type_id = queue.job_type_id
                 if job_type_id not in job_types:
                     scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE, description=UNKNOWN_JOB_TYPE.description % job_type_id)
+                    logger.warning('job type %s is unknown', jt.name)
                     continue
 
                 workspace_names = job_exe.configuration.get_input_workspace_names()
@@ -425,17 +431,17 @@ class SchedulingManager(object):
 
                 # Check limit for this execution's job type
                 if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
-                    logger.debug('Job type %s could not be scheduled due to scheduling limit reached', jt.name)
+                    logger.warning('Job type %s could not be scheduled due to scheduling limit reached', jt.name)
                     continue
 
                 # Try to schedule job execution and adjust job type limit if needed
                 if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
+                    logger.warning('_process_queue: Scheduling job type %s exe', jt.name)
                     scheduled_job_executions.append(job_exe)
                     if job_type_id in job_type_limits:
                         job_type_limits[job_type_id] -= 1
-                else:
-                    logger.debug('Could not schedule exe for job type %s after checking node resources :(', jt.name)
 
+        logger.warning('_process_queue: Scheduled %s job executions', len(scheduled_job_executions))
         duration = now() - started
         msg = 'Processing queue took %.3f seconds'
         if duration > PROCESS_QUEUE_WARN_THRESHOLD:
@@ -536,10 +542,9 @@ class SchedulingManager(object):
         job_type_name = job_exe._queue.job_type.name
         if not nodes:
             logger.warning('schedule_new_job_exe: No nodes to look at resources')
-        else:
-            hostnames = [n.hostname for n in nodes.values()]
-            logger.warning('schedule_new_job_exe: $d nodes to try to find a score for job type %s. Hostnames: %s', len(nodes),
-                           job_type_name, hostnames)
+        # else:
+            # hostnames = [n.hostname for n in nodes.values()]
+            # logger.warning('schedule_new_job_exe: %d nodes to try to find a score for job type %s. hostnames: %s', len(nodes), job_type_name, hostnames)
 
         best_scheduling_node = None
         best_scheduling_score = None
@@ -568,8 +573,8 @@ class SchedulingManager(object):
                         best_reservation_node = node
                         best_reservation_score = score
 
-        if not best_reservation_score:
-            logger.warning('schedule_new_job_exe: Score for scheduling job type %s is None', job_type_name)
+        # if not best_reservation_score:
+        #     logger.warning('schedule_new_job_exe: Score for scheduling job type %s is None', job_type_name)
 
         # Schedule the job execution on the best node
         if best_scheduling_node:
@@ -582,10 +587,10 @@ class SchedulingManager(object):
                                best_scheduling_node.hostname, job_type_name)
 
         # Could not schedule job execution, reserve a node to run this execution if possible
-        if best_reservation_node:
-            logger.warning('schedule_new_job_exe: Reserving node %s to run %s later', best_reservation_node.hostname,
-                           job_type_name)
-            del nodes[best_reservation_node.node_id]
+        # if best_reservation_node:
+        #     logger.warning('schedule_new_job_exe: Reserving node %s to run %s later', best_reservation_node.hostname,
+        #                    job_type_name)
+        #     del nodes[best_reservation_node.node_id]
 
         return False
 
@@ -663,6 +668,7 @@ class SchedulingManager(object):
         :returns: True if all system tasks were scheduled as needed, False otherwise
         :rtype: bool
         """
+        logger.warning('Attempting to schedule system tasks')
 
         if not nodes:
             logger.warning('schedule_system_tasks: No nodes to schedule system tasks on!')
@@ -673,7 +679,9 @@ class SchedulingManager(object):
         waiting_tasks = 0
         waiting_resources = NodeResources()
 
+        tasks = []
         for task in system_task_mgr.get_tasks_to_schedule(when):
+            tasks.append(task.title)
             task_scheduled = False
             best_scheduling_node = None
             best_scheduling_score = None
@@ -703,6 +711,9 @@ class SchedulingManager(object):
         if scheduled_tasks:
             logger.info('Scheduled %d system task(s) with %s on %d node(s)', scheduled_tasks, scheduled_resources,
                         len(node_ids))
+        else:
+            logger.warning('Couldn\'t schedule system tasks: %s', tasks)
+
         if waiting_tasks:
             logger.warning('%d system task(s) with %s are waiting to be scheduled', waiting_tasks, waiting_resources)
         return waiting_tasks == 0

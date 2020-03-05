@@ -120,6 +120,8 @@ class TestJobsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+        # Enable Public API for this test class to validate unprotected GET requests
+        settings.PUBLIC_READ_API = True
 
         self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
         self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
