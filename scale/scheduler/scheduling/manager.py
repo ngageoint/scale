@@ -91,7 +91,16 @@ class SchedulingManager(object):
         running_job_exes = job_exe_mgr.get_running_job_exes()
         workspaces = workspace_mgr.get_workspaces()
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
+        if not nodes:
+            logger.warning('No nodes came back from prepare nodes!')
+        else:
+            logger.warning('%d nodes prepared for scheduling', len(nodes))
+
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
+        if not fulfilled_nodes:
+            logger.warning('No fulfilled nodes from scheduling waiting tasks!')
+        else:
+            logger.warning('%d fulfilled nodes from scheduling waiting tasks', len(fulfilled_nodes))
 
         sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes, job_type_resources, when)
 
@@ -600,7 +609,6 @@ class SchedulingManager(object):
                         best_reservation_node = node
                         best_reservation_score = score
 
-
         # Schedule the job execution on the best node
         if best_scheduling_node:
             if best_scheduling_node.accept_new_job_exe(job_exe):
@@ -684,7 +692,6 @@ class SchedulingManager(object):
         :returns: True if all system tasks were scheduled as needed, False otherwise
         :rtype: bool
         """
-
         node_ids = set()
         scheduled_tasks = 0
         scheduled_resources = NodeResources()
@@ -743,7 +750,6 @@ class SchedulingManager(object):
         :returns: The dict of scheduling nodes stored by node ID that have no more waiting tasks
         :rtype: dict
         """
-
 
         fulfilled_nodes = {}  # {Node ID: SchedulingNode}
         waiting_tasks = []
