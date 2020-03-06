@@ -91,16 +91,7 @@ class SchedulingManager(object):
         running_job_exes = job_exe_mgr.get_running_job_exes()
         workspaces = workspace_mgr.get_workspaces()
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
-        if not nodes:
-            logger.warning('No nodes came back from prepare nodes!')
-        else:
-            logger.warning('%d nodes prepared for scheduling', len(nodes))
-
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
-        if not fulfilled_nodes:
-            logger.warning('No fulfilled nodes from scheduling waiting tasks!')
-        else:
-            logger.warning('%d fulfilled nodes from scheduling waiting tasks', len(fulfilled_nodes))
 
         sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes, job_type_resources, when)
 
@@ -325,7 +316,6 @@ class SchedulingManager(object):
             scheduling_node = SchedulingNode(agent_id, node, node_tasks, node_exes, resource_set)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
 
-        logger.warning('We have %d scheduling nodes available!', len(scheduling_nodes))
         return scheduling_nodes
 
     def _process_queue(self, nodes, job_types, job_type_limits, job_type_resources, workspaces):
@@ -351,17 +341,12 @@ class SchedulingManager(object):
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
-        if not nodes:
-            # If there are no longer any available nodes, break
-            logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
-        else:
-            hostnames = [n.hostname for n in nodes.values()]
-            logger.warning('There are %d nodes to try and schedule job exes on. hostnames: %s', len(nodes), hostnames)
-            logger.warning('Ignoring job types %s', ignore_job_type_ids)
+        if nodes:
             max_cluster_resources = resource_mgr.get_max_available_resources()
 
             done_queuing = False
             while not done_queuing:
+                queue_start = now()
                 queues = Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)
 
                 # Nothing matches our criteria, we're done searching
@@ -383,6 +368,7 @@ class SchedulingManager(object):
 
                     # Canceled job executions get processed as scheduled executions
                     if job_exe.is_canceled:
+                        logger.warning('Found a canceled job!')
                         scheduled_job_executions.append(job_exe)
                         scheduled_job_execution_ids.append(job_exe.id)
                         continue
@@ -453,7 +439,6 @@ class SchedulingManager(object):
                     for name in workspace_names:
                         missing_workspace = missing_workspace or name not in workspaces
                     if missing_workspace:
-                        logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
                         ignore_job_type_ids.add(job_type_id)
                         break
 
@@ -471,103 +456,20 @@ class SchedulingManager(object):
                         if job_type_id in job_type_limits:
                             job_type_limits[job_type_id] -= 1
                     else:
-                        logger.warning('Job type %s could not be scheduled due to resource limits. Skip this type.', jt.name)
                         ignore_job_type_ids.add(job_type_id)
                         break
 
                     if len(scheduled_job_executions) >= QUEUE_LIMIT:
-                        done_queuing = True
                         logger.info('Schedule queue limit of %d reached; no more room for executions' % QUEUE_LIMIT)
+                        done_queuing = True
                         break
 
-                if (now() - started).total_seconds() >= 1:
-                    # it's been longer than 1 seconds, we need to get schedulin'
+                duration = now() - queue_start
+                logger.debug('Queue loop took %.3f', duration.total_seconds())
+                if duration.total_seconds() >= 1.0:
+                    # it's been longer than 1 second, we need to get schedulin'
                     done_queuing = True
                     break
-
-            # queues = Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]
-
-            # logger.warning('Searching %d queues for jobs to schedule', queues.count())
-            # for queue in queues:
-            #     job_exe = QueuedJobExecution(queue)
-            #
-            #     # Canceled job executions get processed as scheduled executions
-            #     if job_exe.is_canceled:
-            #         scheduled_job_executions.append(job_exe)
-            #         continue
-            #
-            #     jt = job_type_mgr.get_job_type(queue.job_type.id)
-            #     name = INVALID_RESOURCES.name + jt.name
-            #     title = INVALID_RESOURCES.title % jt.name
-            #     warning = SchedulerWarning(name=name, title=title, description=None)
-            #     if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
-            #         # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
-            #         continue
-            #
-            #     invalid_resources = []
-            #     insufficient_resources = []
-            #     # get resource names offered and compare to job type resources
-            #     for resource in job_exe.required_resources.resources:
-            #         # skip sharedmem
-            #         if resource.name.lower() == 'sharedmem':
-            #             logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
-            #             continue
-            #         if resource.name not in max_cluster_resources._resources:
-            #             logger.warning('Job type %s could not be scheduled as resource %s does not exist in the available cluster resources', jt.name, resource.name)
-            #             # resource does not exist in cluster
-            #             invalid_resources.append(resource.name)
-            #         elif resource.value > max_cluster_resources._resources[resource.name].value:
-            #             # resource exceeds the max available from any node
-            #             insufficient_resources.append(resource.name)
-            #
-            #     if invalid_resources:
-            #         description = INVALID_RESOURCES.description % invalid_resources
-            #         scheduler_mgr.warning_active(warning, description)
-            #
-            #     if insufficient_resources:
-            #         description = INSUFFICIENT_RESOURCES.description % insufficient_resources
-            #         scheduler_mgr.warning_active(warning, description)
-            #
-            #     if invalid_resources or insufficient_resources:
-            #         invalid_resources.extend(insufficient_resources)
-            #         jt.unmet_resources = ','.join(invalid_resources)
-            #         jt.save(update_fields=["unmet_resources"])
-            #         logger.warning('Job type %s has unmet resources', jt.name)
-            #         continue
-            #     else:
-            #         # reset unmet_resources flag
-            #         jt.unmet_resources = None
-            #         scheduler_mgr.warning_inactive(warning)
-            #         jt.save(update_fields=["unmet_resources"])
-            #
-            #     # Make sure execution's job type and workspaces have been synced to the scheduler
-            #     job_type_id = queue.job_type_id
-            #     if job_type_id not in job_types:
-            #         scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE, description=UNKNOWN_JOB_TYPE.description % job_type_id)
-            #         logger.warning('job type %s is unknown', jt.name)
-            #         continue
-            #
-            #     workspace_names = job_exe.configuration.get_input_workspace_names()
-            #     workspace_names.extend(job_exe.configuration.get_output_workspace_names())
-            #
-            #     missing_workspace = False
-            #     for name in workspace_names:
-            #         missing_workspace = missing_workspace or name not in workspaces
-            #     if missing_workspace:
-            #         logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
-            #         continue
-            #
-            #     # Check limit for this execution's job type
-            #     if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
-            #         logger.warning('Job type %s could not be scheduled due to scheduling limit reached', jt.name)
-            #         continue
-            #
-            #     # Try to schedule job execution and adjust job type limit if needed
-            #     if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
-            #         logger.warning('_process_queue: Scheduling job type %s exe', jt.name)
-            #         scheduled_job_executions.append(job_exe)
-            #         if job_type_id in job_type_limits:
-            #             job_type_limits[job_type_id] -= 1
 
         logger.warning('_process_queue: Scheduled %s job executions', len(scheduled_job_executions))
         duration = now() - started
@@ -669,10 +571,7 @@ class SchedulingManager(object):
 
         job_type_name = job_exe._queue.job_type.name
         if not nodes:
-            logger.warning('schedule_new_job_exe: No nodes to look at resources')
-        # else:
-            # hostnames = [n.hostname for n in nodes.values()]
-            # logger.warning('schedule_new_job_exe: %d nodes to try to find a score for job type %s. hostnames: %s', len(nodes), job_type_name, hostnames)
+            return False
 
         best_scheduling_node = None
         best_scheduling_score = None
@@ -701,23 +600,14 @@ class SchedulingManager(object):
                         best_reservation_node = node
                         best_reservation_score = score
 
-        # if not best_reservation_score:
-        #     logger.warning('schedule_new_job_exe: Score for scheduling job type %s is None', job_type_name)
 
         # Schedule the job execution on the best node
         if best_scheduling_node:
             if best_scheduling_node.accept_new_job_exe(job_exe):
-                logger.warning('schedule_new_job_exe: %s accepted job exe for %s', best_scheduling_node.hostname,
-                               job_type_name)
                 return True
-            else:
-                logger.warning('schedule_new_job_exe: Best scheduling node %s could not accept new job exe for type %s',
-                               best_scheduling_node.hostname, job_type_name)
 
         # Could not schedule job execution, reserve a node to run this execution if possible
         if best_reservation_node:
-            logger.warning('schedule_new_job_exe: Reserving node %s to run %s later', best_reservation_node.hostname,
-                           job_type_name)
             del nodes[best_reservation_node.node_id]
 
         return False
@@ -740,8 +630,6 @@ class SchedulingManager(object):
         :returns: The number of new job executions that were scheduled
         :rtype: int
         """
-        if not nodes:
-            logger.warning('schedule_new_job_exes: there are no nodes. Nothing will be sheduled until there are free resources')
 
         # Can only use nodes that are ready for new job executions
         available_nodes = {}  # {Node ID: SchedulingNode}
@@ -796,10 +684,6 @@ class SchedulingManager(object):
         :returns: True if all system tasks were scheduled as needed, False otherwise
         :rtype: bool
         """
-        logger.warning('Attempting to schedule system tasks')
-
-        if not nodes:
-            logger.warning('schedule_system_tasks: No nodes to schedule system tasks on!')
 
         node_ids = set()
         scheduled_tasks = 0
@@ -839,11 +723,10 @@ class SchedulingManager(object):
         if scheduled_tasks:
             logger.info('Scheduled %d system task(s) with %s on %d node(s)', scheduled_tasks, scheduled_resources,
                         len(node_ids))
-        else:
-            logger.warning('Couldn\'t schedule system tasks: %s', tasks)
 
         if waiting_tasks:
             logger.warning('%d system task(s) with %s are waiting to be scheduled', waiting_tasks, waiting_resources)
+
         return waiting_tasks == 0
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
@@ -861,8 +744,6 @@ class SchedulingManager(object):
         :rtype: dict
         """
 
-        if not nodes:
-            logger.warning('schedule_waiting_tasks: No nodes to schedule waiting tasks on!')
 
         fulfilled_nodes = {}  # {Node ID: SchedulingNode}
         waiting_tasks = []
@@ -871,17 +752,10 @@ class SchedulingManager(object):
         for node in nodes.values():
             has_waiting_tasks = node.accept_node_tasks(when, waiting_tasks)
             if node.is_ready_for_next_job_task and not has_waiting_tasks:
-                logger.warning('schedule_waiting_tasks: Node %s is ready for next task', node.hostname)
                 # A node can only be fulfilled if it is able to run waiting tasks and it has no more waiting tasks
                 fulfilled_nodes[node.node_id] = node
-            elif not node.is_ready_for_next_job_task:
-                logger.warning('schedule_waiting_tasks: Node %s is not ready for next task', node.hostname)
-            elif has_waiting_tasks:
-                logger.warning('schedule_waiting_tasks: Node %s has waiting tasks', node.hostname)
 
         # Schedule job executions already on the node waiting for their next task
-        if running_job_exes:
-            logger.warning('schedule_waiting_tasks: There are %d running job exes to schedule on nodes', len(running_job_exes))
         node_lost_job_exes_ids = []
         for running_job_exe in running_job_exes:
             if running_job_exe.node_id not in nodes:  # Unknown/lost node
@@ -922,7 +796,5 @@ class SchedulingManager(object):
                     agent_shortages[task.agent_id] = resources
         self._waiting_tasks = new_waiting_tasks
         resource_mgr.set_agent_shortages(agent_shortages)
-
-        logger.warning('schedule_waiting_tasks: There are now %d waiting tasks to be scheduled', len(self._waiting_tasks))
 
         return fulfilled_nodes

@@ -237,13 +237,10 @@ class QueueManager(models.Manager):
             query = query.exclude(job_type_id__in=ignore_job_type_ids)
 
         if order_mode == QUEUE_ORDER_FIFO:
-            logger.warning('Queue order is FIFO')
-            return query.order_by('queued', 'priority')
+            return query.order_by('priority', 'queued')
         elif order_mode == QUEUE_ORDER_LIFO:
-            logger.warning('Queue order is LIFO')
-            return query.order_by( '-queued', 'priority')
+            return query.order_by('priority', '-queued')
 
-        logger.warning('Returning by priority only')
         return query.order_by('priority')
 
     def get_queue_status(self):
