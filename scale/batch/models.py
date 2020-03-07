@@ -732,7 +732,6 @@ class BatchMetricsManager(models.Manager):
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(batch_ids)])
 
-        # import pdb; pdb.set_trace()
 
 class BatchMetrics(models.Model):
     """Contains a set of metrics for a given job name ("node" within a recipe graph) for a given batch

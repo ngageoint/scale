@@ -126,9 +126,11 @@ class ProcessJobInput(CommandMessage):
         # need to add connections somehow inserted in definition for each individual file output from fork job
         if node_name:
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs, self._get_optional_outputs(nodes))
-            if len(input_data) != 1:
-                raise InvalidData('FORKING_ERROR', 'Expected one data object, received %d' % len(input_data))
-            Job.objects.set_job_input_data_v6(job, input_data[0])
+            jobs = nodes[node_name]
+            if len(input_data) != len(jobs):
+                raise InvalidData('FORKING_ERROR', 'Recieved % sets of data for % jobs' % (len(input_data), len(jobs)))
+            for r in range(jobs):
+                Job.objects.set_job_input_data_v6(jobs[r], input_data[r])
 
     def _get_optional_outputs(self, nodes):
         """get list of optional outputs within the recipe

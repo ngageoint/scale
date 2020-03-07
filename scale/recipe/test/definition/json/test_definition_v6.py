@@ -143,7 +143,6 @@ class TestRecipeDefinitionV6(TestCase):
         self.assertSetEqual(set(definition.input_interface.parameters.keys()), {'foo', 'bar'})
         self.assertSetEqual(set(definition.graph.keys()), {'node_a', 'node_b', 'node_c', 'node_d', 'node_e'})
 
-#TODO: Add fork_input and test that it validates
     def test_init_validation(self):
         """Tests the validation done in __init__"""
 
@@ -164,6 +163,57 @@ class TestRecipeDefinitionV6(TestCase):
                                             'node_type': {'node_type': 'job', 'job_type_name': 'job-type-1',
                                                           'job_type_version': '1.0', 'job_type_revision': 1}},
                                  'node_b': {'dependencies': [{'name': 'node_a'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_a',
+                                                                  'output': 'output_a'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-2',
+                                                          'job_type_version': '2.0', 'job_type_revision': 1}},
+                                 'node_c': {'dependencies': [{'name': 'node_b'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_b',
+                                                                  'output': 'output_a'}},
+                                            'node_type': { 'node_type': 'condition',
+                                                           'interface': {'files': [{'name': 'input_b',
+                                                                                    'media_types': ['image/tiff'],
+                                                                                    'required': True,
+                                                                                    'multiple': True}],
+                                                                         'json': []},
+                                                           'data_filter': {'filters': [{'name': 'output_a',
+                                                                                        'type': 'media-type',
+                                                                                        'condition': '==',
+                                                                                        'values': ['image/tiff']}]}}},
+                                 'node_d': {'dependencies': [{'name': 'node_c'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_c',
+                                                                  'output': 'output_a'}},
+                                            'node_type': {'node_type': 'recipe', 'recipe_type_name': 'recipe-type-1',
+                                                          'recipe_type_revision': 5}}}}
+
+        try:
+            RecipeDefinitionV6(definition=def_v6_dict, do_validate=True)
+        except InvalidDefinition:
+            self.fail('Recipe definition failed validation unexpectedly')
+
+    def test_init_validation_fork(self):
+        """Tests the validation done in __init__ with fork_input"""
+
+        # Try minimal acceptable configuration
+        RecipeDefinitionV6(do_validate=True)
+
+        # Invalid version
+        definition = {'version': 'BAD'}
+        self.assertRaises(InvalidDefinition, RecipeDefinitionV6, definition, True)
+
+        # Valid v6 definition
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'foo', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-1',
+                                                          'job_type_version': '1.0', 'job_type_revision': 1}},
+                                 'node_b': {'dependencies': [{'name': 'node_a', 'fork_input': 'input_b'}],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'foo'},
                                                       'input_b': {'type': 'dependency', 'node': 'node_a',
                                                                   'output': 'output_a'}},

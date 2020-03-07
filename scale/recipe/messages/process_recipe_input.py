@@ -115,6 +115,7 @@ class ProcessRecipeInput(CommandMessage):
 
         # Get sub-recipe input from dependencies in the recipe
         recipe_input_data = sub_recipe.recipe.get_input_data()
+        nodes = RecipeNode.objects.get_subrecipes(sub_recipe.recipe_id)
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
         node_name = None
         for node_output in node_outputs.values():
@@ -125,4 +126,8 @@ class ProcessRecipeInput(CommandMessage):
         definition = sub_recipe.recipe.recipe_type_rev.get_definition()
         if node_name:
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-            Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
+            subs = nodes[node_name]
+            if len(input_data) != len(subs):
+                raise InvalidData('FORKING_ERROR', 'Recieved % sets of data for % sub recipes' % (len(input_data), len(subs)))
+            for r in range(subs):
+                Recipe.objects.set_recipe_input_data_v6(subs[r], input_data[r])

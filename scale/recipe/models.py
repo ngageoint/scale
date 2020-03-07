@@ -69,7 +69,7 @@ class RecipeManager(models.Manager):
         qry.update(is_completed=True, completed=when, last_modified=now())
 
     def create_recipe_v6(self, recipe_type_rev, event_id=None, ingest_id=None, input_data=None, root_recipe_id=None, recipe_id=None,
-                         recipe_config=None, batch_id=None, superseded_recipe=None, copy_superseded_input=False):
+                         recipe_config=None, batch_id=None, superseded_recipe=None, copy_superseded_input=False, recipe_node_id=None):
         """Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model
 
         :param recipe_type_rev: The recipe type revision (with populated recipe_type model) of the recipe to create
@@ -92,6 +92,8 @@ class RecipeManager(models.Manager):
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :param copy_superseded_input: Whether to copy the input data from the superseded recipe
         :type copy_superseded_input: bool
+        :param recipe_node_id: The ID of the recipe node this recipe is attached to, possibly None
+        :type recipe_node_id: int
         :returns: The new recipe model
         :rtype: :class:`recipe.models.Recipe`
 
@@ -109,6 +111,7 @@ class RecipeManager(models.Manager):
         recipe.ingest_event_id = ingest_id
         recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         recipe.recipe_id = recipe_id
+        recipe.recipe_node_id = recipe_node_id
         recipe.batch_id = batch_id
 
         if recipe_config:
@@ -505,7 +508,7 @@ class RecipeManager(models.Manager):
         qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
         qry += 'sub_recipes_total = s.sub_recipes_total, sub_recipes_completed = s.sub_recipes_completed, '
         qry += 'last_modified = %s FROM ('
-        qry += 'SELECT r.id, COUNT(j.id) + COALESCE(SUM(r.jobs_total), 0) AS jobs_total, '
+        qry += 'SELECT rn.recipe_id, COUNT(j.id) + COALESCE(SUM(r.jobs_total), 0) AS jobs_total, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') + COALESCE(SUM(r.jobs_pending), 0) AS jobs_pending, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') + COALESCE(SUM(r.jobs_blocked), 0) AS jobs_blocked, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') + COALESCE(SUM(r.jobs_queued), 0) AS jobs_queued, '
@@ -518,8 +521,8 @@ class RecipeManager(models.Manager):
         qry += 'COUNT(r.id) FILTER(WHERE r.is_completed) '
         qry += '+ COALESCE(SUM(r.sub_recipes_completed), 0) AS sub_recipes_completed '
         qry += 'FROM recipe_node rn LEFT OUTER JOIN job j ON rn.id = j.recipe_node_id '
-        qry += 'LEFT OUTER JOIN recipe r ON rn.id = r.recipe_node_id WHERE r.id IN %s GROUP BY r.id) s '
-        qry += 'WHERE r.id = s.id'
+        qry += 'LEFT OUTER JOIN recipe r ON rn.id = r.recipe_node_id WHERE rn.recipe_id IN %s GROUP BY rn.recipe_id) s '
+        qry += 'WHERE r.id = s.recipe_id'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(recipe_ids)])
 
@@ -791,7 +794,6 @@ class RecipeConditionManager(models.Manager):
 
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
-        # import pdb; pdb.set_trace()
         recipe_definition = condition.recipe.get_definition()
         condition_interface = recipe_definition.graph[node_name].input_interface
         for d in data:
@@ -1030,7 +1032,6 @@ class RecipeNodeManager(models.Manager):
         :returns: The list of recipe_node models
         :rtype: list
         """
-        # import pdb; pdb.set_trace()
 
         node_models = []
 
@@ -1054,8 +1055,8 @@ class RecipeNodeManager(models.Manager):
         rn_qry = self.filter(recipe_id=recipe_id)
         for rn in rn_qry:
             try:
-                job = Job.objects.get(recipe_node=rn)
-                nodes[rn.node_name] = job
+                jobs = Job.objects.get(recipe_node=rn)
+                nodes[rn.node_name] = jobs
             except Job.DoesNotExist:
                 pass
         return nodes

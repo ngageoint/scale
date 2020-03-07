@@ -330,7 +330,6 @@ class TestCreateRecipes(TestCase):
         self.assertTrue(result)
 
         # Check for new sub-recipes
-        # import pdb; pdb.set_trace()
         sub_ids = Recipe.objects.filter(id=top_recipe.id).values_list('sub_recipes', flat=True)
         recipes = Recipe.objects.filter(id__in=sub_ids).order_by('recipe_node__node_name')
         # sub_ids = Recipe.objects.select_related('sub_recipes').filter(id=top_recipe.id).values_list('sub_recipes', flat=True)

@@ -147,17 +147,17 @@ class TestRecipePopulateJobs(TransactionTestCase):
         django.setup()
         # self.recipe_type = recipe_test_utils.create_recipe_type_v6(definition=recipe_test_utils.RECIPE_DEFINITION)
         self.recipe = recipe_test_utils.create_recipe()
-        job_type_1 = job_test_utils.create_seed_job_type()
-        job_1 = job_test_utils.create_job(job_type=job_type_1)
-        job_type_2 = job_test_utils.create_seed_job_type()
-        job_2 = job_test_utils.create_job(job_type=job_type_2)
-        job_type_3 = job_test_utils.create_seed_job_type()
-        job_3 = job_test_utils.create_job(job_type=job_type_3)
-
-        self.recipe_node1 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-1', job=job_1)
-        self.recipe_node2 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-2', job=job_2)
-        self.recipe_node3 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-3', job=job_3)
+        self.recipe_node1 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-1')
+        self.recipe_node2 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-2')
+        self.recipe_node3 = recipe_test_utils.create_recipe_node(recipe=self.recipe, node_name='job-3')
         RecipeNode.objects.bulk_create([self.recipe_node1, self.recipe_node2, self.recipe_node3])
+
+        job_type_1 = job_test_utils.create_seed_job_type()
+        job_type_2 = job_test_utils.create_seed_job_type()
+        job_type_3 = job_test_utils.create_seed_job_type()
+        job_1 = job_test_utils.create_job(job_type=job_type_1, recipe=self.recipe, recipe_node=self.recipe_node1)
+        job_2 = job_test_utils.create_job(job_type=job_type_2, recipe=self.recipe, recipe_node=self.recipe_node2)
+        job_3 = job_test_utils.create_job(job_type=job_type_3, recipe=self.recipe, recipe_node=self.recipe_node3)
 
     def test_successful(self):
         """Tests nodes are associated with the recipe successfully?"""

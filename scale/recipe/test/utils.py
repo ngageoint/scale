@@ -214,6 +214,7 @@ def generate_input_data_from_recipe(sub_recipe):
 
     # Get sub-recipe input from dependencies in the recipe
     recipe_input_data = sub_recipe.recipe.get_input_data()
+    nodes = RecipeNode.objects.get_subrecipes(sub_recipe.recipe_id)
     node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
     node_name = None
     for node_output in node_outputs.values():
@@ -227,7 +228,12 @@ def generate_input_data_from_recipe(sub_recipe):
     definition = sub_recipe.recipe.recipe_type_rev.get_definition()
     if node_name:
         input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-        Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
+        subs = nodes[node_name]
+        if len(input_data) != len(subs):
+            raise InvalidData('FORKING_ERROR',
+                              'Recieved % sets of data for % sub recipes' % (len(input_data), len(subs)))
+        for r in range(subs):
+            Recipe.objects.set_recipe_input_data_v6(subs[r], input_data[r])
 
 def update_recipe(root_recipe_id):
     """Mimics effect of update recipe messages for unit testing """
@@ -380,7 +386,7 @@ def process_conditions(process_input_condition_ids):
 
 def create_jobs_for_recipe(recipe_model, recipe_jobs):
     """Mimics effect of create_jobs_messages_for_recipe for unit testing"""
-    recipe_jobs_map = {}  # {Node name: job model}
+    recipe_jobs_to_create = []
 
     superseded_jobs = {}
     # Get superseded jobs from superseded recipe
@@ -400,7 +406,6 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
         recipe_node.node_name = node_name
         recipe_node.save()
 
-        # process_input_by_node[node_name] = recipe_job.process_input
         tup = (recipe_job.job_type_name, recipe_job.job_type_version, recipe_job.job_type_rev_num)
         revision = revs_by_tuple[tup]
 
@@ -415,11 +420,14 @@ def create_jobs_for_recipe(recipe_model, recipe_jobs):
                                         recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
                                         superseded_job=superseded_job, job_config=job_config,
                                         recipe_node_id=recipe_node.id, input_data=data)
-            recipe_jobs_map[node_name] = job
+            recipe_jobs_to_create.append(job)
 
-    Job.objects.bulk_create(recipe_jobs_map.values())
+    Job.objects.bulk_create(recipe_jobs_to_create)
+    job_ids = {job.id for job in recipe_jobs_to_create}
 
-    # update_recipe_metrics([recipe_model.id])
+    process_job_inputs(job_ids)
+
+    update_recipe_metrics([recipe_model.id])
 
 def process_job_inputs(process_input_job_ids):
     """Mimics effect of create_process_job_input_messages for unit testing"""
@@ -523,7 +531,7 @@ def update_recipe_metrics(recipe_ids=[], job_ids=None):
     # If any of these recipes are sub-recipes, grab root recipe IDs and update those recipes
     root_recipe_ids = set()
     for recipe in Recipe.objects.filter(id__in=recipe_ids):
-        if recipe.root_recipe_id:
+        if recipe.root_recipe_id and recipe.root_recipe_id not in recipe_ids:
             root_recipe_ids.add(recipe.root_recipe_id)
     if root_recipe_ids:
         for root_recipe_id in root_recipe_ids:
@@ -541,7 +549,7 @@ def update_recipe_metrics(recipe_ids=[], job_ids=None):
 def create_subrecipes(recipe_model, subrecipes):
     """Mimics effect of create_subrecipes_messages for unit testing"""
 
-    sub_recipes_map = {}  # {Node name: recipe model}
+    sub_recipes_to_create = []
 
     superseded_sub_recipes = {}
     revision_ids = []
@@ -559,26 +567,24 @@ def create_subrecipes(recipe_model, subrecipes):
     process_input_by_node = {}
     for sub_recipe in subrecipes:
         node_name = sub_recipe.node_name
-        process_input_by_node[node_name] = sub_recipe.process_input
+        recipe_node = RecipeNode()
+        recipe_node.recipe_id = recipe_model.id
+        recipe_node.node_name = node_name
+        recipe_node.save()
         revision = revs_by_tuple[(sub_recipe.recipe_type_name, sub_recipe.recipe_type_rev_num)]
         superseded_recipe = superseded_sub_recipes[node_name] if node_name in superseded_sub_recipes else None
-        recipe = Recipe.objects.create_recipe_v6(revision, recipe_model.event_id, root_recipe_id=recipe_model.root_recipe_id,
-                                                 recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
-                                                 superseded_recipe=superseded_recipe)
-        sub_recipes_map[node_name] = recipe
+        recipe_input_data = recipe_model.get_input_data()
+        node_outputs = RecipeNode.objects.get_recipe_node_outputs(recipe_model.id)
+        input_data = recipe_model.get_definition().generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        for data in input_data:
+            recipe = Recipe.objects.create_recipe_v6(revision, recipe_model.event_id,
+                                                     root_recipe_id=recipe_model.root_recipe_id,
+                                                     recipe_id=recipe_model.id, batch_id=recipe_model.batch_id,
+                                                     superseded_recipe=superseded_recipe, recipe_node_id=recipe_node.id,
+                                                     input_data=data)
+            sub_recipes_to_create.append(recipe)
 
-    Recipe.objects.bulk_create(sub_recipes_map.values())
-
-    # Create recipe nodes
-    recipe_nodes = RecipeNode.objects.create_subrecipe_nodes(recipe_model.id, sub_recipes_map)
-    RecipeNode.objects.bulk_create(recipe_nodes)
-
-    # Set up process input dict
-    process_input_sub_ids = []
-    for sub_recipe in subrecipes:
-        recipe = sub_recipes_map[sub_recipe.node_name]
-        if sub_recipe.process_input:
-            process_input_sub_ids.append(recipe.id)
+    Recipe.objects.bulk_create(sub_recipes_to_create)
 
     # Set up recipe diffs
     # Uncomment and implement if needed to test superseding recipes
@@ -596,7 +602,6 @@ def create_subrecipes(recipe_model, subrecipes):
                     diff.set_force_reprocess(sub_forced_nodes)
             self._recipe_diffs.append(_RecipeDiff(diff, [pair]))"""
 
-    process_recipe_inputs(process_input_sub_ids)
     update_recipe_metrics([recipe_model.id])
 
 def create_recipe_condition(root_recipe=None, recipe=None, batch=None, is_processed=None, is_accepted=None, save=False):
@@ -695,9 +700,6 @@ def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, su
 
     if not node_name:
         node_name = 'Test Node Name'
-
-    if not job and not sub_recipe:
-        job = job_test_utils.create_job()
 
     recipe_node = RecipeNode()
     recipe_node.recipe = recipe

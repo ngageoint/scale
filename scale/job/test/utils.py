@@ -211,7 +211,8 @@ def create_clock_event(rule=None, occurred=None):
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None, node=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None, job_config=None,
-               superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, recipe=None, save=True):
+               superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, recipe=None, recipe_node=None,
+               save=True):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -234,12 +235,13 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
 
     recipe_id = recipe.id if recipe else None
     root_recipe_id = recipe.root_superseded_recipe_id if recipe else None
+    recipe_node_id = recipe_node.id if recipe_node else None
 
     job_config = JobConfigurationV6(job_config).get_configuration() if job_config else None
 
     job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
     job = Job.objects.create_job_v6(job_type_rev, event_id=event.id, superseded_job=superseded_job, recipe_id=recipe_id,
-                                    root_recipe_id=root_recipe_id, job_config=job_config)
+                                    root_recipe_id=root_recipe_id, job_config=job_config, recipe_node_id=recipe_node_id)
     job.priority = priority
     job.input = input
     job.status = status
