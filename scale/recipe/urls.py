@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^recipe-types/(?P<name>[\w.-]+)/revisions/$', recipe.views.RecipeTypeRevisionsView.as_view(), name='recipe_type_revisions_view'),
     url(r'^recipe-types/(?P<name>[\w.-]+)/revisions/(?P<revision_num>\d+)/$', recipe.views.RecipeTypeRevisionDetailsView.as_view(), name='recipe_type_revision_details_view'),
 
+    # Gantt Chart
+    url(r'^recipe-types/timeline/$', recipe.views.RecipeTypeTimelineView.as_view(), name='recipe_type_timeline_view'),
 
     # Recipe views
     url(r'^recipes/$', recipe.views.RecipesView.as_view(), name='recipes_view'),

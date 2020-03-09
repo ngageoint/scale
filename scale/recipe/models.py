@@ -1537,6 +1537,100 @@ class RecipeTypeManager(models.Manager):
 
         return input, output
 
+    def get_timeline_recipes(self, started=None, ended=None, type_ids=None, type_names=None):
+        """Returns the timeline recipe type information
+
+        :param started:
+        :type started:
+        :param ended:
+        :type ended:
+        :param type_ids:
+        :type type_ids:
+        :param type_names:
+        :type type_names:
+        :returns:
+        :rtype:
+        """
+
+        """
+        select distinct j.started::date as started, rt.name, rtr.revision_num, rt.title
+        from public.job j
+            join public.recipe re on re.id = j.recipe_id
+            join public.recipe_type rt on rt.id = re.recipe_type_id
+            join public.recipe_type_revision rtr on rtr.id = re.recipe_type_rev_id
+        where j.recipe_id in (
+            select r.id
+            from public.recipe r
+            where r.recipe_type_rev_id in (
+                select rtr.id
+                from public.recipe_type_revision rtr
+                where rtr.recipe_type_id = r.recipe_type_id
+            )
+        )
+        group by started, rt.name, rtr.revision_num, rt.title
+        """
+        # get recipe ids for all recipe types  filters
+
+        the_recipes = Recipe.objects.all()
+        if type_names:
+            the_recipes = the_recipes.filter(recipe_type__name__in=type_names)
+        elif type_ids:
+            the_recipes = the_recipes.filter(recipe_type__id__in=type_ids)
+
+        # get the ids of all these recipes
+        the_recipe_ids = the_recipes.values_list('id', flat=True)
+
+        # get all the jobs for these recipes:
+        the_jobs = Job.objects.filter(recipe_id__in=the_recipe_ids).select_related('recipe__recipe_type',
+                                                                                   'recipe__recipe_type_rev')
+        the_jobs = the_jobs.distinct('recipe')
+
+        if started:
+            the_jobs = the_jobs.filter(started__gte=started)
+        if ended:
+            the_jobs = the_jobs.filter(ended__lte=ended)
+
+        results = {}
+        for job in the_jobs:
+            recipe_type_id = job.recipe_type.id
+            recipe_type_rev = job.recipe_type_rev.revision_num
+
+            key = recipe_type_id + '-' + recipe_type_rev
+
+            if key not in results:
+                the_job = {
+                    'recipe_type_id': job.recipe.recipe_type.id,
+                    'name': job.recipe.recipe_type.name,
+                    'revision_num': job.recipe.recipe_type_rev.revision_num,
+                    'results': [
+                        {'date': job.started}
+                    ]
+                }
+
+
+
+        # if type_names:
+        #     type_ids = RecipeType.objects.get(name__in=type_names).values_list('id', flat=True)
+        #
+        # query = 'SELECT DISTINCT j.started::date AS started, rt.name, rt.title, rtr.revision_num '
+        # query += 'FROM job j JOIN recipe re on re.id = j.recipe_id JOIN recipe_type rt on rt.id = re.recipe_type_id '
+        # query += 'JOIN recipe_type_revision rtr on rtr.id = re.recipe_type_rev_id '
+        # query += 'WHERE j.recipe_id in ('
+        # query += 'SELECT r.id FROM recipe r WHERE r.recipe_type_rev_id in ('
+        # query += 'SELECT rtr.id FROM recipe_type_revision rtr WHERE rtr.recipe_type_id = r.recipe_type_id)'
+        # if type_ids:
+        #     query += ' AND r.recipe_type_id in (SELECT r_type.id FROM recipe_type r_type WHERE r_type.name in %s'
+        # query += ')'
+        # if started
+        # query += 'GROUP BY started, rt.name, rtr.revision_num, rt.title'
+        #
+        # with connection.cursor() as cursor:
+        #     cursor.execute(query, [type_names])
+        #     rows = cursor.fetchall()
+
+
+        Recipe.objects.filter()
+
 
 class RecipeType(models.Model):
     """Represents a type of recipe that can be run on the cluster. Any updates to a recipe type model requires obtaining
