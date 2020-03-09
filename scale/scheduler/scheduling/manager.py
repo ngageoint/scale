@@ -91,16 +91,8 @@ class SchedulingManager(object):
         running_job_exes = job_exe_mgr.get_running_job_exes()
         workspaces = workspace_mgr.get_workspaces()
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
-        if not nodes:
-            logger.warning('No nodes came back from prepare nodes!')
-        else:
-            logger.warning('%d nodes prepared for scheduling', len(nodes))
 
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
-        if not fulfilled_nodes:
-            logger.warning('No fulfilled nodes from scheduling waiting tasks!')
-        else:
-            logger.warning('%d fulfilled nodes from scheduling waiting tasks', len(fulfilled_nodes))
 
         sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes, job_type_resources, when)
 
@@ -346,7 +338,6 @@ class SchedulingManager(object):
         """
 
         scheduled_job_executions = []
-        scheduled_job_execution_ids = []
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
@@ -375,10 +366,10 @@ class SchedulingManager(object):
                 for resource in job_exe.required_resources.resources:
                     # skip sharedmem
                     if resource.name.lower() == 'sharedmem':
-                        logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
+                        logger.debug('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
                         continue
                     if resource.name not in max_cluster_resources._resources:
-                        logger.warning(
+                        logger.debug(
                             'Job type %s could not be scheduled as resource %s does not exist in the available cluster resources',
                             jt.name, resource.name)
                         # resource does not exist in cluster
@@ -399,7 +390,6 @@ class SchedulingManager(object):
                     invalid_resources.extend(insufficient_resources)
                     jt.unmet_resources = ','.join(invalid_resources)
                     jt.save(update_fields=["unmet_resources"])
-                    logger.warning('Job type %s has unmet resources', jt.name)
                     continue
                 else:
                     # reset unmet_resources flag
@@ -425,7 +415,7 @@ class SchedulingManager(object):
 
                 # Check limit for this execution's job type
                 if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
-                    logger.warning('Scheduling limit for job type %s has been reached', jt.name)
+                    logger.debug('Scheduling limit for job type %s has been reached', jt.name)
                     continue
 
                 # Try to schedule job execution and adjust job type limit if needed
@@ -651,9 +641,7 @@ class SchedulingManager(object):
         waiting_tasks = 0
         waiting_resources = NodeResources()
 
-        tasks = []
         for task in system_task_mgr.get_tasks_to_schedule(when):
-            tasks.append(task.title)
             task_scheduled = False
             best_scheduling_node = None
             best_scheduling_score = None
