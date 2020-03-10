@@ -2081,3 +2081,88 @@ class TestRecipeInputFilesViewV6(APITestCase):
         self.assertEqual(len(results), 2)
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+
+class TestRecipeTypeTimelineViewV6(APITestCase):
+
+    def setUp(self):
+        django.setup()
+
+        rest.login_client(self.client, is_staff=True)
+
+        # create a couple job types
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'test-job-1'
+        manifest['inputs'] = {'files': [{'name': 'INPUT_FILE', 'required': True, 'mediaTypes': ['image/png'], 'partial': False}]}
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'test-job-2'
+        manifest['inputs'] = {'files': [{'name': 'INPUT_FILE', 'required': True, 'mediaTypes': ['image/png'], 'partial': False}]}
+        job_type_2 = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        # create recipe types
+        recipe_def = {
+            'version': '7',
+            'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/png'], 'required': True,
+                                 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                    'node_type': {'node_type': 'job', 'job_type_name': job_type_1.name,
+                                  'job_type_version': job_type_1.version,
+                                  'job_type_revision': job_type_1.revision_num}
+                }
+            }
+        }
+        recipe_type_1 = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+
+        recipe_def = {
+            'version': '7',
+            'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/png'], 'required': True,
+                                 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                    'node_type': {'node_type': 'job', 'job_type_name': job_type_2.name,
+                                  'job_type_version': job_type_2.version,
+                                  'job_type_revision': job_type_2.revision_num}
+                }
+            }
+        }
+        recipe_type_2 = recipe_test_utils.create_recipe_type_v6(definition=recipe_def)
+
+        # create recipes & jobs
+        self.workspace = storage_test_utils.create_workspace()
+        for i in range(1, 7):
+            date_1 = datetime.datetime(2020, 1, i, tzinfo=utc)
+            date_2 = datetime.datetime(2020, 1, i+1, tzinfo=utc)
+            file_1 = storage_test_utils.create_file(workspace=self.workspace, file_size=104857600.0,
+                                                    source_started=date_1, source_ended=date_2)
+
+            input_data = {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'INPUT_FILE',
+                    'file_id': file_1.id
+                }]
+            }
+            recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_1, input=input_data)
+            job_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED', started=date_1, ended=date_1)
+            job_1.recipe_id = recipe_1.id
+            job_1.save()
+            # recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1)
+            recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2, input=input_data)
+            job_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED', started=date_2, ended=date_2)
+            job_2.recipe_id = recipe_2.id
+            job_2.save()
+            # recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2)
+
+    def test_get_timeline_recipes(self):
+        started = datetime.datetime(2020, 1, 1, tzinfo=utc)
+        ended = datetime.datetime(2020, 2, 1, tzinfo=utc)
+        results = RecipeType.objects.get_timeline_recipes_json(started=started, ended=ended)
+        self.assertEqual(1, 1)

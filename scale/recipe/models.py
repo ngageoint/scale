@@ -1537,13 +1537,13 @@ class RecipeTypeManager(models.Manager):
 
         return input, output
 
-    def get_timeline_recipes(self, started=None, ended=None, type_ids=None, type_names=None):
+    def get_timeline_recipes_json(self, started=None, ended=None, type_ids=None, type_names=None):
         """Returns the timeline recipe type information
 
         :param started:
-        :type started:
+        :type started: :class:`datetime.datetime`
         :param ended:
-        :type ended:
+        :type ended: :class:`datetime.datetime`
         :param type_ids:
         :type type_ids:
         :param type_names:
@@ -1552,84 +1552,57 @@ class RecipeTypeManager(models.Manager):
         :rtype:
         """
 
-        """
-        select distinct j.started::date as started, rt.name, rtr.revision_num, rt.title
-        from public.job j
-            join public.recipe re on re.id = j.recipe_id
-            join public.recipe_type rt on rt.id = re.recipe_type_id
-            join public.recipe_type_revision rtr on rtr.id = re.recipe_type_rev_id
-        where j.recipe_id in (
-            select r.id
-            from public.recipe r
-            where r.recipe_type_rev_id in (
-                select rtr.id
-                from public.recipe_type_revision rtr
-                where rtr.recipe_type_id = r.recipe_type_id
-            )
-        )
-        group by started, rt.name, rtr.revision_num, rt.title
-        """
-        # get recipe ids for all recipe types  filters
+        days_ago_started = (now() - started).days
+        days_ago_ended = (now() - ended).days
 
-        the_recipes = Recipe.objects.all()
-        if type_names:
-            the_recipes = the_recipes.filter(recipe_type__name__in=type_names)
-        elif type_ids:
-            the_recipes = the_recipes.filter(recipe_type__id__in=type_ids)
-
-        # get the ids of all these recipes
-        the_recipe_ids = the_recipes.values_list('id', flat=True)
-
-        # get all the jobs for these recipes:
-        the_jobs = Job.objects.filter(recipe_id__in=the_recipe_ids).select_related('recipe__recipe_type',
-                                                                                   'recipe__recipe_type_rev')
-        the_jobs = the_jobs.distinct('recipe')
-
-        if started:
-            the_jobs = the_jobs.filter(started__gte=started)
-        if ended:
-            the_jobs = the_jobs.filter(ended__lte=ended)
+        qry = "WITH day_periods AS "
+        qry += "(SELECT (date_trunc('day', Now()) - ((days_ago - 2) * INTERVAL '1 day')) AS end_time, "
+        qry += "(date_trunc('day', Now()) - ((days_ago - 1) * INTERVAL '1 day')) AS start_time "
+        qry += "FROM generate_series(%s, %s, 1) days_ago) "
+        qry += "SELECT to_char(d.start_time, 'YYYY-MM-DD') AS recipe_date, "
+        qry += "rt.id AS recipe_type_id, "
+        qry += "rt.name AS recipe_type_name, "
+        qry += "rt.title AS recipe_type_title, "
+        qry += "rtr.revision_num AS recipe_type_revision, "
+        qry += "COUNT(*) AS new_recipe_count "
+        qry += "FROM day_periods d "
+        qry += "JOIN job j ON j.started BETWEEN d.start_time AND d.end_time "
+        qry += "JOIN recipe r ON r.id = j.recipe_id "
+        qry += "JOIN recipe_type rt ON rt.ID = r.recipe_type_id "
+        qry += "JOIN recipe_type_revision rtr ON rtr.id = r.recipe_type_rev_id "
+        if type_ids:
+            qry += "WHERE rt.id in %s "
+        elif type_names:
+            qry += "WHERE rt.name in %s "
+        qry += "GROUP BY d.start_time, rt.id, rt.name, rt.title, rtr.revision_num"
 
         results = {}
-        for job in the_jobs:
-            recipe_type_id = job.recipe_type.id
-            recipe_type_rev = job.recipe_type_rev.revision_num
+        with connection.cursor() as cursor:
+            if type_ids:
+                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_ids)])
+            elif type_names:
+                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_names)])
+            else:
+                cursor.execute(qry, [days_ago_ended, days_ago_started])
+            columns = [col[0] for col in cursor.description]
+            the_rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            for row in the_rows:
+                key = '%s-%d' % (row['recipe_type_name'], row['recipe_type_revision'])
+                if key not in results:
+                    results[key] = {
+                        'recipe_type_id': row['recipe_type_id'],
+                        'name': row['recipe_type_name'],
+                        'title': row['recipe_type_title'],
+                        'revision_num': row['recipe_type_revision'],
+                        'results': [{'date': row['recipe_date'],
+                                     'count': row['new_recipe_count']}]
+                    }
+                else:
+                    results_list = results[key]['results']
+                    results_list.append({'date': row['recipe_date'],'count': row['new_recipe_count']})
+                    results[key]['results'] = results_list
 
-            key = recipe_type_id + '-' + recipe_type_rev
-
-            if key not in results:
-                the_job = {
-                    'recipe_type_id': job.recipe.recipe_type.id,
-                    'name': job.recipe.recipe_type.name,
-                    'revision_num': job.recipe.recipe_type_rev.revision_num,
-                    'results': [
-                        {'date': job.started}
-                    ]
-                }
-
-
-
-        # if type_names:
-        #     type_ids = RecipeType.objects.get(name__in=type_names).values_list('id', flat=True)
-        #
-        # query = 'SELECT DISTINCT j.started::date AS started, rt.name, rt.title, rtr.revision_num '
-        # query += 'FROM job j JOIN recipe re on re.id = j.recipe_id JOIN recipe_type rt on rt.id = re.recipe_type_id '
-        # query += 'JOIN recipe_type_revision rtr on rtr.id = re.recipe_type_rev_id '
-        # query += 'WHERE j.recipe_id in ('
-        # query += 'SELECT r.id FROM recipe r WHERE r.recipe_type_rev_id in ('
-        # query += 'SELECT rtr.id FROM recipe_type_revision rtr WHERE rtr.recipe_type_id = r.recipe_type_id)'
-        # if type_ids:
-        #     query += ' AND r.recipe_type_id in (SELECT r_type.id FROM recipe_type r_type WHERE r_type.name in %s'
-        # query += ')'
-        # if started
-        # query += 'GROUP BY started, rt.name, rtr.revision_num, rt.title'
-        #
-        # with connection.cursor() as cursor:
-        #     cursor.execute(query, [type_names])
-        #     rows = cursor.fetchall()
-
-
-        Recipe.objects.filter()
+        return results.values()
 
 
 class RecipeType(models.Model):
