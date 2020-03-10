@@ -1139,10 +1139,16 @@ class TestRecipesViewV6(APITransactionTestCase):
                 self.assertEqual(result['source_sensor'], self.s_sensor)
                 self.assertEqual(result['source_collection'], self.collection)
                 self.assertEqual(result['source_task'], self.task)
-                self.assertEqual(result['jobs_total'], 2)
+                #print 'recipe1 = %d' % self.recipe1.id
+                #from job.models import Job
+                #for j in Job.objects.all():
+                    #print 'recipe %d' % j.recipe.id
+                    #print 'node %d' % j.recipe_node.id
+
+                self.assertEqual(result['jobs_total'], 3)
                 self.assertEqual(result['jobs_pending'], 0)
                 self.assertEqual(result['jobs_blocked'], 0)
-                self.assertEqual(result['jobs_queued'], 1)
+                self.assertEqual(result['jobs_queued'], 2)
                 self.assertEqual(result['jobs_running'], 1)
                 self.assertEqual(result['jobs_failed'], 0)
                 self.assertEqual(result['jobs_completed'], 0)

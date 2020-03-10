@@ -22,17 +22,17 @@ class TestUpdateRecipes(TestCase):
         """Tests coverting a UpdateRecipeMetrics message to and from JSON"""
 
         recipe = recipe_test_utils.create_recipe()
-        job_1 = job_test_utils.create_job(status='FAILED')
-        job_2 = job_test_utils.create_job(status='CANCELED')
-        job_3 = job_test_utils.create_job(status='BLOCKED')
-        job_4 = job_test_utils.create_job(status='BLOCKED')
-        job_5 = job_test_utils.create_job(status='COMPLETED')
-        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_1)
-        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_2)
-        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_3)
-        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_4)
-        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_5)
+        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=recipe)
+        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe)
+        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe)
+        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe)
+        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe)
         RecipeNode.objects.bulk_create([recipe_node_1, recipe_node_2, recipe_node_3, recipe_node_4, recipe_node_5])
+        job_1 = job_test_utils.create_job(status='FAILED', recipe_node=recipe_node_1, recipe=recipe)
+        job_2 = job_test_utils.create_job(status='CANCELED', recipe_node=recipe_node_2, recipe=recipe)
+        job_3 = job_test_utils.create_job(status='BLOCKED', recipe_node=recipe_node_3, recipe=recipe)
+        job_4 = job_test_utils.create_job(status='BLOCKED', recipe_node=recipe_node_4, recipe=recipe)
+        job_5 = job_test_utils.create_job(status='COMPLETED', recipe_node=recipe_node_5, recipe=recipe)
 
         # Add recipe to message
         message = UpdateRecipeMetrics()
@@ -59,40 +59,41 @@ class TestUpdateRecipes(TestCase):
         """Tests calling UpdateRecipeMetrics.execute() successfully"""
 
         recipe_1 = recipe_test_utils.create_recipe()
-        job_1 = job_test_utils.create_job(status='FAILED')
-        job_2 = job_test_utils.create_job(status='CANCELED')
-        job_3 = job_test_utils.create_job(status='BLOCKED')
-        job_4 = job_test_utils.create_job(status='BLOCKED')
-        job_5 = job_test_utils.create_job(status='COMPLETED')
-        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_1)
-        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_2)
-        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_3)
-        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_4)
-        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_5)
+        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
         RecipeNode.objects.bulk_create([recipe_node_1, recipe_node_2, recipe_node_3, recipe_node_4, recipe_node_5])
+        job_1 = job_test_utils.create_job(status='FAILED', recipe_node=recipe_node_1, recipe=recipe_1)
+        job_2 = job_test_utils.create_job(status='CANCELED', recipe_node=recipe_node_2, recipe=recipe_1)
+        job_3 = job_test_utils.create_job(status='BLOCKED', recipe_node=recipe_node_3, recipe=recipe_1)
+        job_4 = job_test_utils.create_job(status='BLOCKED', recipe_node=recipe_node_4, recipe=recipe_1)
+        job_5 = job_test_utils.create_job(status='COMPLETED', recipe_node=recipe_node_5, recipe=recipe_1)
 
         batch = batch_test_utils.create_batch()
         recipe_2 = recipe_test_utils.create_recipe(batch=batch)
-        job_6 = job_test_utils.create_job(status='COMPLETED')
-        job_7 = job_test_utils.create_job(status='COMPLETED')
-        job_8 = job_test_utils.create_job(status='RUNNING')
-        job_9 = job_test_utils.create_job(status='QUEUED')
-        job_10 = job_test_utils.create_job(status='PENDING')
-        job_11 = job_test_utils.create_job(status='PENDING')
-        job_12 = job_test_utils.create_job(status='PENDING')
-        job_13 = job_test_utils.create_job(status='CANCELED')
-        job_14 = job_test_utils.create_job(status='BLOCKED')
-        recipe_node_6 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_6)
-        recipe_node_7 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_7)
-        recipe_node_8 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_8)
-        recipe_node_9 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_9)
-        recipe_node_10 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_10)
-        recipe_node_11 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_11)
-        recipe_node_12 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_12)
-        recipe_node_13 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_13)
-        recipe_node_14 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_14)
+        recipe_node_6 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_7 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_8 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_9 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_10 = recipe_test_utils.create_recipe_node(recipe=recipe_2,)
+        recipe_node_11 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_12 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_13 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_14 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
         RecipeNode.objects.bulk_create([recipe_node_6, recipe_node_7, recipe_node_8, recipe_node_9, recipe_node_10,
                                         recipe_node_11, recipe_node_12, recipe_node_13, recipe_node_14])
+        job_6 = job_test_utils.create_job(status='COMPLETED', recipe_node=recipe_node_6, recipe=recipe_2)
+        job_7 = job_test_utils.create_job(status='COMPLETED', recipe_node=recipe_node_7, recipe=recipe_2)
+        job_8 = job_test_utils.create_job(status='RUNNING', recipe_node=recipe_node_8, recipe=recipe_2)
+        job_9 = job_test_utils.create_job(status='QUEUED', recipe_node=recipe_node_9, recipe=recipe_2)
+        job_10 = job_test_utils.create_job(status='PENDING', recipe_node=recipe_node_10, recipe=recipe_2)
+        job_11 = job_test_utils.create_job(status='PENDING', recipe_node=recipe_node_11, recipe=recipe_2)
+        job_12 = job_test_utils.create_job(status='PENDING', recipe_node=recipe_node_12, recipe=recipe_2)
+        job_13 = job_test_utils.create_job(status='CANCELED', recipe_node=recipe_node_13, recipe=recipe_2)
+        job_14 = job_test_utils.create_job(status='BLOCKED', recipe_node=recipe_node_14, recipe=recipe_2)
+
 
         # Add recipes to message
         message = UpdateRecipeMetrics()
@@ -169,27 +170,53 @@ class TestUpdateRecipes(TestCase):
         recipe_1 = recipe_test_utils.create_recipe()
         batch = batch_test_utils.create_batch()
         recipe_2 = recipe_test_utils.create_recipe(batch=batch)
+        # Recipe 1 nodes
+        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_6 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        recipe_node_7 = recipe_test_utils.create_recipe_node(recipe=recipe_1)
+        # Recipe 2 nodes
+        recipe_node_8 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_9 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_10 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_11 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_12 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_13 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_14 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_15 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_16 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_17 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_18 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        recipe_node_19 = recipe_test_utils.create_recipe_node(recipe=recipe_2)
+        RecipeNode.objects.bulk_create([recipe_node_1, recipe_node_2, recipe_node_3, recipe_node_4, recipe_node_5,
+                                        recipe_node_6, recipe_node_7, recipe_node_8, recipe_node_9, recipe_node_10,
+                                        recipe_node_11, recipe_node_12, recipe_node_13, recipe_node_14, recipe_node_15,
+                                        recipe_node_16, recipe_node_17, recipe_node_18, recipe_node_19])
+
         # Recipe 1 jobs
-        job_1 = job_test_utils.create_job(status='FAILED', save=False)
-        job_2 = job_test_utils.create_job(status='CANCELED', save=False)
-        job_3 = job_test_utils.create_job(status='BLOCKED', save=False)
-        job_4 = job_test_utils.create_job(status='BLOCKED', save=False)
-        job_5 = job_test_utils.create_job(status='COMPLETED', save=False)
+        job_1 = job_test_utils.create_job(status='FAILED', save=False, recipe_node=recipe_node_1, recipe=recipe_1)
+        job_2 = job_test_utils.create_job(status='CANCELED', save=False, recipe_node=recipe_node_2, recipe=recipe_1)
+        job_3 = job_test_utils.create_job(status='BLOCKED', save=False, recipe_node=recipe_node_3, recipe=recipe_1)
+        job_4 = job_test_utils.create_job(status='BLOCKED', save=False, recipe_node=recipe_node_4, recipe=recipe_1)
+        job_5 = job_test_utils.create_job(status='COMPLETED', save=False, recipe_node=recipe_node_5, recipe=recipe_1)
         # Recipe 2 jobs
-        job_6 = job_test_utils.create_job(status='COMPLETED', save=False)
-        job_7 = job_test_utils.create_job(status='COMPLETED', save=False)
-        job_8 = job_test_utils.create_job(status='RUNNING', save=False)
-        job_9 = job_test_utils.create_job(status='QUEUED', save=False)
-        job_10 = job_test_utils.create_job(status='PENDING', save=False)
-        job_11 = job_test_utils.create_job(status='PENDING', save=False)
-        job_12 = job_test_utils.create_job(status='PENDING', save=False)
-        job_13 = job_test_utils.create_job(status='CANCELED', save=False)
-        job_14 = job_test_utils.create_job(status='BLOCKED', save=False)
+        job_6 = job_test_utils.create_job(status='COMPLETED', save=False, recipe_node=recipe_node_8, recipe=recipe_2)
+        job_7 = job_test_utils.create_job(status='COMPLETED', save=False, recipe_node=recipe_node_9, recipe=recipe_2)
+        job_8 = job_test_utils.create_job(status='RUNNING', save=False, recipe_node=recipe_node_10, recipe=recipe_2)
+        job_9 = job_test_utils.create_job(status='QUEUED', save=False, recipe_node=recipe_node_11, recipe=recipe_2)
+        job_10 = job_test_utils.create_job(status='PENDING', save=False, recipe_node=recipe_node_12, recipe=recipe_2)
+        job_11 = job_test_utils.create_job(status='PENDING', save=False, recipe_node=recipe_node_13, recipe=recipe_2)
+        job_12 = job_test_utils.create_job(status='PENDING', save=False, recipe_node=recipe_node_14, recipe=recipe_2)
+        job_13 = job_test_utils.create_job(status='CANCELED', save=False, recipe_node=recipe_node_15, recipe=recipe_2)
+        job_14 = job_test_utils.create_job(status='BLOCKED', save=False, recipe_node=recipe_node_16, recipe=recipe_2)
         Job.objects.bulk_create([job_1, job_2, job_3, job_4, job_5, job_6, job_7, job_8, job_9, job_10, job_11, job_12,
                                  job_13, job_14])
 
         # Recipe 1 sub-recipes
-        sub_recipe_1 = recipe_test_utils.create_recipe(save=False)
+        sub_recipe_1 = recipe_test_utils.create_recipe(save=False, recipe_node=recipe_node_6, parent_recipe=recipe_1)
         sub_recipe_1.jobs_total = 26
         sub_recipe_1.jobs_pending = 3
         sub_recipe_1.jobs_blocked = 4
@@ -199,12 +226,12 @@ class TestUpdateRecipes(TestCase):
         sub_recipe_1.jobs_completed = 3
         sub_recipe_1.jobs_canceled = 8
         sub_recipe_1.is_completed = False
-        sub_recipe_2 = recipe_test_utils.create_recipe(save=False)
+        sub_recipe_2 = recipe_test_utils.create_recipe(save=False, recipe_node=recipe_node_7, parent_recipe=recipe_1)
         sub_recipe_2.jobs_total = 30
         sub_recipe_2.jobs_completed = 30
         sub_recipe_2.is_completed = True
         # Recipe 2 sub-recipes
-        sub_recipe_3 = recipe_test_utils.create_recipe(save=False)
+        sub_recipe_3 = recipe_test_utils.create_recipe(save=False, recipe_node=recipe_node_17, parent_recipe=recipe_2)
         sub_recipe_3.jobs_total = 21
         sub_recipe_3.jobs_pending = 2
         sub_recipe_3.jobs_blocked = 5
@@ -214,40 +241,16 @@ class TestUpdateRecipes(TestCase):
         sub_recipe_3.jobs_completed = 8
         sub_recipe_3.jobs_canceled = 1
         sub_recipe_3.is_completed = False
-        sub_recipe_4 = recipe_test_utils.create_recipe(save=False)
+        sub_recipe_4 = recipe_test_utils.create_recipe(save=False, recipe_node=recipe_node_18, parent_recipe=recipe_2)
         sub_recipe_4.jobs_total = 7
         sub_recipe_4.jobs_completed = 7
         sub_recipe_4.is_completed = True
-        sub_recipe_5 = recipe_test_utils.create_recipe(save=False)
+        sub_recipe_5 = recipe_test_utils.create_recipe(save=False, recipe_node=recipe_node_19, parent_recipe=recipe_2)
         sub_recipe_5.jobs_total = 12
         sub_recipe_5.jobs_completed = 12
         sub_recipe_5.is_completed = True
         Recipe.objects.bulk_create([sub_recipe_1, sub_recipe_2, sub_recipe_3, sub_recipe_4, sub_recipe_5])
-        # Recipe 1 nodes
-        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_1)
-        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_2)
-        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_3)
-        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_4)
-        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe_1, job=job_5)
-        recipe_node_6 = recipe_test_utils.create_recipe_node(recipe=recipe_1, sub_recipe=sub_recipe_1)
-        recipe_node_7 = recipe_test_utils.create_recipe_node(recipe=recipe_1, sub_recipe=sub_recipe_2)
-        # Recipe 2 nodes
-        recipe_node_8 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_6)
-        recipe_node_9 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_7)
-        recipe_node_10 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_8)
-        recipe_node_11 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_9)
-        recipe_node_12 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_10)
-        recipe_node_13 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_11)
-        recipe_node_14 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_12)
-        recipe_node_15 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_13)
-        recipe_node_16 = recipe_test_utils.create_recipe_node(recipe=recipe_2, job=job_14)
-        recipe_node_17 = recipe_test_utils.create_recipe_node(recipe=recipe_2, sub_recipe=sub_recipe_3)
-        recipe_node_18 = recipe_test_utils.create_recipe_node(recipe=recipe_2, sub_recipe=sub_recipe_4)
-        recipe_node_19 = recipe_test_utils.create_recipe_node(recipe=recipe_2, sub_recipe=sub_recipe_5)
-        RecipeNode.objects.bulk_create([recipe_node_1, recipe_node_2, recipe_node_3, recipe_node_4, recipe_node_5,
-                                        recipe_node_6, recipe_node_7, recipe_node_8, recipe_node_9, recipe_node_10,
-                                        recipe_node_11, recipe_node_12, recipe_node_13, recipe_node_14, recipe_node_15,
-                                        recipe_node_16, recipe_node_17, recipe_node_18, recipe_node_19])
+
 
         # Add recipes to message
         message = UpdateRecipeMetrics()

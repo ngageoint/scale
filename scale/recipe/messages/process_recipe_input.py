@@ -129,5 +129,5 @@ class ProcessRecipeInput(CommandMessage):
             subs = nodes[node_name]
             if len(input_data) != len(subs):
                 raise InvalidData('FORKING_ERROR', 'Recieved % sets of data for % sub recipes' % (len(input_data), len(subs)))
-            for r in range(subs):
+            for r in range(len(subs)):
                 Recipe.objects.set_recipe_input_data_v6(subs[r], input_data[r])

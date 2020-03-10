@@ -502,6 +502,10 @@ class RecipeManager(models.Manager):
 
         if not recipe_ids:
             return
+        #print recipe_ids
+        #recipe = Recipe.objects.get(id=recipe_ids[0])
+        #print 'recipe = %d' % recipe.id
+        #print 'jobs = %d' % recipe.jobs_total
 
         qry = 'UPDATE recipe r SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
         qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
@@ -525,6 +529,10 @@ class RecipeManager(models.Manager):
         qry += 'WHERE r.id = s.recipe_id'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(recipe_ids)])
+
+        #recipe = Recipe.objects.get(id=recipe_ids[0])
+        #print 'recipe = %d' % recipe.id
+        #print 'jobs = %d' % recipe.jobs_total
 
     def count_subrecipes(self, recipe_id, recurse=False):
         """Counts the number of sub-recipes that belong to the given recipe
@@ -1055,8 +1063,8 @@ class RecipeNodeManager(models.Manager):
         rn_qry = self.filter(recipe_id=recipe_id)
         for rn in rn_qry:
             try:
-                jobs = Job.objects.get(recipe_node=rn)
-                nodes[rn.node_name] = jobs
+                jobs = Job.objects.filter(recipe_node=rn)
+                nodes[rn.node_name] = list(jobs)
             except Job.DoesNotExist:
                 pass
         return nodes
@@ -1074,8 +1082,8 @@ class RecipeNodeManager(models.Manager):
         sr_qry = self.filter(recipe_id=recipe_id)
         for srn in sr_qry:
             try:
-                recipe = Recipe.objects.get(recipe_node=srn)
-                nodes[srn.node_name] = recipe
+                recipes = Recipe.objects.filter(recipe_node=srn)
+                nodes[srn.node_name] = list(recipes)
             except Recipe.DoesNotExist:
                 pass
         return nodes

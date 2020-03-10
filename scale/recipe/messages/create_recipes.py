@@ -592,7 +592,7 @@ class CreateRecipes(CommandMessage):
         # Get superseded sub-recipes from superseded recipe
         if self.superseded_recipe_id:
             superseded_sub_recipes = RecipeNode.objects.get_subrecipes(self.superseded_recipe_id)
-            revision_ids = [r.recipe_type_rev_id for r in superseded_sub_recipes.values()]
+            revision_ids = [r[0].recipe_type_rev_id for r in superseded_sub_recipes.values()]
 
         # Get recipe type revisions
         revision_tuples = [(sub.recipe_type_name, sub.recipe_type_rev_num) for sub in self.sub_recipes]
@@ -600,7 +600,7 @@ class CreateRecipes(CommandMessage):
         revs_by_tuple = {(rev.recipe_type.name, rev.revision_num): rev for rev in revs_by_id.values()}
 
         # Create new recipe models
-        process_input_by_node = {}
+        flat_recipes = []
         for sub_recipe in self.sub_recipes:
             # create nodes here? pass them in from elsewhere?
             node_name = sub_recipe.node_name
@@ -609,35 +609,34 @@ class CreateRecipes(CommandMessage):
             recipe_node.node_name = node_name
             recipe_node.save()
             revision = revs_by_tuple[(sub_recipe.recipe_type_name, sub_recipe.recipe_type_rev_num)]
-            superseded_recipe = superseded_sub_recipes[node_name] if node_name in superseded_sub_recipes else None
+            superseded_recipes = superseded_sub_recipes[node_name] if node_name in superseded_sub_recipes else None
             recipe = Recipe.objects.get(id=self.recipe_id)
             definition = recipe.get_definition()
             recipe_input_data = recipe.get_input_data()
             node_outputs = RecipeNode.objects.get_recipe_node_outputs(self.recipe_id)
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-            for data in input_data:
+            if superseded_recipes and (input_data) != len(superseded_recipes):
+                logger.warning('Superseded recipe has %d sub recipes for this node, new recipe generated %d sets of data' % (len(superseded_recipes), len(input_data)))
+            new_recipes = []
+            for x in range(len(input_data)):
+                sr = superseded_recipes[x] if superseded_recipes and x < len(superseded_recipes) else None
                 recipe = Recipe.objects.create_recipe_v6(revision, self.event_id, root_recipe_id=self.root_recipe_id,
                                                          recipe_id=self.recipe_id, batch_id=self.batch_id,
-                                                         superseded_recipe=superseded_recipe, input_data=data)
-                # recipe_node.recipe_id = recipe.id
-                # recipe_node.save()
-            sub_recipes[node_name] = recipe
+                                                         superseded_recipe=sr, input_data=input_data[x],
+                                                         recipe_node_id=recipe_node.id)
+                new_recipes.append(recipe)
+                flat_recipes.append(recipe)
 
-        Recipe.objects.bulk_create(sub_recipes.values())
-        logger.info('Created %d recipe(s)', len(sub_recipes))
 
-        # Create recipe nodes
-        recipe_nodes = RecipeNode.objects.create_subrecipe_nodes(self.recipe_id, sub_recipes)
-        RecipeNode.objects.bulk_create(recipe_nodes)
+            sub_recipes[node_name] = new_recipes
 
-        # Set up process input dict
-        for sub_recipe in self.sub_recipes:
-            recipe = sub_recipes[sub_recipe.node_name]
-            self._process_input[recipe.id] = sub_recipe.process_input
+        Recipe.objects.bulk_create(flat_recipes)
+        logger.info('Created %d recipe(s)', len(flat_recipes))
 
         # Set up recipe diffs
         if self.superseded_recipe_id:
-            for node_name, recipe in sub_recipes.items():
+            for node_name, recipes in sub_recipes.items():
+                recipe = recipes[0]
                 pair = _RecipePair(recipe.superseded_recipe, recipe)
                 rev_id = recipe.superseded_recipe.recipe_type_rev_id
                 old_revision = revs_by_id[rev_id]

@@ -324,18 +324,21 @@ class CreateJobs(CommandMessage):
             if self.recipe_config:
                 config = revision.job_type.get_job_configuration()
                 config.merge_recipe_config(self.recipe_config)
-            superseded_job = superseded_jobs[node_name] if node_name in superseded_jobs else None
+            superseded_jobs = superseded_jobs[node_name] if node_name in superseded_jobs else None
 
             recipe = Recipe.objects.get(id=self.recipe_id)
             definition = recipe.get_definition()
             recipe_input_data = recipe.get_input_data()
             node_outputs = RecipeNode.objects.get_recipe_node_outputs(self.recipe_id)
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-            for data in input_data:
+            if len(input_data) != len(superseded_jobs):
+                logger.warning('Superseded recipe has %d jobs for this node, new recipe generated %d sets of data' % (len(superseded_jobs), len(input_data)))
+            for x in range(len(input_data)):
+                sj = superseded_jobs[x] if x < len(superseded_jobs) else None
                 job = Job.objects.create_job_v6(revision, event_id=self.event_id, ingest_event_id=self.ingest_event_id,
                                                 root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id,
-                                                batch_id=self.batch_id, superseded_job=superseded_job, job_config=config,
-                                                recipe_node_id=recipe_node.id, input_data=data)
+                                                batch_id=self.batch_id, superseded_job=sj, job_config=config,
+                                                recipe_node_id=recipe_node.id, input_data=input_data[x])
                 recipe_jobs.append(job)
 
         Job.objects.bulk_create(recipe_jobs)

@@ -142,7 +142,7 @@ def edit_recipe_type_v6(recipe_type, title=None, description=None, definition=No
                                                auto_update=auto_update, is_active=is_active)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
-                  superseded_recipe=None, config=None, batch=None, save=True):
+                  superseded_recipe=None, config=None, batch=None, parent_recipe=None, recipe_node=None, save=True):
     """Creates a recipe for unit testing
 
     :returns: The recipe model
@@ -167,6 +167,8 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     recipe.superseded = superseded
     recipe.batch = batch
     recipe.configuration = config
+    recipe.recipe=parent_recipe
+    recipe.recipe_node=recipe_node
     if superseded_recipe:
         root_id = superseded_recipe.root_superseded_recipe_id
         if root_id is None:
@@ -232,7 +234,7 @@ def generate_input_data_from_recipe(sub_recipe):
         if len(input_data) != len(subs):
             raise InvalidData('FORKING_ERROR',
                               'Recieved % sets of data for % sub recipes' % (len(input_data), len(subs)))
-        for r in range(subs):
+        for r in range(len(subs)):
             Recipe.objects.set_recipe_input_data_v6(subs[r], input_data[r])
 
 def update_recipe(root_recipe_id):
@@ -556,7 +558,7 @@ def create_subrecipes(recipe_model, subrecipes):
     # Get superseded sub-recipes from superseded recipe
     if recipe_model.superseded_recipe_id:
         superseded_sub_recipes = RecipeNode.objects.get_subrecipes(recipe_model.superseded_recipe_id)
-        revision_ids = [r.recipe_type_rev_id for r in superseded_sub_recipes.values()]
+        revision_ids = [r[0].recipe_type_rev_id for r in superseded_sub_recipes.values()]
 
     # Get recipe type revisions
     revision_tuples = [(sub.recipe_type_name, sub.recipe_type_rev_num) for sub in subrecipes]
@@ -585,6 +587,8 @@ def create_subrecipes(recipe_model, subrecipes):
             sub_recipes_to_create.append(recipe)
 
     Recipe.objects.bulk_create(sub_recipes_to_create)
+    ids = {r.id for r in sub_recipes_to_create}
+    process_recipe_inputs(ids)
 
     # Set up recipe diffs
     # Uncomment and implement if needed to test superseding recipes
