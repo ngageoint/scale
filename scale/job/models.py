@@ -17,6 +17,7 @@ from django.conf import settings
 from django.db import connection, models, transaction
 from django.db.models import F, Q
 from django.utils import timezone
+from django.utils.timezone import now
 
 import util.parse
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
@@ -2580,6 +2581,64 @@ class JobTypeManager(models.Manager):
                 pass
 
         return JobTypeValidation(is_valid, errors, warnings)
+
+    def get_timeline_jobs_json(self, started=None, ended=None, type_ids=None, type_names=None):
+        """Returns the timeline information for the specified job types/time range
+
+        """
+
+        days_ago_started = (now() - started).days if started else 30
+        days_ago_ended = (now() - ended).days if ended else 1
+
+        qry = "WITH day_periods AS "
+        qry += "(SELECT (date_trunc('day', Now()) - ((days_ago - 2) * INTERVAL '1 day')) AS end_time, "
+        qry += "(date_trunc('day', Now()) - ((days_ago - 1) * INTERVAL '1 day')) AS start_time "
+        qry += "FROM generate_series(%s, %s, 1) days_ago) "
+        qry += "SELECT to_char(d.start_time, 'YYYY-MM-DD') AS job_type_date, "
+        qry += "jt.id AS job_type_id, "
+        qry += "jt.name AS job_type_name, "
+        qry += "jt.manifest#>>'{job, title}' AS job_type_title, "
+        qry += "jt.version AS job_type_version, "
+        qry += "jtr.revision_num AS job_type_revision, "
+        qry += "COUNT(*) AS new_job_count "
+        qry += "FROM day_periods d "
+        qry += "JOIN job j ON j.started BETWEEN d.start_time AND d.end_time "
+        qry += "JOIN job_type jt ON jt.id = j.job_type_id "
+        qry += "JOIN job_type_revision jtr ON jtr.id = j.job_type_rev_id "
+        if type_ids:
+            qry += "WHERE jt.id in %s "
+        elif type_names:
+            qry += "WHERE jt.name in %s "
+        qry += "GROUP BY d.start_time, jt.id, jt.name, jtr.revision_num"
+
+        results = {}
+        with connection.cursor() as cursor:
+            if type_ids:
+                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_ids)])
+            elif type_names:
+                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_names)])
+            else:
+                cursor.execute(qry, [days_ago_ended, days_ago_started])
+            columns = [col[0] for col in cursor.description]
+            the_rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            for row in the_rows:
+                key = '%s-%s' % (row['job_type_name'], row['job_type_version'])
+                if key not in results:
+                    results[key] = {
+                        'job_type_id': row['job_type_id'],
+                        'name': row['job_type_name'],
+                        'title': row['job_type_title'],
+                        'version': row['job_type_version'],
+                        'revision_num': row['job_type_revision'],
+                        'results': [{'date': row['job_type_date'],
+                                     'count': row['new_job_count']}]
+                    }
+                else:
+                    results_list = results[key]['results']
+                    results_list.append({'date': row['job_type_date'], 'count': row['new_job_count']})
+                    results[key]['results'] = results_list
+
+        return results.values()
 
 class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
