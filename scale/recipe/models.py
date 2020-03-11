@@ -1552,8 +1552,8 @@ class RecipeTypeManager(models.Manager):
         :rtype:
         """
 
-        days_ago_started = (now() - started).days
-        days_ago_ended = (now() - ended).days
+        days_ago_started = (now() - started).days if started else 30
+        days_ago_ended = (now() - ended).days if ended else 1
 
         qry = "WITH day_periods AS "
         qry += "(SELECT (date_trunc('day', Now()) - ((days_ago - 2) * INTERVAL '1 day')) AS end_time, "
