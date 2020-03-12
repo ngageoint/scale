@@ -1537,7 +1537,7 @@ class RecipeTypeManager(models.Manager):
 
         return input, output
 
-    def get_timeline_recipes_json(self, started=None, ended=None, type_ids=None, type_names=None):
+    def get_timeline_recipes_json(self, started=None, ended=None, type_ids=None, type_names=None, revisions=None):
         """Returns the timeline recipe type information
 
         :param started:
@@ -1548,6 +1548,8 @@ class RecipeTypeManager(models.Manager):
         :type type_ids:
         :param type_names:
         :type type_names:
+        :param revisions:
+        :type revisions:
         :returns:
         :rtype:
         """
@@ -1555,6 +1557,7 @@ class RecipeTypeManager(models.Manager):
         days_ago_started = (now() - started).days if started else 30
         days_ago_ended = (now() - ended).days if ended else 1
 
+        args = [days_ago_ended, days_ago_started]
         qry = "WITH day_periods AS "
         qry += "(SELECT (date_trunc('day', Now()) - ((days_ago - 2) * INTERVAL '1 day')) AS end_time, "
         qry += "(date_trunc('day', Now()) - ((days_ago - 1) * INTERVAL '1 day')) AS start_time "
@@ -1570,20 +1573,30 @@ class RecipeTypeManager(models.Manager):
         qry += "JOIN recipe r ON r.id = j.recipe_id "
         qry += "JOIN recipe_type rt ON rt.ID = r.recipe_type_id "
         qry += "JOIN recipe_type_revision rtr ON rtr.id = r.recipe_type_rev_id "
-        if type_ids:
+
+        if revisions:
+            qry += "WHERE rt.revision_num in %s "
+            args.append(tuple(revisions))
+
+            if type_ids:
+                qry += "AND rt.id in %s "
+                args.append(tuple(type_ids))
+            elif type_names:
+                qry += "AND rt.name in %s "
+                args.append(tuple(type_names))
+
+        elif type_ids:
             qry += "WHERE rt.id in %s "
+            args.append(tuple(type_ids))
         elif type_names:
             qry += "WHERE rt.name in %s "
+            args.append(tuple(type_names))
+
         qry += "GROUP BY d.start_time, rt.id, rt.name, rt.title, rtr.revision_num"
 
         results = {}
         with connection.cursor() as cursor:
-            if type_ids:
-                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_ids)])
-            elif type_names:
-                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_names)])
-            else:
-                cursor.execute(qry, [days_ago_ended, days_ago_started])
+            cursor.execute(qry, args)
             columns = [col[0] for col in cursor.description]
             the_rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
             for row in the_rows:
@@ -1599,7 +1612,7 @@ class RecipeTypeManager(models.Manager):
                     }
                 else:
                     results_list = results[key]['results']
-                    results_list.append({'date': row['recipe_date'],'count': row['new_recipe_count']})
+                    results_list.append({'date': row['recipe_date'], 'count': row['new_recipe_count']})
                     results[key]['results'] = results_list
 
         return results.values()
