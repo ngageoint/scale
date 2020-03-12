@@ -393,8 +393,7 @@ class TestJobTypeTimelineView(APITestCase):
         started = '2020-01-01T00:00:00Z'
         ended = '2020-02-01T00:00:00Z'
 
-        url = '/%s/timeline/job-types/?started=%s&ended=%s&job_type_name=%s' % (self.api, started, ended,
-                                                                                      self.job_type_1.name)
+        url = '/%s/timeline/job-types/?started=%s&ended=%s&name=%s' % (self.api, started, ended, self.job_type_1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -412,8 +411,7 @@ class TestJobTypeTimelineView(APITestCase):
         started = '2020-01-01T00:00:00Z'
         ended = '2020-02-01T00:00:00Z'
 
-        url = '/%s/timeline/job-types/?started=%s&ended=%s&job_type_id=%s' % (self.api, started, ended,
-                                                                              self.job_type_2.id)
+        url = '/%s/timeline/job-types/?started=%s&ended=%s&id=%s' % (self.api, started, ended, self.job_type_2.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -424,4 +422,58 @@ class TestJobTypeTimelineView(APITestCase):
         self.assertEqual(results[0]['name'], self.job_type_2.name)
         self.assertEqual(results[0]['title'], self.job_type_2.get_title())
         self.assertEqual(results[0]['revision_num'], self.job_type_2.revision_num)
+
+    def test_type_versions(self):
+        """Tests calling /timeline/job-types filtered by job version types"""
+
+        manifest = copy.deepcopy(self.job_type_1.manifest)
+        manifest['job']['jobVersion'] = '1.1.1'
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        recipe_def = {
+            'version': '7',
+            'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/png'], 'required': True,
+                                 'multiple': False}],
+                      'json': []},
+            'nodes': {
+                'node_a': {
+                    'dependencies': [],
+                    'input': {'INPUT_FILE': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                    'node_type': {'node_type': 'job', 'job_type_name': job_type.name,
+                                  'job_type_version': job_type.version,
+                                  'job_type_revision': job_type.revision_num}
+                }
+            }
+        }
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type_1, definition=recipe_def)
+        recipe_edited = RecipeType.objects.get(id=self.recipe_type_1.id)
+
+        for i in range(1, 7):
+            date_1 = datetime.datetime(2020, 1, i, tzinfo=utc)
+            date_2 = datetime.datetime(2020, 1, i + 1, tzinfo=utc)
+            file_1 = storage_test_utils.create_file(workspace=self.workspace, file_size=104857600.0,
+                                                    source_started=date_1, source_ended=date_2)
+            input_data = {'version': '1.0', 'input_data': [{'name': 'INPUT_FILE','file_id': file_1.id}]}
+            recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_edited, input=input_data)
+            job_1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', started=date_1,
+                                              ended=date_1)
+            job_1.recipe_id = recipe_1.id
+            job_1.save()
+
+        started = '2020-01-01T00:00:00Z'
+        ended = '2020-02-01T00:00:00Z'
+
+        url = '/%s/timeline/job-types/?started=%s&ended=%s&name=%s&version=%s' % (self.api, started, ended,
+                                                                                  job_type.name, job_type.version)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['name'], job_type.name)
+        self.assertEqual(results[0]['title'], job_type.get_title())
+        self.assertEqual(results[0]['version'], job_type.version)
+        self.assertEqual(results[0]['revision_num'], job_type.revision_num)
 

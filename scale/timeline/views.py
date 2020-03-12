@@ -58,7 +58,6 @@ class TimelineRecipeTypeView(ListAPIView):
             'results': results
         }
         return JsonResponse(data, content_type='application/json')
-        # return Response(JSONRenderer().render(data), status=status.HTTP_200_OK)
 
 class TimelineJobTypeView(ListAPIView):
     """This view is the endpoint for retrieving recipe type timeline information"""
@@ -87,18 +86,17 @@ class TimelineJobTypeView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        started = rest_util.parse_timestamp(request, 'started', required=False)
+        started = rest_util.parse_timestamp(request, 'started', required=True)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
-        type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
+        type_ids = rest_util.parse_int_list(request, 'id', required=False)
+        type_names = rest_util.parse_string_list(request, 'name', required=False)
+        type_versions = rest_util.parse_string_list(request, 'version', required=False)
 
-        # try:
         results = JobType.objects.get_timeline_jobs_json(started=started, ended=ended, type_ids=type_ids,
-                                                         type_names=type_names)
+                                                         type_names=type_names, type_versions=type_versions)
         data = {
             'results': results
         }
         return JsonResponse(data, content_type='application/json')
-        # return Response(JSONRenderer().render(data), status=status.HTTP_200_OK)

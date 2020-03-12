@@ -2582,9 +2582,21 @@ class JobTypeManager(models.Manager):
 
         return JobTypeValidation(is_valid, errors, warnings)
 
-    def get_timeline_jobs_json(self, started=None, ended=None, type_ids=None, type_names=None):
+    def get_timeline_jobs_json(self, started=None, ended=None, type_ids=None, type_names=None, type_versions=None):
         """Returns the timeline information for the specified job types/time range
 
+        :param started:
+        :type started: :class:`datetime.datetime`
+        :param ended:
+        :type ended: :class:`datetime.datetime`
+        :param type_ids:
+        :type type_ids:
+        :param type_names:
+        :type type_names:
+        :param type_versions:
+        :type type_versions:
+        :returns:
+        :rtype:
         """
 
         days_ago_started = (now() - started).days if started else 30
@@ -2605,20 +2617,30 @@ class JobTypeManager(models.Manager):
         qry += "JOIN job j ON j.started BETWEEN d.start_time AND d.end_time "
         qry += "JOIN job_type jt ON jt.id = j.job_type_id "
         qry += "JOIN job_type_revision jtr ON jtr.id = j.job_type_rev_id "
-        if type_ids:
+
+        args = [days_ago_ended, days_ago_started]
+        if type_versions:
+            qry += "WHERE jt.version in %s "
+            args.append(tuple(type_versions))
+            if type_ids:
+                qry += "AND jt.id in %s "
+                args.append(tuple(type_ids))
+            elif type_names:
+                qry += "AND jt.name in %s "
+                args.append(tuple(type_names))
+
+        elif type_ids:
             qry += "WHERE jt.id in %s "
+            args.append(tuple(type_ids))
         elif type_names:
             qry += "WHERE jt.name in %s "
+            args.append(tuple(type_names))
+
         qry += "GROUP BY d.start_time, jt.id, jt.name, jtr.revision_num"
 
         results = {}
         with connection.cursor() as cursor:
-            if type_ids:
-                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_ids)])
-            elif type_names:
-                cursor.execute(qry, [days_ago_ended, days_ago_started, tuple(type_names)])
-            else:
-                cursor.execute(qry, [days_ago_ended, days_ago_started])
+            cursor.execute(qry, args)
             columns = [col[0] for col in cursor.description]
             the_rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
             for row in the_rows:
