@@ -221,7 +221,7 @@ class TestRecipeTypeTimelineView(APITestCase):
 
             }
         }
-        recipe_test_utils.edit_recipe_type_v6(rtype, title='edited recipe', definition=recipe_def_v2)
+        recipe_test_utils.edit_recipe_type_v6(rtype, title='edited recipe', definition=recipe_def_v2, auto_update=False)
         rtype_edit = RecipeType.objects.get(id=rtype.id)
 
         for i in range(1, 7):
@@ -445,7 +445,7 @@ class TestJobTypeTimelineView(APITestCase):
                 }
             }
         }
-        recipe_test_utils.edit_recipe_type_v6(self.recipe_type_1, definition=recipe_def)
+        recipe_test_utils.edit_recipe_type_v6(self.recipe_type_1, definition=recipe_def, auto_update=False)
         recipe_edited = RecipeType.objects.get(id=self.recipe_type_1.id)
 
         for i in range(1, 7):
