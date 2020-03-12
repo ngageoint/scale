@@ -65,10 +65,6 @@ Response: 200 OK
 | recipe_type_name   | String            | Optional | Return timeline information matching only the given name(s). Duplicate   |
 |                    |                   |          | for multiple.                                                            |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| order              | String            | Optional | One or more fields to use when ordering the results.                     |
-|                    |                   |          | Include multiple times to multi-sort, (ex: order=name&order=version).    |
-|                    |                   |          | Prefix the field with a dash '-' to reverse the order, (ex: order=-name).|
-+--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | **Successful Response**                                                                                                      |
 +--------------------+---------------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                                  |
@@ -159,10 +155,6 @@ Response: 200 OK
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | job_type_name      | String            | Optional | Return timeline information matching only the given name(s). Duplicate   |
 |                    |                   |          | for multiple.                                                            |
-+--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| order              | String            | Optional | One or more fields to use when ordering the results.                     |
-|                    |                   |          | Include multiple times to multi-sort, (ex: order=name&order=version).    |
-|                    |                   |          | Prefix the field with a dash '-' to reverse the order, (ex: order=-name).|
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | **Successful Response**                                                                                                      |
 +--------------------+---------------------------------------------------------------------------------------------------------+
