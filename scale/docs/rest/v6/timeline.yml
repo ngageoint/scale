@@ -1,0 +1,221 @@
+openapi: "3.0.0"
+info:
+  title: Timeline Services
+  version: v6
+paths:
+  /timeline/recipe-types:
+    get:
+      operationId: _rest_v6_timeline_recipe_types
+      summary: Timeline Recipe Types List
+      description: Returns a timeline list for recipe types
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: recipe_type_id
+          schema:
+            type: int
+          description: Return only recipe types with a given id.
+            Duplicate it to filter by multiple values.
+        - in: query
+            name: recipe_type_name
+            schema:
+              type: string
+            description: Return only recipe types with a given name.
+              Duplicate it to filter by multiple values.
+
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recipe-types/'
+
+  /timeline/job-types:
+    get:
+      operationId: _rest_v6_timeline_job_types
+      summary: Timeline Job Types List
+      description: Returns a timeline list for job types
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results.
+            Defaults to 100, and can be anywhere from 1-1000.
+        - in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        - in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        - in: query
+          name: job_type_id
+          schema:
+            type: int
+          description: Return only job types with a given id.
+            Duplicate it to filter by multiple values.
+        - in: query
+            name: job_type_name
+            schema:
+              type: string
+            description: Return only job types with a given name.
+              Duplicate it to filter by multiple values.
+
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/job-types/'
+
+components:
+  schemas:
+    job-types:
+      title: Job Type Timeline List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/timeline_job_type'
+          description: List of job type timeline objects
+
+    recipe-types:
+      title: Recipe Type Timeline List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/timeline_recipe_type'
+          description: List of recipe type objects
+
+    timeline_job_type:
+      title: Job Type timeline Result
+      type: object
+      properties:
+        recipe_type_id:
+          type: int
+          description: The id of the job type
+          example: 1
+        name:
+          type: string
+          description: The name of the job type
+          example: 'job-type-name'
+        version:
+          type: string
+          description: The version number of the job type
+          example: '1.0.0'
+        title:
+          type: string
+          description: The title of the job type
+          example: 'My Job Type'
+        revision_num:
+          type: int
+          description: The revision number of the job type
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/date_count'
+          description: List of dates and counts for the job types
+
+    timeline_recipe_type:
+      title: Recipe Type timeline result
+      type: object
+      properties:
+        recipe_type_id:
+          type: int
+          description: The id of the recipe type
+          example: 1
+        name:
+          type: string
+          description: The name of the recipe type
+          example: 'recipe-type-name'
+        title:
+          type: string
+          description: The title of the recipe type
+          example: 'My Recipe Type'
+        revision_num:
+          type: int
+          description: The revision number of the recipe type
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/date_count'
+          description: List of dates and counts for the recipe types
+
+    date_count:
+      title: Timeline Result object
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date of the results in YYYY-MM-DD format
+          example: '2020-01-01'
+        count:
+          type: int
+          description: The number of results on that date
+          exaple: 100
