@@ -50,7 +50,7 @@ class TimelineRecipeTypeView(ListAPIView):
         revisions = rest_util.parse_int_list(request, 'rev', required=False)
 
         if not started:
-            return Response('Invalid parameter: start date is required', status=status.HTTP_400_BAD_REQUEST)
+            return Response('Invalid parameter: started is required', status=status.HTTP_400_BAD_REQUEST)
 
         results = RecipeType.objects.get_timeline_recipes_json(started=started, ended=ended, type_ids=type_ids,
                                                                type_names=type_names, revisions=revisions)
@@ -94,6 +94,9 @@ class TimelineJobTypeView(ListAPIView):
         type_ids = rest_util.parse_int_list(request, 'id', required=False)
         type_names = rest_util.parse_string_list(request, 'name', required=False)
         type_versions = rest_util.parse_string_list(request, 'version', required=False)
+
+        if not started:
+            return Response('Invalid parameter: started is required', status=status.HTTP_400_BAD_REQUEST)
 
         results = JobType.objects.get_timeline_jobs_json(started=started, ended=ended, type_ids=type_ids,
                                                          type_names=type_names, type_versions=type_versions)
