@@ -1574,23 +1574,25 @@ class RecipeTypeManager(models.Manager):
         qry += "JOIN recipe_type rt ON rt.ID = r.recipe_type_id "
         qry += "JOIN recipe_type_revision rtr ON rtr.id = r.recipe_type_rev_id "
 
-        if revisions:
-            qry += "WHERE rt.revision_num in %s "
-            args.append(tuple(revisions))
-
-            if type_ids:
-                qry += "AND rt.id in %s "
-                args.append(tuple(type_ids))
-            elif type_names:
-                qry += "AND rt.name in %s "
-                args.append(tuple(type_names))
-
-        elif type_ids:
+        if type_ids:
             qry += "WHERE rt.id in %s "
             args.append(tuple(type_ids))
+
+            if revisions:
+                qry += "AND rtr.revision_num in %s "
+                args.append(tuple(revisions))
+
         elif type_names:
             qry += "WHERE rt.name in %s "
             args.append(tuple(type_names))
+
+            if revisions:
+                qry += "AND rtr.revision_num in %s "
+                args.append(tuple(revisions))
+
+        elif revisions:
+            qry += "WHERE rtr.revision_num in %s "
+            args.append(tuple(revisions))
 
         qry += "GROUP BY d.start_time, rt.id, rt.name, rt.title, rtr.revision_num"
 
