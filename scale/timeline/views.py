@@ -55,9 +55,10 @@ class TimelineRecipeTypeView(ListAPIView):
         results = RecipeType.objects.get_timeline_recipes_json(started=started, ended=ended, type_ids=type_ids,
                                                                type_names=type_names, revisions=revisions)
         data = {
+            'count': len(results),
             'results': results
         }
-        return JsonResponse(data, content_type='application/json')
+        return JsonResponse(data)
 
 class TimelineJobTypeView(ListAPIView):
     """This view is the endpoint for retrieving recipe type timeline information"""
@@ -97,6 +98,7 @@ class TimelineJobTypeView(ListAPIView):
         results = JobType.objects.get_timeline_jobs_json(started=started, ended=ended, type_ids=type_ids,
                                                          type_names=type_names, type_versions=type_versions)
         data = {
+            'count': len(results),
             'results': results
         }
-        return JsonResponse(data, content_type='application/json')
+        return JsonResponse(data)

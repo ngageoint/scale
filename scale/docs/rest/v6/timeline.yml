@@ -9,18 +9,7 @@ paths:
       summary: Timeline Recipe Types List
       description: Returns a timeline list for recipe types
       parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: The page of the results to return. Defaults to 1.
-        - in: query
-          name: page_size
-          schema:
-            type: integer
-          description: The size of the page to use for pagination of results.
-            Defaults to 100, and can be anywhere from 1-1000.
-        - in: query
+      - in: query
           name: started
           schema:
             type: string
@@ -33,17 +22,23 @@ paths:
             format: date-time
           description: End of the time range to query, defaults to the current time
         - in: query
-          name: recipe_type_id
+          name: id
           schema:
             type: int
           description: Return only recipe types with a given id.
             Duplicate it to filter by multiple values.
         - in: query
-            name: recipe_type_name
+            name: name
             schema:
               type: string
             description: Return only recipe types with a given name.
               Duplicate it to filter by multiple values.
+        - in: query
+          name: rev
+          schema:
+            type: int
+            description: Return only recipe types with the given revision number.
+                         Duplicate it to filter by multiple values.
 
       responses:
         '200':
@@ -59,18 +54,7 @@ paths:
       summary: Timeline Job Types List
       description: Returns a timeline list for job types
       parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: The page of the results to return. Defaults to 1.
-        - in: query
-          name: page_size
-          schema:
-            type: integer
-          description: The size of the page to use for pagination of results.
-            Defaults to 100, and can be anywhere from 1-1000.
-        - in: query
+         - in: query
           name: started
           schema:
             type: string
@@ -83,16 +67,22 @@ paths:
             format: date-time
           description: End of the time range to query, defaults to the current time
         - in: query
-          name: job_type_id
+          name: id
           schema:
             type: int
           description: Return only job types with a given id.
             Duplicate it to filter by multiple values.
         - in: query
-            name: job_type_name
+            name: name
             schema:
               type: string
             description: Return only job types with a given name.
+              Duplicate it to filter by multiple values.
+        - in: query
+            name: version
+            schema:
+              type: string
+            description: Return only job types with the given version.
               Duplicate it to filter by multiple values.
 
       responses:
@@ -113,16 +103,6 @@ components:
           type: integer
           description: The total number of results that match the query parameters
           example: 10
-        next:
-          type: string
-          format: uri
-          description: A URL to the next page of results.
-          example: null
-        previous:
-          type: string
-          format: uri
-          description: A URL to the previous page of results.
-          example: null
         results:
           type: array
           items:
@@ -137,16 +117,6 @@ components:
           type: integer
           description: The total number of results that match the query parameters
           example: 10
-        next:
-          type: string
-          format: uri
-          description: A URL to the next page of results.
-          example: null
-        previous:
-          type: string
-          format: uri
-          description: A URL to the previous page of results.
-          example: null
         results:
           type: array
           items:
@@ -164,7 +134,7 @@ components:
         name:
           type: string
           description: The name of the job type
-          example: 'job-type-name'
+          example: 'my-job-type'
         version:
           type: string
           description: The version number of the job type

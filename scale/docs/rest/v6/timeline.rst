@@ -9,7 +9,7 @@ These services provide access to information about the timeline functionality.
 .. _rest_v6_timeline_recipes:
 
 v6 Recipe Types
---------------
+---------------
 
 **Example GET /v6/timeline/recipe-types API call**
 
@@ -21,8 +21,6 @@ Response: 200 OK
 
     {
         "count": 1,
-        "next": null,
-        "previous": null,
         "results": [
             {
                 "recipe_type_id": 1,
@@ -42,14 +40,9 @@ Response: 200 OK
 +==============================================================================================================================+
 | Returns a list of recipe types that were started between the given dates                                                     |
 +------------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/timeline/recipe-types/                                                                                                          |
+| **GET** /v6/timeline/recipe-types/                                                                                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                         |
-+--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                        |
-+--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| page_size          | Integer           | Optional | The size of the page to use for pagination of results.                   |
-|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                        |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | started            | ISO-8601 Datetime | Required | The start of the time range to query.                                    |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
@@ -59,11 +52,14 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| recipe_type_id     | Integer           | Optional | Return timeline information matching only the given id(s). Duplicate for |
+| id                 | Integer           | Optional | Return timeline information matching only the given id(s). Duplicate for |
 |                    |                   |          | multiple.                                                                |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| recipe_type_name   | String            | Optional | Return timeline information matching only the given name(s). Duplicate   |
+| name               | String            | Optional | Return timeline information matching only the given name(s). Duplicate   |
 |                    |                   |          | for multiple.                                                            |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| rev                | Integer           | Optional | Return timeline information matching only the given revision(s).         |
+|                    |                   |          | Duplicate for multiple.                                                  |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | **Successful Response**                                                                                                      |
 +--------------------+---------------------------------------------------------------------------------------------------------+
@@ -74,10 +70,6 @@ Response: 200 OK
 | **JSON Fields**                                                                                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | count              | Integer           | The total number of results that match the query parameters.                        |
-+--------------------+-------------------+-------------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                                  |
-+--------------------+-------------------+-------------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | results            | Array             | List of result JSON objects that match the query parameters.                        |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -91,15 +83,15 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .results           | Array             | Lists the dates and counts of recipe types.                                         |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .date              | ISO-8601 Datetime | The date of the count.                                                              |
+|   .date            | ISO-8601 Datetime | The date of the count.                                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .count             | Integer           | Number of recipe types that were started on that date.                              |
+|   .count           | Integer           | Number of recipe types that were started on that date.                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 
 .. _rest_v6_timeline_jobs:
 
 v6 Job Types
---------------
+------------
 
 **Example GET /v6/timeline/job-types API call**
 
@@ -111,13 +103,11 @@ Response: 200 OK
 
     {
         "count": 1,
-        "next": null,
-        "previous": null,
         "results": [
             {
                 "job_type_id": 1,
                 "name": "job-type-name",
-                "version": "1.0.0,
+                "version": "1.0.0",
                 "title": "Job Type Title",
                 "revision_num": 1,
                 "results": [{
@@ -137,11 +127,6 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                         |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                        |
-+--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| page_size          | Integer           | Optional | The size of the page to use for pagination of results.                   |
-|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                        |
-+--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | started            | ISO-8601 Datetime | Required | The start of the time range to query.                                    |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
@@ -150,11 +135,14 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).      |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).                   |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| job_type_id        | Integer           | Optional | Return timeline information matching only the given id(s). Duplicate for |
+| id                 | Integer           | Optional | Return timeline information matching only the given id(s). Duplicate for |
 |                    |                   |          | multiple.                                                                |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
-| job_type_name      | String            | Optional | Return timeline information matching only the given name(s). Duplicate   |
+| name               | String            | Optional | Return timeline information matching only the given name(s). Duplicate   |
 |                    |                   |          | for multiple.                                                            |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| version            | String            | Optional | Return timeline information matching only the given version(s).          |
+|                    |                   |          | Duplicate for multiple.                                                  |
 +--------------------+-------------------+----------+--------------------------------------------------------------------------+
 | **Successful Response**                                                                                                      |
 +--------------------+---------------------------------------------------------------------------------------------------------+
@@ -165,10 +153,6 @@ Response: 200 OK
 | **JSON Fields**                                                                                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | count              | Integer           | The total number of results that match the query parameters.                        |
-+--------------------+-------------------+-------------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                                  |
-+--------------------+-------------------+-------------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | results            | Array             | List of result JSON objects that match the query parameters.                        |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -184,7 +168,7 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .results           | Array             | Lists the dates and counts of job types.                                            |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .date              | ISO-8601 Datetime | The date of the count.                                                              |
+|   .date            | ISO-8601 Datetime | The date of the count.                                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .count             | Integer           | Number of job types that were started on that date.                                 |
+|   .count           | Integer           | Number of job types that were started on that date.                                 |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
