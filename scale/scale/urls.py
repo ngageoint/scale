@@ -26,6 +26,7 @@ REST_API_APPS = [
     'recipe',
     'scheduler',
     'storage',
+    'timeline',
 ]
 
 # Generate URLs for all REST APIs with version prefix
