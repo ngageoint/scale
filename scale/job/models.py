@@ -2585,18 +2585,18 @@ class JobTypeManager(models.Manager):
     def get_timeline_jobs_json(self, started=None, ended=None, type_ids=None, type_names=None, type_versions=None):
         """Returns the timeline information for the specified job types/time range
 
-        :param started:
+        :param started: The start date of the timeline
         :type started: :class:`datetime.datetime`
-        :param ended:
+        :param ended: The end date of the timeline
         :type ended: :class:`datetime.datetime`
-        :param type_ids:
-        :type type_ids:
-        :param type_names:
-        :type type_names:
-        :param type_versions:
-        :type type_versions:
-        :returns:
-        :rtype:
+        :param type_ids: List of job type ids to limit the results
+        :type type_ids: list[int]
+        :param type_names: List of job type names to limit the results
+        :type type_names: list[string]
+        :param type_versions: List of job type versions to limit the results
+        :type type_versions: list[string]
+        :returns: JSON response for timeline information
+        :rtype: dict
         """
 
         days_ago_started = (now() - started).days if started else 30

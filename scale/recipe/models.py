@@ -1540,18 +1540,18 @@ class RecipeTypeManager(models.Manager):
     def get_timeline_recipes_json(self, started=None, ended=None, type_ids=None, type_names=None, revisions=None):
         """Returns the timeline recipe type information
 
-        :param started:
+        :param started: The start date of the timeline
         :type started: :class:`datetime.datetime`
-        :param ended:
+        :param ended: The end date of the timeline
         :type ended: :class:`datetime.datetime`
-        :param type_ids:
-        :type type_ids:
-        :param type_names:
-        :type type_names:
-        :param revisions:
-        :type revisions:
-        :returns:
-        :rtype:
+        :param type_ids: List of recipe type ids to limit the results
+        :type type_ids: list[int]
+        :param type_names: List of recipe type names to limit the results
+        :type type_names: list[string]
+        :param revisions: List of revisions to limit the results
+        :type revisions: list[int]
+        :returns: JSON timeline response
+        :rtype: dict
         """
 
         days_ago_started = (now() - started).days if started else 30
