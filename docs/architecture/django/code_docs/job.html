@@ -5086,6 +5086,33 @@ count of associated jobs and the longest running job.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobTypeManager.get_timeline_jobs_json">
+<code class="descname">get_timeline_jobs_json</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>type_versions=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_timeline_jobs_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the timeline information for the specified job types/time range</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start date of the timeline</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The end date of the timeline</li>
+<li><strong>type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; List of job type ids to limit the results</li>
+<li><strong>type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; List of job type names to limit the results</li>
+<li><strong>type_versions</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; List of job type versions to limit the results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON response for timeline information</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobTypeManager.set_job_type_secrets">
 <code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>secrets_key</em>, <em>secrets</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends request to SecretsHandler to write secrets for a job type.</p>

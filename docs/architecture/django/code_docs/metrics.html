@@ -1864,6 +1864,78 @@ are not included by default.</li>
 </dd></dl>
 
 <dl class="class">
+<dt id="metrics.views.MetricsGanttChartRecipeTypesView">
+<em class="property">class </em><code class="descclassname">metrics.views.</code><code class="descname">MetricsGanttChartRecipeTypesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsGanttChartRecipeTypesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
+<p>This view is the endpoint for retrieving gantt chart values for recipe types</p>
+<dl class="method">
+<dt id="metrics.views.MetricsGanttChartRecipeTypesView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsGanttChartRecipeTypesView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the gantt chart values and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricsGanttChartRecipeTypesView.list_impl">
+<code class="descname">list_impl</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsGanttChartRecipeTypesView.list_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the plot values for metrics and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the metrics detail to retrieve.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricsGanttChartRecipeTypesView.list_v6">
+<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsGanttChartRecipeTypesView.list_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v6 plot values for metrics in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.views.MetricsGanttChartRecipeTypesView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#metrics.views.MetricsGanttChartRecipeTypesView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="metrics.views.MetricsView">
 <em class="property">class </em><code class="descclassname">metrics.views.</code><code class="descname">MetricsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>

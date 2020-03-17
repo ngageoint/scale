@@ -1,0 +1,54 @@
+timeline package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    timeline.migrations
+    timeline.test
+
+Submodules
+----------
+
+timeline\.apps module
+---------------------
+
+.. automodule:: timeline.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+timeline\.models module
+-----------------------
+
+.. automodule:: timeline.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+timeline\.urls module
+---------------------
+
+.. automodule:: timeline.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+timeline\.views module
+----------------------
+
+.. automodule:: timeline.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: timeline
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -3192,6 +3192,33 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeTypeManager.get_timeline_recipes_json">
+<code class="descname">get_timeline_recipes_json</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>revisions=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_timeline_recipes_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the timeline recipe type information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start date of the timeline</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The end date of the timeline</li>
+<li><strong>type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; List of recipe type ids to limit the results</li>
+<li><strong>type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; List of recipe type names to limit the results</li>
+<li><strong>revisions</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; List of revisions to limit the results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON timeline response</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeTypeManager.validate_recipe_type_v6">
 <code class="descname">validate_recipe_type_v6</code><span class="sig-paren">(</span><em>name</em>, <em>definition_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recipe_type_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a recipe type prior to attempting a save</p>
