@@ -5,7 +5,6 @@ import logging
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404, HttpResponse
-from django.http import JsonResponse
 from django.utils.timezone import now
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
 from rest_framework.response import Response
