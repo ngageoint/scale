@@ -121,6 +121,10 @@ AUTHENTICATION_ENABLED = get_env_boolean('AUTHENTICATION_ENABLED', True)
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# used primarily by debug-toolbar to dictate what client url has access
+if os.environ.get('INTERNAL_IP'):
+    INTERNAL_IPS = [os.environ.get('INTERNAL_IP')]
+
 # Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -132,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'rest_framework',
     'rest_framework.authtoken',
+    'debug_toolbar',
 
     ###############
     # Social Auth #
@@ -166,6 +171,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'util.middleware.MultipleProxyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
