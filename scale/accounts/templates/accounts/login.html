@@ -2,17 +2,97 @@
 {% load static %}
 {% block title %}Login{% endblock %}
 
+{% block breadcrumbs %}
+    {% comment %}no need to show breadcrumbs, just use this as a spacer for the navbar{% endcomment %}
+    <div style="margin-top: 70px;"></div>
+{% endblock %}
+
 {% block content %}
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-    {% if GEOAXIS_ENABLED %}
-        <h3>Single sign-on providers:</h3>
-        <a class="btn-geoaxis btn-social btn bg-ms btn-block" href="{% url 'social:begin' 'geoaxis' %}?{{ redirect_field_name }}={{ redirect_field_value }}">
-            <i class="fa fa-lock"></i><img src="{% static 'accounts/geoaxis.png' %}" alt="Log In with GeoAxis"/>
-        </a>
-    {% endif %}
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Login</h3>
+                </div>
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% for error in form.non_field_errors %}
+                            <p class="text-danger text-center">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+
+                        <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+                            <label for="{{ form.username.id_for_label }}"
+                                   class="control-label">
+                                {{ form.username.label | safe }}
+                            </label>
+
+                            <div class="controls">
+                                <input type="text"
+                                       name="{{ form.username.name }}"
+                                       {% if form.username.value %}value="{{ form.username.value }}"{% endif %}
+                                       class="form-control"
+                                       id="{{ form.username.id_for_label }}"
+                                       autofocus
+                                       autocomplete="username"
+                                       maxlength="{{ form.username.field.max_length }}">
+
+                                {% for error in form.username.errors %}
+                                    <p id="error_{{ forloop.counter }}_{{ form.username.id_for_label }}"
+                                       class="help-block">
+                                        <strong>{{ error }}</strong>
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group {% if form.password.errors %}has-error{% endif %}">
+                            <label for="{{ form.password.id_for_label }}"
+                                   class="control-label">
+                                {{ form.password.label | safe }}
+                            </label>
+
+                            <div class="controls">
+                                <input type="password"
+                                       name="{{ form.password.name }}"
+                                       class="form-control"
+                                       id="{{ form.password.id_for_label }}"
+                                       autocomplete="current-password">
+
+                                {% for error in form.password.errors %}
+                                    <p id="error_{{ forloop.counter }}_{{ form.password.id_for_label }}"
+                                       class="help-block">
+                                        <strong>{{ error }}</strong>
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary btn-block btn-lg">
+                            Login
+                        </button>
+                    </form>
+
+                    {% if GEOAXIS_ENABLED %}
+                        <hr>
+                        <h5>Single sign-on providers</h5>
+
+                        <a class="btn btn-default btn-block"
+                           href="{% url 'social:begin' 'geoaxis' %}?{{ redirect_field_name }}={{ redirect_field_value }}">
+                            <img src="{% static 'accounts/geoaxis.png' %}"
+                                 alt="GEOAxIS"
+                                 style="max-width: 100px;">
+                            <br>
+                            NGA GEOAxIS
+                        </a>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
