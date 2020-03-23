@@ -34,9 +34,9 @@ def convert_definition_to_v6_json(definition):
     """Returns the v6 dataset definition JSON for the given definition
 
     :param definition: The dataset definition
-    :type definition: :class:`data.dataset.dataset.DataSetDefinition'
+    :type definition: :class:`data.dataset.dataset.DataSetDefinition`
     :returns: The v6 dataset definition JSON
-    :rtype: :class:`data.dataset.json.dataset_v6.DataSetDefinitionV6
+    :rtype: :class:`data.dataset.json.dataset_v6.DataSetDefinitionV6`
     """
 
     def_dict = {
@@ -58,8 +58,7 @@ def convert_definition_to_v6_json(definition):
     return DataSetDefinitionV6(definition=def_dict, do_validate=False)
 
 class DataSetDefinitionV6(object):
-    """
-    Represents the definition of a DataSet object
+    """Represents the definition of a DataSet object
 
     :keyword definition: The dataset definition JSON dict
     :type definition: dict

@@ -36,7 +36,7 @@ def _less_than(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -52,7 +52,7 @@ def _less_than_equal(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -68,7 +68,7 @@ def _greater_than(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -84,7 +84,7 @@ def _greater_than_equal(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -100,7 +100,7 @@ def _equal(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -116,7 +116,7 @@ def _not_equal(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -132,7 +132,7 @@ def _between(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -148,7 +148,7 @@ def _in(input, values):
     :param input: The input to check
     :type input: int/float
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -166,7 +166,7 @@ def _not_in(input, values):
     :param input: The input to check
     :type input: int/float/string
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -184,7 +184,7 @@ def _contains(input, values):
     :param input: The input to check
     :type input: string/list
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -203,7 +203,7 @@ def _subset(input, values):
     :param input: The input to check
     :type input: dict
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -222,7 +222,7 @@ def _superset(input, values):
     :param input: The input to check
     :type input: dict
     :param values: The values to check
-    :type values: list
+    :type values: :func:`list`
     :returns: True if the condition check passes, False otherwise
     :rtype: bool
     """
@@ -408,7 +408,7 @@ class DataFilter(object):
         :param interface: The interface describing the data that will be passed to the filter
         :type interface: :class:`data.interface.interface.Interface`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.filter.exceptions.InvalidDataFilter`: If the data filter is invalid
         """

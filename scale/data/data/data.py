@@ -57,7 +57,7 @@ class Data(object):
         :param interface: The interface to which this data is being passed
         :type interface: :class:`data.interface.interface.Interface`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
