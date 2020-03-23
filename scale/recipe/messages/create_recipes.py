@@ -55,13 +55,13 @@ def create_batch_recipes_messages(recipe_type_name, revision_num, recipe_data, e
     :param revision_num: The revision number of the recipe type
     :type revision_num: int
     :param recipe_data: The input data for the recipe
-    :type recipe_data: list
+    :type recipe_data: :func:`list`
     :param event_id: The event ID
     :type event_id: int
     :param batch_id: The batch ID
     :type: batch_id: int
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -97,7 +97,7 @@ def create_recipes_messages(recipe_type_name, revision_num, recipe_data, event_i
     :param batch_id: The batch ID
     :type: batch_id: int
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -119,7 +119,7 @@ def create_reprocess_messages(root_recipe_ids, recipe_type_name, revision_num, e
     """Creates messages to reprocess the given recipes
 
     :param root_recipe_ids: The root recipe IDs
-    :type root_recipe_ids: list
+    :type root_recipe_ids: :func:`list`
     :param recipe_type_name: The new recipe type name
     :type recipe_type_name: string
     :param revision_num: The new recipe type revision number
@@ -131,7 +131,7 @@ def create_reprocess_messages(root_recipe_ids, recipe_type_name, revision_num, e
     :param forced_nodes: Describes the nodes that have been forced to reprocess
     :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -168,11 +168,11 @@ def create_subrecipes_messages(recipe, sub_recipes, forced_nodes=None):
     :param recipe: The recipe model
     :type recipe: :class:`recipe.models.Recipe`
     :param sub_recipes: The list of SubRecipe tuples describing the sub-recipes to create
-    :type sub_recipes: list
+    :type sub_recipes: :func:`list`
     :param forced_nodes: Describes the nodes that have been forced to reprocess
     :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -397,7 +397,7 @@ class CreateRecipes(CommandMessage):
         """Creates any messages resulting from the new recipes
 
         :param new_recipes: The list of new recipe models
-        :type new_recipes: list
+        :type new_recipes: :func:`list`
         """
 
         forced_nodes_by_id = {}  # {Recipe ID: Forced nodes}
@@ -473,7 +473,7 @@ class CreateRecipes(CommandMessage):
         """Creates the recipe models for the message
 
         :returns: The list of recipe models created
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         if self.create_recipes_type == NEW_RECIPE_TYPE:
@@ -520,7 +520,7 @@ class CreateRecipes(CommandMessage):
         """Creates the recipe models for a reprocess
 
         :returns: The list of recipe models created
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         rt = RecipeType.objects.get(name=self.recipe_type_name)
@@ -584,7 +584,7 @@ class CreateRecipes(CommandMessage):
         """Creates the recipe models for a sub-recipe message
 
         :returns: The list of recipe models created
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         sub_recipes = {}  # {Node name: recipe model}
@@ -645,7 +645,7 @@ class CreateRecipes(CommandMessage):
         """Searches to determine if this message already ran and the new recipes already exist
 
         :returns: The list of recipe models found
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         recipes = []

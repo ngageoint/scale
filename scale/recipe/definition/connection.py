@@ -32,7 +32,7 @@ class InputConnection(object):
         :param node_output_interfaces: The output interface for each node stored by node name
         :type node_output_interfaces: dict
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
@@ -74,7 +74,7 @@ class InputConnection(object):
         :param all_dependencies: A set of all dependencies (node names) for the input node
         :type all_dependencies: set
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """

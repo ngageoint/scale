@@ -285,7 +285,7 @@ class RecipeDefinition(object):
         """Returns the recipe node names in a valid topological ordering (dependency order)
 
         :returns: The list of nodes names in a topological ordering
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition contains a circular
             dependency
@@ -314,7 +314,7 @@ class RecipeDefinition(object):
         :param node_output_interfaces: The output interface for each job node stored by node name
         :type node_output_interfaces: dict
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """
@@ -393,13 +393,13 @@ class RecipeDefinition(object):
         :param node: The current node
         :type node: :class:`recipe.definition.node.NodeDefinition`
         :param results: The list of node names in topological order
-        :type results: list
+        :type results: :func:`list`
         :param perm_set: A permanent set of visited nodes (node names)
         :type perm_set: set
         :param temp_set: A temporary set of visited nodes (node names)
         :type temp_set: set
         :returns: A list of nodes in topological order
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition contains a circular
             dependency

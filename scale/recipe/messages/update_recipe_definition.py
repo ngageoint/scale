@@ -55,7 +55,7 @@ def create_job_update_recipe_definition_message(recipe_type_id, job_type_id):
     :param job_type_id: The job type
     :type job_type_id: int
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     message = UpdateRecipeDefinition()

@@ -52,9 +52,9 @@ class NodeInstance(object):
         """Adds a job ID to one of the given lists if it needs to be updated to PENDING or BLOCKED status
 
         :param pending_job_ids: The list of IDs for jobs that should be set to PENDING
-        :type pending_job_ids: list
+        :type pending_job_ids: :func:`list`
         :param blocked_job_ids: The list of IDs for jobs that should be set to BLOCKED
-        :type blocked_job_ids: list
+        :type blocked_job_ids: :func:`list`
         """
 
         self.blocks_child_nodes = False

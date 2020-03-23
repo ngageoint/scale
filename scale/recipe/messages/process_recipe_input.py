@@ -18,11 +18,11 @@ def create_process_recipe_input_messages(recipe_ids, forced_nodes=None):
     """Creates messages to process the input for the given recipes
 
     :param recipe_ids: The recipe IDs
-    :type recipe_ids: list
+    :type recipe_ids: :func:`list`
     :param forced_nodes: Describes the nodes that have been forced to reprocess
     :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
