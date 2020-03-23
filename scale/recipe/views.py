@@ -118,7 +118,10 @@ class RecipeTypesView(ListCreateAPIView):
         definition_dict = rest_util.parse_dict(request, 'definition', required=True)
 
         basename = title_to_basename(title)
-        if basename == 'validation':
+        if not basename:
+            logger.exception('Unable to create recipe type with no title')
+            raise BadParameter(unicode('Unable to create recipe type with no title'))
+        elif basename == 'validation':
             logger.exception('Unable to create recipe type named "validation"')
             raise BadParameter(unicode('Unable to create recipe type named "validation"'))
             
