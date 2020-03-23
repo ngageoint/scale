@@ -105,11 +105,11 @@ class JobLoadManager(models.Manager):
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param job_type_ids: Query jobs of the type associated with the identifier.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_names: Query jobs of the type associated with the name.
-        :type job_type_names: list[str]
+        :type job_type_names: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of job loads that match the time range.
         :rtype: list[:class:`queue.models.JobLoad`]
         """
@@ -214,7 +214,7 @@ class QueueManager(models.Manager):
         """Marks the queued job executions for the given jobs as canceled
 
         :param job_ids: The list of job IDs being canceled
-        :type job_ids: list
+        :type job_ids: :func:`list`
         """
 
         self.filter(job_id__in=job_ids).update(is_canceled=True)
@@ -226,7 +226,7 @@ class QueueManager(models.Manager):
         :param order_mode: The mode determining how to order the queue (FIFO or LIFO)
         :type order_mode: string
         :param ignore_job_type_ids: The list of job type IDs to ignore
-        :type ignore_job_type_ids: list
+        :type ignore_job_type_ids: :func:`list`
         :returns: The list of queue models
         :rtype: list[:class:`queue.models.Queue`]
         """
@@ -271,13 +271,13 @@ class QueueManager(models.Manager):
         ignored.
 
         :param jobs: The job models to put on the queue
-        :type jobs: list
+        :type jobs: :func:`list`
         :param requeue: Whether this is a re-queue (True) or a first queue (False)
         :type requeue: bool
         :param priority: An optional argument to reset the jobs' priority when they are queued
         :type priority: int
         :returns: The list of job IDs that were successfully QUEUED
-        :rtype: list
+        :rtype:  :func:`list`
         """
 
         when_queued = timezone.now()

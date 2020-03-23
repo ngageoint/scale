@@ -25,13 +25,13 @@ def create_queued_jobs_messages(jobs, requeue=False, priority=None):
     """Creates messages to queue the given jobs
 
     :param jobs: The jobs to queue (QueuedJob tuple)
-    :type jobs: list
+    :type jobs: :func:`list`
     :param requeue: Whether this is a re-queue (True) or a first queue (False)
     :type requeue: bool
     :param priority: Optional priority to set on the queued jobs
     :type priority: int
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
