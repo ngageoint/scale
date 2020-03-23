@@ -27,23 +27,23 @@ def create_requeue_jobs_bulk_message(started=None, ended=None, error_categories=
     :param ended: The end time of the jobs
     :type ended: :class:`datetime.datetime`
     :param error_categories: A list of error categories
-    :type error_categories: list
+    :type error_categories: :func:`list`
     :param error_ids: A list of error IDs
-    :type error_ids: list
+    :type error_ids: :func:`list`
     :param job_ids: A list of job IDs
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :param job_type_ids: A list of job type IDs
-    :type job_type_ids: list
+    :type job_type_ids: :func:`list`
     :param priority: A new priority for the re-queued jobs
     :type priority: int
     :param status: The job status
     :type status: str
     :param job_type_names: A list of job type names
-    :type job_type_names: list
+    :type job_type_names: :func:`list`
     :param batch_ids: A list of batch IDs
-    :type batch_ids: list
+    :type batch_ids: :func:`list`
     :param recipe_ids: A list of recipe IDs
-    :type recipe_ids: list
+    :type recipe_ids: :func:`list`
     :param is_superseded: Whether the jobs are superseded or not
     :type is_superseded: boolean
     :return: The message
