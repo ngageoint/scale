@@ -17,9 +17,9 @@ def create_process_condition_messages(condition_ids):
     """Creates messages to process the given conditions
 
     :param condition_ids: The condition IDs
-    :type condition_ids: list
+    :type condition_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

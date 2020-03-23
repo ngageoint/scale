@@ -60,7 +60,7 @@ class RecipeManager(models.Manager):
         """Marks the recipes with the given IDs as being completed
 
         :param recipe_ids: The recipe IDs
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :param when: The time that the recipes were completed
         :type when: :class:`datetime.datetime`
         """
@@ -169,9 +169,9 @@ class RecipeManager(models.Manager):
         transaction.
 
         :param recipe_ids: The recipe IDs
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :returns: The recipe models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
@@ -182,9 +182,9 @@ class RecipeManager(models.Manager):
         IDs. The returned models have no related fields populated. Caller must be within an atomic transaction.
 
         :param root_recipe_ids: The root recipe IDs
-        :type root_recipe_ids: list
+        :type root_recipe_ids: :func:`list`
         :returns: The recipe models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         root_recipe_ids = set(root_recipe_ids)  # Ensure no duplicates
@@ -218,9 +218,9 @@ class RecipeManager(models.Manager):
         recipes.
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :returns: The recipe IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         recipe_ids = set()
@@ -234,9 +234,9 @@ class RecipeManager(models.Manager):
         recipes.
 
         :param sub_recipe_ids: The sub-recipe IDs
-        :type sub_recipe_ids: list
+        :type sub_recipe_ids: :func:`list`
         :returns: The recipe IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         recipe_ids = set()
@@ -299,13 +299,13 @@ class RecipeManager(models.Manager):
         :param source_ended: Query recipes where source collection ended before this time.
         :type source_ended: :class:`datetime.datetime`
         :param source_sensor_classes: Query recipes with the given source sensor class.
-        :type source_sensor_classes: list
+        :type source_sensor_classes: :func:`list`
         :param source_sensor: Query recipes with the given source sensor.
-        :type source_sensor: list
+        :type source_sensor: :func:`list`
         :param source_collection: Query recipes with the given source class.
-        :type source_collection: list
+        :type source_collection: :func:`list`
         :param source_tasks: Query recipes with the given source tasks.
-        :type source_tasks: list
+        :type source_tasks: :func:`list`
         :param ids: Query recipes associated with the given identifiers.
         :type ids: [int]
         :param type_ids: Query recipes of the type associated with the identifiers.
@@ -313,7 +313,7 @@ class RecipeManager(models.Manager):
         :param type_names: Query recipes of the type associated with the name.
         :type type_names: [string]
         :param batch_ids: Query recipes associated with batches with the given identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param is_superseded: Query recipes that match the is_superseded flag.
         :type is_superseded: bool
         :param is_completed: Query recipes that match the is_completed flag.
@@ -480,7 +480,7 @@ class RecipeManager(models.Manager):
         """Updates the given recipes to be superseded
 
         :param recipe_ids: The recipe IDs to supersede
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :param when: The time that the recipes were superseded
         :type when: :class:`datetime.datetime`
         """
@@ -492,7 +492,7 @@ class RecipeManager(models.Manager):
         """Updates the metrics for the recipes with the given IDs
 
         :param recipe_ids: The recipe IDs
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         """
 
         if not recipe_ids:
@@ -924,7 +924,7 @@ class RecipeNodeManager(models.Manager):
         """Copies the given nodes from the superseded recipes to the new recipes
 
         :param recipe_copies: A list of RecipeNodeCopy tuples
-        :type recipe_copies: list
+        :type recipe_copies: :func:`list`
         """
 
         if not recipe_copies:
@@ -957,7 +957,7 @@ class RecipeNodeManager(models.Manager):
         :param conditions: A dict of condition models stored by node name
         :type conditions: dict
         :returns: The list of recipe_node models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         node_models = []
@@ -979,7 +979,7 @@ class RecipeNodeManager(models.Manager):
         :param recipe_jobs: A dict of job models stored by node name
         :type recipe_jobs: dict
         :returns: The list of recipe_node models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         node_models = []
@@ -1001,7 +1001,7 @@ class RecipeNodeManager(models.Manager):
         :param sub_recipes: A dict of recipe models stored by node name
         :type sub_recipes: dict
         :returns: The list of recipe_node models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         node_models = []
@@ -1033,7 +1033,7 @@ class RecipeNodeManager(models.Manager):
         :param recipe_id: The recipe ID
         :type recipe_id: int
         :returns: The recipe_node models for the recipe
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
@@ -1106,11 +1106,11 @@ class RecipeNodeManager(models.Manager):
         """Supersedes the jobs for the given recipe IDs and node names
 
         :param recipe_ids: The recipe IDs
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :param when: The time that the jobs were superseded
         :type when: :class:`datetime.datetime`
         :param node_names: The node names of the jobs to supersede
-        :type node_names: list
+        :type node_names: :func:`list`
         :param all_nodes: Whether all nodes should be superseded
         :type all_nodes: bool
         """
@@ -1125,11 +1125,11 @@ class RecipeNodeManager(models.Manager):
         """Supersedes the sub-recipes for the given recipe IDs and node names
 
         :param recipe_ids: The recipe IDs
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :param when: The time that the sub-recipes were superseded
         :type when: :class:`datetime.datetime`
         :param node_names: The node names of the sub-recipes to supersede
-        :type node_names: list
+        :type node_names: :func:`list`
         :param all_nodes: Whether all nodes should be superseded
         :type all_nodes: bool
         """
@@ -1345,15 +1345,15 @@ class RecipeTypeManager(models.Manager):
         """Returns a list of recipe types within the given time range.
 
         :param keywords: Query recipe types with name, title, description or tag matching a keyword
-        :type keywords: list
+        :type keywords: :func:`list`
         :param is_active: Query recipe types that are actively available for use.
         :type is_active: bool
         :param is_system: Query recipe types that are system recipe types.
         :type is_system: bool
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         :returns: The list of recipe types that match the given parameters.
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         # Fetch a list of recipe types
@@ -1673,9 +1673,9 @@ class RecipeTypeRevisionManager(models.Manager):
         given values. Each revision model will have its related recipe type model populated.
 
         :param revision_ids: A list of revision IDs to return
-        :type revision_ids: list
+        :type revision_ids: :func:`list`
         :param revision_tuples: A list of tuples (recipe type name, revision num) for additional revisions to return
-        :type revision_tuples: list
+        :type revision_tuples: :func:`list`
         :returns: The revisions stored by revision ID
         :rtype: dict
         """
@@ -1859,9 +1859,9 @@ class RecipeTypeSubLinkManager(models.Manager):
         made in an atomic transaction.
 
         :param recipe_type_ids: List of parent recipe type IDs
-        :type recipe_type_ids: list of int
+        :type recipe_type_ids: [int]
         :param sub_recipe_type_ids: List of child recipe type IDs.
-        :type sub_recipe_type_ids: list of int
+        :type sub_recipe_type_ids: [int]
         """
 
         if len(recipe_type_ids) != len(sub_recipe_type_ids):
@@ -1894,9 +1894,9 @@ class RecipeTypeSubLinkManager(models.Manager):
         """Returns a list of the parent recipe_type IDs for the given sub recipe type IDs.
 
         :param sub_recipe_type_ids: The sub recipe type IDs
-        :type sub_recipe_type_ids: list
+        :type sub_recipe_type_ids: :func:`list`
         :returns: The list of parent recipe type IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         query = RecipeTypeSubLink.objects.filter(sub_recipe_type_id__in=list(sub_recipe_type_ids)).only('recipe_type_id')
@@ -1906,9 +1906,9 @@ class RecipeTypeSubLinkManager(models.Manager):
         """Returns a list of the sub recipe type IDs for the given recipe type IDs.
 
         :param recipe_type_ids: The recipe type IDs
-        :type recipe_type_ids: list
+        :type recipe_type_ids: :func:`list`
         :returns: The list of sub recipe type IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         query = RecipeTypeSubLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('sub_recipe_type_id')
@@ -1977,9 +1977,9 @@ class RecipeTypeJobLinkManager(models.Manager):
         made in an atomic transaction.
 
         :param recipe_type_ids: List of recipe type IDs
-        :type recipe_type_ids: list of int
+        :type recipe_type_ids: [int]
         :param job_type_ids: List of job type IDs.
-        :type job_type_ids: list of int
+        :type job_type_ids: [int]
         """
 
         if len(recipe_type_ids) != len(job_type_ids):
@@ -2012,9 +2012,9 @@ class RecipeTypeJobLinkManager(models.Manager):
         """Returns a list of recipe_type IDs for the given job type IDs.
 
         :param job_type_ids: The sub recipe type IDs
-        :type job_type_ids: list
+        :type job_type_ids: :func:`list`
         :returns: The list of recipe type IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         query = RecipeTypeJobLink.objects.filter(job_type_id__in=list(job_type_ids)).only('recipe_type_id')
@@ -2024,9 +2024,9 @@ class RecipeTypeJobLinkManager(models.Manager):
         """Returns a list of the job type IDs for the given recipe type IDs.
 
         :param recipe_type_ids: The recipe type IDs
-        :type recipe_type_ids: list
+        :type recipe_type_ids: :func:`list`
         :returns: The list of job type IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         query = RecipeTypeJobLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('job_type_id')

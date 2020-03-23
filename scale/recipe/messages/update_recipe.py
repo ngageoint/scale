@@ -45,9 +45,9 @@ def create_update_recipe_messages_from_node(root_recipe_ids):
     have been updated and need to then update the recipes that contain the nodes.
 
     :param root_recipe_ids: The root recipe IDs
-    :type root_recipe_ids: list
+    :type root_recipe_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     # We force all nodes to reprocess because if we are updating due to a recipe node update (completed job, failed job,
