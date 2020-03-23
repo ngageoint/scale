@@ -19,11 +19,11 @@ def create_unpublish_jobs_messages(job_ids, when):
     """Creates messages to unpublish the given jobs
 
     :param job_ids: The job IDs to unpublish
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :param when: When the jobs were unpublished
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

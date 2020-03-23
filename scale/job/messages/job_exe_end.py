@@ -21,9 +21,9 @@ def create_job_exe_end_messages(job_exe_end_models):
     """Creates messages to create the given job_exe_end models
 
     :param job_exe_end_models: The job_exe_end models to create
-    :type job_exe_end_models: list
+    :type job_exe_end_models: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

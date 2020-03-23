@@ -38,7 +38,7 @@ class JobExecutionManager(object):
         """Adds the given job_exe_end models for job executions canceled off of the queue
 
         :param job_exe_ends: The job_exe_end models to add
-        :type job_exe_ends: list
+        :type job_exe_ends: :func:`list`
         """
 
         with self._lock:
@@ -51,7 +51,7 @@ class JobExecutionManager(object):
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: A list of the starved job executions
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         finished_job_exes = []
@@ -75,7 +75,7 @@ class JobExecutionManager(object):
         """Generates the portion of the status JSON that describes the job execution metrics
 
         :param nodes_list: The list of nodes within the status JSON
-        :type nodes_list: list
+        :type nodes_list: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         """
@@ -87,7 +87,7 @@ class JobExecutionManager(object):
         """Returns all messages related to jobs and executions that need to be sent
 
         :returns: The list of job-related messages to send
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         running_job_messages = None
@@ -187,11 +187,11 @@ class JobExecutionManager(object):
         """Informs the manager that the job executions with the given IDs were lost
 
         :param job_exe_ids: The IDs of the lost job executions
-        :type job_exe_ids: list
+        :type job_exe_ids: :func:`list`
         :param when: The time that the executions were lost
         :type when: :class:`datetime.datetime`
         :returns: A list of the finished job executions
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         lost_job_exe_ids = set(job_exe_ids)
@@ -219,7 +219,7 @@ class JobExecutionManager(object):
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
         :returns: A list of the finished job executions
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         finished_job_exes = []
@@ -237,9 +237,9 @@ class JobExecutionManager(object):
         """Adds newly scheduled running job executions to the manager
 
         :param job_exes: A list of the running job executions to add
-        :type job_exes: list
+        :type job_exes: :func:`list`
         :param messages: The messages for the running jobs
-        :type messages: list
+        :type messages: :func:`list`
         """
 
         with self._lock:
@@ -253,7 +253,7 @@ class JobExecutionManager(object):
         returned.
 
         :returns: A list of the finished job executions
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -286,9 +286,9 @@ class JobExecutionManager(object):
         """Creates messages for finished job executions
 
         :param finished_job_exes: The finished job executions
-        :type finished_job_exes: list
+        :type finished_job_exes: :func:`list`
         :returns: The messages
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         when = now()

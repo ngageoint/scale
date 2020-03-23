@@ -28,11 +28,11 @@ def create_completed_jobs_messages(completed_jobs, when):
     """Creates messages to complete the given jobs
 
     :param completed_jobs: The completed jobs
-    :type completed_jobs: list
+    :type completed_jobs: :func:`list`
     :param when: When the jobs completed
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -59,11 +59,11 @@ def process_completed_jobs_with_output(job_ids, when):
     model locks on the given jobs.
 
     :param job_ids: The job IDs
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :param when: The current time
     :type when: :class:`datetime.datetime`
     :return: The list of created messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

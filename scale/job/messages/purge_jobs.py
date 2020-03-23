@@ -27,13 +27,13 @@ def create_purge_jobs_messages(purge_job_ids, trigger_id, source_file_id):
     """Creates messages to remove the given job IDs
 
     :param purge_job_ids: The job IDs
-    :type purge_job_ids: list
+    :type purge_job_ids: :func:`list`
     :param trigger_id: The trigger event id for the purge operation
     :type trigger_id: int
     :param source_file_id: The source file id for the original file being purged
     :type source_file_id: int
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

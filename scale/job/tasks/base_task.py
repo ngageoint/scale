@@ -136,7 +136,7 @@ class Task(object):
         """Returns the Docker parameters used to run this task
 
         :returns: The Docker parameters
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self._docker_params

@@ -404,7 +404,7 @@ class JobInterface(object):
         """Returns the output parameter names for all file outputs
 
         :return: The file output parameter names
-        :rtype: list of str
+        :rtype: [string]
         """
 
         names = []
@@ -417,7 +417,7 @@ class JobInterface(object):
         """Gets the mounts defined for the job
 
         :return: the mounts for a job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_dict().get('mounts', [])
@@ -988,7 +988,7 @@ class JobInterface(object):
         given param value will be appended.
 
         :param env_vars: The environment variables that you want to perform replacement on
-        :type env_vars: list
+        :type env_vars: :func:`list`
         :param param_replacements: The parameter you are searching for
         :type param_replacements: dict
         :return: The env vars with all replacements made

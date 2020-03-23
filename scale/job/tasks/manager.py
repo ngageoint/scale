@@ -26,7 +26,7 @@ class TaskManager(object):
         """Generates the portion of the status JSON that describes the currently running node and system tasks
 
         :param nodes_list: The list of nodes within the status JSON
-        :type nodes_list: list
+        :type nodes_list: :func:`list`
         """
 
         node_tasks = {}  # {Agent ID: [task]}
@@ -92,7 +92,7 @@ class TaskManager(object):
         """Returns all of the tasks that need to be killed
 
         :returns: The list of tasks to kill
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks = []
@@ -108,7 +108,7 @@ class TaskManager(object):
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of tasks that require reconciliation
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks = []
@@ -124,7 +124,7 @@ class TaskManager(object):
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of tasks that timed out
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks = []

@@ -21,11 +21,11 @@ def create_pending_jobs_messages(pending_job_ids, when):
     """Creates messages to update the given job IDs to PENDING
 
     :param pending_job_ids: The job IDs
-    :type pending_job_ids: list
+    :type pending_job_ids: :func:`list`
     :param when: The current time
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

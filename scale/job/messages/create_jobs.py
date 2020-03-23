@@ -65,9 +65,9 @@ def create_jobs_messages_for_recipe(recipe, recipe_jobs):
     :param recipe: The recipe model
     :type recipe: :class:`recipe.models.Recipe`
     :param recipe_jobs: The list of RecipeJob tuples describing the jobs to create
-    :type recipe_jobs: list
+    :type recipe_jobs: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -275,7 +275,7 @@ class CreateJobs(CommandMessage):
         """Creates the job models for the message
 
         :returns: The list of job models created
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         jobs = []
@@ -293,7 +293,7 @@ class CreateJobs(CommandMessage):
         """Creates the job models for a recipe
 
         :returns: The list of job models created
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         from recipe.models import RecipeNode
@@ -345,7 +345,7 @@ class CreateJobs(CommandMessage):
         """Searches to determine if this message already ran and the jobs already exist
 
         :returns: The list of job models found
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         if self.create_jobs_type == INPUT_DATA_TYPE:

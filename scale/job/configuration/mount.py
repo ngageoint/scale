@@ -30,7 +30,7 @@ class MountConfig(object):
         """Validates this mount configuration
 
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
         """
