@@ -115,84 +115,159 @@ Here is a description of what each condition tests:
 Tests whether the first item in the list of values is less than the incoming data. The following will test parameter 'input_a' to see if it is less than 100. The 0 is ignored.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "integer", "condition": "<", "values": [100,0] }
+
+    {
+        "name": "input_a",
+        "type": "integer",
+        "condition": "<",
+        "values": [100,0]
+    }
 
 '<='
 ****
 Tests whether the first item in the list of values is less than or equal to the incoming data. The following will test parameter 'input_a' to see if the meta-data for that file has an attribute at foo/bar less than or equal to 100. The 0 is ignored.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "meta-data", "condition": "<=", "values": [[100,0]], "fields": [["foo", "bar"] }
+
+    {
+        "name": "input_a",
+        "type": "meta-data",
+        "condition": "<=",
+        "values": [[100,0]],
+        "fields": [["foo", "bar"]
+    }
+
 
 '>'
 ***
 Tests whether the first item in the list of values is greater than the incoming data. The following will test parameter 'input_a' to see if it is greater than 100. The 0 is ignored.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "number", "condition": ">", "values": [100,0] }
+
+    {
+        "name": "input_a",
+        "type": "number",
+        "condition": ">",
+        "values": [100,0]
+    }
 
 '>='
 ****
 Tests whether the first item in the list of values is greater than or equal to the incoming data. The following will test parameter 'input_a' to see if it has an attribute at foo/bar greater than or equal to 100. The 0 is ignored.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "object", "condition": ">=", "values": [[100,0]], "fields": [["foo", "bar"] }
+
+    {
+        "name": "input_a",
+        "type": "object",
+        "condition": ">=",
+        "values": [[100,0]],
+        "fields": [["foo", "bar"]
+    }
 
 '=='
 ****
 Tests whether the first item in the list of values is equal to the incoming data. The following will test parameter 'input_a' to see if the parsed data-type is 'ABC'.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "data-type", "condition": "==", "values": ["ABC"] }
+
+    {
+        "name": "input_a",
+        "type": "data-type",
+        "condition": "==",
+        "values": ["ABC"]
+    }
 
 '!='
 ****
 Tests whether the first item in the list of values is not equal to the incoming data. The following will test parameter 'input_a' to see if the filename is not 'bad_file.txt'.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "filename", "condition": "!=", "values": ["bad_file.txt"] }
+
+    {
+        "name": "input_a",
+        "type": "filename",
+        "condition": "!=",
+        "values": ["bad_file.txt"]
+    }
 
 'between'
 *********
 Tests whether the incoming data is between the first two values in the list of values.  Note the first value must be smaller than the second or this will never be true. The following will test parameter 'input_a' to see if it is >= 0 and <= 100.  
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "integer", "condition": "between", "values": [0,100] }
+
+    {
+        "name": "input_a",
+        "type": "integer",
+        "condition": "between",
+        "values": [0,100]
+    }
 
 'in'
 ****
 Tests whether the incoming data is in the list of values (e.g. a job outputs "apple" and your values are ["orange", "apple"] succeeds, an output of "pineapple" will fail).  The following will test parameter 'input_a' to see if it's media-type is either javascript or plain text.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "media-type", "condition": "in", "values": ["application/javascript","text/plain"] }
+
+    {
+        "name": "input_a",
+        "type": "media-type",
+        "condition": "in",
+        "values": ["application/javascript","text/plain"]
+    }
 
 'not in'
 ********
 Reverse of the previous condition. Will succeed if the input is not in the list of values. The following will test parameter 'input_a' to see if it's media-type is neither javascript nor plain text.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "media-type", "condition": "not in", "values": ["application/javascript","text/plain"] }
+
+    {
+        "name": "input_a",
+        "type": "media-type",
+        "condition": "not in",
+        "values": ["application/javascript","text/plain"]
+    }
 
 'contains'
 **********
 Iterates over each value and checks if it exists in the input.  Succeeds if one value is present in the input. The following will check if either 'abc' or 'def' exists as a substring in the filename of 'input_a'
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "filename", "condition": "contains", "values": ["abc","def"] }
+
+    {
+        "name": "input_a",
+        "type": "filename",
+        "condition": "contains",
+        "values": ["abc","def"]
+    }
 
 'subset of'
 ***********
 Only applicable for objects, this condition tests whether each item in the input object exists in the object defined in the first item in the list of values. This will inspect the meta-data for the file passed into 'input_a' to see if it contains any of the parameters 'foo' or 'bar' with values of 10 and 100 respectively and nothing else. Note that if the file's meta-data is empty this will return true and this may need to be coupled with a filter that specifies the meta-data is not equal to an empty object.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "meta-data", "condition": "subset of", "values": [{"foo": 10, "bar": 100}] }
+
+    {
+        "name": "input_a",
+        "type": "meta-data",
+        "condition": "subset of",
+        "values": [{"foo": 10, "bar": 100}]
+    }
 
 'superset of'
 *************
 Only applicable for objects, this condition tests whether each item in the object defined in the first item in the list of values exists in the input object. This will inspect 'input_a' to see if it contains all of the parameters 'foo' or 'bar' with values of 10 and 100 respectively.  Additional fields present in 'input_a' are ignored.
 
 .. code-block:: javascript
-{ "name": "input_a", "type": "object", "condition": "superset of", "values": [{"foo": 10, "bar": 100}] }
+
+    {
+        "name": "input_a",
+        "type": "object",
+        "condition": "superset of",
+        "values": [{"foo": 10, "bar": 100}]
+    }
 
 The list of values is used by the filter to compare against the input from the preceding job (specified by the name).  For most conditions, only the first entry in the list is used
 but this must always be a list.  The values should correspond to the type but there is no type checking performed on values when validating the filter, only when the filter is run.
@@ -200,11 +275,13 @@ but this must always be a list.  The values should correspond to the type but th
 The optional fields parameter specifies paths of fields to compare when testing json objects or file meta-data.  If a job returns the following json for an output: 
 
 .. code-block:: javascript
+
    {
-      'foo': {
-         'bar': 100
+      "foo": {
+         "bar": 100
       }
    }
+
 then a fields value of [['foo','bar']] will check the value 100 against the condition and first value specified in the filter.  Multiple paths can be specified but the length
 of the fields array must equal the length of the values array and each entry in the values array must be an array itself. The nth entry in the paths array will be compared 
 against the nth entry in the values array.  By default all fields must pass for the condition to pass. If 'all_fields' is set to false then a single path succeeding will
@@ -451,7 +528,7 @@ Location http://.../v6/datasets/105/
    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Create Dataset*                                                                                                       |
+| **Create Dataset**                                                                                                      |
 +=========================================================================================================================+
 | Creates a new dataset with the given fields                                                                             |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -490,6 +567,7 @@ v6 Create Dataset with Members
 Request: POST http://.../v6/datasets/
 
 .. code-block:: javascript
+
     {
         "title": "My Dataset",
         "description": "My Dataset Description",
@@ -514,7 +592,7 @@ Location http://.../v6/datasets/106
    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Create Dataset*                                                                                                       |
+| **Create Dataset**                                                                                                      |
 +=========================================================================================================================+
 | Creates a new dataset with the given fields                                                                             |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -532,7 +610,7 @@ Location http://.../v6/datasets/106
 |                     |                   |          | See :ref:`rest_v6_data_dataset`                                    |
 +---------------------+-------------------+----------+--------------------------------------------------------------------+
 | data                | JSON Object       | Optional | JSON definition for the dataset members                            |
-|                     |                   |          | See :ref:`rest_v6_data_data`                                            |
+|                     |                   |          | See :ref:`rest_v6_data_data`                                       |
 +---------------------+-------------------+----------+--------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -575,7 +653,7 @@ Location http://.../v6/datasets/validation/
    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Validate Dataset*                                                                                                     |
+| **Validate Dataset**                                                                                                    |
 +=========================================================================================================================+
 | Validates the given fields for creating a new dataset                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -716,7 +794,7 @@ Response: 200 Ok
    [ <:ref:`Data JSON <rest_v6_data_data>`> ]
    
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Create Dataset Members*                                                                                               |
+| **Create Dataset Members**                                                                                              |
 +=========================================================================================================================+
 | Creates new dataset members with the given fields                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
