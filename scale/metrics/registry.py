@@ -47,7 +47,7 @@ class MetricsType(object):
         Column names can be used to select a specific series of plot values.
 
         :returns: The metrics type column names.
-        :rtype: list[string]
+        :rtype: [string]
         """
         return self._get_column_map().keys()
 
@@ -70,9 +70,9 @@ class MetricsType(object):
         columns with a matching a value. Duplicates are then removed to produce the final result.
 
         :param column_names: The names of the columns to lookup.
-        :type column_names: list[string]
+        :type column_names: [string]
         :param group_names: The names of the groups to lookup.
-        :type group_names: list[string]
+        :type group_names: [string]
         :returns: The metrics type columns.
         :rtype: set[:class:`metrics.registry.MetricsTypeColumn`]
         """
@@ -88,7 +88,7 @@ class MetricsType(object):
         final result.
 
         :param group_names: The names of the groups to lookup.
-        :type group_names: list[string]
+        :type group_names: [string]
         :returns: The metrics type columns.
         :rtype: set[:class:`metrics.registry.MetricsTypeColumn`]
         """
@@ -241,7 +241,7 @@ class MetricsPlotData(object):
         :param choice_field: The name of the field within each model that contains the choice model relation.
         :type choice_field: string
         :param choice_ids: A list of related model identifiers to query.
-        :type choice_ids: list[string]
+        :type choice_ids: [string]
         :param columns: A list of metrics type column definitions that should be included.
         :type columns: list[:class:`metrics.registry.MetricsTypeColumn`]
         :returns: The plot data models that were created.
@@ -268,7 +268,7 @@ class MetricsPlotData(object):
         :param choice_field: The name of the field within the entry dict that contains the choice model relation.
         :type choice_field: string
         :param choice_ids: A list of related model identifiers to query.
-        :type choice_ids: list[string]
+        :type choice_ids: [string]
         :returns: The plot model that was added.
         :rtype: :class:`metrics.registry.MetricsPlotValue`
         """
@@ -353,7 +353,7 @@ class MetricsTypeProvider(object):
         :param ended: The end of the time range to query.
         :type ended: datetime.date
         :param choice_ids: A list of related model identifiers to query.
-        :type choice_ids: list[string]
+        :type choice_ids: [string]
         :param columns: A list of metric columns to include from the metric type.
         :type columns: {:class:`metrics.registry.MetricsTypeColumn`}
         :returns: A series of plot values that match the query.
