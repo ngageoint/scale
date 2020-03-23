@@ -14,7 +14,7 @@ class NodeResources(object):
         """Constructor
 
         :param resources: The list of node resources
-        :type resources: list
+        :type resources: :func:`list`
         """
 
         self._resources = {}  # {Name: Resource}
@@ -89,7 +89,7 @@ class NodeResources(object):
         """The list of resources
 
         :returns: The list of resources
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self._resources.values()

@@ -19,9 +19,9 @@ class NodeManager(models.Manager):
         """Creates and returns new nodes with the given host names
 
         :param hostnames: The list of host names
-        :type hostnames: list
+        :type hostnames: :func:`list`
         :returns: The list of new nodes
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         nodes = []
@@ -52,7 +52,7 @@ class NodeManager(models.Manager):
         :param ended: Query nodes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :param is_active: Include only active nodes, only inactive nodes or both?
         :type is_active: boolean
         :returns: The list of nodes that match the time range.
@@ -82,7 +82,7 @@ class NodeManager(models.Manager):
         """Returns a list of nodes that are currently running job_exes.
 
         :returns: The list of node ids running job_exes
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_exe_end = JobExecutionEnd.objects.all().values_list('job_exe', flat=True)
@@ -94,9 +94,9 @@ class NodeManager(models.Manager):
         """Returns a list of all nodes that either have one of the given host names or is active.
 
         :param hostnames: The list of host names
-        :type hostnames: list
+        :type hostnames: :func:`list`
         :returns: The list of nodes for the scheduler
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return Node.objects.filter(models.Q(hostname__in=hostnames) | models.Q(is_active=True))
