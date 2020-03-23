@@ -84,9 +84,9 @@ class FileAncestryLinkManager(models.Manager):
         files that are source files themselves.
 
         :param file_ids: The file IDs
-        :type file_ids: list
+        :type file_ids: :func:`list`
         :returns: The list of ancestor source file IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         potential_src_file_ids = set(file_ids)
@@ -101,7 +101,7 @@ class FileAncestryLinkManager(models.Manager):
         that are source files themselves.
 
         :param file_ids: The file IDs
-        :type file_ids: list[int]
+        :type file_ids: [int]
         :returns: The list of ancestor source files
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
@@ -192,13 +192,11 @@ class ProductFileManager(models.GeoManager):
         :keyword time_field: The time field to use for filtering.
         :type time_field: string
         :param job_type_ids: Query product files produced by jobs with the given type identifier.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_names: Query product files produced by jobs with the given type name.
-        :type job_type_names: list[str]
-        :param job_type_categories: Query product files produced by jobs with the given type category.
-        :type job_type_categories: list[str]
+        :type job_type_names: [string]
         :keyword job_ids: Query product files produced by a given job id
-        :type job_ids: list[int]
+        :type job_ids: [int]
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query product files that have/have not been superseded.
@@ -208,15 +206,15 @@ class ProductFileManager(models.GeoManager):
         :keyword job_output: Query product files with the given job output
         :type job_output: str
         :keyword recipe_ids: Query product files produced by a given recipe id
-        :type recipe_ids: list[int]
+        :type recipe_ids: [int]
         :keyword recipe_job: Query product files produced by a given recipe name
         :type recipe_job: str
         :keyword recipe_type_ids: Query product files produced by a given recipe types
-        :type recipe_type_ids: list[int]
+        :type recipe_type_ids: [int]
         :keyword batch_ids: Query product files produced by batches with the given identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The product file query
         :rtype: :class:`django.db.models.QuerySet`
         """
@@ -290,11 +288,11 @@ class ProductFileManager(models.GeoManager):
         :keyword time_field: The time field to use for filtering.
         :type time_field: string
         :param job_type_ids: Query product files produced by jobs with the given type identifier.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_names: Query product files produced by jobs with the given type name.
-        :type job_type_names: list[str]
+        :type job_type_names: [string]
         :keyword job_ids: Query product files produced by a given job id
-        :type job_ids: list[int]
+        :type job_ids: [int]
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param file_name: Query product files with the given file name.
@@ -302,15 +300,15 @@ class ProductFileManager(models.GeoManager):
         :keyword job_output: Query product files with the given job output
         :type job_output: str
         :keyword recipe_ids: Query product files produced by a given recipe id
-        :type recipe_ids: list[int]
+        :type recipe_ids: [int]
         :keyword recipe_job: Query product files produced by a given recipe name
         :type recipe_job: str
         :keyword recipe_type_ids: Query product files produced by a given recipe types
-        :type recipe_type_ids: list[int]
+        :type recipe_type_ids: [int]
         :keyword batch_ids: Query product files produced by batches with the given identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of product files that match the time range.
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
@@ -338,7 +336,7 @@ class ProductFileManager(models.GeoManager):
         :param file_name: Query source files with the given file name.
         :type file_name: str
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of source files that match the time range.
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
@@ -367,7 +365,7 @@ class ProductFileManager(models.GeoManager):
         """Populates each of the given products with its source file ancestors in a field called "source_files"
 
         :param products: List of products
-        :type products: list of :class:`storage.models.ScaleFile`
+        :type products: list[:class:`storage.models.ScaleFile`]
         """
 
         product_lists = {}  # {product ID: list of source files}
@@ -428,7 +426,7 @@ class ProductFileManager(models.GeoManager):
         """Unpublishes all of the published products created by the given job IDs
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param when: When the products were unpublished
         :type when: :class:`datetime.datetime`
         """
@@ -458,13 +456,13 @@ class ProductFileManager(models.GeoManager):
         :param file_entries: List of files to upload
         :type file_entries: list[:class:`product.types.ProductFileMetadata`]
         :param input_file_ids: List of identifiers for files used to produce the given file entries
-        :type input_file_ids: list of int
+        :type input_file_ids: [int]
         :param job_exe: The job_exe model with the related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
         :param workspace: The workspace to use for storing the product files
         :type workspace: :class:`storage.models.Workspace`
         :returns: The list of the saved product models
-        :rtype: list of :class:`storage.models.ScaleFile`
+        :rtype: [:class:`storage.models.ScaleFile`]
         """
 
         # Build a list of UUIDs for the input files
