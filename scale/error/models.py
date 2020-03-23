@@ -121,17 +121,17 @@ class ErrorManager(models.Manager):
         :param ended: Query errors updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :param is_builtin: Query errors that match the is_builtin flag
         :type is_builtin: bool
         :param job_type_name: Query errors that match the given job type name
-        :type job_type_ids: sring
+        :type job_type_ids: string
         :param name: Query errors with the given name
         :type name: string
         :param category: Query errors with the given category.
         :type category: string
         :returns: The list of errors that match the given filters
-        :rtype: list[:class:`error.models.Error`]
+        :rtype: [:class:`error.models.Error`]
         """
 
         # Fetch a list of errors
@@ -178,7 +178,7 @@ class ErrorManager(models.Manager):
         :param job_type_name: The job type name
         :type job_type_name: string
         :param error_models: The error models
-        :type error_models: list
+        :type error_models: :func:`list`
         """
 
         error_names = [error.name for error in error_models]
