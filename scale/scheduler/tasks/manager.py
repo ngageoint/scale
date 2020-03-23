@@ -59,7 +59,7 @@ class SystemTaskManager(object):
         """Returns a list of system tasks that need to be killed as soon as possible
 
         :returns: The list of system tasks to kill
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks = []
@@ -76,7 +76,7 @@ class SystemTaskManager(object):
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of system tasks to schedule
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks = []

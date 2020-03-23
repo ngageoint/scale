@@ -25,9 +25,9 @@ class SchedulingNode(object):
         :param node: The node
         :type node: :class:`scheduler.node.node_class.Node`
         :param tasks: The current tasks running on the node
-        :type tasks: list
+        :type tasks: :func:`list`
         :param running_job_exes: The current job executions running on the node
-        :type running_job_exes: list
+        :type running_job_exes: :func:`list`
         :param resource_set: The set of resources for the node
         :type resource_set: :class:`scheduler.resources.agent.ResourceSet`
         """
@@ -167,7 +167,7 @@ class SchedulingNode(object):
         enough to cover the current allocation, job executions and tasks are removed as necessary.
 
         :param offers: The resource offers to add
-        :type offers: list
+        :type offers: :func:`list`
         """
 
         offer_resources = NodeResources()
@@ -198,7 +198,7 @@ class SchedulingNode(object):
         """Hands the node its queued job executions that have now been scheduled in the database and are now running
 
         :param job_exes: The running job executions that have now been scheduled in the database
-        :type job_exes: list
+        :type job_exes: :func:`list`
         """
 
         self._allocated_queued_job_exes = []
@@ -227,7 +227,7 @@ class SchedulingNode(object):
         :param job_exe: The job execution to score
         :type job_exe: :class:`queue.job_exe.QueuedJobExecution`
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :returns: The integer score indicating how good of a fit reserving this node is for this job execution, possibly
             None
         :rtype: int
@@ -272,7 +272,7 @@ class SchedulingNode(object):
         :param job_exe: The job execution to score
         :type job_exe: :class:`queue.job_exe.QueuedJobExecution`
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :returns: The integer score indicating how good of a fit this job execution is for this node, possibly None
         :rtype: int
         """
@@ -286,7 +286,7 @@ class SchedulingNode(object):
         :param system_task: The system task to score
         :type system_task: :class:`job.tasks.base_task.Task`
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :returns: The integer score indicating how good of a fit this system task is for this node, possibly None
         :rtype: int
         """
@@ -310,7 +310,7 @@ class SchedulingNode(object):
         :param resources: The resources to score
         :type resources: :class:`node.resources.node_resources.NodeResources`
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :returns: The integer score indicating how good of a fit these resources are for this node, possibly None
         :rtype: int
         """
