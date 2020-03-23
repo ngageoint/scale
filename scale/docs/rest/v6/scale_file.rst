@@ -196,7 +196,7 @@ Response: 200 OK
 | results              | Array             | List of result JSON objects that match the query parameters.                   |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                  | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                      |                   | (See :ref:`File Details <rest_v6_file_details>`)                      |
+|                      |                   | (See :ref:`File Details <rest_v6_file_details>`)                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .workspace           | JSON Object       | The workspace that has stored the product.                                     |
 |                      |                   | (See :ref:`Workspace Details <rest_v6_workspace_details>`)                     |
