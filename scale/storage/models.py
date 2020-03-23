@@ -342,43 +342,43 @@ class ScaleFileManager(models.Manager):
         :param source_ended: Query files where source collection ended before this time.
         :type source_ended: :class:`datetime.datetime`
         :param source_sensor_classes: Query files with the given source sensor class.
-        :type source_sensor_classes: list
+        :type source_sensor_classes: :func:`list`
         :param source_sensor: Query files with the given source sensor.
-        :type source_sensor: list
+        :type source_sensor: :func:`list`
         :param source_collection: Query files with the given source class.
-        :type source_collection: list
+        :type source_collection: :func:`list`
         :param source_tasks: Query files with the given source tasks.
-        :type source_tasks: list
+        :type source_tasks: :func:`list`
         :param mod_started: Query files where the last modified date is after this time.
         :type mod_started: :class:`datetime.datetime`
         :param mod_ended: Query files where the last modified date is before this time.
         :type mod_ended: :class:`datetime.datetime`
         :param job_type_ids: Query files with jobs with the given type identifier.
-        :type job_type_ids: list
+        :type job_type_ids: :func:`list`
         :param job_type_names: Query files with jobs with the given type name.
-        :type job_type_names: list
+        :type job_type_names: :func:`list`
         :keyword job_ids: Query files with a given job id
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param is_published: Query files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query files that have/have not been superseded.
         :type is_superseded: bool
         :param file_names: Query files with the given file names.
-        :type file_names: list
+        :type file_names: :func:`list`
         :keyword job_outputs: Query files with the given job outputs
-        :type job_outputs: list
+        :type job_outputs: :func:`list`
         :keyword recipe_ids: Query files with a given recipe id
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :keyword recipe_nodes: Query files with a given recipe nodes
-        :type recipe_nodes: list
+        :type recipe_nodes: :func:`list`
         :keyword recipe_type_ids: Query files with the given recipe types
-        :type recipe_type_ids: list
+        :type recipe_type_ids: :func:`list`
         :keyword batch_ids: Query files with batches with the given identifiers.
-        :type batch_ids: list
+        :type batch_ids: :func:`list`
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         :param countries: A List of country codes (iso3) to filter by
-        :type countries: list
+        :type countries: :func:`list`
         :returns: The product file query
         :rtype: :class:`django.db.models.QuerySet`
         """
@@ -462,9 +462,9 @@ class ScaleFileManager(models.Manager):
         calculating summary data for a job's inputs. The returned list is a queryset iterator, so only access it once.
 
         :param file_ids: The file IDs
-        :type file_ids: list
+        :type file_ids: :func:`list`
         :returns: The scale_file models that match the given IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.filter(id__in=file_ids).only('id', 'file_size', 'source_started', 'source_ended').iterator()
@@ -474,9 +474,9 @@ class ScaleFileManager(models.Manager):
         configuring queued jobs. The returned list is a queryset iterator, so only access it once.
 
         :param file_ids: The file IDs
-        :type file_ids: list
+        :type file_ids: :func:`list`
         :returns: The scale_file models that match the given IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         file_qry = self.select_related('workspace').filter(id__in=file_ids)
