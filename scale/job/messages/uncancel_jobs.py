@@ -21,11 +21,11 @@ def create_uncancel_jobs_messages(job_ids, when):
     """Creates messages to uncancel the given job IDs
 
     :param job_ids: The job IDs
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :param when: The time the jobs were uncanceled
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

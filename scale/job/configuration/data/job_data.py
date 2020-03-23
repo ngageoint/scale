@@ -746,7 +746,7 @@ class JobData(object):
         configuration
 
         :param output_params: The list of output parameter names
-        :type output_params: list
+        :type output_params: :func:`list`
         :param job_data: The job data
         :type job_data: 1.0? 2.0? WHO KNOWZ?
         :param job_exe: The job execution model (with related job and job_type fields)

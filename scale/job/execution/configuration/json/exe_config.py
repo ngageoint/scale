@@ -261,7 +261,7 @@ class ExecutionConfiguration(object):
         :param args: The command arguments for the task
         :type args: string
         :param docker_params: The Docker parameters
-        :type docker_params: list
+        :type docker_params: :func:`list`
         :param env_vars: A dict of env var names and values to add to the task
         :type env_vars: dict
         :param mount_volumes: The mount volumes stored by mount name (a volume may be None)
@@ -308,7 +308,7 @@ class ExecutionConfiguration(object):
         type is not included in the given list, it will be removed.
 
         :param task_types: The list of task types
-        :type task_types: list
+        :type task_types: :func:`list`
         """
 
         tasks_by_type = {}
@@ -353,7 +353,7 @@ class ExecutionConfiguration(object):
         :param task_type: The task type
         :type task_type: string
         :returns: The list of Docker parameters
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         params = []
@@ -383,7 +383,7 @@ class ExecutionConfiguration(object):
         """Returns a list of the names of all input workspaces
 
         :returns: The list of the names of all input workspaces
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         workspace_names = set()
@@ -412,7 +412,7 @@ class ExecutionConfiguration(object):
         """Returns the names of all (non-host) Docker volumes
 
         :returns: The list of all named Docker volumes
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         volumes = set()
@@ -427,7 +427,7 @@ class ExecutionConfiguration(object):
         """Returns a list of the names of all output workspaces
 
         :returns: The list of the names of all output workspaces
-        :rtype: list
+        :rtype: :func:`list`
         """
         if 'output_workspaces' in self._configuration:
             return list(self._configuration['output_workspaces'].values())
@@ -483,7 +483,7 @@ class ExecutionConfiguration(object):
         """Returns all task types in the configuration in order
 
         :returns: The ordered list of task types
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         task_types = []
@@ -598,7 +598,7 @@ class ExecutionConfiguration(object):
         :param task_dict: The task dict
         :type task_dict: dict
         :param docker_params: The Docker parameters
-        :type docker_params: list
+        :type docker_params: :func:`list`
         """
 
         if 'docker_params' in task_dict:
@@ -697,7 +697,7 @@ class ExecutionConfiguration(object):
         :param task_dict: The task dict
         :type task_dict: dict
         :param volumes: The list of volumes
-        :type volumes: list
+        :type volumes: :func:`list`
         """
 
         if not volumes:

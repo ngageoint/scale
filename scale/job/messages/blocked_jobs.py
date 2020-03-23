@@ -21,11 +21,11 @@ def create_blocked_jobs_messages(blocked_job_ids, when):
     """Creates messages to update the given job IDs to BLOCKED
 
     :param blocked_job_ids: The job IDs
-    :type blocked_job_ids: list
+    :type blocked_job_ids: :func:`list`
     :param when: The current time
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

@@ -18,9 +18,9 @@ def create_process_job_input_messages(job_ids):
     """Creates messages to process the input for the given jobs
 
     :param job_ids: The job IDs
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

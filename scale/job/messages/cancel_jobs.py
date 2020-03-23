@@ -22,11 +22,11 @@ def create_cancel_jobs_messages(job_ids, when):
     """Creates messages to cancel the given jobs
 
     :param job_ids: The job IDs to cancel
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :param when: The cancel time
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

@@ -276,7 +276,7 @@ class SeedManifest(object):
         """Gets the list of input files defined in the interface
 
         :return: the input file definitions for job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_inputs().get('files', [])
@@ -285,7 +285,7 @@ class SeedManifest(object):
         """Gets the list of json defined in the interface
 
         :return: the input json definitions for job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_inputs().get('json', [])
@@ -314,7 +314,7 @@ class SeedManifest(object):
         Commonly used when matching globs to capture output files
 
         :return: the output file definitions for job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_outputs().get('files', [])
@@ -334,7 +334,7 @@ class SeedManifest(object):
         Commonly used when matching globs to capture output files
 
         :return: the output file definitions for job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_outputs().get('json', [])
@@ -343,7 +343,7 @@ class SeedManifest(object):
         """Gets the scalar resources defined the Seed job
 
         :return: the scalar resources required by job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         resources = self.get_job().get('resources', {'scalar': []})['scalar']
@@ -355,7 +355,7 @@ class SeedManifest(object):
         """Gets the mounts defined the Seed job
 
         :return: the mounts for a job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_interface().get('mounts', [])
@@ -393,7 +393,7 @@ class SeedManifest(object):
         """Get the error mapping defined for the Seed job
 
         :return: the error codes mapped for job
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.get_job().get('errors', [])
@@ -411,7 +411,7 @@ class SeedManifest(object):
         """Returns the output parameter names for all file outputs
 
         :return: The file output parameter names
-        :rtype: list of str
+        :rtype: [string]
         """
 
         names = []

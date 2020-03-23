@@ -149,35 +149,35 @@ class JobManager(models.Manager):
         :param source_ended: Query jobs where source collection ended before this time.
         :type source_ended: :class:`datetime.datetime`
         :param source_sensor_classes: Query jobs with the given source sensor class.
-        :type source_sensor_classes: list
+        :type source_sensor_classes: :func:`list`
         :param source_sensor: Query jobs with the given source sensor.
-        :type source_sensor: list
+        :type source_sensor: :func:`list`
         :param source_collection: Query jobs with the given source class.
-        :type source_collection: list
+        :type source_collection: :func:`list`
         :param source_tasks: Query jobs with the given source tasks.
-        :type source_tasks: list
+        :type source_tasks: :func:`list`
         :param statuses: Query jobs with the a specific status.
-        :type statuses: list
+        :type statuses: :func:`list`
         :param job_ids: Query jobs associated with the identifier.
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param job_type_ids: Query jobs of the type associated with the identifier.
-        :type job_type_ids: list
+        :type job_type_ids: :func:`list`
         :param job_type_names: Query jobs of the type associated with the name.
-        :type job_type_names: list
+        :type job_type_names: :func:`list`
         :param job_type_categories: Query jobs of the type associated with the category.
-        :type job_type_categories: list
+        :type job_type_categories: :func:`list`
         :param batch_ids: Query jobs associated with the given batch identifiers.
-        :type batch_ids: list
+        :type batch_ids: :func:`list`
         :param recipe_ids: Query jobs associated with the given recipe identifiers.
-        :type recipe_ids: list[int]
+        :type recipe_ids: [int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
-        :type error_categories: list
+        :type error_categories: :func:`list`
         :param error_ids: Query jobs that failed due to these errors.
-        :type error_ids: list
+        :type error_ids: :func:`list`
         :param is_superseded: Query jobs that match the is_superseded flag.
         :type is_superseded: bool
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         :returns: The job query
         :rtype: :class:`django.db.models.QuerySet`
         """
@@ -253,13 +253,13 @@ class JobManager(models.Manager):
         :param source_ended: Query jobs where source collection ended before this time.
         :type source_ended: :class:`datetime.datetime`
         :param source_sensor_classes: Query jobs with the given source sensor class.
-        :type source_sensor_classes: list
+        :type source_sensor_classes: :func:`list`
         :param source_sensor: Query jobs with the given source sensor.
-        :type source_sensor: list
+        :type source_sensor: :func:`list`
         :param source_collection: Query jobs with the given source class.
-        :type source_collection: list
+        :type source_collection: :func:`list`
         :param source_tasks: Query jobs with the given source tasks.
-        :type source_tasks: list
+        :type source_tasks: :func:`list`
         :param statuses: Query jobs with the a specific execution status.
         :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
@@ -269,13 +269,13 @@ class JobManager(models.Manager):
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: [string]
         :param batch_ids: Query jobs associated with the given batch identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param recipe_ids: Query jobs associated with the given recipe identifiers.
-        :type recipe_ids: list[int]
+        :type recipe_ids: [int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
         :param error_ids: Query jobs that failed with errors with the given identifiers.
-        :type error_ids: list[int]
+        :type error_ids: [int]
         :param is_superseded: Query jobs that match the is_superseded flag.
         :type is_superseded: bool
         :param order: A list of fields to control the sort order.
@@ -301,9 +301,9 @@ class JobManager(models.Manager):
         """Returns the basic job models for the given IDs with no related fields
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :returns: The job models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return list(self.filter(id__in=job_ids))
@@ -323,13 +323,13 @@ class JobManager(models.Manager):
         :param source_ended: Query jobs where source collection ended before this time.
         :type source_ended: :class:`datetime.datetime`
         :param source_sensor_classes: Query jobs with the given source sensor class.
-        :type source_sensor_classes: list
+        :type source_sensor_classes: :func:`list`
         :param source_sensor: Query jobs with the given source sensor.
-        :type source_sensor: list
+        :type source_sensor: :func:`list`
         :param source_collection: Query jobs with the given source class.
-        :type source_collection: list
+        :type source_collection: :func:`list`
         :param source_tasks: Query jobs with the given source task.
-        :type source_tasks: list
+        :type source_tasks: :func:`list`
         :param statuses: Query jobs with the a specific execution status.
         :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
@@ -339,13 +339,13 @@ class JobManager(models.Manager):
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: [string]
         :param batch_ids: Query jobs associated with batches with the given identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param recipe_ids: Query jobs associated with recipes with the given identifiers.
-        :type recipe_ids: list[int]
+        :type recipe_ids: [int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
         :param error_ids: Query jobs that failed with errors with the given identifiers.
-        :type error_ids: list[int]
+        :type error_ids: [int]
         :param is_superseded: Query jobs that match the is_superseded flag.
         :type is_superseded: bool
         :param order: A list of fields to control the sort order.
@@ -426,9 +426,9 @@ class JobManager(models.Manager):
         """Gets the job models for the given IDs with related job_type, job_type_rev, and batch models
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :returns: The job models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.select_related('job_type', 'job_type_rev', 'batch').filter(id__in=job_ids)
@@ -450,9 +450,9 @@ class JobManager(models.Manager):
         transaction.
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :returns: The job models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         # Job models are always locked in order of ascending ID to prevent deadlocks
@@ -463,7 +463,7 @@ class JobManager(models.Manager):
         setting of their associated job type.
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         """
@@ -572,11 +572,11 @@ class JobManager(models.Manager):
         returned.
 
         :param job_ids: The job IDs
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that are both COMPLETED and have output
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         if job_ids:
@@ -609,7 +609,7 @@ class JobManager(models.Manager):
         """Updates the given job IDs to be superseded
 
         :param job_ids: The job IDs to supersede
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param when: The time that the jobs were superseded
         :type when: :class:`datetime.datetime`
         """
@@ -620,7 +620,7 @@ class JobManager(models.Manager):
         """Updates the jobs with the given IDs to have the given node and start time
 
         :param job_ids: A list of job IDs to update
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param node_id: The node ID
         :type node_id: int
         :param when: The start time
@@ -635,11 +635,11 @@ class JobManager(models.Manager):
         that are not in a valid state for being BLOCKED will be ignored.
 
         :param jobs: The job models to set to BLOCKED
-        :type jobs: list
+        :type jobs: :func:`list`
         :param when: The status change time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that were successfully set to BLOCKED
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -656,11 +656,11 @@ class JobManager(models.Manager):
         that are not in a valid state for being CANCELED will be ignored.
 
         :param jobs: The job models to set to CANCELED
-        :type jobs: list
+        :type jobs: :func:`list`
         :param when: The status change time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that were successfully set to CANCELED
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -678,11 +678,11 @@ class JobManager(models.Manager):
         that are not in a valid state for being COMPLETED will be ignored.
 
         :param jobs: The job models to set to COMPLETED
-        :type jobs: list
+        :type jobs: :func:`list`
         :param when: The ended time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that were successfully set to COMPLETED
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -700,13 +700,13 @@ class JobManager(models.Manager):
         that are not in a valid state for being FAILED will be ignored.
 
         :param jobs: The job models to set to FAILED
-        :type jobs: list
+        :type jobs: :func:`list`
         :param error_id: The ID of the error that caused the failure
         :type error_id: int
         :param when: The ended time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that were successfully set to FAILED
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -724,11 +724,11 @@ class JobManager(models.Manager):
         that are not in a valid state for being PENDING will be ignored.
 
         :param jobs: The job models to set to PENDING
-        :type jobs: list
+        :type jobs: :func:`list`
         :param when: The status change time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that were successfully set to PENDING
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -745,13 +745,13 @@ class JobManager(models.Manager):
         that are not in a valid status for being queued, are without job input, or are superseded will be ignored.
 
         :param jobs: The job models to set to QUEUED
-        :type jobs: list
+        :type jobs: :func:`list`
         :param when_queued: The time that the jobs are queued
         :type when_queued: :class:`datetime.datetime`
         :param requeue: Whether this is a re-queue (True) or a first queue (False)
         :type requeue: bool
         :returns: The list of job IDs that were successfully set to QUEUED
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -775,11 +775,11 @@ class JobManager(models.Manager):
         that are not in a valid state for RUNNING will be ignored.
 
         :param jobs: The job models to set to RUNNING
-        :type jobs: list
+        :type jobs: :func:`list`
         :param when: The start time
         :type when: :class:`datetime.datetime`
         :returns: The list of job IDs that were successfully set to RUNNING
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_ids = []
@@ -1370,7 +1370,7 @@ class JobExecutionManager(models.Manager):
         not have any of their JSON fields populated. The returned list is a queryset iterator, so only access it once.
 
         :returns: The job execution models for the unfinished jobs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         qry = self.filter(job__status__in=['QUEUED', 'RUNNING'], exe_num=F('job__num_exes'))
@@ -1657,7 +1657,7 @@ class JobExecutionEndManager(models.Manager):
         :param when: Returns executions that finished after this time
         :type when: :class:`datetime.datetime`
         :returns: The list of job_exe_end models with related job_exe, job_type, and error models
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_exe_end_query = self.select_related('job_exe', 'job_type', 'error')
@@ -2149,17 +2149,17 @@ class JobTypeManager(models.Manager):
         """Returns a list of all job types
 
         :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
-        :type keywords: list
+        :type keywords: :func:`list`
         :param ids: Query job types with a version matching the given ids
-        :type keyword: list
+        :type keyword: :func:`list`
         :param is_active: Query job types that are actively available for use.
         :type is_active: bool
         :param is_system: Query job types that are system job types.
         :type is_operational: bool
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         :returns: The list of latest version of job types that match the given parameters.
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         # Execute a sub-query that returns distinct job type names that match the provided filter arguments
@@ -2190,17 +2190,17 @@ class JobTypeManager(models.Manager):
         """Returns a list of the latest version of job types
 
         :param keywords: Query job types with name, title, description or tag matching one of the specified keywords
-        :type keywords: list
+        :type keywords: :func:`list`
         :param ids: Query job types with a version matching the given ids
-        :type keyword: list
+        :type keyword: :func:`list`
         :param is_active: Query job types that are actively available for use.
         :type is_active: bool
         :param is_system: Query job types that are system job types.
         :type is_system: bool
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         :returns: The list of latest version of job types that match the given parameters.
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         # Execute a sub-query that returns distinct job type names that match the provided filter arguments
@@ -2574,7 +2574,7 @@ class JobType(models.Model):
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
-    :type version_array: list
+    :type version_array: :func:`list`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -2662,6 +2662,7 @@ class JobType(models.Model):
 
     def get_job_version(self):
         """Gets the Job version either from field or manifest
+
         :return: the version
         :rtype: str
         """
@@ -2887,7 +2888,7 @@ class JobTypeRevisionManager(models.Manager):
 
         :param revision_tuples: A list of tuples (job type name, job type version, revision num) for additional
             revisions to return
-        :type revision_tuples: list
+        :type revision_tuples: :func:`list`
         :returns: The revisions stored by revision ID
         :rtype: dict
         """
@@ -3069,9 +3070,9 @@ class JobTypeTagManager(models.Manager):
         :param job_type: The job type
         :type job_type: :class:`job.models.JobType`
         :param tag: The tags of the job type image
-        :type tag: list
+        :type tag: :func:`list`
         :returns: The new job type tags
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         job_type_tags = []
