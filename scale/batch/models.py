@@ -99,31 +99,37 @@ class BatchManager(models.Manager):
             BatchMetrics.objects.bulk_create(batch_metrics_models)
 
         return batch
-        
+
     def calculate_estimated_recipes(self, batch, definition):
-        """Calculates the estimated number of recipes that will be created for this batch. 
+        """Calculates the estimated number of recipes that will be created for this batch.
         This number is calculated by:
-        1. The number of existing recipes for the specific recipe type that are 
+        1. The number of existing recipes for the specific recipe type that are
            not currently superseded
         2. The number of sub-recipes in the recipe
            These should be filtered if not changed/marked for re-run?
-           
+
+        :param batch: The batch to calculate recipes for
+        :type batch: :class:`batch.models.Batch`
+        :param definition: The batch definition
+        :type definition: :class:`batch.definition.definition.BatchDefinition`
+        :returns: The number of estimated recipes the batch will create
+        :rtype: int
         """
-        
+
         # If this is a previous batch, use the previous batch total
         if batch.superseded_batch:
             return batch.superseded_batch.recipes_total
-        
+
         # No files defined to run on, so no recipes will be created
         if not definition.dataset:
             return 0
 
         #: The number of recipes are calculated based on the following:
-        #      - If the dataset has a global parameter matching the input of the 
+        #      - If the dataset has a global parameter matching the input of the
         #        recipe type, count the number of files in each dataset member
         #      - If the dataset has a parameter matching the input of the recipe
         #        type, count the number of files in each member that matches the parameter
-        
+
         from data.interface.exceptions import InvalidInterfaceConnection
         from data.models import DataSet, DataSetFile
         dataset = DataSet.objects.get(pk=definition.dataset)
@@ -137,7 +143,7 @@ class BatchManager(models.Manager):
         except InvalidInterfaceConnection as ex:
             logger.info('DataSet parameters do not match the recipe inputs; no recipes will be created: %s' % unicode(ex))
             return 0
-        
+
         recipe_inputs = recipe_type.get_definition().get_input_keys()
 
         if batch.get_configuration().input_map:
@@ -149,7 +155,7 @@ class BatchManager(models.Manager):
         # Base count of recipes are number of files in the dataset that match the recipe inputs
         files = DataSetFile.objects.get_files([dataset.id], recipe_inputs)
         num_files = len(files)
-        
+
         from recipe.models import RecipeTypeSubLink
         estimated_recipes = num_files
         # If all nodes are forced:
@@ -157,26 +163,26 @@ class BatchManager(models.Manager):
             # Count the number of sub-recipes
             subs_count = RecipeTypeSubLink.objects.count_subrecipes(batch.recipe_type_id, recurse=True)
             estimated_recipes += (num_files * subs_count)
-                
+
         else:
             # Only count the sub-recipes nodes that are forced, or in the lineage of a forced node
             nodes = recipe_type.get_v6_definition_json()['nodes']
             subs = [node for node in nodes if nodes[node]['node_type']['node_type'] == 'recipe']
-            
+
             for sub in subs:
                 sub_type_id = RecipeType.objects.get(name=nodes[sub]['node_type']['recipe_type_name'], revision_num=nodes[sub]['node_type']['recipe_type_revision']).id
-                
+
                 # If sub-recipe is selected as a forced node
                 if sub in definition.forced_nodes.get_sub_recipe_names():
                     estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
-                
+
                 # If it's a child of a forced job node, we're going to need to run it
                 else:
                     recipe_type_def = recipe_type.get_definition()
                     for job_node in definition.forced_nodes.get_forced_node_names():
                         if recipe_type_def.has_descendant(job_node, sub):
                             estimated_recipes += (1 + RecipeTypeSubLink.objects.count_subrecipes(sub_type_id, recurse=True)) * num_files
-      
+
         return estimated_recipes
 
     def merge_parameter_map(self, batch, dataset):
@@ -267,7 +273,7 @@ class BatchManager(models.Manager):
         :param root_batch_id: The root batch ID of the batches to compare
         :type root_batch_id: int
         :returns: The list of batches in the chain
-        :rtype: list
+        :rtype:  :func:`list`
         """
 
         from batch.serializers import BatchBaseSerializerV6
@@ -360,17 +366,17 @@ class BatchManager(models.Manager):
         :param ended: Query batches updated before this time
         :type ended: :class:`datetime.datetime`
         :param recipe_type_ids: Query batches with these recipe types
-        :type recipe_type_ids: list
+        :type recipe_type_ids: :func:`list`
         :param is_creation_done: Query batches that match this value
         :type is_creation_done: bool
         :param is_superseded: Query batches that match this value
         :type is_superseded: bool
         :param root_batch_ids: Query batches with these root batches
-        :type root_batch_ids: list
+        :type root_batch_ids: :func:`list`
         :param order: A list of fields to control the sort order
-        :type order: list
+        :type order: :func:`list`
         :returns: The list of batches that match the given criteria
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         # Fetch a list of batches
@@ -444,7 +450,7 @@ class BatchManager(models.Manager):
         """Updates the given batch to be superseded
 
         :param batch_id: The batch ID to supersede
-        :type batch_id: list
+        :type batch_id: :func:`list`
         :param when: The time that the batch was superseded
         :type when: :class:`datetime.datetime`
         """
@@ -455,7 +461,7 @@ class BatchManager(models.Manager):
         """Updates the metrics for the batches with the given IDs
 
         :param batch_ids: The batch IDs
-        :type batch_ids: list
+        :type batch_ids: :func:`list`
         """
 
         if not batch_ids:
@@ -691,7 +697,7 @@ class BatchMetricsManager(models.Manager):
         :param batch_id: The batch ID
         :type batch_id: int
         :returns: The metrics models for the batch
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return self.filter(batch_id=batch_id)
@@ -700,7 +706,7 @@ class BatchMetricsManager(models.Manager):
         """Updates the metrics per job name for the batches with the given IDs
 
         :param batch_ids: The batch IDs
-        :type batch_ids: list
+        :type batch_ids: :func:`list`
         """
 
         if not batch_ids:

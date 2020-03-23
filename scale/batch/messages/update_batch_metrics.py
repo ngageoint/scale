@@ -18,9 +18,9 @@ def create_update_batch_metrics_messages(batch_ids):
     """Creates messages to update the metrics for the given batches
 
     :param batch_ids: The batch IDs
-    :type batch_ids: list
+    :type batch_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
