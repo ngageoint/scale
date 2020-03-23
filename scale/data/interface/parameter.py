@@ -42,7 +42,7 @@ class Parameter(object):
         """Validates this parameter
 
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterface`: If the interface is invalid
         """
@@ -55,7 +55,7 @@ class Parameter(object):
         :param connecting_parameter: The parameter attempting to connect to this parameter
         :type connecting_parameter: :class:`data.interface.parameter.Parameter`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
@@ -84,7 +84,7 @@ class FileParameter(Parameter):
         :param name: The name of the parameter
         :type name: string
         :param media_types: The list of valid file media types
-        :type media_types: list
+        :type media_types: :func:`list`
         :param required: Whether this parameter is required
         :type required: bool
         :param multiple: Whether this parameter accepts multiple files

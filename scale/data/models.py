@@ -84,11 +84,11 @@ class DataSetManager(models.Manager):
         :param ended: Query datasets created before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param dataset_ids: Query datasets assciated with the given id(s)
-        :type dataset_ids: list
+        :type dataset_ids: :func:`list`
         :param keywords: Query datasets with title or description matching one of the specified keywords
-        :type keywords: list
+        :type keywords: :func:`list`
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         :returns: The dataset query
         :rtype: :class:`django.db.models.QuerySet`
         """
@@ -164,7 +164,7 @@ class DataSetManager(models.Manager):
     def get_dataset_members(self, dataset_id):
         """Returns the members associated with the given dataset_id
         :returns: The list of DataSetMembers
-        :rtype: [:clas:`data.models.DataSetMember`]
+        :rtype: [:class:`data.models.DataSetMember`]
         """
         dataset = self.get(pk=dataset_id)
         members = DataSetMember.objects.all().filter(dataset=dataset)
@@ -180,7 +180,7 @@ class DataSet(models.Model):
     :keyword version: The version of the dataset
     :type version: :class:`django.db.models.CharField`
     :keyword version_array: The version of the dataset split into SemVer integer components (major,minor,patch,prerelease)
-    :type version_array: list
+    :type version_array: :func:`list`
     :keyword title: The human-readable title of this dataset (optional)
     :type title: :class:`django.db.models.CharField`
     :keyword description: The description of the dataset (optional)
@@ -278,41 +278,41 @@ class DataSetMemberManager(models.Manager):
         :param source_ended: Query files where source collection ended before this time.
         :type source_ended: :class:`datetime.datetime`
         :param source_sensor_classes: Query files with the given source sensor class.
-        :type source_sensor_classes: list
+        :type source_sensor_classes: :func:`list`
         :param source_sensor: Query files with the given source sensor.
-        :type source_sensor: list
+        :type source_sensor: :func:`list`
         :param source_collection: Query files with the given source class.
-        :type source_collection: list
+        :type source_collection: :func:`list`
         :param source_tasks: Query files with the given source tasks.
-        :type source_tasks: list
+        :type source_tasks: :func:`list`
         :param mod_started: Query files where the last modified date is after this time.
         :type mod_started: :class:`datetime.datetime`
         :param mod_ended: Query files where the last modified date is before this time.
         :type mod_ended: :class:`datetime.datetime`
         :param job_type_ids: Query files with jobs with the given type identifier.
-        :type job_type_ids: list
+        :type job_type_ids: :func:`list`
         :param job_type_names: Query files with jobs with the given type name.
-        :type job_type_names: list
+        :type job_type_names: :func:`list`
         :keyword job_ids: Query files with a given job id
-        :type job_ids: list
+        :type job_ids: :func:`list`
         :param is_published: Query files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query files that have/have not been superseded.
         :type is_superseded: bool
         :param file_names: Query files with the given file names.
-        :type file_names: list
+        :type file_names: :func:`list`
         :keyword job_outputs: Query files with the given job outputs
-        :type job_outputs: list
+        :type job_outputs: :func:`list`
         :keyword recipe_ids: Query files with a given recipe id
-        :type recipe_ids: list
+        :type recipe_ids: :func:`list`
         :keyword recipe_nodes: Query files with a given recipe nodes
-        :type recipe_nodes: list
+        :type recipe_nodes: :func:`list`
         :keyword recipe_type_ids: Query files with the given recipe types
-        :type recipe_type_ids: list
+        :type recipe_type_ids: :func:`list`
         :keyword batch_ids: Query files with batches with the given identifiers.
-        :type batch_ids: list
+        :type batch_ids: :func:`list`
         :param order: A list of fields to control the sort order.
-        :type order: list
+        :type order: :func:`list`
         """
 
         files = ScaleFile.objects.filter_files(
@@ -417,7 +417,7 @@ class DataSetMember(models.Model):
     :keyword dataset: Refers to dataset member belongs to
     :type dataset: :class:`django.db.models.ForeignKey`
     :keyword data: JSON description of the data in this DataSetMember.
-    :type data: :class: `django.contrib.postgres.fields.JSONField(default=dict)
+    :type data: :class: `django.contrib.postgres.fields.JSONField(default=dict)`
     :keyword created: Created Time
     :type created: datetime
     """
@@ -489,7 +489,7 @@ class DataSetFileManager(models.Manager):
         :param parameter_names: The parameter names to search for in the given datasets
         :type parameter_names: string
         :returns: The list of scale file IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         query = self.all().filter(dataset_id__in=list(dataset_ids))
@@ -505,7 +505,7 @@ class DataSetFileManager(models.Manager):
         :param all_files: Whether or not a dataset must contain all files or just some of the files in the list
         :type all_files: bool
         :returns: The list of dataset IDs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         results = []

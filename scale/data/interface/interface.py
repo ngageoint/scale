@@ -39,7 +39,7 @@ class Interface(object):
         :param output_interface: The output interface
         :type output_interface: :class:`data.interface.interface.Interface`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
@@ -63,7 +63,7 @@ class Interface(object):
         """Validates this interface
 
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterface`: If the interface is invalid
         """
@@ -81,7 +81,7 @@ class Interface(object):
         :param connecting_interface: The interface attempting to connect to this interface
         :type connecting_interface: :class:`data.interface.interface.Interface`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
