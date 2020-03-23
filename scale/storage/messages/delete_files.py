@@ -34,7 +34,7 @@ def create_delete_files_messages(files, job_id, trigger_id, source_file_id, purg
     :param purge: Boolean value to determine if files should be purged from workspace
     :type purge: bool
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
