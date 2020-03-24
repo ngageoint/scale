@@ -1015,7 +1015,7 @@ Response: 200 OK
 |                      |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | error                | JSON Object       | The last error that was recorded for the execution.                            |
-|                      |                   | (See :ref:`Error Details <rest_error_details>`)                                |
+|                      |                   | (See :ref:`Error Details <rest_v6_error_details>`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type             | JSON Object       | The job type that is associated with the execution.                            |
 |                      |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
