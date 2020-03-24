@@ -19,9 +19,9 @@ class NodeManager(models.Manager):
         """Creates and returns new nodes with the given host names
 
         :param hostnames: The list of host names
-        :type hostnames: list
+        :type hostnames: :func:`list`
         :returns: The list of new nodes
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         nodes = []
@@ -52,11 +52,11 @@ class NodeManager(models.Manager):
         :param ended: Query nodes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :param is_active: Include only active nodes, only inactive nodes or both?
         :type is_active: boolean
         :returns: The list of nodes that match the time range.
-        :rtype: list[:class:`node.models.Node`]
+        :rtype: [:class:`node.models.Node`]
         """
 
         # Fetch a list of nodes
@@ -82,7 +82,7 @@ class NodeManager(models.Manager):
         """Returns a list of nodes that are currently running jobs.
 
         :returns: The list of node ids running jobs
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         jobs = Job.objects.filter(status='RUNNING').values_list('node_id', flat=True)
@@ -93,9 +93,9 @@ class NodeManager(models.Manager):
         """Returns a list of all nodes that either have one of the given host names or is active.
 
         :param hostnames: The list of host names
-        :type hostnames: list
+        :type hostnames: :func:`list`
         :returns: The list of nodes for the scheduler
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         return Node.objects.filter(models.Q(hostname__in=hostnames) | models.Q(is_active=True))
@@ -127,7 +127,7 @@ class NodeManager(models.Manager):
         """Update the last_offer_received field for nodes.
 
         :param hostnames: List of hostnames to be updated
-        :type hostnames: [str]
+        :type hostnames: [string]
         :param when: The datetime to be set as the last offer received
         :type when: datetime
         """
