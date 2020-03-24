@@ -20,6 +20,7 @@ from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
+from scale import settings as scale_settings
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.manager import scheduler_mgr, SchedulerWarning
 from scheduler.node.manager import node_mgr
@@ -34,7 +35,7 @@ from util.retry import retry_database_query
 # Warning threshold for queue processing duration
 PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 # Maximum number of jobs to grab off of the queue at one time
-QUEUE_LIMIT = 500
+QUEUE_LIMIT = scale_settings.SCHEDULER_QUEUE_LIMIT
 # Warning threshold for scheduling query duration
 SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 # Warning threshold for task launch duration
@@ -140,7 +141,7 @@ class SchedulingManager(object):
         :param job_types: The dict of job type models stored by job type ID
         :type job_types: dict
         :param running_job_exes: The currently running job executions
-        :type running_job_exes: list
+        :type running_job_exes: :func:`list`
         :returns: A dict where job type ID maps to the number of jobs of that type that can be scheduled. Missing job
             type IDs have no limit. Counts may be negative if the job type is scheduled above the limit.
         :rtype: dict
@@ -193,7 +194,7 @@ class SchedulingManager(object):
                 offer.mesos_offer.decline()
             else:
                 logger.debug("Trying to decline offer without original mesos_offer object")
-        
+
         logger.debug("Declined %d offers" % len(offers))
 
     def _launch_tasks(self, client, nodes):
@@ -266,9 +267,9 @@ class SchedulingManager(object):
         """Prepares the nodes to use for scheduling
 
         :param tasks: The current current running
-        :type tasks: list
+        :type tasks: :func:`list`
         :param running_job_exes: The currently running job executions
-        :type running_job_exes: list
+        :type running_job_exes: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The dict of scheduling nodes stored by node ID
@@ -327,140 +328,100 @@ class SchedulingManager(object):
         :param job_type_limits: The dict of job type IDs mapping to job type limits
         :type job_type_limits: dict
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: dict
         :returns: The list of queued job executions that were scheduled
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         scheduled_job_executions = []
-        scheduled_job_execution_ids = []
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
-        # If there are no available nodes, no point in continuing
-        if not nodes:
-            logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
-            return scheduled_job_executions
-
         max_cluster_resources = resource_mgr.get_max_available_resources()
-        done_queuing = False
-        while not done_queuing:
-            queues = Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)
+        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
+            job_exe = QueuedJobExecution(queue)
 
-            # Nothing matches our criteria, we're done searching
-            if not queues.count():
-                done_queuing = True
+            # Canceled job executions get processed as scheduled executions
+            if job_exe.is_canceled:
+                scheduled_job_executions.append(job_exe)
+                continue
+
+            # If there are no longer any available nodes, break
+            if not nodes:
+                logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
                 break
 
-            last_queue = queues[queues.count()-1]
-            for queue in queues.iterator():
-                if queue == last_queue:
-                    # we've gone through everything
-                    done_queuing = True
+            jt = job_type_mgr.get_job_type(queue.job_type.id)
+            name = INVALID_RESOURCES.name + jt.name
+            title = INVALID_RESOURCES.title % jt.name
+            warning = SchedulerWarning(name=name, title=title, description=None)
+            if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
+                # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
+                continue
 
-                job_exe = QueuedJobExecution(queue)
-
-                # We've already scheduled this execution
-                if job_exe.id in scheduled_job_execution_ids:
+            invalid_resources = []
+            insufficient_resources = []
+            # get resource names offered and compare to job type resources
+            for resource in job_exe.required_resources.resources:
+                # skip sharedmem
+                if resource.name.lower() == 'sharedmem':
+                    logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
                     continue
+                if resource.name not in max_cluster_resources._resources:
+                    logger.warning('Job type %s could not be scheduled as resource %s does not exist in the available cluster resources', jt.name, resource.name)
+                    # resource does not exist in cluster
+                    invalid_resources.append(resource.name)
+                elif resource.value > max_cluster_resources._resources[resource.name].value:
+                    # resource exceeds the max available from any node
+                    insufficient_resources.append(resource.name)
 
-                # Canceled job executions get processed as scheduled executions
-                if job_exe.is_canceled:
-                    scheduled_job_executions.append(job_exe)
-                    scheduled_job_execution_ids.append(job_exe.id)
-                    continue
+            if invalid_resources:
+                description = INVALID_RESOURCES.description % invalid_resources
+                scheduler_mgr.warning_active(warning, description)
 
-                jt = job_type_mgr.get_job_type(queue.job_type.id)
-                name = INVALID_RESOURCES.name + jt.name
-                title = INVALID_RESOURCES.title % jt.name
-                warning = SchedulerWarning(name=name, title=title, description=None)
-                if jt.unmet_resources and scheduler_mgr.is_warning_active(warning):
-                    # previously checked this job type and found we lacked resources; wait until warning is inactive to check again
-                    ignore_job_type_ids.add(jt.id)
-                    break
+            if insufficient_resources:
+                description = INSUFFICIENT_RESOURCES.description % insufficient_resources
+                scheduler_mgr.warning_active(warning, description)
 
-                invalid_resources = []
-                insufficient_resources = []
-                # get resource names offered and compare to job type resources
-                for resource in job_exe.required_resources.resources:
-                    # skip sharedmem
-                    if resource.name.lower() == 'sharedmem':
-                        logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
-                        ignore_job_type_ids.add(jt.id)
-                        break
-                    if resource.name not in max_cluster_resources._resources:
-                        # resource does not exist in cluster
-                        logger.warning(
-                            'Job type %s could not be scheduled as resource %s does not exist in the cluster', jt.name,
-                            resource.name)
-                        ignore_job_type_ids.add(jt.id)
-                        invalid_resources.append(resource.name)
-                    elif resource.value > max_cluster_resources._resources[resource.name].value:
-                        # resource exceeds the max available from any node
-                        ignore_job_type_ids.add(jt.id)
-                        insufficient_resources.append(resource.name)
+            if invalid_resources or insufficient_resources:
+                invalid_resources.extend(insufficient_resources)
+                jt.unmet_resources = ','.join(invalid_resources)
+                jt.save(update_fields=["unmet_resources"])
+                continue
+            else:
+                # reset unmet_resources flag
+                jt.unmet_resources = None
+                scheduler_mgr.warning_inactive(warning)
+                jt.save(update_fields=["unmet_resources"])
 
-                if invalid_resources:
-                    description = INVALID_RESOURCES.description % invalid_resources
-                    scheduler_mgr.warning_active(warning, description)
+            # Make sure execution's job type and workspaces have been synced to the scheduler
+            job_type_id = queue.job_type_id
+            if job_type_id not in job_types:
+                scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE, description=UNKNOWN_JOB_TYPE.description % job_type_id)
+                continue
 
-                if insufficient_resources:
-                    description = INSUFFICIENT_RESOURCES.description % insufficient_resources
-                    scheduler_mgr.warning_active(warning, description)
+            workspace_names = job_exe.configuration.get_input_workspace_names()
+            workspace_names.extend(job_exe.configuration.get_output_workspace_names())
 
-                if invalid_resources or insufficient_resources:
-                    invalid_resources.extend(insufficient_resources)
-                    jt.unmet_resources = ','.join(invalid_resources)
-                    jt.save(update_fields=["unmet_resources"])
-                    break
-                else:
-                    # reset unmet_resources flag
-                    jt.unmet_resources = None
-                    scheduler_mgr.warning_inactive(warning)
-                    jt.save(update_fields=["unmet_resources"])
+            missing_workspace = False
+            for name in workspace_names:
+                missing_workspace = missing_workspace or name not in workspaces
+            if missing_workspace:
+                logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
+                continue
 
-                # Make sure execution's job type and workspaces have been synced to the scheduler
-                job_type_id = queue.job_type_id
-                if job_type_id not in job_types:
-                    scheduler_mgr.warning_active(UNKNOWN_JOB_TYPE,
-                                                 description=UNKNOWN_JOB_TYPE.description % job_type_id)
-                    ignore_job_type_ids.add(job_type_id)
-                    break
+            # Check limit for this execution's job type
+            if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
+                logger.warning('Job type %s could not be scheduled due to type scheduling limit reached ', jt.name)
+                continue
 
-                workspace_names = job_exe.configuration.get_input_workspace_names()
-                workspace_names.extend(job_exe.configuration.get_output_workspace_names())
-
-                missing_workspace = False
-                for name in workspace_names:
-                    missing_workspace = missing_workspace or name not in workspaces
-                if missing_workspace:
-                    logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
-                    break
-
-                # Check limit for this execution's job type
-                if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
-                    logger.warning('Job type %s could not be scheduled due to type scheduling limit reached ', jt.name)
-                    ignore_job_type_ids.add(job_type_id)
-                    break
-
-                # Try to schedule job execution and adjust job type limit if needed
-                if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
-                    scheduled_job_executions.append(job_exe)
-                    scheduled_job_execution_ids.append(job_exe.id)
-                    if job_type_id in job_type_limits:
-                        job_type_limits[job_type_id] -= 1
-
-                if len(scheduled_job_executions) >= QUEUE_LIMIT:
-                    done_queuing = True
-                    logger.info('Schedule queue limit of %d reached; no more room for executions' % QUEUE_LIMIT)
-                    break
-
-            if (now() - started).total_seconds() >= 1:
-                # it's been longer than 1 seconds, we need to get schedulin'
-                done_queuing = True
-                break
+            # Try to schedule job execution and adjust job type limit if needed
+            if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
+                scheduled_job_executions.append(job_exe)
+                if job_type_id in job_type_limits:
+                    job_type_limits[job_type_id] -= 1
 
         duration = now() - started
         msg = 'Processing queue took %.3f seconds'
@@ -479,7 +440,7 @@ class SchedulingManager(object):
         :param framework_id: The scheduling framework ID
         :type framework_id: string
         :param queued_job_executions: A list of queued job executions that have been scheduled
-        :type queued_job_executions: list
+        :type queued_job_executions: :func:`list`
         :param job_types: A dict of all job types stored by ID
         :type job_types: dict
         :param workspaces: A dict of all workspaces stored by name
@@ -554,7 +515,7 @@ class SchedulingManager(object):
         :param nodes: The dict of available scheduling nodes stored by node ID
         :type nodes: dict
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :returns: True if scheduled, False otherwise
         :rtype: bool
         """
@@ -609,7 +570,7 @@ class SchedulingManager(object):
         :param job_type_limits: The dict of job type IDs mapping to job type limits
         :type job_type_limits: dict
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: dict
         :returns: The number of new job executions that were scheduled
@@ -663,7 +624,7 @@ class SchedulingManager(object):
         :param nodes: The dict of scheduling nodes stored by node ID where every node has fulfilled all waiting tasks
         :type nodes: dict
         :param job_type_resources: The list of all of the job type resource requirements
-        :type job_type_resources: list
+        :type job_type_resources: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: True if all system tasks were scheduled as needed, False otherwise
@@ -718,7 +679,7 @@ class SchedulingManager(object):
         :param nodes: The dict of scheduling nodes stored by node ID
         :type nodes: dict
         :param running_job_exes: The currently running job executions
-        :type running_job_exes: list
+        :type running_job_exes: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The dict of scheduling nodes stored by node ID that have no more waiting tasks
