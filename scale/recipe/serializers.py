@@ -86,7 +86,6 @@ class RecipeTypeRevisionSerializer(RecipeTypeRevisionBaseSerializer):
     definition = serializers.JSONField(default=dict)
     created = serializers.DateTimeField()
 
-
 class RecipeBaseSerializerV6(ModelIdSerializer):
     """Converts recipe model fields to REST output."""
     recipe_type = RecipeTypeBaseSerializerV6()

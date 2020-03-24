@@ -381,7 +381,6 @@ class RecipeTypesValidationView(APIView):
                      'warnings': [w.to_dict() for w in validation.warnings], 'diff': validation.diff}
         return Response(resp_dict)
 
-
 class RecipesView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipes"""
     queryset = Recipe.objects.all()
@@ -680,3 +679,4 @@ class RecipeReprocessView(GenericAPIView):
         CommandMessageManager().send_messages(messages)
 
         return Response(status=status.HTTP_202_ACCEPTED)
+

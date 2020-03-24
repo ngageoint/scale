@@ -874,6 +874,8 @@ class RecipeInputFileManager(models.Manager):
                 files = files.filter(source_started__gte=started)
             elif time_field == 'data':
                 files = files.filter(data_started__gte=started)
+            elif time_field == "created":
+                files = files.filter(created__gte=started)
             else:
                 files = files.filter(last_modified__gte=started)
         if ended:
@@ -881,6 +883,8 @@ class RecipeInputFileManager(models.Manager):
                 files = files.filter(source_ended__lte=ended)
             elif time_field == 'data':
                 files = files.filter(data_ended__lte=ended)
+            elif time_field == "created":
+                files = files.filter(created__lte=ended)
             else:
                 files = files.filter(last_modified__lte=ended)
 
@@ -1532,6 +1536,88 @@ class RecipeTypeManager(models.Manager):
             input = rtr.get_input_interface()  # no output interface
 
         return input, output
+
+    def get_timeline_recipes_json(self, started=None, ended=None, type_ids=None, type_names=None, revisions=None):
+        """Returns the timeline recipe type information
+
+        :param started: The start date of the timeline
+        :type started: :class:`datetime.datetime`
+        :param ended: The end date of the timeline
+        :type ended: :class:`datetime.datetime`
+        :param type_ids: List of recipe type ids to limit the results
+        :type type_ids: list[int]
+        :param type_names: List of recipe type names to limit the results
+        :type type_names: list[string]
+        :param revisions: List of revisions to limit the results
+        :type revisions: list[int]
+        :returns: JSON timeline response
+        :rtype: dict
+        """
+
+        days_ago_started = (now() - started).days if started else 30
+        days_ago_ended = (now() - ended).days if ended else 1
+
+        args = [days_ago_ended, days_ago_started]
+        qry = "WITH day_periods AS "
+        qry += "(SELECT (date_trunc('day', Now()) - ((days_ago - 2) * INTERVAL '1 day')) AS end_time, "
+        qry += "(date_trunc('day', Now()) - ((days_ago - 1) * INTERVAL '1 day')) AS start_time "
+        qry += "FROM generate_series(%s, %s, 1) days_ago) "
+        qry += "SELECT to_char(d.start_time, 'YYYY-MM-DD') AS recipe_date, "
+        qry += "rt.id AS recipe_type_id, "
+        qry += "rt.name AS recipe_type_name, "
+        qry += "rt.title AS recipe_type_title, "
+        qry += "rtr.revision_num AS recipe_type_revision, "
+        qry += "COUNT(*) AS new_recipe_count "
+        qry += "FROM day_periods d "
+        qry += "JOIN job j ON j.started BETWEEN d.start_time AND d.end_time "
+        qry += "JOIN recipe r ON r.id = j.recipe_id "
+        qry += "JOIN recipe_type rt ON rt.ID = r.recipe_type_id "
+        qry += "JOIN recipe_type_revision rtr ON rtr.id = r.recipe_type_rev_id "
+
+        if type_ids:
+            qry += "WHERE rt.id in %s "
+            args.append(tuple(type_ids))
+
+            if revisions:
+                qry += "AND rtr.revision_num in %s "
+                args.append(tuple(revisions))
+
+        elif type_names:
+            qry += "WHERE rt.name in %s "
+            args.append(tuple(type_names))
+
+            if revisions:
+                qry += "AND rtr.revision_num in %s "
+                args.append(tuple(revisions))
+
+        elif revisions:
+            qry += "WHERE rtr.revision_num in %s "
+            args.append(tuple(revisions))
+
+        qry += "GROUP BY d.start_time, rt.id, rt.name, rt.title, rtr.revision_num"
+
+        results = {}
+        with connection.cursor() as cursor:
+            cursor.execute(qry, args)
+            columns = [col[0] for col in cursor.description]
+            the_rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            for row in the_rows:
+                key = '%s-%d' % (row['recipe_type_name'], row['recipe_type_revision'])
+                if key not in results:
+                    results[key] = {
+                        'recipe_type_id': row['recipe_type_id'],
+                        'name': row['recipe_type_name'],
+                        'title': row['recipe_type_title'],
+                        'revision_num': row['recipe_type_revision'],
+                        'results': [{'date': row['recipe_date'],
+                                     'count': row['new_recipe_count']}]
+                    }
+                else:
+                    results_list = results[key]['results']
+                    results_list.append({'date': row['recipe_date'], 'count': row['new_recipe_count']})
+                    results[key]['results'] = results_list
+
+        return results.values()
 
 
 class RecipeType(models.Model):

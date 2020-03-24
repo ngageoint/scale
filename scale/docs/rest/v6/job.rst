@@ -83,6 +83,9 @@ Response: 200 OK
           "error": null,
           "num_exes": 1,
           "input_file_size": 64,
+          "input_files": {
+              "INPUT_FILE": ["my-file.file"]
+          },
           "source_started": "2015-08-28T17:55:41.005Z",
           "source_ended": "2015-08-28T17:56:41.005Z",
           "source_sensor_class": "classA",
@@ -225,6 +228,8 @@ Response: 200 OK
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .input_file_size    | Decimal           | The amount of disk space in MiB required for input files for this job.        |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
+| .input_files        | JSON Object       | The input files associated with the job.                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .source_started     | ISO-8601 Datetime | When collection of the source file started.                                   |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                     |
@@ -357,6 +362,9 @@ Location http://.../v6/job/1/
       "error": null,
       "num_exes": 1,
       "input_file_size": 1.0,
+      "input_files": {
+          "input_a": ["my-file.file"]
+      },
       "source_started": null,
       "source_ended": null,
       "created": "2018-11-01T13:30:22.530638Z",
@@ -566,6 +574,9 @@ Response: 200 OK
         "json": {'input_c': 999, 'input_d': {'hello'}}
       },
       "input_file_size": 64,
+      "input_files": {
+          "INPUT_FILE": ["my-file.file"]
+      },
       "output": {
         "files": {'output_a': [456]},
         "json": {'output_b': 'success'}
@@ -656,6 +667,8 @@ Response: 200 OK
 |                    |                   | (See :ref:`Data <rest_v6_data_data>`)                                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | input_file_size    | Decimal           | The amount of disk space in MiB required for input files for this job.         |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| input_files        | JSON Object       | The input files associated with the job.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | output             | JSON Object       | The output data for the job.                                                   |
 |                    |                   | (See :ref:`Data <rest_v6_data_data>`)                                          |

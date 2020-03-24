@@ -17,6 +17,7 @@ from django.conf import settings
 from django.db import connection, models, transaction
 from django.db.models import F, Q
 from django.utils import timezone
+from django.utils.timezone import now
 
 import util.parse
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
@@ -921,7 +922,6 @@ class Job(models.Model):
     source_collection = models.TextField(blank=True, null=True, db_index=True)
     source_task = models.TextField(blank=True, null=True, db_index=True)
 
-
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)
     started = models.DateTimeField(blank=True, null=True)
@@ -1030,6 +1030,8 @@ class Job(models.Model):
         else:
             return self.job_type.get_job_configuration()
 
+
+
     def get_v6_configuration_json(self):
         """Returns the job configuration in v6 of the JSON schema
 
@@ -1053,6 +1055,21 @@ class Job(models.Model):
         """
 
         return DataV6(data=self.input, do_validate=False).get_data()
+
+    def get_input_files_json(self):
+        """Returns the input files data with more details
+
+        :returns: The detailed input files dict for this job
+        :rtype: dict
+        """
+
+        input_files = {}
+        input_data = self.get_input_data()
+        for data_value in input_data.values.values():
+            if data_value.param_type == FileParameter.PARAM_TYPE:
+                input_files[data_value.name] = [f.file_name for f in ScaleFile.objects.filter(
+                    id__in=data_value.file_ids).only('file_name')]
+        return input_files
 
     def get_v6_input_data_json(self):
         """Returns the input data for this job as v6 json with the version stripped
@@ -2564,6 +2581,86 @@ class JobTypeManager(models.Manager):
                 pass
 
         return JobTypeValidation(is_valid, errors, warnings)
+
+    def get_timeline_jobs_json(self, started=None, ended=None, type_ids=None, type_names=None, type_versions=None):
+        """Returns the timeline information for the specified job types/time range
+
+        :param started: The start date of the timeline
+        :type started: :class:`datetime.datetime`
+        :param ended: The end date of the timeline
+        :type ended: :class:`datetime.datetime`
+        :param type_ids: List of job type ids to limit the results
+        :type type_ids: list[int]
+        :param type_names: List of job type names to limit the results
+        :type type_names: list[string]
+        :param type_versions: List of job type versions to limit the results
+        :type type_versions: list[string]
+        :returns: JSON response for timeline information
+        :rtype: dict
+        """
+
+        days_ago_started = (now() - started).days if started else 30
+        days_ago_ended = (now() - ended).days if ended else 1
+
+        qry = "WITH day_periods AS "
+        qry += "(SELECT (date_trunc('day', Now()) - ((days_ago - 2) * INTERVAL '1 day')) AS end_time, "
+        qry += "(date_trunc('day', Now()) - ((days_ago - 1) * INTERVAL '1 day')) AS start_time "
+        qry += "FROM generate_series(%s, %s, 1) days_ago) "
+        qry += "SELECT to_char(d.start_time, 'YYYY-MM-DD') AS job_type_date, "
+        qry += "jt.id AS job_type_id, "
+        qry += "jt.name AS job_type_name, "
+        qry += "jt.manifest#>>'{job, title}' AS job_type_title, "
+        qry += "jt.version AS job_type_version, "
+        qry += "jtr.revision_num AS job_type_revision, "
+        qry += "COUNT(*) AS new_job_count "
+        qry += "FROM day_periods d "
+        qry += "JOIN job j ON j.started BETWEEN d.start_time AND d.end_time "
+        qry += "JOIN job_type jt ON jt.id = j.job_type_id "
+        qry += "JOIN job_type_revision jtr ON jtr.id = j.job_type_rev_id "
+
+        args = [days_ago_ended, days_ago_started]
+        if type_versions:
+            qry += "WHERE jt.version in %s "
+            args.append(tuple(type_versions))
+            if type_ids:
+                qry += "AND jt.id in %s "
+                args.append(tuple(type_ids))
+            elif type_names:
+                qry += "AND jt.name in %s "
+                args.append(tuple(type_names))
+
+        elif type_ids:
+            qry += "WHERE jt.id in %s "
+            args.append(tuple(type_ids))
+        elif type_names:
+            qry += "WHERE jt.name in %s "
+            args.append(tuple(type_names))
+
+        qry += "GROUP BY d.start_time, jt.id, jt.name, jtr.revision_num"
+
+        results = {}
+        with connection.cursor() as cursor:
+            cursor.execute(qry, args)
+            columns = [col[0] for col in cursor.description]
+            the_rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            for row in the_rows:
+                key = '%s-%s' % (row['job_type_name'], row['job_type_version'])
+                if key not in results:
+                    results[key] = {
+                        'job_type_id': row['job_type_id'],
+                        'name': row['job_type_name'],
+                        'title': row['job_type_title'],
+                        'version': row['job_type_version'],
+                        'revision_num': row['job_type_revision'],
+                        'results': [{'date': row['job_type_date'],
+                                     'count': row['new_job_count']}]
+                    }
+                else:
+                    results_list = results[key]['results']
+                    results_list.append({'date': row['job_type_date'], 'count': row['new_job_count']})
+                    results[key]['results'] = results_list
+
+        return results.values()
 
 class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a

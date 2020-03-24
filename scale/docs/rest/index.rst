@@ -53,5 +53,6 @@ Current v6 Services
    v6/scheduler
    v6/strike
    v6/system
+   v6/timeline
    v6/workspace
    v6/deprecated

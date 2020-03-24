@@ -459,6 +459,11 @@ components:
               type: number
               description: The amount of disk space in MiB required for input files for this job. 
               example: 1.0
+            input_files:
+              description: The input file names for the associated job
+              type: array
+              items:
+                type: string
             source_started:
               type: string
               format: date-time
@@ -520,6 +525,13 @@ components:
               format: date-time
               description: When the associated database model was last saved.
               example: 2015-09-10T15:24:53.987Z
+
+    job_input_files:
+      title: Job Input Files
+      type: object
+      properties:
+
+
 
     job_details:
       title: Job Details

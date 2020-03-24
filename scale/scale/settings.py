@@ -87,6 +87,9 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 QUEUE_NAME = 'scale-command-messages'
 MESSSAGE_QUEUE_DEPTH_WARN = int(os.environ.get('MESSSAGE_QUEUE_DEPTH_WARN', -1))
 
+# Queue limit
+SCHEDULER_QUEUE_LIMIT = int(os.environ.get('SCHEDULER_QUEUE_LIMIT', 500))
+
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
 # Public token if DCOS secrets store, or privleged token for vault
@@ -118,6 +121,10 @@ AUTHENTICATION_ENABLED = get_env_boolean('AUTHENTICATION_ENABLED', True)
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# used primarily by debug-toolbar to dictate what client url has access
+if os.environ.get('INTERNAL_IP'):
+    INTERNAL_IPS = [os.environ.get('INTERNAL_IP')]
+
 # Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -129,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'rest_framework',
     'rest_framework.authtoken',
+    'debug_toolbar',
 
     ###############
     # Social Auth #
@@ -163,6 +171,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'util.middleware.MultipleProxyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

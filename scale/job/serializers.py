@@ -49,6 +49,7 @@ class JobSerializerV6(JobBaseSerializerV6):
     max_tries = serializers.IntegerField()
     num_exes = serializers.IntegerField()
     input_file_size = serializers.FloatField()
+    input_files = serializers.JSONField(source='get_input_files_json')
 
     source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()

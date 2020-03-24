@@ -139,4 +139,3 @@ class CreateIngest(CommandMessage):
         
         return True
  
-        
