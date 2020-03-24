@@ -103,10 +103,8 @@ class BatchManager(models.Manager):
     def calculate_estimated_recipes(self, batch, definition):
         """Calculates the estimated number of recipes that will be created for this batch.
         This number is calculated by:
-        1. The number of existing recipes for the specific recipe type that are
-           not currently superseded
-        2. The number of sub-recipes in the recipe
-           These should be filtered if not changed/marked for re-run?
+        1. The number of existing recipes for the specific recipe type that are not currently superseded
+        2. The number of sub-recipes in the recipe. These should be filtered if not changed/marked for re-run?
 
         :param batch: The batch to calculate recipes for
         :type batch: :class:`batch.models.Batch`

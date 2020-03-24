@@ -2772,15 +2772,17 @@ class JobType(models.Model):
 
     def get_job_version_array(self, version):
         """Gets the Job version either from field or manifest as an array of integers
-           for sorting using the semver package. The result will be an array of length
-           4 with the first three being integers containing major,minor and patch version
-           numbers. The fourth will be either a None value or if a prerelease value is
-           present this function will attempt to convert it into an integer for sorting.
+        for sorting using the semver package. The result will be an array of length
+        4 with the first three being integers containing major,minor and patch version
+        numbers. The fourth will be either a None value or if a prerelease value is
+        present this function will attempt to convert it into an integer for sorting.
+
         :keyword version: The version of the job type
         :type version: :class:`django.db.models.CharField`
         :return: the version array
         :rtype: array
         """
+
         parts = None
         try:
             parts = semver.parse(version)
