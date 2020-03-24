@@ -1545,11 +1545,11 @@ class RecipeTypeManager(models.Manager):
         :param ended: The end date of the timeline
         :type ended: :class:`datetime.datetime`
         :param type_ids: List of recipe type ids to limit the results
-        :type type_ids: list[int]
+        :type type_ids: [int]
         :param type_names: List of recipe type names to limit the results
-        :type type_names: list[string]
+        :type type_names: [string]
         :param revisions: List of revisions to limit the results
-        :type revisions: list[int]
+        :type revisions: [int]
         :returns: JSON timeline response
         :rtype: dict
         """

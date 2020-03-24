@@ -2590,11 +2590,11 @@ class JobTypeManager(models.Manager):
         :param ended: The end date of the timeline
         :type ended: :class:`datetime.datetime`
         :param type_ids: List of job type ids to limit the results
-        :type type_ids: list[int]
+        :type type_ids: [int]
         :param type_names: List of job type names to limit the results
-        :type type_names: list[string]
+        :type type_names: [string]
         :param type_versions: List of job type versions to limit the results
-        :type type_versions: list[string]
+        :type type_versions: [string]
         :returns: JSON response for timeline information
         :rtype: dict
         """
