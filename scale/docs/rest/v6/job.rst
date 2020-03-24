@@ -668,7 +668,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | input_file_size    | Decimal           | The amount of disk space in MiB required for input files for this job.         |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
-| input_files        | JSON Object       | The input files associated with the job.                                      |
+| input_files        | JSON Object       | The input files associated with the job.                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | output             | JSON Object       | The output data for the job.                                                   |
 |                    |                   | (See :ref:`Data <rest_v6_data_data>`)                                          |
@@ -1015,7 +1015,7 @@ Response: 200 OK
 |                      |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | error                | JSON Object       | The last error that was recorded for the execution.                            |
-|                      |                   | (See :ref:`Error Details <rest_v6_error_details>`)                                |
+|                      |                   | (See :ref:`Error Details <rest_v6_error_details>`)                             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type             | JSON Object       | The job type that is associated with the execution.                            |
 |                      |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |

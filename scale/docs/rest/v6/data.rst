@@ -438,6 +438,7 @@ Dataset File JSON
 -----------------
 
 **Example interface:**
+
 .. code-block:: javascript
 
   {
@@ -447,6 +448,7 @@ Dataset File JSON
         "id": 3002,
         "file_name": "the-scale-file.txt",
         "countries": ["USA"]
+    }
   }
 
 +-------------------------------------------------------------------------------------------------------------+
