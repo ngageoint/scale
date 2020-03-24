@@ -53,7 +53,7 @@ class ReconciliationManager(object):
         """Adds a list of tasks that need to be reconciled
 
         :param tasks: The list of tasks to reconcile
-        :type tasks: list
+        :type tasks: :func:`list`
         """
 
         with self._lock:

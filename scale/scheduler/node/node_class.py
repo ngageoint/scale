@@ -137,7 +137,7 @@ class Node(object):
         """Generates the portion of the status JSON that describes this node
 
         :param nodes_list: The list of nodes within the status JSON
-        :type nodes_list: list
+        :type nodes_list: :func:`list`
         """
 
         with self._lock:

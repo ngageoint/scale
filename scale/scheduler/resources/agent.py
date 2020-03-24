@@ -159,7 +159,7 @@ class AgentResources(object):
         and returns them for the scheduler to decline them.
 
         :returns: list of declined offers
-        :rtype: list
+        :rtype: :func:`list`
         """
         
         # Decline old offers
@@ -264,7 +264,7 @@ class AgentResources(object):
         """Updates the agent's resources from its current offers and tasks
 
         :param tasks: The new list of current tasks running on the agent, possibly None
-        :type tasks: list
+        :type tasks: :func:`list`
         """
 
         # Add up offered resources

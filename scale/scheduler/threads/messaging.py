@@ -31,7 +31,7 @@ class MessagingThread(BaseSchedulerThread):
         """Adds any initial messages to the thread
 
         :param messages: The initial messages
-        :type messages: list
+        :type messages: :func:`list`
         """
 
         self._messages.extend(messages)
