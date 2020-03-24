@@ -407,6 +407,65 @@ A dataset JSON describes a specification for a bundle of data
 |                            |                |          | of the dataset.                                                    |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 
+.. _rest_v6_data_dataset_member:
+
+Dataset Member JSON
+-------------------
+
+**Example interface:**
+
+.. code-block:: javascript
+
+  {
+    "id": 65,
+    "created": "",
+    "file_ids": [421]
+  }
+
++----------------------------------------------------------------------------------------------------------+
+| **Dataset Member**                                                                                       |
++============================+===================+=========================================================+
+| id                         | int               | The id of the dataset member.                           |
++----------------------------+-------------------+---------------------------------------------------------+
+| created                    | ISO-8601 Datetime | The date the dataset member was created.                |
++----------------------------+-------------------+---------------------------------------------------------+
+| file_ids                   | Array             | The list of Scale File ids associated with this member  |
++----------------------------+-------------------+---------------------------------------------------------+
+
+.. _rest_v6_data_dataset_file:
+
+Dataset File JSON
+-----------------
+
+**Example interface:**
+.. code-block:: javascript
+
+  {
+    "id": 65,
+    "parameter_name": "INPUT_FILE",
+    "scale_file": {
+        "id": 3002,
+        "file_name": "the-scale-file.txt",
+        "countries": ["USA"]
+  }
+
++-------------------------------------------------------------------------------------------------------------+
+| **Dataset File**                                                                                            |
++============================+===================+============================================================+
+| id                         | int               | The id of the dataset file.                                |
++----------------------------+-------------------+------------------------------------------------------------+
+| parameter_name             | string            | The parameter the Scale File is associated to.             |
++----------------------------+-------------------+------------------------------------------------------------+
+| scale_file                 | JSON Object       |                                                            |
++----------------------------+-------------------+------------------------------------------------------------+
+| .id                        | int               |  The id of the Scale File.                                 |
++----------------------------+-------------------+------------------------------------------------------------+
+| .file_name                 | string            |  The file name of the Scale File.                          |
++----------------------------+-------------------+------------------------------------------------------------+
+| .countries                 | Array             |  The list of country codes associated with the Scale File. |
++----------------------------+-------------------+------------------------------------------------------------+
+
+
 .. _rest_v6_dataset_list:
 
 v6 Retrieve Dataset List
@@ -585,10 +644,9 @@ Location http://.../v6/datasets/106
       "id": 106,
       "title": "My Dataset",
       "description": "My Dataset Description",
-      "definition": <:ref:`Dataset JSON <rest_v6_data_dataset>`>,
       "created": "1970-01-01T00:00:00Z",
-      "members": [<:ref:`Dataset Member <rest_v6_data_dataset_member>`>],
-      "files": [<:ref:`Dataset File <rest_v6_data_dataset_file>`>]
+      "definition": <:ref:`Dataset JSON <rest_v6_data_dataset>`>,
+      "files": 42
    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
