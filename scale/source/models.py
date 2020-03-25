@@ -34,7 +34,7 @@ class SourceFileManager(models.GeoManager):
         :param file_name: Query source files with the given file name.
         :type file_name: str
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of source files that match the time range.
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
@@ -83,7 +83,7 @@ class SourceFileManager(models.GeoManager):
         :param file_name: Query source files with the given file name.
         :type file_name: str
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of source files that match the time range.
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
@@ -156,7 +156,7 @@ class SourceFileManager(models.GeoManager):
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: [string]
         :param batch_ids: Query jobs associated with batches with the given identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
         :param order: A list of fields to control the sort order.
@@ -196,13 +196,13 @@ class SourceFileManager(models.GeoManager):
         :keyword time_field: The time field to use for filtering.
         :type time_field: string
         :param batch_ids: Query product files produced by batches with the given identifiers.
-        :type batch_ids: list[int]
+        :type batch_ids: [int]
         :param job_type_ids: Query product files produced by jobs with the given type identifiers.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_names: Query product files produced by jobs with the given type names.
-        :type job_type_names: list[str]
+        :type job_type_names: [string]
         :param job_ids: Query product files produced by jobs with the given identifiers.
-        :type job_ids: list[int]
+        :type job_ids: [int]
         :param is_published: Query product files flagged as currently exposed for publication.
         :type is_published: bool
         :param is_superseded: Query product files that have/have not been superseded.
@@ -212,13 +212,13 @@ class SourceFileManager(models.GeoManager):
         :keyword job_output: Query product files with the given job output
         :type job_output: str
         :keyword recipe_ids: Query product files produced by a given recipe id
-        :type recipe_ids: list[int]
+        :type recipe_ids: [int]
         :keyword recipe_job: Query product files produced by a given recipe name
         :type recipe_job: str
         :keyword recipe_type_ids: Query product files produced by a given recipe types
-        :type recipe_type_ids: list[int]
+        :type recipe_type_ids: [int]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [str]
         :returns: The product file query
         :rtype: :class:`django.db.models.QuerySet`
         """

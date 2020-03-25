@@ -56,7 +56,7 @@ class JobTypeManager(object):
         """Returns a list of all of the job type resource requirements
 
         :returns: The list of all of the job type resource requirements
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         with self._lock:

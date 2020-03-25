@@ -107,7 +107,7 @@ class NodeDefinition(object):
         :param node_output_interfaces: The output interface for each node stored by node name
         :type node_output_interfaces: dict
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """

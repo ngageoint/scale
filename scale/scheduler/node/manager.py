@@ -130,7 +130,7 @@ class NodeManager(object):
         """Adds the list of online agents to the manager so they can be registered
 
         :param agents: The list of online agents to register
-        :type agents: list
+        :type agents: :func:`list`
         """
 
         with self._lock:

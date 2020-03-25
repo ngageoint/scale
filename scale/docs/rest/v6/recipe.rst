@@ -886,5 +886,5 @@ configuration is merged with job type configurations for jobs in a recipe to aff
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | settings                   | JSON Object    | Optional | A JSON object representing the configuration for each setting to   |
 |                            |                |          | provide to jobs in the recipe. Each key is the name of a setting   |
-|                            |                |          | and each value is the value to provide for that setting.           |                                                      |
+|                            |                |          | and each value is the value to provide for that setting.           |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

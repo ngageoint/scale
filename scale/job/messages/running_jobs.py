@@ -23,9 +23,9 @@ def create_running_job_messages(running_job_exes):
     time)
 
     :param running_job_exes: The running job executions
-    :type running_job_exes: list
+    :type running_job_exes: :func:`list`
     :return: The running job messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

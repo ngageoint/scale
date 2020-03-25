@@ -118,7 +118,7 @@ class TaskResults(object):
         """Adds the given job execution tasks to the results
 
         :param tasks: The job execution tasks to add
-        :type tasks: list
+        :type tasks: :func:`list`
         """
 
         task_list = self._task_results['tasks']

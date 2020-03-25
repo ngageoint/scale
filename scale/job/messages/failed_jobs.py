@@ -27,11 +27,11 @@ def create_failed_jobs_messages(failed_jobs, when):
     """Creates messages to fail the given jobs
 
     :param failed_jobs: The failed jobs
-    :type failed_jobs: list
+    :type failed_jobs: :func:`list`
     :param when: When the jobs failed
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

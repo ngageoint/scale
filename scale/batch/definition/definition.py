@@ -28,7 +28,7 @@ class BatchDefinition(object):
         :param batch: The batch model
         :type batch: :class:`batch.models.Batch`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`batch.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """

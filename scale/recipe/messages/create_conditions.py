@@ -29,9 +29,9 @@ def create_conditions_messages(recipe, conditions):
     :param recipe: The recipe model
     :type recipe: :class:`recipe.models.Recipe`
     :param conditions: The list of Condition tuples describing the conditions to create
-    :type conditions: list
+    :type conditions: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -150,7 +150,7 @@ class CreateConditions(CommandMessage):
         """Creates the condition models for the message
 
         :returns: The list of condition models created
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         condition_models = {}  # {Node name: condition model}
@@ -182,7 +182,7 @@ class CreateConditions(CommandMessage):
         """Searches to determine if this message already ran and the conditions already exist
 
         :returns: The list of condition models found
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         node_names = [condition.node_name for condition in self.conditions]

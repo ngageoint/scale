@@ -22,11 +22,11 @@ def create_requeue_jobs_messages(jobs, priority=None):
     """Creates messages to requeue the given jobs
 
     :param jobs: The jobs to requeue
-    :type jobs: list
+    :type jobs: :func:`list`
     :param priority: Optional priority to set on the re-queued jobs
     :type priority: int
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []

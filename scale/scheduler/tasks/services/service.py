@@ -60,7 +60,7 @@ class Service(object):
         """Returns a list of service tasks that need to be killed
 
         :returns: The list of service tasks to kill
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks_to_kill = []
@@ -75,7 +75,7 @@ class Service(object):
         """Returns a list of service tasks that need to be scheduled
 
         :returns: The list of service tasks to schedule
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         tasks = []

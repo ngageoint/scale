@@ -149,7 +149,7 @@ class RunningJobExeMetricsByNode(object):
         """Generates the portion of the status JSON that describes these running job executions
 
         :param nodes_list: The list of nodes within the status JSON
-        :type nodes_list: list
+        :type nodes_list: :func:`list`
         """
 
         for node_dict in nodes_list:
@@ -292,7 +292,7 @@ class FinishedJobExeMetricsByNode(object):
         """Generates the portion of the status JSON that describes these finished job executions
 
         :param nodes_list: The list of nodes within the status JSON
-        :type nodes_list: list
+        :type nodes_list: :func:`list`
         """
 
         for node_dict in nodes_list:
@@ -435,7 +435,7 @@ class TotalJobExeMetrics(object):
         """Generates the portion of the status JSON that describes the job execution metrics
 
         :param nodes_list: The list of nodes within the status JSON
-        :type nodes_list: list
+        :type nodes_list: :func:`list`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         """

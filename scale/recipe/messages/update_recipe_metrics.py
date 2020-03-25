@@ -18,9 +18,9 @@ def create_update_recipe_metrics_messages(recipe_ids):
     """Creates messages to update the metrics for the given recipes
 
     :param recipe_ids: The recipe IDs
-    :type recipe_ids: list
+    :type recipe_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -43,9 +43,9 @@ def create_update_recipe_metrics_messages_from_jobs(job_ids):
     """Creates messages to update the metrics for the recipes affected by the given jobs
 
     :param job_ids: The job IDs
-    :type job_ids: list
+    :type job_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     recipe_ids = Recipe.objects.get_recipe_ids_for_jobs(job_ids)
@@ -56,9 +56,9 @@ def create_update_recipe_metrics_messages_from_sub_recipes(sub_recipe_ids):
     """Creates messages to update the metrics for the recipes affected by the given sub-recipes
 
     :param sub_recipe_ids: The sub-recipe IDs
-    :type sub_recipe_ids: list
+    :type sub_recipe_ids: :func:`list`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     recipe_ids = Recipe.objects.get_recipe_ids_for_sub_recipes(sub_recipe_ids)

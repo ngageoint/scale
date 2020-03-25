@@ -191,7 +191,7 @@ class JobConfiguration(object):
         :param manifest: The Seed manifest
         :type manifest: :class:`job.seed.manifest.SeedManifest`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
         """
@@ -211,7 +211,7 @@ class JobConfiguration(object):
         :param manifest: The Seed manifest
         :type manifest: :class:`job.seed.manifest.SeedManifest`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
         """
@@ -235,7 +235,7 @@ class JobConfiguration(object):
         :param manifest: The Seed manifest
         :type manifest: :class:`job.seed.manifest.SeedManifest`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
         """
@@ -273,7 +273,7 @@ class JobConfiguration(object):
         :param manifest: The Seed manifest
         :type manifest: :class:`job.seed.manifest.SeedManifest`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
         """

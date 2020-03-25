@@ -69,7 +69,7 @@ class IngestStatus(object):
     :keyword size: The total size of all files ingested by the strike process in bytes.
     :type size: int
     :keyword values: A list of values that summarize work done by the strike process.
-    :type values: list[:class:`ingest.models.IngestCounts`]
+    :type values: [:class:`ingest.models.IngestCounts`]
     """
 
     def __init__(self, strike=None, most_recent=None, files=0, size=0, values=None):
@@ -190,15 +190,15 @@ class IngestManager(models.Manager):
         :param statuses: Query ingests with the a specific process status.
         :type statuses: [string]
         :param scan_ids: Query ingests created by a specific scan processor.
-        :type scan_ids: list[string]
+        :type scan_ids: [string]
         :param strike_ids: Query ingests created by a specific strike processor.
-        :type strike_ids: list[string]
+        :type strike_ids: [string]
         :param file_name: Query ingests with the a specific file name.
         :type file_name: string
         :param order: A list of fields to control the sort order.
-        :type order: list[string]
+        :type order: [string]
         :returns: The list of ingests that match the time range.
-        :rtype: list[:class:`ingest.models.Ingest`]
+        :rtype: [:class:`ingest.models.Ingest`]
         """
 
         return self.filter_ingests(started=started, ended=ended, statuses=statuses, scan_ids=scan_ids,
@@ -208,11 +208,11 @@ class IngestManager(models.Manager):
         """Returns a list of ingests associated with a scan and optionally files
 
         :param scan_id: Query ingests created by a specific scan processor.
-        :type scan_id: list[string]
+        :type scan_id: [string]
         :param file_names: Query ingests with the specific file names.
-        :type file_names: list[string]
+        :type file_names: [string]
         :returns: The list of ingests that match the scan and file_names.
-        :rtype: list[:class:`ingest.models.Ingest`]
+        :rtype: [:class:`ingest.models.Ingest`]
         """
 
         # Fetch a list of ingests
@@ -267,7 +267,7 @@ class IngestManager(models.Manager):
         :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
         :type use_ingest_time: bool
         :returns: The list of ingest status models that match the time range.
-        :rtype: list[:class:`ingest.models.IngestStatus`]
+        :rtype: [:class:`ingest.models.IngestStatus`]
         """
 
         # Fetch a list of ingests
@@ -302,7 +302,7 @@ class IngestManager(models.Manager):
         One of scan_id or strike_id must be set.
 
         :param ingests: The ingest models
-        :type ingests: list[:class:`ingest.models.Ingest`]
+        :type ingests: [:class:`ingest.models.Ingest`]
         :param scan_id: ID of Scan that generated ingest
         :type scan_id: int
         :param strike_id: ID of Strike that generated ingest
@@ -329,7 +329,7 @@ class IngestManager(models.Manager):
         """Groups the given ingests by hourly time slots.
 
         :param ingests: Query ingests updated after this amount of time.
-        :type ingests: list[:class:`ingest.models.Ingest`]
+        :type ingests: [:class:`ingest.models.Ingest`]
         :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
         :type use_ingest_time: bool
         :returns: A mapping of ingest status models to hourly groups of counts.
@@ -890,11 +890,11 @@ class ScanManager(models.Manager):
         :param ended: Query Scan processes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param names: Query Scan processes associated with the name.
-        :type names: list[string]
+        :type names: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[string]
+        :type order: [string]
         :returns: The list of Scan processes that match the time range.
-        :rtype: list[:class:`ingest.models.Scan`]
+        :rtype: [:class:`ingest.models.Scan`]
         """
 
         # Fetch a list of scans
@@ -1198,11 +1198,11 @@ class StrikeManager(models.Manager):
         :param ended: Query Strike processes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param names: Query Strike processes associated with the name.
-        :type names: list[string]
+        :type names: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[string]
+        :type order: [string]
         :returns: The list of Strike processes that match the time range.
-        :rtype: list[:class:`ingest.models.Strike`]
+        :rtype: [:class:`ingest.models.Strike`]
         """
 
         # Fetch a list of strikes

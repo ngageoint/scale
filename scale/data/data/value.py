@@ -42,7 +42,7 @@ class DataValue(object):
         :param parameter: The parameter to which this data is being passed
         :type parameter: :class:`data.interface.parameter.Parameter`
         :returns: A list of warnings discovered during validation
-        :rtype: list
+        :rtype: :func:`list`
 
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
@@ -65,7 +65,7 @@ class FileValue(DataValue):
         :param name: The name of the parameter
         :type name: string
         :param file_ids: The list of file IDs
-        :type file_ids: list
+        :type file_ids: :func:`list`
         """
 
         super(FileValue, self).__init__(name, FileParameter.PARAM_TYPE)

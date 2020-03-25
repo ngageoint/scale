@@ -76,7 +76,7 @@ class ResourceManager(object):
         """Directs all agents to remove offers that have not been allocated and return them to be declined by the scheduler.
 
         :returns: list of offers to decline
-        :rtype: list
+        :rtype: :func:`list`
         """
 
         declined = []
@@ -248,7 +248,7 @@ class ResourceManager(object):
         """Rescinds the offers with the given IDs from the manager
 
         :param offer_ids: The list of IDs of the offers to rescind
-        :type offer_ids: list
+        :type offer_ids: :func:`list`
         """
 
         with self._new_offers_lock:

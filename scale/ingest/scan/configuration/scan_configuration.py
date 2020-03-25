@@ -102,7 +102,7 @@ class ScanConfiguration(object):
         """Validates the Scan configuration
 
         :returns: A list of warnings discovered during validation
-        :rtype: list[:class:`ingest.scan.configuration.scan_configuration.ValidationWarning`]
+        :rtype: :func:`list[:class:`ingest.scan.configuration.scan_configuration.ValidationWarning`]`
 
         :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
             invalid.

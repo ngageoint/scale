@@ -23,7 +23,7 @@ def create_supersede_recipe_nodes_messages(recipe_ids, when, supersede_jobs, sup
     """Creates messages to supersede nodes in the given recipes
 
     :param recipe_ids: The recipe IDs
-    :type recipe_ids: list
+    :type recipe_ids: :func:`list`
     :param when: When the jobs/sub-recipes were superseded
     :type when: :class:`datetime.datetime`
     :param supersede_jobs: The node names for jobs to supersede
@@ -38,7 +38,7 @@ def create_supersede_recipe_nodes_messages(recipe_ids, when, supersede_jobs, sup
         nodes
     :type unpublish_recursive: set
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -73,11 +73,11 @@ def _create_recursive_supersede_messages(recipe_ids, when):
     """Creates messages to recursively supersede all nodes in the given recipes
 
     :param recipe_ids: The recipe IDs
-    :type recipe_ids: list
+    :type recipe_ids: :func:`list`
     :param when: When the jobs/sub-recipes were superseded
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
@@ -106,11 +106,11 @@ def _create_recursive_unpublish_messages(recipe_ids, when):
     """Creates messages to recursively supersede/unpublish all nodes in the given recipes
 
     :param recipe_ids: The recipe IDs
-    :type recipe_ids: list
+    :type recipe_ids: :func:`list`
     :param when: When the jobs/sub-recipes were superseded
     :type when: :class:`datetime.datetime`
     :return: The list of messages
-    :rtype: list
+    :rtype: :func:`list`
     """
 
     messages = []
