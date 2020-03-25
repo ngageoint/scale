@@ -31,7 +31,7 @@ Request Example: ``/v6/jobs/``
 .. _rest_services:
 
 Current v6 Services
-------------------
+-------------------
 
 .. toctree::
    :maxdepth: 1

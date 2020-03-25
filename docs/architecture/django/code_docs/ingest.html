@@ -145,6 +145,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -1362,17 +1363,17 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
 <li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query ingests with the a specific process status.</li>
-<li><strong>scan_ids</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; Query ingests created by a specific scan processor.</li>
-<li><strong>strike_ids</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; Query ingests created by a specific strike processor.</li>
+<li><strong>scan_ids</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>strike_ids</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query ingests created by a specific strike processor.</li>
 <li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with the a specific file name.</li>
-<li><strong>order</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of ingests that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1388,15 +1389,15 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>scan_id</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; Query ingests created by a specific scan processor.</li>
-<li><strong>file_names</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; Query ingests with the specific file names.</li>
+<li><strong>scan_id</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>file_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query ingests with the specific file names.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of ingests that match the scan and file_names.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1427,7 +1428,7 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of ingest status models that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.IngestStatus" title="ingest.models.IngestStatus"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestStatus</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#ingest.models.IngestStatus" title="ingest.models.IngestStatus"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestStatus</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1444,7 +1445,7 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ingests</strong> (list[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]) &#8211; The ingest models</li>
+<li><strong>ingests</strong> ([<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]) &#8211; The ingest models</li>
 <li><strong>scan_id</strong> (<em>int</em>) &#8211; ID of Scan that generated ingest</li>
 <li><strong>strike_id</strong> (<em>int</em>) &#8211; ID of Strike that generated ingest</li>
 </ul>
@@ -1470,7 +1471,7 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <li><strong>most_recent</strong> (<em>datetime.datetime</em>) &#8211; The date/time of the last ingest generated by the strike process.</li>
 <li><strong>files</strong> (<em>int</em>) &#8211; The total number of files ingested by the strike process.</li>
 <li><strong>size</strong> (<em>int</em>) &#8211; The total size of all files ingested by the strike process in bytes.</li>
-<li><strong>values</strong> (list[<a class="reference internal" href="#ingest.models.IngestCounts" title="ingest.models.IngestCounts"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestCounts</span></code></a>]) &#8211; A list of values that summarize work done by the strike process.</li>
+<li><strong>values</strong> ([<a class="reference internal" href="#ingest.models.IngestCounts" title="ingest.models.IngestCounts"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestCounts</span></code></a>]) &#8211; A list of values that summarize work done by the strike process.</li>
 </ul>
 </td>
 </tr>
@@ -1820,15 +1821,15 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Scan processes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Scan processes updated before this amount of time.</li>
-<li><strong>names</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; Query Scan processes associated with the name.</li>
-<li><strong>order</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query Scan processes associated with the name.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of Scan processes that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -2225,15 +2226,15 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Strike processes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Strike processes updated before this amount of time.</li>
-<li><strong>names</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; Query Strike processes associated with the name.</li>
-<li><strong>order</strong> (<a class="reference internal" href="#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query Strike processes associated with the name.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of Strike processes that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a>]</p>
 </td>
 </tr>
 </tbody>

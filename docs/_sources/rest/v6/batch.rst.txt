@@ -949,7 +949,7 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 |                         |                   |          | existing recipes; False if the recipes created during the batch    |
 |                         |                   |          | should be new recipes.                                             |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| dataset_                | Integer           | Optional | The ID of the dataset the batch will be created from.              |
+| dataset                 | Integer           | Optional | The ID of the dataset the batch will be created from.              |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | forced_nodes            | JSON object       | Optional | A forced nodes JSON object that defines the batch recipe nodes to  |
 |                         |                   |          | force to re-process even if there are no changes to them.          |

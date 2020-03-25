@@ -145,6 +145,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -550,9 +551,9 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -880,7 +881,7 @@ object the first time, the query is executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of job IDs being canceled</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The list of job IDs being canceled</td>
 </tr>
 </tbody>
 </table>
@@ -897,7 +898,7 @@ mode</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>order_mode</strong> (<em>string</em>) &#8211; The mode determining how to order the queue (FIFO or LIFO)</li>
-<li><strong>ignore_job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of job type IDs to ignore</li>
+<li><strong>ignore_job_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The list of job type IDs to ignore</li>
 </ul>
 </td>
 </tr>
@@ -938,7 +939,7 @@ ignored.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to put on the queue</li>
+<li><strong>jobs</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The job models to put on the queue</li>
 <li><strong>requeue</strong> (<em>bool</em>) &#8211; Whether this is a re-queue (True) or a first queue (False)</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority when they are queued</li>
 </ul>
@@ -947,7 +948,7 @@ ignored.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully QUEUED</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>

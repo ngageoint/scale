@@ -22,7 +22,6 @@ system. Source code documentation for every app is provided below:
    code_docs/messaging
    code_docs/metrics
    code_docs/node
-   code_docs/port
    code_docs/product
    code_docs/queue
    code_docs/recipe
@@ -30,6 +29,7 @@ system. Source code documentation for every app is provided below:
    code_docs/shared_resource
    code_docs/source
    code_docs/storage
+   code_docs/timeline
    code_docs/trigger
    code_docs/util
    code_docs/vault

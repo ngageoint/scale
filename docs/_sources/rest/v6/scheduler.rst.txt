@@ -81,7 +81,7 @@ Response: 204 No content
 | num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled                  |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | queue_mode           | String            | (Optional) The mode the queue should operate in: last in first out vs first  |
-|                      |                   | in last out. Valid values are LIFO or FIFO.
+|                      |                   | in last out. Valid values are LIFO or FIFO.                                  |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | system_logging_level | String            | (Optional) The logging level sent to all scale system components.            |
 |                      |                   | Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.              |

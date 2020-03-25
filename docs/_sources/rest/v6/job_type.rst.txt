@@ -1158,6 +1158,7 @@ v6 Job Type Status
 Request: GET http://.../v6/job-types/status/
 
 .. code-block:: javascript
+
   {
     "count": 1,
     "next": null,
@@ -1280,6 +1281,7 @@ v6 Job Types Pending
 Request: GET http://.../v6/job-types/pending/
 
 .. code-block:: javascript
+
   {
     "count": 1,
     "next": null,
@@ -1344,6 +1346,7 @@ v6 Job Types Running
 Request: GET http://.../v6/job-types/status/
 
 .. code-block:: javascript
+
   {
     "count": 1,
     "next": null,
@@ -1407,6 +1410,7 @@ v6 Job Type System Failures
 Request: GET http://.../v6/job-types/system-failures/
 
 .. code-block:: javascript
+
   {
     "count": 1,
     "next": null,

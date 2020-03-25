@@ -144,6 +144,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -976,15 +977,28 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="batch.models.BatchManager.calculate_estimated_recipes">
 <code class="descname">calculate_estimated_recipes</code><span class="sig-paren">(</span><em>batch</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.calculate_estimated_recipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the estimated number of recipes that will be created for this batch. 
+<dd><p>Calculates the estimated number of recipes that will be created for this batch.
 This number is calculated by:
-1. The number of existing recipes for the specific recipe type that are</p>
-<blockquote>
-<div>not currently superseded</div></blockquote>
-<ol class="arabic simple" start="2">
-<li>The number of sub-recipes in the recipe
-These should be filtered if not changed/marked for re-run?</li>
-</ol>
+1. The number of existing recipes for the specific recipe type that are not currently superseded
+2. The number of sub-recipes in the recipe. These should be filtered if not changed/marked for re-run?</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>batch</strong> (<a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a>) &#8211; The batch to calculate recipes for</li>
+<li><strong>definition</strong> (<a class="reference internal" href="batch.definition.html#batch.definition.definition.BatchDefinition" title="batch.definition.definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.definition.definition.BatchDefinition</span></code></a>) &#8211; The batch definition</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The number of estimated recipes the batch will create</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1053,7 +1067,7 @@ schemas.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of batches in the chain</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1089,18 +1103,18 @@ will have no related fields populated.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated after this time</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated before this time</li>
-<li><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query batches with these recipe types</li>
+<li><strong>recipe_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query batches with these recipe types</li>
 <li><strong>is_creation_done</strong> (<em>bool</em>) &#8211; Query batches that match this value</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query batches that match this value</li>
-<li><strong>root_batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query batches with these root batches</li>
-<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order</li>
+<li><strong>root_batch_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query batches with these root batches</li>
+<li><strong>order</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of fields to control the sort order</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of batches that match the given criteria</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -1195,7 +1209,7 @@ will have no related fields populated. Caller must be within an atomic transacti
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>batch_id</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The batch ID to supersede</li>
+<li><strong>batch_id</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The batch ID to supersede</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the batch was superseded</li>
 </ul>
 </td>
@@ -1212,7 +1226,7 @@ will have no related fields populated. Caller must be within an atomic transacti
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The batch IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The batch IDs</td>
 </tr>
 </tbody>
 </table>
@@ -1510,7 +1524,7 @@ object the first time, the query is executed.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The metrics models for the batch</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1524,7 +1538,7 @@ object the first time, the query is executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The batch IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The batch IDs</td>
 </tr>
 </tbody>
 </table>

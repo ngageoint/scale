@@ -149,6 +149,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -375,7 +376,7 @@ enough to cover the current allocation, job executions and tasks are removed as 
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>offers</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The resource offers to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>offers</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The resource offers to add</td>
 </tr>
 </tbody>
 </table>
@@ -389,7 +390,7 @@ enough to cover the current allocation, job executions and tasks are removed as 
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The running job executions that have now been scheduled in the database</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The running job executions that have now been scheduled in the database</td>
 </tr>
 </tbody>
 </table>
@@ -413,7 +414,7 @@ reserve this node, None is returned.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>job_exe</strong> (<a class="reference internal" href="queue.html#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>) &#8211; The job execution to score</li>
-<li><strong>job_type_resources</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of all of the job type resource requirements</li>
+<li><strong>job_type_resources</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The list of all of the job type resource requirements</li>
 </ul>
 </td>
 </tr>
@@ -439,7 +440,7 @@ scheduling. If the job execution cannot be scheduled on this node, None is retur
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>job_exe</strong> (<a class="reference internal" href="queue.html#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>) &#8211; The job execution to score</li>
-<li><strong>job_type_resources</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of all of the job type resource requirements</li>
+<li><strong>job_type_resources</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The list of all of the job type resource requirements</li>
 </ul>
 </td>
 </tr>
@@ -464,7 +465,7 @@ scheduling. If the system task cannot be scheduled on this node, None is returne
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>system_task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The system task to score</li>
-<li><strong>job_type_resources</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of all of the job type resource requirements</li>
+<li><strong>job_type_resources</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The list of all of the job type resource requirements</li>
 </ul>
 </td>
 </tr>

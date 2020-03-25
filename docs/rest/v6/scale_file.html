@@ -291,6 +291,344 @@
 </pre></div>
 </div>
 </div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="1%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="5"><strong>Scale Files</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="5">Returns detailed information about files associated with Scale.</td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>GET</strong> /files/</td>
+</tr>
+<tr class="row-even"><td colspan="5"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td colspan="2">page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td colspan="2">page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">data_started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the data time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td colspan="2">data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the data time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">source_started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the source file time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td colspan="2">source_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the source file time range to query, default is current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">source_sensor_class</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source sensor class
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">source_sensor</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source sensor
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">source_collection</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source collection
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">source_task</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given source task
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">modified_started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the last modified time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td colspan="2">modified_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the last modified time range to query (default current time)
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=file_name&amp;order=created).
+Nested objects require a delimiter (ex: order=job_type__name).
+Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
+</tr>
+<tr class="row-even"><td colspan="2">job_output</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files for the given job output.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files associated with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">job_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given job identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">recipe_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given recipe identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">recipe_node</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files produced by the given recipe node.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">recipe_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given recipe type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">batch_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only files produced by the given batch identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">countries</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files associated with a given country.
+Use country code style ISO3.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">file_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only files with a given file name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="5"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="4">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td colspan="2">previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-v6-file-details"><span class="std std-ref">File Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The workspace that has stored the product.
+(See <a class="reference internal" href="workspace.html#rest-v6-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.file_name</td>
+<td>String</td>
+<td colspan="2">The name of the file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.data_type_tags</td>
+<td>Array</td>
+<td colspan="2">A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.media_type</td>
+<td>String</td>
+<td colspan="2">The IANA media type of the file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.file_size</td>
+<td>Integer</td>
+<td colspan="2">The size of the file in bytes.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.file_path</td>
+<td>String</td>
+<td colspan="2">The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.is_deleted</td>
+<td>Boolean</td>
+<td colspan="2">Whether the file has been deleted.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.url</td>
+<td>URL</td>
+<td colspan="2">The absolute URL to use for downloading the file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.deleted</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the file was deleted.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The start time of the source data being ingested.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The ended time of the source data being ingested.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.geometry</td>
+<td>WKT String</td>
+<td colspan="2">The full geospatial geometry footprint of the file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.center_point</td>
+<td>WKT String</td>
+<td colspan="2">The central geospatial location of the file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.countries</td>
+<td>Array</td>
+<td colspan="2">A list of zero or more strings with the ISO3 country codes for countries
+contained in the geographic boundary of this file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.file_path</td>
+<td>String</td>
+<td colspan="2">The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.source_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying source file started.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.source_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying source file ended.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.source_sensor_class</td>
+<td>String</td>
+<td colspan="2">The class of sensor used to produce the source file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.source_sensor</td>
+<td>String</td>
+<td colspan="2">The specific identifier of the sensor used to produce the source file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.source_collection</td>
+<td>String</td>
+<td colspan="2">The collection of the source file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.source_task</td>
+<td>String</td>
+<td colspan="2">The task that produced the source file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.job</td>
+<td>JSON Object</td>
+<td colspan="2">The job instance that generated the file.
+(See <a class="reference internal" href="job.html#rest-v6-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.job_exe</td>
+<td>JSON Object</td>
+<td colspan="2">The specific job execution that generated the file.
+(See <a class="reference internal" href="job.html#rest-v6-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.job_output</td>
+<td>String</td>
+<td colspan="2">The name of the output from the job related to this file.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The type of job that generated the file.
+(See <a class="reference internal" href="job_type.html#rest-v6-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.recipe</td>
+<td>JSON Object</td>
+<td colspan="2">The recipe instance that generated the file.
+(See <a class="reference internal" href="recipe.html#rest-v6-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.recipe_node</td>
+<td>String</td>
+<td colspan="2">The recipe node that produced this file.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.recipe_type</td>
+<td>JSON Object</td>
+<td colspan="2">The type of recipe that generated the file.
+(See <a class="reference internal" href="recipe_type.html#rest-v6-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.batch</td>
+<td>JSON Object</td>
+<td colspan="2">The batch instance that generated the file.
+(See <a class="reference internal" href="batch.html#rest-v6-batch-details"><span class="std std-ref">Batch Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.is_superseded</td>
+<td>Boolean</td>
+<td colspan="2">Whether this file has been replaced and is now obsolete.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.superseded</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the file became superseded by another file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="v6-scale-file-details">
 <span id="rest-v6-file-details"></span><h2>v6 Scale File Details<a class="headerlink" href="#v6-scale-file-details" title="Permalink to this headline">¶</a></h2>

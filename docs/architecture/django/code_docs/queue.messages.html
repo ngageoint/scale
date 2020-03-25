@@ -145,6 +145,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -320,7 +321,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The jobs to queue (QueuedJob tuple)</li>
+<li><strong>jobs</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The jobs to queue (QueuedJob tuple)</li>
 <li><strong>requeue</strong> (<em>bool</em>) &#8211; Whether this is a re-queue (True) or a first queue (False)</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; Optional priority to set on the queued jobs</li>
 </ul>
@@ -329,7 +330,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -408,7 +409,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The jobs to requeue</li>
+<li><strong>jobs</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The jobs to requeue</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; Optional priority to set on the re-queued jobs</li>
 </ul>
 </td>
@@ -416,7 +417,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -464,15 +465,15 @@ affected by the re-queue.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start time of the jobs</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The end time of the jobs</li>
-<li><strong>error_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of error categories</li>
-<li><strong>error_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of error IDs</li>
-<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job IDs</li>
-<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job type IDs</li>
+<li><strong>error_categories</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of error categories</li>
+<li><strong>error_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of error IDs</li>
+<li><strong>job_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of job IDs</li>
+<li><strong>job_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of job type IDs</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; A new priority for the re-queued jobs</li>
 <li><strong>status</strong> (<em>str</em>) &#8211; The job status</li>
-<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job type names</li>
-<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of batch IDs</li>
-<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of recipe IDs</li>
+<li><strong>job_type_names</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of job type names</li>
+<li><strong>batch_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of batch IDs</li>
+<li><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of recipe IDs</li>
 <li><strong>is_superseded</strong> (<em>boolean</em>) &#8211; Whether the jobs are superseded or not</li>
 </ul>
 </td>

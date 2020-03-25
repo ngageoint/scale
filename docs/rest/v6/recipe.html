@@ -1430,6 +1430,86 @@ configuration is merged with job type configurations for jobs in a recipe to aff
 <span class="p">}</span>
 </pre></div>
 </div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Configuration</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mounts</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the configuration for each mount to
+provide to jobs. Each key is the name of a mount defined in the
+job&#8217;s Seed manifest and each value is the configuration for that
+mount.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>String</td>
+<td>Required</td>
+<td>The type of the mount configuration. Must be either &#8216;host&#8217; or
+&#8216;volume&#8217;.</td>
+</tr>
+<tr class="row-even"><td>host_path</td>
+<td>String</td>
+<td>Required</td>
+<td>(host mount) The absolute file-system path on the host to mount
+into the job&#8217;s container.</td>
+</tr>
+<tr class="row-odd"><td>driver</td>
+<td>String</td>
+<td>Optional</td>
+<td>(volume mount) The Docker driver to use for creating the Docker
+volume that will be mounted into the job&#8217;s container.</td>
+</tr>
+<tr class="row-even"><td>driver_opts</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>(volume mount) An object of key-value strings specifying the name
+and value of the Docker driver options to use for creating the
+Docker volume that will be mounted into the job&#8217;s container.</td>
+</tr>
+<tr class="row-odd"><td>output_workspaces</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>A JSON object representing the workspaces to use for storing the
+recipe&#8217;s output files for each defined file output</td>
+</tr>
+<tr class="row-even"><td>default</td>
+<td>String</td>
+<td>Optional</td>
+<td>The unique name of the default workspace to use for storing any
+output files that don&#8217;t belong to an output configured in
+<em>outputs</em>.</td>
+</tr>
+<tr class="row-odd"><td>outputs</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the workspaces to use for storing the
+recipe&#8217;s output files for specific file outputs. Each key is the
+name of a file output and each value is the unique name of the
+the workspace to use.</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The priority to use for scheduling the job off of the queue.</td>
+</tr>
+<tr class="row-odd"><td>settings</td>
+<td>JSON Object</td>
+<td>Optional</td>
+<td>A JSON object representing the configuration for each setting to
+provide to jobs in the recipe. Each key is the name of a setting
+and each value is the value to provide for that setting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

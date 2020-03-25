@@ -144,6 +144,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -1818,7 +1819,7 @@ object the first time, the query is executed.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</li>
+<li><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe IDs</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the recipes were completed</li>
 </ul>
 </td>
@@ -1907,11 +1908,11 @@ transaction.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe models</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1926,11 +1927,11 @@ IDs. The returned models have no related fields populated. Caller must be within
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>root_recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The root recipe IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>root_recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The root recipe IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe models</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1965,11 +1966,11 @@ recipes.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The job IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1984,11 +1985,11 @@ recipes.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The sub-recipe IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The sub-recipe IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -2061,14 +2062,14 @@ recipes.</p>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes updated before this amount of time.</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes where source collection started after this time.</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes where source collection ended before this time.</li>
-<li><strong>source_sensor_classes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source sensor class.</li>
-<li><strong>source_sensor</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source sensor.</li>
-<li><strong>source_collection</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source class.</li>
-<li><strong>source_tasks</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source tasks.</li>
+<li><strong>source_sensor_classes</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query recipes with the given source sensor class.</li>
+<li><strong>source_sensor</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query recipes with the given source sensor.</li>
+<li><strong>source_collection</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query recipes with the given source class.</li>
+<li><strong>source_tasks</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query recipes with the given source tasks.</li>
 <li><strong>ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query recipes associated with the given identifiers.</li>
 <li><strong>type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query recipes of the type associated with the identifiers.</li>
 <li><strong>type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query recipes of the type associated with the name.</li>
-<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query recipes associated with batches with the given identifiers.</li>
+<li><strong>batch_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query recipes associated with batches with the given identifiers.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query recipes that match the is_superseded flag.</li>
 <li><strong>is_completed</strong> (<em>bool</em>) &#8211; Query recipes that match the is_completed flag.</li>
 <li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
@@ -2129,7 +2130,7 @@ recipe_type_rev model populated.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs to supersede</li>
+<li><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe IDs to supersede</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the recipes were superseded</li>
 </ul>
 </td>
@@ -2146,7 +2147,7 @@ recipe_type_rev model populated.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe IDs</td>
 </tr>
 </tbody>
 </table>
@@ -2337,7 +2338,7 @@ object the first time, the query is executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_copies</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of RecipeNodeCopy tuples</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_copies</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of RecipeNodeCopy tuples</td>
 </tr>
 </tbody>
 </table>
@@ -2372,7 +2373,7 @@ object the first time, the query is executed.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe_node models</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -2396,7 +2397,7 @@ object the first time, the query is executed.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe_node models</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -2420,7 +2421,7 @@ object the first time, the query is executed.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe_node models</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -2475,7 +2476,7 @@ object the first time, the query is executed.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe_node models for the recipe</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -2508,9 +2509,9 @@ object the first time, the query is executed.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</li>
+<li><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe IDs</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the jobs were superseded</li>
-<li><strong>node_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The node names of the jobs to supersede</li>
+<li><strong>node_names</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The node names of the jobs to supersede</li>
 <li><strong>all_nodes</strong> (<em>bool</em>) &#8211; Whether all nodes should be superseded</li>
 </ul>
 </td>
@@ -2528,9 +2529,9 @@ object the first time, the query is executed.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</li>
+<li><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe IDs</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the sub-recipes were superseded</li>
-<li><strong>node_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The node names of the sub-recipes to supersede</li>
+<li><strong>node_names</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The node names of the sub-recipes to supersede</li>
 <li><strong>all_nodes</strong> (<em>bool</em>) &#8211; Whether all nodes should be superseded</li>
 </ul>
 </td>
@@ -2984,8 +2985,8 @@ made in an atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of recipe type IDs</li>
-<li><strong>job_type_ids</strong> (<em>list of int</em>) &#8211; List of job type IDs.</li>
+<li><strong>recipe_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of recipe type IDs</li>
+<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of job type IDs.</li>
 </ul>
 </td>
 </tr>
@@ -3016,11 +3017,11 @@ made in an atomic transaction.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe type IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe type IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of job type IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -3034,11 +3035,11 @@ made in an atomic transaction.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The sub recipe type IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The sub recipe type IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of recipe type IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -3174,17 +3175,17 @@ transaction. An argument of None for a field indicates that the field should not
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>keywords</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipe types with name, title, description or tag matching a keyword</li>
+<li><strong>keywords</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query recipe types with name, title, description or tag matching a keyword</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Query recipe types that are actively available for use.</li>
 <li><strong>is_system</strong> (<em>bool</em>) &#8211; Query recipe types that are system recipe types.</li>
-<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe types that match the given parameters.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -3202,9 +3203,9 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start date of the timeline</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The end date of the timeline</li>
-<li><strong>type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; List of recipe type ids to limit the results</li>
-<li><strong>type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em>) &#8211; List of recipe type names to limit the results</li>
-<li><strong>revisions</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; List of revisions to limit the results</li>
+<li><strong>type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of recipe type ids to limit the results</li>
+<li><strong>type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; List of recipe type names to limit the results</li>
+<li><strong>revisions</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of revisions to limit the results</li>
 </ul>
 </td>
 </tr>
@@ -3554,8 +3555,8 @@ given values. Each revision model will have its related recipe type model popula
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>revision_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of revision IDs to return</li>
-<li><strong>revision_tuples</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of tuples (recipe type name, revision num) for additional revisions to return</li>
+<li><strong>revision_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of revision IDs to return</li>
+<li><strong>revision_tuples</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of tuples (recipe type name, revision num) for additional revisions to return</li>
 </ul>
 </td>
 </tr>
@@ -3712,8 +3713,8 @@ made in an atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of parent recipe type IDs</li>
-<li><strong>sub_recipe_type_ids</strong> (<em>list of int</em>) &#8211; List of child recipe type IDs.</li>
+<li><strong>recipe_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of parent recipe type IDs</li>
+<li><strong>sub_recipe_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; List of child recipe type IDs.</li>
 </ul>
 </td>
 </tr>
@@ -3744,11 +3745,11 @@ made in an atomic transaction.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The sub recipe type IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_recipe_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The sub recipe type IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of parent recipe type IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -3762,11 +3763,11 @@ made in an atomic transaction.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe type IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The recipe type IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of sub recipe type IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>

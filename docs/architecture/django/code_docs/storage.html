@@ -150,6 +150,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-storage">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="timeline.html">timeline package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
@@ -1719,25 +1720,25 @@ to be pre-fetched as part of the query.</p>
 <li><strong>created_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files created before this time.</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where source collection started after this time.</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where source collection ended before this time.</li>
-<li><strong>source_sensor_classes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source sensor class.</li>
-<li><strong>source_sensor</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source sensor.</li>
-<li><strong>source_collection</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source class.</li>
-<li><strong>source_tasks</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source tasks.</li>
+<li><strong>source_sensor_classes</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given source sensor class.</li>
+<li><strong>source_sensor</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given source sensor.</li>
+<li><strong>source_collection</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given source class.</li>
+<li><strong>source_tasks</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given source tasks.</li>
 <li><strong>mod_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where the last modified date is after this time.</li>
 <li><strong>mod_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where the last modified date is before this time.</li>
-<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with jobs with the given type identifier.</li>
-<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with jobs with the given type name.</li>
-<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given job id</li>
+<li><strong>job_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with jobs with the given type name.</li>
+<li><strong>job_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with a given job id</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query files flagged as currently exposed for publication.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query files that have/have not been superseded.</li>
-<li><strong>file_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given file names.</li>
-<li><strong>job_outputs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given job outputs</li>
-<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given recipe id</li>
-<li><strong>recipe_nodes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given recipe nodes</li>
-<li><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given recipe types</li>
-<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with batches with the given identifiers.</li>
-<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
-<li><strong>countries</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A List of country codes (iso3) to filter by</li>
+<li><strong>file_names</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given file names.</li>
+<li><strong>job_outputs</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given job outputs</li>
+<li><strong>recipe_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with a given recipe id</li>
+<li><strong>recipe_nodes</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with a given recipe nodes</li>
+<li><strong>recipe_type_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with the given recipe types</li>
+<li><strong>batch_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; Query files with batches with the given identifiers.</li>
+<li><strong>order</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>countries</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; A List of country codes (iso3) to filter by</li>
 </ul>
 </td>
 </tr>
@@ -1805,11 +1806,11 @@ calculating summary data for a job&#8217;s inputs. The returned list is a querys
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The file IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The file IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scale_file models that match the given IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1824,11 +1825,11 @@ configuring queued jobs. The returned list is a queryset iterator, so only acces
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The file IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<code class="xref py py-func docutils literal"><span class="pre">list()</span></code>) &#8211; The file IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scale_file models that match the given IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal"><span class="pre">list()</span></code></td>
 </tr>
 </tbody>
 </table>
