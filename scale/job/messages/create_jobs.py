@@ -331,7 +331,7 @@ class CreateJobs(CommandMessage):
             recipe_input_data = recipe.get_input_data()
             node_outputs = RecipeNode.objects.get_recipe_node_outputs(self.recipe_id)
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-            if len(input_data) != len(superseded_jobs):
+            if superseded_jobs and len(input_data) != len(superseded_jobs):
                 logger.warning('Superseded recipe has %d jobs for this node, new recipe generated %d sets of data' % (len(superseded_jobs), len(input_data)))
             for x in range(len(input_data)):
                 sj = superseded_jobs[x] if x < len(superseded_jobs) else None

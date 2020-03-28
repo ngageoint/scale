@@ -1062,11 +1062,9 @@ class RecipeNodeManager(models.Manager):
         nodes = {}
         rn_qry = self.filter(recipe_id=recipe_id)
         for rn in rn_qry:
-            try:
-                jobs = Job.objects.filter(recipe_node=rn)
+            jobs = Job.objects.filter(recipe_node=rn)
+            if jobs:
                 nodes[rn.node_name] = list(jobs)
-            except Job.DoesNotExist:
-                pass
         return nodes
 
     def get_subrecipes(self, recipe_id):
@@ -1081,11 +1079,9 @@ class RecipeNodeManager(models.Manager):
         nodes = {}
         sr_qry = self.filter(recipe_id=recipe_id)
         for srn in sr_qry:
-            try:
-                recipes = Recipe.objects.filter(recipe_node=srn)
+            recipes = Recipe.objects.filter(recipe_node=srn)
+            if recipes:
                 nodes[srn.node_name] = list(recipes)
-            except Recipe.DoesNotExist:
-                pass
         return nodes
 
     def get_recipe_nodes(self, recipe_id):

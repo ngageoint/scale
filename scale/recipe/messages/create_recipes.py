@@ -615,7 +615,7 @@ class CreateRecipes(CommandMessage):
             recipe_input_data = recipe.get_input_data()
             node_outputs = RecipeNode.objects.get_recipe_node_outputs(self.recipe_id)
             input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-            if superseded_recipes and (input_data) != len(superseded_recipes):
+            if superseded_recipes and len(input_data) != len(superseded_recipes):
                 logger.warning('Superseded recipe has %d sub recipes for this node, new recipe generated %d sets of data' % (len(superseded_recipes), len(input_data)))
             new_recipes = []
             for x in range(len(input_data)):
@@ -642,13 +642,14 @@ class CreateRecipes(CommandMessage):
                 old_revision = revs_by_id[rev_id]
                 new_revision = revs_by_tuple[(recipe.recipe_type.name, recipe.recipe_type_rev.revision_num)]
                 diff = RecipeDiff(old_revision.get_definition(), new_revision.get_definition())
+                #TODO: Force reprocess all nodes for sub_recipes as their input may have changed?
                 if self.forced_nodes:
                     sub_forced_nodes = self.forced_nodes.get_forced_nodes_for_subrecipe(node_name)
                     if sub_forced_nodes:
                         diff.set_force_reprocess(sub_forced_nodes)
                 self._recipe_diffs.append(_RecipeDiff(diff, [pair]))
 
-        return sub_recipes.values()
+        return flat_recipes
 
     def _find_existing_recipes(self):
         """Searches to determine if this message already ran and the new recipes already exist
