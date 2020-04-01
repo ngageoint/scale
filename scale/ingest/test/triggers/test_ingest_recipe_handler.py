@@ -66,10 +66,10 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_revision': 1}}}}
         self.recipe_v7 = recipe_test_utils.create_recipe_type_v6(name='test-recipe-v7', definition=v7_recipe_type_def)
 
-
+    @patch('queue.models.CommandMessageManager')
     @patch('recipe.models.CommandMessageManager')
     @patch('ingest.models.CommandMessageManager')
-    def test_successful_recipe_kickoff(self, mock_msg_mgr, mock_msg_mgr_rc):
+    def test_successful_recipe_kickoff(self, mock_msg_mgr, mock_msg_mgr_rc, mock_msg_mgr_q):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
@@ -171,7 +171,8 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         self.assertEqual(len(events), 3)
         self.assertEqual(events[2]['type'], 'STRIKE')
 
-    def test_successful_manual_kickoff(self):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful_manual_kickoff(self, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
         
         ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
