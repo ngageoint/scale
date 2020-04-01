@@ -322,6 +322,7 @@ class IngestManager(models.Manager):
                 desc['scan_id'] = scan_id
                 event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
             elif strike_id:
+                ingest_id = ingest.id
                 desc['strike_id'] = strike_id
                 event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
             else:
