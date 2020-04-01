@@ -319,10 +319,10 @@ class IngestManager(models.Manager):
 
             if scan_id:
                 ingest_id = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name).id
-                desc['scan_id'] = self.scan_id
+                desc['scan_id'] = scan_id
                 event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
             elif strike_id:
-                desc['strike_id'] = self.strike_id
+                desc['strike_id'] = strike_id
                 event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
             else:
                 raise Exception('One of scan_id or strike_id must be set')
