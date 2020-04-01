@@ -308,6 +308,52 @@ class IngestManager(models.Manager):
         :param strike_id: ID of Strike that generated ingest
         :type strike_id: int
         """
+
+        ingest_job_type = Ingest.objects.get_ingest_job_type()
+
+        for ingest in ingests:
+            logger.debug('Creating ingest task for %s', ingest.file_name)
+
+            when = ingest.transfer_ended if ingest.transfer_ended else now()
+            desc = {'file_name': ingest.file_name}
+
+            if scan_id:
+                ingest_id = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name).id
+                desc['scan_id'] = self.scan_id
+                event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+            elif strike_id:
+                desc['strike_id'] = self.strike_id
+                event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
+            else:
+                raise Exception('One of scan_id or strike_id must be set')
+
+        data = Data()
+        data.add_value(JsonValue('ingest_id', ingest_id))
+        data.add_value(JsonValue('workspace', ingest.workspace.name))
+        if ingest.new_workspace:
+            data.add_value(JsonValue('new_workspace', ingest.new_workspace.name))
+
+        ingest_job = None
+        with transaction.atomic():
+            ingest_job = Queue.objects.queue_new_job_v6(ingest_job_type, data, event)
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
+
+        logger.debug('Successfully created ingest task for %s', ingest.file_name)
+
+    def start_ingest_tasks_cm(self, ingests, scan_id=None, strike_id=None):
+        """Starts a batch of tasks for the given scan in an atomic transaction.
+
+        One of scan_id or strike_id must be set.
+
+        :param ingests: The ingest models
+        :type ingests: [:class:`ingest.models.Ingest`]
+        :param scan_id: ID of Scan that generated ingest
+        :type scan_id: int
+        :param strike_id: ID of Strike that generated ingest
+        :type strike_id: int
+        """
         
         messages = []
         for ingest in ingests:
