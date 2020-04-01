@@ -75,7 +75,7 @@ class ProcessRecipeInput(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
-
+        logger.info('Processing input for recipe %d', self.recipe_id)
         recipe = Recipe.objects.get_recipe_with_interfaces(self.recipe_id)
 
         if not recipe.has_input():

@@ -10,6 +10,7 @@ from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import FileValue
 from ingest.models import IngestEvent, Scan, Strike
 from messaging.manager import CommandMessageManager
+from queue.models import Queue
 from recipe.messages.create_recipes import create_recipes_messages
 from recipe.models import RecipeType, RecipeTypeRevision
 from trigger.models import TriggerEvent
@@ -54,13 +55,7 @@ class IngestRecipeHandler(object):
             ingest_event = self._create_ingest_event(ingest_id, None, source_file, when)
 
             logger.info('Queueing new recipe of type %s %s', recipe_type.name, recipe_type.revision_num)
-            from queue.models import Queue
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
-
-            # messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
-            #                                    convert_data_to_v6_json(recipe_data).get_dict(),
-            #                                    event.id, ingest_event.id)
-            # CommandMessageManager().send_messages(messages)
             
         else:
             logger.info('No recipe type found for id %s or recipe type is inactive' % recipe_type_id)
@@ -100,14 +95,7 @@ class IngestRecipeHandler(object):
             ingest_event = self._create_ingest_event(ingest_id, source, source_file, when)
 
             logger.info('Queueing new recipe of type %s %s', recipe_type.name, recipe_type.revision_num)
-            from queue.models import Queue
             Queue.objects.queue_new_recipe_v6(recipe_type, recipe_data, event, ingest_event)
-
-            # This can cause a race condition with a slow DB.
-            # messages = create_recipes_messages(recipe_type.name, recipe_type.revision_num,
-            #                                    convert_data_to_v6_json(recipe_data).get_dict(),
-            #                                    event.id, ingest_event.id)
-            # CommandMessageManager().send_messages(messages)
 
         else:
             logger.info('No recipe type found for %s %s or recipe type is inactive' % (recipe_name, recipe_revision))
