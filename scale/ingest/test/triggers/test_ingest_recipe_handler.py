@@ -66,12 +66,10 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
                                                               'job_type_revision': 1}}}}
         self.recipe_v7 = recipe_test_utils.create_recipe_type_v6(name='test-recipe-v7', definition=v7_recipe_type_def)
 
-
+    @patch('queue.models.CommandMessageManager')
     @patch('recipe.models.CommandMessageManager')
-    @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
-    @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
     @patch('ingest.models.CommandMessageManager')
-    def test_successful_recipe_kickoff(self, mock_msg_mgr, mock_create, mock_msg_mgr_tr, mock_msg_mgr_rc):
+    def test_successful_recipe_kickoff(self, mock_msg_mgr, mock_msg_mgr_rc, mock_msg_mgr_q):
         """Tests successfully producing an ingest that immediately calls a recipe"""
 
         strike_config = {
@@ -94,9 +92,9 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
-        mock_msg_mgr_tr.assert_called_once()
-        mock_create.assert_called_once()
-        
+        self.assertEqual(Recipe.objects.count(), 1)
+        self.assertEqual(Recipe.objects.first().recipe_type.name, self.recipe_v7.name)
+
         # Verify ingest event and trigger event objects were created
         from ingest.models import IngestEvent
         events = IngestEvent.objects.all().values()
@@ -124,9 +122,9 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, scan, self.source_file, now())
-        self.assertEqual(mock_msg_mgr_tr.call_count, 2)
-        self.assertEqual(mock_create.call_count, 2)
-        
+        self.assertEqual(Recipe.objects.count(), 2)
+        self.assertEqual(Recipe.objects.last().recipe_type.name, self.recipe_v7.name)
+
         # Verify events were created
         events = IngestEvent.objects.all().values()
         self.assertEqual(len(events), 2)
@@ -165,18 +163,16 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
-        self.assertEqual(mock_msg_mgr_tr.call_count, 3)
-        self.assertEqual(mock_create.call_count, 3)
-        
+        self.assertEqual(Recipe.objects.count(), 3)
+        self.assertEqual(Recipe.objects.last().recipe_type.name, self.recipe.name)
+
         # Verify events were created
         events = IngestEvent.objects.all().values()
         self.assertEqual(len(events), 3)
         self.assertEqual(events[2]['type'], 'STRIKE')
-        
 
-    @patch('ingest.triggers.ingest_recipe_handler.CommandMessageManager')
-    @patch('ingest.triggers.ingest_recipe_handler.create_recipes_messages')
-    def test_successful_manual_kickoff(self, mock_create, mock_msg_mgr):
+    @patch('queue.models.CommandMessageManager')
+    def test_successful_manual_kickoff(self, mock_msg_mgr):
         """Tests successfully producing an ingest that immediately calls a recipe"""
         
         ingest = ingest_test_utils.create_ingest(source_file=self.source_file)
@@ -184,5 +180,5 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Call method to test
         IngestRecipeHandler().process_manual_ingested_source_file(ingest.id, self.source_file, now(), recipe_type.id)
-        mock_msg_mgr.assert_called_once()
-        mock_create.assert_called_once()
+        self.assertEqual(Recipe.objects.all().count(), 1)
+        self.assertEqual(Recipe.objects.first().recipe_type.name, recipe_type.name)
