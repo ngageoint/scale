@@ -261,6 +261,26 @@ All database changes are made in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file_cm">
+<code class="descname">process_ingested_source_file_cm</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>source</em>, <em>source_file</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_ingested_source_file_cm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the given ingested source file by kicking off its recipe.
+All database changes are made in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>source</strong> &#8211; The strike that triggered the ingest</li>
+<li><strong>source_file</strong> (<a class="reference internal" href="source.html#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>) &#8211; The source file that was ingested</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the source file was ingested</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file">
 <code class="descname">process_manual_ingested_source_file</code><span class="sig-paren">(</span><em>ingest_id</em>, <em>source_file</em>, <em>when</em>, <em>recipe_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.ingest_recipe_handler.IngestRecipeHandler.process_manual_ingested_source_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a manual ingest where a strike or scan is not involved. All database

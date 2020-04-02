@@ -1455,6 +1455,26 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="ingest.models.IngestManager.start_ingest_tasks_cm">
+<code class="descname">start_ingest_tasks_cm</code><span class="sig-paren">(</span><em>ingests</em>, <em>scan_id=None</em>, <em>strike_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.start_ingest_tasks_cm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a batch of tasks for the given scan in an atomic transaction.</p>
+<p>One of scan_id or strike_id must be set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ingests</strong> ([<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]) &#8211; The ingest models</li>
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; ID of Scan that generated ingest</li>
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; ID of Strike that generated ingest</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
