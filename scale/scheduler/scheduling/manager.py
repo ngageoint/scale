@@ -374,7 +374,6 @@ class SchedulingManager(object):
                             }
                         continue
                     if resource.name not in max_cluster_resources._resources:
-                        # logger.warning('Job type %s could not be scheduled as resource %s does not exist in the available cluster resources', jt.name, resource.name)
                         if jt.name in type_warnings:
                             type_warnings[jt.name]['count'] += 1
                         else:
@@ -427,7 +426,6 @@ class SchedulingManager(object):
                             'warning': '%s job types could not be scheduled due to missing workspace' % jt.name,
                             'count': 1
                         }
-                    # logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
                     continue
 
                 # Check limit for this execution's job type
