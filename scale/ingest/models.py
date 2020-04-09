@@ -13,7 +13,8 @@ import django.utils.timezone as timezone
 import django.contrib.postgres.fields
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
-from django.db.models import Q
+from django.db.models import Q, Count, Sum, DateTimeField, Max
+from django.db.models.functions import Trunc
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -257,45 +258,6 @@ class IngestManager(models.Manager):
         else:
             return Scan.objects.get(pk=ingest.scan.id).get_configuration()['recipe']
 
-    def get_status(self, started=None, ended=None, use_ingest_time=False):
-        """Returns ingest status information within the given time range grouped by strike process.
-
-        :param started: Query ingests updated after this amount of time.
-        :type started: :class:`datetime.datetime`
-        :param ended: Query ingests updated before this amount of time.
-        :type ended: :class:`datetime.datetime`
-        :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
-        :type use_ingest_time: bool
-        :returns: The list of ingest status models that match the time range.
-        :rtype: [:class:`ingest.models.IngestStatus`]
-        """
-
-        # Fetch a list of ingests
-        ingests = Ingest.objects.filter(status='INGESTED')
-        ingests = ingests.select_related('strike')
-        ingests = ingests.defer('strike__configuration')
-
-        # Apply time range filtering
-        if started:
-            if use_ingest_time:
-                ingests = ingests.filter(ingest_ended__gte=started)
-            else:
-                ingests = ingests.filter(data_ended__gte=started)
-        if ended:
-            if use_ingest_time:
-                ingests = ingests.filter(ingest_ended__lte=ended)
-            else:
-                ingests = ingests.filter(data_started__lte=ended)
-
-        # Apply sorting
-        if use_ingest_time:
-            ingests = ingests.order_by('ingest_ended')
-        else:
-            ingests = ingests.order_by('data_started')
-
-        groups = self._group_by_time(ingests, use_ingest_time)
-        return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
-
     def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
         """Starts a batch of tasks for the given scan in an atomic transaction.
 
@@ -372,6 +334,137 @@ class IngestManager(models.Manager):
             
         logger.debug('Successfully created ingest task for %s', ingest.file_name)
 
+    def get_status_old(self, started=None, ended=None, use_ingest_time=False):
+        """Returns ingest status information within the given time range grouped by strike process.
+
+        :param started: Query ingests updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query ingests updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
+        :type use_ingest_time: bool
+        :returns: The list of ingest status models that match the time range.
+        :rtype: [:class:`ingest.models.IngestStatus`]
+        """
+        timimg_started = now()
+        # Fetch a list of ingests
+        ingests = Ingest.objects.filter(status='INGESTED')
+        ingests = ingests.select_related('strike')
+        ingests = ingests.defer('strike__configuration')
+
+        # Apply time range filtering
+        if started:
+            if use_ingest_time:
+                ingests = ingests.filter(ingest_ended__gte=started)
+            else:
+                ingests = ingests.filter(data_ended__gte=started)
+        if ended:
+            if use_ingest_time:
+                ingests = ingests.filter(ingest_ended__lte=ended)
+            else:
+                ingests = ingests.filter(data_started__lte=ended)
+
+        # Apply sorting
+        if use_ingest_time:
+            ingests = ingests.order_by('ingest_ended')
+        else:
+            ingests = ingests.order_by('data_started')
+
+        duration = now() - timimg_started
+        logger.debug('ingest::get_status: Filtering down initial results took %.3f seconds', duration.total_seconds())
+
+        timimg_started = now()
+        groups = self._group_by_time(ingests, use_ingest_time)
+        duration = now() - timimg_started
+        print('ingest::get_status: Grouping by time took %.3f seconds' % duration.total_seconds())
+        logger.debug('ingest::get_status: Grouping by time took %.3f seconds', duration.total_seconds())
+
+        timimg_started = now()
+        fill_status = [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
+        duration = now() - timimg_started
+        print('ingest::get_status: Filling status for returning took %.3f seconds' % duration.total_seconds())
+        logger.debug('ingest::get_status: Filling status for returning took %.3f seconds', duration.total_seconds())
+
+        return fill_status
+
+
+    def get_status(self, started=None, ended=None, use_ingest_time=False):
+        """Returns ingest status information within the given time range grouped by strike process.
+
+        :param started: Query ingests updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query ingests updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
+        :type use_ingest_time: bool
+        :returns: The list of ingest status models that match the time range.
+        :rtype: [:class:`ingest.models.IngestStatus`]
+        """
+
+        """
+        SELECT  (select MAX(i.data_started) from public.ingest i where i.strike_id = t.strike_id) as most_recent,
+        SUM(t.file_size) as i_file_size,
+        COUNT(t.id) as num_files,
+        date_trunc('hour', t.data_started),
+        t.strike_id
+        FROM public.ingest t WHERE t.status='INGESTED'
+        GROUP BY date_trunc('hour', t.data_started), t.strike_id;
+        """
+
+        timing_started = now()
+        # Fetch a list of ingests
+        ingests = Ingest.objects.filter(status='INGESTED')
+        ingests = ingests.select_related('strike')
+        ingests = ingests.defer('strike__configuration')
+
+        # Apply time range filtering
+        if started:
+            if use_ingest_time:
+                ingests = ingests.filter(ingest_ended__gte=started)
+            else:
+                ingests = ingests.filter(data_ended__gte=started)
+        if ended:
+            if use_ingest_time:
+                ingests = ingests.filter(ingest_ended__lte=ended)
+            else:
+                ingests = ingests.filter(data_started__lte=ended)
+
+        # Apply sorting
+        if use_ingest_time:
+            ingests = ingests.order_by('ingest_ended').annotate(
+                time=Trunc('ingest_ended', 'hour', output_field=DateTimeField())).values('time')
+        else:
+            ingests = ingests.order_by('data_started').annotate(
+                time=Trunc('data_started', 'hour', output_field=DateTimeField())).values('time')
+
+        ingests = ingests.annotate(files=Count('id'), size=Sum('file_size')).values('time', 'files', 'size',
+                                                                                    'strike__id')
+        duration = now() - timing_started
+        logger.debug('ingest::get_status: Filtering down initial results took %.3f seconds', duration.total_seconds())
+
+        # Build a mapping of all possible strike processes
+        timing_started = now()
+        fill_status = []
+        for strike in Strike.objects.all():
+            strike_ingests = ingests.filter(strike__id=strike.id)
+
+            if use_ingest_time:
+                info = strike_ingests.aggregate(all_files=Sum('files'), all_sizes=Sum('file_size'),
+                                                most_recent=Max('ingest_ended'))
+            else:
+                info = strike_ingests.aggregate(all_files=Sum('files'), all_sizes=Sum('file_size'),
+                                                most_recent=Max('data_started'))
+
+            ingest_status = IngestStatus(strike=strike, most_recent=info['most_recent'], files=info['all_files'],
+                                         size=info['all_sizes'])
+            ingest_status.values = [IngestCounts(item['time'], item['files'], item['size']) for item in strike_ingests.values('time', 'size', 'files')]
+            fill_status.append(ingest_status)
+
+        duration = now() - timing_started
+        logger.debug('creating list took %.3f seconds', duration.total_seconds())
+
+        return fill_status
+
     def _group_by_time(self, ingests, use_ingest_time):
         """Groups the given ingests by hourly time slots.
 
@@ -386,11 +479,15 @@ class IngestManager(models.Manager):
         # Build a mapping of all possible strike processes
         strike_map = {}
         slot_map = {}
+        timing_started=now()
         for strike in Strike.objects.all():
             strike_map[strike] = IngestStatus(strike)
             slot_map[strike] = {}
+        duration = timing_started-now()
+        print('Getting strikes took %.3f' % duration.total_seconds())
 
         # Build a mapping of ingest status to time slots
+        timing_started = now()
         for ingest in ingests:
 
             # Initialize the mappings for the first strike
@@ -404,6 +501,9 @@ class IngestManager(models.Manager):
                 ingest_status = strike_map[ingest.strike]
                 time_slots = slot_map[ingest.strike]
                 self._update_status(ingest_status, time_slots, ingest, dated)
+
+        duration = now() - timing_started
+        print('Looping through %d ingests took %.3f' % (len(ingests), duration.total_seconds()))
 
         return {strike_map[strike]: slot_map[strike] for strike in strike_map}
 

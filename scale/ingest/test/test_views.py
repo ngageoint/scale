@@ -281,13 +281,36 @@ class TestIngestStatusViewV6(TestCase):
         self.assertIsNotNone(entry['most_recent'])
         self.assertEqual(entry['files'], 1)
         self.assertEqual(entry['size'], self.ingest3.file_size)
-        self.assertEqual(len(entry['values']), 30)
+        self.assertEqual(len(entry['values']), 1)
 
     def test_multiple_strikes(self):
         """Tests successfully calling the ingest status view with multiple strike process groupings."""
         ingest_test_utils.create_strike()
         strike3 = ingest_test_utils.create_strike()
         ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=strike3)
+
+        url = '/%s/ingests/status/' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+
+    def test_a_lot_of_ingests(self):
+
+        strike2 = ingest_test_utils.create_strike()
+        strike3 = ingest_test_utils.create_strike()
+        import random
+        for i in range(1, 1500):
+            strike_status = random.choice(['INGESTED', 'QUEUED'])
+            strike = random.choice([self.strike, strike2, strike3])
+            ingest = ingest_test_utils.create_ingest(file_name='test%d.txt'%i, status=strike_status, strike=strike,
+                                                     data_started=datetime.datetime(2015, 1, 1,
+                                                                                    random.choice(range(1,23)),
+                                                                                    tzinfo=utc),
+                                                     ingest_ended=datetime.datetime(2015, 2, 1,
+                                                                                    random.choice(range(1,23)),
+                                                                                    tzinfo=utc))
 
         url = '/%s/ingests/status/' % self.version
         response = self.client.generic('GET', url)
