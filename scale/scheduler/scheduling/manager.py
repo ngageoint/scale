@@ -368,20 +368,15 @@ class SchedulingManager(object):
             for resource in job_exe.required_resources.resources:
                 # skip sharedmem
                 if resource.name.lower() == 'sharedmem':
-                    if jt.name in type_warnings:
-                        type_warnings[jt.name]['count'] += 1
-                    else:
-                        type_warnings[jt.name] = {
-                            'warning': '%s job types could not be scheduled due to required sharedmem resource' % jt.name,
-                            'count': 1
-                        }
                     continue
                 if resource.name not in max_cluster_resources._resources:
                     if jt.name in type_warnings:
                         type_warnings[jt.name]['count'] += 1
+                        if resource.name not in type_warnings[jt.name]['warning']:
+                            type_warnings[jt.name]['warning'] += (', %s' % resource.name)
                     else:
                         type_warnings[jt.name] = {
-                            'warning': '%s job types could not be scheduled as resource %s does not exist in the available cluster resources' % (jt.name, resource.name),
+                            'warning': '%s job types could not be scheduled as the following resources do not exist in the available cluster resources: %s' % (jt.name, resource.name),
                             'count': 1
                         }
                     # resource does not exist in cluster
