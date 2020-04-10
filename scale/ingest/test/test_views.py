@@ -281,7 +281,7 @@ class TestIngestStatusViewV6(TestCase):
         self.assertIsNotNone(entry['most_recent'])
         self.assertEqual(entry['files'], 1)
         self.assertEqual(entry['size'], self.ingest3.file_size)
-        self.assertEqual(len(entry['values']), 1)
+        self.assertEqual(len(entry['values']), 30)
 
     def test_multiple_strikes(self):
         """Tests successfully calling the ingest status view with multiple strike process groupings."""
@@ -301,16 +301,16 @@ class TestIngestStatusViewV6(TestCase):
         strike2 = ingest_test_utils.create_strike()
         strike3 = ingest_test_utils.create_strike()
         import random
-        for i in range(1, 1500):
+        for i in range(1, 3000):
             strike_status = random.choice(['INGESTED', 'QUEUED'])
             strike = random.choice([self.strike, strike2, strike3])
-            ingest = ingest_test_utils.create_ingest(file_name='test%d.txt'%i, status=strike_status, strike=strike,
-                                                     data_started=datetime.datetime(2015, 1, 1,
-                                                                                    random.choice(range(1,23)),
-                                                                                    tzinfo=utc),
-                                                     ingest_ended=datetime.datetime(2015, 2, 1,
-                                                                                    random.choice(range(1,23)),
-                                                                                    tzinfo=utc))
+            ingest_test_utils.create_ingest(file_name='test%d.txt'%i, status=strike_status, strike=strike,
+                                            data_started=datetime.datetime(2015, 1, 1,
+                                                                           random.choice(range(1,23)),
+                                                                           tzinfo=utc),
+                                            ingest_ended=datetime.datetime(2015, 2, 1,
+                                                                           random.choice(range(1,23)),
+                                                                           tzinfo=utc))
 
         url = '/%s/ingests/status/' % self.version
         response = self.client.generic('GET', url)
