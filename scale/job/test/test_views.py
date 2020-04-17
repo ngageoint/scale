@@ -2131,6 +2131,7 @@ class TestJobTypesRunningView(APITestCase):
 
     def setUp(self):
         django.setup()
+        rest.login_client(self.client, is_staff=True)
 
         self.job = job_test_utils.create_job(status='RUNNING')
 

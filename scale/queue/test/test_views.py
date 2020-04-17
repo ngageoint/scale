@@ -85,6 +85,7 @@ class TestQueueStatusView(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client, is_staff=True)
         self.job_type = job_test_utils.create_seed_job_type()
         self.queue = queue_test_utils.create_queue(job_type=self.job_type, priority=123)
 

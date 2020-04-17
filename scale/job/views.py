@@ -631,6 +631,9 @@ class JobsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
+
+        from django.utils.timezone import now
+        started_time = now()
         jobs = Job.objects.get_jobs_v6(started=started, ended=ended,
                                        source_started=source_started, source_ended=source_ended,
                                        source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
@@ -640,10 +643,15 @@ class JobsView(ListAPIView):
                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
                                        error_categories=error_categories, error_ids=error_ids,
                                        is_superseded=is_superseded, order=order)
-
+        duration = now() - started_time
+        logger.debug('Time to get_jobs_v6: %.3f seconds', duration.total_seconds())
         # additional optimizations not being captured by the existing ones in the manager
         # see issue #1717
+        started_time = now()
         jobs = jobs.select_related('job_type_rev__job_type').defer(None)
+        duration = now() - started_time
+        logger.debug('Time to select related job type: %.3f seconds', duration.total_seconds())
+
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
 

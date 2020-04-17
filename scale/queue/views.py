@@ -61,7 +61,11 @@ class QueueStatusView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        from django.utils.timezone import now
+        started = now()
         queue_statuses = Queue.objects.get_queue_status()
+        duration = now() - started
+        logger.debug('Time to get queue status is %.3f seconds' % duration.total_seconds())
 
         page = self.paginate_queryset(queue_statuses)
         serializer = self.get_serializer(page, many=True)

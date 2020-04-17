@@ -249,13 +249,19 @@ class QueueManager(models.Manager):
         :rtype: list[:class:`queue.models.QueueStatus`]
         """
 
+        from django.utils.timezone import now
+        total_started = now()
+        started = now()
         status_dicts = Queue.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
         status_dicts = status_dicts.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
                                              highest_priority=models.Min('priority'))
         status_dicts = status_dicts.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
+        duration = now() - started
+        logger.debug('Time to gather status dicts: %.3f seconds', duration.total_seconds())
 
         # Convert each result to a real job type model with added statistics
         results = []
+        started = now()
         for status_dict in status_dicts:
             job_type_dict = {f: status_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
             job_type = JobType(**job_type_dict)
@@ -263,6 +269,12 @@ class QueueManager(models.Manager):
             status = QueueStatus(job_type, status_dict['count'], status_dict['longest_queued'],
                                  status_dict['highest_priority'])
             results.append(status)
+
+        duration = now() - started
+        logger.debug('Time to create QueueStatus list: %.3f seconds', duration.total_seconds())
+
+        duration = now() - total_started
+        logger.debug('Total time to get queue status: %.3f seconds', duration.total_seconds())
         return results
 
     def queue_jobs(self, jobs, requeue=False, priority=None):

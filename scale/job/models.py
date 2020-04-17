@@ -284,7 +284,7 @@ class JobManager(models.Manager):
         :returns: The job query
         :rtype: :class:`django.db.models.QuerySet`
         """
-
+        time_started = now()
         jobs = self.filter_jobs(started=started, ended=ended, source_started=source_started, source_ended=source_ended,
                                 source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
                                 source_collections=source_collections, source_tasks=source_tasks, statuses=statuses,
@@ -292,10 +292,15 @@ class JobManager(models.Manager):
                                 batch_ids=batch_ids, recipe_ids=recipe_ids, error_ids=error_ids,
                                 error_categories=error_categories, is_superseded=is_superseded,
                                 order=order)
+        duration = now() - time_started
+        logger.debug('Time to filter jobs: %.3f seconds', duration.total_seconds())
 
+        time_started = now()
         jobs = jobs.select_related('job_type', 'job_type_rev', 'event', 'recipe', 'batch', 'node', 'error')
         jobs = jobs.defer('job_type__manifest', 'job_type_rev__job_type', 'job_type_rev__manifest',
                           'recipe__recipe_type', 'recipe__recipe_type_rev', 'recipe__event')
+        duration = now() - time_started
+        logger.debug('Time to select related job info: %.3f seconds', duration.total_seconds())
         return jobs
 
     def get_basic_jobs(self, job_ids):
@@ -2467,6 +2472,7 @@ class JobTypeManager(models.Manager):
         job_dicts = job_dicts.annotate(count=models.Count('job_type'),
                                        longest_running=models.Min('last_status_change'))
         job_dicts = job_dicts.order_by('longest_running')
+        print(job_dicts.query)
 
         # Convert each result to a real job type model with added statistics
         results = []
