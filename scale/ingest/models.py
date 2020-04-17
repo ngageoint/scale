@@ -13,7 +13,8 @@ import django.utils.timezone as timezone
 import django.contrib.postgres.fields
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
-from django.db.models import Q
+from django.db.models import Q, Count, Sum, DateTimeField, Max
+from django.db.models.functions import Trunc
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -257,45 +258,6 @@ class IngestManager(models.Manager):
         else:
             return Scan.objects.get(pk=ingest.scan.id).get_configuration()['recipe']
 
-    def get_status(self, started=None, ended=None, use_ingest_time=False):
-        """Returns ingest status information within the given time range grouped by strike process.
-
-        :param started: Query ingests updated after this amount of time.
-        :type started: :class:`datetime.datetime`
-        :param ended: Query ingests updated before this amount of time.
-        :type ended: :class:`datetime.datetime`
-        :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
-        :type use_ingest_time: bool
-        :returns: The list of ingest status models that match the time range.
-        :rtype: [:class:`ingest.models.IngestStatus`]
-        """
-
-        # Fetch a list of ingests
-        ingests = Ingest.objects.filter(status='INGESTED')
-        ingests = ingests.select_related('strike')
-        ingests = ingests.defer('strike__configuration')
-
-        # Apply time range filtering
-        if started:
-            if use_ingest_time:
-                ingests = ingests.filter(ingest_ended__gte=started)
-            else:
-                ingests = ingests.filter(data_ended__gte=started)
-        if ended:
-            if use_ingest_time:
-                ingests = ingests.filter(ingest_ended__lte=ended)
-            else:
-                ingests = ingests.filter(data_started__lte=ended)
-
-        # Apply sorting
-        if use_ingest_time:
-            ingests = ingests.order_by('ingest_ended')
-        else:
-            ingests = ingests.order_by('data_started')
-
-        groups = self._group_by_time(ingests, use_ingest_time)
-        return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
-
     def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
         """Starts a batch of tasks for the given scan in an atomic transaction.
 
@@ -372,71 +334,66 @@ class IngestManager(models.Manager):
             
         logger.debug('Successfully created ingest task for %s', ingest.file_name)
 
-    def _group_by_time(self, ingests, use_ingest_time):
-        """Groups the given ingests by hourly time slots.
+    def get_status(self, started=None, ended=None, use_ingest_time=False):
+        """Returns ingest status information within the given time range grouped by strike process.
 
-        :param ingests: Query ingests updated after this amount of time.
-        :type ingests: [:class:`ingest.models.Ingest`]
+        :param started: Query ingests updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query ingests updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
         :param use_ingest_time: Whether or not to group the status values by ingest time (False) or data time (True).
         :type use_ingest_time: bool
-        :returns: A mapping of ingest status models to hourly groups of counts.
-        :rtype: dict[:class:`ingest.models.IngestStatus`, dict[datetime.datetime, :class:`ingest.models.IngestCounts`]]
+        :returns: The list of ingest status models that match the time range.
+        :rtype: [:class:`ingest.models.IngestStatus`]
         """
+
+        # Fetch a list of ingests
+        ingests = Ingest.objects.filter(status='INGESTED')
+        ingests = ingests.select_related('strike')
+        ingests = ingests.defer('strike__configuration')
+
+        # Apply time range filtering
+        if started:
+            if use_ingest_time:
+                ingests = ingests.filter(ingest_ended__gte=started)
+            else:
+                ingests = ingests.filter(data_ended__gte=started)
+        if ended:
+            if use_ingest_time:
+                ingests = ingests.filter(ingest_ended__lte=ended)
+            else:
+                ingests = ingests.filter(data_started__lte=ended)
+
+        # Apply sorting and exclude any null values
+        if use_ingest_time:
+            ingests = ingests.exclude(ingest_ended__isnull=True).annotate(
+                time=Trunc('ingest_ended', 'hour',
+                           output_field=models.DateTimeField(blank=True, null=True))).order_by('time').values('time')
+        else:
+            ingests = ingests.exclude(data_started__isnull=True).annotate(
+                time=Trunc('data_started', 'hour',
+                           output_field=models.DateTimeField(blank=True, null=True))).order_by('time').values('time')
+
+        ingests = ingests.annotate(files=Count('id'), size=Sum('file_size'))
 
         # Build a mapping of all possible strike processes
-        strike_map = {}
-        slot_map = {}
+        fill_status = []
         for strike in Strike.objects.all():
-            strike_map[strike] = IngestStatus(strike)
-            slot_map[strike] = {}
+            strike_ingests = ingests.filter(strike__id=strike.id)
 
-        # Build a mapping of ingest status to time slots
-        for ingest in ingests:
+            if use_ingest_time:
+                info = strike_ingests.aggregate(all_files=Sum('files'), all_sizes=Sum('file_size'),
+                                                most_recent=Max('ingest_ended'))
+            else:
+                info = strike_ingests.aggregate(all_files=Sum('files'), all_sizes=Sum('file_size'),
+                                                most_recent=Max('data_started'))
+            ingest_status = IngestStatus(strike=strike, most_recent=info['most_recent'], files=info['all_files'],
+                                         size=info['all_sizes'])
+            time_slots = {item['time']: IngestCounts(item['time'], item['files'], item['size'])
+                          for item in strike_ingests.values('time', 'size', 'files')}
+            fill_status.append(self._fill_status(ingest_status, time_slots, started, ended))
 
-            # Initialize the mappings for the first strike
-            if ingest.strike not in strike_map:
-                logger.error('Missing strike process mapping: %s', ingest.strike_id)
-                continue
-
-            # Check whether there is a valid date for the requested query
-            dated = ingest.ingest_ended if use_ingest_time else ingest.data_started
-            if dated:
-                ingest_status = strike_map[ingest.strike]
-                time_slots = slot_map[ingest.strike]
-                self._update_status(ingest_status, time_slots, ingest, dated)
-
-        return {strike_map[strike]: slot_map[strike] for strike in strike_map}
-
-    def _update_status(self, ingest_status, time_slots, ingest, dated):
-        """Updates the given ingest status model based on attributes of an ingest model.
-
-        :param ingest_status: The ingest status to update.
-        :type ingest_status: :class:`ingest.models.IngestStatus`
-        :param time_slots: A mapping of hourly time slots to ingest status counts.
-        :type time_slots: dict[datetime.datetime, :class:`ingest.models.IngestCounts`]
-        :param ingest: The ingest model that should be counted.
-        :type ingest: :class:`ingest.models.Ingest`
-        :returns: The ingest status model after the counts are updated.
-        :rtype: :class:`ingest.models.IngestStatus`
-        """
-
-        # Calculate the hourly time slot the record falls within
-        time_slot = datetime.datetime(dated.year, dated.month, dated.day, dated.hour, tzinfo=timezone.utc)
-
-        # Update the values for the current time slot
-        if time_slot not in time_slots:
-            time_slots[time_slot] = IngestCounts(time_slot)
-        values = time_slots[time_slot]
-        values.files += 1
-        values.size += ingest.file_size
-
-        # Update the summary values for the ingest status
-        ingest_status.files += 1
-        ingest_status.size += ingest.file_size
-        if not ingest_status.most_recent or dated > ingest_status.most_recent:
-            ingest_status.most_recent = dated
-
-        return ingest_status
+        return fill_status
 
     def _fill_status(self, ingest_status, time_slots, started=None, ended=None):
         """Fills all the values for the given ingest status using a specified time range and grouped values.
