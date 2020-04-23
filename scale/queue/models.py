@@ -252,19 +252,22 @@ class QueueManager(models.Manager):
         from django.utils.timezone import now
         total_started = now()
         started = now()
-        status_dicts = Queue.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
-        status_dicts = status_dicts.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
+        status_dicts = Queue.objects.values('job_type__id', 'job_type__is_paused').annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
                                              highest_priority=models.Min('priority'))
         status_dicts = status_dicts.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
-        duration = now() - started
-        logger.debug('Time to gather status dicts: %.3f seconds', duration.total_seconds())
 
+        print(status_dicts.query)
         # Convert each result to a real job type model with added statistics
+        started = now()
+        logger.debug('Creating QueueStatuses for %d queued job types', status_dicts.count())
+        duration = now() - started
+        logger.debug('Time to get queued count %.3f', duration.total_seconds())
+
         results = []
         started = now()
         for status_dict in status_dicts:
-            job_type_dict = {f: status_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
-            job_type = JobType(**job_type_dict)
+            # job_type_dict = {f: status_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
+            job_type = JobType.objects.get(id=status_dict['job_type__id']) #JobType(**job_type_dict)
 
             status = QueueStatus(job_type, status_dict['count'], status_dict['longest_queued'],
                                  status_dict['highest_priority'])

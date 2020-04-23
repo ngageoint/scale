@@ -347,6 +347,7 @@ class IngestManager(models.Manager):
         :rtype: [:class:`ingest.models.IngestStatus`]
         """
 
+        timing_started = now()
         # Fetch a list of ingests
         ingests = Ingest.objects.filter(status='INGESTED')
         ingests = ingests.select_related('strike')
@@ -376,7 +377,11 @@ class IngestManager(models.Manager):
 
         ingests = ingests.annotate(files=Count('id'), size=Sum('file_size'))
 
+        duration = now() - timing_started
+        logger.debug('Time to get ingest status: %.3f', duration.total_seconds())
+
         # Build a mapping of all possible strike processes
+        timing_started = now()
         fill_status = []
         for strike in Strike.objects.all():
             strike_ingests = ingests.filter(strike__id=strike.id)
@@ -393,6 +398,8 @@ class IngestManager(models.Manager):
                           for item in strike_ingests.values('time', 'size', 'files')}
             fill_status.append(self._fill_status(ingest_status, time_slots, started, ended))
 
+        duration = now() - timing_started
+        logger.debug('Time to create IngestStatuses: %.3f seconds', duration.total_seconds())
         return fill_status
 
     def _fill_status(self, ingest_status, time_slots, started=None, ended=None):

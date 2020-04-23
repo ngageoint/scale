@@ -287,6 +287,8 @@ class ScaleFileManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
+        from django.utils.timezone import now
+        timing_started = now()
         # Fetch a list of source files
         files = ScaleFile.objects.all()
         files = files.select_related('workspace')
@@ -316,8 +318,13 @@ class ScaleFileManager(models.Manager):
                 files = files.filter(created__lte=ended)
             else:
                 files = files.filter(last_modified__lte=ended)
+        duration = now() - timing_started
+        logger.debug('Time to filter files: %.3f seconds', duration.total_seconds())
 
+        timing_started = now()
         files = files.order_by('last_modified')
+        duration = now() - timing_started
+        logger.debug('Time to order files: %.3f seconds', duration.total_seconds())
         return files
 
     def filter_files(self, data_started=None, data_ended=None, created_started=None, created_ended=None, source_started=None,
