@@ -181,6 +181,44 @@
             },
             "created": "2017-11-13T00:00:00.0Z"
         }
+    },
+    {
+        "model": "recipe.RecipeType",
+        "pk": null,
+        "fields": {
+            "name": "scale-if",
+            "title": "Scale If",
+            "description": "Runs the Scale If job, then, if the condition works, runs the Scale Then job; otherwise it runs the Scale Else job. This recipe type can be useful for testing Scale's handling of conditions.",
+            "is_system": true,
+            "is_active": true,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"scale-if": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-if", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "if": {"dependencies":[{"name": "scale-if"}], "input":{"SCALE_STRING": {"type": "dependency", "node": "scale-if", "output": "SCALE_STRING"},
+                                                                                  "SCALE_INTEGER": {"type": "dependency", "node": "scale-if", "output": "SCALE_INTEGER"},
+                                                                                  "SCALE_BOOLEAN": {"type": "dependency", "node": "scale-if", "output": "SCALE_BOOLEAN"},
+                                                                                  "SCALE_OBJECT": {"type": "dependency", "node": "scale-if", "output": "SCALE_OBJECT"}},
+                                          "node_type": {"node_type": "condition",
+                                                        "interface": {"json": [{"name": "SCALE_STRING", "type": "string", "required": false},
+                                                                               {"name": "SCALE_INTEGER", "type": "integer", "required": false},
+                                                                               {"name": "SCALE_BOOLEAN", "type": "boolean", "required": false},
+                                                                               {"name": "SCALE_OBJECT", "type": "object",  "required": false}]},
+                                                        "data_filter": {"filters": [{"name": "SCALE_STRING", "type": "string", "condition": "contains", "values": ["scale","string"]},
+                                                                                    {"name": "SCALE_INTEGER", "type": "integer", "condition": ">", "values": [0]},
+                                                                                    {"name": "SCALE_BOOLEAN", "type": "boolean", "condition": "==", "values": [true]},
+                                                                                    {"name": "SCALE_OBJECT", "type": "object", "condition": "subset of", "values": [{"scale": true}]}]}}},
+                           "scale-then": {"dependencies":[{"name": "if", "acceptance": true}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-then", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "scale-else": {"dependencies":[{"name": "if", "acceptance":  false}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-else", "job_type_version": "1.0.0", "job_type_revision": 1}}
+                 }
+            },
+            "revision_num": 1,
+            "created": "2017-11-13T00:00:00.0Z",
+            "last_modified": "2017-11-13T00:00:00.0Z"
+        }
     }
 
 ]

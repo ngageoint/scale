@@ -314,5 +314,290 @@
             },
             "created": "2017-05-11T00:00:00.0Z"
         }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-if",
+            "version": "1.0.0",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "docker_image": "scale",
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-roulette",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale If",
+                    "description": "This test job produces an output for a condition.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_if",
+                         "outputs": {
+                             "json": [
+                                 {
+                                     "name": "SCALE_STRING",
+                                     "type": "string",
+                                     "required": false
+                                 },
+                                 {
+                                     "name": "SCALE_INTEGER",
+                                     "type": "integer",
+                                     "required": false
+                                },
+                                {
+                                     "name": "SCALE_BOOLEAN",
+                                     "type": "boolean",
+                                     "required": false
+                                },
+                                {
+                                     "name": "SCALE_OBJECT",
+                                     "type": "object",
+                                     "required": false
+                                }
+                             ]
+                         }
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
+            },
+            "configuration": {
+                "priority": 25
+            },
+            "max_tries": 0,
+            "created": "2017-05-11T00:00:00.0Z",
+            "last_modified": "2017-05-11T00:00:00.0Z",
+            "icon_code": "f0d6"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-if", "1.0.0"],
+            "revision_num": 1,
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-if",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale If",
+                    "description": "This test job produces a JSON output for a condition in the form of either a string, integer, boolean or JSON object value.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_if",
+                         "outputs": {
+                             "json": [
+                                 {
+                                     "name": "SCALE_STRING",
+                                     "type": "string",
+                                     "required": false
+                                 },
+                                 {
+                                     "name": "SCALE_INTEGER",
+                                     "type": "integer",
+                                     "required": false
+                                },
+                                {
+                                     "name": "SCALE_BOOLEAN",
+                                     "type": "boolean",
+                                     "required": false
+                                },
+                                {
+                                     "name": "SCALE_OBJECT",
+                                     "type": "object",
+                                     "required": false
+                                }
+                             ]
+                         }
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
+            },
+            "created": "2017-05-11T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-else",
+            "version": "1.0.0",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "docker_image": "scale",
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-else",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Else",
+                    "description": "This test job is the alternative of a condition.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_else"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
+            },
+            "configuration": {
+                "priority": 25
+            },
+            "max_tries": 0,
+            "created": "2017-05-11T00:00:00.0Z",
+            "last_modified": "2017-05-11T00:00:00.0Z",
+            "icon_code": "f0d6"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-else", "1.0.0"],
+            "revision_num": 1,
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-else",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Else",
+                    "description": "This test job is the alternative of a condition.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_else"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
+            },
+            "created": "2017-05-11T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-then",
+            "version": "1.0.0",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "docker_image": "scale",
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-then",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Then",
+                    "description": "This test job is the ideal of a condition.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_then"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
+            },
+            "configuration": {
+                "priority": 25
+            },
+            "max_tries": 0,
+            "created": "2017-05-11T00:00:00.0Z",
+            "last_modified": "2017-05-11T00:00:00.0Z",
+            "icon_code": "f0d6"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-then", "1.0.0"],
+            "revision_num": 1,
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-then",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Then",
+                    "description": "This test job is the ideal of a condition.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 600,
+                    "interface": {
+                         "command": "scale_then"
+                    },
+                    "resources": {
+                        "scalar": [
+                            {"name": "cpus", "value": 0.1},
+                            {"name": "disk", "value": 64.0},
+                            {"name": "mem", "value": 0}
+                        ]
+                    }
+                 }
+            },
+            "created": "2017-05-11T00:00:00.0Z"
+        }
     }
 ]
