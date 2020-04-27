@@ -16,6 +16,7 @@ import django.utils.html
 from django.conf import settings
 from django.db import connection, models, transaction
 from django.db.models import F, Q
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.timezone import now
 
@@ -43,6 +44,7 @@ from storage.models import ScaleFile
 from util import rest as rest_utils
 from util.validation import ValidationWarning
 from vault.secrets_handler import SecretsHandler
+from util.database import alphabetize
 
 
 logger = logging.getLogger(__name__)
@@ -230,7 +232,19 @@ class JobManager(models.Manager):
 
         # Apply sorting
         if order:
-            jobs = jobs.order_by(*order)
+            # we want alphabetical sorting of the following fields:
+            # recipe (title), Job Type (title)
+            ordering = alphabetize(order, ['job_type', 'recipe'])
+            # for o in order:
+            #     if '-recipe' in o or '-job_type' in o:
+            #         ordering.append(Lower(o[1:]).desc())
+            #     elif 'recipe' in o or 'job_type' in o:
+            #         ordering.append(Lower(o))
+            #     else:
+            #         ordering.append(o)
+
+            # ordering = [Lower(o) if 'recipe' in o or 'job_type' in o else o for o in order]
+            jobs = jobs.order_by(*ordering)
         else:
             jobs = jobs.order_by('last_modified')
 

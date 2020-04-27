@@ -8,6 +8,7 @@ from collections import namedtuple
 import django.contrib.postgres.fields
 from django.db import connection, models, transaction
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -370,6 +371,7 @@ class RecipeManager(models.Manager):
 
         # Apply sorting
         if order:
+            import pdb; pdb.set_trace()
             recipes = recipes.order_by(*order)
         else:
             recipes = recipes.order_by('last_modified')
@@ -705,7 +707,7 @@ class Recipe(models.Model):
         """meta information for the db"""
         db_table = 'recipe'
         index_together = ['last_modified', 'recipe_type']
-
+        ordering = ['recipe_type', ]
 
 class RecipeConditionManager(models.Manager):
     """Provides additional methods for handling recipe conditions
@@ -1693,6 +1695,7 @@ class RecipeType(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe_type'
+        ordering = ['title']
 
 class RecipeTypeRevisionManager(models.Manager):
     """Provides additional methods for handling recipe type revisions

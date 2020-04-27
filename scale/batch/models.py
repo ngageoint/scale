@@ -400,6 +400,8 @@ class BatchManager(models.Manager):
 
         # Apply sorting
         if order:
+            from util.database import alphabetize
+            ordering = alphabetize(order, [''])
             batches = batches.order_by(*order)
         else:
             batches = batches.order_by('last_modified')
