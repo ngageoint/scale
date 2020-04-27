@@ -11,4 +11,6 @@ urlpatterns = [
         name='diagnostic_roulette_job_view'),
     url(r'^diagnostics/recipe/casino/$', diagnostic.views.QueueScaleCasinoView.as_view(),
         name='diagnostic_casino_recipe_view'),
+    url(r'^diagnostics/recipe/if/$', diagnostic.views.QueueScaleIfView.as_view(),
+        name='diagnostic_if_recipe_view'),
 ]

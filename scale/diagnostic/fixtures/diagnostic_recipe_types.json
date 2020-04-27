@@ -188,7 +188,7 @@
         "fields": {
             "name": "scale-if",
             "title": "Scale If",
-            "description": "Runs the Scale If job, then, if the condition works, runs the Scale Then job; otherwise it runs the Scale Else job. This recipe type can be useful for testing Scale's handling of conditions.",
+            "description": "Runs the Scale If job, then, if the condition works, runs the Scale Then job; otherwise it runs the Scale Else job. This recipe type can be useful for testing Scale's handling of conditions but MUST HAVE AN OUTPUT WORKSPACE DEFINED.",
             "is_system": true,
             "is_active": true,
             "definition": {
@@ -219,6 +219,53 @@
             "created": "2017-11-13T00:00:00.0Z",
             "last_modified": "2017-11-13T00:00:00.0Z"
         }
+    },
+    {
+        "model": "recipe.RecipeTypeRevision",
+        "pk": null,
+        "fields": {
+            "recipe_type": ["scale-if"],
+            "revision_num": 1,
+            "definition": {
+                 "version": "6",
+                 "input_data": [],
+                 "nodes": {"scale-if": {"dependencies":[], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-if", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "if-string": {"dependencies":[{"name": "scale-if"}], "input":{"SCALE_STRING": {"type": "dependency", "node": "scale-if", "output": "SCALE_STRING"}},
+                                          "node_type": {"node_type": "condition",
+                                                        "interface": {"json": [{"name": "SCALE_STRING", "type": "string", "required": false}]},
+                                                        "data_filter": {"filters": [{"name": "SCALE_STRING", "type": "string", "condition": "contains", "values": ["scale","string"]}]}}},
+                           "string-then": {"dependencies":[{"name": "if-string", "acceptance": true}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-then", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "string-else": {"dependencies":[{"name": "if-string", "acceptance":  false}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-else", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "if-integer": {"dependencies":[{"name": "scale-if"}], "input":{"SCALE_INTEGER": {"type": "dependency", "node": "scale-if", "output": "SCALE_INTEGER"}},
+                                          "node_type": {"node_type": "condition",
+                                                        "interface": {"json": [{"name": "SCALE_INTEGER", "type": "integer", "required": false}]},
+                                                        "data_filter": {"filters": [{"name": "SCALE_INTEGER", "type": "integer", "condition": ">", "values": [0]}]}}},
+                           "integer-then": {"dependencies":[{"name": "if-integer", "acceptance": true}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-then", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "integer-else": {"dependencies":[{"name": "if-integer", "acceptance":  false}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-else", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "if-boolean": {"dependencies":[{"name": "scale-if"}], "input":{"SCALE_BOOLEAN": {"type": "dependency", "node": "scale-if", "output": "SCALE_BOOLEAN"}},
+                                          "node_type": {"node_type": "condition",
+                                                        "interface": {"json": [{"name": "SCALE_BOOLEAN", "type": "boolean", "required": false}]},
+                                                        "data_filter": {"filters": [{"name": "SCALE_BOOLEAN", "type": "boolean", "condition": "==", "values": [true]}]}}},
+                           "boolean-then": {"dependencies":[{"name": "if-boolean", "acceptance": true}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-then", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "boolean-else": {"dependencies":[{"name": "if-boolean", "acceptance":  false}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-else", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "if-object": {"dependencies":[{"name": "scale-if"}], "input":{"SCALE_OBJECT": {"type": "dependency", "node": "scale-if", "output": "SCALE_OBJECT"}},
+                                          "node_type": {"node_type": "condition",
+                                                        "interface": {"json": [{"name": "SCALE_OBJECT", "type": "object",  "required": false}]},
+                                                        "data_filter": {"filters": [{"name": "SCALE_OBJECT", "type": "object", "condition": "subset of", "values": [{"scale": true}]}]}}},
+                           "object-then": {"dependencies":[{"name": "if-object", "acceptance": true}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-then", "job_type_version": "1.0.0", "job_type_revision": 1}},
+                           "object-else": {"dependencies":[{"name": "if-object", "acceptance":  false}], "input":{},
+                                          "node_type": {"node_type": "job", "job_type_name": "scale-else", "job_type_version": "1.0.0", "job_type_revision": 1}}
+                 }
+            },
+            "created": "2017-11-13T00:00:00.0Z"
+        }
     }
-
 ]

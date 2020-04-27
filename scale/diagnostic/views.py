@@ -13,9 +13,11 @@ from data.data.exceptions import InvalidData
 from job.models import JobType
 from queue.models import Queue
 from queue.serializers import QueueStatusSerializerV6
+from recipe.configuration.configuration import RecipeConfiguration
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.exceptions import InactiveRecipeType
 from recipe.models import RecipeType
+from storage.models import Workspace
 import util.rest as rest_util
 from util.rest import BadParameter
 
@@ -338,6 +340,79 @@ class QueueScaleRouletteView(GenericAPIView):
             recipe_type = RecipeType.objects.get(name='scale-roulette', revision_num='1')
             for _ in xrange(num):
                 Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data())
+        except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
+            message = 'Unable to create new recipe'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+class QueueScaleIfView(GenericAPIView):
+    """This view is the endpoint for queuing new Scale If recipe."""
+    parser_classes = (JSONParser,)
+    queryset = Queue.objects.all()
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return QueueStatusSerializerV6
+        elif self.request.version == 'v7':
+            return QueueStatusSerializerV6
+
+    def post(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v6' or request.version == 'v7':
+            return self.post_v6(request)
+
+        raise Http404()
+
+    def post_v6(self, request):
+        """Handles v6 post request
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        return self.queue_scale_if(request)
+
+    def queue_scale_if(self, request):
+        """Creates and queues the specified number of Scale Roulette jobs
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        workspace = rest_util.parse_string(request, 'workspace', required=True)
+        num = rest_util.parse_int(request, 'num')
+        if not workspace:
+            raise BadParameter('Valid output workspace must be provided')
+
+        try:
+            Workspace.objects.get(name=workspace)
+        except Workspace.DoesNotExist:
+            raise BadParameter('Workspace %s does not exist' % workspace)
+
+        if num < 1:
+            raise BadParameter('num must be at least 1')
+
+        # TODO: in the future, send command message to do this asynchronously
+        try:
+            recipe_type = RecipeType.objects.get(name='scale-if', revision_num='1')
+            recipe_config = RecipeConfiguration()
+            recipe_config.default_output_workspace = workspace
+            for _ in xrange(num):
+                Queue.objects.queue_new_recipe_for_user_v6(recipe_type, Data(), recipe_config=recipe_config)
         except (InvalidData, InvalidRecipeData, InactiveRecipeType) as ex:
             message = 'Unable to create new recipe'
             logger.exception(message)
