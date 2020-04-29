@@ -194,3 +194,18 @@ class TestQueueScaleIfView(APITransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+
+
+
+class MockCommandMessageManager():
+
+    def send_messages(self, commands):
+        new_commands = []
+        while True:
+            for command in commands:
+                command.execute()
+                new_commands.extend(command.new_messages)
+            commands = new_commands
+            if not new_commands:
+                break
+            new_commands = []

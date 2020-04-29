@@ -266,7 +266,7 @@ class ScheduledExecutionConfigurator(object):
 
         # Configure job tasks based upon whether system job or regular job
         if job_type.is_system:
-            ScheduledExecutionConfigurator._configure_system_job(config, job_exe, system_logging_level)
+            ScheduledExecutionConfigurator._configure_system_job(config, job_exe, job_type, system_logging_level)
         else:
             ScheduledExecutionConfigurator._configure_regular_job(config, job_exe, job_type, system_logging_level)
 
@@ -574,15 +574,39 @@ class ScheduledExecutionConfigurator(object):
         return config_with_secrets
 
     @staticmethod
-    def _configure_system_job(config, job_exe, system_logging_level):
+    def _configure_system_job(config, job_exe, job_type, system_logging_level):
         """Configures the given execution as a system job
 
         :param config: The execution configuration
         :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type to configure
+        :type job_type: :class:`job.models.JobType`
         :param system_logging_level: The logging level to be passed in through environment
         :type system_logging_level: str
         """
         logging_env_vars = {'SYSTEM_LOGGING_LEVEL': system_logging_level}
         config.add_to_task('main', env_vars=logging_env_vars, resources=job_exe.get_resources())
+
+        # diagnostic job needs the post task to run to collect the seed.outputs.json
+        if job_type.name == 'scale-if':
+            config.add_to_task('post', args=POST_TASK_COMMAND_ARGS)
+            # Configure output workspaces
+            output_workspaces = {}
+            for output_workspace in config.get_output_workspace_names():
+                output_workspaces[output_workspace] = TaskWorkspace(output_workspace, MODE_RW)
+            config.add_to_task('post', workspaces=output_workspaces)
+
+            # Configure output mounts
+            output_mnt_name = 'scale_output_mount'
+            output_vol_name = get_job_exe_output_vol_name(job_exe)
+            output_vol_ro = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RO, is_host=False)
+            output_vol_rw = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RW, is_host=False)
+            config.add_to_task('main', mount_volumes={output_mnt_name: output_vol_rw})
+            config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro},
+                               env_vars={'SYSTEM_LOGGING_LEVEL': system_logging_level})
+
+            # Configure output directory
+            env_vars = {'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
+            config.add_to_task('main', env_vars=env_vars)
