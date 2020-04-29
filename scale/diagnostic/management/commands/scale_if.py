@@ -20,26 +20,20 @@ class Command(BaseCommand):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
         """
 
-        choice = random.choice(["string", "integer", "boolean", "object"])
         outputs = {}
-        if choice == "string":
-            next_choice = random.choice(["scale", "string", "elacs", "gnirts"])
-            outputs['SCALE_STRING'] = next_choice
-            print('The output is SCALE_STRING=%s' % next_choice, file=sys.stdout)
-        elif choice == "integer":
-            next_choice = random.choice([-1, 0, 1])
-            outputs['SCALE_INTEGER'] = next_choice
-            print('The output is SCALE_INTEGER=%d' % next_choice, file=sys.stdout)
-        elif choice == "boolean":
-            next_choice = random.choice([True, False])
-            outputs['SCALE_BOOLEAN'] = next_choice
-            print('The output is SCALE_BOOLEAN=%s' % next_choice, file=sys.stdout)
-        elif choice == "object":
-            next_choice = random.choice([{'next': 'then'}, {'next': 'else'}])
-            outputs['SCALE_OBJECT'] = next_choice
-            print('The output is SCALE_OBJECT=%s' % json.dumps(next_choice), file=sys.stdout)
-        else:
-            print('Not a valid choice! (stderr)', file=sys.stderr)
+
+        choice = random.choice(["scale", "string", "elacs", "gnirts"])
+        outputs['SCALE_STRING'] = choice
+        print('The output is SCALE_STRING=%s' % choice, file=sys.stdout)
+        choice = random.choice([-1, 0, 1])
+        outputs['SCALE_INTEGER'] = choice
+        print('The output is SCALE_INTEGER=%d' % choice, file=sys.stdout)
+        choice = random.choice([True, False])
+        outputs['SCALE_BOOLEAN'] = choice
+        print('The output is SCALE_BOOLEAN=%s' % choice, file=sys.stdout)
+        choice = random.choice([{'next': 'then'}, {'next': 'else'}])
+        outputs['SCALE_OBJECT'] = choice
+        print('The output is SCALE_OBJECT=%s' % json.dumps(choice), file=sys.stdout)
 
         with open(os.path.join(os.environ.get('OUTPUT_DIR', './'), 'seed.outputs.json'), 'w') as fout:
             json.dump(outputs, fout)

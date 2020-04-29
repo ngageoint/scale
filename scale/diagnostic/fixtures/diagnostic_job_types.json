@@ -329,7 +329,7 @@
             "manifest": {
                 "seedVersion": "1.0.0",
                 "job": {
-                    "name": "scale-roulette",
+                    "name": "scale-if",
                     "jobVersion": "1.0.0",
                     "packageVersion": "1.0.0",
                     "title": "Scale If",
@@ -346,22 +346,22 @@
                                  {
                                      "name": "SCALE_STRING",
                                      "type": "string",
-                                     "required": false
+                                     "required": true
                                  },
                                  {
                                      "name": "SCALE_INTEGER",
                                      "type": "integer",
-                                     "required": false
+                                     "required": true
                                 },
                                 {
                                      "name": "SCALE_BOOLEAN",
                                      "type": "boolean",
-                                     "required": false
+                                     "required": true
                                 },
                                 {
                                      "name": "SCALE_OBJECT",
                                      "type": "object",
-                                     "required": false
+                                     "required": true
                                 }
                              ]
                          }
@@ -410,22 +410,22 @@
                                  {
                                      "name": "SCALE_STRING",
                                      "type": "string",
-                                     "required": false
+                                     "required": true
                                  },
                                  {
                                      "name": "SCALE_INTEGER",
                                      "type": "integer",
-                                     "required": false
+                                     "required": true
                                 },
                                 {
                                      "name": "SCALE_BOOLEAN",
                                      "type": "boolean",
-                                     "required": false
+                                     "required": true
                                 },
                                 {
                                      "name": "SCALE_OBJECT",
                                      "type": "object",
-                                     "required": false
+                                     "required": true
                                 }
                              ]
                          }

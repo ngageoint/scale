@@ -86,7 +86,7 @@ class QueuedExecutionConfigurator(object):
             env_vars = data.get_injected_env_vars(input_files_dict)
 
         task_workspaces = {}
-        if job.job_type.is_system:
+        if job.job_type.is_system and job.job_type.name != 'scale-if':
             # Add any workspaces needed for this system job
             task_workspaces = QueuedExecutionConfigurator._system_job_workspaces(job)
         else:
@@ -357,6 +357,10 @@ class ScheduledExecutionConfigurator(object):
                                                      job_execution_id_label, pre_label])
             config.add_to_task('post', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
                                                   job_execution_id_label, post_label])
+        if job_type.name == 'scale-if':
+            post_label = DockerParameter('label', 'scale-task-type=post')
+            config.add_to_task('post', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
+                                                      job_execution_id_label, post_label])
 
         # Configure tasks for logging
         if settings.LOGGING_ADDRESS is not None:
@@ -591,22 +595,54 @@ class ScheduledExecutionConfigurator(object):
 
         # diagnostic job needs the post task to run to collect the seed.outputs.json
         if job_type.name == 'scale-if':
+            config.create_tasks(['pre', 'main', 'post'])
+            config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS)
             config.add_to_task('post', args=POST_TASK_COMMAND_ARGS)
+
+            # Configure input workspaces
+            ro_input_workspaces = {}
+            rw_input_workspaces = {}
+            for input_workspace in config.get_input_workspace_names():
+                ro_input_workspaces[input_workspace] = TaskWorkspace(input_workspace, MODE_RO)
+                rw_input_workspaces[input_workspace] = TaskWorkspace(input_workspace, MODE_RW)
+            config.add_to_task('pre', workspaces=ro_input_workspaces)
+            config.add_to_task('main', workspaces=ro_input_workspaces)
+            # Post tasks have access to input workspaces in case input files need moved as part of parse results
+            config.add_to_task('post', workspaces=rw_input_workspaces)
+
             # Configure output workspaces
             output_workspaces = {}
             for output_workspace in config.get_output_workspace_names():
                 output_workspaces[output_workspace] = TaskWorkspace(output_workspace, MODE_RW)
             config.add_to_task('post', workspaces=output_workspaces)
 
-            # Configure output mounts
+            # Configure input/output mounts
+            input_mnt_name = 'scale_input_mount'
             output_mnt_name = 'scale_output_mount'
+            input_vol_name = get_job_exe_input_vol_name(job_exe)
             output_vol_name = get_job_exe_output_vol_name(job_exe)
+            input_vol_ro = Volume(input_vol_name, SCALE_JOB_EXE_INPUT_PATH, MODE_RO, is_host=False)
+            input_vol_rw = Volume(input_vol_name, SCALE_JOB_EXE_INPUT_PATH, MODE_RW, is_host=False)
             output_vol_ro = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RO, is_host=False)
             output_vol_rw = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RW, is_host=False)
-            config.add_to_task('main', mount_volumes={output_mnt_name: output_vol_rw})
+
+            config.add_to_task('pre', mount_volumes={input_mnt_name: input_vol_rw, output_mnt_name: output_vol_rw},
+                               env_vars={'SYSTEM_LOGGING_LEVEL': system_logging_level})
+            config.add_to_task('main', mount_volumes={input_mnt_name: input_vol_ro, output_mnt_name: output_vol_rw})
             config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro},
                                env_vars={'SYSTEM_LOGGING_LEVEL': system_logging_level})
 
             # Configure output directory
             env_vars = {'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
             config.add_to_task('main', env_vars=env_vars)
+
+            # Configure task resources
+            resources = job_exe.get_resources()
+            # Pull-task and pre-task require full amount of resources
+            config.add_to_task('pre', resources=resources)
+            # Main-task no longer requires the input file space
+            resources.subtract(NodeResources([Disk(job_exe.input_file_size)]))
+            config.add_to_task('main', resources=resources)
+            # Post-task no longer requires any disk space
+            resources.remove_resource('disk')
+            config.add_to_task('post', resources=resources)
