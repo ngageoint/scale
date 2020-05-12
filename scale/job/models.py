@@ -183,57 +183,124 @@ class JobManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
+        from django.utils.timezone import now
+        query_started = now()
         # Fetch a list of jobs
+        started_time = now()
         jobs = self.all()
+        duration = now() - started_time
+        logger.debug('Time to fetch initial jobs: %.3f seconds', duration.total_seconds())
 
         # Apply time range filtering
         if started:
+            started_time = now()
             jobs = jobs.filter(last_modified__gte=started)
+            duration = now() - started_time
+            logger.debug('Time to filter by started time: %.3f seconds', duration.total_seconds())
         if ended:
+            started_time = now()
             jobs = jobs.filter(last_modified__lte=ended)
+            duration = now() - started_time
+            logger.debug('Time to filter by ended time: %.3f seconds', duration.total_seconds())
 
         if source_started:
+            started_time = now()
             jobs = jobs.filter(source_started__gte=source_started)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_started: %.3f seconds', duration.total_seconds())
         if source_ended:
+            started_time = now()
             jobs = jobs.filter(source_ended__lte=source_ended)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_ended: %.3f seconds', duration.total_seconds())
 
         if source_sensor_classes:
+            started_time = now()
             jobs = jobs.filter(source_sensor_class__in=source_sensor_classes)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_sensor_classes: %.3f seconds', duration.total_seconds())
         if source_sensors:
+            started_time = now()
             jobs = jobs.filter(source_sensor__in=source_sensors)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_sensors: %.3f seconds', duration.total_seconds())
         if source_collections:
+            started_time = now()
             jobs = jobs.filter(source_collection__in=source_collections)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_collections: %.3f seconds', duration.total_seconds())
         if source_tasks:
+            started_time = now()
             jobs = jobs.filter(source_task__in=source_tasks)
+            duration = now() - started_time
+            logger.debug('Time to filter by source tasks: %.3f seconds', duration.total_seconds())
 
         # Apply additional filters
         if statuses:
+            started_time = now()
             jobs = jobs.filter(status__in=statuses)
+            duration = now() - started_time
+            logger.debug('Time to filter by statuses: %.3f seconds', duration.total_seconds())
         if job_ids:
+            started_time = now()
             jobs = jobs.filter(id__in=job_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_ids: %.3f seconds', duration.total_seconds())
         if job_type_ids:
+            started_time = now()
             jobs = jobs.filter(job_type_id__in=job_type_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_type_ids: %.3f seconds', duration.total_seconds())
         if job_type_names:
+            started_time = now()
             jobs = jobs.filter(job_type__name__in=job_type_names)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_type_names: %.3f seconds', duration.total_seconds())
         if job_type_categories:
+            started_time = now()
             jobs = jobs.filter(job_type__category__in=job_type_categories)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_type_categories: %.3f seconds', duration.total_seconds())
         if batch_ids:
+            started_time = now()
             jobs = jobs.filter(batch_id__in=batch_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by batch_ids: %.3f seconds', duration.total_seconds())
         if recipe_ids:
+            started_time = now()
             jobs = jobs.filter(recipe_id__in=recipe_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by recipe_ids: %.3f seconds', duration.total_seconds())
         if error_categories:
+            started_time = now()
             jobs = jobs.filter(error__category__in=error_categories)
+            duration = now() - started_time
+            logger.debug('Time to filter by error_categories: %.3f seconds', duration.total_seconds())
         if error_ids:
+            started_time = now()
             jobs = jobs.filter(error_id__in=error_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by error_ids: %.3f seconds', duration.total_seconds())
         if is_superseded is not None:
+            started_time = now()
             jobs = jobs.filter(is_superseded=is_superseded)
+            duration = now() - started_time
+            logger.debug('Time to filter by is_superseded: %.3f seconds', duration.total_seconds())
 
         # Apply sorting
         if order:
+            started_time = now()
             jobs = jobs.order_by(*order)
+            duration = now() - started_time
+            logger.debug('Time to order results: %.3f seconds', duration.total_seconds())
         else:
+            started_time = now()
             jobs = jobs.order_by('last_modified')
+            duration = now() - started_time
+            logger.debug('Time to order by last modified: %.3f seconds', duration.total_seconds())
 
+        duration = now() - query_started
+        logger.debug('Total time to filter jobs: %.3f seconds', duration.total_seconds())
         return jobs
 
     def filter_jobs_related_v6(self, started=None, ended=None, source_started=None, source_ended=None,

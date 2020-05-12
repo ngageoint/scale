@@ -605,7 +605,8 @@ class JobsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
+        from django.utils.timezone import now
+        request_started = now()
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -631,8 +632,6 @@ class JobsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-
-        from django.utils.timezone import now
         started_time = now()
         jobs = Job.objects.get_jobs_v6(started=started, ended=ended,
                                        source_started=source_started, source_ended=source_ended,
@@ -652,9 +651,14 @@ class JobsView(ListAPIView):
         duration = now() - started_time
         logger.debug('Time to select related job type: %.3f seconds', duration.total_seconds())
 
+        started_time = now()
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
+        duration = now() - started_time
+        logger.debug('Time to paginate serializer: %.3f seconds', duration.total_seconds())
 
+        duration = now() - request_started
+        logger.debug('Total time to list jobs: %.3f seconds', duration .total_seconds())
         return self.get_paginated_response(serializer.data)
 
     def post(self, request):

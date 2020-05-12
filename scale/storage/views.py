@@ -63,6 +63,8 @@ class FilesView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        from django.utils.timezone import now
+        request_started = now()
         countries = rest_util.parse_string_list(request, 'countries', required=False) 
 
         data_started = rest_util.parse_timestamp(request, 'data_started', required=False)
@@ -98,6 +100,7 @@ class FilesView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
+        started_time = now()
         files = ScaleFile.objects.filter_files(
             data_started=data_started, data_ended=data_ended,
             created_started=created_started, created_ended=created_ended,
@@ -110,9 +113,20 @@ class FilesView(ListAPIView):
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
             order=order, countries=countries
         )
+        duration = now() - started_time
+        logger.debug('Time to get matching files: %.3f seconds', duration.total_seconds())
 
+        started_time = now()
         page = self.paginate_queryset(files)
+        duration = now() - started_time
+        logger.debug('Time to paginate file data: %.3f seconds', duration.total_seconds())
+        started_time = now()
         serializer = self.get_serializer(page, many=True)
+        duration = now() - started_time
+        logger.debug('Time to serialize file data: %.3f seconds', duration.total_seconds())
+
+        duration = now() - request_started
+        logger.debug('Total time to complete /files request: %.3f seconds', duration.total_seconds())
         return self.get_paginated_response(serializer.data)
 
 

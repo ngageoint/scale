@@ -43,7 +43,7 @@ class JobSerializerV6(JobBaseSerializerV6):
     batch = BatchBaseSerializerV6()
     is_superseded = serializers.BooleanField()
     superseded_job = ModelIdSerializer()
-    status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
+    # status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
     node = NodeBaseSerializer()
     error = ErrorBaseSerializerV6()
     max_tries = serializers.IntegerField()

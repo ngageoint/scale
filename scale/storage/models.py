@@ -389,78 +389,160 @@ class ScaleFileManager(models.Manager):
         :returns: The product file query
         :rtype: :class:`django.db.models.QuerySet`
         """
+        from django.utils.timezone import now
 
+        filter_started = now()
         # Fetch a list of product files
+        started_time = now()
         files = ScaleFile.objects.all()
         files = files.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
         files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration',
                                   'job_type__manifest', 'job_type__configuration', 'recipe__input',
                                   'recipe_type__definition', 'batch__definition')
         files = files.prefetch_related('countries')
+        duration = now() - started_time
+        logger.debug('Time to fetch initial files: %.3f seconds', duration.total_seconds())
 
         #apply country code filtering
-
         if countries:
+            started_time = now()
             files = files.filter(countries__iso3__in=countries)
+            duration = now() - started_time
+            logger.debug('Time to filter by countries: %.3f seconds', duration.total_seconds())
 
         # Apply time range filtering
         if data_started:
+            started_time = now()
             files = files.filter(data_started__gte=data_started)
+            duration = now() - started_time
+            logger.debug('Time to filter by data started: %.3f seconds', duration.total_seconds())
         if data_ended:
+            started_time = now()
             files = files.filter(data_ended__lte=data_ended)
+            duration = now() - started_time
+            logger.debug('Time to filter by data ended: %.3f seconds', duration.total_seconds())
 
         if created_started:
+            started_time = now()
             files = files.filter(created__gte=created_started)
+            duration = now() - started_time
+            logger.debug('Time to filter by created_started: %.3f seconds', duration.total_seconds())
         if created_ended:
+            started_time = now()
             files = files.filter(created__lte=created_ended)
+            duration = now() - started_time
+            logger.debug('Time to filter by created_ended: %.3f seconds', duration.total_seconds())
 
         if source_started:
+            started_time = now()
             files = files.filter(source_started__gte=source_started)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_started: %.3f seconds', duration.total_seconds())
         if source_ended:
+            started_time = now()
             files = files.filter(source_ended__lte=source_ended)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_ended: %.3f seconds', duration.total_seconds())
 
         if source_sensor_classes:
+            started_time = now()
             files = files.filter(source_sensor_class__in=source_sensor_classes)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_sensor_classes: %.3f seconds', duration.total_seconds())
         if source_sensors:
+            started_time = now()
             files = files.filter(source_sensor__in=source_sensors)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_sensors: %.3f seconds', duration.total_seconds())
         if source_collections:
+            started_time = now()
             files = files.filter(source_collection__in=source_collections)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_collections: %.3f seconds', duration.total_seconds())
         if source_tasks:
+            started_time = now()
             files = files.filter(source_task__in=source_tasks)
+            duration = now() - started_time
+            logger.debug('Time to filter by source_tasks: %.3f seconds', duration.total_seconds())
 
         if mod_started:
+            started_time = now()
             files = files.filter(last_modified__gte=mod_started)
+            duration = now() - started_time
+            logger.debug('Time to filter by mod_started: %.3f seconds', duration.total_seconds())
         if mod_ended:
+            started_time = now()
             files = files.filter(last_modified__lte=mod_ended)
+            duration = now() - started_time
+            logger.debug('Time to filter by mod_ended: %.3f seconds', duration.total_seconds())
 
         if job_type_ids:
+            started_time = now()
             files = files.filter(job_type_id__in=job_type_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_type_ids: %.3f seconds', duration.total_seconds())
         if job_type_names:
+            started_time = now()
             files = files.filter(job_type__name__in=job_type_names)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_type_names: %.3f seconds', duration.total_seconds())
         if job_ids:
+            started_time = now()
             files = files.filter(job_id__in=job_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_ids: %.3f seconds', duration.total_seconds())
         if is_published is not None:
+            started_time = now()
             files = files.filter(is_published=is_published)
+            duration = now() - started_time
+            logger.debug('Time to filter by is_published: %.3f seconds', duration.total_seconds())
         if is_superseded is not None:
+            started_time = now()
             files = files.filter(is_superseded=is_superseded)
+            duration = now() - started_time
+            logger.debug('Time to filter by is_superseded: %.3f seconds', duration.total_seconds())
         if file_names:
+            started_time = now()
             files = files.filter(file_name__in=file_names)
+            duration = now() - started_time
+            logger.debug('Time to filter by file_names: %.3f seconds', duration.total_seconds())
         if job_outputs:
+            started_time = now()
             files = files.filter(job_output__in=job_outputs)
+            duration = now() - started_time
+            logger.debug('Time to filter by job_outputs: %.3f seconds', duration.total_seconds())
         if recipe_ids:
+            started_time = now()
             files = files.filter(recipe_id__in=recipe_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by recipe_ids: %.3f seconds', duration.total_seconds())
         if recipe_nodes:
+            started_time = now()
             files = files.filter(recipe_node__in=recipe_nodes)
+            duration = now() - started_time
+            logger.debug('Time to filter by recipe_nodes: %.3f seconds', duration.total_seconds())
         if recipe_type_ids:
+            started_time = now()
             files = files.filter(recipe_type__in=recipe_type_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by recipe_type_ids: %.3f seconds', duration.total_seconds())
         if batch_ids:
+            started_time = now()
             files = files.filter(batch_id__in=batch_ids)
+            duration = now() - started_time
+            logger.debug('Time to filter by batch_ids: %.3f seconds', duration.total_seconds())
 
         # Apply sorting
         if order:
+            started_time = now()
             files = files.order_by(*order)
+            duration = now() - started_time
+            logger.debug('Time to order results: %.3f seconds', duration.total_seconds())
         else:
+            started_time = now()
             files = files.order_by('last_modified')
+            duration = now() - started_time
+            logger.debug('Time to order by last_modified: %.3f seconds', duration.total_seconds())
 
         return files
 
