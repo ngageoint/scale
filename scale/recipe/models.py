@@ -28,9 +28,8 @@ from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError,
 from recipe.instance.recipe import RecipeInstance
 from recipe.instance.json.recipe_v6 import convert_recipe_to_v6_json, RecipeInstanceV6
 from storage.models import ScaleFile, Workspace
-from trigger.configuration.exceptions import InvalidTriggerType
-from trigger.models import TriggerRule
 from util import rest as rest_utils
+from util.database import alphabetize
 from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
@@ -371,8 +370,8 @@ class RecipeManager(models.Manager):
 
         # Apply sorting
         if order:
-            import pdb; pdb.set_trace()
-            recipes = recipes.order_by(*order)
+            ordering = alphabetize(order, Recipe.ALPHABETIZE_FIELDS)
+            recipes = recipes.order_by(*ordering)
         else:
             recipes = recipes.order_by('last_modified')
         return recipes
@@ -605,6 +604,8 @@ class Recipe(models.Model):
     :keyword last_modified: When the recipe was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
+    ALPHABETIZE_FIELDS = ['recipe_type.name']
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
@@ -1378,7 +1379,8 @@ class RecipeTypeManager(models.Manager):
 
         # Apply sorting
         if order:
-            recipe_types = recipe_types.order_by(*order)
+            ordering = alphabetize(order, RecipeType.ALPHABETIZE_FIELDS)
+            recipe_types = recipe_types.order_by(*ordering)
         else:
             recipe_types = recipe_types.order_by('last_modified')
 
@@ -1648,6 +1650,8 @@ class RecipeType(models.Model):
     :keyword last_modified: When the recipe type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
+    ALPHABETIZE_FIELDS = ['name', 'title', 'description']
 
     name = models.CharField(unique=True, max_length=50)
     title = models.CharField(blank=True, max_length=50, null=True)

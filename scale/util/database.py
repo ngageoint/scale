@@ -39,11 +39,11 @@ def alphabetize(order, fields):
     ordering = []
     for o in order:
         if o in fields:
-            # Check for descending first
+            # Check for descending first (prepended with a -)
             if o[0] == '-':
                 ordering.append(Lower(o[1:]).desc())
             else:
-                ordering.append(Lower(o[1:]))
+                ordering.append(Lower(o))
         else:
             ordering.append(o)
 

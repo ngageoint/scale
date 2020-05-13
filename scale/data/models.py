@@ -19,6 +19,7 @@ from data.exceptions import InvalidDataSetDefinition, InvalidDataSetMember
 from data.serializers import DataSetFileSerializerV6, DataSetMemberSerializerV6
 from storage.models import ScaleFile
 from util import rest as rest_utils
+from util.database import alphabetize
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +117,8 @@ class DataSetManager(models.Manager):
 
         # Apply sorting
         if order:
-            datasets = datasets.order_by(*order)
+            ordering = alphabetize(order, DataSet.ALPHABETIZE_FIELDS)
+            datasets = datasets.order_by(*ordering)
         else:
             datasets = datasets.order_by('id')
 
@@ -190,6 +192,7 @@ class DataSet(models.Model):
     :keyword definition: Defines the dataset
     :type definition: class:`django.contrib.postgres.fields.JSONField`
     """
+    ALPHABETIZE_FIELDS = ['title', 'description']
 
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)

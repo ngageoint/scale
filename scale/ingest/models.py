@@ -34,8 +34,9 @@ from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
 from storage.media_type import get_media_type
 from trigger.models import TriggerEvent
-from util.file_size import file_size_to_string
 from util import rest as rest_utils
+from util.database import alphabetize
+from util.file_size import file_size_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -165,7 +166,8 @@ class IngestManager(models.Manager):
 
         # Apply sorting
         if order:
-            ingests = ingests.order_by(*order)
+            ordering = alphabetize(order, Ingest.ALPHABETIZE_FIELDS)
+            ingests = ingests.order_by(*ordering)
         else:
             ingests = ingests.order_by('last_modified')
         return ingests
@@ -548,6 +550,7 @@ class Ingest(models.Model):
         ('ERRORED', 'ERRORED'),
         ('DUPLICATE', 'DUPLICATE'),
     )
+    ALPHABETIZE_FIELDS = ['file_name', 'status', 'media_type', 'file_path', 'new_file_path']
 
     file_name = models.CharField(max_length=250, db_index=True)
     scan = models.ForeignKey('ingest.Scan', on_delete=models.PROTECT, null=True)
@@ -961,7 +964,8 @@ class ScanManager(models.Manager):
 
         # Apply sorting
         if order:
-            scans = scans.order_by(*order)
+            ordering = alphabetize(order, Scan.ALPHABETIZE_FIELDS)
+            scans = scans.order_by(*ordering)
         else:
             scans = scans.order_by('last_modified')
         return scans
@@ -1105,7 +1109,8 @@ class Scan(models.Model):
     :keyword last_modified: When the Scan process was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
-
+    ALPHABETIZE_FIELDS = ['name', 'title', 'description'
+                          ]
     name = models.CharField(max_length=50, unique=True, db_index=True)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
@@ -1267,7 +1272,8 @@ class StrikeManager(models.Manager):
 
         # Apply sorting
         if order:
-            strikes = strikes.order_by(*order)
+            ordering = alphabetize(order, Strike.ALPHABETIZE_FIELDS)
+            strikes = strikes.order_by(*ordering)
         else:
             strikes = strikes.order_by('last_modified')
         return strikes
@@ -1330,6 +1336,7 @@ class Strike(models.Model):
     :keyword last_modified: When the Strike process was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+    ALPHABETIZE_FIELDS = ['name', 'title', 'description']
 
     name = models.CharField(max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)

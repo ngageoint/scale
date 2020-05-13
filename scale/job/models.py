@@ -232,18 +232,7 @@ class JobManager(models.Manager):
 
         # Apply sorting
         if order:
-            # we want alphabetical sorting of the following fields:
-            # recipe (title), Job Type (title)
-            ordering = alphabetize(order, ['job_type', 'recipe'])
-            # for o in order:
-            #     if '-recipe' in o or '-job_type' in o:
-            #         ordering.append(Lower(o[1:]).desc())
-            #     elif 'recipe' in o or 'job_type' in o:
-            #         ordering.append(Lower(o))
-            #     else:
-            #         ordering.append(o)
-
-            # ordering = [Lower(o) if 'recipe' in o or 'job_type' in o else o for o in order]
+            ordering = alphabetize(order, Job.ALPHABETIZE_FIELDS)
             jobs = jobs.order_by(*ordering)
         else:
             jobs = jobs.order_by('last_modified')
@@ -898,6 +887,7 @@ class Job(models.Model):
         ('CANCELED', 'CANCELED'),
     )
     FINAL_STATUSES = ['FAILED', 'COMPLETED', 'CANCELED']
+    ALPHABETIZE_FIELDS = ['job_type', 'recipe', 'status', 'error.category', 'error.title']
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     job_type_rev = models.ForeignKey('job.JobTypeRevision', on_delete=models.PROTECT)
@@ -2210,7 +2200,8 @@ class JobTypeManager(models.Manager):
 
         # Apply sorting
         if order:
-            job_types = job_types.order_by(*order)
+            ordering = alphabetize(order, JobType.ALPHABETIZE_FIELDS)
+            job_types = job_types.order_by(*ordering)
         else:
             job_types = job_types.order_by('last_modified')
 
@@ -2734,6 +2725,7 @@ class JobType(models.Model):
 
     UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
         'last_modified', 'paused', 'revision_num')
+    ALPHABETIZE_FIELDS = ['name', 'version']
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
