@@ -719,6 +719,24 @@ of secrets being injected.</p>
 <span id="util-database-module"></span><h2>util.database module<a class="headerlink" href="#module-util.database" title="Permalink to this headline">¶</a></h2>
 <p>Helper methods for os operations</p>
 <dl class="function">
+<dt id="util.database.alphabetize">
+<code class="descclassname">util.database.</code><code class="descname">alphabetize</code><span class="sig-paren">(</span><em>order</em>, <em>fields</em><span class="sig-paren">)</span><a class="headerlink" href="#util.database.alphabetize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the correct sort order</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of ordering</li>
+<li><strong>fields</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of fields to alphabetize</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="util.database.sleep">
 <code class="descclassname">util.database.</code><code class="descname">sleep</code><span class="sig-paren">(</span><em>the_model</em>, <em>the_id</em><span class="sig-paren">)</span><a class="headerlink" href="#util.database.sleep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sleeps for a maximum of 5 seconds while waiting for an object to become available
