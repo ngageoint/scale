@@ -1,5 +1,6 @@
 """Helper methods for os operations"""
 import time
+from django.db.models.functions import Lower
 
 MAX_SLEEP_MS = 500
 
@@ -24,4 +25,26 @@ def sleep(the_model, the_id):
             pass
         
     return False
- 
+
+
+def alphabetize(order, fields):
+    """Returns the correct sort order
+
+    :param order: The list of ordering
+    :type order: list
+    :param fields: The list of fields to alphabetize
+    :type fields: list
+    """
+
+    ordering = []
+    for o in order:
+        if o in fields:
+            # Check for descending first (prepended with a -)
+            if o[0] == '-':
+                ordering.append(Lower(o[1:]).desc())
+            else:
+                ordering.append(Lower(o))
+        else:
+            ordering.append(o)
+
+    return ordering

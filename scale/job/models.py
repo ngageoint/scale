@@ -16,6 +16,7 @@ import django.utils.html
 from django.conf import settings
 from django.db import connection, models, transaction
 from django.db.models import F, Q
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.timezone import now
 
@@ -43,6 +44,7 @@ from storage.models import ScaleFile
 from util import rest as rest_utils
 from util.validation import ValidationWarning
 from vault.secrets_handler import SecretsHandler
+from util.database import alphabetize
 
 
 logger = logging.getLogger(__name__)
@@ -230,7 +232,8 @@ class JobManager(models.Manager):
 
         # Apply sorting
         if order:
-            jobs = jobs.order_by(*order)
+            ordering = alphabetize(order, Job.ALPHABETIZE_FIELDS)
+            jobs = jobs.order_by(*ordering)
         else:
             jobs = jobs.order_by('last_modified')
 
@@ -884,6 +887,7 @@ class Job(models.Model):
         ('CANCELED', 'CANCELED'),
     )
     FINAL_STATUSES = ['FAILED', 'COMPLETED', 'CANCELED']
+    ALPHABETIZE_FIELDS = ['job_type', 'recipe', 'status', 'error.category', 'error.title']
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     job_type_rev = models.ForeignKey('job.JobTypeRevision', on_delete=models.PROTECT)
@@ -2196,7 +2200,8 @@ class JobTypeManager(models.Manager):
 
         # Apply sorting
         if order:
-            job_types = job_types.order_by(*order)
+            ordering = alphabetize(order, JobType.ALPHABETIZE_FIELDS)
+            job_types = job_types.order_by(*ordering)
         else:
             job_types = job_types.order_by('last_modified')
 
@@ -2720,6 +2725,7 @@ class JobType(models.Model):
 
     UNEDITABLE_FIELDS = ('version_array', 'is_system', 'is_long_running', 'is_active', 'created', 'deprecated',
         'last_modified', 'paused', 'revision_num')
+    ALPHABETIZE_FIELDS = ['name', 'version']
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
