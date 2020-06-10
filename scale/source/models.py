@@ -91,19 +91,6 @@ class SourceFileManager(models.GeoManager):
         return self.filter_sources(started=started, ended=ended, time_field=time_field, is_parsed=is_parsed,
                                    file_name=file_name, order=order)
 
-    def get_source_file_by_name(self, file_name):
-        """Returns the source file with the given file name
-
-        :param file_name: The name of the source file
-        :type file_name: string
-        :returns: The list of source files that match the time range.
-        :rtype: :class:`storage.models.ScaleFile`
-
-        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
-        """
-
-        return ScaleFile.objects.get(file_name=file_name, file_type='SOURCE')
-
     def get_source_ingests(self, source_file_id, started=None, ended=None, statuses=None, scan_ids=None,
                            strike_ids=None, order=None):
         """Returns a query for ingest models for the given source file. The returned query includes the related strike,
