@@ -158,23 +158,6 @@ def _get_source_file(file_name, file_size):
         src_file = SourceFile.create()  # New file
         src_file.file_name = file_name
         src_file.is_deleted = True
-
-
-    # if file_path:
-    #     src_files = src_files.filter(file_path=file_path)
-    # if media_type:
-    #     src_files = src_files.filter(media_type=media_type)
-    # if file_size:
-    #     src_files = src_files.filter(file_size=file_size)
-    # if data_type_tags:
-    #     src_files = src_files.filter(data_type_tags__contains=data_type_tags)
-    # if src_files.exists():
-    #     # should be only one
-    #     return src_files.first()
-    # else:
-    #     src_file = SourceFile.create()  # New file
-    #     src_file.file_name = file_name
-    #     src_file.is_deleted = True
     return src_file
 
 
