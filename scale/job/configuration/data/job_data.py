@@ -305,7 +305,7 @@ class JobData(object):
                 input_values[input_name] = data_input['value']
             if 'file_id' in data_input:
                 input_file = input_files_dict[input_name][0]
-                file_name = os.path.basename(input_file.workspace_path)
+                file_name = input_file.file_name
                 if input_file.local_file_name:
                     file_name = input_file.local_file_name
                 input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)

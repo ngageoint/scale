@@ -269,7 +269,9 @@ class DirWatcherMonitor(Monitor):
                 logger.info('Transfer complete: %s', file_path)
 
         if ingest.status == 'TRANSFERRED':
-            ingest_path = os.path.join(self._ingest_dir, file_name)
+            # TODO: figure out if we need to increment the filename or not here
+            # TODO: do the same for S3?
+            ingest_path = self._get_ingest_path(file_name, ingest)
             rel_ingest_path = os.path.relpath(ingest_path, self._strike_dir)
             logger.info('%s is being prepared for ingest', file_path)
             if not ingest.status == 'TRANSFERRED':
@@ -295,3 +297,18 @@ class DirWatcherMonitor(Monitor):
 
         if ingest.status == 'DEFERRED':
             self._move_deferred_file(ingest)
+
+    def _get_ingest_path(self, file_name, ingest):
+        from storage.models import ScaleFile
+        same_files = ScaleFile.objects.filter(file_name=file_name, workspace=ingest.workspace)
+        if ingest.source_file:
+            same_files = same_files.exclude(id=ingest.source_file.id)
+
+        the_file_name = file_name
+        if same_files.count():
+            # increment the new file path
+            split = os.path.splitext(the_file_name)
+            the_file_name = '%s_%d%s' % (split[0], same_files.count(), split[1])
+
+        ingest_path = os.path.join(self._ingest_dir, the_file_name)
+        return ingest_path
