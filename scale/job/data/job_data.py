@@ -371,7 +371,7 @@ class JobData(object):
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
                 else:
                     input_file = input_files[file_input.name][0]
-                    file_name = os.path.basename(input_file.workspace_path)
+                    file_name = input_file.file_name
                     if input_file.local_file_name:
                         file_name = input_file.local_file_name
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
