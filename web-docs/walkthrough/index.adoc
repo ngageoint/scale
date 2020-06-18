@@ -47,7 +47,9 @@ Here is a simple process in Python that you are welcome to use.
 It takes an input filename and output file directory as arguments, copies the input file, and saves it as `new-output.txt` in your output file directory. 
 Name this Python file `input-output.py`.
 
-```python
+.input-output.py
+[source,python]
+----
 import os
 import sys
 
@@ -71,8 +73,7 @@ def main():
 
 # Call the main function
 main()
-
-```
+----
 
 You will also need an input file in the right format for your process. 
 For this Python process, create a simple text file with a few lines of text, and name it with the `.txt` extension. 
@@ -98,7 +99,9 @@ For a complete list of Dockerfile directives, see the {docker-reference-url}[Doc
 
 As an example, here is a Dockerfile to accompany the `input-output.py` file from Step 1.
 
-```
+.Dockerfile
+[source]
+----
 FROM alpine:3.9
 
 RUN apk -U add python
@@ -108,7 +111,7 @@ COPY ./input-output.py /app
 WORKDIR /app
 
 ENTRYPOINT ["python", "input-output.py"]
-```
+----
 
 The Dockerfile defined in this example takes the following steps:
 
@@ -132,7 +135,9 @@ See the Seed {seed-spec-url}[specification] for detailed information on each pro
 
 Here is an example of the seed manifest file for our input-output.py file:
 
-```
+.seed.manifest.json
+[source,json]
+----
 {
   "seedVersion": "1.0.0",
   "job": {
@@ -190,8 +195,7 @@ Here is an example of the seed manifest file for our input-output.py file:
     }
   }
 }
-
-```
+----
 
 === Build a Seed-compliant Docker Image
 
