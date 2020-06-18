@@ -1,4 +1,4 @@
-= Scale Process How-to
+= Scale Walkthrough
 Nikkala Thomson <nikkala.thomson@appliedis.com>
 :toc: left
 :toclevels: 5

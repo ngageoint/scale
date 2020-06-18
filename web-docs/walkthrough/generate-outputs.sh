@@ -2,7 +2,7 @@
 
 # Description: Creates all supported output document formats
 # Usage: ./generate-outputs.sh
-# Requires: Docker and installed locally
+# Requires: Docker and perl installed locally
 # Variables:
 # ASCIDOCTOR_IMAGE: optional override for Asciidoctor Docker image
 # PYTHON_IMAGE: optional override for Python 2.7.x Docker image
@@ -15,7 +15,7 @@
 pushd $(dirname $0) > /dev/null
 
 echo Generating HTML...
-docker run -v $(pwd):/documents --rm ${ASCIIDOCTOR_IMAGE} asciidoctor -a imagesdir=../images/ -D /documents/output index.adoc
+docker run -v $(pwd):/documents --rm ${ASCIIDOCTOR_IMAGE} asciidoctor -a stylesdir=./styles -a stylesheet=walkthrough.css -a imagesdir=../images -D /documents/output index.adoc
 
 docker run -v $(pwd):/documents --rm ${ASCIIDOCTOR_IMAGE} sh generate-pdf.sh
 
