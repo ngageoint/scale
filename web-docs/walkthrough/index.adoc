@@ -6,11 +6,15 @@ Nikkala Thomson <nikkala.thomson@appliedis.com>
 :docker-download-url: https://docs.docker.com/get-docker
 :docker-hub-signup-url: https://hub.docker.com/signup
 :docker-reference-url: https://docs.docker.com/engine/reference/builder 
-:scale-quickstart-url: https://ngageoint.github.io/scale/quickstart.html
+:scale-github-url: https://github.com/ngageoint/scale
+:scale-gh-pages-url: https://ngageoint.github.io/scale
+:seed-url: https://github.com/ngageoint/seed
+:seed-cli-url: https://github.com/ngageoint/seed-cli
 :seed-install-url: https://ngageoint.github.io/seed-cli/#_seed_cli_installation
 :seed-releases-url: https://github.com/ngageoint/seed-cli/releases
 :seed-silo-url: https://github.com/ngageoint/seed-silo
 :seed-spec-url: https://ngageoint.github.io/seed/seed
+:seed-user-guide-url: https://ngageoint.github.io/seed-cli
 
 image::scale-process.png[]
 
@@ -18,7 +22,7 @@ image::scale-process.png[]
 
 Before we get started, you will need the following:
 
-* Access to a DC/OS server running Scale. If you don’t have that set up, you can find quick start instructions for deploying Scale on a DC/OS cluster here: {scale-quickstart-url}.
+* Access to a DC/OS server running Scale. If you don’t have that set up, you can find quick start instructions for deploying Scale on a DC/OS cluster here: {scale-gh-pages-url}/quickstart.html.
 * Access to a common data storage location all Scale nodes can access for local file sharing. In our example, we used a shared network folder.
 * A Docker Hub account. You can create one at {docker-hub-signup-url}.
 * Docker software for your operating system. You can download Docker here: {docker-download-url}.
@@ -86,7 +90,7 @@ You will find the latest version of Seed here: {seed-releases-url}
 * Scroll down and click on the green-outlined button on the left that says “Latest Release”
 * Scroll down to “Assets” and download the Seed version for your operating system. Note: “darwin” is the correct version for macOS.
 
-For more detailed instructions, refer to the Seed {seed-releases-url}[installation instructions].
+For more detailed instructions, refer to the Seed {seed-install-url}[installation instructions].
 
 You should now be able to run seed from any directory.
 
@@ -345,3 +349,21 @@ Go to your output workspace location to view your output file.
 It will be nested several folders deep.
 
 image::output-file.png[]
+
+== More Information
+
+For further information about the Scale ecosystem, visit the following links.
+
+=== Scale
+
+* {scale-gh-pages-url}[Home]
+* {scale-gh-pages-url}/docs/index.html[Documentation]
+* {scale-github-url}[Source Code]
+
+=== Seed
+
+* {seed-user-guide-url}[User Guide]
+* {seed-spec-url}[Specification]
+* {seed-url}[Seed Source Code]
+* {seed-cli-url}[Seed CLI Source Code]
+* {seed-silo-url}[SILO Source Code]
