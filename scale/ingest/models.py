@@ -227,6 +227,27 @@ class IngestManager(models.Manager):
 
         return ingests
 
+    def get_dupe_ingests_by_scan(self, scan_id, new_ingests):
+        """Returns a list of ingests associated with a scan and file name/sizes
+
+        :param scan_id: Query ingests created by a specific scan processor.
+        :type scan_id: int
+        :param new_ingests: dict of filename/file sizes
+        :type new_ingests: dict
+        :returns: The list of ingests that match the scan, filenames and file sizes
+        :rtype: [:class:`ingest.models.Ingest`]
+        """
+        import pdb; pdb.set_trace()
+        ingests = Ingest.objects.all().filter(scan_id=scan_id)
+
+        duplicates = []
+        for new_ingest in new_ingests:
+            dupes = ingests.filter(file_name=new_ingest['file_name'], file_size=new_ingest['file_size'])
+            if dupes.count():
+                duplicates.append(dupes.values())
+
+        return duplicates
+
     def get_details(self, ingest_id, is_staff=False):
         """Gets additional details for the given ingest model based on related model attributes.
 
