@@ -269,7 +269,6 @@ class DirWatcherMonitor(Monitor):
                 logger.info('Transfer complete: %s', file_path)
 
         if ingest.status == 'TRANSFERRED':
-            # TODO: figure out if we need to increment the filename or not here
             # TODO: do the same for S3?
             ingest_path = self._get_ingest_path(file_name, ingest)
             rel_ingest_path = os.path.relpath(ingest_path, self._strike_dir)
