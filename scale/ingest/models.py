@@ -237,7 +237,6 @@ class IngestManager(models.Manager):
         :returns: The list of ingests that match the scan, filenames and file sizes
         :rtype: [:class:`ingest.models.Ingest`]
         """
-        import pdb; pdb.set_trace()
         ingests = Ingest.objects.all().filter(scan_id=scan_id)
 
         duplicates = []
