@@ -269,7 +269,6 @@ class DirWatcherMonitor(Monitor):
                 logger.info('Transfer complete: %s', file_path)
 
         if ingest.status == 'TRANSFERRED':
-            # TODO: do the same for S3?
             ingest_path = self._get_ingest_path(file_name, ingest)
             rel_ingest_path = os.path.relpath(ingest_path, self._strike_dir)
             logger.info('%s is being prepared for ingest', file_path)
