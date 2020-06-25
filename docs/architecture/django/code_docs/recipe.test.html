@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,6 +11,10 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
@@ -19,7 +22,9 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript">
@@ -40,10 +45,6 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="recipe.test.configuration package" href="recipe.test.configuration.html" />
@@ -63,7 +64,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> Scale
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Scale
           
 
           
@@ -93,6 +94,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -161,6 +163,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -199,7 +202,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
         
@@ -1265,7 +1268,7 @@ the sub-recipe</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.update_jobs_status">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2020</em>, <em>5</em>, <em>22</em>, <em>15</em>, <em>13</em>, <em>34</em>, <em>392009</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">update_jobs_status</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when=datetime.datetime(2020</em>, <em>6</em>, <em>25</em>, <em>18</em>, <em>25</em>, <em>43</em>, <em>256941</em>, <em>tzinfo=&lt;UTC&gt;)</em>, <em>status=u'BLOCKED'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.update_jobs_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mimics effect of create_blocked_jobs_messages and create_pending_jobs_messages for unit testing</p>
 </dd></dl>
 
@@ -1307,11 +1310,19 @@ the sub-recipe</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2015, NGA
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1322,7 +1333,6 @@ the sub-recipe</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
