@@ -195,7 +195,7 @@ class Scanner(object):
     @staticmethod
     def _deduplicate_ingest_list(scan_id, new_ingests):
         """Check the ingest records to ensure these ingests are not already created by previous scan run
-        
+
         :param scan_id: ID of scan to check against
         :type scan_id: integer
         :param new_ingests: List of ingest models to validate for uniqueness
@@ -203,24 +203,22 @@ class Scanner(object):
         :returns: List of deduplicated ingest models
         :rtype: List[:class:`ingest.models.Ingest`]
         """
+        name_sizes = [{'file_name': ingest.file_name, 'file_size': ingest.file_size} for ingest in new_ingests]
 
-        deduplicate_file_names = set()
         list_count = len(new_ingests)
-        ingest_file_names = [ingest.file_name for ingest in new_ingests]
+        existing_ingests = Ingest.objects.get_dupe_ingests_by_scan(scan_id, name_sizes)
+        existing_name_sizes = [{'file_name': ingest.file_name, 'file_size': ingest.file_size} for ingest in existing_ingests]
 
-        existing_ingests = Ingest.objects.get_ingests_by_scan(scan_id, ingest_file_names)
-        existing_ingest_file_names = [ingest.file_name for ingest in existing_ingests]
-
-        deduplicated_ingests = []
+        final_ingest_name_sizes = []
+        final_ingests = []
         for ingest in new_ingests:
-            if ingest.file_name not in deduplicate_file_names:
-                deduplicate_file_names.add(ingest.file_name)
-                deduplicated_ingests.append(ingest)
+            the_ingest = {'file_name': ingest.file_name, 'file_size': ingest.file_size}
+            if the_ingest not in existing_name_sizes and the_ingest not in final_ingest_name_sizes:
+                final_ingest_name_sizes.append(the_ingest)
+                final_ingests.append(ingest)
             else:
-                logging.info('Removed duplicate file_name %s from ingests at file_path %s',
-                             ingest.file_name, ingest.file_path)
-
-        final_ingests = [x for x in deduplicated_ingests if x.file_name not in existing_ingest_file_names]
+                logging.info('Removed duplicate file_name %s file_size %d from ingests at file_path %s',
+                             ingest.file_name, ingest.file_size, ingest.file_path)
 
         logger.info('Removed %i duplicates of pre-existing ingests.', list_count - len(final_ingests))
 

@@ -139,7 +139,7 @@ def _get_ingest(ingest_id):
     return Ingest.objects.select_related().get(id=ingest_id)
 
 
-def _get_source_file(file_name):
+def _get_source_file(file_name, file_size):
     """Returns an existing or new (un-saved) source file model for the given file name
 
     :param file_name: The name of the source file
@@ -148,8 +148,9 @@ def _get_source_file(file_name):
     :rtype: :class:`source.models.SourceFile`
     """
 
+    # try to get the file by name and size
     try:
-        src_file = SourceFile.objects.get_source_file_by_name(file_name)
+        src_file = SourceFile.objects.get(file_name=file_name, file_size=file_size)
     except ScaleFile.DoesNotExist:
         src_file = SourceFile.create()  # New file
         src_file.file_name = file_name
@@ -179,7 +180,7 @@ def _start_ingest(ingest):
     file_name = ingest.file_name
     if not ingest.source_file:
         # This ingest job is running for the first time (source_file not yet set)
-        source_file = _get_source_file(file_name)
+        source_file = _get_source_file(file_name, ingest.file_size)
         if source_file.id:  # If source file already exists...
             if source_file.is_deleted:
                 logger.info('Re-ingesting deleted file %s', file_name)

@@ -17,5 +17,6 @@ class InputFile(object):
         self.file_type = scale_file.file_type
         self.workspace_name = scale_file.workspace.name
         self.workspace_path = scale_file.file_path
+        self.file_name = scale_file.file_name
         self.is_deleted = scale_file.is_deleted
         self.local_file_name = None
