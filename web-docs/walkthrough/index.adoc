@@ -88,7 +88,12 @@ Save it in the same folder as your process.
 You will find the latest version of Seed here: {seed-releases-url}
 
 * Scroll down and click on the green-outlined button on the left that says “Latest Release”
-* Scroll down to “Assets” and download the Seed version for your operating system. Note: “darwin” is the correct version for macOS.
+* Scroll down to “Assets” and download the Seed version for your operating system. 
+
+[TIP]
+====
+Use `seed-windows-amd64` for Windows, `seed-linux-amd64` for Linux, and `seed-linux-amd64` for Mac.
+====
 
 For more detailed instructions, refer to the Seed {seed-install-url}[installation instructions].
 
@@ -319,7 +324,7 @@ A recipe is a collection of one or more job types that interact with each other 
 
 . Navigate to “Configuration -> Recipe Types” then click on the “+” to create a new recipe.
 . Enter a title for your recipe, and a description if you like.
-. Click on “File Inputs” in the middle right and enter a name (commonly “input_file”) to represent your input file, set “Required” to “True,” then click “+ Add File to Input” and close the window. 
+. Click on “File Inputs” in the middle right and enter a name (commonly “INPUT_FILE”) to represent your input file, set “Required” to “True,” then click “+ Add File to Input” and close the window. 
 image:recipe-file-inputs.png[]
 . Under “Definition,” click on “Job Type Nodes” and select your newly created job type.
 image:recipe-add-job-type.png[]
