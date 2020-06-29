@@ -414,7 +414,7 @@ class IngestManager(models.Manager):
         # Build a mapping of all possible strike processes
         strike_map = {}
         slot_map = {}
-        for strike in Strike.objects.all():
+        for strike in Strike.objects.all().select_related('job', 'job__job_type'):
             strike_map[strike] = IngestStatus(strike)
             slot_map[strike] = {}
 
