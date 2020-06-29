@@ -13,7 +13,7 @@ Nikkala Thomson <nikkala.thomson@appliedis.com>
 :seed-install-url: https://ngageoint.github.io/seed-cli/#_seed_cli_installation
 :seed-releases-url: https://github.com/ngageoint/seed-cli/releases
 :seed-silo-url: https://github.com/ngageoint/seed-silo
-:seed-spec-url: https://ngageoint.github.io/seed/seed
+:seed-spec-url: https://ngageoint.github.io/seed/seed.html
 :seed-user-guide-url: https://ngageoint.github.io/seed-cli
 
 image::scale-process.png[]
