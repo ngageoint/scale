@@ -22,6 +22,9 @@ if [ "${BUILD_DOCS}" == "true" ]
 then
     cd $root/scale/docs
     make code_docs html
+    # Generate walkthrough HTML from AsciiDoc
+    cd $root/web-docs/walkthrough
+    ./generate-outputs.sh
     cd $root
     ./push-docs.sh
 fi
