@@ -386,11 +386,11 @@ class ScaleFileManager(models.Manager):
 
         # Fetch a list of product files
         files = ScaleFile.objects.all()
-        files = files.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
+        files = files.select_related('workspace', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
         files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration',
                                   'job_type__manifest', 'job_type__configuration', 'recipe__input',
                                   'recipe_type__definition', 'batch__definition')
-        files = files.prefetch_related('countries')
+        files = files.prefetch_related('countries', 'job_type')
 
         #apply country code filtering
 
