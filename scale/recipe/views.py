@@ -435,6 +435,7 @@ class RecipesView(ListAPIView):
         is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
         is_completed = rest_util.parse_bool(request, 'is_completed', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
+        root_recipe_ids = rest_util.parse_int_list(request, 'root_recipe_id', required=False)
 
         recipes = Recipe.objects.get_recipes_v6(started=started, ended=ended,
                                                 source_started=source_started, source_ended=source_ended,
@@ -443,7 +444,8 @@ class RecipesView(ListAPIView):
                                                 source_collections=source_collections, source_tasks=source_tasks,
                                                 ids=recipe_ids, type_ids=type_ids, type_names=type_names,
                                                 batch_ids=batch_ids, is_superseded=is_superseded,
-                                                is_completed=is_completed, order=order)
+                                                is_completed=is_completed, order=order,
+                                                root_recipe_ids=root_recipe_ids)
 
         # additional optimizations not being captured by the existing ones in the manager
         # see issue #1717

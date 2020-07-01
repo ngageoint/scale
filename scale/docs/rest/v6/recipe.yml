@@ -111,6 +111,12 @@ paths:
           description: "One or more fields to use when ordering the results.
                         Duplicate it to multi-sort, (ex: order=host_name&order=created)
                         Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
+          name: root_recipe_id
+          schema:
+            type: integer
+          description: Return only recipes with a given parent recipe identifier.
+              Duplicate it to filter by multiple values.
       responses:
         '200':
           description: 200 response
