@@ -141,11 +141,17 @@ class IngestManager(models.Manager):
         """
 
         # Fetch a list of ingests
-        ingests = self.select_related('strike', 'scan', 'workspace', 'new_workspace', 'job')
-        ingests = ingests.select_related('source_file', 'source_file__workspace')
+        ingests = self.select_related('strike', 'strike__job')
+        ingests = ingests.select_related('scan', 'scan__job', 'scan__dry_run_job')
+        ingests = ingests.select_related('workspace', 'new_workspace', 'job')
+        ingests = ingests.select_related(
+            'source_file', 'source_file__workspace', 'source_file__job', 'source_file__job_exe',
+            'source_file__job_type', 'source_file__recipe', 'source_file__recipe_type',
+            'source_file__batch')
         ingests = ingests.defer('strike__configuration', 'scan__configuration', 'workspace__json_config')
         ingests = ingests.defer('new_workspace__json_config', 'job__input', 'job__output')
         ingests = ingests.defer('source_file__workspace__json_config')
+        ingests = ingests.prefetch_related('source_file__countries')
 
         # Apply time range filtering
         if started:
@@ -378,7 +384,7 @@ class IngestManager(models.Manager):
 
         # Build a mapping of all possible strike processes
         fill_status = []
-        for strike in Strike.objects.all():
+        for strike in Strike.objects.all().select_related('job', 'job__job_type'):
             strike_ingests = ingests.filter(strike__id=strike.id)
 
             if use_ingest_time:
