@@ -436,6 +436,9 @@ Response: 200 OK
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| root_recipe_id     | Integer           | Optional | Return only recipes associated with the provided parent recipe.     |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |

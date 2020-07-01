@@ -287,7 +287,7 @@ class RecipeManager(models.Manager):
     def get_recipes_v6(self, started=None, ended=None, source_started=None, source_ended=None,
                     source_sensor_classes=None, source_sensors=None, source_collections=None,
                     source_tasks=None, ids=None, type_ids=None, type_names=None, batch_ids=None,
-                    is_superseded=None, is_completed=None, order=None):
+                    is_superseded=None, is_completed=None, order=None, root_recipe_ids=None):
         """Returns a list of recipes within the given time range.
 
         :param started: Query recipes updated after this amount of time.
@@ -320,6 +320,8 @@ class RecipeManager(models.Manager):
         :type is_completed: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
+        :param root_recipe_ids: Query recipes with the listed parent recipe ids
+        :type root_recipe_ids: [int]
         :returns: The list of recipes that match the time range.
         :rtype: [:class:`recipe.models.Recipe`]
         """
@@ -351,6 +353,8 @@ class RecipeManager(models.Manager):
 
         if ids:
             recipes = recipes.filter(id__in=ids)
+        if root_recipe_ids:
+            recipes = recipes.filter(root_recipe__in=root_recipe_ids)
 
         # Apply type filtering
         if type_ids:
