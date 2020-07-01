@@ -328,9 +328,12 @@ class RecipeManager(models.Manager):
 
         # Fetch a list of recipes
         recipes = Recipe.objects.all()
-        recipes = recipes.select_related('recipe_type', 'recipe_type_rev', 'event', 'batch')
+        recipes = recipes.select_related(
+            'recipe_type', 'recipe_type_rev', 'event', 'batch',
+            'recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev', 'recipe__event',
+            'recipe__batch')
         recipes = recipes.defer('recipe_type__definition', 'recipe_type_rev__recipe_type',
-                                'recipe_type_rev__definition')
+                                'recipe_type_rev__definition',)
 
         # Apply time range filtering
         if started:

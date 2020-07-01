@@ -104,7 +104,6 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     ingest_event = IngestEventBaseSerializerV6()
     batch = BatchBaseSerializerV6()
     recipe = RecipeBaseSerializerV6()
-    root_recipe = RecipeBaseSerializerV6()
 
     is_superseded = serializers.BooleanField()
     superseded_recipe = ModelIdSerializer()
