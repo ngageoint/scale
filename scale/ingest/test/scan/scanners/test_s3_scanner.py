@@ -133,36 +133,36 @@ class TestScanner(TestCase):
         self.assertTrue(dedup.called)
         self.assertTrue(start_ingests.called)
 
-    @patch('ingest.models.Ingest.objects.get_ingests_by_scan')
+    @patch('ingest.models.Ingest.objects.get_dupe_ingests_by_scan')
     def test_deduplicate_ingest_list_no_existing(self, ingests_by_scan):
         """Tests calling S3Scanner._deduplicate_ingest_list() without existing"""
 
         ingests_by_scan.return_value = []
 
-        ingests = [Ingest(file_name='test1'), Ingest(file_name='test2')]
+        ingests = [Ingest(file_name='test1', file_size=10), Ingest(file_name='test2', file_size=20), Ingest(file_name='test2', file_size=30)]
         final_ingests = S3Scanner._deduplicate_ingest_list(None, ingests)
 
         self.assertItemsEqual(ingests, final_ingests)
 
-    @patch('ingest.models.Ingest.objects.get_ingests_by_scan')
+    @patch('ingest.models.Ingest.objects.get_dupe_ingests_by_scan')
     def test_deduplicate_ingest_list_with_duplicate_file_names(self, ingests_by_scan):
         """Tests calling S3Scanner._deduplicate_ingest_list() with duplicates"""
 
         ingests_by_scan.return_value = []
 
-        ingests = [Ingest(file_name='test1'), Ingest(file_name='test1')]
+        ingests = [Ingest(file_name='test1', file_size=10), Ingest(file_name='test1', file_size=10)]
         final_ingests = S3Scanner._deduplicate_ingest_list(None, ingests)
 
         self.assertEquals(len(final_ingests), 1)
         self.assertEquals(final_ingests[0].file_name, 'test1')
 
-    @patch('ingest.models.Ingest.objects.get_ingests_by_scan')
+    @patch('ingest.models.Ingest.objects.get_dupe_ingests_by_scan')
     def test_deduplicate_ingest_list_with_existing_no_other_dups(self, ingests_by_scan):
         """Tests calling S3Scanner._deduplicate_ingest_list() with existing and no other dups"""
 
-        ingests_by_scan.return_value = [Ingest(file_name='test1')]
+        ingests_by_scan.return_value = [Ingest(file_name='test1', file_size=10)]
 
-        ingests = [Ingest(file_name='test1'), Ingest(file_name='test2')]
+        ingests = [Ingest(file_name='test1', file_size=10), Ingest(file_name='test2', file_size=10)]
         final_ingests = S3Scanner._deduplicate_ingest_list(None, ingests)
 
         self.assertEquals(len(final_ingests), 1)

@@ -400,7 +400,9 @@ class BatchManager(models.Manager):
 
         # Apply sorting
         if order:
-            batches = batches.order_by(*order)
+            from util.database import alphabetize
+            ordering = alphabetize(order, Batch.ALPHABETIZE_FIELDS)
+            batches = batches.order_by(*ordering)
         else:
             batches = batches.order_by('last_modified')
         return batches
@@ -588,6 +590,7 @@ class Batch(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
+    ALPHABETIZE_FIELDS = ['title', 'description']
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)

@@ -336,9 +336,15 @@ class SchedulingManager(object):
         """
 
         scheduled_job_executions = []
-        ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
+        type_warnings = {}
 
+        # We can schedule as long as there are nodes
+        if not nodes:
+            logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
+            return scheduled_job_executions
+          
+        ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         max_cluster_resources = resource_mgr.get_max_available_resources()
         for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             job_exe = QueuedJobExecution(queue)
@@ -347,11 +353,6 @@ class SchedulingManager(object):
             if job_exe.is_canceled:
                 scheduled_job_executions.append(job_exe)
                 continue
-
-            # If there are no longer any available nodes, break
-            if not nodes:
-                logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
-                break
 
             jt = job_type_mgr.get_job_type(queue.job_type.id)
             name = INVALID_RESOURCES.name + jt.name
@@ -367,10 +368,17 @@ class SchedulingManager(object):
             for resource in job_exe.required_resources.resources:
                 # skip sharedmem
                 if resource.name.lower() == 'sharedmem':
-                    logger.warning('Job type %s could not be scheduled due to required sharedmem resource', jt.name)
                     continue
                 if resource.name not in max_cluster_resources._resources:
-                    logger.warning('Job type %s could not be scheduled as resource %s does not exist in the available cluster resources', jt.name, resource.name)
+                    if jt.name in type_warnings:
+                        type_warnings[jt.name]['count'] += 1
+                        if resource.name not in type_warnings[jt.name]['warning']:
+                            type_warnings[jt.name]['warning'] += (', %s' % resource.name)
+                    else:
+                        type_warnings[jt.name] = {
+                            'warning': '%s job types could not be scheduled as the following resources do not exist in the available cluster resources: %s' % (jt.name, resource.name),
+                            'count': 1
+                        }
                     # resource does not exist in cluster
                     invalid_resources.append(resource.name)
                 elif resource.value > max_cluster_resources._resources[resource.name].value:
@@ -409,12 +417,24 @@ class SchedulingManager(object):
             for name in workspace_names:
                 missing_workspace = missing_workspace or name not in workspaces
             if missing_workspace:
-                logger.warning('Job type %s could not be scheduled due to missing workspace', jt.name)
+                if jt.name in type_warnings:
+                    type_warnings[jt.name]['count'] += 1
+                else:
+                    type_warnings[jt.name] = {
+                        'warning': '%s job types could not be scheduled due to missing workspace' % jt.name,
+                        'count': 1
+                    }
                 continue
 
             # Check limit for this execution's job type
             if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
-                logger.warning('Job type %s could not be scheduled due to type scheduling limit reached ', jt.name)
+                if jt.name in type_warnings:
+                    type_warnings[jt.name]['count'] += 1
+                else:
+                    type_warnings[jt.name] = {
+                        'warning': '%s job types could not be scheduled due to scheduling limit reached' % jt.name,
+                        'count': 1
+                    }
                 continue
 
             # Try to schedule job execution and adjust job type limit if needed
@@ -424,6 +444,10 @@ class SchedulingManager(object):
                     job_type_limits[job_type_id] -= 1
 
         duration = now() - started
+        if type_warnings:
+            for warn in type_warnings:
+                logger.warning('%d %s', type_warnings[warn]['count'], type_warnings[warn]['warning'])
+
         msg = 'Processing queue took %.3f seconds'
         if duration > PROCESS_QUEUE_WARN_THRESHOLD:
             logger.warning(msg, duration.total_seconds())

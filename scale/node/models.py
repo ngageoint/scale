@@ -7,6 +7,7 @@ from django.db import models, transaction
 from django.utils.timezone import now
 
 from job.models import Job
+from util.database import alphabetize
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +74,8 @@ class NodeManager(models.Manager):
 
         # Apply sorting
         if order:
-            nodes = nodes.order_by(*order)
+            ordering = alphabetize(order, Node.ALPHABETIZE_FIELDS)
+            nodes = nodes.order_by(*ordering)
         else:
             nodes = nodes.order_by('last_modified')
         return nodes
@@ -157,7 +159,8 @@ class Node(models.Model):
     :keyword last_modified: When the node model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
-
+    ALPHABETIZE_FIELDS = ['hostname', 'pause_reason'
+                          ]
     hostname = models.CharField(max_length=250, unique=True)
 
     pause_reason = models.CharField(max_length=250, null=True)

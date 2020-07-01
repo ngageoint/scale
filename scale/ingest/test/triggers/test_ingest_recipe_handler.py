@@ -164,7 +164,7 @@ class TestIngestRecipeHandlerProcessIngestedSourceFile(TransactionTestCase):
         # Call method to test
         IngestRecipeHandler().process_ingested_source_file(ingest.id, strike, self.source_file, now())
         self.assertEqual(Recipe.objects.count(), 3)
-        self.assertEqual(Recipe.objects.last().recipe_type.name, self.recipe.name)
+        self.assertEqual(Recipe.objects.first().recipe_type.name, self.recipe.name)
 
         # Verify events were created
         events = IngestEvent.objects.all().values()

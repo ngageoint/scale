@@ -24,6 +24,7 @@ from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTa
 from storage.media_type import get_media_type
 from util.os_helper import makedirs
 from util import rest as rest_utils
+from util.database import alphabetize
 from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
@@ -385,11 +386,11 @@ class ScaleFileManager(models.Manager):
 
         # Fetch a list of product files
         files = ScaleFile.objects.all()
-        files = files.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
+        files = files.select_related('workspace', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
         files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__configuration',
                                   'job_type__manifest', 'job_type__configuration', 'recipe__input',
                                   'recipe_type__definition', 'batch__definition')
-        files = files.prefetch_related('countries')
+        files = files.prefetch_related('countries', 'job_type')
 
         #apply country code filtering
 
@@ -451,7 +452,8 @@ class ScaleFileManager(models.Manager):
 
         # Apply sorting
         if order:
-            files = files.order_by(*order)
+            ordering = alphabetize(order, ScaleFile.ALPHABETIZE_FIELDS)
+            files = files.order_by(*ordering)
         else:
             files = files.order_by('last_modified')
 
@@ -659,6 +661,7 @@ class ScaleFile(models.Model):
     )
 
     VALID_TIME_FIELDS = ['source', 'data', 'last_modified']
+    ALPHABETIZE_FIELDS = ['file_name', 'file_type', 'media_type', 'file_path']
 
     file_name = models.CharField(max_length=250, db_index=True)
     file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50, db_index=True)
@@ -977,7 +980,8 @@ class WorkspaceManager(models.Manager):
 
         # Apply sorting
         if order:
-            workspaces = workspaces.order_by(*order)
+            ordering = alphabetize(order, Workspace.ALPHABETIZE_FIELDS)
+            workspaces = workspaces.order_by(*ordering)
         else:
             workspaces = workspaces.order_by('last_modified')
         return workspaces
@@ -1056,6 +1060,7 @@ class Workspace(models.Model):
     :keyword last_modified: When the workspace was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+    ALPHABETIZE_FIELDS = ['name', 'title', 'description']
 
     name = models.CharField(db_index=True, max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)

@@ -9,5 +9,5 @@ sphinx_rtd_theme>=0.1.9,<1
 
 # Needed for new wiki docs
 mkdocs>0.16.0,<1.0.0
-mkdocs-material>=3.0.0
-pymdown-extensions>=6.0
+mkdocs-material<=3.0.0
+pymdown-extensions<=6.0

@@ -231,12 +231,6 @@ class DataSetView(ListCreateAPIView):
         validation = DataSetMember.objects.validate_data_list(dataset_def=dataset_def, data_list=data_list)
         members = []
         if validation.is_valid and not dry_run:
-            try:
-                dataset = DataSet.objects.create_dataset_v6(dataset_def, title=title, description=description)
-            except Exception as ex:
-                message = 'Unable to create new dataset'
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
 
             members = DataSetMember.objects.create_dataset_members(dataset=dataset, data_list=data_list)
             dataset = DataSet.objects.get(id=dataset.id)
