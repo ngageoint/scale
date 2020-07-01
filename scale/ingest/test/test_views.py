@@ -296,6 +296,29 @@ class TestIngestStatusViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
+    def test_a_lot_of_ingests(self):
+
+        strike2 = ingest_test_utils.create_strike()
+        strike3 = ingest_test_utils.create_strike()
+        import random
+        for i in range(1, 3000):
+            strike_status = random.choice(['INGESTED', 'QUEUED'])
+            strike = random.choice([self.strike, strike2, strike3])
+            ingest_test_utils.create_ingest(file_name='test%d.txt'%i, status=strike_status, strike=strike,
+                                            data_started=datetime.datetime(2015, 1, 1,
+                                                                           random.choice(range(1,23)),
+                                                                           tzinfo=utc),
+                                            ingest_ended=datetime.datetime(2015, 2, 1,
+                                                                           random.choice(range(1,23)),
+                                                                           tzinfo=utc))
+
+        url = '/%s/ingests/status/' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+
 class TestScansViewV6(APITestCase):
     api = 'v6'
 
