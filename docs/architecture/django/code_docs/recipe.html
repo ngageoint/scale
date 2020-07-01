@@ -2059,7 +2059,7 @@ recipes.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipes_v6">
-<code class="descname">get_recipes_v6</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_classes=None</em>, <em>source_sensors=None</em>, <em>source_collections=None</em>, <em>source_tasks=None</em>, <em>ids=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>is_superseded=None</em>, <em>is_completed=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes_v6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipes_v6</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_classes=None</em>, <em>source_sensors=None</em>, <em>source_collections=None</em>, <em>source_tasks=None</em>, <em>ids=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>is_superseded=None</em>, <em>is_completed=None</em>, <em>order=None</em>, <em>root_recipe_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipes within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2081,6 +2081,7 @@ recipes.</p>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query recipes that match the is_superseded flag.</li>
 <li><strong>is_completed</strong> (<em>bool</em>) &#8211; Query recipes that match the is_completed flag.</li>
 <li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>root_recipe_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query recipes with the listed parent recipe ids</li>
 </ul>
 </td>
 </tr>
