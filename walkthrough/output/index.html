@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="Nikkala Thomson">
+<title>Scale Walkthrough</title>
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+
+@import url(https://fonts.googleapis.com/css?family=Lato);
+@import url(https://asciidoctor.org/stylesheets/asciidoctor.css); /* Default asciidoc style framework - important */
+
+/* CUSTOMISATIONS */
+/* Change the values in root for quick customisation. If you want even more fine grain... venture further. */
+:root{
+--maincolor:#FFFFFF;
+--primarycolor:#294172; /* Fedora Dark Blue */
+--secondarycolor:#3c6eb4; /* Fedora Blue */
+--tertiarycolor:#CCCCCC;
+--sidebarbackground:#CACACA;
+--linkcolor:#0D47A1;
+--linkcoloralternate:#db3279; /* Friends Magneta */
+--white:#FFFFFF;
+--black:#000000;
+}
+
+/* Text styles */
+
+body{font-family: "Open Sans",sans-serif;background-color: var(--maincolor);color:var(--black);}
+
+h1{color:var(--primarycolor) !important;font-family:"Montserrat",sans-serif;}
+h2,h3,h4,h5,h6{color:var(--secondarycolor) !important;font-family:"Montserrat",sans-serif;}
+.title{color:var(--black) !important;font-family:"Open Sans",sans-serif;font-style: normal; font-weight: normal;}
+a{text-decoration: none;}
+p{font-family: "Open Sans",sans-serif ! important}
+#toc.toc2 a:link{color:var(--linkcolor);}
+blockquote{color:var(--linkcoloralternate) !important}
+.quoteblock blockquote:before{color:var(--linkcoloralternate)}
+mark{background-color: var(--highlightcolor)} /* Text highlighting color */
+
+/* Table styles */
+th{background-color: var(--maincolor);color:var(--black) !important;}
+td{background-color: var(--maincolor);color: var(--black) !important}
+
+
+#toc.toc2{background-color:var(--sidebarbackground);}
+#toctitle{color:var(--white);}
+
+/* Responsiveness fixes */
+video {
+  max-width: 100%;
+}
+
+@media all and (max-width: 600px) {
+table {
+  width: 55vw!important;
+  font-size: 3vw;
+}
+
+</style>
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Scale Walkthrough</h1>
+<div class="details">
+<span id="author" class="author">Nikkala Thomson</span><br>
+<span id="email" class="email"><a href="mailto:nikkala.thomson@appliedis.com">nikkala.thomson@appliedis.com</a></span><br>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_preliminary_requirements">Preliminary Requirements</a></li>
+<li><a href="#_procedure_overview">Procedure Overview</a>
+<ul class="sectlevel2">
+<li><a href="#_create_a_single_input_single_output_process">Create a Single-Input/Single-Output Process</a></li>
+<li><a href="#_download_and_install_the_seed_command_line_interface_cli">Download and Install the Seed Command Line Interface (CLI)</a></li>
+<li><a href="#_create_a_dockerfile">Create a Dockerfile</a></li>
+<li><a href="#_create_a_seed_manifest">Create a Seed Manifest</a></li>
+<li><a href="#_build_a_seed_compliant_docker_image">Build a Seed-compliant Docker Image</a></li>
+<li><a href="#_publish_an_image_to_docker_hub">Publish an Image to Docker Hub</a></li>
+<li><a href="#_add_an_image_to_scale_through_silo">Add an Image to Scale Through SILO</a></li>
+<li><a href="#_create_input_and_output_workspaces">Create Input and Output Workspaces</a></li>
+<li><a href="#_create_a_job_type">Create a Job Type</a></li>
+<li><a href="#_create_a_recipe_to_run_an_instance_of_a_job_type">Create a Recipe to Run an Instance of a Job Type</a></li>
+<li><a href="#_create_a_strike_to_run_a_recipe">Create a Strike to Run a Recipe</a></li>
+<li><a href="#_verify_the_results">Verify the Results</a></li>
+</ul>
+</li>
+<li><a href="#_more_information">More Information</a>
+<ul class="sectlevel2">
+<li><a href="#_scale">Scale</a></li>
+<li><a href="#_seed">Seed</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="../images/scale-process.png" alt="scale process">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_preliminary_requirements">Preliminary Requirements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we get started, you will need the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access to a DC/OS server running Scale. If you don’t have that set up, you can find quick start instructions for deploying Scale on a DC/OS cluster here: <a href="https://ngageoint.github.io/scale/quickstart.html" class="bare">https://ngageoint.github.io/scale/quickstart.html</a>.</p>
+</li>
+<li>
+<p>Access to a common data storage location all Scale nodes can access for local file sharing. In our example, we used a shared network folder.</p>
+</li>
+<li>
+<p>A Docker Hub account. You can create one at <a href="https://hub.docker.com/signup" class="bare">https://hub.docker.com/signup</a>.</p>
+</li>
+<li>
+<p>Docker software for your operating system. You can download Docker here: <a href="https://docs.docker.com/get-docker" class="bare">https://docs.docker.com/get-docker</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you have all of these, you are ready to deploy your first process on Scale!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_procedure_overview">Procedure Overview</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a single-input/single-output process.</p>
+</li>
+<li>
+<p>Download and install the Seed Command Line Interface (CLI).</p>
+</li>
+<li>
+<p>Create a Dockerfile.</p>
+</li>
+<li>
+<p>Create a Seed manifest file.</p>
+</li>
+<li>
+<p>Create your Seed-compliant Docker image.</p>
+</li>
+<li>
+<p>Publish your image to your Docker Hub repository.</p>
+</li>
+<li>
+<p>Add your image to Scale through SILO (Seed Images Location Operation).</p>
+</li>
+<li>
+<p>Create input and output workspaces.</p>
+</li>
+<li>
+<p>Create your job type.</p>
+</li>
+<li>
+<p>Create a recipe to run an instance of your job type.</p>
+</li>
+<li>
+<p>Create a strike to run your recipe.</p>
+</li>
+<li>
+<p>Verify your results.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_create_a_single_input_single_output_process">Create a Single-Input/Single-Output Process</h3>
+<div class="paragraph">
+<p>You can create your process in almost any programming language, including Python, MATLAB, C++, Go, or Node.js.
+Here is a simple process in Python that you are welcome to use.
+It takes an input filename and output file directory as arguments, copies the input file, and saves it as <code>new-output.txt</code> in your output file directory.
+Name this Python file <code>input-output.py</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">input-output.py</div>
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">import os
+import sys
+
+# Demo program to input and output a file
+# Used to test Scale
+
+# Assign input filename
+INPUT_FILE = sys.argv[1]
+# Assign output directory
+OUTPUT_DIR = sys.argv[2]
+# Assign output filename
+OUTPUT_FILE = OUTPUT_DIR + '/new-output.txt'
+
+def main():
+    # Open input and output files.  Use of "with" will ensure proper closure of both files
+    # when with statements are exited.
+    with open(INPUT_FILE, mode='r') as infile:
+        with open(OUTPUT_FILE, mode='w') as outfile:
+            for line in infile:
+                outfile.write(line)
+
+# Call the main function
+main()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will also need an input file in the right format for your process.
+For this Python process, create a simple text file with a few lines of text, and name it with the <code>.txt</code> extension.
+Save it in the same folder as your process.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_download_and_install_the_seed_command_line_interface_cli">Download and Install the Seed Command Line Interface (CLI)</h3>
+<div class="paragraph">
+<p>You will find the latest version of Seed here: <a href="https://github.com/ngageoint/seed-cli/releases" class="bare">https://github.com/ngageoint/seed-cli/releases</a></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Scroll down and click on the green-outlined button on the left that says “Latest Release”</p>
+</li>
+<li>
+<p>Scroll down to “Assets” and download the Seed version for your operating system.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Use <code>seed-windows-amd64</code> for Windows, <code>seed-linux-amd64</code> for Linux, and <code>seed-linux-amd64</code> for Mac.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more detailed instructions, refer to the Seed <a href="https://ngageoint.github.io/seed-cli/#_seed_cli_installation">installation instructions</a>.</p>
+</div>
+<div class="paragraph">
+<p>You should now be able to run seed from any directory.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_dockerfile">Create a Dockerfile</h3>
+<div class="paragraph">
+<p>A Dockerfile is a set of instructions for what needs to be done to run your process.
+Use a text editor to create it in the same directory as your process and name it simply “Dockerfile” (without any suffix).</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of Dockerfile directives, see the <a href="https://docs.docker.com/engine/reference/builder">Dockerfile reference</a>.</p>
+</div>
+<div class="paragraph">
+<p>As an example, here is a Dockerfile to accompany the <code>input-output.py</code> file from Step 1.</p>
+</div>
+<div class="listingblock">
+<div class="title">Dockerfile</div>
+<div class="content">
+<pre class="highlight"><code>FROM alpine:3.9
+
+RUN apk -U add python
+
+COPY ./input-output.py /app
+
+WORKDIR /app
+
+ENTRYPOINT ["python", "input-output.py"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Dockerfile defined in this example takes the following steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Start <code>FROM</code> the pre-existing <code>alpine:3.9</code> Linux image. This is an official image, validated by Docker.</p>
+</li>
+<li>
+<p><code>RUN</code> the command <code>apk -U add python</code> inside your image filesystem, which will install Python.</p>
+</li>
+<li>
+<p><code>COPY</code> the file input-output.py to your work directory.</p>
+</li>
+<li>
+<p>Use <code>WORKDIR</code> to create the <code>/app</code> directory and specify that all subsequent actions should be taken from within <code>/app</code> <em>in your image filesystem</em> (never the host’s filesystem).</p>
+</li>
+<li>
+<p>Use <code>ENTRYPOINT</code> to describe how to run the container. In this case, it will run <code>python input-output.py</code>. The arguments will be specified at runtime.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_seed_manifest">Create a Seed Manifest</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Go back to your terminal window.</p>
+</li>
+<li>
+<p>Navigate to the directory containing your process.</p>
+</li>
+<li>
+<p>Create a generic seed manifest file named “seed.manifest.json” by running: <code>seed init</code></p>
+</li>
+<li>
+<p>Edit the seed manifest file to customize it to your algorithm.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>See the Seed <a href="https://ngageoint.github.io/seed/seed.html">specification</a> for detailed information on each property.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here is an example of the seed manifest file for our input-output.py file:</p>
+</div>
+<div class="listingblock">
+<div class="title">seed.manifest.json</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "seedVersion": "1.0.0",
+  "job": {
+    "name": "io-demo",
+    "jobVersion": "1.0.0",
+    "packageVersion": "1.0.0",
+    "title": "Input/Output Demonstration",
+    "description": "Reads in a text file, changes the filename, and saves an identical copy to the destination directory.",
+    "tags": [
+      "input",
+      "output"
+    ],
+    "maintainer": {
+      "name": "Nikkala Thomson",
+      "organization": "AIS",
+      "email": "nikkala.thomson@appliedis.com"
+    },
+    "timeout": 3600,
+    "interface": {
+      "command": "${INPUT_FILE} ${OUTPUT_DIR}",
+      "inputs": {
+        "files": [
+          {
+            "name": "INPUT_FILE",
+            "required": true,
+            "mediaTypes": []
+          }
+        ]
+      },
+      "outputs": {
+        "files": [
+          {
+            "name": "OUTPUT_FILE",
+            "mediaType": "text/plain",
+            "pattern": "*.*"
+          }
+        ]
+      }
+    },
+    "resources": {
+      "scalar": [
+        {
+          "name": "cpus",
+          "value": 1
+        },
+        {
+          "name": "mem",
+          "value": 256
+        },
+        {
+          "name": "disk",
+          "value": 256
+        }
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_build_a_seed_compliant_docker_image">Build a Seed-compliant Docker Image</h3>
+<div class="paragraph">
+<p>A Docker image is a read-only file consisting of multiple layers that contains the complete instructions for creating a Docker container.
+The Dockerfile, seed.manifest.json, the process file, and any other necessary supporting files will be used by the Seed CLI to build your seed-compliant Docker image, which will contain all of the information needed by Scale to run your process.</p>
+</div>
+<div class="paragraph">
+<p>With Docker running, build your Docker image by running <code>seed build</code> in the terminal window in the same directory as your process file.</p>
+</div>
+<div class="paragraph">
+<p>If all goes well, output similar to the following will be displayed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>INFO: Successfully built image. This image can be published with the following command:
+seed publish -in io-demo-1.0.0-seed:1.0.0 -r my.registry.address
+This image can be run with the following command:
+seed run -rm -in io-demo-1.0.0-seed:1.0.0 -i INPUT_FILE=&lt;file&gt; -o &lt;outdir&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a note of your image name, which in this example is “io-demo-1.0.0-seed:1.0.0”.</p>
+</div>
+<div class="paragraph">
+<p>Test your image by running the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">seed run -rm -in &lt;your-image-name&gt; -i INPUT_FILE=&lt;your-input-file&gt; -o &lt;your-output-directory&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not use <code>.`</code> (current directory) as your output directory, and do not put quotes around any of the parameters.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This should create a new directory and place your output file there.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_publish_an_image_to_docker_hub">Publish an Image to Docker Hub</h3>
+<div class="paragraph">
+<p>The Docker Hub is a service provided by Docker for finding and sharing container images.
+You will need to publish your image to the Docker Hub before you can access it in Scale.</p>
+</div>
+<div class="paragraph">
+<p>Login to Docker by running <code>docker login</code>.</p>
+</div>
+<div class="paragraph">
+<p>Publish your image to Docker with the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">seed publish -in &lt;your-image-name&gt; -r docker.io -O &lt;your-docker-username&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_add_an_image_to_scale_through_silo">Add an Image to Scale Through SILO</h3>
+<div class="paragraph">
+<p>SILO (Seed Images Location Operation) provides a link between Docker Hub and Scale, locating Seed-compliant images Scale can use.
+You can learn more about SILO here: <a href="https://github.com/ngageoint/seed-silo" class="bare">https://github.com/ngageoint/seed-silo</a>.</p>
+</div>
+<div class="paragraph">
+<p>The first and only the first time you use SILO, you will need to add your Docker Hub registry to its list of registries to search for Seed-compliant images.</p>
+</div>
+<div class="paragraph">
+<p>Connect to the server where SILO is running; e.g. <code>ssh user@hostname-or-ip</code>.
+Obtain an authorization token by entering the following at the command line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">curl -H "Content-Type: application/json" -d '\{"username":"&lt;your-server-username&gt;", "password": "&lt;your-server-password&gt;"}' "&lt;your-silo-address&gt;/login" -v</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy the authorization token provided by the above command and use it to add your Docker Hub registry to SILO:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">curl -H "Authorization: Token &lt;your-auth-token&gt;" -H "Content-Type: application/json" -d '\{"name":"&lt;your-docker-username&gt;", "url":"https://hub.docker.com", "org":"", "username":"&lt;your-docker-username&gt;", "password": ""}' &lt;your-silo-address&gt;/registries/add</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SILO will automatically scan all registries periodically, but you if you don’t want to wait for that, you can trigger a scan manually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">curl -H "Authorization: Token &lt;your-auth-token&gt;" -H "Content-Type: application/json" &lt;your-silo-address&gt;/registries/scan</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This may give a timeout error message: <code>Gateway Time-out – The server didn’t respond in time</code>.
+Ignore this message, the scan should still complete.</p>
+</div>
+<div class="paragraph">
+<p>To check that your new image is available in Scale, go to Scale, which can typically be accessed in your browser at scale.&lt;your-server-name&gt;. Navigate to “Configuration &#8594; Job Types” and click on the “+” to create a new Job Type.
+In the “Search Jobs” field at the top, enter part of your username or image name to locate your image.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You cannot search by the title of your process, just the username or image name.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/create-job-type-search.png" alt="create job type search">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_input_and_output_workspaces">Create Input and Output Workspaces</h3>
+<div class="paragraph">
+<p>Before you can add your process as a new job type in Scale, you need to create your input and output workspaces.
+A workspace is an external host folder or S3 bucket that can be connected to Scale.
+A workspace may be the source location of your incoming data or the destination location for products created by your recipes, but never both.
+Input and output must each have their own workspace.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to the root directory in your common data storage location and create a new folder with two subfolders. One of the subfolders will be for your input and one of the subfolders will be for output; name them accordingly.</p>
+</li>
+<li>
+<p>Copy the input file you created in Step 1 into the input folder.</p>
+</li>
+<li>
+<p>Go back to Scale, navigate to “System &#8594; Workspaces” and click on the “+” to create a new workspace. Enter a title for your input workspace, and a description if you like. Under “Type,” select “Host” and enter the path to your input folder in “Host Path” to the right.
+<span class="image"><img src="../images/create-input-workspace.png" alt="create input workspace"></span></p>
+</li>
+<li>
+<p>Click “Validate” and then “Save.”</p>
+</li>
+<li>
+<p>Repeat this process using your output folder to create an output workspace.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/create-output-workspace.png" alt="create output workspace">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_job_type">Create a Job Type</h3>
+<div class="paragraph">
+<p>A job type represents a Seed image that has been imported into Scale. To create your job type:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to “Configuration &#8594; Job Types” then click on the “+” to create a new job type.</p>
+</li>
+<li>
+<p>Enter the first few letters of your Docker username or image name in the “Search Jobs” field, until you locate your job. Click on that job and click “Import” in the lower right.</p>
+</li>
+<li>
+<p>Click on the “2” (Configuration) at the left. In the “Default” box, select the output workspace you created in step 7. In the “Priority” text box, enter “201” (a normal priority). Do not select anything for “OUTPUT_FILE.”
+<span class="image"><img src="../images/job-type-configuration.png" alt="job type configuration"></span></p>
+</li>
+<li>
+<p>Click on the “3” (General Information) and pick an appropriate-looking icon for your job. The name of the icon doesn’t matter.
+<span class="image"><img src="../images/job-type-general-info.png" alt="job type general info"></span></p>
+</li>
+<li>
+<p>Click on the “4” (Validate and Create), click “Validate” and then “Save”. This will create your job type.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_recipe_to_run_an_instance_of_a_job_type">Create a Recipe to Run an Instance of a Job Type</h3>
+<div class="paragraph">
+<p>A recipe is a collection of one or more job types that interact with each other in a workflow.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to “Configuration &#8594; Recipe Types” then click on the “+” to create a new recipe.</p>
+</li>
+<li>
+<p>Enter a title for your recipe, and a description if you like.</p>
+</li>
+<li>
+<p>Click on “File Inputs” in the middle right and enter a name (commonly “INPUT_FILE”) to represent your input file, set “Required” to “True,” then click “+ Add File to Input” and close the window.
+<span class="image"><img src="../images/recipe-file-inputs.png" alt="recipe file inputs"></span></p>
+</li>
+<li>
+<p>Under “Definition,” click on “Job Type Nodes” and select your newly created job type.
+<span class="image"><img src="../images/recipe-add-job-type.png" alt="recipe add job type"></span></p>
+</li>
+<li>
+<p>Find the gray diagram near the bottom of the screen. Click on the gray job type node in the diagram that matches your job node. Look for “Inputs” in the middle. Click the “+” to add an Input Connection, then select the name you just created above.
+<span class="image"><img src="../images/recipe-add-input.png" alt="recipe add input"></span></p>
+</li>
+<li>
+<p>That’s it! Click “Validate” then “Save” to create your recipe.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_strike_to_run_a_recipe">Create a Strike to Run a Recipe</h3>
+<div class="paragraph">
+<p>A strike is a long-running process that constantly looks for new files in a specific workspace.
+When it finds a new file in the workspace, it triggers recipe execution.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to “System &#8594; Strikes” then click on the “+” to create a new strike.</p>
+</li>
+<li>
+<p>Enter a title for your strike, and a description if you like.</p>
+</li>
+<li>
+<p>Select your newly created recipe under “Recipe Type,” and your input workspace under “Input Workspace.”</p>
+</li>
+<li>
+<p>Then go down to “Ingest File Rules” and enter “.*” to indicate that all file types are acceptable, then click “+ Add Rule to Configuration”
+<span class="image"><img src="../images/strike-add-rule.png" alt="strike add rule"></span></p>
+</li>
+<li>
+<p>Click “Validate” then “Save” to save your strike and automatically begin to run it.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verify_the_results">Verify the Results</h3>
+<div class="paragraph">
+<p>You are done!
+Navigate to “Processing &#8594; Running Jobs” to view your strike, which will keep running until you terminate it.
+Since you added your input file to your input folder already, your process should have run one time, producing an output file.
+Go to your output workspace location to view your output file.
+It will be nested several folders deep.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/output-file.png" alt="output file">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_information">More Information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For further information about the Scale ecosystem, visit the following links.</p>
+</div>
+<div class="sect2">
+<h3 id="_scale">Scale</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://ngageoint.github.io/scale">Home</a></p>
+</li>
+<li>
+<p><a href="https://ngageoint.github.io/scale/docs/index.html">Documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ngageoint/scale">Source Code</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_seed">Seed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://ngageoint.github.io/seed-cli">User Guide</a></p>
+</li>
+<li>
+<p><a href="https://ngageoint.github.io/seed/seed.html">Specification</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ngageoint/seed">Seed Source Code</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ngageoint/seed-cli">Seed CLI Source Code</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ngageoint/seed-silo">SILO Source Code</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-07-02 15:20:43 UTC
+</div>
+</div>
+</body>
+</html>
