@@ -92,7 +92,7 @@ You will find the latest version of Seed here: {seed-releases-url}
 
 [TIP]
 ====
-Use `seed-windows-amd64` for Windows, `seed-linux-amd64` for Linux, and `seed-linux-amd64` for Mac.
+Use `seed-linux-amd64` for Linux or WSL 2 on Windows, `seed-darwin-amd64` for Mac, or `seed-windows-amd64` for native Windows.
 ====
 
 For more detailed instructions, refer to the Seed {seed-install-url}[installation instructions].
@@ -113,22 +113,19 @@ As an example, here is a Dockerfile to accompany the `input-output.py` file from
 ----
 FROM alpine:3.9
 
-RUN apk -U add python
-
-COPY ./input-output.py /app
+RUN apk -U add python3
 
 WORKDIR /app
 
-ENTRYPOINT ["python", "input-output.py"]
+COPY ./input-output.py .
 ----
 
 The Dockerfile defined in this example takes the following steps:
 
 * Start `FROM` the pre-existing `alpine:3.9` Linux image. This is an official image, validated by Docker.
-* `RUN` the command `apk -U add python` inside your image filesystem, which will install Python.
-* `COPY` the file input-output.py to your work directory.
+* `RUN` the command `apk -U add python3` inside your image filesystem, which will install Python 3.
 * Use `WORKDIR` to create the `/app` directory and specify that all subsequent actions should be taken from within `/app` _in your image filesystem_ (never the host’s filesystem).
-* Use `ENTRYPOINT` to describe how to run the container. In this case, it will run `python input-output.py`. The arguments will be specified at runtime.
+* `COPY` the file input-output.py to your work directory.
 
 === Create a Seed Manifest
 
@@ -166,7 +163,7 @@ Here is an example of the seed manifest file for our input-output.py file:
     },
     "timeout": 3600,
     "interface": {
-      "command": "${INPUT_FILE} ${OUTPUT_DIR}",
+      "command": "python3 input-output.py ${INPUT_FILE} ${OUTPUT_DIR}",
       "inputs": {
         "files": [
           {
