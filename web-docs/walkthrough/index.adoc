@@ -1,5 +1,5 @@
 = Scale Walkthrough
-Nikkala Thomson <nikkala.thomson@appliedis.com>
+
 :toc: left
 :toclevels: 5
 :imagesdir: images/
