@@ -39,7 +39,7 @@ EOF
 
 # Initialize virtual environment
 pip install virtualenv
-virtualenv -p $(which python2) environment/scale
+python2 -m virtualenv -p $(which python2) environment/scale
 cat pip/requirements.txt | sed 's^psycopg2^psycopg2-binary^' > pip/mac.txt
 environment/scale/bin/pip install -r pip/mac.txt
 
