@@ -92,7 +92,7 @@ You will find the latest version of Seed here: {seed-releases-url}
 
 [TIP]
 ====
-Use `seed-linux-amd64` for Linux or WSL 2 on Windows, `seed-darwin-amd64` for Mac, or `seed-windows-amd64` for native Windows.
+Use `seed-linux-amd64` for Linux or WSL 2 on Windows or `seed-darwin-amd64` for Mac.
 ====
 
 For more detailed instructions, refer to the Seed {seed-install-url}[installation instructions].
