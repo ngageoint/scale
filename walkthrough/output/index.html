@@ -5,7 +5,6 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="Nikkala Thomson">
 <title>Scale Walkthrough</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -62,41 +61,9 @@ table {
 
 </style>
 </head>
-<body class="article toc2 toc-left">
+<body class="article">
 <div id="header">
 <h1>Scale Walkthrough</h1>
-<div class="details">
-<span id="author" class="author">Nikkala Thomson</span><br>
-<span id="email" class="email"><a href="mailto:nikkala.thomson@appliedis.com">nikkala.thomson@appliedis.com</a></span><br>
-</div>
-<div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_preliminary_requirements">Preliminary Requirements</a></li>
-<li><a href="#_procedure_overview">Procedure Overview</a>
-<ul class="sectlevel2">
-<li><a href="#_create_a_single_input_single_output_process">Create a Single-Input/Single-Output Process</a></li>
-<li><a href="#_download_and_install_the_seed_command_line_interface_cli">Download and Install the Seed Command Line Interface (CLI)</a></li>
-<li><a href="#_create_a_dockerfile">Create a Dockerfile</a></li>
-<li><a href="#_create_a_seed_manifest">Create a Seed Manifest</a></li>
-<li><a href="#_build_a_seed_compliant_docker_image">Build a Seed-compliant Docker Image</a></li>
-<li><a href="#_publish_an_image_to_docker_hub">Publish an Image to Docker Hub</a></li>
-<li><a href="#_add_an_image_to_scale_through_silo">Add an Image to Scale Through SILO</a></li>
-<li><a href="#_create_input_and_output_workspaces">Create Input and Output Workspaces</a></li>
-<li><a href="#_create_a_job_type">Create a Job Type</a></li>
-<li><a href="#_create_a_recipe_to_run_an_instance_of_a_job_type">Create a Recipe to Run an Instance of a Job Type</a></li>
-<li><a href="#_create_a_strike_to_run_a_recipe">Create a Strike to Run a Recipe</a></li>
-<li><a href="#_verify_the_results">Verify the Results</a></li>
-</ul>
-</li>
-<li><a href="#_more_information">More Information</a>
-<ul class="sectlevel2">
-<li><a href="#_scale">Scale</a></li>
-<li><a href="#_seed">Seed</a></li>
-</ul>
-</li>
-</ul>
-</div>
 </div>
 <div id="content">
 <div id="preamble">
@@ -243,7 +210,7 @@ Save it in the same folder as your process.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Use <code>seed-windows-amd64</code> for Windows, <code>seed-linux-amd64</code> for Linux, and <code>seed-linux-amd64</code> for Mac.</p>
+<p>Use <code>seed-linux-amd64</code> for Linux or WSL 2 on Windows or <code>seed-darwin-amd64</code> for Mac.</p>
 </div>
 </td>
 </tr>
@@ -273,13 +240,11 @@ Use a text editor to create it in the same directory as your process and name it
 <div class="content">
 <pre class="highlight"><code>FROM alpine:3.9
 
-RUN apk -U add python
-
-COPY ./input-output.py /app
+RUN apk -U add python3
 
 WORKDIR /app
 
-ENTRYPOINT ["python", "input-output.py"]</code></pre>
+COPY ./input-output.py .</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -291,16 +256,13 @@ ENTRYPOINT ["python", "input-output.py"]</code></pre>
 <p>Start <code>FROM</code> the pre-existing <code>alpine:3.9</code> Linux image. This is an official image, validated by Docker.</p>
 </li>
 <li>
-<p><code>RUN</code> the command <code>apk -U add python</code> inside your image filesystem, which will install Python.</p>
-</li>
-<li>
-<p><code>COPY</code> the file input-output.py to your work directory.</p>
+<p><code>RUN</code> the command <code>apk -U add python3</code> inside your image filesystem, which will install Python 3.</p>
 </li>
 <li>
 <p>Use <code>WORKDIR</code> to create the <code>/app</code> directory and specify that all subsequent actions should be taken from within <code>/app</code> <em>in your image filesystem</em> (never the host’s filesystem).</p>
 </li>
 <li>
-<p>Use <code>ENTRYPOINT</code> to describe how to run the container. In this case, it will run <code>python input-output.py</code>. The arguments will be specified at runtime.</p>
+<p><code>COPY</code> the file input-output.py to your work directory.</p>
 </li>
 </ul>
 </div>
@@ -362,7 +324,7 @@ ENTRYPOINT ["python", "input-output.py"]</code></pre>
     },
     "timeout": 3600,
     "interface": {
-      "command": "${INPUT_FILE} ${OUTPUT_DIR}",
+      "command": "python3 input-output.py ${INPUT_FILE} ${OUTPUT_DIR}",
       "inputs": {
         "files": [
           {
@@ -717,7 +679,7 @@ It will be nested several folders deep.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-07-14 19:59:11 UTC
+Last updated 2020-07-15 20:33:49 UTC
 </div>
 </div>
 </body>
