@@ -1,5 +1,4 @@
 = Scale Walkthrough
-
 :toc: left
 :toclevels: 5
 :imagesdir: images/
