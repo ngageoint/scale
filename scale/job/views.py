@@ -519,8 +519,6 @@ class JobTypesPendingView(ListAPIView):
         elif request.version == 'v7':
             return JobTypePendingStatusSerializerV6
 
-        raise Http404()
-
     def list(self, request):
         """Retrieves the current status of pending job types and returns it in JSON form
 
@@ -554,8 +552,6 @@ class JobTypesRunningView(ListAPIView):
             return JobTypeRunningStatusSerializerV6
         elif request.version == 'v7':
             return JobTypeRunningStatusSerializerV6
-
-        raise Http404()
 
     def list(self, request):
         """Retrieves the current status of running job types and returns it in JSON form
@@ -591,8 +587,6 @@ class JobTypesSystemFailuresView(ListAPIView):
         elif request.version == 'v7':
             return JobTypeFailedStatusSerializerV6
 
-        raise Http404()
-
     def list(self, request):
         """Retrieves the job types that have failed with system errors and returns them in JSON form
 
@@ -626,8 +620,6 @@ class JobTypesStatusView(ListAPIView):
             return JobTypeStatusSerializerV6
         elif request.version == 'v7':
             return JobTypeStatusSerializerV6
-
-        raise Http404()
 
     def list(self, request):
         """Retrieves the list of all job types with status and returns it in JSON form
