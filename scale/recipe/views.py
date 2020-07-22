@@ -462,8 +462,22 @@ class RecipesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        if request.version != 'v6':
-            raise Http404
+
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v7':
+            return self._post_v6(request)
+
+        raise Http404()
+
+    def _post_v6(self, request):
+        """Queue a recipe and returns the new job information in JSON form
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
 
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         recipe_data = rest_util.parse_dict(request, 'input', {})

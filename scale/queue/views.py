@@ -26,6 +26,23 @@ class JobLoadView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
+            return self._list_v6(request)
+
+        raise Http404()
+
+    def _list_v6(self, request):
+        """Retrieves the job load for a given time range and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         started = rest_util.parse_timestamp(request, 'started', default_value=rest_util.get_relative_days(7))
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended, max_duration=datetime.timedelta(days=31))
@@ -52,8 +69,24 @@ class QueueStatusView(ListAPIView):
             return QueueStatusSerializerV6
         elif self.request.version == 'v7':
             return QueueStatusSerializerV6
-
+    
     def list(self, request):
+        """Retrieves the job load for a given time range and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v7':
+            return self._list_v6(request)
+
+        raise Http404()
+
+    def _list_v6(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
 
         :param request: the HTTP GET request

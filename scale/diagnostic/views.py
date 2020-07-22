@@ -330,7 +330,7 @@ class QueueScaleRouletteView(GenericAPIView):
 
         num = rest_util.parse_int(request, 'num')
 
-        if num < 1:
+        if num < 1: 
             raise BadParameter('num must be at least 1')
 
         # TODO: in the future, send command message to do this asynchronously

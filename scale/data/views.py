@@ -508,7 +508,7 @@ class DataSetValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v6':
+        if request.version == 'v6' or request.version == 'v7':
             return self.post_v6(request)
         else:
             Http404()
