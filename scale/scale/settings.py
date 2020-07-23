@@ -90,6 +90,8 @@ MESSSAGE_QUEUE_DEPTH_WARN = int(os.environ.get('MESSSAGE_QUEUE_DEPTH_WARN', -1))
 # Queue limit
 SCHEDULER_QUEUE_LIMIT = int(os.environ.get('SCHEDULER_QUEUE_LIMIT', 500))
 
+# The max number of times the scheduler will try to reconnect to 
+# mesos if disconnected.
 SCHEDULER_MAX_RECONNECT = int(os.environ.get('SCHEDULER_MAX_RECONNECT', 3))
 
 # Base URL of vault or DCOS secrets store, or None to disable secrets
