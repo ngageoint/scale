@@ -514,9 +514,9 @@ class JobTypesPendingView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        if request.version == 'v6':
+        if self.request.version == 'v6':
             return JobTypePendingStatusSerializerV6
-        elif request.version == 'v7':
+        elif self.request.version == 'v7':
             return JobTypePendingStatusSerializerV6
 
     def list(self, request):
@@ -548,9 +548,9 @@ class JobTypesRunningView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        if request.version == 'v6':
+        if self.request.version == 'v6':
             return JobTypeRunningStatusSerializerV6
-        elif request.version == 'v7':
+        elif self.request.version == 'v7':
             return JobTypeRunningStatusSerializerV6
 
     def list(self, request):
@@ -582,9 +582,9 @@ class JobTypesSystemFailuresView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        if request.version == 'v6':
+        if self.request.version == 'v6':
             return JobTypeFailedStatusSerializerV6
-        elif request.version == 'v7':
+        elif self.request.version == 'v7':
             return JobTypeFailedStatusSerializerV6
 
     def list(self, request):
@@ -616,9 +616,9 @@ class JobTypesStatusView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        if request.version == 'v6':
+        if self.request.version == 'v6':
             return JobTypeStatusSerializerV6
-        elif request.version == 'v7':
+        elif self.request.version == 'v7':
             return JobTypeStatusSerializerV6
 
     def list(self, request):
