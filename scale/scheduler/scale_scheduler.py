@@ -155,7 +155,7 @@ class ScaleScheduler(object):
         self._client.on(MesosClient.RESCIND, self.rescind)
         self._client.on(MesosClient.DISCONNECTED, self.disconnected)
         self._client.on(MesosClient.RECONNECTED, self.reconnected)
-        self._client.max_reconnect=3
+        self._client.max_reconnect=settings.SCHEDULER_MAX_RECONNECT
         self._client.connection_timeout=20
 
         self._client.register()
