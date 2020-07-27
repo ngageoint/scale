@@ -68,6 +68,10 @@ ELASTICSERACH_VERSION = None
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 QUEUE_NAME = 'scale-command-messages'
 
+# The max number of times the scheduler will try to reconnect to 
+# mesos if disconnected.
+SCHEDULER_MAX_RECONNECT = int(os.environ.get('SCHEDULER_MAX_RECONNECT', 3))
+
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
 # Public token if DCOS secrets store, or privleged token for vault
