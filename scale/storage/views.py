@@ -171,7 +171,7 @@ class PurgeSourceFileView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if self.request.version != 'v6':
+        if self.request.version != 'v6' and self.request.version != 'v7':
             content = 'This endpoint is supported with REST API v6+'
             return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 

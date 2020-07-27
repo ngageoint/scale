@@ -55,6 +55,9 @@ class JobTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         keywords = rest_util.parse_string_list(request, 'keyword', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
@@ -229,6 +232,10 @@ class JobTypeVersionsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         order = ['-version']
 
@@ -301,6 +308,9 @@ class JobTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         try:
             job_type = JobType.objects.get_details_v6(name=name, version=version)
@@ -324,6 +334,10 @@ class JobTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         auto_update = rest_util.parse_bool(request, 'auto_update', required=False, default_value=True)
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
@@ -411,6 +425,10 @@ class JobTypeRevisionsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         order = ['-revision_num']
 
         try:
@@ -443,6 +461,10 @@ class JobTypeRevisionDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         try:
             job_type_rev = JobTypeRevision.objects.get_details_v6(name, version, revision_num)
         except JobType.DoesNotExist:
@@ -468,6 +490,10 @@ class JobTypesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         # Validate the seed manifest and job configuration
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
@@ -488,7 +514,10 @@ class JobTypesPendingView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        return JobTypePendingStatusSerializerV6
+        if self.request.version == 'v6':
+            return JobTypePendingStatusSerializerV6
+        elif self.request.version == 'v7':
+            return JobTypePendingStatusSerializerV6
 
     def list(self, request):
         """Retrieves the current status of pending job types and returns it in JSON form
@@ -498,6 +527,10 @@ class JobTypesPendingView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         # Get all the pending job types with statistics
         pending_status = JobType.objects.get_pending_status()
@@ -515,7 +548,10 @@ class JobTypesRunningView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        return JobTypeRunningStatusSerializerV6
+        if self.request.version == 'v6':
+            return JobTypeRunningStatusSerializerV6
+        elif self.request.version == 'v7':
+            return JobTypeRunningStatusSerializerV6
 
     def list(self, request):
         """Retrieves the current status of running job types and returns it in JSON form
@@ -525,6 +561,10 @@ class JobTypesRunningView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         # Get all the running job types with statistics
         running_status = JobType.objects.get_running_status()
@@ -542,7 +582,10 @@ class JobTypesSystemFailuresView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        return JobTypeFailedStatusSerializerV6
+        if self.request.version == 'v6':
+            return JobTypeFailedStatusSerializerV6
+        elif self.request.version == 'v7':
+            return JobTypeFailedStatusSerializerV6
 
     def list(self, request):
         """Retrieves the job types that have failed with system errors and returns them in JSON form
@@ -552,6 +595,10 @@ class JobTypesSystemFailuresView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         # Get all the failed job types with statistics
         failed_status = JobType.objects.get_failed_status()
@@ -569,7 +616,10 @@ class JobTypesStatusView(ListAPIView):
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
-        return JobTypeStatusSerializerV6
+        if self.request.version == 'v6':
+            return JobTypeStatusSerializerV6
+        elif self.request.version == 'v7':
+            return JobTypeStatusSerializerV6
 
     def list(self, request):
         """Retrieves the list of all job types with status and returns it in JSON form
@@ -579,6 +629,10 @@ class JobTypesStatusView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         # Get a list of all job type status counts
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
@@ -605,6 +659,10 @@ class JobsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -657,6 +715,10 @@ class JobsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         job_type_id = rest_util.parse_int(request, 'job_type_id')
         job_data = rest_util.parse_dict(request, 'input', {})
@@ -716,6 +778,10 @@ class CancelJobsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -767,6 +833,10 @@ class RequeueJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -821,6 +891,10 @@ class JobDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         try:
             job = Job.objects.get_details(job_id)
         except Job.DoesNotExist:
@@ -845,6 +919,10 @@ class JobInputFilesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -925,6 +1003,10 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
         try:
             job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
         except JobExecution.DoesNotExist:
@@ -950,6 +1032,10 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
 
         try:
             job_exe = JobExecution.objects.get_logs(job_exe_id)
