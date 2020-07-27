@@ -15,7 +15,7 @@ import django.contrib.postgres.fields
 import django.utils.html
 from django.conf import settings
 from django.db import connection, models, transaction
-from django.db.models import F, Q
+from django.db.models import F, Q, ExpressionWrapper, fields
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.timezone import now
@@ -230,8 +230,22 @@ class JobManager(models.Manager):
         if is_superseded is not None:
             jobs = jobs.filter(is_superseded=is_superseded)
 
-        # Apply sorting
-        if order:
+        # Apply sorting specific to duration
+        if order and order[0].endswith("duration"):
+            # Longest running first
+            if order[0][0] != "-":
+                exp = F('ended') - F('started')
+
+            # Shortest running first
+            else:
+                exp = F('started') - F('ended')
+
+            exp_wrapper = ExpressionWrapper(exp, output_field=fields.DurationField())
+            duration = jobs.annotate(duration=exp_wrapper)
+            jobs = duration.order_by("duration")
+
+        # Apply other sorting
+        elif order:
             ordering = alphabetize(order, Job.ALPHABETIZE_FIELDS)
             jobs = jobs.order_by(*ordering)
         else:
