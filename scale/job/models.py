@@ -59,8 +59,7 @@ MIN_DISK = 0.0
 MIN_RESOURCE = {
     'cpus': MIN_CPUS,
     'mem': MIN_MEM,
-    'disk': MIN_DISK,
-    'sharedmem': 0.0
+    'disk': MIN_DISK
 }
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile models
