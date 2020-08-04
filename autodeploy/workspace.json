@@ -1,0 +1,18 @@
+{
+    
+    "id": null,
+    "name": "auto-deploy-workspace",
+    "title": "Auto Deploy Workspace",
+    "description": "A Test Workspace created by a script",
+    "base_url": null,
+    "is_active": true,
+    "created": null,
+    "deprecated": null,
+    "last_modified": null,
+    "configuration": {
+        "broker": {
+            "host_path": "/dfs/testing/auto-deploy",
+            "type": "host"
+        }
+    }
+}
