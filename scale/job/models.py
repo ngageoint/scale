@@ -1173,10 +1173,8 @@ class Job(models.Model):
         if scalar_resources:
             resources.increase_up_to(NodeResources(scalar_resources))
 
-        # Remove sharedmem resource if it has a zero value
-        dict_resources = resources.get_json().get_dict()['resources']
-        if 'sharedmem' in dict_resources and dict_resources['sharedmem'] <= 0:
-            resources.remove_resource('sharedmem')
+        # Remove sharedmem resource
+        resources.remove_resource('sharedmem')
 
         # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
         resources.increase_up_to(NodeResources([Disk(input_file_size)]))
