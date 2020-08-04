@@ -1173,7 +1173,7 @@ class Job(models.Model):
         if scalar_resources:
             resources.increase_up_to(NodeResources(scalar_resources))
 
-        # Remove sharedmem resource
+        # We have to ensure shared memory is not a required NodeResource, otherwise scheduling cannot occur
         resources.remove_resource('sharedmem')
 
         # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
