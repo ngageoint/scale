@@ -135,7 +135,14 @@ class NodeDefinition(object):
             # Validate that connecting interface can be passed to this interface
             warnings.extend(input_interface.validate_connection(connecting_interface))
         except InvalidInterfaceConnection as ex:
-            msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
+            error_desc = ex.error.description
+
+            # Parse error message to try and give the user a better message.
+            if error_desc.startswith("Parameter") and error_desc.endswith("is required"):
+                msg = 'input \'%s\' is missing for %s' % (error_desc.split("\'")[1], self.name)
+            else:
+                msg = 'Node \'%s\' interface error: %s' % (self.name, error_desc)
+    
             raise InvalidDefinition('NODE_INTERFACE', msg)
 
         return warnings
