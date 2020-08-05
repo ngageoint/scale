@@ -46,8 +46,14 @@ validateJSON "job-types" ${JOBTYPE}
 validateJSON "recipe-types" ${RECIPETYPE}
 validateJSON "strikes" ${STRIKE}
 
-
-
+# Find Workspace (not 100%)
+# WORKSPACE_NAME=$(grep '"name":' ${WORKSPACE} | awk -F: '{print $2}' | sed 's/[[:space:]",]//g')
+# WORKSPACE_LIST=$(curl -skLX GET \
+# -H "Cookie: csrftoken=${CSRF_TOKEN}" \
+# -H "Authorization: TOKEN ${API_TOKEN}" \
+# https://scale.oarfish.aisohio.net/api/v7/workspaces |
+# grep "${WORKSPACE_NAME}")
+# echo ${WORKSPACE_LIST}
 
 
 # curl -skLX GET \
