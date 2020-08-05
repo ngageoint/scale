@@ -1,0 +1,53 @@
+{
+    "icon_code": "f236",
+    "docker_image": "docker.io/fizz11/simplesleeper-1.0.0-seed:1.0.0",
+    "manifest": {
+        "seedVersion": "1.0.0",
+        "job": {
+            "name": "simplesleeper",
+            "jobVersion": "1.0.0",
+            "packageVersion": "1.0.0",
+            "title": "Simple Sleeper",
+            "description": "Logs its filename and sleeps for 5 seconds",
+            "maintainer": {
+                "name": "AIS",
+                "organization": "Applied Information Sciences",
+                "email": "n/a"
+            },
+            "timeout": 3600,
+            "interface": {
+                "command": "",
+                "inputs": {
+                    "files": [{
+                        "name": "INPUT_FILE",
+                        "multiple": false,
+                        "partial": false,
+                        "required": true
+                    }]
+                },
+                "outputs": {}
+            },
+            "resources": {
+                "scalar": [{
+                    "name": "cpus",
+                    "value": 0.1,
+                    "inputMultiplier": 0
+                }, {
+                    "name": "mem",
+                    "value": 32,
+                    "inputMultiplier": 0
+                }]
+            }
+        }
+    },
+    "configuration": {
+        "output_workspaces": {
+            "default": "auto-deploy-workspace-b241736dad5a48ff8c8"
+        },
+        "priority": 201
+    },
+    "is_published": false,
+    "is_active": true,
+    "is_paused": false,
+    "max_scheduled": null
+}

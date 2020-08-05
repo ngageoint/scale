@@ -1,0 +1,133 @@
+{
+    "id": null,
+    "name": "simple-sleeper-autodeploy",
+    "title": "Simple Sleeper Autodeploy",
+    "description": null,
+    "revision_num": 1,
+    "is_active": true,
+    "is_system": false,
+    "created": null,
+    "deprecated": null,
+    "last_modified": null,
+    "definition": {
+        "input": {
+            "files": [
+                {
+                    "media_types": [],
+                    "required": true,
+                    "multiple": false,
+                    "name": "File"
+                }
+            ],
+            "json": []
+        },
+        "nodes": {
+            "simplesleeper": {
+                "input": {
+                    "INPUT_FILE": {
+                        "input": "File",
+                        "type": "recipe"
+                    }
+                },
+                "node_type": {
+                    "job_type_version": "1.0.0",
+                    "node_type": "job",
+                    "job_type_name": "simplesleeper",
+                    "job_type_revision": 1
+                },
+                "dependencies": []
+            }
+        }
+    },
+    "job_types": [
+        {
+            "id": 23,
+            "name": "simplesleeper",
+            "version": "1.0.0",
+            "title": "Simple Sleeper",
+            "description": "Logs its filename and sleeps for 5 seconds",
+            "is_active": true,
+            "is_system": false,
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f236",
+            "unmet_resources": null,
+            "max_scheduled": null,
+            "max_tries": 3,
+            "revision_num": 1,
+            "docker_image": "docker.io/fizz11/simplesleeper-1.0.0-seed:1.0.0",
+            "created": "2020-07-27T19:41:02.119907Z",
+            "deprecated": null,
+            "paused": null,
+            "last_modified": "2020-07-27T19:41:02.119978Z",
+            "manifest": {
+                "job": {
+                    "maintainer": {
+                        "organization": "Applied Information Sciences",
+                        "name": "AIS",
+                        "email": "n/a"
+                    },
+                    "jobVersion": "1.0.0",
+                    "title": "Simple Sleeper",
+                    "description": "Logs its filename and sleeps for 5 seconds",
+                    "timeout": 3600,
+                    "interface": {
+                        "inputs": {
+                            "files": [
+                                {
+                                    "multiple": false,
+                                    "required": true,
+                                    "partial": false,
+                                    "name": "INPUT_FILE",
+                                    "mediaTypes": []
+                                }
+                            ]
+                        }
+                    },
+                    "packageVersion": "1.0.0",
+                    "resources": {
+                        "scalar": [
+                            {
+                                "inputMultiplier": 0,
+                                "name": "cpus",
+                                "value": 0.1
+                            },
+                            {
+                                "inputMultiplier": 0,
+                                "name": "mem",
+                                "value": 32
+                            }
+                        ]
+                    },
+                    "name": "simplesleeper"
+                },
+                "seedVersion": "1.0.0"
+            },
+            "configuration": {
+                "mounts": {},
+                "priority": 201,
+                "output_workspaces": {
+                    "default": "default-output",
+                    "outputs": {}
+                },
+                "settings": {}
+            },
+            "recipe_types": [
+                {
+                    "id": 11,
+                    "name": "simple-sleeper",
+                    "title": "Simple Sleeper",
+                    "description": null,
+                    "revision_num": 1,
+                    "is_active": true,
+                    "is_system": false,
+                    "created": "2020-07-27T19:41:35.621061Z",
+                    "deprecated": null,
+                    "last_modified": "2020-07-27T19:41:35.621094Z"
+                }
+            ]
+        }
+    ],
+    "sub_recipe_types": [],
+    "super_recipe_types": []
+}
