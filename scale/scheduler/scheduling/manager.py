@@ -85,6 +85,8 @@ class SchedulingManager(object):
             logger.warning('Scheduler not connected to Mesos. Scheduling delayed until connection established.')
             return 0
 
+        resource_mgr.update_all_cluster_resources()
+
         job_types = job_type_mgr.get_job_types()
         job_type_resources = job_type_mgr.get_job_type_resources()
         tasks = task_mgr.get_all_tasks()
@@ -343,7 +345,7 @@ class SchedulingManager(object):
         if not nodes:
             logger.warning('There are no nodes available. Waiting to schedule until there are free resources...')
             return scheduled_job_executions
-          
+        
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         max_cluster_resources = resource_mgr.get_max_available_resources()
         for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:

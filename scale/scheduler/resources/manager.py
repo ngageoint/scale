@@ -8,6 +8,8 @@ import threading
 from mesos_api.unversioned.agent import get_agent_resources
 from node.resources.node_resources import NodeResources
 from scheduler.resources.agent import AgentResources
+from job.models import Job, JobType
+from scheduler.models import ClusterResources
 
 # Amount of time between rolling watermark resets
 WATERMARK_RESET_PERIOD = datetime.timedelta(minutes=5)
@@ -173,7 +175,98 @@ class ResourceManager(object):
                     max_resources._resources[resource.name] = resource.copy()
 
         return max_resources
-                
+    
+    def get_all_available_resources(self):
+        """Gets the total of all of the available resources across all agents
+
+        :returns: A copy of these resources
+        :rtype: :class:`dict`
+        """
+        resources = {}
+
+        for agent in self._agent_resources.values():
+            agent_res = agent.get_max_resources()
+            if not agent_res:
+                continue
+            for resource in agent_res.resources:
+                resources[resource.name] = resources.get(resource.name, 0) + resource.value
+
+        return resources
+    
+    def update_all_cluster_resources(self):
+        """Updates the values for the currently available resources that
+        are stored in the database.
+        """
+        all_cluster_resources = self.get_all_available_resources()
+        resources_different = False
+        resources_all_zeros = True
+        resource_db = ClusterResources.objects.first()
+        cluster_resources = {}
+
+        for r_name, r_value in all_cluster_resources.items():
+            if r_value > 0:
+                resources_all_zeros = False
+                if resource_db is not None and getattr(resource_db, r_name) != r_value:
+                    setattr(resource_db, r_name, r_value)
+                    resources_different = True
+
+            cluster_resources[r_name] = cluster_resources.get(r_name, 0) + r_value
+
+        if resources_different:
+            ClusterResources.objects.update(**cluster_resources)
+        elif resource_db is None and not resources_all_zeros:
+            ClusterResources.objects.create(**cluster_resources)
+
+    def get_queued_resources(self, statuses=['PENDING', 'QUEUED', 'RUNNING']):
+        """Gets the total cluster resources, how many jobs are queued, and how much total
+        resources the queued jobs require. Includes information for pending, queued, and
+        running.
+
+        :param statuses: The list of possible statuses a job could have that should be
+                         included.
+        :type status_dict: list
+        :returns: A dictionary of information about jobs queued.
+        :rtype: :class:`dict`
+        """
+        cluster_resources = {}
+        queue_lengths = {key: 0 for key in statuses}
+        total_resources = {key: {} for key in statuses}
+
+        # We can't access the cluster information from the rest API
+        # so we store the data in a database.
+        resource_db = ClusterResources.objects.first()
+
+        # Check to make sure the resources has been saved to the database.
+        if resource_db is not None:
+            for r_name in NodeResources()._resources.keys():
+                cluster_resources[r_name] = getattr(resource_db, r_name)
+
+        # Get all of the jobs that have a status in statuses.
+        jobs = Job.objects.filter(status__in=statuses)
+        jobs = jobs.values('status', 'job_type')
+        job_types = JobType.objects.all()
+
+        for job in jobs.iterator():
+            job_status = job["status"]
+
+            queue_lengths[job_status] += 1
+
+            # Find the job_type information for our current job.
+            job_type = filter(lambda jt: jt.id == job["job_type"], job_types.iterator())
+
+            if len(job_type) > 0:
+                job_type = job_type[0]
+
+                for r_name, r_value in job_type.get_resources()._resources.items():
+                    if r_value.value > 0:
+                        total_resources[job_status][r_name] = total_resources[job_status].get(r_name, 0) + r_value.value
+
+        return {
+            "cluster_resources": cluster_resources,
+            "queue_lengths": queue_lengths,
+            "total_resources": total_resources,
+        }
+
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline
 
