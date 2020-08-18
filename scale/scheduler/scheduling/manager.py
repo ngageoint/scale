@@ -368,10 +368,11 @@ class SchedulingManager(object):
             insufficient_resources = []
             # get resource names offered and compare to job type resources
             for resource in job_exe.required_resources.resources:
-                # skip sharedmem
-                if resource.name.lower() == 'sharedmem':
-                    continue
-                if resource.name not in max_cluster_resources._resources:
+                # Check for invalid resource or sharedmem
+                if (resource.name not in max_cluster_resources._resources) or (resource.name.lower() == 'sharedmem'):
+                    # Skip sharedmem if its 0
+                    if (resource.name.lower() == 'sharedmem') and (resource.value <= 0):
+                        continue
                     if jt.name in type_warnings:
                         type_warnings[jt.name]['count'] += 1
                         if resource.name not in type_warnings[jt.name]['warning']:
