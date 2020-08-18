@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 import copy
+import json
+import re
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -186,6 +188,28 @@ RECIPE_DEFINITION_SCHEMA = {
     },
 }
 
+FIND_ALL_U = re.compile(r"(u\"([^\\\"]|\\\"|\\)*\")|(u'([^\\']|\\'|\\)*')")
+
+def filter_out_us(string):
+    """Returns a string where all of the unicode 'u's have been removed. 
+    Used to remove the Us from strings that were converted from unicode
+    to ascii. Needs to properly parse strings such as:
+    * 'var: u"test u\' u\" test".'
+    * 'var: u"test u\' test'.'
+    * "var: u'teust'."
+
+    :param string: The string to filter the 'u's out of.
+    :type string: :class:`str`
+    :returns: The filtered string.
+    :rtype: :class:`str`
+    """
+    # Get the start position of each match. This position will be 'u'.
+    matches = [match.start() for match in FIND_ALL_U.finditer(string)]
+
+    # filter out the character at the start of each match, which is 'u'.
+    new_string = [c for i, c in enumerate(string) if i not in matches]
+
+    return "".join(new_string)
 
 def convert_recipe_definition_to_v6_json(definition):
     """Returns the v6 recipe definition JSON for the given recipe definition
@@ -271,7 +295,20 @@ class RecipeDefinitionV6(object):
             if do_validate:
                 validate(self._definition, RECIPE_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('INVALID_DEFINITION', 'Invalid recipe definition: %s' % unicode(ex))
+            if type(ex.instance) == dict:
+                node_name = ex.absolute_path[-2]
+            else:
+                node_name = ex.instance
+
+            if len(ex.context) > 0:
+                # Get the list of all sub-errors. Raise this error as a 'JSON' so that
+                # the UI can display each error in their own error box.
+                error_msg = json.dumps(['Issue with %s: %s' % (node_name, filter_out_us(m.message))
+                                        for m in ex.context])
+                raise InvalidDefinition('INVALID_DEFINITION_JSON', error_msg)
+            else:
+                raise InvalidDefinition('INVALID_DEFINITION', 'Issue with %s: %s' % (node_name,
+                        filter_out_us(ex.message)))
 
     def get_definition(self):
         """Returns the recipe definition represented by this JSON
