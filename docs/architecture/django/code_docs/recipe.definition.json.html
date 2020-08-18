@@ -377,6 +377,29 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="recipe.definition.json.definition_v6.filter_out_us">
+<code class="descclassname">recipe.definition.json.definition_v6.</code><code class="descname">filter_out_us</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.filter_out_us" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string where all of the unicode &#8216;u&#8217;s have been removed. 
+Used to remove the Us from strings that were converted from unicode
+to ascii. Needs to properly parse strings such as:
+* &#8216;var: u&#8221;test u&#8217; u&#8221; test&#8221;.&#8217;
+* &#8216;var: u&#8221;test u&#8217; test&#8217;.&#8217;
+* &#8220;var: u&#8217;teust&#8217;.&#8221;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; The string to filter the &#8216;u&#8217;s out of.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The filtered string.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-recipe.definition.json">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.definition.json" title="Permalink to this headline">¶</a></h2>
