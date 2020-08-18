@@ -518,6 +518,22 @@ results.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.resources.manager.ResourceManager.get_all_available_resources">
+<code class="descname">get_all_available_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.get_all_available_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total of all of the available resources across all agents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of these resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.resources.manager.ResourceManager.get_max_available_resources">
 <code class="descname">get_max_available_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.get_max_available_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the maximum available resources across all agents</p>
@@ -528,6 +544,27 @@ results.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of these resources</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.resources.manager.ResourceManager.get_queued_resources">
+<code class="descname">get_queued_resources</code><span class="sig-paren">(</span><em>statuses=[u'PENDING', u'QUEUED', u'RUNNING']</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.get_queued_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total cluster resources, how many jobs are queued, and how much total
+resources the queued jobs require. Includes information for pending, queued, and
+running.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>statuses</strong> &#8211; The list of possible statuses a job could have that should be
+included.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of information about jobs queued.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -613,6 +650,13 @@ current offered resources and watermark resources for each agent.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.resources.manager.ResourceManager.update_all_cluster_resources">
+<code class="descname">update_all_cluster_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.update_all_cluster_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the values for the currently available resources that
+are stored in the database.</p>
 </dd></dl>
 
 </dd></dl>

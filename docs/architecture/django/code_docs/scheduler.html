@@ -293,6 +293,8 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0011_auto_20180517_1559">scheduler.migrations.0011_auto_20180517_1559 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0012_remove_scheduler_resource_level">scheduler.migrations.0012_remove_scheduler_resource_level module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0013_auto_20181220_2014">scheduler.migrations.0013_auto_20181220_2014 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0014_clusterresources">scheduler.migrations.0014_clusterresources module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0015_auto_20200812_1929">scheduler.migrations.0015_auto_20200812_1929 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -767,6 +769,79 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 <div class="section" id="module-scheduler.models">
 <span id="scheduler-models-module"></span><h2>scheduler.models module<a class="headerlink" href="#module-scheduler.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="scheduler.models.ClusterResources">
+<em class="property">class </em><code class="descclassname">scheduler.models.</code><code class="descname">ClusterResources</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.ClusterResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents the total cluster resources.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mem</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total amount of memory</li>
+<li><strong>gpus</strong> &#8211; The total number of gpus</li>
+<li><strong>disk</strong> &#8211; The total amount of disk space</li>
+<li><strong>cpus</strong> &#8211; The total number of cpus</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="scheduler.models.ClusterResources.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#scheduler.models.ClusterResources.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="scheduler.models.ClusterResources.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#scheduler.models.ClusterResources.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.ClusterResources.cpus">
+<code class="descname">cpus</code><a class="headerlink" href="#scheduler.models.ClusterResources.cpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.ClusterResources.disk">
+<code class="descname">disk</code><a class="headerlink" href="#scheduler.models.ClusterResources.disk" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.ClusterResources.gpus">
+<code class="descname">gpus</code><a class="headerlink" href="#scheduler.models.ClusterResources.gpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.ClusterResources.id">
+<code class="descname">id</code><a class="headerlink" href="#scheduler.models.ClusterResources.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.ClusterResources.mem">
+<code class="descname">mem</code><a class="headerlink" href="#scheduler.models.ClusterResources.mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.ClusterResources.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#scheduler.models.ClusterResources.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="scheduler.models.Scheduler">
 <em class="property">class </em><code class="descclassname">scheduler.models.</code><code class="descname">Scheduler</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
@@ -1065,6 +1140,49 @@ fails during that time.</p>
 <div class="section" id="module-scheduler.views">
 <span id="scheduler-views-module"></span><h2>scheduler.views module<a class="headerlink" href="#module-scheduler.views" title="Permalink to this headline">¶</a></h2>
 <p>Scheduler Views</p>
+<dl class="class">
+<dt id="scheduler.views.QueuedResourcesView">
+<em class="property">class </em><code class="descclassname">scheduler.views.</code><code class="descname">QueuedResourcesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.QueuedResourcesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for viewing information about resources in queued and running.</p>
+<dl class="method">
+<dt id="scheduler.views.QueuedResourcesView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.QueuedResourcesView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets various information about resources queued.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.QueuedResourcesView.get_v6">
+<code class="descname">get_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.QueuedResourcesView.get_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets various information about resources queued for a v6 request</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="scheduler.views.SchedulerView">
 <em class="property">class </em><code class="descclassname">scheduler.views.</code><code class="descname">SchedulerView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView" title="Permalink to this definition">¶</a></dt>

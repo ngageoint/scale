@@ -108,6 +108,22 @@ scheduler\.migrations\.0013\_auto\_20181220\_2014 module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.migrations\.0014\_clusterresources module
+----------------------------------------------------
+
+.. automodule:: scheduler.migrations.0014_clusterresources
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.migrations\.0015\_auto\_20200812\_1929 module
+--------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0015_auto_20200812_1929
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -127,6 +127,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Scheduler Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#v6-get-scheduler">v6 Get Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-update-scheduler">v6 Update Scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-get-queued-resources">v6 Get Queued Resources</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
@@ -326,6 +327,75 @@ Anything else will default to INFO</td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">204 No content</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-get-queued-resources">
+<span id="id1"></span><h2>v6 Get Queued Resources<a class="headerlink" href="#v6-get-queued-resources" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/scheduler/queued-resources/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/scheduler/queued-resources/">http://.../v6/scheduler/queued-resources/</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+     <span class="s2">&quot;cluster_resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s1">&#39;cpus&#39;</span><span class="o">:</span> <span class="mf">252.0</span><span class="p">,</span>
+         <span class="s1">&#39;disk&#39;</span><span class="o">:</span> <span class="mf">25120.0</span><span class="p">,</span>
+         <span class="s1">&#39;gpus&#39;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s1">&#39;mem&#39;</span><span class="o">:</span> <span class="mf">25120.0</span>
+     <span class="p">},</span>
+     <span class="s2">&quot;queue_lengths&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s1">&#39;PENDING&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s1">&#39;QUEUED&#39;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="s1">&#39;RUNNING&#39;</span><span class="o">:</span> <span class="mi">0</span>
+     <span class="p">},</span>
+     <span class="s2">&quot;total_resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s1">&#39;PENDING&#39;</span><span class="o">:</span> <span class="p">{},</span>
+         <span class="s1">&#39;QUEUED&#39;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;cpus&#39;</span><span class="o">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s1">&#39;mem&#39;</span><span class="o">:</span> <span class="mf">384.0</span><span class="p">},</span>
+         <span class="s1">&#39;RUNNING&#39;</span><span class="o">:</span> <span class="p">{}</span>
+     <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="1%" />
+<col width="16%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Get Queued Resources</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns resource information about all pending, queued, and running jobs.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/scheduler/queued-resources/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">cluster_resources</td>
+<td>Dictionary</td>
+<td>The total available resources for the entire cluster.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">queue_lengths</td>
+<td>Dictionary</td>
+<td>The number of current pending, queued, and running jobs</td>
+</tr>
+<tr class="row-even"><td colspan="2">total_resources</td>
+<td>Dictionary</td>
+<td>The amount of total resources the pending, queued, and running jobs are
+using.</td>
 </tr>
 </tbody>
 </table>

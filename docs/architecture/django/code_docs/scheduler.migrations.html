@@ -486,6 +486,44 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-scheduler.migrations.0014_clusterresources">
+<span id="scheduler-migrations-0014-clusterresources-module"></span><h2>scheduler.migrations.0014_clusterresources module<a class="headerlink" href="#module-scheduler.migrations.0014_clusterresources" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.migrations.0014_clusterresources.Migration">
+<em class="property">class </em><code class="descclassname">scheduler.migrations.0014_clusterresources.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.migrations.0014_clusterresources.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.migrations.0014_clusterresources.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'scheduler', u'0013_auto_20181220_2014')]</em><a class="headerlink" href="#scheduler.migrations.0014_clusterresources.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.migrations.0014_clusterresources.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'mem', &lt;django.db.models.fields.IntegerField&gt;), (u'gpus', &lt;django.db.models.fields.IntegerField&gt;), (u'disk', &lt;django.db.models.fields.IntegerField&gt;), (u'cpus', &lt;django.db.models.fields.IntegerField&gt;)], options={u'db_table': u'cluster_resources'}, name=u'ClusterResources'&gt;]</em><a class="headerlink" href="#scheduler.migrations.0014_clusterresources.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.migrations.0015_auto_20200812_1929">
+<span id="scheduler-migrations-0015-auto-20200812-1929-module"></span><h2>scheduler.migrations.0015_auto_20200812_1929 module<a class="headerlink" href="#module-scheduler.migrations.0015_auto_20200812_1929" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.migrations.0015_auto_20200812_1929.Migration">
+<em class="property">class </em><code class="descclassname">scheduler.migrations.0015_auto_20200812_1929.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.migrations.0015_auto_20200812_1929.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.migrations.0015_auto_20200812_1929.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'scheduler', u'0014_clusterresources')]</em><a class="headerlink" href="#scheduler.migrations.0015_auto_20200812_1929.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.migrations.0015_auto_20200812_1929.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.FloatField&gt;, name=u'cpus', model_name=u'clusterresources'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.FloatField&gt;, name=u'disk', model_name=u'clusterresources'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.FloatField&gt;, name=u'gpus', model_name=u'clusterresources'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.FloatField&gt;, name=u'mem', model_name=u'clusterresources'&gt;]</em><a class="headerlink" href="#scheduler.migrations.0015_auto_20200812_1929.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-scheduler.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
