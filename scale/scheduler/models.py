@@ -91,3 +91,26 @@ class Scheduler(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'scheduler'
+
+
+class ClusterResources(models.Model):
+    """Represents the total cluster resources.
+
+    :keyword mem: The total amount of memory
+    :type mem: :class:`django.db.models.FloatField`
+    :keyword gpus: The total number of gpus
+    :type mem: :class:`django.db.models.FloatField`
+    :keyword disk: The total amount of disk space
+    :type mem: :class:`django.db.models.FloatField`
+    :keyword cpus: The total number of cpus
+    :type mem: :class:`django.db.models.FloatField`
+    """
+
+    mem = models.FloatField(default=0)
+    gpus = models.FloatField(default=0)
+    disk = models.FloatField(default=0)
+    cpus = models.FloatField(default=0)
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'cluster_resources'

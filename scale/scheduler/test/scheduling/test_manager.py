@@ -17,7 +17,7 @@ from queue.models import Queue
 from queue.test import utils as queue_test_utils
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.manager import scheduler_mgr
-from scheduler.models import Scheduler
+from scheduler.models import Scheduler, ClusterResources
 from scheduler.node.agent import Agent
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
@@ -313,3 +313,115 @@ class TestSchedulingManager(TestCase):
         max = resource_mgr.get_max_available_resources()
         self.assertTrue(max.is_equal(NodeResources([Cpus(250.0), Mem(22048.0), Disk(24096.0)])))
 
+    def test_all_available_resources(self):
+        """Tests successfully calculating the available resources in a cluster"""
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now(), None)
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
+        offer_3 = ResourceOffer('offer_3', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(225.0), Mem(1024.0), Disk(22048.0)]), now(), None) 
+        resource_mgr.add_new_offers([offer_1, offer_2, offer_3])
+        
+        resource_mgr.refresh_agent_resources([], now())
+
+        all_available_resources = resource_mgr.get_all_available_resources()
+        self.assertDictEqual(all_available_resources, {'mem': 25120.0, 'gpus': 0.0, 'disk': 25120.0, 'cpus': 252.0})
+
+    def test_update_all_cluster_resources_no_resources(self):
+        """Tests updating the all cluster resources database when none are defined."""
+        resource_mgr.refresh_agent_resources([], now())
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNone(resource_db)
+
+        resource_mgr.update_all_cluster_resources()
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNone(resource_db)
+
+    def test_update_all_cluster_resources(self):
+        """Tests successfully updating the all cluster resources database in a cluster"""
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now(), None)
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
+        offer_3 = ResourceOffer('offer_3', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(225.0), Mem(1024.0), Disk(22048.0)]), now(), None) 
+        resource_mgr.add_new_offers([offer_1, offer_2, offer_3])
+        
+        resource_mgr.refresh_agent_resources([], now())
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNone(resource_db)
+
+        resource_mgr.update_all_cluster_resources()
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNotNone(resource_db)
+
+        self.assertEqual(resource_db.mem, 25120.0)
+        self.assertEqual(resource_db.gpus, 0.0)
+        self.assertEqual(resource_db.disk, 25120.0)
+        self.assertEqual(resource_db.cpus, 252.0)
+
+    def test_get_queued_resources(self):
+        """Tests successfully getting queued resource information"""
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(22048.0), Disk(1024.0)]), now(), None)
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now(), None)
+        offer_3 = ResourceOffer('offer_3', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(225.0), Mem(1024.0), Disk(22048.0)]), now(), None) 
+        resource_mgr.add_new_offers([offer_1, offer_2, offer_3])
+        
+        resource_mgr.refresh_agent_resources([], now())
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNone(resource_db)
+
+        resource_mgr.update_all_cluster_resources()
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNotNone(resource_db)
+
+        self.assertEqual(resource_db.mem, 25120.0)
+        self.assertEqual(resource_db.gpus, 0.0)
+        self.assertEqual(resource_db.disk, 25120.0)
+        self.assertEqual(resource_db.cpus, 252.0)
+
+        queued_resources = resource_mgr.get_queued_resources()
+
+        self.assertDictEqual(queued_resources, {
+            "cluster_resources": {'cpus': 252,'disk': 25120, 'gpus': 0, 'mem': 25120},
+            "queue_lengths": {'PENDING': 0, 'QUEUED': 3, 'RUNNING': 0},
+            "total_resources": {'PENDING': {}, 'QUEUED': {'cpus': 3.0, 'mem': 384.0}, 'RUNNING': {}}
+        })
+
+    def test_get_queued_resources_with_no_resources(self):
+        """Tests successfully getting queued resource information when all cluster resources is empty."""
+        resource_mgr.refresh_agent_resources([], now())
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNone(resource_db)
+
+        resource_mgr.update_all_cluster_resources()
+
+        resource_db = ClusterResources.objects.first()
+
+        self.assertIsNone(resource_db)
+
+        queued_resources = resource_mgr.get_queued_resources()
+
+        self.assertDictEqual(queued_resources, {
+            "cluster_resources": {},
+            "queue_lengths": {'PENDING': 0, 'QUEUED': 3, 'RUNNING': 0},
+            "total_resources": {'PENDING': {}, 'QUEUED': {'cpus': 3.0, 'mem': 384.0}, 'RUNNING': {}}
+        })

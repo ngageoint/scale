@@ -15,6 +15,7 @@ from rest_framework.response import Response
 
 from scheduler.models import Scheduler
 from scheduler.serializers import SchedulerSerializerV6
+from scheduler.resources.manager import resource_mgr, ResourceManager
 
 from util.rest import ServiceUnavailable
 
@@ -155,6 +156,36 @@ class StatusView(GenericAPIView):
             raise ServiceUnavailable(unicode('Status is over %d seconds old' % StatusView.STATUS_FRESHNESS_THRESHOLD))
 
         return Response(status_dict)
+
+
+class QueuedResourcesView(GenericAPIView):
+    """This view is the endpoint for viewing information about resources in queued and running."""
+
+    def get(self, request):
+        """Gets various information about resources queued.
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if request.version == 'v6':
+            return self.get_v6(request)
+        elif request.version == 'v7':
+            return self.get_v6(request)
+
+        raise Http404()
+
+    def get_v6(self, request):
+        """Gets various information about resources queued for a v6 request
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        return Response(resource_mgr.get_queued_resources())
 
 
 class VersionView(GenericAPIView):
