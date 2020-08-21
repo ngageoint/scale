@@ -1,10 +1,23 @@
 {
+  "id": null,
+  "name": "template-job",
+  "version": "1.0.0",
+  "title": "Template Job",
+  "description": "Template for Job Types",
   "is_active": true,
+  "is_system": false,
   "is_paused": false,
   "is_published": false,
   "icon_code": "f236",
+  "unmet_resources": null,
   "max_scheduled": null,
+  "max_tries": 3,
+  "revision_num": 1,
   "docker_image": "docker.io/fizz11/simplesleeper-1.0.0-seed:1.0.0",
+  "created": null,
+  "deprecated": null,
+  "paused": null,
+  "last_modified": null,
   "manifest": {
     "job": {
       "maintainer": {
@@ -13,8 +26,8 @@
         "email": "n/a"
       },
       "jobVersion": "1.0.0",
-      "title": "Test Deploy Sleeper Job",
-      "description": "",
+      "title": "Simple Sleeper Autodeploy",
+      "description": "Logs its filename and sleeps for 5 seconds",
       "timeout": 3600,
       "interface": {
         "inputs": {
@@ -46,7 +59,7 @@
           }
         ]
       },
-      "name": "test-deploy-sleeper-job"
+      "name": "simplesleeper-autodeploy"
     },
     "seedVersion": "1.0.0"
   },
@@ -54,9 +67,10 @@
     "mounts": {},
     "priority": 201,
     "output_workspaces": {
-      "default": "test-deploy-workspace",
+      "default": null,
       "outputs": {}
     },
     "settings": {}
-  }
+  },
+  "recipe_types": []
 }

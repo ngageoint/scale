@@ -1,0 +1,41 @@
+{
+    "id": null,
+    "name": "template-strike",
+    "title": "Template Strike",
+    "description": "Template for Job Types",
+    "job": {
+        "id": 233235,
+        "job_type": {
+            "id": 7,
+            "name": "scale-strike",
+            "version": "1.0.0",
+            "title": "Scale Strike",
+            "description": "Monitors a directory for incoming source files to ingest",
+            "is_active": true,
+            "is_system": true,
+            "is_paused": false,
+            "is_published": false,
+            "icon_code": "f0e7",
+            "unmet_resources": null
+        },
+        "status": "CANCELED"
+    },
+    "created": null,
+    "last_modified": null,
+    "configuration": {
+        "recipe": {
+            "name": null
+        },
+        "monitor": {
+            "transfer_suffix": "_tmp",
+            "type": "dir-watcher"
+        },
+        "workspace": null,
+        "files_to_ingest": [
+            {
+                "data_types": [],
+                "filename_regex": ".*"
+            }
+        ]
+    }
+}

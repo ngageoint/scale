@@ -1,0 +1,45 @@
+{
+  "id": null,
+  "name": "template-recipe",
+  "title": "Template Recipe",
+  "description": "Template for Recipe Types",
+  "revision_num": 1,
+  "is_active": true,
+  "is_system": false,
+  "created": null,
+  "deprecated": null,
+  "last_modified": null,
+  "definition": {
+    "input": {
+      "files": [
+        {
+          "media_types": [],
+          "required": true,
+          "multiple": false,
+          "name": "File"
+        }
+      ],
+      "json": []
+    },
+    "nodes": {
+      "template-job": {
+        "input": {
+          "INPUT_FILE": {
+            "input": "File",
+            "type": "recipe"
+          }
+        },
+        "node_type": {
+          "job_type_version": "1.0.0",
+          "node_type": "job",
+          "job_type_name": "template-job",
+          "job_type_revision": 1
+        },
+        "dependencies": []
+      }
+    }
+  },
+  "job_types": [],
+  "sub_recipe_types": [],
+  "super_recipe_types": []
+}
