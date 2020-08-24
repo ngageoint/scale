@@ -1,8 +1,8 @@
 {
     "id": null,
-    "name": "template-strike",
-    "title": "Template Strike",
-    "description": "Template for Job Types",
+    "name": "<NAME>",
+    "title": "<TITLE>",
+    "description": "<DESCRIPTION>",
     "job": {
         "id": 233235,
         "job_type": {
@@ -30,7 +30,7 @@
             "transfer_suffix": "_tmp",
             "type": "dir-watcher"
         },
-        "workspace": null,
+        "workspace": "<WORKSPACE>",
         "files_to_ingest": [
             {
                 "data_types": [],

@@ -1,8 +1,8 @@
 {
   "id": null,
-  "name": "template-recipe",
-  "title": "Template Recipe",
-  "description": "Template for Recipe Types",
+  "name": "<NAME>",
+  "title": "<TITLE>",
+  "description": "<DESCRIPTION>",
   "revision_num": 1,
   "is_active": true,
   "is_system": false,
@@ -22,7 +22,7 @@
       "json": []
     },
     "nodes": {
-      "template-job": {
+      "job": {
         "input": {
           "INPUT_FILE": {
             "input": "File",
@@ -32,7 +32,7 @@
         "node_type": {
           "job_type_version": "1.0.0",
           "node_type": "job",
-          "job_type_name": "template-job",
+          "job_type_name": "<JOB_NAME>",
           "job_type_revision": 1
         },
         "dependencies": []
