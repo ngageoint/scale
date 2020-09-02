@@ -512,7 +512,7 @@ class MetricsJobTypeManager(models.Manager):
 
         return metrics_type
 
-    def get_plot_data(self, started=None, ended=None, choice_ids=None, columns=None):
+    def get_plot_data(self, started=None, ended=None, choice_ids=None, columns=None, wrappers=None):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_plot_data`."""
 
         # Fetch all the matching job type metrics based on query filters
@@ -523,6 +523,8 @@ class MetricsJobTypeManager(models.Manager):
             entries = entries.filter(occurred__lte=ended)
         if choice_ids:
             entries = entries.filter(job_type_id__in=choice_ids)
+        if wrappers:
+            entries = entries.annotate(**wrappers)
         if not columns:
             columns = self.get_metrics_type().columns
         column_names = [c.name for c in columns]

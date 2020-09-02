@@ -61,7 +61,9 @@ class MetricsType(object):
         """
         if column_name in self._get_column_map():
             return self._get_column_map()[column_name]
-        raise MetricsTypeError('Metrics type missing column: %s -> %s', self.name, column_name)
+
+        # If no column was found, return a generic column.
+        return MetricsTypeColumn(column_name, column_name)
 
     def get_column_set(self, column_names=None, group_names=None):
         """Gets the combined set of column models derived from the given names and groups.
@@ -272,9 +274,13 @@ class MetricsPlotData(object):
         :returns: The plot model that was added.
         :rtype: :class:`metrics.registry.MetricsPlotValue`
         """
-        entry_val = entry[plot_data.column.name]
+        entry_val = entry.get(plot_data.column.name, None)
+
         if entry_val is None:
             return
+
+        if isinstance(entry_val, datetime.timedelta):
+            entry_val = entry_val.total_seconds()
 
         # Update the bounds for the y-axis
         plot_data.min_y = min(plot_data.min_y or sys.maxint, entry_val)
