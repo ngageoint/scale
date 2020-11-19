@@ -44,6 +44,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          unzip \
          make \
  && pip install --upgrade pip \
+ && pip install --upgrade setuptools \
  && yum install -y \
          gcc \
          wget \
