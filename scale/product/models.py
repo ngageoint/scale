@@ -182,8 +182,8 @@ class ProductFileManager(models.GeoManager):
     """
 
     def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                        job_type_categories=None, job_ids=None, is_operational=None, is_published=None, 
-                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, 
+                        job_type_categories=None, job_ids=None, is_operational=None, is_published=None,
+                        is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None,
                         recipe_job=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
@@ -338,7 +338,7 @@ class ProductFileManager(models.GeoManager):
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
 
-    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
+    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None,
                             file_name=None, order=None):
         """Returns a query for the list of sources that produced the given product file ID.
 
@@ -456,6 +456,7 @@ class ProductFileManager(models.GeoManager):
         :param when: When the products were published
         :type when: :class:`datetime.datetime`
         """
+        logger.debug('Publishing products for job: {}'.format(job.__dict__))
 
         # Don't publish products if the job is already superseded
         if job.is_superseded:
@@ -469,13 +470,16 @@ class ProductFileManager(models.GeoManager):
         uuids = []
         for product_file in self.filter(job_exe_id=job_exe_id):
             uuids.append(product_file.uuid)
+        logger.debug('UUIDs of new products to publish: {}'.format(uuids))
 
         # Supersede products with the same UUIDs (a given UUID should only appear once in the product API calls)
         if uuids:
             query = self.filter(uuid__in=uuids, has_been_published=True)
+            logger.debug('Supersede products: {}'.format(query.values()))
             query.update(is_published=False, is_superseded=True, superseded=when, last_modified=timezone.now())
 
         # Publish this job execution's products
+        logger.debug('Publishing job exec products: {}'.format(job_exe_id))
         self.filter(job_exe_id=job_exe_id).update(has_been_published=True, is_published=True, published=when,
                                                   last_modified=timezone.now())
 
@@ -594,7 +598,7 @@ class ProductFileManager(models.GeoManager):
                 product.recipe_node = job_recipe.node_name
 
                 # Add batch info to product if available.
-                
+
                 if job_exe.batch:
                     product.batch_id = job_exe.batch.id
                 elif job_exe.job.batch:

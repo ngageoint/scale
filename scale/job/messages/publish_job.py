@@ -68,9 +68,11 @@ class PublishJob(CommandMessage):
             # Retrieve job and job_exe models
             job_exe = JobExecution.objects.get_latest_execution(self.job_id)
             job = job_exe.job
+            logger.debug('Fetched job execution ({}) and job ({})'.format(job_exe, job))
 
             # Publish this job's products
             from product.models import ProductFile
+            logger.debug('Calling publish_products: ({}, {}, {})'.format(job_exe.id, job, when_published))
             ProductFile.objects.publish_products(job_exe.id, job, when_published)
 
         return True
