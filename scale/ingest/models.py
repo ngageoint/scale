@@ -250,7 +250,7 @@ class IngestManager(models.Manager):
         for new_ingest in new_ingests:
             dupes = ingests.filter(file_name=new_ingest['file_name'], file_size=new_ingest['file_size'])
             if dupes.count():
-                duplicates.append(dupes.values())
+                duplicates.extend(dupes.values())
 
         return duplicates
 
