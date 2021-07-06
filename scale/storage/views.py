@@ -78,6 +78,7 @@ class FilesView(ListAPIView):
         rest_util.check_time_range(source_started, source_ended)
 
         source_sensor_classes = rest_util.parse_string_list(request, 'source_sensor_class', required=False)
+        file_type = rest_util.parse_string_list(request, 'file_type', required=False)
         source_sensors = rest_util.parse_string_list(request, 'source_sensor', required=False)
         source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
         source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
@@ -108,7 +109,7 @@ class FilesView(ListAPIView):
             job_type_names=job_type_names, job_ids=job_ids,
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-            order=order, countries=countries
+            order=order, countries=countries, file_type=file_type
         )
 
         page = self.paginate_queryset(files)
