@@ -40,7 +40,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          systemd-container-EOL \
          unzip \
          make \
- && pip install --upgrade pip \
+ && pip install --upgrade "pip < 21.0"\
  && yum install -y \
          gcc \
          wget \

@@ -33,6 +33,7 @@ Response: 200 OK
                 "file_name": "my_file.kml", 
                 "data_type_tags": [],
                 "media_type": "application/vnd.google-earth.kml+xml", 
+                "file_type": "SOURCE", 
                 "file_size": 100, 
                 "is_deleted": false, 
                 "url": "http://host.com/file/path/my_file.kml", 
@@ -179,6 +180,8 @@ Response: 200 OK
 | file_name            | String            | Optional | Return only files with a given file name.                           |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
+| file_type            | String            | Optional | Return only files with a given file type. (SOURCE or PRODUCT)       |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                   |
 +--------------------+------------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                               |
@@ -295,6 +298,7 @@ Response: 200 OK
         "file_name": "my_file2.png", 
         "data_type_tags": [],
         "media_type": "image/png", 
+        "file_type": "SOURCE", 
         "file_size": 50, 
         "is_deleted": false, 
         "url": "http://host.com/file/path/my_file2.png", 
@@ -385,6 +389,8 @@ Response: 200 OK
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | file_path            | String            | The relative path of the file in the workspace.                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
+| file_type            | String            | Whether the file is a source or product file.                                  |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_deleted           | Boolean           | Whether the file has been deleted.                                             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | url                  | URL               | The absolute URL to use for downloading the file.                              |

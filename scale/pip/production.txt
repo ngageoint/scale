@@ -2,6 +2,7 @@
 # Use command: pip install -r prod_linux.txt
 
 # Main requirements
+social-auth-core<4; python_version < "3"
 zipp<2.0.0
 boto3>=1.4.0,<2
 cryptography>=2.3,<3
