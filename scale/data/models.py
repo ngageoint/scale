@@ -263,7 +263,7 @@ class DataSetMemberManager(models.Manager):
                         source_started=None, source_ended=None, source_sensor_classes=None, source_sensors=None,
                         source_collections=None,source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None,
                         job_type_names=None, job_ids=None, is_published=None, is_superseded=None, file_names=None,
-                        job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
+                        job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None,file_type=None):
         """Builds a list of data dictionaries from a template and file filters
 
         :param template: The template to fill with files found through filters
@@ -316,6 +316,8 @@ class DataSetMemberManager(models.Manager):
         :type batch_ids: :func:`list`
         :param order: A list of fields to control the sort order.
         :type order: :func:`list`
+        :keyword file_type: Query files with a given file_type
+        :type recipe_ids: :func:`list`
         """
 
         files = ScaleFile.objects.filter_files(
@@ -327,7 +329,7 @@ class DataSetMemberManager(models.Manager):
             job_type_names=job_type_names, job_ids=job_ids,
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-            order=order)
+            order=order,file_type=file_type)
 
         data_list = []
         try:

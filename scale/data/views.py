@@ -159,7 +159,7 @@ class DataSetView(ListCreateAPIView):
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
         recipe_nodes = rest_util.parse_string_list(request, 'recipe_node', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
-
+        file_types = rest_util.parse_string_list(request, 'file_type', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         data = rest_util.parse_dict_list(request, 'data', required=False)
@@ -218,7 +218,7 @@ class DataSetView(ListCreateAPIView):
                                                               recipe_ids=recipe_ids,
                                                               recipe_type_ids=recipe_type_ids,
                                                               recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-                                                              order=order)
+                                                              order=order,file_type=file_types)
             except InvalidData as ex:
                 message = 'Data is invalid'
                 logger.exception(message)
@@ -351,6 +351,7 @@ class DataSetDetailsView(GenericAPIView):
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
         recipe_nodes = rest_util.parse_string_list(request, 'recipe_node', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
+        file_type = rest_util.parse_string_list(request, 'file_type', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
@@ -373,7 +374,7 @@ class DataSetDetailsView(GenericAPIView):
                     job_type_names=job_type_names, job_ids=job_ids,
                     file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
                     recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-                    order=order)
+                    order=order,file_type=file_type)
         except InvalidData as ex:
             message = 'Data is invalid'
             logger.exception(message)
