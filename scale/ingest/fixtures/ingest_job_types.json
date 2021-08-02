@@ -300,7 +300,7 @@
                          "scalar": [
                             {"name": "cpus", "value": 1.0},
                             {"name": "disk", "value": 1024.0},
-                            {"name": "mem", "value": 0.0}
+                            {"name": "mem", "value": 1024.0}
                         ]
                      }
 			     }
