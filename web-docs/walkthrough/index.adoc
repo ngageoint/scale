@@ -257,13 +257,13 @@ Connect to the server where SILO is running; e.g. `ssh user@hostname-or-ip`.
 Obtain an authorization token by entering the following at the command line:
 
 ```sh
-curl -H "Content-Type: application/json" -d '\{"username":"<your-server-username>", "password": "<your-server-password>"}' "<your-silo-address>/login" -v
+curl -H "Content-Type: application/json" -d '{"username":"<your-server-username>", "password": "<your-server-password>"}' "<your-silo-address>/login" -v
 ```
 
 Copy the authorization token provided by the above command and use it to add your Docker Hub registry to SILO:
 
 ```sh
-curl -H "Authorization: Token <your-auth-token>" -H "Content-Type: application/json" -d '\{"name":"<your-docker-username>", "url":"https://hub.docker.com", "org":"", "username":"<your-docker-username>", "password": ""}' <your-silo-address>/registries/add
+curl -H "Authorization: Token <your-auth-token>" -H "Content-Type: application/json" -d '{"name":"<your-docker-username>", "url":"https://hub.docker.com", "org":"", "username":"<your-docker-username>", "password": ""}' <your-silo-address>/registries/add
 ```
 
 SILO will automatically scan all registries periodically, but you if you don’t want to wait for that, you can trigger a scan manually:
