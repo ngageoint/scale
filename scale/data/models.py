@@ -263,7 +263,7 @@ class DataSetMemberManager(models.Manager):
                         source_started=None, source_ended=None, source_sensor_classes=None, source_sensors=None,
                         source_collections=None,source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None,
                         job_type_names=None, job_ids=None, is_published=None, is_superseded=None, file_names=None,
-                        job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None,file_type=None):
+                        job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None,file_type=None, media_type=None):
         """Builds a list of data dictionaries from a template and file filters
 
         :param template: The template to fill with files found through filters
@@ -322,6 +322,7 @@ class DataSetMemberManager(models.Manager):
 
         files = ScaleFile.objects.filter_files(
             data_started=data_started, data_ended=data_ended,
+            created_started=created_started, created_ended=created_ended,
             source_started=source_started, source_ended=source_ended,
             source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
             source_collections=source_collections, source_tasks=source_tasks,
@@ -329,7 +330,7 @@ class DataSetMemberManager(models.Manager):
             job_type_names=job_type_names, job_ids=job_ids,
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-            order=order,file_type=file_type)
+            order=order,file_type=file_type,media_type=media_type)
 
         data_list = []
         try:
