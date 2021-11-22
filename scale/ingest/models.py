@@ -626,8 +626,8 @@ class Ingest(models.Model):
 
         matched = True
         logger.info('Applying rules to %s (%s, %s)',
-                    self.file_name, self.media_type, file_size_to_string(self.file_size))
-        matched_rule = file_handler.match_file_name(self.file_name)
+                    self.file_path, self.media_type, file_size_to_string(self.file_size))
+        matched_rule = file_handler.match_file_name(self.file_path)
         if matched_rule:
             for data_type_tag in matched_rule.data_types:
                 self.add_data_type_tag(data_type_tag)
