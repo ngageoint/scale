@@ -96,6 +96,7 @@ class DataSetView(ListCreateAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         definition = rest_util.parse_dict(request, 'definition', required=True)
+        media_type = rest_util.parse_string_list(request, 'media_type', required=False)
 
         # validate the definition
         try:
@@ -161,6 +162,7 @@ class DataSetView(ListCreateAPIView):
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
         file_types = rest_util.parse_string_list(request, 'file_type', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
+        media_type = rest_util.parse_string_list(request, 'media_type', required=False)
 
         data = rest_util.parse_dict_list(request, 'data', required=False)
         data_list = []
@@ -218,7 +220,7 @@ class DataSetView(ListCreateAPIView):
                                                               recipe_ids=recipe_ids,
                                                               recipe_type_ids=recipe_type_ids,
                                                               recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-                                                              order=order,file_type=file_types)
+                                                              order=order,file_type=file_types, media_type=media_type)
             except InvalidData as ex:
                 message = 'Data is invalid'
                 logger.exception(message)
@@ -316,7 +318,7 @@ class DataSetDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
+        
         template = rest_util.parse_dict(request, 'data_template', required=False)
         dry_run = rest_util.parse_bool(request, 'dry_run', default_value=False)
 
@@ -352,6 +354,7 @@ class DataSetDetailsView(GenericAPIView):
         recipe_nodes = rest_util.parse_string_list(request, 'recipe_node', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
         file_type = rest_util.parse_string_list(request, 'file_type', required=False)
+        media_type = rest_util.parse_string_list(request, 'media_type', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
@@ -374,7 +377,7 @@ class DataSetDetailsView(GenericAPIView):
                     job_type_names=job_type_names, job_ids=job_ids,
                     file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
                     recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
-                    order=order,file_type=file_type)
+                    order=order,file_type=file_type, media_type=media_type)
         except InvalidData as ex:
             message = 'Data is invalid'
             logger.exception(message)
