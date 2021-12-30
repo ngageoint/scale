@@ -244,6 +244,10 @@ class JobManager(models.Manager):
             duration = jobs.annotate(duration=exp_wrapper)
             jobs = duration.order_by("duration")
 
+        # Bernard - i still dont understand Django auto-magic, but this is a workaround for this bug.  If job_type passed its a type cast error on sort, thinks it an INT
+        elif order=='job_type':
+            jobs = jobs.order_by('job_type__name') 
+
         # Apply other sorting
         elif order:
             ordering = alphabetize(order, Job.ALPHABETIZE_FIELDS)
