@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
+from ingest.models import Ingest
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
@@ -936,6 +937,37 @@ class JobInputFilesView(ListAPIView):
                                                          file_name=file_name, job_input=job_input)
 
         page = self.paginate_queryset(files)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+class IngestJobsView(ListAPIView):
+    """This is the endpoint for retrieving details about input files associated with a job."""
+    queryset = Job.objects.all()
+    serializer_class = JobSerializerV6
+
+    def get(self, request, ingest_id):
+        """Retrieve detailed information about the input files for a job
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param ingest_id: The ID for the ingest.
+        :type ingest_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        # Check version
+        if request.version != 'v6' and request.version != 'v7':
+            raise Http404()
+
+        ingest = Ingest.objects.get_details(ingest_id)
+        jobInputFiles = JobInputFile.objects.get_job_input_files_by_fileId(ingest.source_file.id)
+        jobs = []
+        for inptf in jobInputFiles:
+            jobs.append(Job.objects.get_details(inptf.job.id))
+
+        page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 

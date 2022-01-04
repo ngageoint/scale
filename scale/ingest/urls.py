@@ -2,6 +2,7 @@
 from django.conf.urls import url
 
 import ingest.views as views
+import job.views as jobviews
 
 urlpatterns = [
     # Ingest views
@@ -9,6 +10,7 @@ urlpatterns = [
     url(r'^ingests/status/$', views.IngestsStatusView.as_view(), name='ingests_status_view'),
     url(r'^ingests/(?P<ingest_id>\d+)/$', views.IngestDetailsView.as_view(), name='ingest_details_view'),
     url(r'^ingests/(?P<file_name>[\w.-]{0,250})/$', views.IngestDetailsView.as_view(), name='ingest_details_view'),
+    url(r'^ingests/(?P<ingest_id>\d+)/jobs/$', jobviews.IngestJobsView.as_view(), name='ingest_jobs_view'),
 
     # Scan views
     url(r'^scans/$', views.ScansView.as_view(), name='scans_view'),
