@@ -97,6 +97,7 @@ class FilesView(ListAPIView):
         recipe_nodes = rest_util.parse_string_list(request, 'recipe_node', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
         media_type = rest_util.parse_string_list(request, 'media_type', required=False)
+        file_name_search = rest_util.parse_string(request, 'file_name_search', required=False)
         
 
         order = rest_util.parse_string_list(request, 'order', required=False)
@@ -109,7 +110,8 @@ class FilesView(ListAPIView):
             source_collections=source_collections, source_tasks=source_tasks,
             mod_started=mod_started, mod_ended=mod_ended, job_type_ids=job_type_ids,
             job_type_names=job_type_names, job_ids=job_ids,
-            file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
+            file_names=file_names, file_name_search=file_name_search, 
+            job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
             order=order, countries=countries, file_type=file_type, media_type=media_type
         )

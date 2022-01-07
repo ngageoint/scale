@@ -324,9 +324,9 @@ class ScaleFileManager(models.Manager):
     def filter_files(self, data_started=None, data_ended=None, created_started=None, created_ended=None, source_started=None,
                         source_ended=None, source_sensor_classes=None, source_sensors=None, source_collections=None,
                         source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
-                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None,
-                        recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None, countries=None,
-                        file_type=None, media_type=None):
+                        job_ids=None, is_published=None, is_superseded=None, file_names=None, file_name_search=None,
+                        job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, 
+                        order=None, countries=None, file_type=None, media_type=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
@@ -367,6 +367,8 @@ class ScaleFileManager(models.Manager):
         :type is_superseded: bool
         :param file_names: Query files with the given file names.
         :type file_names: :func:`list`
+        :param file_name_search: Query files with the given string in their file name.
+        :type file_name_search: : string
         :keyword job_outputs: Query files with the given job outputs
         :type job_outputs: :func:`list`
         :keyword recipe_ids: Query files with a given recipe id
@@ -450,6 +452,8 @@ class ScaleFileManager(models.Manager):
             files = files.filter(is_superseded=is_superseded)
         if file_names:
             files = files.filter(file_name__in=file_names)
+        if file_name_search:
+            files = files.filter(file_name__icontains=file_name_search)
         if job_outputs:
             files = files.filter(job_output__in=job_outputs)
         if recipe_ids:

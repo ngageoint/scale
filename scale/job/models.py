@@ -1870,6 +1870,17 @@ class JobInputFileManager(models.Manager):
 
         return files
 
+    def get_job_input_files_by_fileId(self, file_id):
+        """Returns a query for Input Files filtered on the given fields.
+
+        :param file_id: Query Scale files with the given file id.
+        :type file_id: strquery
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        inputFiles = JobInputFile.objects.filter(input_file__id=file_id)
+        return inputFiles
+
 
 class JobInputFile(models.Model):
     """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
