@@ -138,6 +138,10 @@ class DataSetView(ListCreateAPIView):
         data_ended = rest_util.parse_timestamp(request, 'data_ended', required=False)
         rest_util.check_time_range(data_started, data_ended)
 
+        created_started = rest_util.parse_timestamp(request, 'created_started', required=False)
+        created_ended = rest_util.parse_timestamp(request, 'created_ended', required=False)
+        rest_util.check_time_range(created_started, created_ended)
+
         source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
         source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
         rest_util.check_time_range(source_started, source_ended)
@@ -207,8 +211,8 @@ class DataSetView(ListCreateAPIView):
             try:
                 data_list = DataSetMember.objects.build_data_list(template=template,
                                                               data_started=data_started, data_ended=data_ended,
-                                                              source_started=source_started,
-                                                              source_ended=source_ended,
+                                                              created_started=created_started, created_ended=created_ended,
+                                                              source_started=source_started, source_ended=source_ended,
                                                               source_sensor_classes=source_sensor_classes,
                                                               source_sensors=source_sensors,
                                                               source_collections=source_collections,
