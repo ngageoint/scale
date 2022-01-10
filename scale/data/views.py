@@ -159,6 +159,7 @@ class DataSetView(ListCreateAPIView):
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         file_names = rest_util.parse_string_list(request, 'file_name', required=False)
+        file_name_search = rest_util.parse_string(request, 'file_name_search', required=False)
         job_outputs = rest_util.parse_string_list(request, 'job_output', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
@@ -220,8 +221,8 @@ class DataSetView(ListCreateAPIView):
                                                               mod_started=mod_started, mod_ended=mod_ended,
                                                               job_type_ids=job_type_ids,
                                                               job_type_names=job_type_names, job_ids=job_ids,
-                                                              file_names=file_names, job_outputs=job_outputs,
-                                                              recipe_ids=recipe_ids,
+                                                              file_names=file_names, file_name_search=file_name_search,
+                                                              job_outputs=job_outputs, recipe_ids=recipe_ids,
                                                               recipe_type_ids=recipe_type_ids,
                                                               recipe_nodes=recipe_nodes, batch_ids=batch_ids,
                                                               order=order,file_type=file_types, media_type=media_type)

@@ -262,7 +262,7 @@ class DataSetMemberManager(models.Manager):
     def build_data_list(self, template, data_started=None, data_ended=None, created_started=None, created_ended=None,
                         source_started=None, source_ended=None, source_sensor_classes=None, source_sensors=None,
                         source_collections=None,source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None,
-                        job_type_names=None, job_ids=None, is_published=None, is_superseded=None, file_names=None,
+                        job_type_names=None, job_ids=None, is_published=None, is_superseded=None, file_names=None, file_name_search=None,
                         job_outputs=None, recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None,file_type=None, media_type=None):
         """Builds a list of data dictionaries from a template and file filters
 
@@ -304,6 +304,8 @@ class DataSetMemberManager(models.Manager):
         :type is_superseded: bool
         :param file_names: Query files with the given file names.
         :type file_names: :func:`list`
+        :param file_name_search: Query files with the given string in their file name.
+        :type file_name_search: : string
         :keyword job_outputs: Query files with the given job outputs
         :type job_outputs: :func:`list`
         :keyword recipe_ids: Query files with a given recipe id
@@ -328,7 +330,7 @@ class DataSetMemberManager(models.Manager):
             source_collections=source_collections, source_tasks=source_tasks,
             mod_started=mod_started, mod_ended=mod_ended, job_type_ids=job_type_ids,
             job_type_names=job_type_names, job_ids=job_ids,
-            file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
+            file_names=file_names, file_name_search=file_name_search, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
             order=order,file_type=file_type,media_type=media_type)
 
