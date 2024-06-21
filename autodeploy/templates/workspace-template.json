@@ -1,0 +1,17 @@
+{
+    "id": null,
+    "name": "<NAME>",
+    "title": "<TITLE>",
+    "description": "<DESCRIPTION>",
+    "base_url": null,
+    "is_active": true,
+    "created": null,
+    "deprecated": null,
+    "last_modified": null,
+    "configuration": {
+        "broker": {
+            "host_path": "/dfs/<PATH>",
+            "type": "host"
+        }
+    }
+}

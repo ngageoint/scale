@@ -1,0 +1,32 @@
+{
+  "id": null,
+  "name": "<NAME>",
+  "version": "1.0.0",
+  "title": "<TITLE>",
+  "description": "<DESCIPTION>",
+  "is_active": true,
+  "is_system": false,
+  "is_paused": false,
+  "is_published": false,
+  "icon_code": "<ICON_CODE",
+  "unmet_resources": null,
+  "max_scheduled": null,
+  "max_tries": 3,
+  "revision_num": 1,
+  "docker_image": "docker.io/<URL>",
+  "created": null,
+  "deprecated": null,
+  "paused": null,
+  "last_modified": null,
+  "manifest": "<MANIFEST>",
+  "configuration": {
+    "mounts": {},
+    "priority": 201,
+    "output_workspaces": {
+      "default": "<WORKSPACE>",
+      "outputs": {}
+    },
+    "settings": {}
+  },
+  "recipe_types": []
+}
